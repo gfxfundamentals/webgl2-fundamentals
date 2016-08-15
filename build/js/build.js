@@ -323,7 +323,7 @@ var Builder = function() {
         image:          'http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg',
         updated:        articles[0].date,
         author: {
-          name:       'WebGLFundamenals Contributors',
+          name:       'WebGL2Fundamenals Contributors',
           link:       'http://webgl2fundamentals.org/contributors.html',
         },
       });
@@ -335,7 +335,7 @@ var Builder = function() {
           description:    "",
           author: [
             {
-              name:       'WebGLFundamenals Contributors',
+              name:       'WebGL2Fundamenals Contributors',
               link:       'http://webgl2fundamentals.org/contributors.html',
             },
           ],
