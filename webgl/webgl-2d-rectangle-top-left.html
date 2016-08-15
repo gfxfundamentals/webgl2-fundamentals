@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>WebGL - 2D Rectangle Top Left</title>
+<title>WebGL2 - 2D Rectangle Top Left</title>
 <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
 </head>
 <body>
@@ -11,47 +11,61 @@
 </body>
 <script src="resources/webgl-utils.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script>
-<!-- vertex shader -->
-<script id="2d-vertex-shader" type="notjs">
-  attribute vec4 a_position;
-
-  uniform vec2 u_resolution;
-
-  void main() {
-     // convert the position from pixels to 0.0 to 1.0
-     vec2 zeroToOne = a_position.xy / u_resolution;
-
-     // convert from 0->1 to 0->2
-     vec2 zeroToTwo = zeroToOne * 2.0;
-
-     // convert from 0->2 to -1->+1 (clipspace)
-     vec2 clipSpace = zeroToTwo - 1.0;
-
-     gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
-  }
-</script>
-<!-- fragment shader -->
-<script id="2d-fragment-shader" type="notjs">
-  precision mediump float;
-
-  void main() {
-    gl_FragColor = vec4(1, 0, 0.5, 1); // return redish-purple
-  }
-</script>
 <script>
 "use strict";
+
+var vertexShaderSource = `#version 300 es
+
+// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec4 a_position;
+
+// Used to pass in the resolution of the canvas
+uniform vec2 u_resolution;
+
+// all shaders have a main function
+void main() {
+
+  // convert the position from pixels to 0.0 to 1.0
+  vec2 zeroToOne = a_position.xy / u_resolution;
+
+  // convert from 0->1 to 0->2
+  vec2 zeroToTwo = zeroToOne * 2.0;
+
+  // convert from 0->2 to -1->+1 (clipspace)
+  vec2 clipSpace = zeroToTwo - 1.0;
+
+  gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+}
+`;
+
+var fragmentShaderSource = `#version 300 es
+
+// fragment shaders don't have a default precision so we need
+// to pick one. mediump is a good default. It means "medium precision"
+precision mediump float;
+
+// we need to declare an output for the fragment shader
+out vec4 outColor;
+
+void main() {
+  // Just set the ouput to a constant redish-purple
+  outColor = vec4(1, 0, 0.5, 1);
+}
+`;
 
 function main() {
   // Get A WebGL context
   var canvas = document.getElementById("c");
   setupLesson(canvas);
-  var gl = canvas.getContext("webgl");
+  var gl = canvas.getContext("webgl2");
   if (!gl) {
+    showNeedWebGL2();
     return;
   }
 
   // Use our boilerplate utils to compile the shaders and link into a program
-  var program = createProgramFromScripts(gl, ["2d-vertex-shader", "2d-fragment-shader"]);
+  var program = createProgramFromSources(gl, [vertexShaderSource, fragmentShaderSource]);
 
   // look up where the vertex data needs to go.
   var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
@@ -61,8 +75,11 @@ function main() {
 
   // Create a buffer and put a single pixel space rectangle in
   // it (2 triangles)
-  var buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  // Create a buffer and put three 2d clip space points in it
+  var positionBuffer = gl.createBuffer();
+
+  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
   var positions = [
     10, 20,
@@ -73,6 +90,12 @@ function main() {
     80, 30,
   ];
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+  // Create a vertex array object (attribute state)
+  var vao = gl.createVertexArray();
+
+  // and make it the one we're currently working with
+  gl.bindVertexArray(vao);
 
   // Turn on the attribute
   gl.enableVertexAttribArray(positionAttributeLocation);

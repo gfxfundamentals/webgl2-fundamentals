@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>WebGL - Fundamentals</title>
+    <title>WebGL2 - Fundamentals</title>
     <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
   </head>
   <body>
@@ -11,36 +11,38 @@
   </body>
 </html>
 <script src="resources/webgl-lessons-helper.js"></script>
-<script id="2d-vertex-shader" type="notjs">
-
-  // an attribute will receive data from a buffer
-  attribute vec4 a_position;
-
-  // all shaders have a main function
-  void main() {
-
-    // gl_Position is a special variable a vertex shader
-    // is responsible for setting
-    gl_Position = a_position;
-  }
-
-</script>
-
-<script id="2d-fragment-shader" type="notjs">
-
-  // fragment shaders don't have a default precision so we need
-  // to pick one. mediump is a good default
-  precision mediump float;
-
-  void main() {
-    // gl_FragColor is a special variable a fragment shader
-    // is responsible for setting
-    gl_FragColor = vec4(1, 0, 0.5, 1); // return redish-purple
-  }
-
-</script>
 <script>
 "use strict";
+
+var vertexShaderSource = `#version 300 es
+
+// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec4 a_position;
+
+// all shaders have a main function
+void main() {
+
+  // gl_Position is a special variable a vertex shader
+  // is responsible for setting
+  gl_Position = a_position;
+}
+`;
+
+var fragmentShaderSource = `#version 300 es
+
+// fragment shaders don't have a default precision so we need
+// to pick one. mediump is a good default. It means "medium precision"
+precision mediump float;
+
+// we need to declare an output for the fragment shader
+out vec4 outColor;
+
+void main() {
+  // Just set the ouput to a constant redish-purple
+  outColor = vec4(1, 0, 0.5, 1);
+}
+`;
 
 function createShader(gl, type, source) {
   var shader = gl.createShader(type);
@@ -73,14 +75,11 @@ function main() {
   // Get A WebGL context
   var canvas = document.getElementById("c");
   setupLesson(canvas);  // this is just to change the style if we're in an iframe
-  var gl = canvas.getContext("webgl");
+  var gl = canvas.getContext("webgl2");
   if (!gl) {
+    showNeedWebGL2();
     return;
   }
-
-  // Get the strings for our GLSL shaders
-  var vertexShaderSource = document.getElementById("2d-vertex-shader").text;
-  var fragmentShaderSource = document.getElementById("2d-fragment-shader").text;
 
   // create GLSL shaders, upload the GLSL source, compile the shaders
   var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
@@ -104,6 +103,12 @@ function main() {
     0.7, 0,
   ];
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+  // Create a vertex array object (attribute state)
+  var vao = gl.createVertexArray();
+
+  // and make it the one we're currently working with
+  gl.bindVertexArray(vao);
 
   // Turn on the attribute
   gl.enableVertexAttribArray(positionAttributeLocation);
