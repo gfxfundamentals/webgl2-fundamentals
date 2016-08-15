@@ -34,23 +34,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL Fundamentals" />
+<meta property="og:title" content="WebGL2 Fundamentals" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="Your first WebGL lesson starting with the fundamentals" />
+<meta property="og:description" content="Your first WebGL2 lesson starting with the fundamentals" />
 <meta property="og:url" content="http://webgl2fundamentals.org/webgl/lessons/webgl-fundamentals.html" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@greggman" />
 <meta name="twitter:creator" content="@greggman" />
 <meta name="twitter:domain" content="webglfundamentals.org" />
-<meta name="twitter:title" content="WebGL Fundamentals" />
+<meta name="twitter:title" content="WebGL2 Fundamentals" />
 <meta name="twitter:url" content="http://webgl2fundamentals.org/webgl/lessons/webgl-fundamentals.html" />
-<meta name="twitter:description" content="Your first WebGL lesson starting with the fundamentals" />
+<meta name="twitter:description" content="Your first WebGL2 lesson starting with the fundamentals" />
 <meta name="twitter:image:src" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>WebGL Fundamentals</title>
+<title>WebGL2 Fundamentals</title>
 <link href="/webgl/lessons/resources/webglfundamentals-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/webgl/lessons/resources/base.css" type="text/css" />
 <link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
@@ -63,11 +63,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL Fundamentals</h1>
+    <h1>WebGL2 Fundamentals</h1>
   </div>
   <div class="row">
     <div class="col-sm-8 lesson-main">
-      <p>WebGL is often thought of as a 3D API. People think &quot;I&#39;ll use WebGL and <em>magic</em> I&#39;ll get cool 3d&quot;.
+      <p>First things first, this articles are about WebGL2. If you&#39;re interested in WebGL 1.0
+please go here [<a href="http://webglfundamentals.org">http://webglfundamentals.org</a>]. Note that WebGL 2 is <a href="webgl1-backward-compatibility.html">nearly 100% backward
+compatible with WebGL 1</a>. That said, once you enable
+WebGL 2 you might as well use it as it was meant to be used. These tutorials follow
+that path.</p>
+<p>WebGL is often thought of as a 3D API. People think &quot;I&#39;ll use WebGL and <em>magic</em> I&#39;ll get cool 3d&quot;.
 In reality WebGL is just a rasterization engine. It draws points, lines, and triangles based
 on code you supply. Getting WebGL to do anything else is up to you to provide code to use points, lines,
 and triangles to accomplish your task.</p>
@@ -79,13 +84,13 @@ and a fragment shader and they are each written in a very strictly typed C/C++ l
 WebGL can then rasterize various kinds of primitives including points, lines, or triangles.
 When rasterizing these primitives it calls a second user supplied function called a fragment shader.
 A fragment shader&#39;s job is to compute a color for each pixel of the primitive currently being drawn.</p>
-<p>Nearly all of the entire WebGL API is about setting up state for these pairs of functions to run. You setup
-a bunch of state then execute a pair of functions by calling <code>gl.drawArrays</code> or <code>gl.drawElements</code> which
-executes your shaders on the GPU.</p>
+<p>Nearly all of the entire WebGL API is about setting up state for these pairs of functions to run.
+For each thing you want to draw you setup a bunch of state then execute a pair of functions by calling
+<code>gl.drawArrays</code> or <code>gl.drawElements</code> which executes your shaders on the GPU.</p>
 <p>Any data you want those functions to have accesse to must be provided to the GPU. There are 4 ways
 a shader can receive data.</p>
 <ol>
-<li><p>Attributes and Buffers</p>
+<li><p>Attributes, Buffers, and Vertex Arrays</p>
 <p>Buffers are arrays of binary data you upload to the GPU. Usually buffers contain
 things like positions, normals, texture coordinates, vertex colors, etc although
 you&#39;re free to put anything you want in them.</p>
@@ -98,6 +103,8 @@ in the buffer the positions start, and how many bytes to get from one position t
 <p>Buffers are not random access. Instead a vertex shaders is executed a specified number
 of times. Each time it&#39;s executed the next value from each specified buffers is pulled
 out assigned to an attribute.</p>
+<p>The state of attributes, which buffers to use for each one and how to pull out data
+from those buffers, is collected into a vertex array object (VAO).</p>
 </li>
 <li><p>Uniforms</p>
 <p>Uniforms are effectively global variables you set before you execute your shader program.</p>
@@ -121,8 +128,11 @@ clipspace coordinates and a fragment shader that provides the color.</p>
 <p>Clipspace coordinates always go from -1 to +1 no matter what size your
 canvas is. Here is a simple WebGL example that shows WebGL in its simplest form.</p>
 <p>Let&#39;s start with a vertex shader</p>
-<pre><code>// an attribute will receive data from a buffer
-attribute vec4 a_position;
+<pre><code>#version 300 es
+
+// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec4 a_position;
 
 // all shaders have a main function
 void main() {
@@ -158,61 +168,72 @@ data (see below) and so the actual computation for getting data out of the buffe
 would be a little different but hopefully this gives you an idea of how a vertex
 shader will be executed.</p>
 <p>Next we need a fragment shader</p>
-<pre><code>// fragment shaders don&#39;t have a default precision so we need
+<pre><code>#version 300 es
+
+// fragment shaders don&#39;t have a default precision so we need
 // to pick one. mediump is a good default. It means &quot;medium precision&quot;
 precision mediump float;
 
+// we need to declare an output for the fragment shader
+out vec4 outColor;
+
 void main() {
-  // gl_FragColor is a special variable a fragment shader
-  // is responsible for setting
-  gl_FragColor = vec4(1, 0, 0.5, 1); // return redish-purple
+  // Just set the ouput to a constant redish-purple
+  outColor = vec4(1, 0, 0.5, 1);
 }
-</code></pre><p>Above we&#39;re setting <code>gl_FragColor</code> to <code>1, 0, 0.5, 1</code> which is 1 for red, 0 for green,
-0.5 for blue, 1 for alpha. Colors in WebGL go from 0 to 1.</p>
+</code></pre><p>Above we declared <code>outColor</code> as our fragment shader&#39;s output. We&#39;re setting <code>outColor</code> to <code>1, 0, 0.5, 1</code>
+which is 1 for red, 0 for green, 0.5 for blue, 1 for alpha. Colors in WebGL go from 0 to 1.</p>
 <p>Now that we have written the 2 shader functions lets get started with WebGL</p>
 <p>First we need an HTML canvas element</p>
 <pre><code> &lt;canvas id=&quot;c&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
 </code></pre><p>Then in JavaScript we can look that up</p>
 <pre><code> var canvas = document.getElementById(&quot;c&quot;);
 </code></pre><p>Now we can create a WebGLRenderingContext</p>
-<pre><code> var gl = canvas.getContext(&quot;webgl&quot;);
+<pre><code> var gl = canvas.getContext(&quot;webgl2&quot;);
  if (!gl) {
-    // no webgl for you!
+    // no webgl2 for you!
     ...
 </code></pre><p>Now we need to compile those shaders to put them on the GPU so first we need to get them into strings.
 You can create your GLSL strings any way you normally create strings in JavaScript. For example by concatenating,
-by using AJAX to download them, by using multiline template strings. or in thise case by
-putting them in non-JavaScript typed script tags.</p>
-<pre><code>&lt;script id=&quot;2d-vertex-shader&quot; type=&quot;notjs&quot;&gt;
+by using AJAX to download them, by putting them in non-javascript script tags, or in this case in
+multiline template strings.</p>
+<pre><code>var vertexShaderSource = `#version 300 es
 
-  // an attribute will receive data from a buffer
-  attribute vec4 a_position;
+// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec4 a_position;
 
-  // all shaders have a main function
-  void main() {
+// all shaders have a main function
+void main() {
 
-    // gl_Position is a special variable a vertex shader
-    // is responsible for setting
-    gl_Position = a_position;
-  }
+  // gl_Position is a special variable a vertex shader
+  // is responsible for setting
+  gl_Position = a_position;
+}
+`;
 
-&lt;/script&gt;
+var fragmentShaderSource = `#version 300 es
 
-&lt;script id=&quot;2d-fragment-shader&quot; type=&quot;notjs&quot;&gt;
+// fragment shaders don&#39;t have a default precision so we need
+// to pick one. mediump is a good default. It means &quot;medium precision&quot;
+precision mediump float;
 
-  // fragment shaders don&#39;t have a default precision so we need
-  // to pick one. mediump is a good default
-  precision mediump float;
+// we need to declare an output for the fragment shader
+out vec4 outColor;
 
-  void main() {
-    // gl_FragColor is a special variable a fragment shader
-    // is responsible for setting
-    gl_FragColor = vec4(1, 0, 0.5, 1); // return redish-purple
-  }
-
-&lt;/script&gt;
+void main() {
+  // Just set the ouput to a constant redish-purple
+  outColor = vec4(1, 0, 0.5, 1);
+}
+`;
 </code></pre><p>In fact, most 3D engines generate GLSL shaders on the fly using various types of templates, concatenation, etc.
 For the samples on this site though none of them are complex enough to need to generate GLSL at runtime.</p>
+<blockquote>
+<p>NOTE: <code>#version 300 es</code> <strong>MUST BE THE VERY FIRST LINE OF YOUR SHADER</strong>. No comments or
+blank lines are allowed before it! <code>#version 300 es</code> tells WebGL2 you want to use WebGL2&#39;s
+shader language called GLSL ES 3.00. If you don&#39;t put that as the first line the shader
+language defaults to WebGL 1.0&#39;s GLSL ES 1.00 which has many differences and far less features.</p>
+</blockquote>
 <p>Next we need a function that will create a shader, upload the GLSL source, and compile the shader.
 Note I haven&#39;t written any comments because it should be clear from the names of the functions
 what is happening.</p>
@@ -229,10 +250,7 @@ what is happening.</p>
   gl.deleteShader(shader);
 }
 </code></pre><p>We can now call that function to create the 2 shaders</p>
-<pre><code>var vertexShaderSource = document.getElementById(&quot;2d-vertex-shader&quot;).text;
-var fragmentShaderSource = document.getElementById(&quot;2d-fragment-shader&quot;).text;
-
-var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+<pre><code>var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
 var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 </code></pre><p>We then need to <em>link</em> those 2 shaders into a <em>program</em></p>
 <pre><code>function createProgram(gl, vertexShader, fragmentShader) {
@@ -283,7 +301,12 @@ it to the <code>ARRAY_BUFFER</code> bind point above.</p>
 WebGL can try to use that hint to optimize certain things. <code>gl.STATIC_DRAW</code> tells WebGL
 we are not likely to change this data much.</p>
 <p>Now that we&#39;ve put data in the a buffer we need to tell the attribute how to get data
-out of it. First off we need to turn the attribute on</p>
+out of it. First we need to create a collection of attributes called a Vertex Array Object.</p>
+<pre><code>var vao = gl.createVertexArray();
+</code></pre><p>And we need to make that the current vertex array so that all of our attribute settings
+will apply to that set of attribute state</p>
+<pre><code>gl.bindVertexArray(vao);
+</code></pre><p>Now we finally setup the attributes in the vertex array. First off we need to turn the attribute on</p>
 <pre><code>gl.enableVertexAttribArray(positionAttributeLocation);
 </code></pre><p>Then we need to specify how to pull the data out</p>
 <pre><code>var size = 2;          // 2 components per iteration
@@ -357,10 +380,8 @@ be to the right of that.</p>
 <p>For 2D stuff you would probably rather work in pixels than clipspace so
 let&#39;s change the shader so we can supply the position in pixels and have
 it convert to clipspace for us. Here&#39;s the new vertex shader</p>
-<pre><code>&lt;script id=&quot;2d-vertex-shader&quot; type=&quot;notjs&quot;&gt;
-
--  attribute vec4 a_position;
-*  attribute vec2 a_position;
+<pre><code>-  in vec4 a_position;
+*  in vec2 a_position;
 
 +  uniform vec2 u_resolution;
 
@@ -376,8 +397,6 @@ it convert to clipspace for us. Here&#39;s the new vertex shader</p>
 +
 *    gl_Position = vec4(clipSpace, 0, 1);
   }
-
-&lt;/script&gt;
 </code></pre><p>Some things to notice about the changes. We changed <code>a_position</code> to a <code>vec2</code> since we&#39;re
 only using <code>x</code> and <code>y</code> anyway. A <code>vec2</code> is similar to a <code>vec4</code> but only has <code>x</code> and <code>y</code>.</p>
 <p>Next we added a <code>uniform</code> called <code>u_resolution</code>. To set that we need to look up its location.</p>
@@ -432,15 +451,16 @@ we can just flip the clip space y coordinate.</p>
 we can call it for different sized rectangles. While we&#39;re at it
 we&#39;ll make the color settable.</p>
 <p>First we make the fragment shader take a color uniform input.</p>
-<pre><code>&lt;script id=&quot;2d-fragment-shader&quot; type=&quot;notjs&quot;&gt;
-  precision mediump float;
+<pre><code>precision mediump float;
 
 +  uniform vec4 u_color;
 
-  void main() {
-*    gl_FragColor = u_color;
-  }
-&lt;/script&gt;
+out vec4 outColor;
+
+void main() {
+-  outColor = vec4(1, 0, 0.5, 1);
+*  outColor = u_color;
+}
 </code></pre><p>And here&#39;s the new code that draws 50 rectangles in random places and random colors.</p>
 <pre><code>  var colorLocation = gl.getUniformLocation(program, &quot;u_color&quot;);
   ...
@@ -519,39 +539,6 @@ only draw one thing and so do not show that structure.</p>
 I&#39;ll show you <a href="webgl-image-processing.html">how to do some 2D image processing</a>.
 If you are interesting in learning about translation,
 rotation and scale then <a href="webgl-2d-translation.html">start here</a>.</p>
-<div class="webgl_bottombar">
-<h3>What does type="notjs" mean?</h3>
-<p>
-<code>&lt;script&gt;</code> tags default to having JavaScript in them.
-You can put no type or you can put <code>type="javascript"</code> or
-<code>type="text/javascript"</code> and the browser will interpret the
-contents as JavaScript. If you put anything for else for <code>type</code> the browser ignores the
-contents of the script tag. In other words <code>type="notjs"</code>
-or <code>type="foobar"</code> have no meaning as far as the browser
-is concerned.</p>
-<p>This makes the shaders easy to edit.
-Other alterntives include string concatenations like</p>
-<pre class="prettyprint">
-  var shaderSource =
-    "void main() {\n" +
-    "  gl_FragColor = vec4(1,0,0,1);\n" +
-    "}";
-</pre>
-<p>or we'd could load shaders with ajax requests but that is slow and asynchronous.</p>
-<p>A more modern alternative would be to use multiline template literals.</p>
-<pre class="prettyprint">
-  var shaderSource = `
-    void main() {
-      gl_FragColor = vec4(1,0,0,1);
-    }
-  `;
-</pre>
-<p>Multiline template literals work in all browsers that support WebGL.
-Unfortunately they don't work in really old browsers so if you care
-about supporting a fallback for those browsers you might not want to
-use mutliline template literals or you might want to use <a href="https://babeljs.io/">a transpiler</a>.
-</p>
-</div>
 
       <hr/>
       <div>
@@ -562,8 +549,8 @@ use mutliline template literals or you might want to use <a href="https://babelj
         <script type="text/javascript">
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'webglfundamentals'; // required: replace example with your forum shortname
-            var disqus_identifier = 'WebGL Fundamentals';
-            var disqus_title = 'WebGL Fundamentals';
+            var disqus_identifier = 'WebGL2 Fundamentals';
+            var disqus_title = 'WebGL2 Fundamentals';
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
             (function() {
