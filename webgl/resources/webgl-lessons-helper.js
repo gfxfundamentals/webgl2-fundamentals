@@ -65,41 +65,12 @@
   }
 
   /**
-   * Mesasge for getting a webgl browser
-   * @type {string}
-   */
-  var GET_A_WEBGL_BROWSER = '' +
-    'This page requires a browser that supports WebGL.<br/>' +
-    '<a href="http://get.webgl.org">Click here to upgrade your browser.</a>';
-
-  /**
    * Mesasge for need better hardware
    * @type {string}
    */
   var OTHER_PROBLEM = '' +
-    "It doesn't appear your computer can support WebGL.<br/>" +
+    "It doesn't appear your computer can support WebGL2.<br/>" +
     '<a href="http://get.webgl.org/troubleshooting/">Click here for more information.</a>';
-
-  /**
-   * Creates a webgl context.
-   * @param {HTMLCanvasElement} canvas The canvas tag to get
-   *     context from. If one is not passed in one will be
-   *     created.
-   * @return {WebGLRenderingContext} The created context.
-   */
-  function create3DContext(canvas, opt_attribs) {
-    var names = ["webgl", "experimental-webgl"];
-    var context = null;
-    for (var ii = 0; ii < names.length; ++ii) {
-      try {
-        context = canvas.getContext(names[ii], opt_attribs);
-      } catch(e) {}  // eslint-disable-line
-      if (context) {
-        break;
-      }
-    }
-    return context;
-  }
 
   /**
    * Creates a webgl context. If creation fails it will
@@ -112,24 +83,11 @@
    * @return {WebGLRenderingContext} The created context.
    * @memberOf module:webgl-utils
    */
-  function setupWebGL(canvas, opt_attribs) {
-    function showLink(str) {
-      var container = canvas.parentNode;
-      if (container) {
-        container.innerHTML = makeFailHTML(str);
-      }
+  function showNeedWebGL2(canvas) {
+    var container = canvas.parentNode;
+    if (container) {
+      container.innerHTML = makeFailHTML(OTHER_PROBLEM);
     }
-
-    if (!topWindow.WebGLRenderingContext) {
-      showLink(GET_A_WEBGL_BROWSER);
-      return null;
-    }
-
-    var context = create3DContext(canvas, opt_attribs);
-    if (!context) {
-      showLink(OTHER_PROBLEM);
-    }
-    return context;
   }
 
   /**
@@ -167,10 +125,7 @@
       h1.innerText = title;
       document.body.insertBefore(h1, document.body.children[0]);
     }
-
-    var gl = setupWebGL(canvas, attribs);
   }
-
 
   /**
    * Get's the iframe in the parent document
@@ -251,5 +206,6 @@
   updateCSSIfInIFrame();
 
   window.setupLesson = setupLesson;
+  window.showNeedWebGL2 = showNeedWebGL2;
 }(this));
 
