@@ -1,12 +1,12 @@
-WebGL Fundamentals
-==================
+WebGL2 Fundamentals
+===================
 
-This is [a series of lessons or tutorials about WebGL](http://webgl2fundamentals.org/).
+This is [a series of lessons or tutorials about WebGL2](http://webgl2fundamentals.org/).
 
 Unlike most WebGL lessons these are not based off of OpenGL.
 OpenGL is 20 years old. The lessons of OpenGL don't match well with WebGL.
 The APIs have changed too much. The ideas of OpenGL and OpenGL tutorials
-are out of date with WebGL, OpenGL ES 2.0 and the land of shaders.
+are out of date with WebGL, OpenGL ES 3.0 and the land of shaders.
 
 I would argue that WebGL is actually a very simple API. What makes it
 appear complicated is the way in which it's used. The complications
@@ -55,6 +55,5 @@ A list of articles I'd like to write or see written
     *   scene graph
         *   putting lights and camera in scene graph
 *   Physically based rendering
-*   WebGL 2.0
 
 
