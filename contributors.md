@@ -1,7 +1,7 @@
-WebGLFundamentals.org Contributors
+webgl2fundamentals.org Contributors
 ==================================
 
-WebGLFundamentals is brought to you by:
+webgl2fundamentals is brought to you by:
 
 *    Gregg (Greggman) Tavares [games.greggman.com](http://games.greggman.com)
 

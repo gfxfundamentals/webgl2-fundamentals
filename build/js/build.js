@@ -215,13 +215,13 @@ var Builder = function() {
     metaData['toc'] = opt_extra.toc;
     metaData['templateOptions'] = opt_extra.templateOptions;
     metaData['langInfo'] = g_langInfo;
-    metaData['url'] = "http://webglfundamentals.org/" + outFileName.replace(/\\/g, '/');
-    metaData['screenshot'] = "http://webglfundamentals.org/webgl/lessons/resources/webglfundamentals.jpg";
+    metaData['url'] = "http://webgl2fundamentals.org/" + outFileName.replace(/\\/g, '/');
+    metaData['screenshot'] = "http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg";
     var basename = path.basename(contentFileName, ".md");
     [".jpg", ".png"].forEach(function(ext) {
       var filename = path.join("webgl", "lessons", "screenshots", basename + ext);
       if (fs.existsSync(filename)) {
-        metaData['screenshot'] = "http://webglfundamentals.org/webgl/lessons/screenshots/" + basename + ext;
+        metaData['screenshot'] = "http://webgl2fundamentals.org/webgl/lessons/screenshots/" + basename + ext;
       }
     });
 
@@ -244,7 +244,7 @@ var Builder = function() {
   var addArticleByLang = function(article, lang) {
     var filename = path.basename(article.dst_file_name);
     var articleInfo = g_articlesByLang[filename];
-    var url = "http://webglfundamentals.org/" + article.dst_file_name;
+    var url = "http://webgl2fundamentals.org/" + article.dst_file_name;
     if (!articleInfo) {
       articleInfo = {
         url: url,
@@ -320,23 +320,23 @@ var Builder = function() {
         title:          g_langInfo.title,
         description:    g_langInfo.description,
         link:           g_langInfo.link,
-        image:          'http://webglfundamentals.org/webgl/lessons/resources/webglfundamentals.jpg',
+        image:          'http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg',
         updated:        articles[0].date,
         author: {
           name:       'WebGLFundamenals Contributors',
-          link:       'http://webglfundamentals.org/contributors.html',
+          link:       'http://webgl2fundamentals.org/contributors.html',
         },
       });
 
       articles.forEach(function(article, ndx) {
         feed.addItem({
           title:          article.title,
-          link:           "http://webglfundamentals.org/" + article.dst_file_name,
+          link:           "http://webgl2fundamentals.org/" + article.dst_file_name,
           description:    "",
           author: [
             {
               name:       'WebGLFundamenals Contributors',
-              link:       'http://webglfundamentals.org/contributors.html',
+              link:       'http://webgl2fundamentals.org/contributors.html',
             },
           ],
           // contributor: [
@@ -371,7 +371,7 @@ var Builder = function() {
 
   this.writeGlobalFiles = function() {
     var sm = sitemap.createSitemap ({
-      hostname: 'http://webglfundamentals.org',
+      hostname: 'http://webgl2fundamentals.org',
       cacheTime: 600000,
     });
     var articleLangs = { };

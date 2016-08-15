@@ -1,8 +1,8 @@
-WebGLFundamentals API Docs
+webgl2fundamentals API Docs
 ==========================
 
 These docs are an attempt to help explain some of the helper function
-used in the articles on [webglfundamentals.org](http://webglfundamentals.org).
+used in the articles on [webgl2fundamentals.org](http://webgl2fundamentals.org).
 
 WebGL is a very low-level API and so using it is very verbose. To draw a simple
 lighted cube can easily require 50-100 WebGL calls. Calls to create buffers
