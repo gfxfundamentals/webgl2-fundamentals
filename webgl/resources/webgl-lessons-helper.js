@@ -49,30 +49,6 @@
   }
 
   /**
-   * Creates the HTLM for a failure message
-   * @param {string} canvasContainerId id of container of th
-   *        canvas.
-   * @return {string} The html.
-   */
-  function makeFailHTML(msg) {
-    return '' +
-      '<table style="background-color: #8CE; width: 100%; height: 100%;"><tr>' +
-      '<td align="center">' +
-      '<div style="display: table-cell; vertical-align: middle;">' +
-      '<div style="">' + msg + '</div>' +
-      '</div>' +
-      '</td></tr></table>';
-  }
-
-  /**
-   * Mesasge for need better hardware
-   * @type {string}
-   */
-  var OTHER_PROBLEM = '' +
-    "It doesn't appear your computer can support WebGL2.<br/>" +
-    '<a href="http://get.webgl.org/troubleshooting/">Click here for more information.</a>';
-
-  /**
    * Creates a webgl context. If creation fails it will
    * change the contents of the container of the <canvas>
    * tag to an error message with the correct links for WebGL.
@@ -84,9 +60,31 @@
    * @memberOf module:webgl-utils
    */
   function showNeedWebGL2(canvas) {
-    var container = canvas.parentNode;
-    if (container) {
-      container.innerHTML = makeFailHTML(OTHER_PROBLEM);
+    var doc = canvas.ownerDocument;
+    if (doc) {
+      var div = doc.createElement("div");
+      div.innerHTML = `
+        <div style="
+           position: absolute;
+           left: 0;
+           top: 0;
+           background-color: #DEF;
+           width: 100vw;
+           height: 100vh;
+           display: flex;
+           flex-flow: column;
+           justify-content: center;
+           align-content: center;
+           align-items: center;
+        ">
+          <div style="text-align: center;">
+             It doesn't appear your browser supports WebGL2.<br/>
+             <a href="http://get.webgl.org/troubleshooting/">Click here for more information.</a>
+          </div>
+        </div>
+      `;
+      div = div.querySelector("div");
+      doc.body.appendChild(div);
     }
   }
 
