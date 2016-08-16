@@ -14,10 +14,13 @@ Fix articles
 *   webgl-3d-orthographic.html
 *   webgl-3d-perspective.html
 *   webgl-3d-camera.html
+*   webgl-3d-lighting-directional.html
+*   webgl-3d-lighting-point.html
 *   webgl-less-code-more-fun.html
 *   webgl-drawing-multiple-things.html
 *   webgl-scene-graph.html
 *   webgl-2d-drawimage.html
+*   webgl-2d-matrix-stack.html
 *   webgl-text-html.html
 *   webgl-text-canvas2d.html
 *   webgl-text-texture.html
