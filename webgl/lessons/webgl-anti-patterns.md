@@ -9,7 +9,7 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
     and sticks them on the `WebGLRenderingContext` something like this
 
     <pre class="prettyprint">
-    gl = canvas.getContext("webgl");
+    gl = canvas.getContext("webgl2");
     gl.viewportWidth = canvas.width;    // BAD!!!
     gl.viewportHeight = canvas.height;  // BAD!!!
     </pre>
