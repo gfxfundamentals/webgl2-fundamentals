@@ -471,6 +471,8 @@ we'll make the color settable.
 
 First we make the fragment shader take a color uniform input.
 
+    #version 300 es
+
     precision mediump float;
 
     +  uniform vec4 u_color;
