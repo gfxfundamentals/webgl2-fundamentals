@@ -86,7 +86,7 @@ vertices the GPU uses them to make a triangle.  It figures out which
 pixels the 3 points of the triangle correspond to, and then rasterizes the
 triangle which is a fancy word for “draws it with pixels”.  For each
 pixel it will call your fragment shader asking you what color to make that
-pixel. Your fragment shader has to set a special variable <code>gl_FragColor</code>
+pixel. Your fragment shader has output a vec4
 with the color it wants for that pixel.</p>
 <p>That’s all very interesting but as you can see in our examples to up
 this point the fragment shader has very little info per pixel.
@@ -114,9 +114,9 @@ function drawScene() {
   // Draw the geometry.
 *  gl.drawArrays(gl.TRIANGLES, 0, 3);
 }
-</code></pre><p>Then in our vertex shader we declare a <em>varying</em> to pass data to the
+</code></pre><p>Then in our vertex shader we declare a <em>varying</em> by making an <code>out</code> to pass data to the
 fragment shader.</p>
-<pre><code>varying vec4 v_color;
+<pre><code>out vec4 v_color;
 ...
 void main() {
   // Multiply the position by the matrix.
@@ -127,13 +127,17 @@ void main() {
   // Colorspace goes from 0.0 to 1.0
 *  v_color = gl_Position * 0.5 + 0.5;
 }
-</code></pre><p>And then we declare the same <em>varying</em> in the fragment shader.</p>
-<pre><code>precision mediump float;
+</code></pre><p>And then we declare the same <em>varying</em> as an <code>in</code> in the fragment shader.</p>
+<pre><code>#version 300 es
 
-*varying vec4 v_color;
+precision mediump float;
+
+in vec4 v_color;
+
+out vec4 outColor;
 
 void main() {
-*  gl_FragColor = v_color;
+*  outColor = v_color;
 }
 </code></pre><p>WebGL will connect the varying in the vertex shader to the varying of the
 same name and type in the fragment shader.</p>
@@ -221,10 +225,10 @@ on to the fragment shader.  So for example let&#39;s draw a rectangle, that
 consists of 2 triangles, in 2 colors.  To do this we&#39;ll add another
 attribute to the vertex shader so we can pass it more data and we&#39;ll pass
 that data directly to the fragment shader.</p>
-<pre><code>attribute vec2 a_position;
-+attribute vec4 a_color;
+<pre><code>in vec2 a_position;
++in vec4 a_color;
 ...
-varying vec4 v_color;
+out vec4 v_color;
 
 void main() {
    ...
@@ -239,11 +243,15 @@ void main() {
 +  // Create a buffer for the colors.
 +  var buffer = gl.createBuffer();
 +  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
++
++  // Set the colors.
++  setColors(gl);
+
+  // setup attributes
+  ...
 +  gl.enableVertexAttribArray(colorLocation);
 +  gl.vertexAttribPointer(colorLocation, 4, gl.FLOAT, false, 0, 0);
 
-  // Set the colors.
-+  setColors(gl);
   ...
 
 +// Fill the buffer with colors for the 2 triangles
@@ -311,7 +319,7 @@ you&#39;ll see they also use an extra attribute to pass in texture coordinates.<
 <p>Buffers are the way of getting vertex and other per vertex data onto the
 GPU.  <code>gl.createBuffer</code> creates a buffer.
 <code>gl.bindBuffer</code> sets that buffer as the buffer to be worked on.
-<code>gl.bufferData</code> copies data into the buffer.</p>
+<code>gl.bufferData</code> copies data into the current buffer.</p>
 <p>Once the data is in the buffer we need to tell WebGL how to get data out
 of it and provide it to the vertex shader&#39;s attributes.</p>
 <p>To do this, first we ask WebGL what locations it assigned to the
@@ -338,7 +346,7 @@ next piece of data, and an offset for how far into the buffer our data is.</p>
 <p>If you are using 1 buffer per type of data then both stride and offset can
 always be 0.  0 for stride means &quot;use a stride that matches the type and
 size&quot;.  0 for offset means start at the beginning of the buffer.  Setting
-them to values other than 0 is more complicated and though it has some
+them to values other than 0 is more complicated and though it might have some
 benefits in terms of performance it&#39;s not worth the complication unless
 you are trying to push WebGL to its absolute limits.</p>
 <p>I hope that clears up buffers and attributes.</p>
@@ -364,7 +372,12 @@ per vertex, a 75% savings.
 </p>
 <p>Let's change our code to do this. When we tell WebGL how to extract our colors we'd use</p>
 <pre class="prettyprint showlinemods">
-  gl.vertexAttribPointer(colorLocation, 4, gl.UNSIGNED_BYTE, true, 0, 0);
+  var size = 4;
+*  var type = gl.UNSIGNED_BYTE;
+*  var normalize = true;
+  var stride = 0;
+  var offset = 0;
+  gl.vertexAttribPointer(colorLocation, size, type, normalize, stride, offset);
 </pre>
 <p>And when we fill out our buffer with colors we'd use</p>
 <pre class="prettyprint showlinemods">
