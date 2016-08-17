@@ -41,10 +41,7 @@
     define([], factory);
   } else {
     // Browser globals
-    var lib = factory();
-    Object.keys(lib).forEach(function(key) {
-      root[key] = lib[key];
-    });
+    root.m4 = factory();
   }
 }(this, function () {
 
@@ -65,6 +62,71 @@
    * @typedef {number[]|TypedArray} Matrix4
    * @memberOf module:webgl-3d-math
    */
+
+  /**
+   * Takes two 4-by-4 matrices, a and b, and computes the product in the order
+   * that pre-composes b with a.  In other words, the matrix returned will
+   * transform by b first and then a.  Note this is subtly different from just
+   * multiplying the matrices together.  For given a and b, this function returns
+   * the same object in both row-major and column-major mode.
+   * @param {Matrix4} a A matrix.
+   * @param {Matrix4} b A matrix.
+   * @param {Matrix4} [dst] optional matrix to store result
+   * @return {Matrix4} dst or a new matrix of none provided
+   */
+  function multiply(a, b, dst) {
+    dst = dst || new Float32Array(16);
+    var b00 = b[0 * 4 + 0];
+    var b01 = b[0 * 4 + 1];
+    var b02 = b[0 * 4 + 2];
+    var b03 = b[0 * 4 + 3];
+    var b10 = b[1 * 4 + 0];
+    var b11 = b[1 * 4 + 1];
+    var b12 = b[1 * 4 + 2];
+    var b13 = b[1 * 4 + 3];
+    var b20 = b[2 * 4 + 0];
+    var b21 = b[2 * 4 + 1];
+    var b22 = b[2 * 4 + 2];
+    var b23 = b[2 * 4 + 3];
+    var b30 = b[3 * 4 + 0];
+    var b31 = b[3 * 4 + 1];
+    var b32 = b[3 * 4 + 2];
+    var b33 = b[3 * 4 + 3];
+    var a00 = a[0 * 4 + 0];
+    var a01 = a[0 * 4 + 1];
+    var a02 = a[0 * 4 + 2];
+    var a03 = a[0 * 4 + 3];
+    var a10 = a[1 * 4 + 0];
+    var a11 = a[1 * 4 + 1];
+    var a12 = a[1 * 4 + 2];
+    var a13 = a[1 * 4 + 3];
+    var a20 = a[2 * 4 + 0];
+    var a21 = a[2 * 4 + 1];
+    var a22 = a[2 * 4 + 2];
+    var a23 = a[2 * 4 + 3];
+    var a30 = a[3 * 4 + 0];
+    var a31 = a[3 * 4 + 1];
+    var a32 = a[3 * 4 + 2];
+    var a33 = a[3 * 4 + 3];
+    dst[ 0] = b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30;
+    dst[ 1] = b00 * a01 + b01 * a11 + b02 * a21 + b03 * a31;
+    dst[ 2] = b00 * a02 + b01 * a12 + b02 * a22 + b03 * a32;
+    dst[ 3] = b00 * a03 + b01 * a13 + b02 * a23 + b03 * a33;
+    dst[ 4] = b10 * a00 + b11 * a10 + b12 * a20 + b13 * a30;
+    dst[ 5] = b10 * a01 + b11 * a11 + b12 * a21 + b13 * a31;
+    dst[ 6] = b10 * a02 + b11 * a12 + b12 * a22 + b13 * a32;
+    dst[ 7] = b10 * a03 + b11 * a13 + b12 * a23 + b13 * a33;
+    dst[ 8] = b20 * a00 + b21 * a10 + b22 * a20 + b23 * a30;
+    dst[ 9] = b20 * a01 + b21 * a11 + b22 * a21 + b23 * a31;
+    dst[10] = b20 * a02 + b21 * a12 + b22 * a22 + b23 * a32;
+    dst[11] = b20 * a03 + b21 * a13 + b22 * a23 + b23 * a33;
+    dst[12] = b30 * a00 + b31 * a10 + b32 * a20 + b33 * a30;
+    dst[13] = b30 * a01 + b31 * a11 + b32 * a21 + b33 * a31;
+    dst[14] = b30 * a02 + b31 * a12 + b32 * a22 + b33 * a32;
+    dst[15] = b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33;
+    return dst;
+  }
+
 
   /**
    * subtracts 2 vectors3s
@@ -123,7 +185,7 @@
    * @return {Matrix4} dst or a new matrix of none provided
    * @memberOf module:webgl-3d-math
    */
-  function makeIdentity(dst) {
+  function identity(dst) {
     dst = dst || new Float32Array(16);
 
     dst[ 0] = 1;
@@ -153,7 +215,7 @@
    * @return {Matrix4} dst or a new matrix of none provided
    * @memberOf module:webgl-3d-math
    */
-  function makeTranspose(m, dst) {
+  function transpose(m, dst) {
     dst = dst || new Float32Array(16);
 
     dst[ 0] = m[0];
@@ -188,7 +250,7 @@
    * @return {Matrix4} dst or a new matrix of none provided
    * @memberOf module:webgl-3d-math
    */
-  function makeLookAt(cameraPosition, target, up, dst) {
+  function lookAt(cameraPosition, target, up, dst) {
     dst = dst || new Float32Array(16);
     var zAxis = normalize(
         subtractVectors(cameraPosition, target));
@@ -234,7 +296,7 @@
    * @return {Matrix4} dst or a new matrix of none provided
    * @memberOf module:webgl-3d-math
    */
-  function makePerspective(fieldOfViewInRadians, aspect, near, far, dst) {
+  function perspective(fieldOfViewInRadians, aspect, near, far, dst) {
     dst = dst || new Float32Array(16);
     var f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians);
     var rangeInv = 1.0 / (near - far);
@@ -277,7 +339,7 @@
    * @return {Matrix4} dst or a new matrix of none provided
    * @memberOf module:webgl-3d-math
    */
-  function makeOrthographic(left, right, bottom, top, near, far, dst) {
+  function orthographic(left, right, bottom, top, near, far, dst) {
     dst = dst || new Float32Array(16);
 
     dst[ 0] = 2 / (right - left);
@@ -319,7 +381,7 @@
    * @return {Matrix4} dst or a new matrix of none provided
    * @memberOf module:webgl-3d-math
    */
-  function makeFrustum(left, right, bottom, top, near, far) {
+  function frustum(left, right, bottom, top, near, far) {
     var dx = right - left;
     var dy = top - bottom;
     var dz = far - near;
@@ -353,7 +415,7 @@
    * @return {Matrix4} dst or a new matrix of none provided
    * @memberOf module:webgl-3d-math
    */
-  function makeTranslation(tx, ty, tz, dst) {
+  function translation(tx, ty, tz, dst) {
     dst = dst || new Float32Array(16);
 
     dst[ 0] = 1;
@@ -377,13 +439,28 @@
   }
 
   /**
+   * Mutliply by translation matrix.
+   * @param {Matrix4} m matrix to multiply
+   * @param {number} tx x translation.
+   * @param {number} ty y translation.
+   * @param {number} tz z translation.
+   * @param {Matrix4} [dst] optional matrix to store result
+   * @return {Matrix4} dst or a new matrix of none provided
+   * @memberOf module:webgl-3d-math
+   */
+  function translate(m, tx, ty, tz, dst) {
+    var b = translation(tx, ty, tz, dst);
+    return mutliply(m, b, b);
+  }
+
+  /**
    * Makes an x rotation matrix
    * @param {number} angleInRadians amount to rotate
    * @param {Matrix4} [dst] optional matrix to store result
    * @return {Matrix4} dst or a new matrix of none provided
    * @memberOf module:webgl-3d-math
    */
-  function makeXRotation(angleInRadians, dst) {
+  function xRotation(angleInRadians, dst) {
     dst = dst || new Float32Array(16);
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
@@ -409,13 +486,26 @@
   }
 
   /**
+   * Multiply by an x rotation matrix
+   * @param {Matrix4} m matrix to multiply
+   * @param {number} angleInRadians amount to rotate
+   * @param {Matrix4} [dst] optional matrix to store result
+   * @return {Matrix4} dst or a new matrix of none provided
+   * @memberOf module:webgl-3d-math
+   */
+  function xRotate(m, angleInRadians, dst) {
+    var b = xRotations(angleInRadians, dst);
+    return multiply(m, b, b);
+  }
+
+  /**
    * Makes an y rotation matrix
    * @param {number} angleInRadians amount to rotate
    * @param {Matrix4} [dst] optional matrix to store result
    * @return {Matrix4} dst or a new matrix of none provided
    * @memberOf module:webgl-3d-math
    */
-  function makeYRotation(angleInRadians, dst) {
+  function yRotation(angleInRadians, dst) {
     dst = dst || new Float32Array(16);
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
@@ -441,13 +531,26 @@
   }
 
   /**
+   * Multiply by an y rotation matrix
+   * @param {Matrix4} m matrix to multiply
+   * @param {number} angleInRadians amount to rotate
+   * @param {Matrix4} [dst] optional matrix to store result
+   * @return {Matrix4} dst or a new matrix of none provided
+   * @memberOf module:webgl-3d-math
+   */
+  function yRotate(m, angleInRadians, dst) {
+    var b = yRotations(angleInRadians, dst);
+    return multiply(m, b, b);
+  }
+
+  /**
    * Makes an z rotation matrix
    * @param {number} angleInRadians amount to rotate
    * @param {Matrix4} [dst] optional matrix to store result
    * @return {Matrix4} dst or a new matrix of none provided
    * @memberOf module:webgl-3d-math
    */
-  function makeZRotation(angleInRadians, dst) {
+  function zRotation(angleInRadians, dst) {
     dst = dst || new Float32Array(16);
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
@@ -473,6 +576,19 @@
   }
 
   /**
+   * Multiply by an z rotation matrix
+   * @param {Matrix4} m matrix to multiply
+   * @param {number} angleInRadians amount to rotate
+   * @param {Matrix4} [dst] optional matrix to store result
+   * @return {Matrix4} dst or a new matrix of none provided
+   * @memberOf module:webgl-3d-math
+   */
+  function zRotate(m, angleInRadians, dst) {
+    var b = zRotations(angleInRadians, dst);
+    return multiply(m, b, b);
+  }
+
+  /**
    * Makes an rotation matrix around an arbitrary axis
    * @param {Vector3} axis axis to rotate around
    * @param {number} angleInRadians amount to rotate
@@ -480,7 +596,7 @@
    * @return {Matrix4} dst or a new matrix of none provided
    * @memberOf module:webgl-3d-math
    */
-  function makeAxisRotation(axis, angleInRadians, dst) {
+  function axisRotation(axis, angleInRadians, dst) {
     dst = dst || new Float32Array(16);
 
     var x = axis[0];
@@ -518,6 +634,20 @@
   }
 
   /**
+   * Multiply by an axis rotation matrix
+   * @param {Matrix4} m matrix to multiply
+   * @param {Vector3} axis axis to rotate around
+   * @param {number} angleInRadians amount to rotate
+   * @param {Matrix4} [dst] optional matrix to store result
+   * @return {Matrix4} dst or a new matrix of none provided
+   * @memberOf module:webgl-3d-math
+   */
+  function axisRotate(m, axis, angleInRadians, dst) {
+    var b = axisRotations(axis, angleInRadians, dst);
+    return multiply(m, b, b);
+  }
+
+  /**
    * Makes a scale matrix
    * @param {number} sx x scale.
    * @param {number} sy y scale.
@@ -526,7 +656,7 @@
    * @return {Matrix4} dst or a new matrix of none provided
    * @memberOf module:webgl-3d-math
    */
-  function makeScale(sx, sy, sz, dst) {
+  function scaling(sx, sy, sz, dst) {
     dst = dst || new Float32Array(16);
 
     dst[ 0] = sx;
@@ -550,67 +680,18 @@
   }
 
   /**
-   * Takes two 4-by-4 matrices, a and b, and computes the product in the order
-   * that pre-composes b with a.  In other words, the matrix returned will
-   * transform by b first and then a.  Note this is subtly different from just
-   * multiplying the matrices together.  For given a and b, this function returns
-   * the same object in both row-major and column-major mode.
-   * @param {Matrix4} a A matrix.
-   * @param {Matrix4} b A matrix.
+   * Multiply by a scaling matrix
+   * @param {Matrix4} m matrix to multiply
+   * @param {number} sx x scale.
+   * @param {number} sy y scale.
+   * @param {number} sz z scale.
    * @param {Matrix4} [dst] optional matrix to store result
    * @return {Matrix4} dst or a new matrix of none provided
+   * @memberOf module:webgl-3d-math
    */
-  function matrixMultiply(a, b, dst) {
-    dst = dst || new Float32Array(16);
-    var a00 = a[0 * 4 + 0];
-    var a01 = a[0 * 4 + 1];
-    var a02 = a[0 * 4 + 2];
-    var a03 = a[0 * 4 + 3];
-    var a10 = a[1 * 4 + 0];
-    var a11 = a[1 * 4 + 1];
-    var a12 = a[1 * 4 + 2];
-    var a13 = a[1 * 4 + 3];
-    var a20 = a[2 * 4 + 0];
-    var a21 = a[2 * 4 + 1];
-    var a22 = a[2 * 4 + 2];
-    var a23 = a[2 * 4 + 3];
-    var a30 = a[3 * 4 + 0];
-    var a31 = a[3 * 4 + 1];
-    var a32 = a[3 * 4 + 2];
-    var a33 = a[3 * 4 + 3];
-    var b00 = b[0 * 4 + 0];
-    var b01 = b[0 * 4 + 1];
-    var b02 = b[0 * 4 + 2];
-    var b03 = b[0 * 4 + 3];
-    var b10 = b[1 * 4 + 0];
-    var b11 = b[1 * 4 + 1];
-    var b12 = b[1 * 4 + 2];
-    var b13 = b[1 * 4 + 3];
-    var b20 = b[2 * 4 + 0];
-    var b21 = b[2 * 4 + 1];
-    var b22 = b[2 * 4 + 2];
-    var b23 = b[2 * 4 + 3];
-    var b30 = b[3 * 4 + 0];
-    var b31 = b[3 * 4 + 1];
-    var b32 = b[3 * 4 + 2];
-    var b33 = b[3 * 4 + 3];
-    dst[ 0] = a00 * b00 + a01 * b10 + a02 * b20 + a03 * b30;
-    dst[ 1] = a00 * b01 + a01 * b11 + a02 * b21 + a03 * b31;
-    dst[ 2] = a00 * b02 + a01 * b12 + a02 * b22 + a03 * b32;
-    dst[ 3] = a00 * b03 + a01 * b13 + a02 * b23 + a03 * b33;
-    dst[ 4] = a10 * b00 + a11 * b10 + a12 * b20 + a13 * b30;
-    dst[ 5] = a10 * b01 + a11 * b11 + a12 * b21 + a13 * b31;
-    dst[ 6] = a10 * b02 + a11 * b12 + a12 * b22 + a13 * b32;
-    dst[ 7] = a10 * b03 + a11 * b13 + a12 * b23 + a13 * b33;
-    dst[ 8] = a20 * b00 + a21 * b10 + a22 * b20 + a23 * b30;
-    dst[ 9] = a20 * b01 + a21 * b11 + a22 * b21 + a23 * b31;
-    dst[10] = a20 * b02 + a21 * b12 + a22 * b22 + a23 * b32;
-    dst[11] = a20 * b03 + a21 * b13 + a22 * b23 + a23 * b33;
-    dst[12] = a30 * b00 + a31 * b10 + a32 * b20 + a33 * b30;
-    dst[13] = a30 * b01 + a31 * b11 + a32 * b21 + a33 * b31;
-    dst[14] = a30 * b02 + a31 * b12 + a32 * b22 + a33 * b32;
-    dst[15] = a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33;
-    return dst;
+  function scale(m, sx, sy, sz, dst) {
+    var b = scaling(sx, sy, sz, dst);
+    return multiply(m, b, b);
   }
 
   /**
@@ -620,7 +701,7 @@
    * @return {Matrix4} dst or a new matrix of none provided
    * @memberOf module:webgl-3d-math
    */
-  function makeInverse(m, dst) {
+  function inverse(m, dst) {
     dst = dst || new Float32Array(16);
     var m00 = m[0 * 4 + 0];
     var m01 = m[0 * 4 + 1];
@@ -794,7 +875,7 @@
    */
   function transformNormal(m, v, dst) {
     dst = dst || new Float32Array(3);
-    var mi = makeInverse(m);
+    var mi = inverse(m);
     var v0 = v[0];
     var v1 = v[1];
     var v2 = v[2];
@@ -831,23 +912,29 @@
 
   return {
     copyMatrix: copyMatrix,
-    makeLookAt: makeLookAt,
+    lookAt: lookAt,
     subtractVectors: subtractVectors,
     normalize: normalize,
     cross: cross,
-    makeIdentity: makeIdentity,
-    makeTranspose: makeTranspose,
-    makeOrthographic: makeOrthographic,
-    makeFrustum: makeFrustum,
-    makePerspective: makePerspective,
-    makeTranslation: makeTranslation,
-    makeXRotation: makeXRotation,
-    makeYRotation: makeYRotation,
-    makeZRotation: makeZRotation,
-    makeAxisRotation: makeAxisRotation,
-    makeScale: makeScale,
-    matrixMultiply: matrixMultiply,
-    makeInverse: makeInverse,
+    identity: identity,
+    transpose: transpose,
+    orthographic: orthographic,
+    frustum: frustum,
+    perspective: perspective,
+    translation: translation,
+    translate: translate,
+    xRotation: xRotation,
+    yRotation: yRotation,
+    zRotation: zRotation,
+    xRotate: xRotate,
+    yRotate: yRotate,
+    zRotate: zRotate,
+    axisRotation: axisRotation,
+    axisRotate: axisRotate,
+    scaling: scaling,
+    scale: scale,
+    multiply: multiply,
+    inverse: inverse,
     matrixVectorMultiply: matrixVectorMultiply,
     transformPoint: transformPoint,
     transformDirection: transformDirection,
