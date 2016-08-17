@@ -37,10 +37,7 @@
     });
   } else {
     // Browser globals
-    var lib = factory.call(root);
-    Object.keys(lib).forEach(function(key) {
-      root[key] = lib[key];
-    });
+    root.webglUtils = factory.call(root);
   }
 }(this, function () {
   "use strict";  // eslint-disable-line
@@ -621,7 +618,7 @@
       var script = document.getElementById(source);
       return script ? script.text : source;
     });
-    var program = createProgramFromSources(gl, shaderSources, opt_attribs, opt_locations, opt_errorCallback);
+    var program = webglUtils.createProgramFromSources(gl, shaderSources, opt_attribs, opt_locations, opt_errorCallback);
     if (!program) {
       return null;
     }

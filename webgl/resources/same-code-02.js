@@ -81,7 +81,7 @@ function main() {
   var canvas = isCanvas ? container : document.createElement("canvas");
   var gl = canvas.getContext("webgl", { alpha: false });
   if (!gl) {
-    showNeedWebGL2(gl.canvas);
+    webglLessonsHelper.showNeedWebGL2(gl.canvas);
     return;
   }
 

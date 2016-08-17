@@ -206,8 +206,14 @@ We now have to supply colors for WebGL to use.
 
       // setup attributes
       ...
+    +  // tell the color attribute how to pull data out of the current ARRAY_BUFFER
     +  gl.enableVertexAttribArray(colorLocation);
-    +  gl.vertexAttribPointer(colorLocation, 4, gl.FLOAT, false, 0, 0);
+    +  var size = 4;
+    +  var type = gl.FLOAT;
+    +  var normalize = false;
+    +  var stride = 0;
+    +  var offset = 0;
+    +  gl.vertexAttribPointer(colorLocation, size, type, normalize, stride, offset);
 
       ...
 

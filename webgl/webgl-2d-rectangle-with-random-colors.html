@@ -69,15 +69,15 @@ void main() {
 function main() {
   // Get A WebGL context
   var canvas = document.getElementById("canvas");
-  WebGLLessonsHelper.setupLesson(canvas);
+  webglLessonsHelper.setupLesson(canvas);
   var gl = canvas.getContext("webgl2");
   if (!gl) {
-    WebGLLessonsHelper.showNeedWebGL2(gl.canvas);
+    webglLessonsHelper.showNeedWebGL2(gl.canvas);
     return;
   }
 
   // setup GLSL program
-  var program = createProgramFromSources(gl, [vs, fs]);
+  var program = webglUtils.createProgramFromSources(gl, [vs, fs]);
   gl.useProgram(program);
 
   // look up where the vertex data needs to go.
@@ -129,11 +129,11 @@ function main() {
   drawScene();
 
   // Setup a ui.
-  WebGLLessonsHelper.setupSlider("#x",      {value: translation[0], slide: updatePosition(0), max: canvas.width });
-  WebGLLessonsHelper.setupSlider("#y",      {value: translation[1], slide: updatePosition(1), max: canvas.height});
-  WebGLLessonsHelper.setupSlider("#angle",  {slide: updateAngle, max: 360});
-  WebGLLessonsHelper.setupSlider("#scaleX", {value: scale[0], slide: updateScale(0), min: -5, max: 5, step: 0.01, precision: 2});
-  WebGLLessonsHelper.setupSlider("#scaleY", {value: scale[1], slide: updateScale(1), min: -5, max: 5, step: 0.01, precision: 2});
+  webglLessonsHelper.setupSlider("#x",      {value: translation[0], slide: updatePosition(0), max: canvas.width });
+  webglLessonsHelper.setupSlider("#y",      {value: translation[1], slide: updatePosition(1), max: canvas.height});
+  webglLessonsHelper.setupSlider("#angle",  {slide: updateAngle, max: 360});
+  webglLessonsHelper.setupSlider("#scaleX", {value: scale[0], slide: updateScale(0), min: -5, max: 5, step: 0.01, precision: 2});
+  webglLessonsHelper.setupSlider("#scaleY", {value: scale[1], slide: updateScale(1), min: -5, max: 5, step: 0.01, precision: 2});
 
   function updatePosition(index) {
     return function(event, ui) {
