@@ -39,6 +39,37 @@ Drag sliders to translate, rotate, and scale.
 <script>
 "use strict";
 
+var vs = `#version 300 es
+in vec2 a_position;
+
+uniform mat3 u_matrix;
+
+out vec4 v_color;
+
+void main() {
+  // Multiply the position by the matrix.
+  gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
+
+  // Convert from clipspace to colorspace.
+  // Clipspace goes -1.0 to +1.0
+  // Colorspace goes from 0.0 to 1.0
+  v_color = gl_Position * 0.5 + 0.5;
+}
+`;
+
+var fs = `#version 300 es
+
+precision mediump float;
+
+in vec4 v_color;
+
+out vec4 outColor;
+
+void main() {
+  outColor = v_color;
+}
+`;
+
 function main() {
   // Get A WebGL context
   var canvas = document.getElementById("canvas");
@@ -50,8 +81,7 @@ function main() {
   }
 
   // setup GLSL program
-  var program = createProgramFromScripts(gl, ["2d-vertex-shader", "2d-fragment-shader"]);
-  gl.useProgram(program);
+  var program = createProgramFromSources(gl, [vs, fs]);
 
   // look up where the vertex data needs to go.
   var positionLocation = gl.getAttribLocation(program, "a_position");
@@ -62,11 +92,17 @@ function main() {
   // Create a buffer.
   var buffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.enableVertexAttribArray(positionLocation);
-  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
   // Set Geometry.
   setGeometry(gl);
+
+  // Create set of attributes
+  var vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+
+  // setup attributes
+  gl.enableVertexAttribArray(positionLocation);
+  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
   var translation = [200, 150];
   var angleInRadians = 0;
@@ -103,6 +139,8 @@ function main() {
 
   // Draw the scene.
   function drawScene() {
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
     // Clear the canvas.
     gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -117,11 +155,16 @@ function main() {
     matrix = matrixMultiply(matrix, translationMatrix);
     matrix = matrixMultiply(matrix, projectionMatrix);
 
+    gl.bindVertexArray(vao);
+    gl.useProgram(program);
+
     // Set the matrix.
     gl.uniformMatrix3fv(matrixLocation, false, matrix);
 
     // Draw the geometry.
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    var offset = 0;
+    var count = 3;
+    gl.drawArrays(gl.TRIANGLES, offset, count);
   }
 }
 
@@ -139,34 +182,6 @@ function setGeometry(gl) {
 $(function(){
   main();
 });
-</script>
-<!-- vertex shader -->
-<script id="2d-vertex-shader" type="x-shader/x-vertex">
-attribute vec2 a_position;
-
-uniform mat3 u_matrix;
-
-varying vec4 v_color;
-
-void main() {
-  // Multiply the position by the matrix.
-  gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
-
-  // Convert from clipspace to colorspace.
-  // Clipspace goes -1.0 to +1.0
-  // Colorspace goes from 0.0 to 1.0
-  v_color = gl_Position * 0.5 + 0.5;
-}
-</script>
-<!-- fragment shader -->
-<script id="2d-fragment-shader" type="x-shader/x-fragment">
-precision mediump float;
-
-varying vec4 v_color;
-
-void main() {
-  gl_FragColor = v_color;
-}
 </script>
 </html>
 
