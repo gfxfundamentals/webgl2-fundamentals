@@ -3,7 +3,6 @@ TO DO
 
 Fix articles
 
-*   webgl-how-it-works.html
 *   webgl-shaders-and-glsl.html
 *   webgl-image-processing.html
 *   webgl-image-processing-continued.html
@@ -34,9 +33,41 @@ Fix articles
 *   webgl-2d-vs-3d-library.html
 *   webgl-anti-patterns.html
 
+Cover WebGL1->2
 
+*  getContext("webgl2")
+*  #version es 300
+*  attribute -> in
+*  varying -> in/out
+*  gl_FragColor -> out vec4 someName;
+*  texture2D/textureCube -> texture
+*  mod to %
+*  npot no longer an issue
+*  many extensions not needed
+   *  depth texture
+   *  floating point textures
+   *  vertex array objects
+   *  standard deviations
+   *  instanced drawing
+   *  textures in vertex shaders (were optional)
 
+*  use vertex array objects
+*  use uniform buffer objects
 
+New Features
+
+*  integer textures/attributes and math
+*  transform feedback
+*  samplers (what's the point?)
+*  lots of texture formats
+*  3d textures
+*  texture arrays
+*  common compressed textures
+*  compressed vertices (what's the point?)
+*  loop restrictions in shaders removed only in 300 es (GL more secure?)
+*  indexing sampler arrays restiction removed
+
+Misc
 
 *   move scripts to bottom
 *   remove on window
@@ -49,4 +80,5 @@ DONE
 ----
 
 *   webgl-fundamentals.html
+*   webgl-how-it-works.html
 
