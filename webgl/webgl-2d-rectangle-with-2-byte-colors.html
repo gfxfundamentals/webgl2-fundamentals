@@ -3,8 +3,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>WebGL2 - Rectangle with 2 colors</title>
-<link type="text/css" href="resources/css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
+<title>WebGL2 - Rectangle with 2 UNSIGNED_BYTE colors</title>
 <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
 <style>
 #ui {
@@ -30,27 +29,55 @@ Drag sliders to translate, rotate, and scale.
   </div>
 </div>
 </body>
-<script src="resources/jquery-1.7.1.min.js"></script>
-<script src="resources/jquery-ui-1.8.16.custom.min.js"></script>
-<script src="resources/jquery.gman.ui.js"></script>
 <script src="resources/webgl-utils.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script>
 <script src="resources/webgl-2d-math.js"></script>
 <script>
 "use strict";
 
+var vs = `#version 300 es
+
+in vec2 a_position;
+in vec4 a_color;
+
+uniform mat3 u_matrix;
+
+out vec4 v_color;
+
+void main() {
+  // Multiply the position by the matrix.
+  gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
+
+  // Copy the color from the attribute to the varying.
+  v_color = a_color;
+}
+`;
+
+var fs = `#version 300 es
+
+precision mediump float;
+
+in vec4 v_color;
+
+out vec4 outColor;
+
+void main() {
+  outColor = v_color;
+}
+`;
+
 function main() {
   // Get A WebGL context
   var canvas = document.getElementById("canvas");
-  setupLesson(canvas);
+  WebGLLessonsHelper.setupLesson(canvas);
   var gl = canvas.getContext("webgl2");
   if (!gl) {
-    showNeedWebGL2(gl.canvas);
+    WebGLLessonsHelper.showNeedWebGL2(gl.canvas);
     return;
   }
 
   // setup GLSL program
-  var program = createProgramFromScripts(gl, ["2d-vertex-shader", "2d-fragment-shader"]);
+  var program = createProgramFromSources(gl, [vs, fs]);
   gl.useProgram(program);
 
   // look up where the vertex data needs to go.
@@ -60,23 +87,40 @@ function main() {
   // lookup uniforms
   var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 
+  // Create set of attributes
+  var vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+
   // Create a buffer for the positons.
   var buffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.enableVertexAttribArray(positionLocation);
-  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
   // Set Geometry.
   setGeometry(gl);
 
+  // tell the position attribute how to pull data out of the current ARRAY_BUFFER
+  gl.enableVertexAttribArray(positionLocation);
+  var size = 2;
+  var type = gl.FLOAT;
+  var normalize = false;
+  var stride = 0;
+  var offset = 0;
+  gl.vertexAttribPointer(positionLocation, size, type, normalize, stride, offset);
+
   // Create a buffer for the colors.
   var buffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.enableVertexAttribArray(colorLocation);
-  gl.vertexAttribPointer(colorLocation, 4, gl.UNSIGNED_BYTE, true, 0, 0);
-
   // Set the colors.
   setColors(gl);
+
+  // tell the color attribute how to pull data out of the current ARRAY_BUFFER
+  gl.enableVertexAttribArray(colorLocation);
+  var size = 4;
+  var type = gl.UNSIGNED_BYTE;
+  var normalize = true;
+  var stride = 0;
+  var offset = 0;
+  gl.vertexAttribPointer(colorLocation, size, type, normalize, stride, offset);
 
   var translation = [200, 150];
   var angleInRadians = 0;
@@ -85,11 +129,11 @@ function main() {
   drawScene();
 
   // Setup a ui.
-  $("#x").gmanSlider({value: translation[0], slide: updatePosition(0), max: canvas.width });
-  $("#y").gmanSlider({value: translation[1], slide: updatePosition(1), max: canvas.height});
-  $("#angle").gmanSlider({slide: updateAngle, max: 360});
-  $("#scaleX").gmanSlider({value: scale[0], slide: updateScale(0), min: -5, max: 5, step: 0.01, precision: 2});
-  $("#scaleY").gmanSlider({value: scale[1], slide: updateScale(1), min: -5, max: 5, step: 0.01, precision: 2});
+  WebGLLessonsHelper.setupSlider("#x",      {value: translation[0], slide: updatePosition(0), max: canvas.width });
+  WebGLLessonsHelper.setupSlider("#y",      {value: translation[1], slide: updatePosition(1), max: canvas.height});
+  WebGLLessonsHelper.setupSlider("#angle",  {slide: updateAngle, max: 360});
+  WebGLLessonsHelper.setupSlider("#scaleX", {value: scale[0], slide: updateScale(0), min: -5, max: 5, step: 0.01, precision: 2});
+  WebGLLessonsHelper.setupSlider("#scaleY", {value: scale[1], slide: updateScale(1), min: -5, max: 5, step: 0.01, precision: 2});
 
   function updatePosition(index) {
     return function(event, ui) {
@@ -113,30 +157,29 @@ function main() {
 
   // Draw the scene.
   function drawScene() {
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
     // Clear the canvas.
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     // Compute the matrices
-    var projectionMatrix = make2DProjection(canvas.clientWidth, canvas.clientHeight);
-    var translationMatrix = makeTranslation(translation[0], translation[1]);
-    var rotationMatrix = makeRotation(angleInRadians);
-    var scaleMatrix = makeScale(scale[0], scale[1]);
-
-    // Multiply the matrices.
-    var matrix = matrixMultiply(scaleMatrix, rotationMatrix);
-    matrix = matrixMultiply(matrix, translationMatrix);
-    matrix = matrixMultiply(matrix, projectionMatrix);
+    var matrix = m3.projection(gl.canvas.clientWidth, gl.canvas.clientHeight);
+    matrix = m3.translate(matrix, translation[0], translation[1]);
+    matrix = m3.rotate(matrix, angleInRadians);
+    matrix = m3.scale(matrix, scale[0], scale[1]);
 
     // Set the matrix.
     gl.uniformMatrix3fv(matrixLocation, false, matrix);
 
     // Draw the geometry.
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    var offset = 0;
+    var count = 6;
+    gl.drawArrays(gl.TRIANGLES, offset, count);
   }
 }
 
 
-// Fill the buffer with the values that define a rectangle.
+// Fill the current buffer with the values that define a rectangle.
 function setGeometry(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
@@ -150,7 +193,7 @@ function setGeometry(gl) {
       gl.STATIC_DRAW);
 }
 
-// Fill the buffer with colors for the 2 triangles
+// Fill the current buffer with colors for the 2 triangles
 // that make the rectangle.
 function setColors(gl) {
   // Pick 2 random colors.
@@ -173,36 +216,7 @@ function setColors(gl) {
       gl.STATIC_DRAW);
 }
 
-$(function(){
-  main();
-});
-</script>
-<!-- vertex shader -->
-<script id="2d-vertex-shader" type="x-shader/x-vertex">
-attribute vec2 a_position;
-attribute vec4 a_color;
-
-uniform mat3 u_matrix;
-
-varying vec4 v_color;
-
-void main() {
-  // Multiply the position by the matrix.
-  gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
-
-  // Copy the color from the attribute to the varying.
-  v_color = a_color;
-}
-</script>
-<!-- fragment shader -->
-<script id="2d-fragment-shader" type="x-shader/x-fragment">
-precision mediump float;
-
-varying vec4 v_color;
-
-void main() {
-  gl_FragColor = v_color;
-}
+main();
 </script>
 </html>
 
