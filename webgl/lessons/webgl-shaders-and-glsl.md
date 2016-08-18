@@ -16,6 +16,7 @@ WebGL app will have many shader programs.
 
 A Vertex Shader's job is to generate clipspace coordinates. It always takes the form
 
+    #version 300 es
     void main() {
        gl_Position = doMathToMakeClipspaceCoordinates
     }
@@ -31,7 +32,7 @@ Vertex shaders need data. They can get that data in 3 ways.
 
 ### Attributes
 
-The most common way is through buffers and *attributes*.
+The most common way for a vertex shader to get data is through buffers and *attributes*.
 [How it works](webgl-how-it-works.html) covered buffers and
 attributes. You create buffers,
 
@@ -63,7 +64,9 @@ then tell WebGL how to pull data out of those buffers and into the attribute
 In [WebGL fundamentals](webgl-fundamentals.html) we showed that we can do no math
 in the shader and just pass the data directly through.
 
-    attribute vec4 a_position;
+    #version 300 es
+
+    in vec4 a_position;
 
     void main() {
        gl_Position = a_position;
@@ -71,7 +74,8 @@ in the shader and just pass the data directly through.
 
 If we put clipspace vertices into our buffers it will work.
 
-Attributes can use `float`, `vec2`, `vec3`, `vec4`, `mat2`, `mat3`, and `mat4` as types.
+Attributes can use `float`, `vec2`, `vec3`, `vec4`, `mat2`, `mat3`, `mat4`,
+`int`, `ivec2`, `ivec3`, `ivec4`, `uint`, `uvec2`, `uvec3`, `uvec4` as types.
 
 ### Uniforms
 
@@ -79,7 +83,9 @@ For a vertex shader uniforms are values passed to the vertex shader that stay th
 for all vertices in a draw call. As a very simple example we could add an offset to
 the vertex shader above
 
-    attribute vec4 a_position;
+    #version 300 es
+
+    in vec4 a_position;
     +uniform vec4 u_offset;
 
     void main() {
@@ -119,14 +125,22 @@ Uniforms can be many types. For each type you have to call the corresponding fun
     gl.uniform4i (ivec4UniformLoc, v0, v1, v2, v4);    // for ivec4
     gl.uniform4iv(ivec4UniformLoc, [v0, v1, v2, v4]);  // for ivec4 or ivec4 array
 
-    gl.uniform1i (sampler2DUniformLoc,   v);           // for sampler2D (textures)
-    gl.uniform1iv(sampler2DUniformLoc, [v]);           // for sampler2D or sampler2D array
+    gl.uniform1u (intUniformLoc,   v);                 // for uint
+    gl.uniform1uv(intUniformLoc, [v]);                 // for uint or uint array
+    gl.uniform2u (ivec2UniformLoc, v0, v1);            // for uvec2
+    gl.uniform2uv(ivec2UniformLoc, [v0, v1]);          // for uvec2 or uvec2 array
+    gl.uniform3u (ivec3UniformLoc, v0, v1, v2);        // for uvec3
+    gl.uniform3uv(ivec3UniformLoc, [v0, v1, v2]);      // for uvec3 or uvec3 array
+    gl.uniform4u (ivec4UniformLoc, v0, v1, v2, v4);    // for uvec4
+    gl.uniform4uv(ivec4UniformLoc, [v0, v1, v2, v4]);  // for uvec4 or uvec4 array
 
-    gl.uniform1i (samplerCubeUniformLoc,   v);         // for samplerCube (textures)
-    gl.uniform1iv(samplerCubeUniformLoc, [v]);         // for samplerCube or samplerCube array
+    // for sampler2D, sampler3D, samplerCube, samplerCubeShader, sampler2DShadow,
+    // sampler2DArray, sampler2DArrayShadow
+    gl.uniform1i (samplerUniformLoc,   v);
+    gl.uniform1iv(samplerUniformLoc, [v]);
 
-There's also types `bool`, `bvec2`, `bvec3`, and `bvec4`. They use either the `gl.uniform?f?` or `gl.uniform?i?`
-functions.
+There's also types `bool`, `bvec2`, `bvec3`, and `bvec4`. They use either the `gl.uniform?f?`, `gl.uniform?i?`,
+or `gl.uniform?u?` functions.
 
 Note that for an array you can set all the uniforms of the array at once. For example
 
@@ -174,14 +188,17 @@ See [Textures in Fragment Shaders](#textures-in-fragment-shaders).
 A Fragment Shader's job is to provide a color for the current pixel being rasterized.
 It always takes the form
 
+    #version 300 es
     precision mediump float;
 
+    out vec4 outColor;  // you can pick any name
+
     void main() {
-       gl_FragColor = doMathToMakeAColor;
+       outColor = doMathToMakeAColor;
     }
 
 Your fragment shader is called once per pixel. Each time it's called you are required
-to set the special global variable, `gl_FragColor` to some color.
+to set your out variable to some color.
 
 Fragment shaders need data. They can get data in 3 ways
 
@@ -196,7 +213,7 @@ See [Uniforms in Vertex Shaders](#uniforms).
 ### Textures in Fragment Shaders
 
 Getting a value from a texture in a shader we create a `sampler2D` uniform and use the GLSL
-function `texture2D` to extract a value from it.
+function `texture` to extract a value from it.
 
     precision mediump float;
 
@@ -204,7 +221,7 @@ function `texture2D` to extract a value from it.
 
     void main() {
        vec2 texcoord = vec2(0.5, 0.5)  // get a value from the middle of the texture
-       gl_FragColor = texture2D(u_texture, texcoord);
+       gl_FragColor = texture(u_texture, texcoord);
     }
 
 What data comes out of the texture is [dependent on many settings](webgl-3d-textures.html).
@@ -213,10 +230,22 @@ At a minimum we need to create and put data in the texture, for example
     var tex = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, tex);
     var level = 0;
+    var internalFormat = gl.RGBA,
     var width = 2;
     var height = 1;
+    var border = 0; // MUST ALWAYS BE ZERO
+    var format = gl.RGBA;
+    var type = gl.UNSIGNED_BYTE;
     var data = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255]);
-    gl.texImage2D(gl.TEXTURE_2D, level, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
+    gl.texImage2D(gl.TEXTURE_2D,
+                  level,
+                  internalFormat,
+                  width,
+                  height,
+                  border,
+                  format,
+                  type,
+                  data);
 
 Then look up the uniform location in the shader program
 
@@ -238,17 +267,19 @@ A varying is a way to pass a value from a vertex shader to a fragment shader whi
 covered in [how it works](webgl-how-it-works.html).
 
 To use a varying we need to declare matching varyings in both a vertex and fragment shader.
-We set the varying in the vertex shader with some value per vertex. When WebGL draws pixels
-it will interpolate between those values and pass them to the corresponding varying in
+We set the *out* varying in the vertex shader with some value per vertex. When WebGL draws pixels
+it will optionallinterpolate between those values and pass them to the corresponding *in* varying in
 the fragment shader
 
 Vertex shader
 
-    attribute vec4 a_position;
+    #version 300 es
+
+    in vec4 a_position;
 
     uniform vec4 u_offset;
 
-    +varying vec4 v_positionWithOffset;
+    +out vec4 v_positionWithOffset;
 
     void main() {
       gl_Position = a_position + u_offset;
@@ -257,14 +288,17 @@ Vertex shader
 
 Fragment shader
 
+    #version 300 es
     precision mediump float;
 
-    +varying vec4 v_positionWithOffset;
+    +in vec4 v_positionWithOffset;
+
+    out vec4 outColor;
 
     void main() {
     +  // convert from clipsapce (-1 <-> +1) to color space (0 -> 1).
-    +  vec4 color = v_positionWithOffset * 0.5 + 0.5
-    +  gl_FragColor = color;
+    +  vec4 color = v_positionWithOffset * 0.5 + 0.5;
+    +  outColor = color;
     }
 
 The example above is a mostly nonsense example. It doesn't generally make sense to
@@ -273,7 +307,8 @@ it will work and produce colors.
 
 ## GLSL
 
-GLSL stands for Graphics Library Shader Language. It's the language shaders are written
+GLSL stands for [Graphics Library Shader Language](https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf).
+It's the language shaders are written
 in. It has some special semi unique features that are certainly not common in JavaScript.
 It's designed to do the math that is commonly needed to compute things for rasterizing
 graphics. So for example it has built in types like `vec2`, `vec3`, and `vec4` which
@@ -319,7 +354,7 @@ is the same as
 
     vec4(v.b, v.g, v.r, v.a)
 
-when constructing a vec or a mat you can supply multiple parts at once. So for example
+When constructing a vec or a mat you can supply multiple parts at once. So for example
 
     vec4(v.rgb, 1)
 
@@ -367,14 +402,14 @@ is the same as
       mix(v1.w, v2.w, f));
 
 You can see a list of all the GLSL functions on the last page of [the WebGL
-Reference Card](https://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf).
+Reference Card](https://www.khronos.org/files/webgl/webgl-reference-card-2_0.pdf).
 If you like really dry and verbose stuff you can try
-[the GLSL spec](https://www.khronos.org/files/opengles_shading_language.pdf).
+[the GLSL ES 3.00 spec](https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf).
 
 ## Putting it all togehter
 
 That's the point of this entire series of posts. WebGL is all about creating various shaders, supplying
-the data to those shaders and then calling `gl.drawArrays` or `gl.drawElements` to have WebGL process
+the data to those shaders and then calling `gl.drawArrays`, `gl.drawElements`, etc to have WebGL process
 the vertices by calling the current vertex shader for each vertex and then render pixels by calling the
 the current fragment shader for each pixel.
 
