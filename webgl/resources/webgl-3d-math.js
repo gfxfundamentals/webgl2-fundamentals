@@ -450,7 +450,7 @@
    */
   function translate(m, tx, ty, tz, dst) {
     var b = translation(tx, ty, tz, dst);
-    return mutliply(m, b, b);
+    return multiply(m, b, b);
   }
 
   /**
@@ -494,7 +494,7 @@
    * @memberOf module:webgl-3d-math
    */
   function xRotate(m, angleInRadians, dst) {
-    var b = xRotations(angleInRadians, dst);
+    var b = xRotation(angleInRadians, dst);
     return multiply(m, b, b);
   }
 
@@ -539,7 +539,7 @@
    * @memberOf module:webgl-3d-math
    */
   function yRotate(m, angleInRadians, dst) {
-    var b = yRotations(angleInRadians, dst);
+    var b = yRotation(angleInRadians, dst);
     return multiply(m, b, b);
   }
 
@@ -584,7 +584,7 @@
    * @memberOf module:webgl-3d-math
    */
   function zRotate(m, angleInRadians, dst) {
-    var b = zRotations(angleInRadians, dst);
+    var b = zRotation(angleInRadians, dst);
     return multiply(m, b, b);
   }
 
@@ -643,7 +643,7 @@
    * @memberOf module:webgl-3d-math
    */
   function axisRotate(m, axis, angleInRadians, dst) {
-    var b = axisRotations(axis, angleInRadians, dst);
+    var b = axisRotation(axis, angleInRadians, dst);
     return multiply(m, b, b);
   }
 
