@@ -64,7 +64,8 @@ function main() {
   }
 
   // Use our boilerplate utils to compile the shaders and link into a program
-  var program = webglUtils.createProgramFromSources(gl, [vertexShaderSource, fragmentShaderSource]);
+  var program = webglUtils.createProgramFromSources(gl,
+      [vertexShaderSource, fragmentShaderSource]);
 
   // look up where the vertex data needs to go.
   var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
@@ -73,22 +74,8 @@ function main() {
   var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
   var colorLocation = gl.getUniformLocation(program, "u_color");
 
-  // Create a buffer and put a single pixel space rectangle in
-  // it (2 triangles)
+  // Create a buffer
   var positionBuffer = gl.createBuffer();
-
-  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
-  var positions = [
-    10, 20,
-    80, 20,
-    10, 30,
-    10, 30,
-    80, 20,
-    80, 30,
-  ];
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
   // Create a vertex array object (attribute state)
   var vao = gl.createVertexArray();
@@ -98,6 +85,9 @@ function main() {
 
   // Turn on the attribute
   gl.enableVertexAttribArray(positionAttributeLocation);
+
+  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
   // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
   var size = 2;          // 2 components per iteration
@@ -114,12 +104,12 @@ function main() {
   // Tell it to use our program (pair of shaders)
   gl.useProgram(program);
 
-  // Set
-  gl.uniform2f(resolutionUniformLocation, canvas.width, canvas.height);
+  // Tell WebGL how to convert from clip space to pixels
+  gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
   // draw 50 random rectangles in random colors
   for (var ii = 0; ii < 50; ++ii) {
-    // Setup a random rectangle
+    // Put a rectangle in the position buffer
     setRectangle(
         gl, randomInt(300), randomInt(300), randomInt(300), randomInt(300));
 
