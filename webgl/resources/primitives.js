@@ -45,8 +45,8 @@
   }
 }(this, function (webglUtils, math3d) {
 
-  webglUtils = webglUtils || this;
-  math3d = math3d || this;
+  webglUtils = webglUtils || this.webglUtils;
+  math3d = math3d || this.math3d;
 
   function allButIndices(name) {
     return name !== "indices";
