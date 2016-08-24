@@ -78,15 +78,15 @@ function main() {
   var container = document.getElementById("canvas") || document.body;
   var isCanvas = (container instanceof HTMLCanvasElement);
   var canvas = isCanvas ? container : document.createElement("canvas");
-  var gl = canvas.getContext("webgl2", { alpha: false });
-  if (!gl) {
-    webglLessonsHelper.showNeedWebGL2(gl.canvas);
-    return;
-  }
-
   if (!isCanvas) {
     container.appendChild(canvas);
   }
+
+  var gl = canvas.getContext("webgl2", { alpha: false });
+  if (!gl) {
+    return;
+  }
+
 
   // setup GLSL program
   var programInfo = webglUtils.createProgramInfo(gl, [vertexShaderSource, fragmentShaderSource]);
