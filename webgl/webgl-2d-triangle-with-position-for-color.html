@@ -152,8 +152,11 @@ function main() {
     matrix = m3.rotate(matrix, angleInRadians);
     matrix = m3.scale(matrix, scale[0], scale[1]);
 
-    gl.bindVertexArray(vao);
+    // Tell it to use our program (pair of shaders)
     gl.useProgram(program);
+
+    // Bind the attribute/buffer set we want.
+    gl.bindVertexArray(vao);
 
     // Set the matrix.
     gl.uniformMatrix3fv(matrixLocation, false, matrix);

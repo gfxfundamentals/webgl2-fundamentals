@@ -25,13 +25,54 @@ Drag sliders to translate.
   </div>
 </div>
 </body>
-<script src="resources/jquery-1.7.1.min.js"></script>
-<script src="resources/jquery-ui-1.8.16.custom.min.js"></script>
-<script src="resources/jquery.gman.ui.js"></script>
 <script src="resources/webgl-utils.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script>
 <script>
 "use strict";
+
+var vertexShaderSource = `#version 300 es
+
+// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec2 a_position;
+
+// Used to pass in the resolution of the canvas
+uniform vec2 u_resolution;
+
+// translation to add to position
+uniform vec2 u_translation;
+
+// all shaders have a main function
+void main() {
+  // Add in the translation
+  vec2 position = a_position + u_translation;
+
+  // convert the position from pixels to 0.0 to 1.0
+  vec2 zeroToOne = position / u_resolution;
+
+  // convert from 0->1 to 0->2
+  vec2 zeroToTwo = zeroToOne * 2.0;
+
+  // convert from 0->2 to -1->+1 (clipspace)
+  vec2 clipSpace = zeroToTwo - 1.0;
+
+  gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+}
+`;
+
+var fragmentShaderSource = `#version 300 es
+
+precision mediump float;
+
+uniform vec4 u_color;
+
+// we need to declare an output for the fragment shader
+out vec4 outColor;
+
+void main() {
+  outColor = u_color;
+}
+`;
 
 function main() {
   // Get A WebGL context
@@ -43,40 +84,54 @@ function main() {
     return;
   }
 
-  // setup GLSL program
-  var program = createProgramFromScripts(gl, ["2d-vertex-shader", "2d-fragment-shader"]);
-  gl.useProgram(program);
+  // Use our boilerplate utils to compile the shaders and link into a program
+  var program = webglUtils.createProgramFromSources(gl,
+      [vertexShaderSource, fragmentShaderSource]);
 
   // look up where the vertex data needs to go.
-  var positionLocation = gl.getAttribLocation(program, "a_position");
+  var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
 
-  // lookup uniforms
-  var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+  // look up uniform locations
+  var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
   var colorLocation = gl.getUniformLocation(program, "u_color");
   var translationLocation = gl.getUniformLocation(program, "u_translation");
 
-  // set the resolution
-  gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+  // Create a buffer
+  var positionBuffer = gl.createBuffer();
 
-  // Create a buffer.
-  var buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.enableVertexAttribArray(positionLocation);
-  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+  // Create a vertex array object (attribute state)
+  var vao = gl.createVertexArray();
 
+  // and make it the one we're currently working with
+  gl.bindVertexArray(vao);
+
+  // Turn on the attribute
+  gl.enableVertexAttribArray(positionAttributeLocation);
+
+  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
   // Set Geometry.
   setGeometry(gl);
 
-  // Set a random color.
-  gl.uniform4f(colorLocation, Math.random(), Math.random(), Math.random(), 1);
+  // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+  var size = 2;          // 2 components per iteration
+  var type = gl.FLOAT;   // the data is 32bit floats
+  var normalize = false; // don't normalize the data
+  var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+  var offset = 0;        // start at the beginning of the buffer
+  gl.vertexAttribPointer(
+      positionAttributeLocation, size, type, normalize, stride, offset);
 
+  // First let's make some variables
+  // to hold the translation,
   var translation = [0, 0];
+  var color = [Math.random(), Math.random(), Math.random(), 1];
 
   drawScene();
 
   // Setup a ui.
-  $("#x").gmanSlider({slide: updatePosition(0), max: canvas.width });
-  $("#y").gmanSlider({slide: updatePosition(1), max: canvas.height});
+  webglLessonsHelper.setupSlider("#x", {slide: updatePosition(0), max: gl.canvas.width });
+  webglLessonsHelper.setupSlider("#y", {slide: updatePosition(1), max: gl.canvas.height});
 
   function updatePosition(index) {
     return function(event, ui) {
@@ -87,14 +142,29 @@ function main() {
 
   // Draw the scene.
   function drawScene() {
-    // Clear the canvas.
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    // Tell WebGL how to convert from clip space to pixels
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+    // Tell it to use our program (pair of shaders)
+    gl.useProgram(program);
+
+    // Bind the attribute/buffer set we want.
+    gl.bindVertexArray(vao);
+
+    // Tell WebGL how to convert from clip space to pixels
+    gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+
+    // Set the color.
+    gl.uniform4fv(colorLocation, color);
 
     // Set the translation.
     gl.uniform2fv(translationLocation, translation);
 
-    // Draw the geometry.
-    gl.drawArrays(gl.TRIANGLES, 0, 18);
+    // Draw the rectangle.
+    var primitiveType = gl.TRIANGLES;
+    var offset = 0;
+    var count = 6;
+    gl.drawArrays(primitiveType, offset, count);
   }
 }
 
@@ -129,42 +199,7 @@ function setGeometry(gl) {
       gl.STATIC_DRAW);
 }
 
-$(function(){
-  main();
-});
-</script>
-<!-- vertex shader -->
-<script id="2d-vertex-shader" type="x-shader/x-vertex">
-attribute vec2 a_position;
-
-uniform vec2 u_resolution;
-uniform vec2 u_translation;
-
-void main() {
-   // Add in the translation.
-   vec2 position = a_position + u_translation;
-
-   // convert the position from pixels to 0.0 to 1.0
-   vec2 zeroToOne = position / u_resolution;
-
-   // convert from 0->1 to 0->2
-   vec2 zeroToTwo = zeroToOne * 2.0;
-
-   // convert from 0->2 to -1->+1 (clipspace)
-   vec2 clipSpace = zeroToTwo - 1.0;
-
-   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
-}
-</script>
-<!-- fragment shader -->
-<script id="2d-fragment-shader" type="x-shader/x-fragment">
-precision mediump float;
-
-uniform vec4 u_color;
-
-void main() {
-   gl_FragColor = u_color;
-}
+main();
 </script>
 </html>
 

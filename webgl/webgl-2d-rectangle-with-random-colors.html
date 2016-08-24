@@ -163,6 +163,12 @@ function main() {
     // Clear the canvas.
     gl.clear(gl.COLOR_BUFFER_BIT);
 
+    // Tell it to use our program (pair of shaders)
+    gl.useProgram(program);
+
+    // Bind the attribute/buffer set we want.
+    gl.bindVertexArray(vao);
+
     // Compute the matrices
     var matrix = m3.projection(gl.canvas.clientWidth, gl.canvas.clientHeight);
     matrix = m3.translate(matrix, translation[0], translation[1]);
