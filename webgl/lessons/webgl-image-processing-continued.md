@@ -248,17 +248,17 @@ And then we can set it when we render with
 
 ```
   ...
-  +var flipYLocation = gl.getUniformLocation(program, "u_flipY");
++  var flipYLocation = gl.getUniformLocation(program, "u_flipY");
 
   ...
 
-  +// don't flip
-  +gl.uniform1f(flipYLocation, 1);
++  // don't flip
++  gl.uniform1f(flipYLocation, 1);
 
   ...
 
-  +// flip
-  +gl.uniform1f(flipYLocation, -1);
++  // flip
++  gl.uniform1f(flipYLocation, -1);
 ```
 
 I kept this example simple by using a single GLSL program that can achieve
