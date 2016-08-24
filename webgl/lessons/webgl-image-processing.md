@@ -116,7 +116,16 @@ Once it loads we'll draw it.
     +  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     +
     +  // Upload the image into the texture.
-    +  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    +  var mipLevel = 0;               // the largest mip
+    +  var internalFormat = gl.RGBA;   // format we want in the texture
+    +  var srcFormat = gl.RGBA;        // format of data we are supplying
+    +  var srcType = gl.UNSIGNED_BYTE  // type of data we are supplying
+    +  gl.texImage2D(gl.TEXTURE_2D,
+    +                mipLevel,
+    +                internalFormat,
+    +                srcFormat,
+    +                srcType,
+    +                image);
 
       ...
 
