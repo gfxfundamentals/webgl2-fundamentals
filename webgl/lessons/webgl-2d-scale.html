@@ -57,7 +57,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </head>
 <body>
 <div class="webgl_header">
-  <h1><a href="/">webgl2fundamentals.org</a></h1>
+  <h1><a href="/">WebGL2Fundamentals.org</a></h1>
 </div>
 
 
@@ -67,59 +67,76 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="row">
     <div class="col-sm-8 lesson-main">
-      <p>This post is a continuation of a series of posts about WebGL. The first <a href="webgl-fundamentals.html">started with fundamentals</a> and the previous was <a href="webgl-2d-rotation.html">about rotating geometry</a>.</p>
-<p>Scaling is just as <a href="webgl-2d-translation.html">easy as translation</a>.
-<!--more-->
-We multiply the position by our desired scale. Here are the changes from our <a href="webgl-2d-rotation.html">previous sample</a>.</p>
-<pre class="prettyprint showlinemods">
-&lt;script id="2d-vertex-shader" type="x-shader/x-vertex"&gt;
-attribute vec2 a_position;
+      <p>This post is a continuation of a series of posts about WebGL.
+The first <a href="webgl-fundamentals.html">started with fundamentals</a> and
+the previous was <a href="webgl-2d-rotation.html">about rotating geometry</a>.</p>
+<p>Scaling is just as <a href="webgl-2d-translation.html">easy as translation</a>.</p>
+<p>We multiply the position by our desired scale. Here are the changes
+from our <a href="webgl-2d-rotation.html">previous sample</a>.</p>
+<pre><code>#version 300 es
+
+in vec2 a_position;
 
 uniform vec2 u_resolution;
 uniform vec2 u_translation;
 uniform vec2 u_rotation;
-uniform vec2 u_scale;
++uniform vec2 u_scale;
 
 void main() {
-  // Scale the positon
-  vec2 scaledPosition = a_position * u_scale;
++  // Scale the positon
++  vec2 scaledPosition = a_position * u_scale;
 
   // Rotate the position
   vec2 rotatedPosition = vec2(
-     scaledPosition.x * u_rotation.y + scaledPosition.y * u_rotation.x,
-     scaledPosition.y * u_rotation.y - scaledPosition.x * u_rotation.x);
+*     scaledPosition.x * u_rotation.y + scaledPosition.y * u_rotation.x,
+*     scaledPosition.y * u_rotation.y - scaledPosition.x * u_rotation.x);
 
   // Add in the translation.
   vec2 position = rotatedPosition + u_translation;
-</pre>
+</code></pre><p>and we add the JavaScript needed to set the scale when we draw.</p>
+<pre><code>  ...
 
-<p>and we add the JavaScript needed to set the scale when we draw.</p>
-<pre class="prettyprint showlinemods">
++  var scaleLocation = gl.getUniformLocation(program, &quot;u_scale&quot;);
+
   ...
-  var scaleLocation = gl.getUniformLocation(program, "u_scale");
-  ...
-  var scale = [1, 1];
-  ...
-  // Draw the scene.
-  function drawScene() {
-    // Clear the canvas.
-    gl.clear(gl.COLOR_BUFFER_BIT);
 
-    // Set the translation.
-    gl.uniform2fv(translationLocation, translation);
++  var scale = [1, 1];
 
-    // Set the rotation.
-    gl.uniform2fv(rotationLocation, rotation);
 
-    // Set the scale.
-    gl.uniform2fv(scaleLocation, scale);
+   // Draw the scene.
+   function drawScene() {
+     // Tell WebGL how to convert from clip space to pixels
+     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-    // Draw the rectangle.
-    gl.drawArrays(gl.TRIANGLES, 0, 18);
-  }
-</pre>
+     // Tell it to use our program (pair of shaders)
+     gl.useProgram(program);
 
-<p>And now we have scale. Drag the sliders.</p>
+     // Bind the attribute/buffer set we want.
+     gl.bindVertexArray(vao);
+
+     // Pass in the canvas resolution so we can convert from
+     // pixels to clipspace in the shader
+     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+
+     // Set the color.
+     gl.uniform4fv(colorLocation, color);
+
+     // Set the translation.
+     gl.uniform2fv(translationLocation, translation);
+
+     // Set the rotation.
+     gl.uniform2fv(rotationLocation, rotation);
+
++     // Set the scale.
++     gl.uniform2fv(scaleLocation, scale);
+
+     // Draw the rectangle.
+     var primitiveType = gl.TRIANGLES;
+     var offset = 0;
+     var count = 18;
+     gl.drawArrays(primitiveType, offset, count);
+   }
+</code></pre><p>And now we have scale. Drag the sliders.</p>
 <p><div>
   <iframe class="webgl_example" style="width: 400px; height: 300px;" src="../webgl-2d-geometry-scale.html"></iframe>
   <a class="webgl_center" href="../webgl-2d-geometry-scale.html" target="_blank">click here to open in a separate window</a>
@@ -127,15 +144,32 @@ void main() {
 
 </p>
 <p>One thing to notice is that scaling by a negative value flips our geometry.</p>
-<p>I hope these last 3 posts were helpful in understanding <a href="webgl-2d-translation.html">translation</a>, <a href="webgl-2d-rotation.html">rotation</a> and scale. Next we&#39;ll go over <a href="webgl-2d-matrices.html">the magic that is matrices</a> that combines all 3 of these into a much simpler and often more useful form.</p>
+<p>Another thing to notice is it scales from 0, 0 which for our F is the
+top left corner. That makes sense since we&#39;re multiplying the positions
+by the scale they will move away from 0, 0. You can probably
+imagine ways to fix that. For example you could add another translation
+before you scale, a <em>pre scale</em> translation. Another solution would be
+to change the actual F position data. We&#39;ll go over another way soon.</p>
+<p>I hope these last 3 posts were helpful in understanding
+<a href="webgl-2d-translation.html">translation</a>, <a href="webgl-2d-rotation.html">rotation</a>
+and scale. Next we&#39;ll go over <a href="webgl-2d-matrices.html">the magic that is matrices</a>
+that combines all 3 of these into a much simpler and often more useful form.</p>
 <div class="webgl_bottombar">
 <h3>Why an 'F'?</h3>
 <p>
-The first time I saw someone use an 'F' was on a texture. The 'F' itself is not important. What is important is that you can tell its orientation from any direction. If we used a heart ❤ or a triangle △ for example we couldn't tell if it was flipped horizontally. A circle ○ would be even worse. A colored rectangle would arguably work with different colors on each corner but then you'd have to remember which corner was which. An F's orientation is instantly recognizable.
+The first time I saw someone use an 'F' was on a texture.
+The 'F' itself is not important. What is important is that
+you can tell its orientation from any direction. If we
+used a heart ❤ or a triangle △ for example we couldn't
+tell if it was flipped horizontally. A circle ○ would be
+even worse. A colored rectangle would arguably work with
+different colors on each corner but then you'd have to remember
+which corner was which. An F's orientation is instantly recognizable.
 </p>
 <img src="../resources/f-orientation.svg" class="webgl_center"/>
 <p>
-Any shape that you can tell the orientation of would work, I've just used 'F' ever since I was 'F'irst introduced to the idea.
+Any shape that you can tell the orientation of would work,
+I've just used 'F' ever since I was 'F'irst introduced to the idea.
 </p>
 </div>
 

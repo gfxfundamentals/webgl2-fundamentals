@@ -60,15 +60,6 @@
    * @memberOf module:webgl-2d-math
    */
   function multiply(a, b) {
-    var b00 = b[0 * 3 + 0];
-    var b01 = b[0 * 3 + 1];
-    var b02 = b[0 * 3 + 2];
-    var b10 = b[1 * 3 + 0];
-    var b11 = b[1 * 3 + 1];
-    var b12 = b[1 * 3 + 2];
-    var b20 = b[2 * 3 + 0];
-    var b21 = b[2 * 3 + 1];
-    var b22 = b[2 * 3 + 2];
     var a00 = a[0 * 3 + 0];
     var a01 = a[0 * 3 + 1];
     var a02 = a[0 * 3 + 2];
@@ -78,6 +69,16 @@
     var a20 = a[2 * 3 + 0];
     var a21 = a[2 * 3 + 1];
     var a22 = a[2 * 3 + 2];
+    var b00 = b[0 * 3 + 0];
+    var b01 = b[0 * 3 + 1];
+    var b02 = b[0 * 3 + 2];
+    var b10 = b[1 * 3 + 0];
+    var b11 = b[1 * 3 + 1];
+    var b12 = b[1 * 3 + 2];
+    var b20 = b[2 * 3 + 0];
+    var b21 = b[2 * 3 + 1];
+    var b22 = b[2 * 3 + 2];
+
     return [
       b00 * a00 + b01 * a10 + b02 * a20,
       b00 * a01 + b01 * a11 + b02 * a21,
