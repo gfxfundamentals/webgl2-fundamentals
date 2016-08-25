@@ -30,6 +30,9 @@ h1 {
         -1px 1px 0 #FFF,
          1px 1px 0 #FFF;
 }
+.iframe .description {
+    display: none;
+}
 </style>
 </head>
 <body>
@@ -42,7 +45,35 @@ h1 {
 <script>
 "use strict";
 
-window.onload = main;
+var vertexShaderSource = `#version 300 es
+
+// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec2 a_position;
+
+// A matrix to transform the positions by
+uniform mat3 u_matrix;
+
+// all shaders have a main function
+void main() {
+  // Multiply the position by the matrix.
+  gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
+}
+`;
+
+var fragmentShaderSource = `#version 300 es
+
+precision mediump float;
+
+uniform vec4 u_color;
+
+// we need to declare an output for the fragment shader
+out vec4 outColor;
+
+void main() {
+  outColor = u_color;
+}
+`;
 
 function main() {
   // Get A WebGL context
@@ -54,56 +85,78 @@ function main() {
     return;
   }
 
-  // setup GLSL program
-  var program = createProgramFromScripts(gl, ["2d-vertex-shader", "2d-fragment-shader"]);
-  gl.useProgram(program);
+  // Use our boilerplate utils to compile the shaders and link into a program
+  var program = webglUtils.createProgramFromSources(gl,
+      [vertexShaderSource, fragmentShaderSource]);
 
   // look up where the vertex data needs to go.
-  var positionLocation = gl.getAttribLocation(program, "a_position");
+  var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
 
-  // lookup uniforms
+  // look up uniform locations
   var colorLocation = gl.getUniformLocation(program, "u_color");
   var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 
-  // Create a buffer.
-  var buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.enableVertexAttribArray(positionLocation);
-  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+  // Create a buffer
+  var positionBuffer = gl.createBuffer();
 
+  // Create a vertex array object (attribute state)
+  var vao = gl.createVertexArray();
+
+  // and make it the one we're currently working with
+  gl.bindVertexArray(vao);
+
+  // Turn on the attribute
+  gl.enableVertexAttribArray(positionAttributeLocation);
+
+  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
   // Set Geometry.
   setGeometry(gl);
 
-  // Set a random color.
-  gl.uniform4f(colorLocation, Math.random(), Math.random(), Math.random(), 1);
+  // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+  var size = 2;          // 2 components per iteration
+  var type = gl.FLOAT;   // the data is 32bit floats
+  var normalize = false; // don't normalize the data
+  var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+  var offset = 0;        // start at the beginning of the buffer
+  gl.vertexAttribPointer(
+      positionAttributeLocation, size, type, normalize, stride, offset);
 
   var translation = [30, 10];
-  var angleInRadians = 0;
+  var rotationInRadians = 0;
   var scale = [1, 1];
+  var color = [Math.random(), Math.random(), Math.random(), 1];
 
   drawScene();
 
   // Draw the scene.
   function drawScene() {
-    // Clear the canvas.
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    // Tell WebGL how to convert from clip space to pixels
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+    // Tell it to use our program (pair of shaders)
+    gl.useProgram(program);
+
+    // Bind the attribute/buffer set we want.
+    gl.bindVertexArray(vao);
+
+    // Set the color.
+    gl.uniform4fv(colorLocation, color);
 
     // Compute the matrices
-    var projectionMatrix = make2DProjection(canvas.clientWidth, canvas.clientHeight);
-    var translationMatrix = makeTranslation(translation[0], translation[1]);
-    var rotationMatrix = makeRotation(angleInRadians);
-    var scaleMatrix = makeScale(scale[0], scale[1]);
-
-    // Multiply the matrices.
-    var matrix = matrixMultiply(scaleMatrix, rotationMatrix);
-    matrix = matrixMultiply(matrix, translationMatrix);
-    matrix = matrixMultiply(matrix, projectionMatrix);
+    var matrix = m3.projection(gl.canvas.clientWidth, gl.canvas.clientHeight);
+    matrix = m3.translate(matrix, translation[0], translation[1]);
+    matrix = m3.rotate(matrix, rotationInRadians);
+    matrix = m3.scale(matrix, scale[0], scale[1]);
 
     // Set the matrix.
     gl.uniformMatrix3fv(matrixLocation, false, matrix);
 
     // Draw the geometry.
-    gl.drawArrays(gl.TRIANGLES, 0, 18);
+    var primitiveType = gl.TRIANGLES;
+    var offset = 0;
+    var count = 18;
+    gl.drawArrays(primitiveType, offset, count);
   }
 
   window.addEventListener('resize', drawScene, false);
@@ -140,28 +193,7 @@ function setGeometry(gl) {
       gl.STATIC_DRAW);
 }
 
-</script>
-<!-- vertex shader -->
-<script id="2d-vertex-shader" type="x-shader/x-vertex">
-attribute vec2 a_position;
-
-uniform mat3 u_matrix;
-
-void main() {
-  // Multiply the position by the matrix.
-  gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
-}
-</script>
-<!-- fragment shader -->
-<script id="2d-fragment-shader" type="x-shader/x-fragment">
-precision mediump float;
-
-uniform vec4 u_color;
-
-void main() {
-   gl_FragColor = u_color;
-}
+main();
 </script>
 </html>
-
 

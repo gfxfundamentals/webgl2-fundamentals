@@ -5,7 +5,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>WebGL2 - 2D Geometry Matrix Transform Reverse Order</title>
-<link type="text/css" href="resources/css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
 <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
 <style>
 #ui {
@@ -31,13 +30,112 @@ Drag sliders to translate, rotate, and scale.
   </div>
 </div>
 </body>
-<script src="resources/jquery-1.7.1.min.js"></script>
-<script src="resources/jquery-ui-1.8.16.custom.min.js"></script>
-<script src="resources/jquery.gman.ui.js"></script>
 <script src="resources/webgl-utils.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script>
 <script>
 "use strict";
+
+var vertexShaderSource = `#version 300 es
+
+// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec2 a_position;
+
+// Used to pass in the resolution of the canvas
+uniform vec2 u_resolution;
+
+// A matrix to transform the positions by
+uniform mat3 u_matrix;
+
+// all shaders have a main function
+void main() {
+  // Multiply the position by the matrix.
+  vec2 position = (u_matrix * vec3(a_position, 1)).xy;
+
+  // convert the position from pixels to 0.0 to 1.0
+  vec2 zeroToOne = position / u_resolution;
+
+  // convert from 0->1 to 0->2
+  vec2 zeroToTwo = zeroToOne * 2.0;
+
+  // convert from 0->2 to -1->+1 (clipspace)
+  vec2 clipSpace = zeroToTwo - 1.0;
+
+  gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+}
+`;
+
+var fragmentShaderSource = `#version 300 es
+
+precision mediump float;
+
+uniform vec4 u_color;
+
+// we need to declare an output for the fragment shader
+out vec4 outColor;
+
+void main() {
+  outColor = u_color;
+}
+`;
+
+var m3 = {
+  translation: function translation(tx, ty) {
+    return [
+      1, 0, 0,
+      0, 1, 0,
+      tx, ty, 1
+    ];
+  },
+
+  rotation: function rotation(angleInRadians) {
+    var c = Math.cos(angleInRadians);
+    var s = Math.sin(angleInRadians);
+    return [
+      c,-s, 0,
+      s, c, 0,
+      0, 0, 1
+    ];
+  },
+
+  scaling: function scaling(sx, sy) {
+    return [
+      sx, 0, 0,
+      0, sy, 0,
+      0, 0, 1
+    ];
+  },
+
+  multiply: function multiply(a, b) {
+    var a00 = a[0*3+0];
+    var a01 = a[0*3+1];
+    var a02 = a[0*3+2];
+    var a10 = a[1*3+0];
+    var a11 = a[1*3+1];
+    var a12 = a[1*3+2];
+    var a20 = a[2*3+0];
+    var a21 = a[2*3+1];
+    var a22 = a[2*3+2];
+    var b00 = b[0*3+0];
+    var b01 = b[0*3+1];
+    var b02 = b[0*3+2];
+    var b10 = b[1*3+0];
+    var b11 = b[1*3+1];
+    var b12 = b[1*3+2];
+    var b20 = b[2*3+0];
+    var b21 = b[2*3+1];
+    var b22 = b[2*3+2];
+    return [b00 * a00 + b01 * a10 + b02 * a20,
+            b00 * a01 + b01 * a11 + b02 * a21,
+            b00 * a02 + b01 * a12 + b02 * a22,
+            b10 * a00 + b11 * a10 + b12 * a20,
+            b10 * a01 + b11 * a11 + b12 * a21,
+            b10 * a02 + b11 * a12 + b12 * a22,
+            b20 * a00 + b21 * a10 + b22 * a20,
+            b20 * a01 + b21 * a11 + b22 * a21,
+            b20 * a02 + b21 * a12 + b22 * a22];
+  },
+};
 
 function main() {
   // Get A WebGL context
@@ -49,45 +147,59 @@ function main() {
     return;
   }
 
-  // setup GLSL program
-  var program = createProgramFromScripts(gl, ["2d-vertex-shader", "2d-fragment-shader"]);
-  gl.useProgram(program);
+  // Use our boilerplate utils to compile the shaders and link into a program
+  var program = webglUtils.createProgramFromSources(gl,
+      [vertexShaderSource, fragmentShaderSource]);
 
   // look up where the vertex data needs to go.
-  var positionLocation = gl.getAttribLocation(program, "a_position");
+  var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
 
-  // lookup uniforms
-  var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+  // look up uniform locations
+  var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
   var colorLocation = gl.getUniformLocation(program, "u_color");
   var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 
-  // set the resolution
-  gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+  // Create a buffer
+  var positionBuffer = gl.createBuffer();
 
-  // Create a buffer.
-  var buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.enableVertexAttribArray(positionLocation);
-  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+  // Create a vertex array object (attribute state)
+  var vao = gl.createVertexArray();
 
+  // and make it the one we're currently working with
+  gl.bindVertexArray(vao);
+
+  // Turn on the attribute
+  gl.enableVertexAttribArray(positionAttributeLocation);
+
+  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
   // Set Geometry.
   setGeometry(gl);
 
-  // Set a random color.
-  gl.uniform4f(colorLocation, Math.random(), Math.random(), Math.random(), 1);
+  // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+  var size = 2;          // 2 components per iteration
+  var type = gl.FLOAT;   // the data is 32bit floats
+  var normalize = false; // don't normalize the data
+  var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+  var offset = 0;        // start at the beginning of the buffer
+  gl.vertexAttribPointer(
+      positionAttributeLocation, size, type, normalize, stride, offset);
 
-  var translation = [100, 150];
-  var angleInRadians = 0;
+  // First let's make some variables
+  // to hold the translation,
+  var translation = [150, 100];
+  var rotationInRadians = 0;
   var scale = [1, 1];
+  var color = [Math.random(), Math.random(), Math.random(), 1];
 
   drawScene();
 
   // Setup a ui.
-  $("#x").gmanSlider({value: translation[0], slide: updatePosition(0), max: canvas.width });
-  $("#y").gmanSlider({value: translation[1], slide: updatePosition(1), max: canvas.height});
-  $("#angle").gmanSlider({slide: updateAngle, max: 360});
-  $("#scaleX").gmanSlider({value: scale[0], slide: updateScale(0), min: -5, max: 5, step: 0.01, precision: 2});
-  $("#scaleY").gmanSlider({value: scale[1], slide: updateScale(1), min: -5, max: 5, step: 0.01, precision: 2});
+  webglLessonsHelper.setupSlider("#x",      {value: translation[0], slide: updatePosition(0), max: gl.canvas.width });
+  webglLessonsHelper.setupSlider("#y",      {value: translation[1], slide: updatePosition(1), max: gl.canvas.height});
+  webglLessonsHelper.setupSlider("#angle",  {value: rotationInRadians * 180 / Math.PI | 0, slide: updateAngle, max: 360});
+  webglLessonsHelper.setupSlider("#scaleX", {value: scale[0], slide: updateScale(0), min: -5, max: 5, step: 0.01, precision: 2});
+  webglLessonsHelper.setupSlider("#scaleY", {value: scale[1], slide: updateScale(1), min: -5, max: 5, step: 0.01, precision: 2});
 
   function updatePosition(index) {
     return function(event, ui) {
@@ -98,7 +210,7 @@ function main() {
 
   function updateAngle(event, ui) {
     var angleInDegrees = 360 - ui.value;
-    angleInRadians = angleInDegrees * Math.PI / 180;
+    rotationInRadians = angleInDegrees * Math.PI / 180;
     drawScene();
   }
 
@@ -111,80 +223,40 @@ function main() {
 
   // Draw the scene.
   function drawScene() {
-    // Clear the canvas.
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    // Tell WebGL how to convert from clip space to pixels
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+    // Tell it to use our program (pair of shaders)
+    gl.useProgram(program);
+
+    // Bind the attribute/buffer set we want.
+    gl.bindVertexArray(vao);
+
+    // Pass in the canvas resolution so we can convert from
+    // pixels to clipspace in the shader
+    gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+
+    // Set the color.
+    gl.uniform4fv(colorLocation, color);
 
     // Compute the matrices
-    var translationMatrix = makeTranslation(translation[0], translation[1]);
-    var rotationMatrix = makeRotation(angleInRadians);
-    var scaleMatrix = makeScale(scale[0], scale[1]);
+    var translationMatrix = m3.translation(translation[0], translation[1]);
+    var rotationMatrix = m3.rotation(rotationInRadians);
+    var scaleMatrix = m3.scaling(scale[0], scale[1]);
 
     // Multiply the matrices.
-    var matrix = matrixMultiply(translationMatrix, rotationMatrix);
-    matrix = matrixMultiply(matrix, scaleMatrix);
+    var matrix = m3.multiply(scaleMatrix, rotationMatrix);
+    matrix = m3.multiply(matrix, translationMatrix);
 
     // Set the matrix.
     gl.uniformMatrix3fv(matrixLocation, false, matrix);
 
-    // Draw the geometry.
-    gl.drawArrays(gl.TRIANGLES, 0, 18);
+    // Draw the rectangle.
+    var primitiveType = gl.TRIANGLES;
+    var offset = 0;
+    var count = 18;
+    gl.drawArrays(primitiveType, offset, count);
   }
-}
-
-function makeTranslation(tx, ty) {
-  return [
-    1, 0, 0,
-    0, 1, 0,
-    tx, ty, 1
-  ];
-}
-
-function makeRotation(angleInRadians) {
-  var c = Math.cos(angleInRadians);
-  var s = Math.sin(angleInRadians);
-  return [
-    c,-s, 0,
-    s, c, 0,
-    0, 0, 1
-  ];
-}
-
-function makeScale(sx, sy) {
-  return [
-    sx, 0, 0,
-    0, sy, 0,
-    0, 0, 1
-  ];
-}
-
-function matrixMultiply(a, b) {
-  var a00 = a[0*3+0];
-  var a01 = a[0*3+1];
-  var a02 = a[0*3+2];
-  var a10 = a[1*3+0];
-  var a11 = a[1*3+1];
-  var a12 = a[1*3+2];
-  var a20 = a[2*3+0];
-  var a21 = a[2*3+1];
-  var a22 = a[2*3+2];
-  var b00 = b[0*3+0];
-  var b01 = b[0*3+1];
-  var b02 = b[0*3+2];
-  var b10 = b[1*3+0];
-  var b11 = b[1*3+1];
-  var b12 = b[1*3+2];
-  var b20 = b[2*3+0];
-  var b21 = b[2*3+1];
-  var b22 = b[2*3+2];
-  return [a00 * b00 + a01 * b10 + a02 * b20,
-          a00 * b01 + a01 * b11 + a02 * b21,
-          a00 * b02 + a01 * b12 + a02 * b22,
-          a10 * b00 + a11 * b10 + a12 * b20,
-          a10 * b01 + a11 * b11 + a12 * b21,
-          a10 * b02 + a11 * b12 + a12 * b22,
-          a20 * b00 + a21 * b10 + a22 * b20,
-          a20 * b01 + a21 * b11 + a22 * b21,
-          a20 * b02 + a21 * b12 + a22 * b22];
 }
 
 // Fill the buffer with the values that define a letter 'F'.
@@ -218,42 +290,7 @@ function setGeometry(gl) {
       gl.STATIC_DRAW);
 }
 
-$(function(){
-  main();
-});
-</script>
-<!-- vertex shader -->
-<script id="2d-vertex-shader" type="x-shader/x-vertex">
-attribute vec2 a_position;
-
-uniform vec2 u_resolution;
-uniform mat3 u_matrix;
-
-void main() {
-  // Multiply the position by the matrix.
-  vec2 position = (u_matrix * vec3(a_position, 1)).xy;
-
-  // convert the position from pixels to 0.0 to 1.0
-  vec2 zeroToOne = position / u_resolution;
-
-  // convert from 0->1 to 0->2
-  vec2 zeroToTwo = zeroToOne * 2.0;
-
-  // convert from 0->2 to -1->+1 (clipspace)
-  vec2 clipSpace = zeroToTwo - 1.0;
-
-  gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
-}
-</script>
-<!-- fragment shader -->
-<script id="2d-fragment-shader" type="x-shader/x-fragment">
-precision mediump float;
-
-uniform vec4 u_color;
-
-void main() {
-   gl_FragColor = u_color;
-}
+main();
 </script>
 </html>
 

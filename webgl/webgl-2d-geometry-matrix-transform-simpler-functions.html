@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>WebGL2 - 2D Geometry Matrix Transform</title>
+    <title>WebGL2 - 2D Geometry Matrix Transform with Projection</title>
 <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
 <style>
 #ui {
@@ -41,27 +41,13 @@ var vertexShaderSource = `#version 300 es
 // It will receive data from a buffer
 in vec2 a_position;
 
-// Used to pass in the resolution of the canvas
-uniform vec2 u_resolution;
-
 // A matrix to transform the positions by
 uniform mat3 u_matrix;
 
 // all shaders have a main function
 void main() {
   // Multiply the position by the matrix.
-  vec2 position = (u_matrix * vec3(a_position, 1)).xy;
-
-  // convert the position from pixels to 0.0 to 1.0
-  vec2 zeroToOne = position / u_resolution;
-
-  // convert from 0->1 to 0->2
-  vec2 zeroToTwo = zeroToOne * 2.0;
-
-  // convert from 0->2 to -1->+1 (clipspace)
-  vec2 clipSpace = zeroToTwo - 1.0;
-
-  gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+  gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
 }
 `;
 
@@ -80,6 +66,15 @@ void main() {
 `;
 
 var m3 = {
+  projection: function (width, height) {
+    // Note: This matrix flips the Y axis so that 0 is at the top.
+    return [
+      2 / width, 0, 0,
+      0, -2 / height, 0,
+      -1, 1, 1,
+    ];
+  },
+
   translation: function translation(tx, ty) {
     return [
       1, 0, 0,
@@ -135,6 +130,18 @@ var m3 = {
             b20 * a01 + b21 * a11 + b22 * a21,
             b20 * a02 + b21 * a12 + b22 * a22];
   },
+
+  translate: function(m, tx, ty) {
+    return m3.multiply(m, m3.translation(tx, ty));
+  },
+
+  rotate: function(m, angleInRadians) {
+    return m3.multiply(m, m3.rotation(angleInRadians));
+  },
+
+  scale: function(m, sx, sy) {
+    return m3.multiply(m, m3.scaling(sx, sy));
+  },
 };
 
 function main() {
@@ -155,7 +162,6 @@ function main() {
   var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
 
   // look up uniform locations
-  var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
   var colorLocation = gl.getUniformLocation(program, "u_color");
   var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 
@@ -232,21 +238,14 @@ function main() {
     // Bind the attribute/buffer set we want.
     gl.bindVertexArray(vao);
 
-    // Pass in the canvas resolution so we can convert from
-    // pixels to clipspace in the shader
-    gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
-
     // Set the color.
     gl.uniform4fv(colorLocation, color);
 
-    // Compute the matrices
-    var translationMatrix = m3.translation(translation[0], translation[1]);
-    var rotationMatrix = m3.rotation(rotationInRadians);
-    var scaleMatrix = m3.scaling(scale[0], scale[1]);
-
-    // Multiply the matrices.
-    var matrix = m3.multiply(translationMatrix, rotationMatrix);
-    matrix = m3.multiply(matrix, scaleMatrix);
+    // Compute the matrix
+    var matrix = m3.projection(gl.canvas.clientWidth, gl.canvas.clientHeight);
+    matrix = m3.translate(matrix, translation[0], translation[1]);
+    matrix = m3.rotate(matrix, rotationInRadians);
+    matrix = m3.scale(matrix, scale[0], scale[1]);
 
     // Set the matrix.
     gl.uniformMatrix3fv(matrixLocation, false, matrix);

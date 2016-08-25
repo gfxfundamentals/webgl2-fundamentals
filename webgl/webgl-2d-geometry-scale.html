@@ -145,7 +145,7 @@ function main() {
 
   // First let's make some variables
   // to hold the translation,
-  var translation = [0, 0];
+  var translation = [150, 100];
   var rotation = [0, 1];
   var scale = [1, 1];
   var color = [Math.random(), Math.random(), Math.random(), 1];
@@ -153,8 +153,8 @@ function main() {
   drawScene();
 
   // Setup a ui.
-  webglLessonsHelper.setupSlider("#x",      {slide: updatePosition(0), max: gl.canvas.width });
-  webglLessonsHelper.setupSlider("#y",      {slide: updatePosition(1), max: gl.canvas.height});
+  webglLessonsHelper.setupSlider("#x",      {value: translation[0], slide: updatePosition(0), max: gl.canvas.width });
+  webglLessonsHelper.setupSlider("#y",      {value: translation[1], slide: updatePosition(1), max: gl.canvas.height});
   webglLessonsHelper.setupSlider("#angle",  {slide: updateAngle, max: 360});
   webglLessonsHelper.setupSlider("#scaleX", {value: scale[0], slide: updateScale(0), min: -5, max: 5, step: 0.01, precision: 2});
   webglLessonsHelper.setupSlider("#scaleY", {value: scale[1], slide: updateScale(1), min: -5, max: 5, step: 0.01, precision: 2});
@@ -192,7 +192,8 @@ function main() {
     // Bind the attribute/buffer set we want.
     gl.bindVertexArray(vao);
 
-    // Tell WebGL how to convert from clip space to pixels
+    // Pass in the canvas resolution so we can convert from
+    // pixels to clipspace in the shader
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
     // Set the color.

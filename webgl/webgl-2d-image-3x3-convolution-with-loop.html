@@ -161,8 +161,9 @@ function render(image) {
   gl.vertexAttribPointer(
       texCoordAttributeLocation, size, type, normalize, stride, offset)
 
-  // set the resolution
-  gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+  // Pass in the canvas resolution so we can convert from
+  // pixels to clipspace in the shader
+  gl.uniform2f(resolutionLocation, gl.canvas.width, gl.canvas.height);
 
   var kernels = {
     normal: [0, 0, 0, 0, 1, 0, 0, 0, 0],
@@ -238,7 +239,8 @@ function render(image) {
     // Bind the attribute/buffer set we want.
     gl.bindVertexArray(vao);
 
-    // Set the resolution
+    // Pass in the canvas resolution so we can convert from
+    // pixels to clipspace in the shader
     gl.uniform2f(resolutionLocation, gl.canvas.width, gl.canvas.height);
 
     // Tell the shader to get the texture from texture unit 0
