@@ -132,7 +132,8 @@ Once it loads we'll draw it.
       // Tell it to use our program (pair of shaders)
       gl.useProgram(program);
 
-      // Set the resolution
+      // Pass in the canvas resolution so we can convert from
+      // pixels to clipspace in the shader
       gl.uniform2f(resolutionLocation, gl.canvas.width, gl.canvas.height);
 
     +  // Tell the shader to get the texture from texture unit 0

@@ -40,7 +40,8 @@ passed to `setRectangle` right? Here's a sample based on our
     // Bind the attribute/buffer set we want.
     gl.bindVertexArray(vao);
 
-    // Tell WebGL how to convert from clip space to pixels
+    // Pass in the canvas resolution so we can convert from
+    // pixels to clipspace in the shader
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
     // Update the position buffer with rectangle positions
@@ -214,7 +215,8 @@ translation that we desire.
     // Bind the attribute/buffer set we want.
     gl.bindVertexArray(vao);
 
-    // Tell WebGL how to convert from clip space to pixels
+    // Pass in the canvas resolution so we can convert from
+    // pixels to clipspace in the shader
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
     // Set the color.

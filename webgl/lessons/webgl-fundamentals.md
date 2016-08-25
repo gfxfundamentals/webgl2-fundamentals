@@ -439,7 +439,8 @@ that all the `gl.uniformXXX` functions set uniforms on the current program.
 
     gl.useProgram(program);
 
-    // set the resolution
+    // Pass in the canvas resolution so we can convert from
+    // pixels to clipspace in the shader
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
 And of course to draw 2 triangles we need to have WebGL call our vertex shader 6 times
