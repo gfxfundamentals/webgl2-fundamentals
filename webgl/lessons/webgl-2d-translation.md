@@ -64,13 +64,15 @@ Drag the sliders to translate the rectangle.
 
 {{{example url="../webgl-2d-rectangle-translate.html" }}}
 
-So far so good. But now imagine we wanted to do the same thing with a more complicated shape.
+So far so good. But now imagine we wanted to do the same thing with a
+more complicated shape.
 
 Let's say we wanted to draw an 'F' that consists of 6 triangles like this.
 
 <img src="../resources/polygon-f.svg" width="200" height="270" class="webgl_center">
 
-Well, following our current code we'd have to change `setRectangle` to something more like this.
+Well, following our current code we'd have to change `setRectangle`
+to something more like this.
 
 ```
 // Fill the buffer with the values that define a letter 'F'.
@@ -113,7 +115,8 @@ draw some very complex geometry with hundreds or thousands of lines we'd
 have to write some pretty complex code. On top of that, every time we
 draw JavaScript has to update all the points.
 
-There's a simpler way. Just upload the geometry and do the translation in the shader.
+There's a simpler way. Just upload the geometry and do the translation
+in the shader.
 
 Here's the new shader
 
@@ -148,7 +151,8 @@ void main() {
 }
 ```
 
-and we'll restructure the code a little. For one we only need to set the geometry once.
+and we'll restructure the code a little. For one we only need to set
+the geometry once.
 
 ```
 // Fill the buffer with the values that define a letter 'F'.
@@ -183,7 +187,8 @@ function setGeometry(gl) {
 }
 ```
 
-Then we just need to update `u_translation` before we draw with the translation that we desire.
+Then we just need to update `u_translation` before we draw with the
+translation that we desire.
 
 ```
   ...
@@ -221,7 +226,7 @@ Then we just need to update `u_translation` before we draw with the translation 
     // Draw the rectangle.
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
-    var count = 6;
+*    var count = 18;
     gl.drawArrays(primitiveType, offset, count);
   }
 ```
@@ -236,7 +241,8 @@ Now when we draw, WebGL is doing practically everything. All we are doing is
 setting a translation and asking it to draw. Even if our geometry had tens
 of thousands of points the main code would stay the same.
 
-If you want you can compare <a target="_blank" href="../webgl-2d-geometry-translate.html">the version that uses the complex JavaScript
+If you want you can compare <a target="_blank" href="../webgl-2d-geometry-translate.html">
+the version that uses the complex JavaScript
 above to update all the points</a>.
 
 I hope this example was not too obvious. In the [next article we'll move
