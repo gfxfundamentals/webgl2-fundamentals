@@ -62,7 +62,8 @@ And we update the JavaScript so that we can pass those 2 values in.
 
 +  var rotation = [0, 1];
 
-  ..
+  ...
+
   // Draw the scene.
   function drawScene() {
     // Tell WebGL how to convert from clip space to pixels
@@ -89,7 +90,7 @@ And we update the JavaScript so that we can pass those 2 values in.
     // Draw the rectangle.
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
-    var count = 6;
+    var count = 18;
     gl.drawArrays(primitiveType, offset, count);
   }
 ```
