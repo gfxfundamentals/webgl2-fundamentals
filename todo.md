@@ -3,9 +3,6 @@ TO DO
 
 Fix articles
 
-*   webgl-image-processing.html
-*   webgl-image-processing-continued.html
-*   webgl-2d-translation.html
 *   webgl-2d-rotation.html
 *   webgl-2d-scale.html
 *   webgl-2d-matrices.html
@@ -81,4 +78,7 @@ DONE
 *   webgl-fundamentals.html
 *   webgl-how-it-works.html
 *   webgl-shaders-and-glsl.html
+*   webgl-image-processing.html
+*   webgl-image-processing-continued.html
+*   webgl-2d-translation.html
 
