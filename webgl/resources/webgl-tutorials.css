@@ -22,6 +22,7 @@ canvas {
   top: 10px;
   right: 10px;
   z-index: 3;
+  font-family: monospace;
 
   text-shadow:
    -1px -1px 0 #FFF,
@@ -35,29 +36,36 @@ canvas {
   right: 10px;
   z-index: 3;
 }
+#ui {
+  opacity: 0.8;
+}
 
 .gman-slider-label {
-  float: left;
-  font-size: x-small;
-  gbackground-color: green;
+  font-size: small;
+  min-width: 10em;
+  text-align: right;
 }
 .gman-slider-value {
   float: right;
-  font-size: x-small;
-  gbackground-color: blue;
+  font-size: small;
+  order: 1;
+  min-width: 3em;
 }
 .gman-slider-upper {
-  gbackground-color: yellow;
-  height: 1.0em;
+  height: 1.5em;
 }
 .gman-slider-outer {
-  gbackground-color: purple;
-  height: 2.0em;
+  float:right;
+  display: flex;
+  align-items: center;
+  height: 1.7em;
 }
 .gman-slider-slider {
-  font-size: x-small;
-  gbackground-color: red;
-  width: 100%;
+  opacity: 0.5;
+  font-size: large;
+  min-width: 120px;
+  margin-left: .3em;
+  margin-right: .3em;
 }
 
 /* styles to apply if in an iframe */
@@ -97,6 +105,12 @@ body.iframe {
   top: 10px;
   left: 10px;
   z-index: 3;
+}
+#ui #rotation>canvas {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+#ui {
+    width: 200px;
 }
 
 @media (max-width: 390px) {

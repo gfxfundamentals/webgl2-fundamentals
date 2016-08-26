@@ -229,10 +229,8 @@
     var parent = document.querySelector(selector);
     parent.innerHTML = `
       <div class="gman-slider-outer">
-        <div class="gman-slider-upper">
-          <div class="gman-slider-label">${selector.substring(1)}</div>
-          <div class="gman-slider-value"></div>
-        </div>
+        <div class="gman-slider-label">${selector.substring(1)}</div>
+        <div class="gman-slider-value"></div>
         <input class="gman-slider-slider" type="range" min="${min}" max="${max}" value="${value}" />
       </div>
     `;
