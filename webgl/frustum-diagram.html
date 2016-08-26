@@ -5,16 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>WebGL2 - Frustum Diagram</title>
-<link type="text/css" href="resources/css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
 <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
-<style>
-#ui {
-    width: 200px;
-}
-#rotation>canvas {
-    background-color: rgba(255, 255, 255, 0.6) !important;
-}
-</style>
 </head>
 <body>
 <div class="description">
@@ -24,7 +15,7 @@ Drag sliders to change the frustum.
   <canvas id="canvas" width="400" height="600" style="width: 400px; height: 600px"></canvas>
   <img src="resources/eye-icon.png" style="position: absolute; z-index:2; left: 10px; top: 275px; width: 32px; height: auto;"/>
 </div>
-<div id="uiContainerLeft">
+<div id="uiContainer">
   <div id="ui">
     <div id="fieldOfView"></div>
     <div id="zNear"></div>
@@ -82,9 +73,6 @@ void main() {
 </script>
 <script src="resources/webgl-utils.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script>
-<script src="resources/jquery-1.7.1.min.js"></script>
-<script src="resources/jquery-ui-1.8.16.custom.min.js"></script>
-<script src="resources/jquery.gman.ui.js"></script>
 <script src="resources/tdl/base.js"></script>
 <script>
 "use strict";
@@ -272,10 +260,10 @@ function CreateApp() {
   var zPosition = -25;
 
   // Setup a ui.
-  $("#fieldOfView").gmanSlider({value: fieldOfView, slide: updateFieldOfView, max: 179});
-  $("#zNear").gmanSlider({value: zNear, slide: updateZNear, min: 1, max: 50});
-  $("#zFar").gmanSlider({value: zFar, slide: updateZFar, min: 1, max: 50});
-  $("#zPosition").gmanSlider({value: zPosition, slide: updateZPosition, min: -60, max: 0});
+  webglLessonsHelper.setupSlider("#fieldOfView", {value: fieldOfView, slide: updateFieldOfView, max: 179});
+  webglLessonsHelper.setupSlider("#zNear", {value: zNear, slide: updateZNear, min: 1, max: 50});
+  webglLessonsHelper.setupSlider("#zFar", {value: zFar, slide: updateZFar, min: 1, max: 50});
+  webglLessonsHelper.setupSlider("#zPosition", {value: zPosition, slide: updateZPosition, min: -60, max: 0});
 
   function updateFieldOfView(event, ui) {
     fieldOfView = ui.value;
@@ -460,7 +448,6 @@ var app;
 function main() {
   math = tdl.math;
   fast = tdl.fast;
-  window.requestAnimFrame = tdl.webgl.requestAnimationFrame;
   canvas = document.getElementById("canvas");
   var clock = tdl.clock.createClock();
 
@@ -480,15 +467,12 @@ function main() {
     var elapsedTime = now - then;
     then = now;
     app.render(elapsedTime);
-    requestAnimFrame(render);
+    requestAnimationFrame(render);
   }
   render();
 }
 
-$(function(){
-  main();
-});
-
+window.onload = main;
 </script>
 </html>
 
