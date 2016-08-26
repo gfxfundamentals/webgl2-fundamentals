@@ -116,9 +116,9 @@ origin (0,0,0)
 We then combine (multiply) those to make a viewProjection matrix.
 
 ```
-  // move the projection space to view space (the space in front of
-  // the camera)
-var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
+  // create a viewProjection matrix. This will both apply perspective
+  // AND move the world so that the camera is effectively the origin
+  var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
 ```
 
 Finally we use that space as the starting space to place each `F'
@@ -282,23 +282,23 @@ as we move it.
   var fPosition = [radius, 0, 0];
 
   // Use matrix math to compute a position on the circle.
-  var cameraMatrix = makeTranslation(0, 50, radius * 1.5);
-  cameraMatrix = matrixMultiply(
-      cameraMatrix, makeYRotation(cameraAngleRadians));
+  var cameraMatrix = m4.yRotation(cameraAngleRadians);
+  cameraMatrix = m4.translate(cameraMatrix, 0, 50, radius * 1.5);
 
   // Get the camera's postion from the matrix we computed
-  cameraPosition = [
-      cameraMatrix[12],
-      cameraMatrix[13],
-      cameraMatrix[14]];
+  var cameraPosition = [
+    cameraMatrix[12],
+    cameraMatrix[13],
+    cameraMatrix[14],
+  ];
 
   var up = [0, 1, 0];
 
   // Compute the camera's matrix using look at.
-  var cameraMatrix = makeLookAt(cameraPosition, fPosition, up);
+  var cameraMatrix = m4.lookAt(cameraPosition, fPosition, up);
 
   // Make a view matrix from the camera matrix.
-  var viewMatrix = makeInverse(cameraMatrix);
+  var viewMatrix = m4.inverse(cameraMatrix);
 
   ...
 ```
