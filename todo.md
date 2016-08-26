@@ -3,9 +3,6 @@ TO DO
 
 Fix articles
 
-*   webgl-2d-rotation.html
-*   webgl-2d-scale.html
-*   webgl-2d-matrices.html
 *   webgl-3d-orthographic.html
 *   webgl-3d-perspective.html
 *   webgl-3d-camera.html
@@ -81,4 +78,7 @@ DONE
 *   webgl-image-processing.html
 *   webgl-image-processing-continued.html
 *   webgl-2d-translation.html
+*   webgl-2d-rotation.html
+*   webgl-2d-scale.html
+*   webgl-2d-matrices.html
 
