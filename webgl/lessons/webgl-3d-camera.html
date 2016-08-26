@@ -71,7 +71,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The first <a href="webgl-fundamentals.html">started with fundamentals</a> and
 the previous was about <a href="webgl-3d-perspective.html">3D perspective projection</a>.
 If you haven&#39;t read those please view them first.</p>
-<p>In the last post we had to move the F in front of the frustum because the <code>makePerspective</code>
+<p>In the last post we had to move the F in front of the frustum because the <code>m4.perspective</code>
 function expects it to sit at the origin (0, 0, 0) and that objects in the frustum are <code>-zNear</code>
 to <code>-zFar</code> in front of it.</p>
 <p>Moving stuff in front of the view doesn&#39;t seem the right way to go does it? In the real world
@@ -118,61 +118,68 @@ it so the camera is at (0, 0, 0) and we&#39;ve moved everything in front of
 it.</p>
 <p>Let&#39;s make a 3D scene with a circle of &#39;F&#39;s like the diagrams above.</p>
 <p>Here&#39;s the code.</p>
-<pre class="prettyprint showlinemods">
+<pre><code>function drawScene() {
   var numFs = 5;
   var radius = 200;
 
-  // Compute the projection matrix
-  var aspect = canvas.clientWidth / canvas.clientHeight;
-  var projectionMatrix =
-      makePerspective(fieldOfViewRadians, aspect, 1, 2000);
+  ...
 
-  // Draw 'F's in a circle
-  for (var ii = 0; ii < numFs; ++ii) {
+  // Compute the matrix
+  var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  var zNear = 1;
+  var zFar = 2000;
+  var projectionMatrix = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
+
+  var cameraMatrix = m4.yRotation(cameraAngleRadians);
+  cameraMatrix = m4.translate(cameraMatrix, 0, 0, radius * 1.5);
+
+  // Make a view matrix from the camera matrix.
+  var viewMatrix = m4.inverse(cameraMatrix);
+
+  // move the projection space to view space (the space in front of
+  // the camera)
+  var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
+
+  // Draw &#39;F&#39;s in a circle
+  for (var ii = 0; ii &lt; numFs; ++ii) {
     var angle = ii * Math.PI * 2 / numFs;
 
     var x = Math.cos(angle) * radius;
     var z = Math.sin(angle) * radius;
-    var translationMatrix = makeTranslation(x, 0, z);
-
-    // Multiply the matrices.
-    var matrix = translationMatrix;
-    matrix = matrixMultiply(matrix, projectionMatrix);
+    // add in the translation for this F
+    var matrix = m4.translate(viewProjectionMatrix, x, 0, z);
 
     // Set the matrix.
     gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
     // Draw the geometry.
-    gl.drawArrays(gl.TRIANGLES, 0, 16 * 6);
+    var primitiveType = gl.TRIANGLES;
+    var offset = 0;
+    var count = 16 * 6;
+    gl.drawArrays(primitiveType, offset, count);
   }
-</pre>
-
-<p>Just after we compute our projection matrix let&#39;s compute a camera that
+}
+</code></pre><p>Just after we compute our projection matrix you can see we compute a camera that
 goes around the &#39;F&#39;s like in the diagram above.</p>
-<pre class="prettyprint showlinemods">
-  // Compute the camera's matrix
-  var cameraMatrix = makeTranslation(0, 0, radius * 1.5);
-  cameraMatrix = matrixMultiply(
-      cameraMatrix, makeYRotation(cameraAngleRadians));
-</pre>
-
-<p>We then compute a &quot;view matrix&quot; from the camera matrix.  A &quot;view matrix&quot;
+<pre><code>  // Compute the camera&#39;s matrix
+  var cameraMatrix = m4.yRotation(cameraAngleRadians);
+  cameraMatrix = m4.translate(cameraMatrix, 0, 0, radius * 1.5);
+</code></pre><p>We then compute a &quot;view matrix&quot; from the camera matrix.  A &quot;view matrix&quot;
 is the matrix that moves everything the opposite of the camera effectively
 making everything relative to the camera as though the camera was at the
 origin (0,0,0)</p>
-<pre class="prettyprint showlinemods">
-  // Make a view matrix from the camera matrix.
-  var viewMatrix = makeInverse(cameraMatrix);
-</pre>
-
-<p>Finally we need to apply the view matrix when we compute the matrix for each &#39;F&#39;</p>
-<pre class="prettyprint showlinemods">
-    // Multiply the matrices.
-    var matrix = translationMatrix;
-    matrix = matrixMultiply(matrix, viewMatrix);  // <=-- added
-    matrix = matrixMultiply(matrix, projectionMatrix);
-</pre>
-
+<pre><code>  // Make a view matrix from the camera matrix.
+  var viewMatrix = m4.inverse(cameraMatrix);
+</code></pre><p>We then combine (multiply) those to make a viewProjection matrix.</p>
+<pre><code>  // move the projection space to view space (the space in front of
+  // the camera)
+var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
+</code></pre><p>Finally we use that space as the starting space to place each `F&#39;</p>
+<pre><code>    var x = Math.cos(angle) * radius;
+    var z = Math.sin(angle) * radius;
+    var matrix = m4.translate(viewProjectionMatrix, x, 0, z);
+</code></pre><p>In other words the viewProjection is the same for each <code>F</code>. Same perspective,
+same camera.</p>
 <p>And voila! A camera that goes around the circle of &#39;F&#39;s. Drag the <code>cameraAngle</code> slider
 to move the camera around.</p>
 <p><div>
@@ -266,57 +273,46 @@ matrix that will orient something that points at the <code>target</code> from th
 </pre></div>
 
 <p>Here&#39;s the code to compute the cross product of 2 vectors.</p>
-<pre class="prettyprint showlinemods">
-function cross(a, b) {
+<pre><code>function cross(a, b) {
   return [a[1] * b[2] - a[2] * b[1],
           a[2] * b[0] - a[0] * b[2],
           a[0] * b[1] - a[1] * b[0]];
 }
-</pre>
-
-<p>Here&#39;s the code to subtract two vectors.</p>
-<pre class="prettyprint showlinemods">
-function subtractVectors(a, b) {
+</code></pre><p>Here&#39;s the code to subtract two vectors.</p>
+<pre><code>function subtractVectors(a, b) {
   return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
 }
-</pre>
-
-<p>Here&#39;s the code to normalize a vector (make it into a unit vector).</p>
-<pre class="prettyprint showlinemods">
-function normalize(v) {
+</code></pre><p>Here&#39;s the code to normalize a vector (make it into a unit vector).</p>
+<pre><code>function normalize(v) {
   var length = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-  // make sure we don't divide by 0.
-  if (length > 0.00001) {
+  // make sure we don&#39;t divide by 0.
+  if (length &gt; 0.00001) {
     return [v[0] / length, v[1] / length, v[2] / length];
   } else {
     return [0, 0, 0];
   }
 }
-</pre>
+</code></pre><p>Here&#39;s the code to compute a &quot;lookAt&quot; matrix.</p>
+<pre><code>var m4 = {
+  lookAt: function(cameraPosition, target, up) {
+    var zAxis = normalize(
+        subtractVectors(cameraPosition, target));
+    var xAxis = cross(up, zAxis);
+    var yAxis = cross(zAxis, xAxis);
 
-<p>Here&#39;s the code to compute a &quot;lookAt&quot; matrix.</p>
-<pre class="prettyprint showlinemods">
-function makeLookAt(cameraPosition, target, up) {
-  var zAxis = normalize(
-      subtractVectors(cameraPosition, target));
-  var xAxis = cross(up, zAxis);
-  var yAxis = cross(zAxis, xAxis);
-
-  return [
-     xAxis[0], xAxis[1], xAxis[2], 0,
-     yAxis[0], yAxis[1], yAxis[2], 0,
-     zAxis[0], zAxis[1], zAxis[2], 0,
-     cameraPosition[0],
-     cameraPosition[1],
-     cameraPosition[2],
-     1];
-}
-</pre>
-
-
-<p>And here is how we might use it to make the camera point at a specific &#39;F&#39; as we move it.</p>
-<pre class="prettyprint showlinemods">
-  ...
+    return [
+      xAxis[0], xAxis[1], xAxis[2], 0,
+      yAxis[0], yAxis[1], yAxis[2], 0,
+      zAxis[0], zAxis[1], zAxis[2], 0,
+      cameraPosition[0],
+      cameraPosition[1],
+      cameraPosition[2],
+      1,
+    ];
+  },
+</code></pre><p>And here is how we might use it to make the camera point at a specific &#39;F&#39;
+as we move it.</p>
+<pre><code>  ...
 
   // Compute the position of the first F
   var fPosition = [radius, 0, 0];
@@ -326,7 +322,7 @@ function makeLookAt(cameraPosition, target, up) {
   cameraMatrix = matrixMultiply(
       cameraMatrix, makeYRotation(cameraAngleRadians));
 
-  // Get the camera's postion from the matrix we computed
+  // Get the camera&#39;s postion from the matrix we computed
   cameraPosition = [
       cameraMatrix[12],
       cameraMatrix[13],
@@ -334,16 +330,14 @@ function makeLookAt(cameraPosition, target, up) {
 
   var up = [0, 1, 0];
 
-  // Compute the camera's matrix using look at.
+  // Compute the camera&#39;s matrix using look at.
   var cameraMatrix = makeLookAt(cameraPosition, fPosition, up);
 
   // Make a view matrix from the camera matrix.
   var viewMatrix = makeInverse(cameraMatrix);
 
   ...
-</pre>
-
-<p>And here&#39;s the result.</p>
+</code></pre><p>And here&#39;s the result.</p>
 <p><div>
   <iframe class="webgl_example" style="width: 400px; height: 300px;" src="../webgl-3d-camera-look-at.html"></iframe>
   <a class="webgl_center" href="../webgl-3d-camera-look-at.html" target="_blank">click here to open in a separate window</a>
