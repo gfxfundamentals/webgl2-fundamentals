@@ -3,7 +3,6 @@ TO DO
 
 Fix articles
 
-*   webgl-3d-orthographic.html
 *   webgl-3d-perspective.html
 *   webgl-3d-camera.html
 *   webgl-3d-lighting-directional.html
@@ -81,4 +80,5 @@ DONE
 *   webgl-2d-rotation.html
 *   webgl-2d-scale.html
 *   webgl-2d-matrices.html
+*   webgl-3d-orthographic.html
 
