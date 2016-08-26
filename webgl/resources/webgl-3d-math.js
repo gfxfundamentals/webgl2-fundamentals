@@ -796,7 +796,7 @@
    * @return {Vector4} dst or new Vector4 if not provided
    * @memberOf module:webgl-3d-math
    */
-  function matrixVectorMultiply(v, m, dst) {
+  function transformVector(v, m, dst) {
     dst = dst || new Float32Array(4);
     for (var i = 0; i < 4; ++i) {
       dst[i] = 0.0;
@@ -935,7 +935,7 @@
     scale: scale,
     multiply: multiply,
     inverse: inverse,
-    matrixVectorMultiply: matrixVectorMultiply,
+    transformVector: transformVector,
     transformPoint: transformPoint,
     transformDirection: transformDirection,
     transformNormal: transformNormal,
