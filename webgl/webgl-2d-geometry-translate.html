@@ -6,11 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>WebGL2 - 2D Rectangle Translate</title>
 <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
-<style>
-#ui {
-    width: 200px;
-}
-</style>
 </head>
 <body>
 <div class="description">
@@ -152,7 +147,7 @@ function main() {
     // Set the color.
     gl.uniform4fv(colorLocation, color);
 
-    // Draw the rectangle.
+    // Draw the geometry.
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
     var count = 18;
@@ -165,7 +160,8 @@ function randomInt(range) {
   return Math.floor(Math.random() * range);
 }
 
-// Fill the buffer with the values that define a letter 'F'.
+// Fill the current ARRAY_BUFFER buffer
+// with the values that define a letter 'F'.
 function setGeometry(gl, x, y) {
   var width = 100;
   var height = 150;
