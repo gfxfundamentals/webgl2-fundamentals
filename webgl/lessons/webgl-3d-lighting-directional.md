@@ -1,7 +1,8 @@
 Title: WebGL 3D - Directional Lighting
 Description: How to implement directional lighting in WebGL
 
-This article is a continuation of <a href="webgl-3d-camera.html">WebGL 3D Cameras</a>. If you haven't read that I suggest <a href="webgl-3d-cameras.html">you start there</a>.
+This article is a continuation of [WebGL 3D Cameras](webgl-3d-camera.html).
+If you haven't read that I suggest [you start there](webgl-3d-cameras.html).
 
 There are many ways to implement lighting. Probably the simplest is *directional lighting*.
 
@@ -46,7 +47,7 @@ The lines sticking out of the objects represent normals for each vertex.
 Notice the cube has 3 normals at each corner. That's because you need
 3 different normals to represent the way each face of the cube is um, .. facing.
 
-The normals are also colored based on their direction with
+Here the normals are also colored based on their direction with
 positive x being <span style="color: red;">red</span>, up being
 <span style="color: green;">green</span> and positive z being
 <span style="color: blue;">blue</span>.
@@ -186,7 +187,8 @@ function setNormals(gl) {
           -1, 0, 0,
           -1, 0, 0,
           -1, 0, 0,
-          -1, 0, 0]);
+          -1, 0, 0,
+  ]);
   gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
 }
 ```
@@ -226,52 +228,73 @@ Now we need to make our shaders use them
 First the vertex shader we just pass the normals through to
 the fragment shader
 
-    attribute vec4 a_position;
-    -attribute vec4 a_color;
-    +attribute vec3 a_normal;
+```
+#version 300 es
 
-    uniform mat4 u_matrix;
+// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec4 a_position;
+-in vec4 a_color;
++in vec3 a_normal;
 
-    -varying vec4 v_color;
-    +varying vec3 v_normal;
+// A matrix to transform the positions by
+uniform mat4 u_matrix;
 
-    void main() {
-      // Multiply the position by the matrix.
-      gl_Position = u_matrix * a_position;
+-// a varying to pass the color to the fragment shader
+-out vec4 v_color;
 
-    -  // Pass the color to the fragment shader.
-    -  v_color = a_color;
++// varying to pass the normal to the fragment shader
++out vec3 v_normal;
 
-    +  // Pass the normal to the fragment shader
-    +  v_normal = a_normal;
-    }
+// all shaders have a main function
+void main() {
+  // Multiply the position by the matrix.
+  gl_Position = u_matrix * a_position;
+
+-  // Pass the color to the fragment shader.
+-  v_color = a_color;
+
++  // Pass the normal to the fragment shader
++  v_normal = a_normal;
+}
+```
 
 And the fragment shader we'll do the math using the dot product
 of the direction of the light and the normal
 
 ```
+#version 300 es
+
 precision mediump float;
 
-// Passed in from the vertex shader.
--varying vec4 v_color;
-+varying vec3 v_normal;
+-// the varied color passed from the vertex shader
+-in vec4 v_color;
 
++// Passed in and varied from the vertex shader.
++in vec3 v_normal;
++
 +uniform vec3 u_reverseLightDirection;
 +uniform vec4 u_color;
 
+// we need to declare an output for the fragment shader
+out vec4 outColor;
+
 void main() {
-+   // because v_normal is a varying it's interpolated
-+   // we it will not be a uint vector. Normalizing it
-+   // will make it a unit vector again
-+   vec3 normal = normalize(v_normal);
+-  outColor = v_color;
++  // because v_normal is a varying it's interpolated
++  // so it will not be a uint vector. Normalizing it
++  // will make it a unit vector again
++  vec3 normal = normalize(v_normal);
 +
-+   float light = dot(normal, u_reverseLightDirection);
-
-*   gl_FragColor = u_color;
-
-+   // Lets multiply just the color portion (not the alpha)
-+   // by the light
-+   gl_FragColor.rgb *= light;
++  // compute the light by taking the dot product
++  // of the normal to the light's reverse direction
++  float light = dot(normal, u_reverseLightDirection);
++
++  outColor = u_color;
++
++  // Lets multiply just the color portion (not the alpha)
++  // by the light
++  outColor.rgb *= light;
 }
 ```
 
@@ -290,7 +313,7 @@ and we need to set them
 
 ```
   // Set the matrix.
-  gl.uniformMatrix4fv(matrixLocation, false, worldViewProjectionMatrix);
+  gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
 +  // Set the color to use
 +  gl.uniform4fv(colorLocation, [0.2, 1, 0.2, 1]); // green
@@ -323,8 +346,12 @@ matrix would be the `world` matrix. As it is right now we're only passing in
 which will be what we're currently passing in as `u_matrix`
 
 ```
-attribute vec4 a_position;
-attribute vec3 a_normal;
+#version 300 es
+
+// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec4 a_position;
+in vec3 a_normal;
 
 *uniform mat4 u_worldViewProjection;
 +uniform mat4 u_world;
@@ -349,6 +376,7 @@ Now we have to look those uniforms up
 
 ```
   // lookup uniforms
+-  var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 *  var worldViewProjetionLocation =
 *      gl.getUniformLocation(program, "u_worldViewProjection");
 +  var worldLocation = gl.getUniformLocation(program, "u_world");
@@ -357,6 +385,10 @@ Now we have to look those uniforms up
 And we have to change the code that updates them
 
 ```
+*var worldMatrix = m4.yRotation(fRotationRadians);
+*var worldViewProjectionMatrix = m4.multiply(viewProjectionMatrix,
+                                             worldMatrix);
+
 *// Set the matrices
 *gl.uniformMatrix4fv(
 *    worldViewProjectionLocation, false,
@@ -399,14 +431,22 @@ but it's best if we rename things so they're named what they actually are
 otherwise it will get confusing.
 
 ```
-attribute vec4 a_position;
-attribute vec3 a_normal;
+#version 300 es
+
+// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec4 a_position;
+in vec3 a_normal;
 
 uniform mat4 u_worldViewProjection;
-*uniform mat4 u_worldInverseTranspose;
+-uniform mat4 u_world
++uniform mat4 u_worldInverseTranspose;
 
-varying vec3 v_normal;
+// varyings to pass the normal and color to the fragment shader
+out vec4 v_color;
+out vec3 v_normal;
 
+// all shaders have a main function
 void main() {
   // Multiply the position by the matrix.
   gl_Position = u_worldViewProjection * a_position;
@@ -445,14 +485,16 @@ gl.uniformMatrix4fv(
 and here's the code to transpose a matrix
 
 ```
-function makeTranspose(m) {
-  return [
-    m[0], m[4], m[8], m[12],
-    m[1], m[5], m[9], m[13],
-    m[2], m[6], m[10], m[14],
-    m[3], m[7], m[11], m[15],
-  ];
-}
+var m4 = {
+  transpose: function(m) {
+    return [
+      m[0], m[4], m[8], m[12],
+      m[1], m[5], m[9], m[13],
+      m[2], m[6], m[10], m[14],
+      m[3], m[7], m[11], m[15],
+    ];
+  },
+  ...
 ```
 
 Because the effect is subtle and because we aren't scaling anything
