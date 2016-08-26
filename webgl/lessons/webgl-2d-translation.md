@@ -76,7 +76,7 @@ Well, following our current code we'd have to change `setRectangle`
 to something more like this.
 
 ```
-// Fill the buffer with the values that define a letter 'F'.
+// Fill the current ARRAY_BUFFER buffer with the values that define a letter 'F'.
 function setGeometry(gl, x, y) {
   var width = 100;
   var height = 150;
@@ -156,7 +156,8 @@ and we'll restructure the code a little. For one we only need to set
 the geometry once.
 
 ```
-// Fill the buffer with the values that define a letter 'F'.
+// Fill the current ARRAY_BUFFER buffer
+// with the values that define a letter 'F'.
 function setGeometry(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,

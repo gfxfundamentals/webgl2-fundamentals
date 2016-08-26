@@ -516,11 +516,11 @@ you apply transforms the space so
 
 Step 1:  no matrix (or the identiy matrix)
 
-> we're in clip space.
+> we're in clip space. Positions passed in need to be in clip space
 
 Step 2:  `matrix = m3.projection(gl.canvas.clientWidth, gl.canvas.clientHeight)`;
 
-> we're now in pixel space
+> we're now in pixel space. Positions passed in need to be in pixel space
 
 Step 3:  `matrix = m3.translate(matrix, tx, ty);`
 
