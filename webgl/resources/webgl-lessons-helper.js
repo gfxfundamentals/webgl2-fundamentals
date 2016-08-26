@@ -227,6 +227,9 @@
     value /= step;
 
     var parent = document.querySelector(selector);
+    if (!parent) {
+      return; // like jquery don't fail on a bad selector
+    }
     parent.innerHTML = `
       <div class="gman-slider-outer">
         <div class="gman-slider-label">${selector.substring(1)}</div>
