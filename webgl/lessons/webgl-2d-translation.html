@@ -134,7 +134,7 @@ more complicated shape.</p>
 <p><img src="../resources/polygon-f.svg" width="200" height="270" class="webgl_center"></p>
 <p>Well, following our current code we&#39;d have to change <code>setRectangle</code>
 to something more like this.</p>
-<pre><code>// Fill the buffer with the values that define a letter &#39;F&#39;.
+<pre><code>// Fill the current ARRAY_BUFFER buffer with the values that define a letter &#39;F&#39;.
 function setGeometry(gl, x, y) {
   var width = 100;
   var height = 150;
@@ -204,7 +204,8 @@ void main() {
 }
 </code></pre><p>and we&#39;ll restructure the code a little. For one we only need to set
 the geometry once.</p>
-<pre><code>// Fill the buffer with the values that define a letter &#39;F&#39;.
+<pre><code>// Fill the current ARRAY_BUFFER buffer
+// with the values that define a letter &#39;F&#39;.
 function setGeometry(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
