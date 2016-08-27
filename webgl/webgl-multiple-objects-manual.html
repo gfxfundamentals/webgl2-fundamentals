@@ -17,14 +17,17 @@ Draw multiple objects manually
 <script src="resources/webgl-lessons-helper.js"></script>
 <script src="resources/webgl-3d-math.js"></script>
 <script src="resources/primitives.js"></script>
-<!-- vertex shader -->
-<script id="3d-vertex-shader" type="x-shader/x-vertex">
-attribute vec4 a_position;
-attribute vec4 a_color;
+<script>
+"use strict";
+
+var vs = `#version 300 es
+
+in vec4 a_position;
+in vec4 a_color;
 
 uniform mat4 u_matrix;
 
-varying vec4 v_color;
+out vec4 v_color;
 
 void main() {
   // Multiply the position by the matrix.
@@ -33,22 +36,22 @@ void main() {
   // Pass the color to the fragment shader.
   v_color = a_color;
 }
-</script>
-<!-- fragment shader -->
-<script id="3d-fragment-shader" type="x-shader/x-fragment">
+`;
+
+var fs = `#version 300 es
 precision mediump float;
 
 // Passed in from the vertex shader.
-varying vec4 v_color;
+in vec4 v_color;
 
 uniform vec4 u_colorMult;
 
+out vec4 outColor;
+
 void main() {
-   gl_FragColor = v_color * u_colorMult;
+   outColor = v_color * u_colorMult;
 }
-</script>
-<script>
-"use strict";
+`;
 
 function main() {
   // Get A WebGL context
@@ -60,8 +63,8 @@ function main() {
     return;
   }
 
-  var createFlattenedVertices = function(gl, vertices) {
-    return createBufferInfoFromArrays(
+  function createFlattenedVertices(gl, vertices) {
+    return webglUtils.createBufferInfoFromArrays(
         gl,
         primitives.makeRandomVertexColors(
             primitives.deindexVertices(vertices),
@@ -79,7 +82,11 @@ function main() {
   var coneBufferInfo   = createFlattenedVertices(gl, primitives.createTruncatedConeVertices(10, 0, 20, 12, 1, true, false));
 
   // setup GLSL program
-  var programInfo = createProgramInfo(gl, ["3d-vertex-shader", "3d-fragment-shader"]);
+  var programInfo = webglUtils.createProgramInfo(gl, [vs, fs]);
+
+  var sphereVAO = webglUtils.createVAOFromBufferInfo(gl, programInfo, sphereBufferInfo);
+  var cubeVAO   = webglUtils.createVAOFromBufferInfo(gl, programInfo, cubeBufferInfo);
+  var coneVAO   = webglUtils.createVAOFromBufferInfo(gl, programInfo, coneBufferInfo);
 
   function degToRad(d) {
     return d * Math.PI / 180;
@@ -92,60 +99,53 @@ function main() {
   // Uniforms for each object.
   var sphereUniforms = {
     u_colorMult: [0.5, 1, 0.5, 1],
-    u_matrix: makeIdentity(),
+    u_matrix: m4.identity(),
   };
   var cubeUniforms = {
     u_colorMult: [1, 0.5, 0.5, 1],
-    u_matrix: makeIdentity(),
+    u_matrix: m4.identity(),
   };
   var coneUniforms = {
     u_colorMult: [0.5, 0.5, 1, 1],
-    u_matrix: makeIdentity(),
+    u_matrix: m4.identity(),
   };
   var sphereTranslation = [  0, 0, 0];
   var cubeTranslation   = [-40, 0, 0];
   var coneTranslation   = [ 40, 0, 0];
 
-  function computeMatrix(viewMatrix, projectionMatrix, translation, xRotation, yRotation) {
-    var xRotationMatrix = makeXRotation(xRotation);
-    var yRotationMatrix = makeYRotation(yRotation);
-    var translationMatrix = makeTranslation(
+  function computeMatrix(viewProjectionMatrix, translation, xRotation, yRotation) {
+    var matrix = m4.translate(viewProjectionMatrix,
         translation[0],
         translation[1],
         translation[2]);
-    var matrix = makeIdentity();
-    matrix = matrixMultiply(matrix, xRotationMatrix);
-    matrix = matrixMultiply(matrix, yRotationMatrix);
-    var worldMatrix = matrixMultiply(matrix, translationMatrix);
-    matrix = matrixMultiply(worldMatrix, viewMatrix);
-    return matrixMultiply(matrix, projectionMatrix);
+    matrix = m4.xRotate(matrix, xRotation);
+    return m4.yRotate(matrix, yRotation);
   }
 
   requestAnimationFrame(drawScene);
 
   // Draw the scene.
   function drawScene(time) {
-    time *= 0.0005;
+    time = time * 0.0005;
 
     gl.enable(gl.CULL_FACE);
     gl.enable(gl.DEPTH_TEST);
 
-    // Clear the canvas AND the depth buffer.
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
     // Compute the projection matrix
-    var aspect = canvas.clientWidth / canvas.clientHeight;
+    var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
     var projectionMatrix =
-        makePerspective(fieldOfViewRadians, aspect, 1, 2000);
+        m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
 
     // Compute the camera's matrix using look at.
     var cameraPosition = [0, 0, 100];
     var target = [0, 0, 0];
     var up = [0, 1, 0];
-    var cameraMatrix = makeLookAt(cameraPosition, target, up);
+    var cameraMatrix = m4.lookAt(cameraPosition, target, up);
 
     // Make a view matrix from the camera matrix.
-    var viewMatrix = makeInverse(cameraMatrix);
+    var viewMatrix = m4.inverse(cameraMatrix);
+
+    var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
 
     var sphereXRotation =  time;
     var sphereYRotation =  time;
@@ -154,64 +154,61 @@ function main() {
     var coneXRotation   =  time;
     var coneYRotation   = -time;
 
-    // ------ Draw the sphere --------
-
     gl.useProgram(programInfo.program);
 
+    // ------ Draw the sphere --------
+
     // Setup all the needed attributes.
-    setBuffersAndAttributes(gl, programInfo.attribSetters, sphereBufferInfo);
+    gl.bindVertexArray(sphereVAO);
 
     sphereUniforms.u_matrix = computeMatrix(
-        viewMatrix,
-        projectionMatrix,
+        viewProjectionMatrix,
         sphereTranslation,
         sphereXRotation,
         sphereYRotation);
 
     // Set the uniforms we just computed
-    setUniforms(programInfo.uniformSetters, sphereUniforms);
+    webglUtils.setUniforms(programInfo, sphereUniforms);
 
-    gl.drawArrays(gl.TRIANGLES, 0, sphereBufferInfo.numElements);
+    webglUtils.drawBufferInfo(gl, sphereBufferInfo);
 
     // ------ Draw the cube --------
 
     // Setup all the needed attributes.
-    setBuffersAndAttributes(gl, programInfo.attribSetters, cubeBufferInfo);
+    gl.bindVertexArray(cubeVAO);
 
     cubeUniforms.u_matrix = computeMatrix(
-        viewMatrix,
-        projectionMatrix,
+        viewProjectionMatrix,
         cubeTranslation,
         cubeXRotation,
         cubeYRotation);
 
     // Set the uniforms we just computed
-    setUniforms(programInfo.uniformSetters, cubeUniforms);
+    webglUtils.setUniforms(programInfo, cubeUniforms);
 
-    gl.drawArrays(gl.TRIANGLES, 0, cubeBufferInfo.numElements);
+    webglUtils.drawBufferInfo(gl, cubeBufferInfo);
 
     // ------ Draw the cone --------
 
     // Setup all the needed attributes.
-    setBuffersAndAttributes(gl, programInfo.attribSetters, coneBufferInfo);
+    gl.bindVertexArray(coneVAO);
 
     coneUniforms.u_matrix = computeMatrix(
-        viewMatrix,
-        projectionMatrix,
+        viewProjectionMatrix,
         coneTranslation,
         coneXRotation,
         coneYRotation);
 
     // Set the uniforms we just computed
-    setUniforms(programInfo.uniformSetters, coneUniforms);
+    webglUtils.setUniforms(programInfo, coneUniforms);
 
-    gl.drawArrays(gl.TRIANGLES, 0, coneBufferInfo.numElements);
+    webglUtils.drawBufferInfo(gl, coneBufferInfo);
 
     requestAnimationFrame(drawScene);
   }
 }
 
-window.addEventListener('load', main);
+main();
 </script>
 </html>
 

@@ -18,14 +18,17 @@ Draw multiple objects by list with optimization checks
 <script src="resources/webgl-3d-math.js"></script>
 <script src="resources/primitives.js"></script>
 <script src="resources/chroma.min.js"></script>
-<!-- vertex shader -->
-<script id="3d-vertex-shader" type="x-shader/x-vertex">
-attribute vec4 a_position;
-attribute vec4 a_color;
+<script>
+"use strict";
+
+var vs = `#version 300 es
+
+in vec4 a_position;
+in vec4 a_color;
 
 uniform mat4 u_matrix;
 
-varying vec4 v_color;
+out vec4 v_color;
 
 void main() {
   // Multiply the position by the matrix.
@@ -34,22 +37,22 @@ void main() {
   // Pass the color to the fragment shader.
   v_color = a_color;
 }
-</script>
-<!-- fragment shader -->
-<script id="3d-fragment-shader" type="x-shader/x-fragment">
+`;
+
+var fs = `#version 300 es
 precision mediump float;
 
 // Passed in from the vertex shader.
-varying vec4 v_color;
+in vec4 v_color;
 
 uniform vec4 u_colorMult;
 
+out vec4 outColor;
+
 void main() {
-   gl_FragColor = v_color * u_colorMult;
+   outColor = v_color * u_colorMult;
 }
-</script>
-<script>
-"use strict";
+`;
 
 function main() {
   // Get A WebGL context
@@ -61,8 +64,8 @@ function main() {
     return;
   }
 
-  var createFlattenedVertices = function(gl, vertices) {
-    return createBufferInfoFromArrays(
+  function createFlattenedVertices(gl, vertices) {
+    return webglUtils.createBufferInfoFromArrays(
         gl,
         primitives.makeRandomVertexColors(
             primitives.deindexVertices(vertices),
@@ -79,21 +82,22 @@ function main() {
   var cubeBufferInfo   = createFlattenedVertices(gl, primitives.createCubeVertices(20));
   var coneBufferInfo   = createFlattenedVertices(gl, primitives.createTruncatedConeVertices(10, 0, 20, 12, 1, true, false));
 
-  var shapes = [
-    sphereBufferInfo,
-    cubeBufferInfo,
-    coneBufferInfo,
-  ];
-
-
   // setup GLSL program
-  var programInfo = createProgramInfo(gl, ["3d-vertex-shader", "3d-fragment-shader"]);
+  var programInfo = webglUtils.createProgramInfo(gl, [vs, fs]);
+
+  var sphereVAO = webglUtils.createVAOFromBufferInfo(gl, programInfo, sphereBufferInfo);
+  var cubeVAO   = webglUtils.createVAOFromBufferInfo(gl, programInfo, cubeBufferInfo);
+  var coneVAO   = webglUtils.createVAOFromBufferInfo(gl, programInfo, coneBufferInfo);
 
   function degToRad(d) {
     return d * Math.PI / 180;
   }
 
   function rand(min, max) {
+    if (max === undefined) {
+      max = min;
+      min = 0;
+    }
     return Math.random() * (max - min) + min;
   }
 
@@ -101,81 +105,86 @@ function main() {
     return x >= 0 ? (x % n) : ((n - (-x % n)) % n);
   };
 
-
   var cameraAngleRadians = degToRad(0);
   var fieldOfViewRadians = degToRad(60);
   var cameraHeight = 50;
+
+  // put the shapes in an array so it's easy to pick them at random
+  var shapes = [
+    { bufferInfo: sphereBufferInfo, vertexArray: sphereVAO, },
+    { bufferInfo: cubeBufferInfo,   vertexArray: cubeVAO, },
+    { bufferInfo: coneBufferInfo,   vertexArray: coneVAO, },
+  ];
 
   var objectsToDraw = [];
   var objects = [];
 
   // Make infos for each object for each object.
-  var baseHue = rand(0, 360);
+  var baseHue = rand(360);
   var numObjects = 200;
   for (var ii = 0; ii < numObjects; ++ii) {
+    // pick a shape
+    var shape = shapes[rand(shapes.length) | 0];
+
+    // make an object.
     var object = {
       uniforms: {
-        u_colorMult: chroma.hsv(emod(baseHue + rand(0, 120), 360), rand(0.5, 1), rand(0.5, 1)).gl(),
-        u_matrix: makeIdentity(),
+        u_colorMult: chroma.hsv(emod(baseHue + rand(120), 360), rand(0.5, 1), rand(0.5, 1)).gl(),
+        u_matrix: m4.identity(),
       },
       translation: [rand(-100, 100), rand(-100, 100), rand(-150, -50)],
       xRotationSpeed: rand(0.8, 1.2),
       yRotationSpeed: rand(0.8, 1.2),
     };
     objects.push(object);
+
+    // Add it to the list of things to draw.
     objectsToDraw.push({
       programInfo: programInfo,
-      bufferInfo: shapes[ii % shapes.length],
+      bufferInfo: shape.bufferInfo,
+      vertexArray: shape.vertexArray,
       uniforms: object.uniforms,
     });
   }
 
-  function computeMatrix(viewMatrix, projectionMatrix, translation, xRotation, yRotation) {
-    var xRotationMatrix = makeXRotation(xRotation);
-    var yRotationMatrix = makeYRotation(yRotation);
-    var translationMatrix = makeTranslation(
+  function computeMatrix(viewProjectionMatrix, translation, xRotation, yRotation) {
+    var matrix = m4.translate(viewProjectionMatrix,
         translation[0],
         translation[1],
         translation[2]);
-    var matrix = makeIdentity();
-    matrix = matrixMultiply(matrix, xRotationMatrix);
-    matrix = matrixMultiply(matrix, yRotationMatrix);
-    var worldMatrix = matrixMultiply(matrix, translationMatrix);
-    matrix = matrixMultiply(worldMatrix, viewMatrix);
-    return matrixMultiply(matrix, projectionMatrix);
+    matrix = m4.xRotate(matrix, xRotation);
+    return m4.yRotate(matrix, yRotation);
   }
 
   requestAnimationFrame(drawScene);
 
   // Draw the scene.
   function drawScene(time) {
-    time *= 0.0005;
+    time = time * 0.0005;
 
     gl.enable(gl.CULL_FACE);
     gl.enable(gl.DEPTH_TEST);
 
-    // Clear the canvas AND the depth buffer.
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
     // Compute the projection matrix
-    var aspect = canvas.clientWidth / canvas.clientHeight;
+    var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
     var projectionMatrix =
-        makePerspective(fieldOfViewRadians, aspect, 1, 2000);
+        m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
 
     // Compute the camera's matrix using look at.
     var cameraPosition = [0, 0, 100];
     var target = [0, 0, 0];
     var up = [0, 1, 0];
-    var cameraMatrix = makeLookAt(cameraPosition, target, up);
+    var cameraMatrix = m4.lookAt(cameraPosition, target, up);
 
     // Make a view matrix from the camera matrix.
-    var viewMatrix = makeInverse(cameraMatrix);
+    var viewMatrix = m4.inverse(cameraMatrix);
+
+    var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
 
     // Compute the matrices for each object.
     objects.forEach(function(object) {
       object.uniforms.u_matrix = computeMatrix(
-          viewMatrix,
-          projectionMatrix,
+          viewProjectionMatrix,
           object.translation,
           object.xRotationSpeed * time,
           object.yRotationSpeed * time);
@@ -184,42 +193,35 @@ function main() {
     // ------ Draw the objects --------
 
     var lastUsedProgramInfo = null;
-    var lastUsedBufferInfo = null;
+    var lastUsedVertexArray = null;
 
     objectsToDraw.forEach(function(object) {
       var programInfo = object.programInfo;
-      var bufferInfo = object.bufferInfo;
-      var bindBuffers = false;
+      var vertexArray = object.vertexArray
 
       if (programInfo !== lastUsedProgramInfo) {
         lastUsedProgramInfo = programInfo;
         gl.useProgram(programInfo.program);
-
-        // We have to rebind buffers when changing programs because we
-        // only bind buffers the program uses. So if 2 programs use the same
-        // bufferInfo but the 1st one uses only positions the when the
-        // we switch to the 2nd one some of the attributes will not be on.
-        bindBuffers = true;
       }
 
       // Setup all the needed attributes.
-      if (bindBuffers || bufferInfo !== lastUsedBufferInfo) {
-        lastUsedBufferInfo = bufferInfo;
-        setBuffersAndAttributes(gl, programInfo.attribSetters, bufferInfo);
+      if (lastUsedVertexArray !== vertexArray) {
+        lastUsedVertexArray = vertexArray;
+        gl.bindVertexArray(vertexArray);
       }
 
       // Set the uniforms.
-      setUniforms(programInfo.uniformSetters, object.uniforms);
+      webglUtils.setUniforms(programInfo, object.uniforms);
 
       // Draw
-      gl.drawArrays(gl.TRIANGLES, 0, bufferInfo.numElements);
+      webglUtils.drawBufferInfo(gl, object.bufferInfo);
     });
 
     requestAnimationFrame(drawScene);
   }
 }
 
-window.addEventListener('load', main);
+main();
 </script>
 </html>
 
