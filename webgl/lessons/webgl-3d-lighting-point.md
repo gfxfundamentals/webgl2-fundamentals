@@ -1,7 +1,8 @@
 Title: WebGL 3D - Point Lighting
 Description: How to implement point lighting in WebGL
 
-This article is a continuation of <a href="webgl-3d-lighting-directional.html">WebGL 3D Directional Lighting</a>. If you haven't read that I suggest <a href="webgl-3d-lighting-directional.html">you start there</a>.
+This article is a continuation of [WebGL 3D Directional Lighting](webgl-3d-lighting-directional.html).
+If you haven't read that I suggest [you start there](webgl-3d-lighting-directional.html).
 
 In the last article we covered directional lighting where the light is coming
 universally from the same direction. We set that direction before rendering.
@@ -40,8 +41,10 @@ surface to a point.
 
 Here's all that in context
 
-    attribute vec4 a_position;
-    attribute vec3 a_normal;
+    #version 300 es
+
+    in vec4 a_position;
+    in vec3 a_normal;
 
     +uniform vec3 u_lightWorldPosition;
 
@@ -49,9 +52,8 @@ Here's all that in context
     uniform mat4 u_worldViewProjection;
     uniform mat4 u_worldInverseTranspose;
 
-    varying vec3 v_normal;
-
-    +varying vec3 v_surfaceToLight;
+    out vec3 v_normal;
+    +out vec3 v_surfaceToLight;
 
     void main() {
       // Multiply the position by the matrix.
@@ -70,17 +72,21 @@ Here's all that in context
 
 Now in the fragment shader we need to normalize the surface to light vector
 since it's a not a unit vector. Note that we could normalize in the vertex shader
-but because it's a `varying` it will be linear interpolated between our positions
+but because it's a *varying* it will be linear interpolated between our positions
 and so would not be a complete unit vector
 
+    #version 300 es
     precision mediump float;
 
     // Passed in from the vertex shader.
-    varying vec3 v_normal;
-    +varying vec3 v_surfaceToLight;
+    in vec3 v_normal;
+    +in vec3 v_surfaceToLight;
 
     -uniform vec3 u_reverseLightDirection;
     uniform vec4 u_color;
+
+    // we need to declare an output for the fragment shader
+    out vec4 outColor;
 
     void main() {
       // because v_normal is a varying it's interpolated
@@ -163,8 +169,10 @@ before. 1 = they match, same direction, 0 = they're perpendicular, -1 = they're 
 So first thing is we need to pass in the view/camera/eye position, compute the surface to view vector
 and pass it to the fragment shader.
 
-    attribute vec4 a_position;
-    attribute vec3 a_normal;
+    #version 300 es
+
+    in vec4 a_position;
+    in vec3 a_normal;
 
     uniform vec3 u_lightWorldPosition;
     +uniform vec3 u_viewWorldPosition;
@@ -175,8 +183,8 @@ and pass it to the fragment shader.
 
     varying vec3 v_normal;
 
-    varying vec3 v_surfaceToLight;
-    +varying vec3 v_surfaceToView;
+    out vec3 v_surfaceToLight;
+    +out vec3 v_surfaceToView;
 
     void main() {
       // Multiply the position by the matrix.
@@ -203,9 +211,9 @@ product the `halfVector` and the normal to find out if the light is reflecting
 into the view.
 
     // Passed in from the vertex shader.
-    varying vec3 v_normal;
-    varying vec3 v_surfaceToLight;
-    +varying vec3 v_surfaceToView;
+    in vec3 v_normal;
+    in vec3 v_surfaceToLight;
+    +in vec3 v_surfaceToView;
 
     uniform vec4 u_color;
 
@@ -246,6 +254,8 @@ Finally we have to look up `u_viewWorldPosition` and set it
     var target = [0, 35, 0];
     var up = [0, 1, 0];
     var cameraMatrix = makeLookAt(camera, target, up);
+
+    ...
 
     +// set the camera/view position
     +gl.uniform3fv(viewWorldPositionLocation, camera);
@@ -356,6 +366,6 @@ again makes it negative.</p>
 <p>Well then what does this mean?</p>
 <div class="webgl_center"><pre class="glocal-center-content">pow(-5, 2.5)</pre></div>
 <p>How do you decide which is the result of that positive or negative? I'm not a math guy really
-but it seems undecidable hence it's undefined.</p>.
+but it seems undecidable hence it's undefined.</p>
 </div>
 
