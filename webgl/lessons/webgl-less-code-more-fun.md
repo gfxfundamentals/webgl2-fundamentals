@@ -401,6 +401,23 @@ multiple programs since it automatically keeps the setters with the program they
 
 {{{example url="../webgl-less-code-more-fun-quad-programinfo.html" }}}
 
+One more, sometimes we have data that has no indices and we have to call
+`gl.drawArrays`. Other times do have indices and we have to call `gl.drawElements`.
+Given the data we have we easily check which by looking at `bufferInfo.indices`.
+If it exists we need to call `gl.drawElements`. If not we need to call `gl.drawArrays`.
+So there's a function, `webglUtils.drawBufferInfo` that does that. It's used like this
+
+    webglUtils.drawBufferInfo(gl, bufferInfo);
+
+If you don't pass a 3rd parameter for the type of primitive to draw it assumes
+`gl.TRIANGLE`.
+
+Here's an example were we have a non-indexed triangle and an indexed quad. Because
+we're using `webglUtils.drawBufferInfo` the code doesn't have to change when we
+switch data.
+
+{{{example url="../webgl-less-code-more-fun-quad-drawbufferinfo.html" }}}
+
 Anyway, this is the style I try to write my own WebGL programs.
 For the lessons on these tutorials though I've felt like I have to use the standard **verbose**
 ways so people don't get confused about what is WebGL and what is my own style. At some point
@@ -410,7 +427,8 @@ be using this style.
 Feel free to use this style in your own code. The functions `webglUtils.createProgramInfo`, `webglUtils.createVAOAndSetAttributes`,
 `webglUtils.createBufferInfoFromArrays`, and `webglUtils.setUniforms` are included in the
 [`webgl-utils.js`](https://github.com/greggman/webgl-fundamentals/blob/master/webgl/resources/webgl-utils.js)
-file used by all the samples. If you want something slightly more organized check out [TWGL.js](http://twgljs.org).
+file used by all the samples. If you want something slightly more organized check out [TWGL.js](http://twgljs.org)
+which is what I actually use.
 
 Next up, [drawing multiple things](webgl-drawing-multiple-things.html).
 
