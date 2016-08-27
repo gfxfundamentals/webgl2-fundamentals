@@ -469,13 +469,14 @@
    *     setUniforms(programInfo.uniformSetters, uniforms);
    *     setUniforms(programInfo.uniformSetters, moreUniforms);
    *
-   * @param {Object.<string, function>} setters the setters returned from
+   * @param {Object.<string, function>|module:webgl-utils.ProgramInfo} setters the setters returned from
    *        `createUniformSetters`.
    * @param {Object.<string, value>} an object with values for the
    *        uniforms.
    * @memberOf module:webgl-utils
    */
   function setUniforms(setters, values) {
+    setters = setters.uniformSetters || setters
     Object.keys(values).forEach(function(name) {
       var setter = setters[name];
       if (setter) {
@@ -568,17 +569,51 @@
    *     };
    *
    * @param {Object.<string, function>} setters Attribute setters as returned from createAttributeSetters
-   * @param {Object.<string, module:webgl-utils.AttribInfo>} buffers AttribInfos mapped by attribute name.
+   * @param {Object.<string, module:webgl-utils.AttribInfo>} attribs AttribInfos mapped by attribute name.
    * @memberOf module:webgl-utils
    * @deprecated use {@link module:webgl-utils.setBuffersAndAttributes}
    */
-  function setAttributes(setters, buffers) {
-    Object.keys(buffers).forEach(function(name) {
+  function setAttributes(setters, attribs) {
+    Object.keys(attribs).forEach(function(name) {
       var setter = setters[name];
       if (setter) {
-        setter(buffers[name]);
+        setter(attribs[name]);
       }
     });
+  }
+
+  /**
+   * Creates a vertex array object and then sets the attributes
+   * on it
+   *
+   * @param {WebGLRenderingContext} gl The WebGLRenderingContext
+   *        to use.
+   * @param {Object.<string, function>} setters Attribute setters as returned from createAttributeSetters
+   * @param {Object.<string, module:webgl-utils.AttribInfo>} attribs AttribInfos mapped by attribute name.
+   * @param {WebGLBuffer} [indices] an optional ELEMENT_ARRAY_BUFFER of indices
+   */
+  function createVAOAndSetAttributes(gl, setters, attribs, indices) {
+    var vao = gl.createVertexArray();
+    gl.bindVertexArray(vao);
+    setAttributes(setters, attribs);
+    if (indices) {
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indices);
+    }
+    return vao;
+  }
+
+  /**
+   * Creates a vertex array object and then sets the attributes
+   * on it
+   *
+   * @param {WebGLRenderingContext} gl The WebGLRenderingContext
+   *        to use.
+   * @param {Object.<string, function>| module:webgl-utils.ProgramInfo} programInfo as returned from createProgramInfo or Attribute setters as returned from createAttributeSetters
+   * @param {module:webgl-utils:BufferInfo} bufferInfo BufferInfo as returned from createBufferInfoFromArrays etc...
+   * @param {WebGLBuffer} [indices] an optional ELEMENT_ARRAY_BUFFER of indices
+   */
+  function createVAOFromBufferInfo(gl, programInfo, bufferInfo) {
+    return createVAOAndSetAttributes(gl, programInfo.attribSetters || programInfo, bufferInfo.attribs, bufferInfo.indices);
   }
 
   /**
@@ -1199,6 +1234,8 @@
     createProgramFromSources: createProgramFromSources,
     createProgramInfo: createProgramInfo,
     createUniformSetters: createUniformSetters,
+    createVAOAndSetAttributes: createVAOAndSetAttributes,
+    createVAOFromBufferInfo: createVAOFromBufferInfo,
     drawBufferInfo: drawBufferInfo,
     drawObjectList: drawObjectList,
     getExtensionWithKnownPrefixes: getExtensionWithKnownPrefixes,
