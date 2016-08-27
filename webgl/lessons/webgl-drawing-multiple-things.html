@@ -100,7 +100,7 @@ function drawCircle() {
    ...
 }
 </code></pre><p>WebGL works this second way. Functions like <code>gl.createBuffer</code>, <code>gl.bufferData</code>, <code>gl.createTexture</code>,
-and <code>gl.texImage2D</code> let you upload buffer (vertex) and texture (color, etc..) data to WebGL.
+and <code>gl.texImage2D</code> let you upload data to buffers (vertex data) and data to textures (color, etc..).
 <code>gl.createProgram</code>, <code>gl.createShader</code>, <code>gl.compileProgram</code>, and <code>gl.linkProgram</code> let you create
 your GLSL shaders. Nearly all the rest of the functions of WebGL are setting up these global
 variables or <em>state</em> that is used when <code>gl.drawArrays</code> or <code>gl.drawElements</code> is finally called.</p>
@@ -109,6 +109,11 @@ variables or <em>state</em> that is used when <code>gl.drawArrays</code> or <cod
 <ul>
 <li>create all shaders and programs and look up locations</li>
 <li>create buffers and upload vertex data</li>
+<li>create a vertex array for each thing you want to draw<ul>
+<li>for each attribute call <code>gl.bindBuffer</code>, <code>gl.vertexAttribPointer</code>, <code>gl.enableVertexAttribArray</code></li>
+<li>bind any indices to <code>gl.ELEMENT_ARRAY_BUFFER</code></li>
+</ul>
+</li>
 <li>create textures and upload texture data</li>
 </ul>
 <p>At Render Time</p>
@@ -116,8 +121,8 @@ variables or <em>state</em> that is used when <code>gl.drawArrays</code> or <cod
 <li>clear and set the viewport and other global state (enable depth testing, turn on culling, etc..)</li>
 <li>For each thing you want to draw<ul>
 <li>call <code>gl.useProgram</code> for the program needed to draw.</li>
-<li>setup attributes for the thing you want to draw<ul>
-<li>for each attribute call <code>gl.bindBuffer</code>, <code>gl.vertexAttribPointer</code>, <code>gl.enableVertexAttribArray</code></li>
+<li>bind the vertex array for that thing.<ul>
+<li>call <code>gl.bindVertexArray</code></li>
 </ul>
 </li>
 <li>setup uniforms for the thing you want to draw<ul>
@@ -136,12 +141,14 @@ you need to wait for them to download over the net.</p>
 <p>I&#39;m not going to go into the details of how to compute cube, sphere, and cone data. Let&#39;s just
 assume we have functions to create them and they return <a href="webgl-less-code-more-fun.html">bufferInfo objects as described in
 the previous article</a>.</p>
-<p>So here&#39;s the code. Our shader is the same one simple shader from our <a href="webgl-3d-perspective.html">perspective example</a>
+<p>So here&#39;s the code. Our shader is the same simple shader from our <a href="webgl-3d-perspective.html">perspective example</a>
 except we&#39;ve added a <code>u_colorMult</code> to multiply the vertex colors by.</p>
 <pre><code>// Passed in from the vertex shader.
-varying vec4 v_color;
+in vec4 v_color;
 
 uniform vec4 u_colorMult;
+
+out vec4 outColor;
 
 void main() {
    gl_FragColor = v_color * u_colorMult;
@@ -150,15 +157,15 @@ void main() {
 <pre><code>// Our uniforms for each thing we want to draw
 var sphereUniforms = {
   u_colorMult: [0.5, 1, 0.5, 1],
-  u_matrix: makeIdentity(),
+  u_matrix: m4.identity(),
 };
 var cubeUniforms = {
   u_colorMult: [1, 0.5, 0.5, 1],
-  u_matrix: makeIdentity(),
+  u_matrix: m4.identity(),
 };
 var coneUniforms = {
   u_colorMult: [0.5, 0.5, 1, 1],
-  u_matrix: makeIdentity(),
+  u_matrix: m4.identity(),
 };
 
 // The translation for each object.
@@ -178,53 +185,50 @@ var coneYRotation   = -time;
 gl.useProgram(programInfo.program);
 
 // Setup all the needed attributes.
-setBuffersAndAttributes(gl, programInfo.attribSetters, sphereBufferInfo);
+gl.bindVertexArray(sphereVAO);
 
 sphereUniforms.u_matrix = computeMatrix(
-    viewMatrix,
-    projectionMatrix,
+    viewProjectionMatrix,
     sphereTranslation,
     sphereXRotation,
     sphereYRotation);
 
 // Set the uniforms we just computed
-setUniforms(programInfo.uniformSetters, sphereUniforms);
+webglUtils.setUniforms(programInfo.uniformSetters, sphereUniforms);
 
-gl.drawArrays(gl.TRIANGLES, 0, sphereBufferInfo.numElements);
+webglUtils.drawBufferInfo(gl, sphereBufferInfo);
 
 // ------ Draw the cube --------
 
 // Setup all the needed attributes.
-setBuffersAndAttributes(gl, programInfo.attribSetters, cubeBufferInfo);
+gl.bindVertexArray(cubeVAO);
 
 cubeUniforms.u_matrix = computeMatrix(
-    viewMatrix,
-    projectionMatrix,
+    viewProjectionMatrix,
     cubeTranslation,
     cubeXRotation,
     cubeYRotation);
 
 // Set the uniforms we just computed
-setUniforms(programInfo.uniformSetters, cubeUniforms);
+webglUtils.setUniforms(programInfo.uniformSetters, cubeUniforms);
 
-gl.drawArrays(gl.TRIANGLES, 0, cubeBufferInfo.numElements);
+webglUtils.drawBufferInfo(gl, cubeBufferInfo);
 
 // ------ Draw the cone --------
 
 // Setup all the needed attributes.
-setBuffersAndAttributes(gl, programInfo.attribSetters, coneBufferInfo);
+gl.bindVertexArray(coneVAO);
 
 coneUniforms.u_matrix = computeMatrix(
-    viewMatrix,
-    projectionMatrix,
+    viewProjectionMatrix,
     coneTranslation,
     coneXRotation,
     coneYRotation);
 
 // Set the uniforms we just computed
-setUniforms(programInfo.uniformSetters, coneUniforms);
+webglUtils.setUniforms(programInfo.uniformSetters, coneUniforms);
 
-gl.drawArrays(gl.TRIANGLES, 0, coneBufferInfo.numElements);
+webglUtils.drawBufferInfo(gl, coneBufferInfo);
 </code></pre><p>And here&#39;s that</p>
 <p><div>
   <iframe class="webgl_example" style="width: 400px; height: 300px;" src="../webgl-multiple-objects-manual.html"></iframe>
@@ -235,28 +239,32 @@ gl.drawArrays(gl.TRIANGLES, 0, coneBufferInfo.numElements);
 <p>One thing to notice is since we only have a single shader program we only called <code>gl.useProgram</code>
 once. If we had different shader programs you&#39;d need to call <code>gl.useProgram</code> before um...
 using each program.</p>
-<p>This is another place where it&#39;s a good idea to simplify. There are effectively 3 main things to combine.</p>
+<p>This is another place where it&#39;s a good idea to simplify. There are effectively 4 main things to combine.</p>
 <ol>
-<li>A shader program (and its uniform and attribute info/setters)</li>
-<li>The buffer and attributes for the thing you want to draw</li>
+<li>A shader program (and its uniform and attribute info)</li>
+<li>A vertex array (that contains attribute settings)</li>
 <li>The uniforms needed to draw that thing with the given shader.</li>
+<li>The count to pass to gl.draw and whether or not to call gl.drawArrays or gl.drawElements</li>
 </ol>
 <p>So, a simple simplification would be to make an array of things to draw and in that array
-put the 3 things togehter</p>
+put the 4 things togehter</p>
 <pre><code>var objectsToDraw = [
   {
     programInfo: programInfo,
     bufferInfo: sphereBufferInfo,
+    vertexArray: sphereVAO,
     uniforms: sphereUniforms,
   },
   {
     programInfo: programInfo,
     bufferInfo: cubeBufferInfo,
+    vertexArray: cubeVAO,
     uniforms: cubeUniforms,
   },
   {
     programInfo: programInfo,
     bufferInfo: coneBufferInfo,
+    vertexArray: coneVAO,
     uniforms: coneUniforms,
   },
 ];
@@ -294,130 +302,40 @@ coneUniforms.u_matrix = computeMatrix(
 
 objectsToDraw.forEach(function(object) {
   var programInfo = object.programInfo;
-  var bufferInfo = object.bufferInfo;
 
   gl.useProgram(programInfo.program);
 
   // Setup all the needed attributes.
-  setBuffersAndAttributes(gl, programInfo.attribSetters, bufferInfo);
+  gl.bindVertexArray(object.vertexArray);
 
   // Set the uniforms.
-  setUniforms(programInfo.uniformSetters, object.uniforms);
+  webglUtils.setUniforms(programInfo, object.uniforms);
 
   // Draw
-  gl.drawArrays(gl.TRIANGLES, 0, bufferInfo.numElements);
+  webglUtils.draw(gl, bufferInfo);
 });
 </code></pre><p>And this is arguably the main rendering loop of most 3D engines in existence. Somewhere
-some code or codes decide what goes into the list of <code>objectsToDraw</code> but that&#39;s basically it.</p>
+some code or codes decide what goes into the list of <code>objectsToDraw</code> and the number
+of options they need might be larger but most of them separate out computing what
+goes in that list with actually calling the <code>gl.draw___</code> functions.</p>
 <p><div>
   <iframe class="webgl_example" style="width: 400px; height: 300px;" src="../webgl-multiple-objects-list.html"></iframe>
   <a class="webgl_center" href="../webgl-multiple-objects-list.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>There are a few basic optimizations. If the program we&#39;re about to draw with is the same
-as the previous program we drew with then there&#39;s no need to call <code>gl.useProgram</code>. Similarly
-if we&#39;re drawing with the same shape/geometry/vertices we previously drew with there&#39;s no
-need to set those up again.</p>
-<p>So, a very simple optimization might look like this</p>
-<pre><code>var lastUsedProgramInfo = null;
-var lastUsedBufferInfo = null;
-
-objectsToDraw.forEach(function(object) {
-  var programInfo = object.programInfo;
-  var bufferInfo = object.bufferInfo;
-  var bindBuffers = false;
-
-  if (programInfo !== lastUsedProgramInfo) {
-    lastUsedProgramInfo = programInfo;
-    gl.useProgram(programInfo.program);
-
-    // We have to rebind buffers when changing programs because we
-    // only bind buffers the program uses. So if 2 programs use the same
-    // bufferInfo but the 1st one uses only positions then when
-    // we switch to the 2nd one some of the attributes will not be on.
-    bindBuffers = true;
-  }
-
-  // Setup all the needed attributes.
-  if (bindBuffers || bufferInfo != lastUsedBufferInfo) {
-    lastUsedBufferInfo = bufferInfo;
-    setBuffersAndAttributes(gl, programInfo.attribSetters, bufferInfo);
-  }
-
-  // Set the uniforms.
-  setUniforms(programInfo.uniformSetters, object.uniforms);
-
-  // Draw
-  gl.drawArrays(gl.TRIANGLES, 0, bufferInfo.numElements);
-});
-</code></pre><p>This time let&#39;s draw a lot more objects. Instead of just 3 like before let&#39;s make
-the list of things to draw larger</p>
-<pre><code>// put the shapes in an array so it&#39;s easy to pick them at random
-var shapes = [
-  sphereBufferInfo,
-  cubeBufferInfo,
-  coneBufferInfo,
-];
-
-// make 2 lists of objects, one of stuff to draw, one to manipulate.
-var objectsToDraw = [];
-var objects = [];
-
-// Uniforms for each object.
-var numObjects = 200;
-for (var ii = 0; ii &lt; numObjects; ++ii) {
-  // pick a shape
-  var bufferInfo = shapes[rand(0, shapes.length) | 0];
-
-  // make an object.
-  var object = {
-    uniforms: {
-      u_colorMult: [rand(0, 1), rand(0, 1), rand(0, 1), 1],
-      u_matrix: makeIdentity(),
-    },
-    translation: [rand(-100, 100), rand(-100, 100), rand(-150, -50)],
-    xRotationSpeed: rand(0.8, 1.2),
-    yRotationSpeed: rand(0.8, 1.2),
-  };
-  objects.push(object);
-
-  // Add it to the list of things to draw.
-  objectsToDraw.push({
-    programInfo: programInfo,
-    bufferInfo: bufferInfo,
-    uniforms: object.uniforms,
-  });
-}
-</code></pre><p>At render time</p>
-<pre><code>// Compute the matrices for each object.
-objects.forEach(function(object) {
-  object.uniforms.u_matrix = computeMatrix(
-      viewMatrix,
-      projectionMatrix,
-      object.translation,
-      object.xRotationSpeed * time,
-      object.yRotationSpeed * time);
-});
-</code></pre><p>Then draw the objects using the loop above.</p>
-<p><div>
-  <iframe class="webgl_example" style="width: 400px; height: 300px;" src="../webgl-multiple-objects-list-optimized.html"></iframe>
-  <a class="webgl_center" href="../webgl-multiple-objects-list-optimized.html" target="_blank">click here to open in a separate window</a>
-</div>
-
-</p>
-<p>You could also sort the list by <code>programInfo</code> and/or <code>bufferInfo</code> so that the optimization
-kicks in more often. Most game engines do this. Unfortunately it&#39;s not that simple.
-If everything you&#39;re drawing is opaque and then you can just sort. But, as soon you need to
-draw semi-transparent things you&#39;ll need to draw them in a specific order. Most 3D engines
-handle this by having 2 or more lists of objects to draw. One list for opaque things.
-Another list for transparent things. The opaque list is sorted by program and geometry.
+<h2 id="drawing-transparent-things-and-multiple-lists">Drawing Transparent Things and Multiple Lists</h2>
+<p>In the example above there is just one list to draw. This works because all the objects
+are opaque. If we want to draw transpaent objects though they must be drawn back to front
+with the furthest objects appearing first. On the other hand, for speed, for opaque
+objects we want to draw front to back, that&#39;s because the DEPTH_TEST means that the GPU
+will not execute our fragment shader for any pixels that would be behind other things.
+so we want to draw the stuff in front first.</p>
+<p>Most 3D engines handle this by having 2 or more lists of objects to draw. One list for opaque things.
+Another list for transparent things. The opaque list is sorted front to back.
 The transparent list is sorted by depth. There might also be separate lists for other
 things like overlays or post processing effects.</p>
-<p><a href="../webgl-multiple-objects-list-optimized-sorted.html" target="_blank">Here&#39;s a sorted example</a>.
-On my machine I get ~31fps unsorted and ~37 sorted. That&#39;s nearly a 20% increase. But,
-it&#39;s worst case vs best case and most programs would be doing a lot more so it&#39;s arguably
-not worth thinking about for all but the most special cases.</p>
+<h2 id="consider-using-a-library">Consider using a library</h2>
 <p>It&#39;s important to notice that you can&#39;t draw just any geometry with just any shader.
 For example a shader that requires normals will not function with geometry that has no
 normals. Similarly a shader that requires textures will not work without textures.</p>
@@ -435,6 +353,18 @@ writing a shader generator since different features often require different shad
 arguably be separated from computing matrices. It&#39;s common to compute matrices from a
 <a href="webgl-scene-graph.html">scene graph and we&#39;ll go over that in another article</a>.</p>
 <p>Now that we have a framework for drawing multiple objects <a href="webgl-text-html.html">lets draw some text</a>.</p>
+<div class="webgl_bottombar">
+<h3>WebGL1 Optimization Removed</h3>
+<p>
+In WebGL 1 we didn't have vertex array objects and so
+<a href="http://webglfundametnals.org/webgl/lessons/webgl-drawing-multiple-things.html">I recommended an optimization</a>.
+Without vertex array objects we had to make 12 WebGL calls everytime we switched geometry and so
+it made sense to draw to avoid that as much as possible. In WebGL2 those 12 WebGL calls reduce to just one call
+`gl.bindVertexArray(someVertexArray)` and, at least in my testing I could not measure a difference
+using my recommended optimizations so I removed that section.
+</p>
+</div>
+
 
       <hr/>
       <div>
