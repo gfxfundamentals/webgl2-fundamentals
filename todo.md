@@ -3,7 +3,6 @@ TO DO
 
 Fix articles
 
-*   webgl-less-code-more-fun.html
 *   webgl-drawing-multiple-things.html
 *   webgl-scene-graph.html
 *   webgl-2d-drawimage.html
@@ -20,6 +19,17 @@ Fix articles
 *   webgl-and-alpha.html
 *   webgl-2d-vs-3d-library.html
 *   webgl-anti-patterns.html
+
+List Changes to site
+
+*   math under m3, m4, v3
+*   utilties all under name spaces, webglUtils, webglLessonsHelper
+*   mostly no jquery
+*   multiply order swapped
+*   simplifed trans/rot/scale functions added
+*   using template strings instead of script tags
+*   all shaders using #version 300 es
+*   all examples using vertex array objects
 
 Cover WebGL1->2
 
@@ -82,4 +92,5 @@ DONE
 *   webgl-3d-camera.html
 *   webgl-3d-lighting-directional.html
 *   webgl-3d-lighting-point.html
+*   webgl-less-code-more-fun.html
 
