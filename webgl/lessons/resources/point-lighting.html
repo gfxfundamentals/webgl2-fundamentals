@@ -4,16 +4,7 @@
 <head>
 <meta charset="utf-8">
 <title>WebGL2 - Directional Lighting Diagram</title>
-<link type="text/css" href="../../resources/css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
 <link type="text/css" href="../../resources/webgl-tutorials.css" rel="stylesheet" />
-<style>
-#ui {
-    width: 200px;
-}
-#rotation>canvas {
-    background-color: rgba(255, 255, 255, 0.6) !important;
-}
-</style>
 </head>
 <body>
 <div class="description">
@@ -28,9 +19,6 @@
 </div>
 </body>
 </html>
-<script src="../../resources/jquery-1.7.1.min.js"></script>
-<script src="../../resources/jquery-ui-1.8.16.custom.min.js"></script>
-<script src="../../resources/jquery.gman.ui.js"></script>
 <script src="../../resources/webgl-utils.js"></script>
 <script src="../../resources/webgl-lessons-helper.js"></script>
 <script src="../../resources/webgl-2d-math.js"></script>
@@ -42,15 +30,15 @@ function main() {
   var ctx = document.getElementById("canvas").getContext("2d");
   var direction = 0;
 
-  $("#rotation").gmanSlider({value: radToDeg(direction), slide: updateDirection, min: -70, max: 70 });
+  webglLessonsHelper.setupSlider("#rotation", {value: m3.radToDeg(direction), slide: updateDirection, min: -70, max: 70 });
 
   function updateDirection(event, ui) {
-    direction = degToRad(ui.value);
+    direction = m3.degToRad(ui.value);
     render();
   }
 
   function render() {
-    resizeCanvasToDisplaySize(ctx.canvas, window.devicePixelRatio);
+    webglUtils.resizeCanvasToDisplaySize(ctx.canvas, window.devicePixelRatio);
     var width  = 250;
     var height = 200;
 
@@ -90,7 +78,7 @@ function main() {
       ctx.restore();
 
       dots.push({
-        dot: -dot(Math.sin(a), Math.cos(a), Math.sin(direction), Math.cos(direction)),
+        dot: -m3.dot(Math.sin(a), Math.cos(a), Math.sin(direction), Math.cos(direction)),
         r: r,
       });
     }
@@ -105,7 +93,7 @@ function main() {
     // draw surface
     diagram.roundedRect(ctx, -100, 0, 200, 20);
 
-    var d  = dot(0, 1, Math.sin(direction), Math.cos(direction));
+    var d  = m3.dot(0, 1, Math.sin(direction), Math.cos(direction));
     var gradient =  ctx.createLinearGradient(-100, 0, 100, 10);
 
     dots.forEach(function(dot, ndx) {
@@ -157,8 +145,6 @@ function main() {
   render();
 }
 
-$(function(){
-  main();
-});
+main();
 </script>
 
