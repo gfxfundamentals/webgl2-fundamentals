@@ -2,7 +2,7 @@ Title: WebGL - Less Code, More Fun
 Description: Ways to make programming WebGL less verbose
 
 This post is a continuation of a series of posts about WebGL.
-The first <a href="webgl-fundamentals.html">started with fundamentals</a>.
+The first [started with fundamentals](webgl-fundamentals.html).
 If you haven't read those please view them first.
 
 WebGL programs require that you write shader programs which you have to compile and link and then
@@ -14,22 +14,24 @@ compiling and linking shader programs</a>. Given a set of shaders like this.
 
 vertex shader:
 
-<pre class="prettyprint">
+```
+#version 300 es
+
 uniform mat4 u_worldViewProjection;
 uniform vec3 u_lightWorldPos;
 uniform mat4 u_world;
 uniform mat4 u_viewInverse;
 uniform mat4 u_worldInverseTranspose;
 
-attribute vec4 a_position;
-attribute vec3 a_normal;
-attribute vec2 a_texcoord;
+in vec4 a_position;
+in vec3 a_normal;
+in vec2 a_texcoord;
 
-varying vec4 v_position;
-varying vec2 v_texCoord;
-varying vec3 v_normal;
-varying vec3 v_surfaceToLight;
-varying vec3 v_surfaceToView;
+out vec4 v_position;
+out vec2 v_texCoord;
+out vec3 v_normal;
+out vec3 v_surfaceToLight;
+out vec3 v_surfaceToView;
 
 void main() {
   v_texCoord = a_texcoord;
@@ -39,18 +41,19 @@ void main() {
   v_surfaceToView = (u_viewInverse[3] - (u_world * a_position)).xyz;
   gl_Position = v_position;
 }
-</pre>
+```
 
 fragment shader:
 
-<pre class="prettyprint">
+```
+#version 300 es
 precision mediump float;
 
-varying vec4 v_position;
-varying vec2 v_texCoord;
-varying vec3 v_normal;
-varying vec3 v_surfaceToLight;
-varying vec3 v_surfaceToView;
+in vec4 v_position;
+in vec2 v_texCoord;
+in vec3 v_normal;
+in vec3 v_surfaceToLight;
+in vec3 v_surfaceToView;
 
 uniform vec4 u_lightColor;
 uniform vec4 u_ambient;
@@ -58,6 +61,8 @@ uniform sampler2D u_diffuse;
 uniform vec4 u_specular;
 uniform float u_shininess;
 uniform float u_specularFactor;
+
+out vec4 outColor;
 
 vec4 lit(float l ,float h, float m) {
   return vec4(1.0,
@@ -74,17 +79,16 @@ void main() {
   vec3 halfVector = normalize(surfaceToLight + surfaceToView);
   vec4 litR = lit(dot(a_normal, surfaceToLight),
                     dot(a_normal, halfVector), u_shininess);
-  vec4 outColor = vec4((
-  u_lightColor * (diffuseColor * litR.y + diffuseColor * u_ambient +
+  outColor = vec4((
+    u_lightColor * (diffuseColor * litR.y + diffuseColor * u_ambient +
                 u_specular * litR.z * u_specularFactor)).rgb,
-      diffuseColor.a);
-  gl_FragColor = outColor;
+    diffuseColor.a);
 }
-</pre>
+```
 
 You'd end up having to write code like this to look up and set all the various values to draw.
 
-<pre class="prettyprint">
+```
 // At initialization time
 var u_worldViewProjectionLoc   = gl.getUniformLocation(program, "u_worldViewProjection");
 var u_lightWorldPosLoc         = gl.getUniformLocation(program, "u_lightWorldPos");
@@ -102,6 +106,18 @@ var a_positionLoc              = gl.getAttribLocation(program, "a_position");
 var a_normalLoc                = gl.getAttribLocation(program, "a_normal");
 var a_texCoordLoc              = gl.getAttribLocation(program, "a_texcoord");
 
+// Setup all the buffers and attributes (assuming you made the buffers already)
+var vao = gl.createVertexArray();
+gl.bindVertexArray(vao);
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+gl.enableVertexAttribArray(a_positionLoc);
+gl.vertexAttribPointer(a_positionLoc, positionNumComponents, gl.FLOAT, false, 0, 0);
+gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+gl.enableVertexAttribArray(a_normalLoc);
+gl.vertexAttribPointer(a_normalLoc, normalNumComponents, gl.FLOAT, false, 0, 0);
+gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
+gl.enableVertexAttribArray(a_texcoordLoc);
+gl.vertexAttribPointer(a_texcoordLoc, texcoordNumComponents, gl.FLOAT, 0, 0);
 
 // At init or draw time depending on use.
 var someWorldViewProjectionMat = computeWorldViewProjectionMatrix();
@@ -116,20 +132,9 @@ var specularColor              = [1, 1, 1, 1];
 var shininess                  = 60;
 var specularFactor             = 1;
 
-
 // At draw time
 gl.useProgram(program);
-
-// Setup all the buffers and attributes
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-gl.enableVertexAttribArray(a_positionLoc);
-gl.vertexAttribPointer(a_positionLoc, positionNumComponents, gl.FLOAT, false, 0, 0);
-gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-gl.enableVertexAttribArray(a_normalLoc);
-gl.vertexAttribPointer(a_normalLoc, normalNumComponents, gl.FLOAT, false, 0, 0);
-gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
-gl.enableVertexAttribArray(a_texcoordLoc);
-gl.vertexAttribPointer(a_texcoordLoc, texcoordNumComponents, gl.FLOAT, 0, 0);
+gl.bindVertexArray(vao);
 
 // Setup the textures used
 gl.activeTexture(gl.TEXTURE0 + diffuseTextureUnit);
@@ -149,7 +154,7 @@ gl.uniform1f(u_shininessLoc, shininess);
 gl.uniform1f(u_specularFactorLoc, specularFactor);
 
 gl.drawArrays(...);
-</pre>
+```
 
 That's a lot of typing.
 
@@ -158,16 +163,19 @@ the uniforms and locations and then setup functions to set them for us. We can t
 JavaScript objects to set our settings much more easily. If that's clear as mud well,
 our code would look something like this
 
-<pre class="prettyprint">
+```
 // At initialiation time
-var uniformSetters = createUniformSetters(gl, program);
-var attribSetters  = createAttributeSetters(gl, program);
+var uniformSetters = webglUtils.createUniformSetters(gl, program);
+var attribSetters  = webglUtils.createAttributeSetters(gl, program);
 
+// Setup all the buffers and attributes
 var attribs = {
   a_position: { buffer: positionBuffer, numComponents: 3, },
   a_normal:   { buffer: normalBuffer,   numComponents: 3, },
   a_texcoord: { buffer: texcoordBuffer, numComponents: 2, },
 };
+var vao = webglUtils.createVAOAndSetAttributes(
+    gl, attribSetters, attribs);
 
 // At init time or draw time depending on use.
 var uniforms = {
@@ -187,29 +195,31 @@ var uniforms = {
 // At draw time
 gl.useProgram(program);
 
-// Setup all the buffers and attributes
-setAttributes(attribSetters, attribs);
+// Bind the VAO that has all our buffers and attribute settings
+gl.bindAttribArray(vao);
 
 // Set all the uniforms and textures used.
-setUniforms(uniformSetters, uniforms);
+webglUtils.setUniforms(uniformSetters, uniforms);
 
 gl.drawArrays(...);
-</pre>
+```
 
 That seems a heck of a lot smaller, easier, and less code to me.
 
 You can even use multiple JavaScript objects if it suits you. For example
 
-<pre class="prettyprint">
+```
 // At initialiation time
-var uniformSetters = createUniformSetters(gl, program);
-var attribSetters  = createAttributeSetters(gl, program);
+var uniformSetters = webglUtils.createUniformSetters(gl, program);
+var attribSetters  = webglUtils.createAttributeSetters(gl, program);
 
+// Setup all the buffers and attributes
 var attribs = {
   a_position: { buffer: positionBuffer, numComponents: 3, },
   a_normal:   { buffer: normalBuffer,   numComponents: 3, },
   a_texcoord: { buffer: texcoordBuffer, numComponents: 2, },
 };
+var vao = webglUtils.createVAOAndSetAttributes(gl, attribSetters, attribs);
 
 // At init time or draw time depending
 var uniformsThatAreTheSameForAllObjects = {
@@ -258,16 +268,18 @@ var objects = [
 gl.useProgram(program);
 
 // Setup the parts that are common for all objects
-setAttributes(attribSetters, attribs);
-setUniforms(uniformSetters, uniformThatAreTheSameForAllObjects);
+
+// Bind the VAO that has all our buffers and attribute settings
+gl.bindAttribArray(vao);
+webglUtils.setUniforms(uniformSetters, uniformThatAreTheSameForAllObjects);
 
 objects.forEach(function(object) {
   computeMatricesForObject(object, uniformsThatAreComputedForEachObject);
-  setUniforms(uniformSetters, uniformThatAreComputedForEachObject);
-  setUniforms(unifromSetters, objects.materialUniforms);
+  webglUtils.setUniforms(uniformSetters, uniformThatAreComputedForEachObject);
+  webglUtils.setUniforms(unifromSetters, objects.materialUniforms);
   gl.drawArrays(...);
 });
-</pre>
+```
 
 Here's an example using these helper functions
 
@@ -303,24 +315,19 @@ Looks like a pattern we can simplify as well.
        normal:   { numComponents: 3, data: [0, 0, 1, 0, 0, 1, 0, 0, 1],        },
     };
 
-    var bufferInfo = createBufferInfoFromArrays(gl, arrays);
+    var bufferInfo = webglUtils.createBufferInfoFromArrays(gl, arrays);
+    var vao = webglUtils.createVAOFromBufferInfo(gl, setters, bufferInfo);
 
-Much shorter! Now we can do this at render time
-
-    // Setup all the needed buffers and attributes.
-    setBuffersAndAttributes(gl, attribSetters, bufferInfo);
-
-    ...
-
-    // Draw the geometry.
-    gl.drawArrays(gl.TRIANGLES, 0, bufferInfo.numElements);
+Much shorter!
 
 Here's that
 
 {{{example url="../webgl-less-code-more-fun-triangle.html" }}}
 
-This will even work if we have indices. setAttribsAndBuffers will set all the attributes
-and setup the `ELEMENT_ARRAY_BUFFER` with your `indices` so you can call `gl.drawElements`.
+This will even work if we have indices. `createVAOFromBufferInfo`
+will set all the attributes and setup the `ELEMENT_ARRAY_BUFFER`
+with your `indices` so when you bind that VAO you can call
+`gl.drawElements`.
 
     // an indexed quad
     var arrays = {
@@ -330,12 +337,9 @@ and setup the `ELEMENT_ARRAY_BUFFER` with your `indices` so you can call `gl.dra
        indices:  { numComponents: 3, data: [0, 1, 2, 1, 2, 3],                       },
     };
 
-    var bufferInfo = createBufferInfoFromTypedArray(gl, arrays);
+    var bufferInfo = webglUtils.createBufferInfoFromTypedArray(gl, arrays);
 
 and at render time we can call `gl.drawElements` instead of `gl.drawArrays`.
-
-    // Setup all the needed buffers and attributes.
-    setBuffersAndAttributes(gl, attribSetters, bufferInfo);
 
     ...
 
@@ -345,20 +349,6 @@ and at render time we can call `gl.drawElements` instead of `gl.drawArrays`.
 Here's that
 
 {{{example url="../webgl-less-code-more-fun-quad.html" }}}
-
-`createBufferInfoFromArrays` basically makes an object that looks like this
-
-     bufferInfo = {
-       numElements: 4,        // or whatever the number of elements is
-       indices: WebGLBuffer,  // this property will not exist if there are no indices
-       attribs: {
-         a_position: { buffer: WebGLBuffer, numComponents: 3, },
-         a_normal:   { buffer: WebGLBuffer, numComponents: 3, },
-         a_texcoord: { buffer: WebGLBuffer, numComponents: 2, },
-       },
-     };
-
-And `setBuffersAndAttributes` uses that object to set all the buffers and attributes.
 
 Finally we can go what I consider possibly too far. Given `position` almost always has 3 components (x, y, z)
 and `texcoords` almost always 2, indices 3, and normals 3, we can just let the system guess the number
@@ -390,13 +380,13 @@ components they provide.
 
 Looking for more patterns there's this
 
-    var program = createProgramFromScripts(gl, ["vertexshader", "fragmentshader"]);
-    var uniformSetters = createUniformSetters(gl, program);
-    var attribSetters  = createAttributeSetters(gl, program);
+    var program = webglUtils.createProgramFromSources(gl, [vs, fs]);
+    var uniformSetters = webglUtils.createUniformSetters(gl, program);
+    var attribSetters  = webglUtils.createAttributeSetters(gl, program);
 
 Let's simplify that too into just
 
-    var programInfo = createProgramInfo(gl, ["vertexshader", "fragmentshader"]);
+    var programInfo = webglUtils.createProgramInfo(gl, ["vertexshader", "fragmentshader"]);
 
 Which returns something like
 
@@ -417,8 +407,8 @@ ways so people don't get confused about what is WebGL and what is my own style. 
 though showing all the steps gets in the way of the point so going forward some lessons will
 be using this style.
 
-Feel free to use this style in your own code. The functions `createUniformSetters`, `createAttributeSetters`,
-`createBufferInfoFromArrays`, `setUniforms`, and `setBuffersAndAttributes` are included in the
+Feel free to use this style in your own code. The functions `webglUtils.createProgramInfo`, `webglUtils.createVAOAndSetAttributes`,
+`webglUtils.createBufferInfoFromArrays`, and `webglUtils.setUniforms` are included in the
 [`webgl-utils.js`](https://github.com/greggman/webgl-fundamentals/blob/master/webgl/resources/webgl-utils.js)
 file used by all the samples. If you want something slightly more organized check out [TWGL.js](http://twgljs.org).
 
@@ -432,7 +422,7 @@ directly like this.
 </p>
 <pre class="prettyprint">
 // At initialiation time
-var uniformSetters = createUniformSetters(program);
+var uniformSetters = webglUtils.createUniformSetters(program);
 
 // At draw time
 uniformSetters.u_ambient([1, 0, 0, 1]); // set the ambient color to red.
@@ -443,14 +433,14 @@ anything on the screen in our program. One of the first things I do when nothing
 is appearing is to simplify my shaders. For example I might change the fragment shader
 to the simplest thing possible</p>
 <pre class="prettyprint showlinemods">
-// fragment shader
+#version 300 es
 precision mediump float;
 
-varying vec4 v_position;
-varying vec2 v_texCoord;
-varying vec3 v_normal;
-varying vec3 v_surfaceToLight;
-varying vec3 v_surfaceToView;
+in vec4 v_position;
+in vec2 v_texCoord;
+in vec3 v_normal;
+in vec3 v_surfaceToLight;
+in vec3 v_surfaceToView;
 
 uniform vec4 u_lightColor;
 uniform vec4 u_ambient;
@@ -458,6 +448,8 @@ uniform sampler2D u_diffuse;
 uniform vec4 u_specular;
 uniform float u_shininess;
 uniform float u_specularFactor;
+
+out vec4 outColor;
 
 vec4 lit(float l ,float h, float m) {
   return vec4(1.0,
@@ -475,21 +467,20 @@ void main() {
   vec4 litR = lit(dot(a_normal, surfaceToLight),
                     dot(a_normal, halfVector), u_shininess);
   vec4 outColor = vec4((
-  u_lightColor * (diffuseColor * litR.y + diffuseColor * u_ambient +
+    u_lightColor * (diffuseColor * litR.y + diffuseColor * u_ambient +
                 u_specular * litR.z * u_specularFactor)).rgb,
       diffuseColor.a);
-  gl_FragColor = outColor;
-*  gl_FragColor = vec4(0,1,0,1);  // &lt;!--- just green
+*  outColor = vec4(0,1,0,1);  // &lt;!--- just green
 }
 </pre>
-<p>Notice I just added a line that sets <code>gl_FragColor</code> to a constant color.
+<p>Notice I just added a line that sets <code>outColor</code> to a constant color.
 Most drivers will see that none of the previous lines in the file actually contribute
 to the result. As such they'll optimize out all of our uniforms. The next time we run the program
-when we call <code>createUniformSetters</code> it won't create a setter for <code>u_ambient</code> so the
+when we call <code>webgl.createUniformSetters</code> it won't create a setter for <code>u_ambient</code> so the
 code above that calls <code>uniformSetters.u_ambient()</code> directly will fail with</p>
 <pre class="prettyprint">
 TypeError: undefined is not a function
 </pre>
-<p><code>setUniforms</code> solves that issue. It only sets those uniforms that actually exist</p>
+<p><code>webglUtils.setUniforms</code> solves that issue. It only sets those uniforms that actually exist</p>
 </div>
 
