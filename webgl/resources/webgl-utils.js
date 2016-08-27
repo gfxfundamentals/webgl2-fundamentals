@@ -476,7 +476,7 @@
    * @memberOf module:webgl-utils
    */
   function setUniforms(setters, values) {
-    setters = setters.uniformSetters || setters
+    setters = setters.uniformSetters || setters;
     Object.keys(values).forEach(function(name) {
       var setter = setters[name];
       if (setter) {
@@ -1163,20 +1163,21 @@
    * data you don't have to remember to update your draw call.
    *
    * @param {WebGLRenderingContext} gl A WebGLRenderingContext
-   * @param {enum} type eg (gl.TRIANGLES, gl.LINES, gl.POINTS, gl.TRIANGLE_STRIP, ...)
    * @param {module:webgl-utils.BufferInfo} bufferInfo as returned from createBufferInfoFromArrays
+   * @param {enum} [primitives] eg (gl.TRIANGLES, gl.LINES, gl.POINTS, gl.TRIANGLE_STRIP, ...)
    * @param {number} [count] An optional count. Defaults to bufferInfo.numElements
    * @param {number} [offset] An optional offset. Defaults to 0.
    * @memberOf module:webgl-utils
    */
-  function drawBufferInfo(gl, type, bufferInfo, count, offset) {
+  function drawBufferInfo(gl, bufferInfo, primitives, count, offset) {
     var indices = bufferInfo.indices;
+    var primitives = primitives === undefined ? gl.TRIANGLES : primitives;
     var numElements = count === undefined ? bufferInfo.numElements : count;
     offset = offset === undefined ? offset : 0;
     if (indices) {
-      gl.drawElements(type, numElements, gl.UNSIGNED_SHORT, offset);
+      gl.drawElements(primitives, numElements, gl.UNSIGNED_SHORT, offset);
     } else {
-      gl.drawArrays(type, offset, numElements);
+      gl.drawArrays(primitives, offset, numElements);
     }
   }
 
