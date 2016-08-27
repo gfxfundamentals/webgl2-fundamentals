@@ -467,10 +467,10 @@ Then we need to look that up
 And we need to compute and set it
 
 ```
-var worldViewMatrix = matrixMultiply(worldMatrix, viewMatrix);
-var worldViewProjectionMatrix = matrixMultiply(worldViewMatrix, projectionMatrix);
-+var worldInverseMatrix = makeInverse(worldMatrix);
-+var worldInverseTransposeMatrix = makeTranspose(worldInverseMatrix);
+var worldMatrix = m4.yRotation(fRotationRadians);
+var worldViewProjectionMatrix = m4.multiply(viewProjectionMatrix, worldMatrix);
++var worldInverseMatrix = m4.inverse(worldMatrix);
++var worldInverseTransposeMatrix = m4.transpose(worldInverseMatrix);
 
 // Set the matrices
 gl.uniformMatrix4fv(
