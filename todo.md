@@ -3,7 +3,6 @@ TO DO
 
 Fix articles
 
-*   webgl-3d-lighting-point.html
 *   webgl-less-code-more-fun.html
 *   webgl-drawing-multiple-things.html
 *   webgl-scene-graph.html
@@ -28,7 +27,7 @@ Cover WebGL1->2
 *  #version es 300
 *  attribute -> in
 *  varying -> in/out
-*  gl_FragColor -> out vec4 someName;
+*  gl_FragColor -> out vec4 someName; (not gl_FragColor)
 *  texture2D/textureCube -> texture
 *  mod to %
 *  npot no longer an issue
@@ -40,6 +39,7 @@ Cover WebGL1->2
    *  instanced drawing
    *  textures in vertex shaders (were optional)
 
+*  instancing
 *  use vertex array objects
 *  use uniform buffer objects
 
@@ -81,4 +81,5 @@ DONE
 *   webgl-3d-perspective.html
 *   webgl-3d-camera.html
 *   webgl-3d-lighting-directional.html
+*   webgl-3d-lighting-point.html
 
