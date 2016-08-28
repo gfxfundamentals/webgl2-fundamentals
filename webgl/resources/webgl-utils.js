@@ -1220,7 +1220,7 @@
       setUniforms(programInfo.uniformSetters, object.uniforms);
 
       // Draw
-      drawBufferInfo(gl, gl.TRIANGLES, bufferInfo);
+      drawBufferInfo(gl, bufferInfo);
     });
   }
 
