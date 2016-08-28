@@ -449,8 +449,7 @@
    * @memberOf module:webgl-3d-math
    */
   function translate(m, tx, ty, tz, dst) {
-    var b = translation(tx, ty, tz, dst);
-    return multiply(m, b, b);
+    return multiply(m, translation(tx, ty, tz), dst);
   }
 
   /**
@@ -494,8 +493,7 @@
    * @memberOf module:webgl-3d-math
    */
   function xRotate(m, angleInRadians, dst) {
-    var b = xRotation(angleInRadians, dst);
-    return multiply(m, b, b);
+    return multiply(m, xRotation(angleInRadians), dst);
   }
 
   /**
@@ -539,8 +537,7 @@
    * @memberOf module:webgl-3d-math
    */
   function yRotate(m, angleInRadians, dst) {
-    var b = yRotation(angleInRadians, dst);
-    return multiply(m, b, b);
+    return multiply(m, yRotation(angleInRadians), dst);
   }
 
   /**
@@ -584,8 +581,7 @@
    * @memberOf module:webgl-3d-math
    */
   function zRotate(m, angleInRadians, dst) {
-    var b = zRotation(angleInRadians, dst);
-    return multiply(m, b, b);
+    return multiply(m, zRotation(angleInRadians), dst);
   }
 
   /**
@@ -643,8 +639,7 @@
    * @memberOf module:webgl-3d-math
    */
   function axisRotate(m, axis, angleInRadians, dst) {
-    var b = axisRotation(axis, angleInRadians, dst);
-    return multiply(m, b, b);
+    return multiply(m, axisRotation(axis, angleInRadians), dst);
   }
 
   /**
@@ -690,8 +685,7 @@
    * @memberOf module:webgl-3d-math
    */
   function scale(m, sx, sy, sz, dst) {
-    var b = scaling(sx, sy, sz, dst);
-    return multiply(m, b, b);
+    return multiply(m, scaling(sx, sy, sz), dst);
   }
 
   /**
@@ -887,7 +881,7 @@
     return dst;
   }
 
-  function copyMatrix(src, dst) {
+  function copy(src, dst) {
     dst = dst || new Float32Array(16);
 
     dst[ 0] = src[ 0];
@@ -911,7 +905,7 @@
   }
 
   return {
-    copyMatrix: copyMatrix,
+    copy: copy,
     lookAt: lookAt,
     subtractVectors: subtractVectors,
     normalize: normalize,
