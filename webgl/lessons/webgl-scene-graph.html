@@ -115,7 +115,7 @@ matrices as it walks</p>
 <pre><code>function computeWorldMatrix(currentNode, parentWorldMatrix) {
     // compute our world matrix by multplying our local matrix with
     // our parent&#39;s world matrix.
-    var worldMatrix = matrixMultiply(currentNode.localMatrix, parentWorldMatrix);
+    var worldMatrix = m4.multiply(parentWorldMatrix, currentNode.localMatrix);
 
     // now do the same for all of our children
     currentNode.children.forEach(function(child) {
@@ -146,8 +146,8 @@ anything like that as it would clutter the example. First let&#39;s make a few f
 to help manage nodes. First we&#39;ll make a node class</p>
 <pre><code>var Node = function() {
   this.children = [];
-  this.localMatrix = makeIdentity();
-  this.worldMatrix = makeIdentity();
+  this.localMatrix = m4.identity();
+  this.worldMatrix = m4.identity();
 };
 </code></pre><p>Let&#39;s give it a way to set the parent of a node.</p>
 <pre><code>Node.prototype.setParent = function(parent) {
@@ -173,10 +173,10 @@ their world matrices. If you don&#39;t understand matrix math
   if (parentWorldMatrix) {
     // a matrix was passed in so do the math and
     // store the result in `this.worldMatrix`.
-    matrixMultiply(this.localMatrix, parentWorldMatrix, this.worldMatrix);
+    m4.multiply(parentWorldMatrix, this.localMatrix, this.worldMatrix);
   } else {
     // no matrix was passed in so just copy.
-    copyMatrix(this.localMatrix, this.worldMatrix);
+    m4.copy(this.localMatrix, this.worldMatrix);
   }
 
   // now process all the children
@@ -191,7 +191,7 @@ and color it yellowish for the sun, blue-greenish for the earth and grayish for 
 If <code>drawInfo</code>, <code>bufferInfo</code>, and <code>programInfo</code> are not familiar to you <a href="webgl-drawing-multiple-things.html">see the previous article</a>.</p>
 <pre><code>// Let&#39;s make all the nodes
 var sunNode = new Node();
-sunNode.localMatrix = makeTranslation(0, 0, 0);  // sun at the center
+sunNode.localMatrix = m4.translation(0, 0, 0);  // sun at the center
 sunNode.drawInfo = {
   uniforms: {
     u_colorOffset: [0.6, 0.6, 0, 1], // yellow
@@ -199,10 +199,11 @@ sunNode.drawInfo = {
   },
   programInfo: programInfo,
   bufferInfo: sphereBufferInfo,
+  vertexArray: sphereVAO,
 };
 
 var earthNode = new Node();
-earthNode.localMatrix = makeTranslation(100, 0, 0);  // earth 100 units from the sun
+earthNode.localMatrix = m4.translation(100, 0, 0);  // earth 100 units from the sun
 earthNode.drawInfo = {
   uniforms: {
     u_colorOffset: [0.2, 0.5, 0.8, 1],  // blue-green
@@ -210,10 +211,11 @@ earthNode.drawInfo = {
   },
   programInfo: programInfo,
   bufferInfo: sphereBufferInfo,
+  vertexArray: sphereVAO,
 };
 
 var moonNode = new Node();
-moonNode.localMatrix = makeTranslation(20, 0, 0);  // moon 20 units from the earth
+moonNode.localMatrix = m4.translation(20, 0, 0);  // moon 20 units from the earth
 moonNode.drawInfo = {
   uniforms: {
     u_colorOffset: [0.6, 0.6, 0.6, 1],  // gray
@@ -221,6 +223,7 @@ moonNode.drawInfo = {
   },
   programInfo: programInfo,
   bufferInfo: sphereBufferInfo,
+  vertexArray: sphereVAO,
 };
 </code></pre><p>Now that we&#39;ve made the nodes let&#39;s connect them.</p>
 <pre><code>// connect the celestial objects
@@ -240,16 +243,16 @@ var objectsToDraw = [
 ];
 </code></pre><p>At render time we&#39;ll update each object&#39;s local matrix by rotating it slightly.</p>
 <pre><code>// update the local matrices for each object.
-matrixMultiply(sunNode.localMatrix, makeYRotation(0.01), sunNode.localMatrix);
-matrixMultiply(earthNode.localMatrix, makeYRotation(0.01), earthNode.localMatrix);
-matrixMultiply(moonNode.localMatrix, makeYRotation(0.01), moonNode.localMatrix);
+m4.multiply(m4.yRotation(0.01), sunNode.localMatrix  , sunNode.localMatrix);
+m4.multiply(m4.yRotation(0.01), earthNode.localMatrix, earthNode.localMatrix);
+m4.multiply(m4.yRotation(0.01), moonNode.localMatrix , moonNode.localMatrix);
 </code></pre><p>Now that the local matrices are updated we&#39;ll update all the world matrices</p>
 <pre><code>sunNode.updateWorldMatrix();
 </code></pre><p>Finally now that we have world matrices we need to multiply those to get a <a href="webgl-3d-perspective.html">worldViewProjection
 matrix</a> for each object.</p>
 <pre><code>// Compute all the matrices for rendering
 objects.forEach(function(object) {
-  object.drawInfo.uniforms.u_matrix = matrixMultiply(object.worldMatrix, viewProjectionMatrix);
+  object.drawInfo.uniforms.u_matrix = m4.multiply(viewProjectionMatrix, object.worldMatrix);
 });
 </code></pre><p>Rendering is <a href="webgl-drawing-multiple-things.html">the same loop we saw in our last article</a>.</p>
 <p><div>
@@ -259,9 +262,11 @@ objects.forEach(function(object) {
 
 </p>
 <p>You&#39;ll notice all of the planets are the same size. Let&#39;s try to make the earth larger</p>
-<pre><code>earthNode.localMatrix = matrixMultiply(
-    makeScale(2, 2, 2),           // make the earth twice as large
-    makeTranslation(100, 0, 0));  // earth 100 units from the sun
+<pre><code>// earth 100 units from the sun
+earthNode.localMatrix = m4.translation(100, 0, 0));
+
+// make the earth twice as large
+earthNode.localMatrix = m4.scale(earthNode.localMatrix, 2, 2, 2);
 </code></pre><p><div>
   <iframe class="webgl_example" style="width: 400px; height: 300px;" src="../webgl-scene-graph-solar-system-larger-earth.html"></iframe>
   <a class="webgl_center" href="../webgl-scene-graph-solar-system-larger-earth.html" target="_blank">click here to open in a separate window</a>
@@ -292,18 +297,24 @@ affect the earth. Similarly the earth can rotate separately from the moon. Let&#
 <code>solarSystem</code>, <code>earthOrbit</code> and <code>moonOrbit</code>.</p>
 <pre><code>var solarSystemNode = new Node();
 var earthOrbitNode = new Node();
-earthOrbitNode.localMatrix = makeTranslation(100, 0, 0);  // earth orbit 100 units from the sun
+
+// earth orbit 100 units from the sun
+earthOrbitNode.localMatrix = m4.translation(100, 0, 0);
 var moonOrbitNode = new Node();
-moonOrbitNode.localMatrix = makeTranslation(20, 0, 0);  // moon 20 units from the earth
+
+ // moon 20 units from the earth
+moonOrbitNode.localMatrix = m4.translation(20, 0, 0);
 </code></pre><p>Those orbit distances have been removed from the old nodes</p>
 <pre><code>var earthNode = new Node();
--earthNode.localMatrix = matrixMultiply(
--    makeScale(2, 2, 2),           // make the earth twice as large
--    makeTranslation(100, 0, 0));  // earth 100 units from the sun
-+earthNode.localMatrix = makeScale(2, 2, 2);   // make the earth twice as large
+-// earth 100 units from the sun
+-earthNode.localMatrix = m4.translation(100, 0, 0));
+
+-// make the earth twice as large
+-earthNode.localMatrix = m4.scale(earthNode.localMatrix, 2, 2, 2);
++earthNode.localMatrix = m4.scaling(2, 2, 2);
 
 var moonNode = new Node();
--moonNode.localMatrix = makeTranslation(20, 0, 0);  // moon 20 units from the earth
+-moonNode.localMatrix = m4.translation(20, 0, 0);  // moon 20 units from the earth
 </code></pre><p>Connecting them now looks like this</p>
 <pre><code>// connect the celetial objects
 sunNode.setParent(solarSystemNode);
@@ -313,11 +324,11 @@ moonOrbitNode.setParent(earthOrbitNode);
 moonNode.setParent(moonOrbitNode);
 </code></pre><p>And we only need to update the orbits</p>
 <pre><code>// update the local matrices for each object.
--matrixMultiply(sunNode.localMatrix, makeYRotation(0.01), sunNode.localMatrix);
--matrixMultiply(earthNode.localMatrix, makeYRotation(0.01), earthNode.localMatrix);
--matrixMultiply(moonNode.localMatrix, makeYRotation(0.01), moonNode.localMatrix);
-+matrixMultiply(earthOrbitNode.localMatrix, makeYRotation(0.01), earthOrbitNode.localMatrix);
-+matrixMultiply(moonOrbitNode.localMatrix, makeYRotation(0.01), moonOrbitNode.localMatrix);
+=m4.multiply(m4.yRotation(0.01), sunNode.localMatrix  , sunNode.localMatrix);
+=m4.multiply(m4.yRotation(0.01), earthNode.localMatrix, earthNode.localMatrix);
+=m4.multiply(m4.yRotation(0.01), moonNode.localMatrix , moonNode.localMatrix);
++m4.multiply(m4.yRotation(0.01), earthOrbitNode.localMatrix, earthOrbitNode.localMatrix);
++m4.multiply(m4.yRotation(0.01), moonOrbitNode.localMatrix, moonOrbitNode.localMatrix);
 
 // Update all world matrices in the scene graph
 -sunNode.updateWorldMatrix();
@@ -331,23 +342,27 @@ moonNode.setParent(moonOrbitNode);
 </p>
 <p>You might also notice the sun and the earth are no longer rotating in place. That is now independent.</p>
 <p>Let&#39;s adjust a few more things.</p>
-<pre><code>-sunNode.localMatrix = makeTranslation(0, 0, 0);  // sun at the center
-+sunNode.localMatrix = makeScale(5, 5, 5);
+<pre><code>-sunNode.localMatrix = m4.translation(0, 0, 0);  // sun at the center
++sunNode.localMatrix = m4.scaling(5, 5, 5);
 
 ...
 
-+moonNode.localMatrix = makeScale(0.4, 0.4, 0.4);
+*moonOrbitNode.localMatrix = m4.translation(30, 0, 0);
+
+...
+
++moonNode.localMatrix = m4.scaling(0.4, 0.4, 0.4);
 
 ...
 // update the local matrices for each object.
 matrixMultiply(earthOrbitNode.localMatrix, makeYRotation(0.01), earthOrbitNode.localMatrix);
 matrixMultiply(moonOrbitNode.localMatrix, makeYRotation(0.01), moonOrbitNode.localMatrix);
-// spin the sun
-matrixMultiply(sunNode.localMatrix, makeYRotation(0.005), sunNode.localMatrix);
++// spin the sun
++m4.multiply(m4.yRotation(0.005), sunNode.localMatrix, sunNode.localMatrix);
 +// spin the earth
-+matrixMultiply(earthNode.localMatrix, makeYRotation(0.05), earthNode.localMatrix);
++m4.multiply(m4.yRotation(0.05), earthNode.localMatrix, earthNode.localMatrix);
 +// spin the moon
-+matrixMultiply(monNode.localMatrix, makeYRotation(-0.01), moonNode.localMatrix);
++m4.multiply(m4.yRotation(-0.01), moonNode.localMatrix, moonNode.localMatrix);
 </code></pre><p><div>
   <iframe class="webgl_example" style="width: 400px; height: 300px;" src="../webgl-scene-graph-solar-system-adjusted.html"></iframe>
   <a class="webgl_center" href="../webgl-scene-graph-solar-system-adjusted.html" target="_blank">click here to open in a separate window</a>
@@ -407,11 +422,11 @@ TRS.prototype.getMatrix = function(dst) {
   var s = this.scale;
 
   // compute a matrix from translation, rotation, and scale
-  makeTranslation(t[0], t[1], t[2], dst);
-  matrixMultiply(makeXRotation(r[0]), dst, dst);
-  matrixMultiply(makeYRotation(r[1]), dst, dst);
-  matrixMultiply(makeZRotation(r[2]), dst, dst);
-  matrixMultiply(makeScale(s[0], s[1], s[2]), dst, dst);
+  m4.translation(t[0], t[1], t[2], dst);
+  m4.xRotate(dst, r[0], dst);
+  m4.yRotate(dst, r[1], dst);
+  m4.zRotate(dst, r[2], dst);
+  m4.scale(dst, s[0], s[1], s[2]), dst);
   return dst;
 };
 </code></pre><p>And we can use it like this</p>
@@ -437,7 +452,7 @@ Games in the early to mid 2000s had 30 to 70 joints. If you did every joint in y
 to animate hands animate the thumb as one and the 4 fingers as one large finger to save
 on time (both CPU/GPU and artist time) and memory.</p>
 <p>In any case here&#39;s a block guy I hacked together. It&#39;s using the <code>TRS</code> source for each
-node mentioned above. Programmer art and programmer animation FTW! :P</p>
+node mentioned above. Programmer art and programmer animation FTW! 😂</p>
 <p><div>
   <iframe class="webgl_example" style="width: 400px; height: 300px;" src="../webgl-scene-graph-block-guy.html"></iframe>
   <a class="webgl_center" href="../webgl-scene-graph-block-guy.html" target="_blank">click here to open in a separate window</a>
