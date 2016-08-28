@@ -17,14 +17,17 @@ A human hierarchy using a scene graph
 <script src="resources/webgl-lessons-helper.js"></script>
 <script src="resources/webgl-3d-math.js"></script>
 <script src="resources/primitives.js"></script>
-<!-- vertex shader -->
-<script id="3d-vertex-shader" type="x-shader/x-vertex">
-attribute vec4 a_position;
-attribute vec4 a_color;
+<script>
+"use strict";
+
+var vs = `#version 300 es
+
+in vec4 a_position;
+in vec4 a_color;
 
 uniform mat4 u_matrix;
 
-varying vec4 v_color;
+out vec4 v_color;
 
 void main() {
   // Multiply the position by the matrix.
@@ -33,87 +36,89 @@ void main() {
   // Pass the color to the fragment shader.
   v_color = a_color;
 }
-</script>
-<!-- fragment shader -->
-<script id="3d-fragment-shader" type="x-shader/x-fragment">
+`;
+
+var fs = `#version 300 es
 precision mediump float;
 
 // Passed in from the vertex shader.
-varying vec4 v_color;
+in vec4 v_color;
 
 uniform vec4 u_colorMult;
 uniform vec4 u_colorOffset;
 
+out vec4 outColor;
+
 void main() {
-   gl_FragColor = v_color * u_colorMult + u_colorOffset;
+   outColor = v_color * u_colorMult + u_colorOffset;
 }
-</script>
-<script>
-"use strict";
+`;
 
-   var TRS = function() {
-     this.translation = [0, 0, 0];
-     this.rotation = [0, 0, 0];
-     this.scale = [1, 1, 1];
-   };
+var TRS = function() {
+  this.translation = [0, 0, 0];
+  this.rotation = [0, 0, 0];
+  this.scale = [1, 1, 1];
+};
 
-   TRS.prototype.getMatrix = function(dst) {
-     dst = dst || new Float32Array(16);
-     var t = this.translation;
-     var r = this.rotation;
-     var s = this.scale;
-     makeTranslation(t[0], t[1], t[2], dst);
-     matrixMultiply(makeXRotation(r[0]), dst, dst);
-     matrixMultiply(makeYRotation(r[1]), dst, dst);
-     matrixMultiply(makeZRotation(r[2]), dst, dst);
-     matrixMultiply(makeScale(s[0], s[1], s[2]), dst, dst);
-     return dst;
-   };
+TRS.prototype.getMatrix = function(dst) {
+  dst = dst || new Float32Array(16);
+  var t = this.translation;
+  var r = this.rotation;
+  var s = this.scale;
 
-   var Node = function(source) {
-     this.children = [];
-     this.localMatrix = makeIdentity();
-     this.worldMatrix = makeIdentity();
-     this.source = source;
-   };
+  // compute a matrix from translation, rotation, and scale
+  m4.translation(t[0], t[1], t[2], dst);
+  m4.xRotate(dst, r[0], dst);
+  m4.yRotate(dst, r[1], dst);
+  m4.zRotate(dst, r[2], dst);
+  m4.scale(dst, s[0], s[1], s[2], dst);
+  return dst;
+};
 
-   Node.prototype.setParent = function(parent) {
-     // remove us from our parent
-     if (this.parent) {
-       var ndx = this.parent.children.indexOf(this);
-       if (ndx >= 0) {
-         this.parent.children.splice(ndx, 1);
-       }
-     }
+var Node = function(source) {
+  this.children = [];
+  this.localMatrix = m4.identity();
+  this.worldMatrix = m4.identity();
+  this.source = source;
+};
 
-     // Add us to our new parent
-     if (parent) {
-       parent.children.push(this);
-     }
-     this.parent = parent;
-   };
+Node.prototype.setParent = function(parent) {
+  // remove us from our parent
+  if (this.parent) {
+    var ndx = this.parent.children.indexOf(this);
+    if (ndx >= 0) {
+      this.parent.children.splice(ndx, 1);
+    }
+  }
 
-   Node.prototype.updateWorldMatrix = function(matrix) {
+  // Add us to our new parent
+  if (parent) {
+    parent.children.push(this);
+  }
+  this.parent = parent;
+};
 
-     var source = this.source;
-     if (source) {
-       source.getMatrix(this.localMatrix);
-     }
+Node.prototype.updateWorldMatrix = function(matrix) {
 
-     if (matrix) {
-       // a matrix was passed in so do the math
-       matrixMultiply(this.localMatrix, matrix, this.worldMatrix);
-     } else {
-       // no matrix was passed in so just copy.
-       copyMatrix(this.localMatrix, this.worldMatrix);
-     }
+  var source = this.source;
+  if (source) {
+    source.getMatrix(this.localMatrix);
+  }
 
-     // now process all the children
-     var worldMatrix = this.worldMatrix
-     this.children.forEach(function(child) {
-       child.updateWorldMatrix(worldMatrix);
-     });
-   };
+  if (matrix) {
+    // a matrix was passed in so do the math
+    m4.multiply(matrix, this.localMatrix, this.worldMatrix);
+  } else {
+    // no matrix was passed in so just copy.
+    m4.copy(this.localMatrix, this.worldMatrix);
+  }
+
+  // now process all the children
+  var worldMatrix = this.worldMatrix
+  this.children.forEach(function(child) {
+    child.updateWorldMatrix(worldMatrix);
+  });
+};
 
 
 
@@ -127,9 +132,9 @@ function main() {
     return;
   }
 
-  var createFlattenedVertices = function(gl, vertices) {
+  function createFlattenedVertices(gl, vertices) {
     var last;
-    return createBufferInfoFromArrays(
+    return webglUtils.createBufferInfoFromArrays(
         gl,
         primitives.makeRandomVertexColors(
             primitives.deindexVertices(vertices),
@@ -148,13 +153,19 @@ function main() {
   var cubeBufferInfo = createFlattenedVertices(gl, primitives.createCubeVertices(1));
 
   // setup GLSL program
-  var programInfo = createProgramInfo(gl, ["3d-vertex-shader", "3d-fragment-shader"]);
+  var programInfo = webglUtils.createProgramInfo(gl, [vs, fs]);
+
+  var cubeVAO = webglUtils.createVAOFromBufferInfo(gl, programInfo, cubeBufferInfo);
 
   function degToRad(d) {
     return d * Math.PI / 180;
   }
 
   function rand(min, max) {
+    if (max === undefined) {
+      max = min;
+      min = 0;
+    }
     return Math.random() * (max - min) + min;
   }
 
@@ -282,6 +293,7 @@ function main() {
         },
         programInfo: programInfo,
         bufferInfo: cubeBufferInfo,
+        vertexArray: cubeVAO,
       };
       objectsToDraw.push(node.drawInfo);
       objects.push(node);
@@ -297,47 +309,35 @@ function main() {
   }
 
   var scene = makeNode(blockGuyNodeDescriptions);
-  var clock = 0;
 
-  drawScene();
+  requestAnimationFrame(drawScene);
 
   // Draw the scene.
-  function drawScene() {
+  function drawScene(time) {
+    time *= 0.001;
 
     gl.enable(gl.CULL_FACE);
     gl.enable(gl.DEPTH_TEST);
 
-    // Clear the canvas AND the depth buffer.
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
     // Compute the projection matrix
-    var aspect = canvas.clientWidth / canvas.clientHeight;
+    var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
     var projectionMatrix =
-        makePerspective(fieldOfViewRadians, aspect, 1, 2000);
+        m4.perspective(fieldOfViewRadians, aspect, 1, 200);
 
     // Compute the camera's matrix using look at.
     var cameraPosition = [4, 3.5, 10];
     var target = [0, 3.5, 0];
     var up = [0, 1, 0];
-    var cameraMatrix = makeLookAt(cameraPosition, target, up);
+    var cameraMatrix = m4.lookAt(cameraPosition, target, up);
 
     // Make a view matrix from the camera matrix.
-    var viewMatrix = makeInverse(cameraMatrix);
+    var viewMatrix = m4.inverse(cameraMatrix);
 
-    var viewProjectionMatrix = matrixMultiply(viewMatrix, projectionMatrix);
-
-    // Draw objects
-    clock += 0.01;
-
-    // update the local matrices for each object.
-    //nodesByName["left-arm"]
-
-    // Update all world matrices in the scene graph
-    scene.updateWorldMatrix();
+    var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
 
     var adjust;
-    var speed = 4;
-    var c = clock * speed;
+    var speed = 3;
+    var c = time * speed;
     adjust = Math.abs(Math.sin(c));
     nodeInfosByName["point between feet"].trs.translation[1] = adjust;
     adjust = Math.sin(c);
@@ -371,44 +371,17 @@ function main() {
     adjust = Math.cos(c * 2) * 0.4;
     nodeInfosByName["head"].trs.rotation[0] =  adjust;
 
+    // Update all world matrices in the scene graph
+    scene.updateWorldMatrix();
+
     // Compute all the matrices for rendering
     objects.forEach(function(object) {
-      object.drawInfo.uniforms.u_matrix = matrixMultiply(object.worldMatrix, viewProjectionMatrix);
+        object.drawInfo.uniforms.u_matrix = m4.multiply(viewProjectionMatrix, object.worldMatrix);
     });
 
     // ------ Draw the objects --------
 
-    var lastUsedProgramInfo = null;
-    var lastUsedBufferInfo = null;
-
-    objectsToDraw.forEach(function(object) {
-      var programInfo = object.programInfo;
-      var bufferInfo = object.bufferInfo;
-      var bindBuffers = false;
-
-      if (programInfo !== lastUsedProgramInfo) {
-        lastUsedProgramInfo = programInfo;
-        gl.useProgram(programInfo.program);
-
-        // We have to rebind buffers when changing programs because we
-        // only bind buffers the program uses. So if 2 programs use the same
-        // bufferInfo but the 1st one uses only positions the when the
-        // we switch to the 2nd one some of the attributes will not be on.
-        bindBuffers = true;
-      }
-
-      // Setup all the needed attributes.
-      if (bindBuffers || bufferInfo !== lastUsedBufferInfo) {
-        lastUsedBufferInfo = bufferInfo;
-        setBuffersAndAttributes(gl, programInfo.attribSetters, bufferInfo);
-      }
-
-      // Set the uniforms.
-      setUniforms(programInfo.uniformSetters, object.uniforms);
-
-      // Draw
-      gl.drawArrays(gl.TRIANGLES, 0, bufferInfo.numElements);
-    });
+    webglUtils.drawObjectList(gl, objectsToDraw);
 
     requestAnimationFrame(drawScene);
   }
