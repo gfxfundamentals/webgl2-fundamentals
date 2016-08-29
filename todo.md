@@ -3,7 +3,6 @@ TO DO
 
 Fix articles
 
-*   webgl-scene-graph.html
 *   webgl-2d-drawimage.html
 *   webgl-2d-matrix-stack.html
 *   webgl-text-html.html
@@ -93,4 +92,5 @@ DONE
 *   webgl-3d-lighting-point.html
 *   webgl-less-code-more-fun.html
 *   webgl-drawing-multiple-things.html
+*   webgl-scene-graph.html
 
