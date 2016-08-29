@@ -541,7 +541,34 @@ drawn.</p>
 
 </p>
 <p>which is 3D!</p>
-<p>In the next post I&#39;ll go over <a href="webgl-3d-perspective.html">how to make it have perspective</a>.</p>
+<p>One minor thing. In most 3d math libraries this is no <code>projection</code> function to
+do our conversions from clip space to pixel space. Rather there&#39;s usually a function
+called <code>ortho</code> or <code>orthographic</code> that looks like this</p>
+<pre><code>var m4 = {
+  orthographic: function(left, right, bottom, top, near, far) {
+    return [
+      2 / (right - left), 0, 0, 0,
+      0, 2 / (top - bottom), 0, 0,
+      0, 0, 2 / (near - far), 0,
+
+      (left + right) / (left - right),
+      (bottom + top) / (bottom - top),
+      (near + far) / (near - far),
+      1,
+    ];
+  }
+</code></pre><p>Unlike our simplified <code>projection</code> function above which only had width, height, and depth
+parameters this more common othrographic projection function we can pass in left, right,
+bottom, top, near, and far which gives as more flexability. To use it the same as
+our original projection function we&#39;d call it with</p>
+<pre><code>var left = 0;
+var right = gl.canvas.clientWidth;
+var bottom = gl.canvas.clientHeight;
+var top = 0;
+var near = -400;
+var far = 400;
+m4.orthographic(left, right, bottom, top, near, far);
+</code></pre><p>In the next post I&#39;ll go over <a href="webgl-3d-perspective.html">how to make it have perspective</a>.</p>
 <div class="webgl_bottombar">
 <h3>Why is the attribute vec4 but gl.vertexAttribPointer size 3</h3>
 <p>
