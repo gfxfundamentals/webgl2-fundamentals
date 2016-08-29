@@ -552,6 +552,37 @@ And now we get
 
 which is 3D!
 
+One minor thing. In most 3d math libraries this is no `projection` function to
+do our conversions from clip space to pixel space. Rather there's usually a function
+called `ortho` or `orthographic` that looks like this
+
+    var m4 = {
+      orthographic: function(left, right, bottom, top, near, far) {
+        return [
+          2 / (right - left), 0, 0, 0,
+          0, 2 / (top - bottom), 0, 0,
+          0, 0, 2 / (near - far), 0,
+
+          (left + right) / (left - right),
+          (bottom + top) / (bottom - top),
+          (near + far) / (near - far),
+          1,
+        ];
+      }
+
+Unlike our simplified `projection` function above which only had width, height, and depth
+parameters this more common othrographic projection function we can pass in left, right,
+bottom, top, near, and far which gives as more flexability. To use it the same as
+our original projection function we'd call it with
+
+    var left = 0;
+    var right = gl.canvas.clientWidth;
+    var bottom = gl.canvas.clientHeight;
+    var top = 0;
+    var near = -400;
+    var far = 400;
+    m4.orthographic(left, right, bottom, top, near, far);
+
 In the next post I'll go over [how to make it have perspective](webgl-3d-perspective.html).
 
 <div class="webgl_bottombar">
