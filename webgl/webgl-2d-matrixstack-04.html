@@ -219,15 +219,120 @@ function main() {
   }
 
   var textureInfo = loadImageAndCreateTextureInfo('resources/star.jpg');
+  var scale = 0.5;
+
+  function drawLevel(time, depth) {
+    --depth;
+    if (depth > 0) {
+      time *= 1.4;
+
+      matrixStack.save();
+      {
+        // We're at the center of the center image so go to the top/left corner
+        matrixStack.translate(textureInfo.width / -2, textureInfo.height / -2);
+        matrixStack.rotateZ(Math.sin(time * 2.2));
+        matrixStack.scale(scale, scale);
+        matrixStack.save();
+        {
+          // Now we want the bottom/right corner of the image we're about to draw
+          matrixStack.translate(-textureInfo.width, -textureInfo.height);
+          drawImage(
+            textureInfo.texture,
+            textureInfo.width,
+            textureInfo.height,
+            0, 0);
+
+        }
+        matrixStack.restore();
+
+        matrixStack.translate(-textureInfo.width / 2, -textureInfo.height / 2);
+        drawLevel(time, depth);
+      }
+      matrixStack.restore();
+
+      matrixStack.save();
+      {
+        // We're at the center of the center image so go to the top/right corner
+        matrixStack.translate(textureInfo.width / 2, textureInfo.height / -2);
+        matrixStack.rotateZ(Math.sin(time * 2.3));
+        matrixStack.scale(scale, scale);
+        matrixStack.save();
+        {
+          // Now we want the bottom/right corner of the image we're about to draw
+          matrixStack.translate(0, -textureInfo.height);
+
+          drawImage(
+            textureInfo.texture,
+            textureInfo.width,
+            textureInfo.height,
+            0, 0);
+        }
+        matrixStack.restore();
+
+        matrixStack.translate(textureInfo.width / 2, -textureInfo.height / 2);
+        drawLevel(time, depth);
+      }
+      matrixStack.restore();
+
+      matrixStack.save();
+      {
+        // We're at the center of the center image so go to the bottom/left corner
+        matrixStack.translate(textureInfo.width / -2, textureInfo.height / 2);
+        matrixStack.rotateZ(Math.sin(time * 2.4));
+        matrixStack.scale(scale, scale);
+        matrixStack.save();
+        {
+          // Now we want the top/right corner of the image we're about to draw
+          matrixStack.translate(-textureInfo.width, 0);
+
+          drawImage(
+            textureInfo.texture,
+            textureInfo.width,
+            textureInfo.height,
+            0, 0);
+        }
+        matrixStack.restore();
+
+        matrixStack.translate(-textureInfo.width / 2, textureInfo.height / 2);
+        drawLevel(time, depth);
+      }
+      matrixStack.restore();
+
+      matrixStack.save();
+      {
+        // We're at the center of the center image so go to the bottom/right corner
+        matrixStack.translate(textureInfo.width / 2, textureInfo.height / 2);
+        matrixStack.rotateZ(Math.sin(time * 2.5));
+        matrixStack.scale(scale, scale);
+        matrixStack.save();
+        {
+          // Now we want the top/left corner of the image we're about to draw
+          matrixStack.translate(0, 0);  // 0,0 means this line is not really doing anything
+
+          drawImage(
+            textureInfo.texture,
+            textureInfo.width,
+            textureInfo.height,
+            0, 0);
+        }
+        matrixStack.restore();
+
+        matrixStack.translate(textureInfo.width / 2, textureInfo.height / 2);
+        drawLevel(time, depth);
+      }
+      matrixStack.restore();
+    }
+  }
 
   function draw(time) {
+
     // Tell WebGL how to convert from clip space to pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
 
     matrixStack.save();
     matrixStack.translate(gl.canvas.width / 2, gl.canvas.height / 2);
     matrixStack.rotateZ(time);
+    matrixStack.scale(0.5, 0.5);
 
     matrixStack.save();
     {
@@ -242,77 +347,7 @@ function main() {
     }
     matrixStack.restore();
 
-    matrixStack.save();
-    {
-      // We're at the center of the center image so go to the top/left corner
-      matrixStack.translate(textureInfo.width / -2, textureInfo.height / -2);
-      matrixStack.rotateZ(Math.sin(time * 2.2));
-      matrixStack.scale(0.2, 0.2);
-      // Now we want the bottom/right corner of the image we're about to draw
-      matrixStack.translate(-textureInfo.width, -textureInfo.height);
-
-      drawImage(
-        textureInfo.texture,
-        textureInfo.width,
-        textureInfo.height,
-        0, 0);
-
-    }
-    matrixStack.restore();
-
-    matrixStack.save();
-    {
-      // We're at the center of the center image so go to the top/right corner
-      matrixStack.translate(textureInfo.width / 2, textureInfo.height / -2);
-      matrixStack.rotateZ(Math.sin(time * 2.3));
-      matrixStack.scale(0.2, 0.2);
-      // Now we want the bottom/right corner of the image we're about to draw
-      matrixStack.translate(0, -textureInfo.height);
-
-      drawImage(
-        textureInfo.texture,
-        textureInfo.width,
-        textureInfo.height,
-        0, 0);
-
-    }
-    matrixStack.restore();
-
-    matrixStack.save();
-    {
-      // We're at the center of the center image so go to the bottom/left corner
-      matrixStack.translate(textureInfo.width / -2, textureInfo.height / 2);
-      matrixStack.rotateZ(Math.sin(time * 2.4));
-      matrixStack.scale(0.2, 0.2);
-      // Now we want the top/right corner of the image we're about to draw
-      matrixStack.translate(-textureInfo.width, 0);
-
-      drawImage(
-        textureInfo.texture,
-        textureInfo.width,
-        textureInfo.height,
-        0, 0);
-
-    }
-    matrixStack.restore();
-
-    matrixStack.save();
-    {
-      // We're at the center of the center image so go to the bottom/right corner
-      matrixStack.translate(textureInfo.width / 2, textureInfo.height / 2);
-      matrixStack.rotateZ(Math.sin(time * 2.5));
-      matrixStack.scale(0.2, 0.2);
-      // Now we want the top/left corner of the image we're about to draw
-      matrixStack.translate(0, 0);  // 0,0 means this line is not really doing anything
-
-      drawImage(
-        textureInfo.texture,
-        textureInfo.width,
-        textureInfo.height,
-        0, 0);
-
-    }
-    matrixStack.restore();
+    drawLevel(time, 6);
 
     matrixStack.restore();
   }
