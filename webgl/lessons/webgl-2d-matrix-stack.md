@@ -1,13 +1,14 @@
 Title: WebGL Implementing A Matrix Stack
 Description: How to implement canvas 2d's translate/rotate/scale functions in WebGL
 
-This article is a continuation of [WebGL 2D DrawImage](webgl-2d-drawimage.html). If you haven't read that I suggest [you start there](webgl-2d-drawimage.html).
+This article is a continuation of [WebGL 2D DrawImage](webgl-2d-drawimage.html).
+If you haven't read that I suggest [you start there](webgl-2d-drawimage.html).
 
 In that last article we implemented the WebGL equivilent of Canvas 2D's `drawImage` function
 including its ability to specify both the source rectangle and the destination rectangle.
 
 What we haven't done yet is let us rotate and/or scale it from any arbitrary point. We could do that
-by adding more arguments, at a minimum we'd to specify a center point, a rotation and an x and y scale.
+by adding more arguments, at a minimum we'd need to specify a center point, a rotation and an x and y scale.
 Fortunately there's a more generic and useful way. The way the Canvas 2D API does that is with a matrix stack.
 The matrix stack functions of the Canvas 2D API are `save`, `restore`, `translate`, `rotate`, and `scale`.
 
@@ -32,7 +33,7 @@ MatrixStack.prototype.restore = function() {
   this.stack.pop();
   // Never let the stack be totally empty
   if (this.stack.length < 1) {
-    this.stack[0] = makeIdentity();
+    this.stack[0] = m4.identity();
   }
 };
 
@@ -47,7 +48,7 @@ We also need functions for getting and setting the top matrix
 ```
 // Gets a copy of the current matrix (top of the stack)
 MatrixStack.prototype.getCurrentMatrix = function() {
-  return this.stack[this.stack.length - 1].slice();
+  return this.stack[this.stack.length - 1].slice();  // makes a copy
 };
 
 // Lets us set the current matrix
@@ -63,23 +64,20 @@ previous matrix functions.
 ```
 // Translates the current matrix
 MatrixStack.prototype.translate = function(x, y, z) {
-  var t = makeTranslation(x, y, z);
   var m = this.getCurrentMatrix();
-  this.setCurrentMatrix(matrixMultiply(t, m));
+  this.setCurrentMatrix(m4.translate(m, x, y, z));
 };
 
 // Rotates the current matrix around Z
 MatrixStack.prototype.rotateZ = function(angleInRadians) {
-  var t = makeZRotation(angleInRadians);
   var m = this.getCurrentMatrix();
-  this.setCurrentMatrix(matrixMultiply(t, m));
+  this.setCurrentMatrix(m4.zRotate(m, angleInRadians));
 };
 
 // Scales the current matrix
 MatrixStack.prototype.scale = function(x, y, z) {
-  var t = makeScale(x, y, z);
   var m = this.getCurrentMatrix();
-  this.setCurrentMatrix(matrixMultiply(t, m));
+  this.setCurrentMatrix(m4.scale(m, x, y, z));
 };
 ```
 
@@ -93,9 +91,8 @@ MatrixStack.prototype.translate = function(x, y, z) {
 +  if (z === undefined) {
 +    z = 0;
 +  }
-  var t = makeTranslation(x, y, z);
   var m = this.getCurrentMatrix();
-  this.setCurrentMatrix(matrixMultiply(t, m));
+  this.setCurrentMatrix(m4.translate(m, x, y, z));
 };
 
 ...
@@ -105,18 +102,24 @@ MatrixStack.prototype.scale = function(x, y, z) {
 +  if (z === undefined) {
 +    z = 1;
 +  }
-  var t = makeScale(x, y, z);
   var m = this.getCurrentMatrix();
-  this.setCurrentMatrix(matrixMultiply(t, m));
+  this.setCurrentMatrix(m4.scale(m, x, y, z));
 };
 ```
 
 Using our [`drawImage` from the previous lesson](webgl-2d-drawimage.html) we had these lines
 
 ```
-// multiply them all togehter
-var matrix = matrixMultiply(scaleMatrix, translationMatrix);
-matrix = matrixMultiply(matrix, projectionMatrix);
+// this matirx will convert from pixels to clip space
+var matrix = m4.orthographic(
+    0, gl.canvas.clientWidth, gl.canvas.clientHeight, 0, -1, 1);
+
+// translate our quad to dstX, dstY
+matrix = m4.translate(matrix, dstX, dstY, 0);
+
+// scale our 1 unit quad
+// from 1 unit to dstWidth, dstHeight units
+matrix = m4.scale(matrix, dstWidth, dstHeight, 1);
 ```
 
 We just need to create a matrix stack
@@ -128,16 +131,26 @@ var matrixStack = new MatrixStack();
 and multiply in the top matrix from our stack in
 
 ```
-// multiply them all togehter
-var matrix = matrixMultiply(scaleMatrix, translationMatrix);
-+matrix = matrixMultiply(matrix, matrixStage.getCurrentMatrix());
-matrix = matrixMultiply(matrix, projectionMatrix);
+// this matirx will convert from pixels to clip space
+var matrix = m4.orthographic(
+    0, gl.canvas.clientWidth, gl.canvas.clientHeight, 0, -1, 1);
+
++// The matrix stack is in pixels so it goes after the projection
++// above which converted our space from clip space to pixel space
++matrix = m4.multiply(matrix, matrixStack.getCurrentMatrix());
+
+// translate our quad to dstX, dstY
+matrix = m4.translate(matrix, dstX, dstY, 0);
+
+// scale our 1 unit quad
+// from 1 unit to dstWidth, dstHeight units
+matrix = m4.scale(matrix, dstWidth, dstHeight, 1);
 ```
 
 And now we can use it the same way we'd use it with the Canvas 2D API.
 
 If you're not aware of how to use the matrix stack you can think of it as
-moving and orientating the origin. So for example by default in a 2D canvas the origin (0,0)
+moving and orientating the origin of the canvas. So for example by default in a 2D canvas the origin (0,0)
 is at the top left corner.
 
 For example if we move the origin to the center of the canvas then drawing an image at 0,0
