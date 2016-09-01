@@ -101,7 +101,8 @@ change.</p>
 var timeElement = document.getElementById(&quot;time&quot;);
 var angleElement = document.getElementById(&quot;angle&quot;);
 
-// Create text nodes to save some time for the browser.
+// Create text nodes to save some time for the browser
+// and avoid allocations.
 var timeNode = document.createTextNode(&quot;&quot;);
 var angleNode = document.createTextNode(&quot;&quot;);
 
@@ -109,7 +110,9 @@ var angleNode = document.createTextNode(&quot;&quot;);
 timeElement.appendChild(timeNode);
 angleElement.appendChild(angleNode);
 </code></pre><p>Finally update the nodes when rendering</p>
-<pre><code>function drawScene() {
+<pre><code>function drawScene(time) {
+    var now = time * 0.001;  // convert to seconds
+
     ...
 
     // convert rotation from radians to degrees
@@ -120,7 +123,7 @@ angleElement.appendChild(angleNode);
 
     // set the nodes
     angleNode.nodeValue = angle.toFixed(0);  // no decimal place
-    timeNode.nodeValue = clock.toFixed(2);   // 2 decimal places
+    timeNode.nodeValue = now.toFixed(2);   // 2 decimal places
 </code></pre><p>And here&#39;s that example</p>
 <p><div>
   <iframe class="webgl_example" style="width: 400px; height: 300px;" src="../webgl-text-html-overlay.html"></iframe>
@@ -130,7 +133,7 @@ angleElement.appendChild(angleNode);
 </p>
 <p>Notice how I put spans inside the divs specifically for the parts I wanted to change. I&#39;m making the
 assumption here that that&#39;s faster than just using the divs with no spans and saying something like</p>
-<pre><code>timeNode.value = &quot;Time &quot; + clock.toFixed(2);
+<pre><code>timeNode.nodeValue = &quot;Time &quot; + clock.toFixed(2);
 </code></pre><p>Also I&#39;m using text nodes by calling <code>node = document.createTextNode()</code> and later <code>node.nodeValue = someMsg</code>.
 I could also use <code>someElement.innerHTML = someHTML</code>. That would be more flexible because you could
 insert arbitrary HTML strings though it might be slightly slower since the browser has to create
@@ -200,7 +203,7 @@ divContainerElement.appendChild(div);
 </code></pre><p>Now we can position the div by setting its style.</p>
 <pre><code>div.style.left = Math.floor(x) + &quot;px&quot;;
 div.style.top  = Math.floor(y) + &quot;px&quot;;
-textNode.nodeValue = clock.toFixed(2);
+textNode.nodeValue = now.toFixed(2);
 </code></pre><p>Here&#39;s an example where we&#39;re just bounding the div around.</p>
 <p><div>
   <iframe class="webgl_example" style="width: 400px; height: 300px;" src="../webgl-text-html-bouncing-div.html"></iframe>
@@ -215,7 +218,7 @@ How do we do that? We do it exactly how we asked the GPU to do it when we
 and how to apply a projection matrix to convert them to clipspace. We pass all
 of that to our shader and it multiplies vertices in local space and converts
 them to clipspace. We can do all the math ourselves in JavaScript as well.
-Then  we can multiply clipspace (-1 to +1) into pixels and use
+Then we can multiply clipspace (-1 to +1) into pixels and use
 that to position the div.</p>
 <pre><code>gl.drawArrays(...);
 
@@ -228,7 +231,7 @@ var point = [100, 0, 0, 1];  // this is the front top right corner
 
 // compute a clipspace position
 // using the matrix we computed for the F
-var clipspace = matrixVectorMultiply(point, matrix);
+var clipspace = m4.transformVector(point, matrix);
 
 // divide X and Y by W just like the GPU does.
 clipspace[0] /= clipspace[3];
@@ -241,7 +244,7 @@ var pixelY = (clipspace[1] * -0.5 + 0.5) * gl.canvas.height;
 // position the div
 div.style.left = Math.floor(pixelX) + &quot;px&quot;;
 div.style.top  = Math.floor(pixelY) + &quot;px&quot;;
-textNode.nodeValue = clock.toFixed(2);
+textNode.nodeValue = now.toFixed(2);
 </code></pre><p>And voila, the top left corner of our div is perfectly aligned
 with the top right front corner of the F.</p>
 <p><div>
