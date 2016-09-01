@@ -2,7 +2,7 @@ Title: WebGL Text - HTML
 Description: How to use HTML to display text that is positioned to match WebGL
 
 This article is a continuation of previous WebGL articles.
-If you haven't read them I suggest <a href="webgl-3d-perspective.html">you start there</a>
+If you haven't read them I suggest [you start there](webgl-3d-perspective.html)
 and work your way back.
 
 A common question is "how to I draw text in WebGL". The first thing to ask yourself
@@ -44,7 +44,8 @@ change.
     var timeElement = document.getElementById("time");
     var angleElement = document.getElementById("angle");
 
-    // Create text nodes to save some time for the browser.
+    // Create text nodes to save some time for the browser
+    // and avoid allocations.
     var timeNode = document.createTextNode("");
     var angleNode = document.createTextNode("");
 
@@ -54,7 +55,9 @@ change.
 
 Finally update the nodes when rendering
 
-    function drawScene() {
+    function drawScene(time) {
+        var now = time * 0.001;  // convert to seconds
+
         ...
 
         // convert rotation from radians to degrees
@@ -65,7 +68,7 @@ Finally update the nodes when rendering
 
         // set the nodes
         angleNode.nodeValue = angle.toFixed(0);  // no decimal place
-        timeNode.nodeValue = clock.toFixed(2);   // 2 decimal places
+        timeNode.nodeValue = now.toFixed(2);   // 2 decimal places
 
 And here's that example
 
@@ -74,7 +77,7 @@ And here's that example
 Notice how I put spans inside the divs specifically for the parts I wanted to change. I'm making the
 assumption here that that's faster than just using the divs with no spans and saying something like
 
-    timeNode.value = "Time " + clock.toFixed(2);
+    timeNode.nodeValue = "Time " + clock.toFixed(2);
 
 Also I'm using text nodes by calling `node = document.createTextNode()` and later `node.nodeValue = someMsg`.
 I could also use `someElement.innerHTML = someHTML`. That would be more flexible because you could
@@ -156,7 +159,7 @@ Now we can position the div by setting its style.
 
     div.style.left = Math.floor(x) + "px";
     div.style.top  = Math.floor(y) + "px";
-    textNode.nodeValue = clock.toFixed(2);
+    textNode.nodeValue = now.toFixed(2);
 
 Here's an example where we're just bounding the div around.
 
@@ -170,7 +173,7 @@ Up through that example we learned how to use matrices, how to multiply them,
 and how to apply a projection matrix to convert them to clipspace. We pass all
 of that to our shader and it multiplies vertices in local space and converts
 them to clipspace. We can do all the math ourselves in JavaScript as well.
-Then  we can multiply clipspace (-1 to +1) into pixels and use
+Then we can multiply clipspace (-1 to +1) into pixels and use
 that to position the div.
 
     gl.drawArrays(...);
@@ -184,7 +187,7 @@ that to position the div.
 
     // compute a clipspace position
     // using the matrix we computed for the F
-    var clipspace = matrixVectorMultiply(point, matrix);
+    var clipspace = m4.transformVector(point, matrix);
 
     // divide X and Y by W just like the GPU does.
     clipspace[0] /= clipspace[3];
@@ -197,7 +200,7 @@ that to position the div.
     // position the div
     div.style.left = Math.floor(pixelX) + "px";
     div.style.top  = Math.floor(pixelY) + "px";
-    textNode.nodeValue = clock.toFixed(2);
+    textNode.nodeValue = now.toFixed(2);
 
 And voila, the top left corner of our div is perfectly aligned
 with the top right front corner of the F.
