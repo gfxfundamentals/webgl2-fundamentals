@@ -4,9 +4,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>WebGL Text - HTML Overlay Styled</title>
+    <title>WebGL Text - HTML Div</title>
 <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
 <style>
+* {
+  box-sizing: border-box;
+}
 #ui {
     width: 200px;
 }
@@ -15,6 +18,7 @@
 }
 .container {
     position: relative;
+    overflow: none;
 }
 #overlay {
     position: absolute;
@@ -24,15 +28,12 @@
     color: white;
     font-family: monospace;
     padding: 1em;
-    border-radius: 1em;
-    border: 2px solid #f00;
-    text-shadow: 0px 0px 5px white;
 }
 </style>
 </head>
 <body>
 <div class="description">
-HTML Text Overlay
+HTML Text Divs
 </div>
 <div class="container">
   <canvas id="canvas" width="400" height="300"></canvas>
@@ -101,12 +102,9 @@ function main() {
   var timeElement = document.getElementById("time");
   var angleElement = document.getElementById("angle");
 
-  // Create text nodes to save some time for the browser
-  // and avoid allocations.
   var timeNode = document.createTextNode("");
   var angleNode = document.createTextNode("");
 
-  // Add those text nodes where they need to go
   timeElement.appendChild(timeNode);
   angleElement.appendChild(angleNode);
 
@@ -179,6 +177,8 @@ function main() {
   var fieldOfViewRadians = degToRad(60);
   var rotationSpeed = 1.2;
   var then = 0;
+  var projectionMatrix = m4.identity();
+  var matrix = m4.identity();
 
   requestAnimationFrame(drawScene);
 
@@ -200,8 +200,11 @@ function main() {
     angle = angle % 360;
 
     // set the text
-    angleNode.nodeValue = angle.toFixed(0);  // no decimal place
-    timeNode.nodeValue = now.toFixed(2);   // 2 decimal places
+    // using textContent allocates new text nodes
+    //angleElement.textContent = angle.toFixed(0);  // no decimal place
+    //timeElement.textContent = now.toFixed(2);   // 2 decimal places
+    angleNode.nodeValue = angle.toFixed(0);
+    timeNode.nodeValue = now.toFixed(2);
 
     // Tell WebGL how to convert from clip space to pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -222,17 +225,17 @@ function main() {
     var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
     var zNear = 1;
     var zFar = 2000;
-    var projectionMatrix = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
+    m4.perspective(fieldOfViewRadians, aspect, zNear, zFar, projectionMatrix);
 
     var spread = 170;
     for (var yy = -1; yy <= 1; ++yy) {
       for (var xx = -2; xx <= 2; ++xx) {
-        var matrix = m4.translate(projectionMatrix,
-            translation[0] + xx * spread, translation[1] + yy * spread, translation[2]);
-        matrix = m4.xRotate(matrix, rotation[0]);
-        matrix = m4.yRotate(matrix, rotation[1] + yy * xx * 0.2);
-        matrix = m4.zRotate(matrix, rotation[2]);
-        matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
+        m4.translate(projectionMatrix,
+            translation[0] + xx * spread, translation[1] + yy * spread, translation[2], matrix);
+        m4.xRotate(matrix, rotation[0], matrix);
+        m4.yRotate(matrix, rotation[1] + yy * xx * 0.2, matrix);
+        m4.zRotate(matrix, rotation[2], matrix);
+        m4.scale(matrix, scale[0], scale[1], scale[2], matrix);
 
         // Set the matrix.
         gl.uniformMatrix4fv(matrixLocation, false, matrix);
@@ -523,5 +526,4 @@ function setColors(gl) {
 main();
 </script>
 </html>
-
 

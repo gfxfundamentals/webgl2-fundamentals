@@ -26,9 +26,6 @@
     padding: 1em;
 }
 </style>
-<script src="resources/webgl-utils.js"></script>
-<script src="resources/webgl-lessons-helper.js"></script>
-<script src="resources/webgl-3d-math.js"></script>
 </head>
 <body>
 <div class="description">
@@ -42,15 +39,26 @@ HTML Text Overlay
   </div>
 </div>
 </body>
-<!-- vertex shader -->
-<script id="3d-vertex-shader" type="x-shader/x-vertex">
-attribute vec4 a_position;
-attribute vec4 a_color;
+<script src="resources/webgl-utils.js"></script>
+<script src="resources/webgl-lessons-helper.js"></script>
+<script src="resources/webgl-3d-math.js"></script>
+<script>
+"use strict";
 
+var vertexShaderSource = `#version 300 es
+
+// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec4 a_position;
+in vec4 a_color;
+
+// A matrix to transform the positions by
 uniform mat4 u_matrix;
 
-varying vec4 v_color;
+// a varying the color to the fragment shader
+out vec4 v_color;
 
+// all shaders have a main function
 void main() {
   // Multiply the position by the matrix.
   gl_Position = u_matrix * a_position;
@@ -58,20 +66,23 @@ void main() {
   // Pass the color to the fragment shader.
   v_color = a_color;
 }
-</script>
-<!-- fragment shader -->
-<script id="3d-fragment-shader" type="x-shader/x-fragment">
+`;
+
+var fragmentShaderSource = `#version 300 es
+
 precision mediump float;
 
-// Passed in from the vertex shader.
-varying vec4 v_color;
+// the varied color passed from the vertex shader
+in vec4 v_color;
+
+// we need to declare an output for the fragment shader
+out vec4 outColor;
 
 void main() {
-   gl_FragColor = v_color;
+  outColor = v_color;
 }
-</script>
-<script>
-"use strict";
+`;
+
 
 function main() {
   // Get A WebGL context
@@ -87,47 +98,60 @@ function main() {
   var timeElement = document.getElementById("time");
   var angleElement = document.getElementById("angle");
 
-  // Create text nodes to save some time for the browser.
-  var timeNode = document.createTextNode("");
-  var angleNode = document.createTextNode("");
-
-  // Add those text nodes where they need to go
-  timeElement.appendChild(timeNode);
-  angleElement.appendChild(angleNode);
-
-  gl.enable(gl.CULL_FACE);
-  gl.enable(gl.DEPTH_TEST);
-
-  // setup GLSL program
-  var program = createProgramFromScripts(gl, ["3d-vertex-shader", "3d-fragment-shader"]);
-  gl.useProgram(program);
+  // Use our boilerplate utils to compile the shaders and link into a program
+  var program = webglUtils.createProgramFromSources(gl,
+      [vertexShaderSource, fragmentShaderSource]);
 
   // look up where the vertex data needs to go.
-  var positionLocation = gl.getAttribLocation(program, "a_position");
-  var colorLocation = gl.getAttribLocation(program, "a_color");
+  var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+  var colorAttributeLocation = gl.getAttribLocation(program, "a_color");
 
-  // lookup uniforms
+  // look up uniform locations
   var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 
-  // Create a buffer.
-  var buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.enableVertexAttribArray(positionLocation);
-  gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
+  // Create a vertex array object (attribute state)
+  var vao = gl.createVertexArray();
 
+  // and make it the one we're currently working with
+  gl.bindVertexArray(vao);
+
+  // Create a buffer
+  var positionBuffer = gl.createBuffer();
+  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
   // Set Geometry.
   setGeometry(gl);
 
-  // Create a buffer for colors.
-  var buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.enableVertexAttribArray(colorLocation);
+  // Turn on the attribute
+  gl.enableVertexAttribArray(positionAttributeLocation);
 
-  // We'll supply RGB as bytes.
-  gl.vertexAttribPointer(colorLocation, 3, gl.UNSIGNED_BYTE, true, 0, 0);
+  // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+  var size = 3;          // 3 components per iteration
+  var type = gl.FLOAT;   // the data is 32bit floats
+  var normalize = false; // don't normalize the data
+  var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+  var offset = 0;        // start at the beginning of the buffer
+  gl.vertexAttribPointer(
+      positionAttributeLocation, size, type, normalize, stride, offset);
 
-  // Set Colors.
+  // create the color buffer, make it the current ARRAY_BUFFER
+  // and copy in the color values
+  var colorBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
   setColors(gl);
+
+  // Turn on the attribute
+  gl.enableVertexAttribArray(colorAttributeLocation);
+
+  // Tell the attribute how to get data out of colorBuffer (ARRAY_BUFFER)
+  var size = 3;          // 3 components per iteration
+  var type = gl.UNSIGNED_BYTE;   // the data is 8bit unsigned bytes
+  var normalize = true;  // convert from 0-255 to 0.0-1.0
+  var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next color
+  var offset = 0;        // start at the beginning of the buffer
+  gl.vertexAttribPointer(
+      colorAttributeLocation, size, type, normalize, stride, offset);
+
 
   function radToDeg(r) {
     return r * 180 / Math.PI;
@@ -138,23 +162,21 @@ function main() {
   }
 
   var translation = [0, 30, -360];
-  var rotation = [degToRad(190), degToRad(0), degToRad(0)];
+  var rotation = [degToRad(190), degToRad(40), degToRad(30)];
   var scale = [1, 1, 1];
   var fieldOfViewRadians = degToRad(60);
   var rotationSpeed = 1.2;
-
   var then = 0;
 
   requestAnimationFrame(drawScene);
 
-  // Draw the scene.
-  function drawScene(clock) {
+  function drawScene(time) {
     // Convert to seconds
-    clock *= 0.001;
+    var now = time * 0.001;
     // Subtract the previous time from the current time
-    var deltaTime = clock - then;
+    var deltaTime = now - then;
     // Remember the current time for the next frame.
-    then = clock;
+    then = now;
 
     // Every frame increase the rotation a little.
     rotation[1] += rotationSpeed * deltaTime;
@@ -165,43 +187,49 @@ function main() {
     // only report 0 - 360
     angle = angle % 360;
 
-    // set the nodes
-    angleNode.nodeValue = angle.toFixed(0);  // no decimal place
-    timeNode.nodeValue = clock.toFixed(2);   // 2 decimal places
+    // set the text
+    angleElement.textContent = angle.toFixed(0);  // no decimal place
+    timeElement.textContent = now.toFixed(2);   // 2 decimal places
 
-    // Clear the canvas AND the depth buffer.
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    // Tell WebGL how to convert from clip space to pixels
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-    // Compute the matrices
-    var aspect = canvas.clientWidth / canvas.clientHeight;
-    var projectionMatrix =
-        makePerspective(fieldOfViewRadians, aspect, 1, 2000);
+    // turn on depth testing
+    gl.enable(gl.DEPTH_TEST);
+
+    // tell webgl to cull faces
+    gl.enable(gl.CULL_FACE);
+
+    // Tell it to use our program (pair of shaders)
+    gl.useProgram(program);
+
+    // Bind the attribute/buffer set we want.
+    gl.bindVertexArray(vao);
+
+    // Compute the matrix
+    var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+    var zNear = 1;
+    var zFar = 2000;
+    var projectionMatrix = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
 
     var spread = 170;
     for (var yy = -1; yy <= 1; ++yy) {
       for (var xx = -2; xx <= 2; ++xx) {
-        var translationMatrix =
-            makeTranslation(translation[0] + xx * spread, translation[1] + yy * spread, translation[2]);
-        var rotationXMatrix = makeXRotation(rotation[0]);
-        var rotationYMatrix = makeYRotation(rotation[1] + yy * xx * 0.2);
-        var rotationZMatrix = makeZRotation(rotation[2]);
-        var scaleMatrix = makeScale(scale[0], scale[1], scale[2]);
-
-        // Multiply the matrices.
-
-        var matrix = makeIdentity();
-        matrix = matrixMultiply(matrix, scaleMatrix);
-        matrix = matrixMultiply(matrix, rotationZMatrix);
-        matrix = matrixMultiply(matrix, rotationYMatrix);
-        matrix = matrixMultiply(matrix, rotationXMatrix);
-        matrix = matrixMultiply(matrix, translationMatrix);
-        matrix = matrixMultiply(matrix, projectionMatrix);
+        var matrix = m4.translate(projectionMatrix,
+            translation[0] + xx * spread, translation[1] + yy * spread, translation[2]);
+        matrix = m4.xRotate(matrix, rotation[0]);
+        matrix = m4.yRotate(matrix, rotation[1] + yy * xx * 0.2);
+        matrix = m4.zRotate(matrix, rotation[2]);
+        matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
 
         // Set the matrix.
         gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
         // Draw the geometry.
-        gl.drawArrays(gl.TRIANGLES, 0, 16 * 6);
+        var primitiveType = gl.TRIANGLES;
+        var offset = 0;
+        var count = 16 * 6;
+        gl.drawArrays(primitiveType, offset, count);
       }
     }
 
@@ -209,7 +237,8 @@ function main() {
   }
 }
 
-// Fill the buffer with the values that define a letter 'F'.
+// Fill the current ARRAY_BUFFER buffer
+// with the values that define a letter 'F'.
 function setGeometry(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
@@ -344,7 +373,7 @@ function setGeometry(gl) {
       gl.STATIC_DRAW);
 }
 
-// Fill the buffer with colors for the 'F'.
+// Fill the current ARRAY_BUFFER buffer with colors for the 'F'.
 function setColors(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
