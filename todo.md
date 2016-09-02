@@ -3,7 +3,6 @@ TO DO
 
 Fix articles
 
-*   webgl-text-html.html
 *   webgl-text-canvas2d.html
 *   webgl-text-texture.html
 *   webgl-text-glyphs.html
@@ -93,4 +92,5 @@ DONE
 *   webgl-scene-graph.html
 *   webgl-2d-drawimage.html
 *   webgl-2d-matrix-stack.html
+*   webgl-text-html.html
 
