@@ -599,6 +599,9 @@
     if (indices) {
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indices);
     }
+    // We unbind this because otherwise any change to ELEMENT_ARRAY_BUFFER
+    // like when creating buffers for other stuff will mess up this VAO's binding
+    gl.bindVertexArray(null);
     return vao;
   }
 
