@@ -47,21 +47,30 @@ If it's not clear what `programInfo`, `bufferInfo`, etc are see that article.
 
 So, let's create the 'F' and a unit quad.
 
-    // Create data for 'F'
-    var fBufferInfo = primitives.create3DFBufferInfo(gl);
-    // Create a unit quad for the 'text'
-    var textBufferInfo = primitives.createPlaneBufferInfo(gl, 1, 1, 1, 1, makeXRotation(Math.PI / 2));
+```
+// Create data for 'F'
+var fBufferInfo = primitives.create3DFBufferInfo(gl);
+var fVAO = webglUtils.createVAOFromBufferInfo(
+    gl, fProgramInfo, fBufferInfo);
 
-A unit quad is a quad (square) that's 1 unit big. This one is centered over the origin. `createPlaneBufferInfo`
-creates a plane in the xz plane. We pass in a matrix to rotate it and give us an xy plane unit quad.
+// Create a unit quad for the 'text'
+var textBufferInfo = primitives.createXYQuadBufferInfo(gl, 1);
+var textVAO = webglUtils.createVAOFromBufferInfo(
+    gl, textProgramInfo, textBufferInfo);
+```
+
+The XY quad is a quad (square) that's 1 unit big. This one is centered at the origin. Being 1 unit
+it's extents are -0.5, -0.5 and 0.5, 0.5
 
 Next create 2 shaders
 
     // setup GLSL programs
-    var fProgramInfo = createProgramInfo(gl, ["3d-vertex-shader", "3d-fragment-shader"]);
-    var textProgramInfo = createProgramInfo(gl, ["text-vertex-shader", "text-fragment-shader"]);
+    var fProgramInfo = webglUtils.createProgramInfo(
+        gl, [fVertexShaderSource, fFragmentShaderSource]);
+    var textProgramInfo = webglUtils.createProgramInfo(
+        gl, [textVertexShaderSource, textFragmentShaderSource]);
 
-And create our text texture
+And create our text texture. We generate mips since the text will get small
 
     // create text texture.
     var textCanvas = makeTextCanvas("Hello!", 100, 26);
@@ -70,72 +79,77 @@ And create our text texture
     var textTex = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, textTex);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textCanvas);
-    // make sure we can render it even if it's not a power of 2
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.generateMipmap(gl.TEXTURE_2D);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
 Setup uniforms for both the 'F' and text
 
     var fUniforms = {
-      u_matrix: makeIdentity(),
+      u_matrix: m4.identity(),
     };
 
     var textUniforms = {
-      u_matrix: makeIdentity(),
+      u_matrix: m4.identity(),
       u_texture: textTex,
     };
 
-Now when we compute the matrices for the F we save off the F's view matrix
+Now when we compute the matrices for the F we start with the viewMatrix instead
+of the viewProjectionMatrix like other samples. We multply that by the parts
+that make up our F's orientation
 
-    var matrix = makeIdentity();
-    matrix = matrixMultiply(matrix, preTranslationMatrix);
-    matrix = matrixMultiply(matrix, scaleMatrix);
-    matrix = matrixMultiply(matrix, rotationZMatrix);
-    matrix = matrixMultiply(matrix, rotationYMatrix);
-    matrix = matrixMultiply(matrix, rotationXMatrix);
-    matrix = matrixMultiply(matrix, translationMatrix);
-    matrix = matrixMultiply(matrix, viewMatrix);
-    var fViewMatrix = copyMatrix(matrix);  // remember the view matrix for the text
-    matrix = matrixMultiply(matrix, projectionMatrix);
+    var fViewMatrix = m4.translate(viewMatrix,
+        translation[0] + xx * spread, translation[1] + yy * spread, translation[2]);
+    fViewMatrix = m4.xRotate(fViewMatrix, rotation[0]);
+    fViewMatrix = m4.yRotate(fViewMatrix, rotation[1] + yy * xx * 0.2);
+    fViewMatrix = m4.zRotate(fViewMatrix, rotation[2] + now + (yy * 3 + xx) * 0.1);
+    fViewMatrix = m4.scale(fViewMatrix, scale[0], scale[1], scale[2]);
+    fViewMatrix = m4.translate(fViewMatrix, -50, -75, 0);
+
+Then finally we we multiply in the projectionMatrix when setting our uniform value.
+
+    fUniforms.u_matrix = m4.multiply(projectionMatrix, fViewMatrix);
+
+It's important to note here that `projectionMatrix` is on the left. This lets us
+multiply in the projectionMatrix as though it was the first matrix. Normally
+we multiply on the right.
 
 Drawing the F looks like this
 
+    // setup to draw the 'F'
     gl.useProgram(fProgramInfo.program);
 
-    setBuffersAndAttributes(gl, fProgramInfo.attribSetters, fBufferInfo);
+    // setup the attributes and buffers for the F
+    gl.bindVertexArray(fVAO);
 
-    copyMatrix(matrix, fUniforms.u_matrix);
-    setUniforms(fProgramInfo.uniformSetters, fUniforms);
+    fUniforms.u_matrix = m4.multiply(projectionMatrix, fViewMatrix);
 
-    // Draw the geometry.
-    gl.drawElements(gl.TRIANGLES, fBufferInfo.numElements, gl.UNSIGNED_SHORT, 0);
+    webglUtils.setUniforms(fProgramInfo, fUniforms);
 
-For the text we just need the position of the origin of the F. We also need to scale our
-unit quad to match the dimensions of the texture. Finally we need to multiply by the projection
-matrix.
+    webglUtils.drawBufferInfo(gl, fBufferInfo);
 
-    // scale the F to the size we need it.
+For the text we start with the projectionMatrix and then get only the position
+from the fViewMatrix we saved before. This will get us a space in front the view.
+We also need to scale our unit quad to match the dimensions of the texture.
+
     // use just the view position of the 'F' for the text
-    var textMatrix = makeIdentity();
-    textMatrix = matrixMultiply(textMatrix, makeScale(textWidth, textHeight, 1));
-    textMatrix = matrixMultiply(
-        textMatrix,
-        makeTranslation(fViewMatrix[12], fViewMatrix[13], fViewMatrix[14]));
-    textMatrix = matrixMultiply(textMatrix, projectionMatrix);
+    var textMatrix = m4.translate(projectionMatrix,
+        fViewMatrix[12], fViewMatrix[13], fViewMatrix[14]);
+    // scale the F to the size we need it.
+    textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
 
 And then render the text
 
     // setup to draw the text.
     gl.useProgram(textProgramInfo.program);
 
-    setBuffersAndAttributes(gl, textProgramInfo.attribSetters, textBufferInfo);
+    gl.bindVertexArray(textVAO);
 
-    copyMatrix(textMatrix, textUniforms.u_matrix);
-    setUniforms(textProgramInfo.uniformSetters, textUniforms);
+    m4.copy(textMatrix, textUniforms.u_matrix);
+    webglUtils.setUniforms(textProgramInfo, textUniforms);
 
     // Draw the text.
-    gl.drawElements(gl.TRIANGLES, textBufferInfo.numElements, gl.UNSIGNED_SHORT, 0);
+    webglUtils.drawBufferInfo(gl, textBufferInfo);
 
 So here it is
 
@@ -209,9 +223,8 @@ First we'll declare something to remember the text positions.
 
 And in the loop for rendering the Fs we'll remember those positions
 
-    matrix = matrixMultiply(matrix, viewMatrix);
-    -var fViewMatrix = copyMatrix(matrix);  // remember the view matrix for the text
-    textPositions.push([matrix[12], matrix[13], matrix[14]]);  // remember the position for the text
+    // remember the position for the text
+    textPositions.push([fViewMatrix[12], fViewMatrix[13], fViewMatrix[14]]);
 
 Before we draw the 'F's we'll disable blending and turn on writing to the depth buffer
 
@@ -227,24 +240,22 @@ For drawing the text we'll turn on blending and turn off writing to the depth bu
 And then draw text at all the positions we saved
 
     textPositions.forEach(function(pos) {
-      // draw the text
+      // use just the view position of the 'F' for the text
+      var textMatrix = m4.translate(projectionMatrix,
+          pos[0], pos[1], pos[2]);
       // scale the F to the size we need it.
-      // use just the position of the 'F' for the text
-      var textMatrix = makeIdentity();
-      textMatrix = matrixMultiply(textMatrix, makeScale(textWidth, textHeight, 1));
-      textMatrix = matrixMultiply(textMatrix, makeTranslation(pos[0], pos[1], pos[2]));
-      textMatrix = matrixMultiply(textMatrix, projectionMatrix);
+      textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
 
       // setup to draw the text.
       gl.useProgram(textProgramInfo.program);
 
-      setBuffersAndAttributes(gl, textProgramInfo.attribSetters, textBufferInfo);
+      gl.bindVertexArray(textVAO);
 
-      copyMatrix(textMatrix, textUniforms.u_matrix);
-      setUniforms(textProgramInfo.uniformSetters, textUniforms);
+      m4.copy(textMatrix, textUniforms.u_matrix);
+      webglUtils.setUniforms(textProgramInfo, textUniforms);
 
       // Draw the text.
-      gl.drawElements(gl.TRIANGLES, textBufferInfo.numElements, gl.UNSIGNED_SHORT, 0);
+      webglUtils.drawBufferInfo(gl, textBufferInfo);
     });
 
 And now it mostly works
@@ -265,18 +276,20 @@ Because 'pos' is in view space that means it's relative to the eye (which is at 
 So if we normalize it we get a unit vector pointing from the eye to that point which we can then
 multiply by some amount to move the text a specific number of units toward or away from the eye.
 
-    // because pos is in view space that means it's a vector from the eye to
-    // some position. So translate along that vector back toward the eye some distance
-    +var fromEye = normalize(pos);
+    +// because pos is in view space that means it's a vector from the eye to
+    +// some position. So translate along that vector back toward the eye some distance
+    +var fromEye = m4.normalize(pos);
     +var amountToMoveTowardEye = 150;  // because the F is 150 units long
     +var viewX = pos[0] - fromEye[0] * amountToMoveTowardEye;
     +var viewY = pos[1] - fromEye[1] * amountToMoveTowardEye;
     +var viewZ = pos[2] - fromEye[2] * amountToMoveTowardEye;
 
-    var textMatrix = makeIdentity();
-    textMatrix = matrixMultiply(textMatrix, makeScale(textWidth, textHeight, 1));
-    *textMatrix = matrixMultiply(textMatrix, makeTranslation(viewX, viewY, viewZ));
-    textMatrix = matrixMultiply(textMatrix, projectionMatrix);
+    var textMatrix = m4.translate(projectionMatrix,
+    *    viewX, viewY, viewZ);
+    // scale the F to the size we need it.
+    textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
+    // because pos is in view space that means it's a vector from the eye to
+    // some position. So translate along that vector back toward the eye some distance
 
 Here's that.
 
@@ -362,9 +375,11 @@ F and just update the text uniforms for that F.
       var textHeight = textCanvas.height;
       var textTex = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, textTex);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+      gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textCanvas);
+      gl.generateMipmap(gl.TEXTURE_2D);
       // make sure we can render it even if it's not a power of 2
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
       return {
@@ -376,15 +391,17 @@ F and just update the text uniforms for that F.
 
 Then at render time select a texture
 
-    textPositions.forEach(function(pos, ndx) {
+    *textPositions.forEach(function(pos, ndx) {
 
       +// select a texture
       +var tex = textTextures[ndx];
 
+Use that textures size in our matrix calculations
+
+      var textMatrix = m4.translate(projectionMatrix,
+          viewX, viewY, viewZ);
       // scale the F to the size we need it.
-      // use just the position of the 'F' for the text
-      var textMatrix = makeIdentity();
-      *textMatrix = matrixMultiply(textMatrix, makeScale(tex.width, tex.height, 1));
+      *textMatrix = m4.scale(textMatrix, tex.width * scale, tex.height * scale, 1);
 
 and set the uniform for the texture before drawing
 
@@ -398,7 +415,8 @@ the text by a color and make it any color we want.
 
 First we'll change the text shader to multiply by a color
 
-    varying vec2 v_texcoord;
+    ...
+    in vec2 v_texcoord;
 
     uniform sampler2D u_texture;
     +uniform vec4 u_color;
