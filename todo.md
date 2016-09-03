@@ -3,8 +3,6 @@ TO DO
 
 Fix articles
 
-*   webgl-text-canvas2d.html
-*   webgl-text-texture.html
 *   webgl-text-glyphs.html
 *   webgl-boilerplate.html
 *   webgl-resizing-the-canvas.html
@@ -93,4 +91,6 @@ DONE
 *   webgl-2d-drawimage.html
 *   webgl-2d-matrix-stack.html
 *   webgl-text-html.html
+*   webgl-text-canvas2d.html
+*   webgl-text-texture.html
 
