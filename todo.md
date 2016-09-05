@@ -58,6 +58,14 @@ New Features
 *  compressed vertices (what's the point?)
 *  loop restrictions in shaders removed only in 300 es (GL more secure?)
 *  indexing sampler arrays restiction removed
+*  ubo's
+*  vbo's always
+*  indices
+*  float always
+*  integer textures
+*  integer manip
+*  pixel lookup (no math)
+*  texture size in GLSL
 
 Misc
 
