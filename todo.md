@@ -4,7 +4,6 @@ TO DO
 Fix articles
 
 *   webgl-text-glyphs.html
-*   webgl-boilerplate.html
 *   webgl-resizing-the-canvas.html
 *   webgl-animation.html
 *   webgl-3d-textures.html
@@ -101,4 +100,5 @@ DONE
 *   webgl-text-html.html
 *   webgl-text-canvas2d.html
 *   webgl-text-texture.html
+*   webgl-boilerplate.html
 
