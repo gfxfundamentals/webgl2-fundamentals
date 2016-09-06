@@ -73,7 +73,7 @@ go over everything all at once. I&#39;ll try to avoid that where possible
 and break it down into smaller pieces.</p>
 <p>One of things that makes WebGL seem complicated is that you have these 2
 tiny functions, a vertex shader and a fragment shader.  Those two
-functions usually run on your GPU which is where all the speed comes from.
+functions run on your GPU which is where all the speed comes from.
 That&#39;s also why they are written in a custom language, a language that
 matches what a GPU can do.  Those 2 functions need to be compiled and
 linked.  That process is, 99% of the time, the same in every WebGL
@@ -139,8 +139,24 @@ function createProgram(gl, vertexShader, fragmentShader) {
 </code></pre><p>Of course how you decide to handle errors might be different.  Throwing
 exceptions might not be the best way to handle things.  Still, those few
 lines of code are pretty much the same in nearly every WebGL program.</p>
-<p>I like to store my shaders in non javascript &lt;script&gt; tags.  It makes
-them easy to edit so I use code like this.</p>
+<p>Now that multline template literals are supported in all modern browsers
+it&#39;s my prefered way of storing shaders. I can just do something like</p>
+<pre><code>var vertexShaderSource = `#version 300 es
+
+in vec4 a_position;
+uniform mat4 u_matrix;
+
+void main() {
+   gl_Positon = u_matrix * a_position;
+}
+`;
+</code></pre><p>And have an easy to edit shader. Some older browsers like IE won&#39;t like
+this but first of I&#39;m using WebGL so I don&#39;t really care about IE. If I did
+care and had a non WebGL fallback I&#39;d use some build step with something like
+<a href="https://babeljs.io/">Babel</a> to convert the code above into something that IE
+understands.</p>
+<p>In the past I liked to to store my shaders in non javascript &lt;script&gt; tags.
+It also makes them easy to edit so I&#39;d use code like this.</p>
 <pre><code>/**
  * Creates a shader from the content of a script tag.
  *
@@ -193,8 +209,36 @@ function createProgramFromScripts(
   var fragmentShader = createShaderFromScriptTag(gl, fragmentShaderId);
   return createProgram(gl, vertexShader, fragmentShader);
 }
-</code></pre><p>That&#39;s most of my minimum set of WebGL boilerplate code.
-<a href="https://github.com/greggman/webgl-fundamentals/blob/master/webgl/resources/webgl-utils.js">You can find that code here</a>.
+</code></pre><p>The actual boilerplate API used in most of these samples is</p>
+<pre><code>/**
+ * Creates a program from 2 sources.
+ *
+ * @param {WebGLRenderingContext} gl The WebGLRenderingContext
+ *        to use.
+ * @param {string[]} shaderSourcess Array of sources for the
+ *        shaders. The first is assumed to be the vertex shader,
+ *        the second the fragment shader.
+ * @param {string[]} [opt_attribs] An array of attribs names.
+ *        Locations will be assigned by index if not passed in
+ * @param {number[]} [opt_locations] The locations for the.
+ *        A parallel array to opt_attribs letting you assign locations.
+ * @param {module:webgl-utils.ErrorCallback} opt_errorCallback callback for errors.
+ *        By default it just prints an error to the console
+ *        on error. If you want something else pass an callback.
+ *        It&#39;s passed an error message.
+ * @return {WebGLProgram} The created program.
+ * @memberOf module:webgl-utils
+ */
+function createProgramFromSources(gl,
+                                  shaderSources,
+                                  opt_attribs,
+                                  opt_locaitons,
+                                  opt_errorCallback)
+</code></pre><p>where <code>shaderSources</code> is an array of strings containing the GLSL source code.
+The first string in the array is the vertex shader source. The second is
+the fragment shader source.</p>
+<p>That&#39;s most of my minimum set of WebGL boilerplate code.
+<a href="https://github.com/greggman/webgl2-fundamentals/blob/master/webgl/resources/webgl-utils.js">You can find that code here</a>.
 If you want something slightly more organized check out <a href="http://twgljs.org">TWGL.js</a>.</p>
 <p>The rest of what makes WebGL look complicated is setting up all the inputs
 to your shaders.  See <a href="webgl-how-it-works.html">how it works</a>.</p>
