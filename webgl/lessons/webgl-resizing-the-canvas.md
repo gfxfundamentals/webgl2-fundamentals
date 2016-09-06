@@ -6,7 +6,8 @@ canvas started at one size and stays the same size forever. Here's what you need
 change the size of the canvas.
 
 Every canvas has 2 sizes. The size of its drawingbuffer. This is how many pixels are in the canvas.
-The second size is the size the canvas is displayed. CSS determines this size.
+The second size is the size the canvas is displayed. CSS determines the size the canvas is
+displayed.
 
 You can set the size of the canvas's drawingbuffer in 2 ways. One using HTML
 
@@ -90,11 +91,11 @@ JavaScript check what size that element is being displayed.
       }
     }
 
-Most WebGL apps <a href="webgl-animation.html">are animated</a> so let's call this function just before we render
+Most WebGL apps [are animated](webgl-animation.html) so let's call this function just before we render
 so it will always adjust the canvas to our desired size just before drawing.
 
     function drawScene() {
-       resize(canvas);
+       resize(gl.canvas);
 
        ...
 
@@ -108,31 +109,18 @@ The reason is when we resize the canvas we also need to call `gl.viewport` to se
 `gl.viewport` tells WebGL how to convert from clipspace (-1 to +1) back to pixels and where to do
 it within the canvas. When you first create the WebGL context WebGL will set the viewport to match the size
 of the canvas but after that it's up to you to set it. If you change the size of the canvas
-you need to tell WebGL a new viewport setting.
+you need to tell WebGL a new viewport setting. Given it's just one call to WebGL per frame
+I think it's best to just call before rendering.
 
-Let's change resize to handle this. On top of that, since the WebGL context has a
-reference to the canvas let's pass that into resize.
 
-    function resize(gl) {
-      // Get the canvas from the WebGL context
-      var canvas = gl.canvas;
+    function drawScene(now) {
+      resize(gl.canvas);
 
-      // Lookup the size the browser is displaying the canvas.
-      var displayWidth  = canvas.clientWidth;
-      var displayHeight = canvas.clientHeight;
+      // Tell WebGL how to convert from clip space to pixels
+      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-      // Check if the canvas is not the same size.
-      if (canvas.width  != displayWidth ||
-          canvas.height != displayHeight) {
+      ...
 
-        // Make the canvas the same size
-        canvas.width  = displayWidth;
-        canvas.height = displayHeight;
-
-        // Set the viewport to match
-        gl.viewport(0, 0, canvas.width, canvas.height);
-      }
-    }
 
 Now it's working.
 
@@ -146,7 +134,7 @@ a framebuffer or doing something else that requires a different viewport size. W
 your intent so it can't automatically set the viewport for you.
 
 If you look at many WebGL programs they handle resizing or setting the size of the canvas in many different ways.
-If you're curious <a href="webgl-anti-patterns.html">here are some of the reasons I think the way described above is preferable</a>.
+If you're curious [here are some of the reasons I think the way described above is preferable](webgl-anti-patterns.html).
 
 <div class="webgl_bottombar">
 <h3>How do I handle Retina or HD-DPI displays?</h3>
@@ -159,25 +147,22 @@ graphics it's up to you to render at a higher resolution if you want your graphi
 <p>To do that we can look at the <code>window.devicePixelRatio</code> value. This value tells us how many real pixels
 equals 1 CSS pixel. We can change our resize function to handle that like this.</p>
 <pre class="prettyprint">
-function resize(gl) {
-  var realToCSSPixels = window.devicePixelRatio || 1;
+function resize(canvas) {
+  var cssToRealPixels = window.devicePixelRatio || 1;
 
   // Lookup the size the browser is displaying the canvas in CSS pixels
   // and compute a size needed to make our drawingbuffer match it in
   // device pixels.
-  var displayWidth  = Math.floor(gl.canvas.clientWidth  * realToCSSPixels);
-  var displayHeight = Math.floor(gl.canvas.clientHeight * realToCSSPixels);
+  var displayWidth  = Math.floor(canvas.clientWidth  * cssToRealPixels);
+  var displayHeight = Math.floor(canvas.clientHeight * cssToRealPixels);
 
   // Check if the canvas is not the same size.
-  if (gl.canvas.width  != displayWidth ||
-      gl.canvas.height != displayHeight) {
+  if (canvas.width  != displayWidth ||
+      canvas.height != displayHeight) {
 
     // Make the canvas the same size
-    gl.canvas.width  = displayWidth;
-    gl.canvas.height = displayHeight;
-
-    // Set the viewport to match
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    canvas.width  = displayWidth;
+    canvas.height = displayHeight;
   }
 }
 </pre>
