@@ -2,8 +2,8 @@ Title: WebGL - Animation
 Description: How to do animation in WebGL
 
 This post is a continuation of a series of posts about WebGL.
-The first <a href="webgl-fundamentals.html">started with fundamentals</a>.
-and the previous was about <a href="webgl-3d-camera.html">3D cameras</a>.
+The first [started with fundamentals](webgl-fundamentals.html).
+and the previous was about [3D cameras](webgl-3d-camera.html).
 If you haven't read those please view them first.
 
 How do we animate something in WebGL?
@@ -42,7 +42,7 @@ device like an old smartphone. Or maybe the user is running some heavy program i
 the background. There are all kinds of reasons the browser might not be displaying
 frames at 60 frames a second. Maybe it's the year 2020 and all machines run at 240
 frames a second now. Maybe the user is a gamer and has a CRT monitor running at 90
-frame a second.
+frames a second.
 
 You can see the problem in this example
 
@@ -103,7 +103,7 @@ at the top of this page unless you are on a slow machine but if you don't
 make your animations frame rate independent you'll likely have some users
 that are getting a very different experience than you planned.
 
-Next up <a href="webgl-3d-textures.html">how to apply textures</a>.
+Next up [how to apply textures](webgl-3d-textures.html).
 
 <div class="webgl_bottombar">
 <h3>Don't use setInterval or setTimeout!</h3>
