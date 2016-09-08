@@ -18,6 +18,26 @@ canvas { border: 1px solid black; }
 <script>
 "use strict";
 
+var vs = `#version 300 es
+
+in vec4 a_position;
+uniform mat4 u_worldViewProjection;
+
+void main() {
+   gl_Position = u_worldViewProjection * a_position;
+}
+`;
+
+var fs = `#version 300 es
+precision mediump float;
+
+out vec4 outColor;
+
+void main() {
+   outColor = vec4(0,0,0,1);
+}
+`;
+
 var m = ThreeDMath;
 window.onload = main;
 
@@ -50,13 +70,15 @@ function main() {
   var canvas = document.getElementById("c");
   var gl = canvas.getContext("webgl2");
 
-  var program = createProgramFromScripts(
-      gl, ["2d-vertex-shader", "2d-fragment-shader"]);
+  var program = webglUtils.createProgramFromSources(gl, [vs, fs]);
   gl.useProgram(program);
 
   var positionLoc = gl.getAttribLocation(program, "a_position");
   var worldViewProjectionLoc =
       gl.getUniformLocation(program, "u_worldViewProjection");
+
+  var vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
 
   var buffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -79,8 +101,6 @@ function main() {
 
     var scale = 4;
 
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
     var fieldOfView = Math.PI * 0.25;
     var aspect = canvas.clientWidth / canvas.clientHeight;
     var projection = m.perspective(fieldOfView, aspect, 0.0001, 500);
@@ -101,21 +121,6 @@ function main() {
     requestAnimationFrame(render);
   }
   requestAnimationFrame(render);
-}
-</script>
-<!-- vertex shader -->
-<script id="2d-vertex-shader" type="x-shader/x-vertex">
-attribute vec4 a_position;
-uniform mat4 u_worldViewProjection;
-
-void main() {
-   gl_Position = u_worldViewProjection * a_position;
-}
-</script>
-<!-- fragment shader -->
-<script id="2d-fragment-shader" type="x-shader/x-fragment">
-void main() {
-   gl_FragColor = vec4(0,0,0,1);
 }
 </script>
 </html>
