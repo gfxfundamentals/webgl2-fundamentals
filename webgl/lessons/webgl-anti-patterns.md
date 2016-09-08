@@ -8,17 +8,13 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
     Some code adds properties for their viewport width and height
     and sticks them on the `WebGLRenderingContext` something like this
 
-    <pre class="prettyprint">
-    gl = canvas.getContext("webgl2");
-    gl.viewportWidth = canvas.width;    // BAD!!!
-    gl.viewportHeight = canvas.height;  // BAD!!!
-    </pre>
+        gl = canvas.getContext("webgl2");
+        gl.viewportWidth = canvas.width;    // BAD!!!
+        gl.viewportHeight = canvas.height;  // BAD!!!
 
     Then later they might do something like this
 
-    <pre class="prettyprint">
-    gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-    </pre>
+        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
 
     **Why it's Bad:**
 
@@ -36,11 +32,9 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
     Why make more work for yourself? The WebGL context has its width and height
     directly on it. Just use that.
 
-    <pre class="prettyprint">
-    // When you need to set the viewport to match the size of the canvas's
-    // drawingBuffer this will always be correct
-    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-    </pre>
+        // When you need to set the viewport to match the size of the canvas's
+        // drawingBuffer this will always be correct
+        gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 
     Even better it will handle extreme cases whereas using `gl.canvas.width`
     and `gl.canvas.height` will not. [As for why see here](#drawingbuffer).
@@ -49,10 +43,8 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
 
     Often code uses `canvas.width` and `canvas.height` for aspect ratio like this
 
-    <pre class="prettyprint">
-    var aspect = canvas.width / canvas.height;
-    perspective(fieldOfView, aspect, zNear, zFar);
-    </pre>
+        var aspect = canvas.width / canvas.height;
+        perspective(fieldOfView, aspect, zNear, zFar);
 
     **Why it's Bad:**
 
@@ -65,10 +57,8 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
     size your canvas is actually being displayed on the screen. Using those values
     you'll always get the correct aspect ratio regardless of your CSS settings.
 
-    <pre class="prettyprint">
-    var aspect = canvas.clientWidth / canvas.clientHeight;
-    perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
-    </pre>
+        var aspect = canvas.clientWidth / canvas.clientHeight;
+        perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
 
     Here are examples of a canvas that's the same size (`width="400" height="300"`)
     but using CSS we've told the browser to display the canvas a different size.
@@ -89,10 +79,8 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
     Many WebGL programs use `window.innerWidth` and `window.innerHeight` in many places.
     For example:
 
-    <pre class="prettyprint">
-    canvas.width = window.innerWidth;                    // BAD!!
-    canvas.height = window.hinnerHeight;                 // BAD!!
-    </pre>
+        canvas.width = window.innerWidth;                    // BAD!!
+        canvas.height = window.hinnerHeight;                 // BAD!!
 
     **Why it's Bad:**
 
@@ -109,13 +97,11 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
     Instead of fighting the Web platform, use the Web platform as it was designed to be used.
     Use CSS and `clientWidth` and `clientHeight`.
 
-    <pre class="prettyprint">
-    var width = gl.canvas.clientWidth;
-    var height = gl.canvas.clientHeight;
+        var width = gl.canvas.clientWidth;
+        var height = gl.canvas.clientHeight;
 
-    gl.canvas.width = width;
-    gl.canvas.height = height;
-    </pre>
+        gl.canvas.width = width;
+        gl.canvas.height = height;
 
     Here are 9 cases. They all use exactly the same code. Notice that none of them
     reference `window.innerWidth` nor `window.innerHeight`.
@@ -150,15 +136,11 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
 
     Some apps check for the window `'resize'` event like this to resize their canvas.
 
-    <pre class="prettyprint">
-    window.addEventListener('resize', resizeTheCanvas);
-    </pre>
+        window.addEventListener('resize', resizeTheCanvas);
 
     or this
 
-    <pre class="prettyprint">
-    window.onresize = resizeTheCanvas;
-    </pre>
+        window.onresize = resizeTheCanvas;
 
     **Why it's Bad:**
 
@@ -178,24 +160,22 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
     so it just works for most cases. For WebGL apps that constantly draw every frame
     the solution is to check if you need to resize every time you draw like this
 
-    <pre class="prettyprint">
-    function resize() {
-      var width = gl.canvas.clientWidth;
-      var height = gl.canvas.clientHeight;
-      if (gl.canvas.width != width ||
-          gl.canvas.height != height) {
-         gl.canvas.width = width;
-         gl.canvas.height = height;
-      }
-    }
+        function resize() {
+          var width = gl.canvas.clientWidth;
+          var height = gl.canvas.clientHeight;
+          if (gl.canvas.width != width ||
+              gl.canvas.height != height) {
+             gl.canvas.width = width;
+             gl.canvas.height = height;
+          }
+        }
 
-    function render() {
-       resize();
-       drawStuff();
-       requestAnimationFrame(render);
-    }
-    render();
-    </pre>
+        function render() {
+           resize();
+           drawStuff();
+           requestAnimationFrame(render);
+        }
+        render();
 
     Now in any of those cases your canvas will scale to the right size. No need to
     change any code for different cases. For example using the same code from #3 above
@@ -210,29 +190,27 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
     to trigger a re-draw in every case where the canvas can possibly get resized. One easy way to do
     that would be to setup a requestAnimationFrame loop like this.
 
-    <pre class="prettyprint">
-    function resize() {
-      var width = gl.canvas.clientWidth;
-      var height = gl.canvas.clientHeight;
-      if (gl.canvas.width != width ||
-          gl.canvas.height != height) {
-         gl.canvas.width = width;
-         gl.canvas.height = height;
-         return true;
-      }
-      return false;
-    }
+        function resize() {
+          var width = gl.canvas.clientWidth;
+          var height = gl.canvas.clientHeight;
+          if (gl.canvas.width != width ||
+              gl.canvas.height != height) {
+             gl.canvas.width = width;
+             gl.canvas.height = height;
+             return true;
+          }
+          return false;
+        }
 
-    var needToRender = true;  // draw at least once
-    function checkRender() {
-       if (resize() || needToRender) {
-         needToRender = false;
-         drawStuff();
-       }
-       requestAnimationFrame(checkRender);
-    }
-    checkRender();
-    </pre>
+        var needToRender = true;  // draw at least once
+        function checkRender() {
+           if (resize() || needToRender) {
+             needToRender = false;
+             drawStuff();
+           }
+           requestAnimationFrame(checkRender);
+        }
+        checkRender();
 
     This would only draw if the canvas has been resized or if `needToRender` is true.
     This would handle the resize case for apps that don't render the scene every frame.
@@ -244,15 +222,13 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
     `WebGLObject`s are the various types of resources in WebGL like a `WebGLBuffer`
     or `WebGLTexture`. Some apps add properties to those objects. For example code like this:
 
-    <pre class="prettyprint">
-    var buffer = gl.createBuffer();
-    buffer.itemSize = 3;        // BAD!!
-    buffer.numComponents = 75;  // BAD!!
+        var buffer = gl.createBuffer();
+        buffer.itemSize = 3;        // BAD!!
+        buffer.numComponents = 75;  // BAD!!
 
-    var program = gl.createProgram();
-    ...
-    program.u_matrixLoc = gl.getUniformLocation(program, "u_matrix");  // BAD!!
-    </pre>
+        var program = gl.createProgram();
+        ...
+        program.u_matrixLoc = gl.getUniformLocation(program, "u_matrix");  // BAD!!
 
     **Why it's Bad:**
 
@@ -264,17 +240,13 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
     The problem with the code above is that when the context is lost the WebGL creation functions like
     `gl.createBuffer()` above will return `null`. That effectively makes the code this
 
-    <pre class="prettyprint">
-    var buffer = null;
-    buffer.itemSize = 3;        // ERROR!
-    buffer.numComponents = 75;  // ERROR!
-    </pre>
+        var buffer = null;
+        buffer.itemSize = 3;        // ERROR!
+        buffer.numComponents = 75;  // ERROR!
 
     That will likely kill your app with an error like
 
-    <pre class="prettyprint">
-    TypeError: Cannot set property 'itemSize' of null
-    </pre>
+        TypeError: Cannot set property 'itemSize' of null
 
     While many apps don't care if they die when the context is lost it seems like a bad idea
     to write code that will have to be fixed later if the developers ever decide to update their
@@ -285,21 +257,19 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
     If you want to keep `WebGLObjects` and some info about them together one way would be
     to use JavaScript objects. For example:
 
-    <pre class="prettyprint">
-    var bufferInfo = {
-      id: gl.createBuffer(),
-      itemSize: 3,
-      numComponents: 75,
-    };
+        var bufferInfo = {
+          id: gl.createBuffer(),
+          itemSize: 3,
+          numComponents: 75,
+        };
 
-    var programInfo = {
-      id: program,
-      u_matrixLoc: gl.getUniformLocation(program, "u_matrix"),
-    };
-    </pre>
+        var programInfo = {
+          id: program,
+          u_matrixLoc: gl.getUniformLocation(program, "u_matrix"),
+        };
 
-    Personally I'd suggest <a href="webgl-less-code-more-fun.html">using a few simple helpers that make writing WebGL
-    much simpler</a>.
+    Personally I'd suggest [using a few simple helpers that make writing WebGL
+    much simpler](webgl-less-code-more-fun.html).
 
 Those are a few of what I consider WebGL Anti-Patterns in code I've seen around the net.
 Hopefully I've made the case why to avoid them and given solutions that are easy and useful.
