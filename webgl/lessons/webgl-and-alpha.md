@@ -3,8 +3,8 @@ Description: How alpha in WebGL is different than alpha in OpenGL
 
 I've noticed some OpenGL developers having issues with how WebGL
 treats alpha in the backbuffer (ie, the canvas), so I thought it
- might be good to go over some of the differences between WebGL
- and OpenGL related to alpha.
+might be good to go over some of the differences between WebGL
+and OpenGL related to alpha.
 
 The biggest difference between OpenGL and WebGL is that OpenGL
 renders to a backbuffer that is not composited with anything,
@@ -19,7 +19,7 @@ WebGL has several ways to make this more like OpenGL.
 
 ### #1) Tell WebGL you want it composited with non-premultiplied alpha
 
-    gl = canvas.getContext("webgl", {
+    gl = canvas.getContext("webgl2", {
       premultipliedAlpha: false  // Ask for non-premultiplied alpha
     });
 
@@ -56,13 +56,19 @@ should have been the default.
     ..
     renderScene();
     ..
-    // Set the backbuffer's alpha to 1.0
+    // Set the backbuffer's alpha to 1.0 by
+
+    // Setting the clear color to 1
     gl.clearColor(1, 1, 1, 1);
+
+    // Telling WebGL to only affect the alpha channel
     gl.colorMask(false, false, false, true);
+
+    // clear
     gl.clear(gl.COLOR_BUFFER_BIT);
 
 Clearing is generally very fast as there is a special case for it in most
-hardware. I did this in most of my demos. If I was smart I'd switch to
+hardware. I did this in many of my first WebGL demos. If I was smart I'd switch to
 method #2 above. Maybe I'll do that right after I post this. It seems like
 most WebGL libraries should default to this method. Those few developers
 that are actually using alpha for compositing effects can ask for it. The
@@ -83,19 +89,19 @@ rendering to the canvas.
 
 ### #5) Handling Images
 
-My default if you are loading images with alpha into WebGL. WebGL will
-provide the values as they are in the PNG file with color values not
+By default if you are loading images with alpha into WebGL, WebGL will
+provide the values as they are in the file with color values not
 premultiplied. This is generally what I'm used to for OpenGL programs
 because it's lossless whereas pre-multiplied is lossy.
 
     1, 0.5, 0.5, 0  // RGBA
 
-Is a possible value un-premultiplied whereas pre-multiplied it's an
+Is a possible un-premultiplied value whereas pre-multiplied it's an
 impossible value because `a = 0` which means `r`, `g`, and `b` have
 to be zero.
 
-You can have WebGL pre-multiply the alpha if you want. You do this
-by setting `UNPACK_PREMULTIPLY_ALPHA_WEBGL` to true like this
+When loading an image you can have WebGL pre-multiply the alpha if you want.
+You do this by setting `UNPACK_PREMULTIPLY_ALPHA_WEBGL` to true like this
 
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
