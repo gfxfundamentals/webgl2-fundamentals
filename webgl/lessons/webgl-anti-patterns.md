@@ -94,7 +94,7 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
 
     **What to do instead:**
 
-    Instead of fighting the Web platform, use the Web platform as it was designed to be used.
+    Instead of fighting the Web platform, embrace the Web platform as it was designed to be used.
     Use CSS and `clientWidth` and `clientHeight`.
 
         var width = gl.canvas.clientWidth;
@@ -103,7 +103,7 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
         gl.canvas.width = width;
         gl.canvas.height = height;
 
-    Here are 9 cases. They all use exactly the same code. Notice that none of them
+    Here are 9 cases. They all use exactly the same code. If you look at their code you'll see none of them
     reference `window.innerWidth` nor `window.innerHeight`.
 
     <a href="../webgl-same-code-canvas-fullscreen.html" target="_blank">A page with nothing but a canvas using CSS to make it fullscreen</a>
