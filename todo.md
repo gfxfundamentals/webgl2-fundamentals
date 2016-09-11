@@ -5,7 +5,6 @@ Fix articles
 
 *   webgl-text-glyphs.html
 *   webgl-3d-textures.html
-*   webgl-2-textures.html
 
 List Changes to site
 
@@ -100,5 +99,6 @@ DONE
 *   webgl-animation.html
 *   webgl-and-alpha.html
 *   webgl-2d-vs-3d-library.html
+*   webgl-2-textures.html
 *   webgl-anti-patterns.html
 
