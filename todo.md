@@ -4,12 +4,8 @@ TO DO
 Fix articles
 
 *   webgl-text-glyphs.html
-*   webgl-animation.html
 *   webgl-3d-textures.html
 *   webgl-2-textures.html
-*   webgl-and-alpha.html
-*   webgl-2d-vs-3d-library.html
-*   webgl-anti-patterns.html
 
 List Changes to site
 
@@ -101,4 +97,8 @@ DONE
 *   webgl-text-texture.html
 *   webgl-boilerplate.html
 *   webgl-resizing-the-canvas.html
+*   webgl-animation.html
+*   webgl-and-alpha.html
+*   webgl-2d-vs-3d-library.html
+*   webgl-anti-patterns.html
 
