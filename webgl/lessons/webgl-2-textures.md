@@ -77,18 +77,19 @@ Next we change the shader to use 2 textures. In this case we'll multiply 1 textu
 precision mediump float;
 
 // our textures
-uniform sampler2D u_image0;
-uniform sampler2D u_image1;
+*uniform sampler2D u_image0;
+*uniform sampler2D u_image1;
 
 // the texCoords passed in from the vertex shader.
 in vec2 v_texCoord;
 
+// we need to declare an output for the fragment shader
 out vec2 outColor;
 
 void main() {
-   vec4 color0 = texture2D(u_image0, v_texCoord);
-   vec4 color1 = texture2D(u_image1, v_texCoord);
-   outColor = color0 * color1;
+*   vec4 color0 = texture2D(u_image0, v_texCoord);
+*   vec4 color1 = texture2D(u_image1, v_texCoord);
+*   outColor = color0 * color1;
 }
 ```
 

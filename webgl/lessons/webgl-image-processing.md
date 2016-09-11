@@ -27,8 +27,12 @@ Using [the vertex shader from the end of the previous post](webgl-fundamentals.h
 we need to add an attribute to pass in texture coordinates and then
 pass those on to the fragment shader.
 
-    +in vec2 a_texCoord;
     ...
+
+    +in vec2 a_texCoord;
+
+    ...
+
     +out vec2 v_texCoord;
 
     void main() {
