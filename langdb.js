@@ -1,5 +1,11 @@
 window.langDB = {
   "articles": {
+    "webgl2-whats-new.html": {
+      "en": true
+    },
+    "webgl1-to-webgl2.html": {
+      "en": true
+    },
     "webgl-2d-matrix-stack.html": {
       "en": true
     },
@@ -18,16 +24,16 @@ window.langDB = {
     "webgl-text-glyphs.html": {
       "en": true
     },
-    "webgl-scene-graph.html": {
+    "webgl-text-canvas2d.html": {
       "en": true
     },
     "webgl-text-html.html": {
       "en": true
     },
-    "webgl-text-canvas2d.html": {
+    "webgl-text-texture.html": {
       "en": true
     },
-    "webgl-text-texture.html": {
+    "webgl-scene-graph.html": {
       "en": true
     },
     "webgl-drawing-multiple-things.html": {
@@ -36,10 +42,10 @@ window.langDB = {
     "webgl-resizing-the-canvas.html": {
       "en": true
     },
-    "webgl-less-code-more-fun.html": {
+    "webgl-anti-patterns.html": {
       "en": true
     },
-    "webgl-anti-patterns.html": {
+    "webgl-less-code-more-fun.html": {
       "en": true
     },
     "webgl-3d-textures.html": {
@@ -63,10 +69,7 @@ window.langDB = {
     "webgl-3d-orthographic.html": {
       "en": true
     },
-    "webgl-image-processing-continued.html": {
-      "en": true
-    },
-    "webgl-image-processing.html": {
+    "webgl-fundamentals.html": {
       "en": true
     },
     "webgl-boilerplate.html": {
@@ -75,7 +78,10 @@ window.langDB = {
     "webgl-how-it-works.html": {
       "en": true
     },
-    "webgl-fundamentals.html": {
+    "webgl-image-processing-continued.html": {
+      "en": true
+    },
+    "webgl-image-processing.html": {
       "en": true
     },
     "webgl-2d-translation.html": {

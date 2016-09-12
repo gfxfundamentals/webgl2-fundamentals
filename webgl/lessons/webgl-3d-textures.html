@@ -76,51 +76,63 @@ but it will probably be easier to understand if we go over it in more detail.</p
 <p>The first thing we need to do is adjust our shaders to use textures. Here are the
 changes to the vertex shader. We need to pass in texture coordinates. In this
 case we just pass them straight through to the fragment shader.</p>
-<pre><code>attribute vec4 a_position;
-*attribute vec2 a_texcoord;
+<pre><code>#version 300 es
+in vec4 a_position;
+*in vec2 a_texcoord;
 
 uniform mat4 u_matrix;
 
-*varying vec2 v_texcoord;
++// a varying to pass the texture coordinates to the fragment shader
++out vec2 v_texcoord;
 
 void main() {
   // Multiply the position by the matrix.
   gl_Position = u_matrix * a_position;
 
-*  // Pass the texcoord to the fragment shader.
-*  v_texcoord = a_texcoord;
++  // Pass the texcoord to the fragment shader.
++  v_texcoord = a_texcoord;
 }
 </code></pre><p>In the fragment shader we declare a uniform sampler2D which lets us reference
 a texture. We use the texture coordinates passed from the vertex shader
-and we call <code>texture2D</code> to look up a color from that texture.</p>
-<pre><code>precision mediump float;
+and we call <code>texture</code> to look up a color from that texture.</p>
+<pre><code>#version 300 es
+precision mediump float;
 
 // Passed in from the vertex shader.
-*varying vec2 v_texcoord;
+*in vec2 v_texcoord;
 
 *// The texture.
 *uniform sampler2D u_texture;
 
+out vec4 outColor;
+
 void main() {
-*   gl_FragColor = texture2D(u_texture, v_texcoord);
+*   outColor = texture(u_texture, v_texcoord);
 }
 </code></pre><p>We need to setup the texture coordinates</p>
 <pre><code>// look up where the vertex data needs to go.
-var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
-*var texcoordLocation = gl.getAttribLocation(program, &quot;a_texcoords&quot;);
+var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
+*var texcoordAttributeLocation = gl.getAttribLocation(program, &quot;a_texcoord&quot;);
 
 ...
 
-*// Create a buffer for texcoords.
-var buffer = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-*gl.enableVertexAttribArray(texcoordLocation);
-*
-*// We&#39;ll supply texcoords as floats.
-*gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
-*
-*// Set Texcoords.
+*// create the texcoord buffer, make it the current ARRAY_BUFFER
+*// and copy in the texcoord values
+*var texcoordBuffer = gl.createBuffer();
+*gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
 *setTexcoords(gl);
+*
+*// Turn on the attribute
+*gl.enableVertexAttribArray(texcoordAttributeLocation);
+*
+*// Tell the attribute how to get data out of colorBuffer (ARRAY_BUFFER)
+*var size = 2;          // 2 components per iteration
+*var type = gl.FLOAT;   // the data is 32bit floating point values
+*var normalize = true;  // convert from 0-255 to 0.0-1.0
+*var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next color
+*var offset = 0;        // start at the beginning of the buffer
+*gl.vertexAttribPointer(
+*    texcoordAttributeLocation, size, type, normalize, stride, offset);
 </code></pre><p>And you can see the coordinates we&#39;re using which are mapping the entire
 texture to each quad on our &#39;F&#39;.</p>
 <pre><code>*// Fill the buffer with texture coordinates for the F.
@@ -184,35 +196,42 @@ the image has been downloaded we copy the image to the texture. We&#39;ll use th
 </p>
 <p>What if we wanted to just use a part of the texture across the front of the &#39;F&#39;? Textures are referenced
 with &quot;texture coordinates&quot; and texture coordinates go from 0.0 to 1.0 from left to
-right across the texture and 0.0 to 1.0 from bottom to top up the texture.</p>
+right across the texture and 0.0 to 1.0 from the first pixel on the first line to the last pixel on the last line.
+Notice I didn&#39;t stay top or bottom. Top and bottom make no sense in texture space
+because until you draw something and orient it there is no top and bottom. What matters is you
+supply texture data to WebGL. The start of that data starts at texture coordinate 0,0
+and the end of that data is at 1,1</p>
 <p><img class="webgl_center" width="405" src="resources/texture-coordinates-diagram.svg" /></p>
-<p>So if we match up our vertices to the texture we can figure out what texture coordinates to use.</p>
-<p><img class="webgl_center" width="405" src="resources/f-texture-coordinates-diagram.svg" /></p>
-<p>Here are the texture coordinates for the front.</p>
-<pre><code>    // left column front
-    0.22, 0.19,
-    0.22, 0.79,
-    0.34, 0.19,
-    0.22, 0.79,
-    0.34, 0.79,
-    0.34, 0.19,
+<p>I loaded the texture into photoshop and looked up the various coordinates in pixels.</p>
+<p><img class="webgl_center" width="256" height="256" src="../resources/f-texture-pixel-coords.png" /></p>
+<p>To convert from pixel coordinates to texture coordinates we can just use</p>
+<pre><code>texcoordX = pixelCoordX / (width  - 1)
+texcoordY = pixelCoordY / (height - 1)
+</code></pre><p>Here are the texture coordinates for the front.</p>
+<pre><code>// left column front
+ 38 / 255,  44 / 255,
+ 38 / 255, 223 / 255,
+113 / 255,  44 / 255,
+ 38 / 255, 223 / 255,
+113 / 255, 223 / 255,
+113 / 255,  44 / 255,
 
-    // top rung front
-    0.34, 0.19,
-    0.34, 0.31,
-    0.62, 0.19,
-    0.34, 0.31,
-    0.62, 0.31,
-    0.62, 0.19,
+// top rung front
+113 / 255, 44 / 255,
+113 / 255, 85 / 255,
+218 / 255, 44 / 255,
+113 / 255, 85 / 255,
+218 / 255, 85 / 255,
+218 / 255, 44 / 255,
 
-    // middle rung front
-    0.34, 0.43,
-    0.34, 0.55,
-    0.49, 0.43,
-    0.34, 0.55,
-    0.49, 0.55,
-    0.49, 0.43,
-</code></pre><p>And here it is.</p>
+// middle rung front
+113 / 255, 112 / 255,
+113 / 255, 151 / 255,
+203 / 255, 112 / 255,
+113 / 255, 151 / 255,
+203 / 255, 151 / 255,
+203 / 255, 112 / 255,
+</code></pre><p>I also used similar texture coordinates for the back. And here it is.</p>
 <p><div>
   <iframe class="webgl_example" style="width: 400px; height: 300px;" src="../webgl-3d-textures-texture-coords-mapped.html"></iframe>
   <a class="webgl_center" href="../webgl-3d-textures-texture-coords-mapped.html" target="_blank">click here to open in a separate window</a>
@@ -222,7 +241,7 @@ right across the texture and 0.0 to 1.0 from bottom to top up the texture.</p>
 <p>Not a very exciting display but hopefully it demonstrates how to use texture coordinates. If you&#39;re making
 geometry in code (cubes, spheres, etc) it&#39;s usually pretty easy to compute whatever texture coordinates you
 want. On the other hand if you&#39;re getting 3d models from 3d modeling software like Blender, Maya, 3D Studio Max, then
-your artists (or you) will adjust texture coordinates in those packages.</p>
+your artists (or you) will <a href="https://www.blender.org/manual/editors/uv_image/uv_editing/unwrapping.html">adjust texture coordinates in those packages using a UV editor</a>.</p>
 <p>So what happens if we use texture coordinates outside the 0.0 to 1.0 range. By default WebGL repeats
 the texture. 0.0 to 1.0 is one &#39;copy&#39; of the texture. 1.0 to 2.0 is another copy. even -4.0 to -3.0 is yet
 another copy. Let&#39;s display a plane using these texture coordinates.</p>
@@ -242,7 +261,8 @@ another copy. Let&#39;s display a plane using these texture coordinates.</p>
 <p>You can tell WebGL to not repeat the texture in a certain direction by using <code>CLAMP_TO_EDGE</code>. For example</p>
 <pre><code>gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-</code></pre><p>Click the buttons in the sample above to see the difference.</p>
+</code></pre><p>you can also tell WebGL to mirror the texture when it repeat use <code>gl.MIRRORED_REPEAT</code>.
+Click the buttons in the sample above to see the difference.</p>
 <p>You might have noticed a call to <code>gl.generateMipmap</code> back when we loaded the texture. What is that for?</p>
 <p>Imagine we had this 16x16 pixel texture.</p>
 <p><img class="webgl_center" src="resources/mip-low-res-enlarged.png" style="border: 2px solid black;" /></p>
@@ -282,13 +302,14 @@ flickers.</p>
 </div>
 
 </p>
-<p>Notice how much the ones on the left and middle flicker where as the ones on the right flicker less.
+<p>The example above is exaggerated to show the issue.
+Notice how much the ones on the left and middle flicker where as the ones on the right flicker less.
 The ones on the right also have blended colors since they are using the mips. The smaller you draw the texture the further apart WebGL is
 going to pick pixels. That&#39;s why for example the bottom middle one, even though it&#39;s using <code>LINEAR</code> and blending
-4 pixels it flickers because those 4 pixels are from different corners of the 16x16 image depending on which
+4 pixels it flickers different colors because those 4 pixels are from different corners of the 16x16 image depending on which
 4 are picked you&#39;ll get a different color. The one on the bottom right though stays a consistent color
 because it&#39;s using the 2nd to the smallest mip.</p>
-<p>The second example shows polygons that go deep into the screen.</p>
+<p>This second example shows polygons that go deep into the distance.</p>
 <p><div>
   <iframe class="webgl_example" style="width: 400px; height: 300px;" src="../webgl-3d-textures-mips-tri-linear.html"></iframe>
   <a class="webgl_center" href="../webgl-3d-textures-mips-tri-linear.html" target="_blank">click here to open in a separate window</a>
@@ -316,7 +337,7 @@ needing to read 32 pixels for every pixel drawn. That&#39;s going to be slow. An
 to achieve a certain effect. For example if you want something to have that pixelated <em>retro</em> look maybe you
 want to use <code>NEAREST</code>.  Mips also take memory. In fact they take 33% more memory. That can be a lot of memory
 especially for a very large texture like you might use on a title screen of a game.  If you are never going
-to draw something smaller than the largest mip why waste memory for those mips. Instead just use <code>NEAREST</code>
+to draw something smaller than the largest mip why waste memory for the smaller mips. Instead just use <code>NEAREST</code>
 or <code>LINEAR</code> as they only ever use the first mip.</p>
 <p>To set filtering you call <code>gl.texParameter</code> like this</p>
 <pre><code>gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
@@ -324,81 +345,53 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 </code></pre><p><code>TEXTURE_MIN_FILTER</code> is the setting used when the size you are drawing is smaller than the largest mip.
 <code>TEXTURE_MAG_FILTER</code> is the setting used when the size you are drawing is larger than the largest mip. For
 <code>TEXTURE_MAG_FILTER</code> only <code>NEAREST</code> and <code>LINEAR</code> are valid settings.</p>
-<p>Let&#39;s say we wanted to apply this texture.</p>
-<p><img class="webgl_center" src="../resources/keyboard.jpg" /></p>
-<p>Here it is.</p>
-<p><div>
-  <iframe class="webgl_example" style="width: 400px; height: 300px;" src="../webgl-3d-textures-bad-npot.html"></iframe>
-  <a class="webgl_center" href="../webgl-3d-textures-bad-npot.html" target="_blank">click here to open in a separate window</a>
-</div>
-
-</p>
-<p>Why doesn&#39;t the keyboard texture show up? That&#39;s beacuse WebGL has a kind of severe restriction on textures that
-are not a power of 2 in both dimensions. Powers of 2 are 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, etc.
-The &#39;F&#39; texture was 256x256. 256 is a power of 2. The keyboard texture is 320x240. Neither of those are a power
-of 2 so trying to display the texture fails. In the shader when <code>texture2D</code> is called and when the texture
-referenced is not setup correctly WebGL will use color (0, 0, 0, 1) which is black. If you open up the JavaScript console
-or Web Console, depending on the browser you might see errors pointing out the problem like this</p>
-<pre><code>WebGL: INVALID_OPERATION: generateMipmap: level 0 not power of 2
-   or not all the same size
-WebGL: drawArrays: texture bound to texture unit 0 is not renderable.
-   It maybe non-power-of-2 and have incompatible texture filtering or
-   is not &#39;texture complete&#39;.
-</code></pre><p>To fix it we need to set the wrap mode to <code>CLAMP_TO_EDGE</code> and turn off mip mapping by setting filtering
-to <code>LINEAR</code> or <code>NEAREST</code>.</p>
-<p>Let&#39;s update our image loading code to handle this. First we need a function that will tell us if a value is
-a power of 2.</p>
-<pre><code>function isPowerOf2(value) {
-  return (value &amp; (value - 1)) == 0;
-}
-</code></pre><p>I&#39;m not going to go into the binary math on why this works. Since it does work though, we can use it as follows.</p>
-<pre><code>// Asynchronously load an image
-var image = new Image();
-image.src = &quot;resources/keyboard.jpg&quot;;
-image.addEventListener(&#39;load&#39;, function() {
-  // Now that the image has loaded make copy it to the texture.
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
-
-*  // Check if the image is a power of 2 in both dimensions.
-*  if (isPowerOf2(image.width) &amp;&amp; isPowerOf2(image.height)) {
-*     // Yes, it&#39;s a power of 2. Generate mips.
-     gl.generateMipmap(gl.TEXTURE_2D);
-*  } else {
-*     // No, it&#39;s not a power of 2. Turn of mips and set wrapping to clamp to edge
-*     gl.texParameteri(gl.TETXURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-*     gl.texParameteri(gl.TETXURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-*     gl.texParameteri(gl.TETXURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-*  }
-}
-</code></pre><p>And here&#39;s that</p>
-<p><div>
-  <iframe class="webgl_example" style="width: 400px; height: 300px;" src="../webgl-3d-textures-good-npot.html"></iframe>
-  <a class="webgl_center" href="../webgl-3d-textures-good-npot.html" target="_blank">click here to open in a separate window</a>
-</div>
-
-</p>
+<p>Something to be aware of, WebGL2 requires textures to be &quot;texture complete&quot; otherwise they won&#39;t render.
+&quot;texture complete&quot; means that either</p>
+<ol>
+<li><p>You&#39;ve set the filtering so it only uses the first mip level which means
+settting the <code>TEXTURE_MIN_FILTER</code> to either <code>LINEAR</code> or <code>NEAREST</code>.</p>
+</li>
+<li><p>If you are using mips then they need to be the correct sizes and you have to provide ALL OF THEM
+down to the 1x1 size.</p>
+<p>The easiest way to do that is to call <code>gl.generateMipmap</code>. Otherwise if you provide your own mips you need to provide
+all of them or you&#39;ll get an error.</p>
+</li>
+</ol>
 <p>A common question is &quot;How do I apply a different image to each face of a cube?&quot;. For example let&#39;s say we
 had these 6 images.</p>
 <div class="webgl_table_div_center">
-<table class="webgl_table_center">
-<tr><td><img src="resources/noodles-01.jpg" /></td><td><img src="resources/noodles-02.jpg" /></td><td><img src="resources/noodles-03.jpg" /></td></tr>
-<tr><td><img src="resources/noodles-04.jpg" /></td><td><img src="resources/noodles-05.jpg" /></td><td><img src="resources/noodles-06.jpg" /></td></tr>
-</table>
+  <style>
+    table.webgl_table_center {
+      border-spacing: 0.5em;
+      border-collapse: separate;
+    }
+    table.webgl_table_center img {
+      display:block;
+    }
+  </style>
+  <table class="webgl_table_center">
+  <tr><td><img src="resources/noodles-01.jpg" /></td><td><img src="resources/noodles-02.jpg" /></td><td><img src="resources/noodles-03.jpg" /></td></tr>
+  <tr><td><img src="resources/noodles-04.jpg" /></td><td><img src="resources/noodles-05.jpg" /></td><td><img src="resources/noodles-06.jpg" /></td></tr>
+  </table>
 </div>
 
 <p>3 answers come to mind</p>
-<p>1) make a complicated shader that references 6 textures and pass in some extra per vertex info into
+<ol>
+<li><p>make a complicated shader that references 6 textures and pass in some extra per vertex info into
 the vertex shader that gets passed to the fragment shader to decide which texture to use. DON&#39;T DO THIS!
 A little thought would make it clear that you&#39;d end up having to write tons of different shaders if you
 wanted to do the same thing for different shapes with more sides etc.</p>
-<p>2) draw 6 planes instead of a cube. This is a common solution. It&#39;s not bad but it also only really works
+</li>
+<li><p>draw 6 planes instead of a cube. This is a common solution. It&#39;s not bad but it also only really works
 for small shapes like a cube. If you had a sphere with 1000 quads and you wanted to put a different texture
 on each quad you&#39;d have to draw 1000 planes and that would be slow.</p>
-<p>3) The, dare I say, <em>best solution</em> is to put all of the images in 1 texture and use texture coordinates
+</li>
+<li><p>The, dare I say, <em>best solution</em> is to put all of the images in 1 texture and use texture coordinates
 to map a different part of the texture to each face of the cube. This is the technique that pretty much
 all high performance apps (read <em>games</em>) use. So for example we&#39;d put all the images in one texture possibly
 like this</p>
+</li>
+</ol>
 <p><img class="webgl_center" src="../resources/noodles.jpg" /></p>
 <p>and then use a different set of texture coordinates for each face of the cube.</p>
 <pre><code>    // select the bottom left image
@@ -450,8 +443,8 @@ like this</p>
 </div>
 
 </p>
-<p>This style of applying multiple images using 1 texture is often called a <em>texture atlas</em>. It&#39;s best because
-there&#39;s just 1 texture to load, the shader stays simple as it only has to reference 1 texture, and it only
+<p>This style of applying multiple images using 1 texture is often called a <a href="https://www.google.com/?ion=1&amp;espv=2#q=texture%20atlas"><em>texture atlas</em></a>.
+It&#39;s best because there&#39;s just 1 texture to load, the shader stays simple as it only has to reference 1 texture, and it only
 requires 1 draw call to draw the shape instead of 1 draw call per texture as it might if we split it into
 planes.</p>
 <p>Next up <a href="webgl-less-code-more-fun.html">lets start simplifying with less code more fun</a>.</p>
@@ -467,6 +460,15 @@ at the texture wrap settings they are called <code>TEXTURE_WRAP_S</code> and
 in graphics people have called them Ew-Vees.
 </p>
 <p>So now you know if someone says UVs they're talking about texture coordinates.</p>
+</div>
+
+<div class="webgl_bottombar">
+<h3>Non Power of 2 Images</h3>
+<p>If you are used to WebGL1, WebGL1 had the limit that textures with dimensions
+that were not a power of 2 (like 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, etc)
+could not use mips and could not repeat. In WebGL2 those restritions are gone.
+YAY!
+</p>
 </div>
 
 
@@ -508,6 +510,12 @@ in graphics people have called them Ew-Vees.
     <li><a href="/webgl/lessons/webgl-fundamentals.html">WebGL2 Fundamentals</a></li>
     <li><a href="/webgl/lessons/webgl-how-it-works.html">WebGL2 How It Works</a></li>
     <li><a href="/webgl/lessons/webgl-shaders-and-glsl.html">WebGL2 Shaders and GLSL</a></li>
+  </ul>
+  <li>WebGL2 vs WebGL1</li>
+  <ul>
+    <li><a href="/webgl/lessons/webgl2-whats-new.html">What's new in WebGL2</a></li>
+    <li><a href="/webgl/lessons/webgl1-to-webgl2.html">Moving from WebGL1 to WebGL2</a></li>
+    <li><a href="/webgl/lessons/webgl1-to-webgl2-fundamentals.html">Differences from WebGLFundamentals.org to WebLG2Fundamentals.org</a></li>
   </ul>
   <li>Image Processing</li>
   <ul>
