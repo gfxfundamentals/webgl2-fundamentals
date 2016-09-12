@@ -5,7 +5,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>WebGL2 - Textures - Mips - Depth</title>
-<link type="text/css" href="resources/css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
 <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
 <style>
 #ui {
@@ -23,9 +22,6 @@ body, document {
 #uiContainer {
     left: 10px;
     top: 130px;
-}
-#rotation>canvas {
-    background-color: rgba(255, 255, 255, 0.6) !important;
 }
 #container {
   position: relative;
@@ -45,20 +41,65 @@ Show how mips are important for depth<br/>
   </div>
 </div>
 </body>
-<script src="resources/jquery-1.7.1.min.js"></script>
-<script src="resources/jquery-ui-1.8.16.custom.min.js"></script>
-<script src="resources/jquery.gman.ui.js"></script>
 <script src="resources/webgl-utils.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script>
 <script src="resources/webgl-3d-math.js"></script>
 <script>
 "use strict";
 
+var vertexShaderSource = `#version 300 es
+
+// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec4 a_position;
+in vec2 a_texcoord;
+
+// A matrix to transform the positions by
+uniform mat4 u_matrix;
+
+// a varying to pass the texture coordinates to the fragment shader
+out vec2 v_texcoord;
+
+// all shaders have a main function
+void main() {
+  // Multiply the position by the matrix.
+  gl_Position = u_matrix * a_position;
+
+  // Pass the texcoord to the fragment shader.
+  v_texcoord = a_texcoord;
+}
+`;
+
+var fragmentShaderSource = `#version 300 es
+
+precision mediump float;
+
+// Passed in from the vertex shader.
+in vec2 v_texcoord;
+
+// The texture.
+uniform sampler2D u_texture;
+
+// we need to declare an output for the fragment shader
+out vec4 outColor;
+
+void main() {
+  outColor = texture(u_texture, v_texcoord);
+}
+`;
+
 var zDepth = 50;
 
 function main() {
   // Get A WebGL context
-  var canvas = document.getElementById("canvas", {antialias: false});
+  var canvas = document.getElementById("canvas");
+
+  // this mess is to make the number of pixels
+  // in the canvas match the number of pixels
+  // it will be displayed even on a hi-dpi display
+  // because we want to make sure there's no extra
+  // filtering. This is not the normal way to do
+  // this so please don't copy :P
   var dpr = window.devicePixelRatio || 1;
   var originalCanvasWidth = canvas.width;
   var originalCanvasHeight = canvas.height;
@@ -66,46 +107,68 @@ function main() {
   canvas.style.height = canvas.height + "px";
   canvas.width = Math.floor(canvas.width * dpr);
   canvas.height = Math.floor(canvas.height * dpr);
+
   webglLessonsHelper.setupLesson(canvas);
-  var gl = canvas.getContext("webgl2");
+  var gl = canvas.getContext("webgl2", {antialias: false});
   if (!gl) {
     webglLessonsHelper.showNeedWebGL2(gl.canvas);
     return;
   }
 
-  gl.enable(gl.CULL_FACE);
-  gl.enable(gl.DEPTH_TEST);
-
-  // setup GLSL program
-  var program = createProgramFromScripts(gl, ["3d-vertex-shader", "3d-fragment-shader"]);
-  gl.useProgram(program);
+  // Use our boilerplate utils to compile the shaders and link into a program
+  var program = webglUtils.createProgramFromSources(gl,
+      [vertexShaderSource, fragmentShaderSource]);
 
   // look up where the vertex data needs to go.
-  var positionLocation = gl.getAttribLocation(program, "a_position");
-  var texcoordLocation = gl.getAttribLocation(program, "a_texcoord");
+  var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+  var texcoordAttributeLocation = gl.getAttribLocation(program, "a_texcoord");
 
-  // lookup uniforms
+  // look up uniform locations
   var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 
-  // Create a buffer.
-  var buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.enableVertexAttribArray(positionLocation);
-  gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
+  // Create a buffer
+  var positionBuffer = gl.createBuffer();
 
+  // Create a vertex array object (attribute state)
+  var vao = gl.createVertexArray();
+
+  // and make it the one we're currently working with
+  gl.bindVertexArray(vao);
+
+  // Turn on the attribute
+  gl.enableVertexAttribArray(positionAttributeLocation);
+
+  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
   // Set Geometry.
   setGeometry(gl);
 
-  // Create a buffer for texcoords.
-  var buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.enableVertexAttribArray(texcoordLocation);
+  // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+  var size = 3;          // 3 components per iteration
+  var type = gl.FLOAT;   // the data is 32bit floats
+  var normalize = false; // don't normalize the data
+  var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+  var offset = 0;        // start at the beginning of the buffer
+  gl.vertexAttribPointer(
+      positionAttributeLocation, size, type, normalize, stride, offset);
 
-  // We'll supply texcoords as floats.
-  gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
-
-  // Set Texcoords.
+  // create the texcoord buffer, make it the current ARRAY_BUFFER
+  // and copy in the texcoord values
+  var texcoordBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
   setTexcoords(gl);
+
+  // Turn on the attribute
+  gl.enableVertexAttribArray(texcoordAttributeLocation);
+
+  // Tell the attribute how to get data out of colorBuffer (ARRAY_BUFFER)
+  var size = 2;          // 2 components per iteration
+  var type = gl.FLOAT;   // the data is 32bit floating point values
+  var normalize = true;  // convert from 0-255 to 0.0-1.0
+  var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next color
+  var offset = 0;        // start at the beginning of the buffer
+  gl.vertexAttribPointer(
+      texcoordAttributeLocation, size, type, normalize, stride, offset);
 
   // Create a texture with different colored mips
   var mipTexture = gl.createTexture();
@@ -133,12 +196,20 @@ function main() {
      gl.texImage2D(gl.TEXTURE_2D, level, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
   });
 
+
   // Create a texture.
   var texture = gl.createTexture();
+
+  // use texture unit 0
+  gl.activeTexture(gl.TEXTURE0 + 0);
+
+  // bind to the TEXTURE_2D bind point of texture unit 0
   gl.bindTexture(gl.TEXTURE_2D, texture);
+
   // Fill the texture with a 1x1 blue pixel.
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
                 new Uint8Array([0, 0, 255, 255]));
+
   // Asynchronously load an image
   var image = new Image();
   image.src = "resources/mip-low-res-example.png";
@@ -146,34 +217,10 @@ function main() {
     // Now that the image has loaded make copy it to the texture.
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
-
-    // Check if the image is a power of 2 in both dimensions.
-    if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
-       // Yes, it's a power of 2. Generate mips.
-       gl.generateMipmap(gl.TEXTURE_2D);
-    } else {
-       // No, it's not a power of 2. Turn of mips and set wrapping to clamp to edge
-       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    }
+    gl.generateMipmap(gl.TEXTURE_2D);
     drawScene();
   });
 
-  var textures = [
-    texture,
-    mipTexture,
-  ];
-  var textureIndex = 0;
-
-  $("body").click(function() {
-    textureIndex = (textureIndex + 1) % textures.length;
-    drawScene();
-  });
-
-  function isPowerOf2(value) {
-    return (value & (value - 1)) == 0;
-  }
 
   function radToDeg(r) {
     return r * 180 / Math.PI;
@@ -183,32 +230,57 @@ function main() {
     return d * Math.PI / 180;
   }
 
+  var textures = [
+    texture,
+    mipTexture,
+  ];
+  var textureIndex = 0;
+
+  document.querySelector("body").addEventListener('click', function() {
+    textureIndex = (textureIndex + 1) % textures.length;
+    drawScene();
+  });
+
+  // First let's make some variables
+  // to hold the translation,
   var fieldOfViewRadians = degToRad(60);
 
   drawScene();
 
   // Draw the scene.
-  function drawScene() {
-    // Clear the framebuffer texture.
+  function drawScene(time) {
     gl.clearColor(0, 0, 0, 1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // Compute the projection matrix
-    var aspect = canvas.clientWidth / canvas.clientHeight;
-    var zNear  = 1;
-    var zFar   = 2000;
-    var projectionMatrix =
-        makePerspective(fieldOfViewRadians, aspect, zNear, zFar);
+    // turn on depth testing
+    gl.enable(gl.DEPTH_TEST);
+
+    // tell webgl to cull faces
+    gl.enable(gl.CULL_FACE);
+
+    // Tell it to use our program (pair of shaders)
+    gl.useProgram(program);
+
+    // Bind the attribute/buffer set we want.
+    gl.bindVertexArray(vao);
+
+    // Compute the matrix
+    var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+    var zNear = 1;
+    var zFar = 2000;
+    var projectionMatrix = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
 
     var cameraPosition = [0, 0, 2];
     var up = [0, 1, 0];
     var target = [0, 0, 0];
 
     // Compute the camera's matrix using look at.
-    var cameraMatrix = makeLookAt(cameraPosition, target, up);
+    var cameraMatrix = m4.lookAt(cameraPosition, target, up);
 
     // Make a view matrix from the camera matrix.
-    var viewMatrix = makeInverse(cameraMatrix);
+    var viewMatrix = m4.inverse(cameraMatrix);
+
+    var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
 
     var settings = [
       { x: -1, y:  1, zRot: 0, magFilter: gl.NEAREST, minFilter: gl.NEAREST,                 },
@@ -224,16 +296,10 @@ function main() {
       gl.bindTexture(gl.TEXTURE_2D, textures[textureIndex]);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, s.minFilter);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, s.magFilter);
-      var translationMatrix = makeTranslation(s.x * xSpacing, s.y * ySpacing, -zDepth * 0.5);
-      var zRotationMatrix = makeZRotation(s.zRot * Math.PI);
-      var scaleMatrix = makeScale(1, 1, zDepth);
 
-      // Multiply the matrices.
-      var matrix = scaleMatrix;
-      matrix = matrixMultiply(matrix, zRotationMatrix);
-      matrix = matrixMultiply(matrix, translationMatrix);
-      matrix = matrixMultiply(matrix, viewMatrix);
-      matrix = matrixMultiply(matrix, projectionMatrix);
+      var matrix = m4.translate(viewProjectionMatrix, s.x * xSpacing, s.y * ySpacing, -zDepth * 0.5);
+      matrix = m4.zRotate(matrix, s.zRot * Math.PI);
+      matrix = m4.scale(matrix, 1, 1, zDepth);
 
       // Set the matrix.
       gl.uniformMatrix4fv(matrixLocation, false, matrix);
@@ -244,72 +310,38 @@ function main() {
   }
 }
 
-// Fill the buffer with the values that define a plane.
+// Fill the current ARRAY_BUFFER buffer
+// with the values that define a plane.
 function setGeometry(gl) {
-  var positions = new Float32Array(
-    [
-    -0.5,  0.5, -0.5,
-     0.5,  0.5, -0.5,
-    -0.5,  0.5,  0.5,
-    -0.5,  0.5,  0.5,
-     0.5,  0.5, -0.5,
-     0.5,  0.5,  0.5,
+  var positions = new Float32Array([
+      -0.5, 0.5, -0.5,
+       0.5, 0.5, -0.5,
+      -0.5, 0.5,  0.5,
+      -0.5, 0.5,  0.5,
+       0.5, 0.5, -0.5,
+       0.5, 0.5,  0.5,
+  ]);
 
-    ]);
   gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
 }
 
-// Fill the buffer with texture coordinates for a plane.
+// Fill the current ARRAY_BUFFER buffer
+// with texture coordinates for a plane
 function setTexcoords(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
-      new Float32Array(
-        [
-        0, 0,
-        1, 0,
-        0, zDepth,
-        0, zDepth,
-        1, 0,
-        1, zDepth,
-
+      new Float32Array([
+          0, 0,
+          1, 0,
+          0, zDepth,
+          0, zDepth,
+          1, 0,
+          1, zDepth,
       ]),
       gl.STATIC_DRAW);
 }
 
-$(function(){
-  main();
-});
-</script>
-<!-- vertex shader -->
-<script id="3d-vertex-shader" type="x-shader/x-vertex">
-attribute vec4 a_position;
-attribute vec2 a_texcoord;
-
-uniform mat4 u_matrix;
-
-varying vec2 v_texcoord;
-
-void main() {
-  // Multiply the position by the matrix.
-  gl_Position = u_matrix * a_position;
-
-  // Pass the texcoord to the fragment shader.
-  v_texcoord = a_texcoord;
-}
-</script>
-<!-- fragment shader -->
-<script id="3d-fragment-shader" type="x-shader/x-fragment">
-precision mediump float;
-
-// Passed in from the vertex shader.
-varying vec2 v_texcoord;
-
-// The texture.
-uniform sampler2D u_texture;
-
-void main() {
-   gl_FragColor = texture2D(u_texture, v_texcoord);
-}
+main();
 </script>
 </html>
 
