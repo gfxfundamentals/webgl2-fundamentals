@@ -15,7 +15,7 @@ was optionally available on WebGL1 now that it's
 always available on WebGL2 [I think you should probably
 always use them](webgl1-to-webgl2.html#Vertex-Array-Objects).
 
-## floating point textures always available
+## Floating point textures always available
 
 Floating point textures are used for many special effects
 and calculations. In WebGL1 they were optional. In WebGL2
@@ -163,7 +163,8 @@ from a buffer. The advantages are
    outside of WebGL
 
    In WebGL1 if you had 16 uniforms that would require
-   16 calls to `gl.uinformXXX`. In WebGL2 if you use
+   16 calls to `gl.uinformXXX`. That is relatively slow.
+   In WebGL2 if you use
    a Uniform Buffer Object you can set the values in
    a typed array all inside JavaScript which means it's
    much much faster. When all the values are set
@@ -172,9 +173,16 @@ from a buffer. The advantages are
    to use that buffer with `gl.bindBufferRange` so only
    2 calls.
 
-2. You can save different sets of uniforms buffer objects
+2. You can have different sets of uniforms buffer objects
 
-   For example, you could have 4 uniform buffer blocks defined
+   First some terms. A Uniform Block is a collection
+   of uniforms defined in a shader. A Uniform Buffer Object
+   is a buffer that contains the values a Uniform Block
+   will use. You can create as many Uniform Buffer Objects
+   as you want and bind one of them to a particular Uniform Block
+   when you draw.
+
+   For example, you could have 4 uniform blocks defined
    in a shader.
 
    * A global matrix uniform block that contains
@@ -205,7 +213,7 @@ from a buffer. The advantages are
        gl.bindBufferRange(..., materialBlockIndx, someMaterialSettingsUBO, ...);
        gl.bindBufferRange(..., lightBlockIndx, someLightSettingsUBO, ...);
 
-##  integer textures/attributes and math
+##  Integer textures, attributes and math
 
 In WebGL2 you can have integer based textures where as
 in WebGL1 all textures represented floating point values
@@ -235,50 +243,50 @@ personally ever had a artist need to filter textures in
 multiple ways. I'd be curious to know if any other game
 engine devs have had a different experience.
 
-## Depth Textures ([WEBGL_depth_texture](https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/))
+## Depth Textures
 
 Depth textures were optional in WebGL1 and a PITA to work around. Now they're standard.
 Commonly used for computing shadow maps
 
-## Standard Derivatives ([OES_standard_derivatives](https://www.khronos.org/registry/webgl/extensions/OES_standard_derivatives/))
+## Standard Derivatives
 
 These are now standard. Common uses include computing normals in the shaders instead of passing them in
 
-## Instanced Drawing ([ANGLE_instanced_arrays](https://www.khronos.org/registry/webgl/extensions/ANGLE_instanced_arrays/))
+## Instanced Drawing
 
-Common uses are drawing lots of trees, bushes or grass quickly.
+Now Standard, common uses are drawing lots of trees, bushes or grass quickly.
 
-## UNSIGNED_INT indices ([OES_element_index_uint](https://www.khronos.org/registry/webgl/extensions/OES_element_index_uint/))
+## UNSIGNED_INT indices
 
 Being able to use 32bit ints for indices removes the size limit of indexed geometry
 
-## Setting `gl_FragDepth` ([EXT_frag_depth](https://www.khronos.org/registry/webgl/extensions/EXT_frag_depth/))
+## Setting `gl_FragDepth`
 
 Letting you write your own custom values to the depth buffer / z-buffer.
 
-## Blend Equation MIN/MAX ([EXT_blend_minmax](https://www.khronos.org/registry/webgl/extensions/EXT_blend_minmax/))
+## Blend Equation MIN / MAX
 
-Being able to take the min or max o 2 colors when blending
+Being able to take the min or max of 2 colors when blending
 
-## Direct texture LOD access ([EXT_shader_texture_lod](https://www.khronos.org/registry/webgl/extensions/EXT_shader_texture_lod/))
-
-Being able to choose a specific LOD to get a color from in a shader
-
-## Multiple Draw Buffers ([WEBGL_draw_buffers](https://www.khronos.org/registry/webgl/extensions/WEBGL_draw_buffers/))
+## Multiple Draw Buffers
 
 Being able to draw to multiple buffers at once from a shader. This is commonly used
 for various deferred rendering techniques.
 
 ## Texture access in vertex shaders
 
-In WebGL1 this was an option feature. There was a count of how many textures
-you could access in a vertex shader and that count was allowed to be 0. In WebGL2
-that count is required to be at least 16.
+In WebGL1 this was an optional feature. There was a count of how many textures
+you could access in a vertex shader and that count was allowed to be 0. Most
+devices supported them. In WebGL2 that count is required to be at least 16.
 
 ## Multi-Sampled renderbuffers
 
 In WebGL1 the canvas itself could be anti-aliased with the GPU's built in
-system but there was no support for user controlled mutli-sampling. In WebGL2
+multi-sample system but there was no support for user controlled mutli-sampling. In WebGL2
 you can now make multi-sampled renderbuffers.
 
+## Occlusion Queries
+
+Occlusion queries let you ask the GPU to check if it were to render something
+would any pixels actually get drawn.
 
