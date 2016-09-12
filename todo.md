@@ -34,6 +34,7 @@ Cover WebGL1->2
    *  standard deviations
    *  instanced drawing
    *  textures in vertex shaders (were optional)
+   *  compressed textures
 
 *  instancing
 *  use vertex array objects
