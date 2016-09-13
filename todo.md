@@ -5,6 +5,7 @@ Fix articles
 
 *   webgl-text-glyphs.html
 *   add clear to all examples?
+*   remove image flipping from examples
 
 List Changes to site
 
