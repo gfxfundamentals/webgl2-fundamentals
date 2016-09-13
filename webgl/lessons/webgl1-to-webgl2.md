@@ -5,7 +5,7 @@ WebGL2 is nearly 100% backward compatible with WebGL1.
 If you only use WebGL1 features then then there are
 only 2 differences.
 
-1.  You use `"webgl2"` instead of `"webgl"` when calling `getContext`
+1.  You use `"webgl2"` ins tead of `"webgl"` when calling `getContext`
 
         var gl = someCanvas.getContext("webgl2);
 

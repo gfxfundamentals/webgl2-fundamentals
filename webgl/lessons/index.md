@@ -12,6 +12,7 @@ If you are interested in WebGL 1.0 please [go here](http://webglfundamentals.org
 If you are already familar with WebGL1 you might want to look at these articles
 
 <ul>
+<li><a href="/webgl/lessons/webgl-getting-webgl2.html">How to use WebGL2</a></li>
 <li><a href="/webgl/lessons/webgl2-whats-new.html">What's new in WebGL2</a></li>
 <li><a href="/webgl/lessons/webgl1-to-webgl2.html">Moving from WebGL1 to WebGL2</a></li>
 <li><a href="/webgl/lessons/webgl1-to-webgl2-fundamentals.html">Differences from WebGLFundamentals.org to WebGL2Fundamentals.org</a></li>
