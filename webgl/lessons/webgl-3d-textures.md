@@ -320,7 +320,7 @@ Something to be aware of, WebGL2 requires textures to be "texture complete" othe
    The easiest way to do that is to call `gl.generateMipmap`. Otherwise if you provide your own mips you need to provide
    all of them or you'll get an error.
 
-A common question is "How do I apply a different image to each face of a cube?". For example let's say we
+<a name="texture-atlas" />A common question is "How do I apply a different image to each face of a cube?". For example let's say we
 had these 6 images.
 
 <div class="webgl_table_div_center">
