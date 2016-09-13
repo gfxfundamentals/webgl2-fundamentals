@@ -227,6 +227,10 @@ function draw() {
   // Tell WebGL how to convert from clip space to pixels
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
+  // Clear the canvas
+  gl.clearColor(0, 0, 0, 0);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
   drawInfos.forEach(function(drawInfo) {
     drawImage(
       drawInfo.textureInfo.texture,
@@ -363,18 +367,15 @@ what we&#39;ve already done for the positions.</p>
   gl.bindTexture(gl.TEXTURE_2D, tex);
 
   // this matirx will convert from pixels to clip space
-  var projectionMatrix = make2DProjection(canvas.width, canvas.height, 1);
+  var matrix = m4.orthographic(
+      0, gl.canvas.clientWidth, gl.canvas.clientHeight, 0, -1, 1);
 
-  // this matrix will scale our 1 unit quad
+  // translate our quad to dstX, dstY
+  matrix = m4.translate(matrix, dstX, dstY, 0);
+
+  // scale our 1 unit quad
   // from 1 unit to dstWidth, dstHeight units
-  var scaleMatrix = makeScale(dstWidth, dstHeight, 1);
-
-  // this matrix will translate our quad to dstX, dstY
-  var translationMatrix = makeTranslation(dstX, dstY, 0);
-
-  // multiply them all togehter
-  var matrix = matrixMultiply(scaleMatrix, translationMatrix);
-  matrix = matrixMultiply(matrix, projectionMatrix);
+  matrix = m4.scale(matrix, dstWidth, dstHeight, 1);
 
   // Set the matrix.
   gl.uniformMatrix4fv(matrixLocation, false, matrix);

@@ -340,10 +340,10 @@ by `-Z` times some desired-scale to compensate.
     +var desiredTextScale = -1 / gl.canvas.height;  // 1x1 pixels
     +var scale = viewZ * desiredTextScale;
 
-    var textMatrix = makeIdentity();
-    *textMatrix = matrixMultiply(textMatrix, makeScale(textWidth * scale, textHeight * scale, 1));
-    textMatrix = matrixMultiply(textMatrix, makeTranslation(viewX, viewY, viewZ));
-    textMatrix = matrixMultiply(textMatrix, projectionMatrix);
+    var textMatrix = m4.translate(projectionMatrix,
+        viewX, viewY, viewZ);
+    // scale the F to the size we need it.
+    textMatrix = m4.scale(textMatrix, textWidth * scale, textHeight * scale, 1);
     ...
 
 {{{example url="../webgl-text-texture-consistent-scale.html" }}}

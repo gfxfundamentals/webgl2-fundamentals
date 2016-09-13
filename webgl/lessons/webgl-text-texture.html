@@ -353,10 +353,10 @@ var viewZ = pos[2] - fromEye[2] * amountToMoveTowardEye;
 +var desiredTextScale = -1 / gl.canvas.height;  // 1x1 pixels
 +var scale = viewZ * desiredTextScale;
 
-var textMatrix = makeIdentity();
-*textMatrix = matrixMultiply(textMatrix, makeScale(textWidth * scale, textHeight * scale, 1));
-textMatrix = matrixMultiply(textMatrix, makeTranslation(viewX, viewY, viewZ));
-textMatrix = matrixMultiply(textMatrix, projectionMatrix);
+var textMatrix = m4.translate(projectionMatrix,
+    viewX, viewY, viewZ);
+// scale the F to the size we need it.
+textMatrix = m4.scale(textMatrix, textWidth * scale, textHeight * scale, 1);
 ...
 </code></pre><p><div>
   <iframe class="webgl_example" style="width: 400px; height: 300px;" src="../webgl-text-texture-consistent-scale.html"></iframe>

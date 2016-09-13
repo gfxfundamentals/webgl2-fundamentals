@@ -69,6 +69,10 @@ And we update the JavaScript so that we can pass those 2 values in.
     // Tell WebGL how to convert from clip space to pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
+    // Clear the canvas
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
     // Tell it to use our program (pair of shaders)
     gl.useProgram(program);
 
