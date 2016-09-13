@@ -69,6 +69,10 @@ function main() {
 
   var canvas = document.getElementById("c");
   var gl = canvas.getContext("webgl2");
+  if (!gl) {
+    webglLessonsHelper.showNeedWebGL2(canvas);
+    return;
+  }
 
   var program = webglUtils.createProgramFromSources(gl, [vs, fs]);
   gl.useProgram(program);

@@ -115,7 +115,7 @@ function main() {
   var canvas = isCanvas ? container : document.createElement("canvas");
   var gl = canvas.getContext("webgl2");
   if (!gl) {
-    webglLessonsHelper.showNeedWebGL2(gl.canvas);
+    webglLessonsHelper.showNeedWebGL2(canvas);
     return;
   }
 
