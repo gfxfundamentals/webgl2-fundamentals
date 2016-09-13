@@ -96,7 +96,7 @@
         ">
           <div style="text-align: center;">
              It doesn't appear your browser supports WebGL2.<br/>
-             <a href="http://get.webgl.org/troubleshooting/">Click here for more information.</a>
+             <a href="http://webgl2fundamentals.org/webgl/lessons/webgl-getting-webgl2.html">Click here for more information.</a>
           </div>
         </div>
       `;
