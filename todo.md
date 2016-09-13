@@ -4,7 +4,7 @@ TO DO
 Fix articles
 
 *   webgl-text-glyphs.html
-*   webgl-3d-textures.html
+*   add clear to all examples?
 
 List Changes to site
 
@@ -102,4 +102,5 @@ DONE
 *   webgl-2d-vs-3d-library.html
 *   webgl-2-textures.html
 *   webgl-anti-patterns.html
+*   webgl-3d-textures.html
 
