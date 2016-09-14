@@ -10,14 +10,14 @@ To enable it:
 
    1. Go to `about:config`
    2. search for `webgl2`
-   3. double click on `webgl.enable-protoype-webgl2` until the value is `true`
+   3. double click on `webgl.enable-prototype-webgl2` until the value is `true`
    4. restart Firefox
 
 *  In Chrome
 
    1. Go to `about:flags`
    2. Press Ctrl-F or Cmd-F and search for `webgl 2.0`
-   3. click `enable`
+   3. Find `WebGL 2.0 Prototype` and click `enable`
    4. restart Chrome
 
 
