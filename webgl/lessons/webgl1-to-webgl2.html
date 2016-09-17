@@ -71,11 +71,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 If you only use WebGL1 features then then there are
 only 2 differences.</p>
 <ol>
-<li><p>You use <code>&quot;webgl2&quot;</code> ins tead of <code>&quot;webgl&quot;</code> when calling <code>getContext</code></p>
-<pre><code>var gl = someCanvas.getContext(&quot;webgl2);
+<li><p>You use <code>&quot;webgl2&quot;</code> instead of <code>&quot;webgl&quot;</code> when calling <code>getContext</code></p>
+<pre><code>var gl = someCanvas.getContext(&quot;webgl2&quot;);
 </code></pre><p>Note: there is no &quot;experimental-webgl2&quot;. The browser vendors got
 together and decided no more prefixing things because websites
-get dependant on the prefix.</p>
+get dependent on the prefix.</p>
 </li>
 <li><p>Many extensions are a standard part of WebGL2 and so not available
 as extensions</p>
@@ -277,7 +277,7 @@ the <code>ELEMENT_ARRAY_BUFFER</code> state is part of a Vertex Array.</p>
 I created a VAO for that geometry and set up the attributes
 and <code>ELEMENT_ARRAY_BUFFER</code>. I then created some more
 geometry. When that geometry setup its indices, because
-I still add the previous VAO bound setting up the indices
+I still had the previous VAO bound setting up the indices
 effected the <code>ELEMENT_ARRAY_BUFFER</code> binding for the previous
 VAO. It took me several hours to debug.</p>
 <p>So, my suggestion is never leave a VAO bound if you&#39;re done
@@ -304,7 +304,7 @@ vs in webgl2
 </p>
 <pre class="prettyprint">
 var someVAO = gl.createVertexArray();
-<pre>
+</pre>
 <p>As you can see if you want your code to run in both WebGL1 and WebGL2
 that can present some challenges.</p>
 <p>One workaround would be to copy WebGL1 extensions to the WebGL context at init time.
