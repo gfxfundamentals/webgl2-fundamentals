@@ -15,12 +15,6 @@ was optionally available on WebGL1 now that it's
 always available on WebGL2 [I think you should probably
 always use them](webgl1-to-webgl2.html#Vertex-Array-Objects).
 
-## Floating point textures always available
-
-Floating point textures are used for many special effects
-and calculations. In WebGL1 they were optional. In WebGL2
-they just exist. Rendering to them should also always work.
-
 ## The size of a texture is available to shaders.
 
 In WebGL1 if your shader needed to know the size of
@@ -138,7 +132,7 @@ pass it in as a uniform. In WebGL2 GLSL 300 es there's the built in
 ## Common compressed textures
 
 In WebGL1 there are various compressed texture formats
-that are hardware depending. S3TC was bascially desktop only.
+that are hardware dependent. S3TC was bascially desktop only.
 PVTC was iOS only. Etc..
 
 In WebGL2 these formats are supposed to be supported everywhere
@@ -224,10 +218,10 @@ You can also have integer attributes.
 On top of that, GLSL 300 es allows you to do bit manipulations
 of integers in the shaders.
 
-##  transform feedback
+##  Transform feedback
 
 WebGL2 allows your vertex shader to write its results back
-to a buffer
+to a buffer.
 
 ##  Samplers
 
@@ -289,4 +283,16 @@ you can now make multi-sampled renderbuffers.
 
 Occlusion queries let you ask the GPU to check if it were to render something
 would any pixels actually get drawn.
+
+## Floating point textures always available
+
+Floating point textures are used for many special effects
+and calculations. In WebGL1 they were optional. In WebGL2
+they just exist.
+
+Note: Unfortunately they are still restricted in that filtering
+and rendering to float point textures is still optional. See
+[`OES_texture_float_linear`](https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/)
+ and [`EXT_color_buffer_float`](https://www.khronos.org/registry/webgl/extensions/EXT_color_buffer_float/).
+
 
