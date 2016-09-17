@@ -309,7 +309,7 @@ var someVAO = gl.createVertexArray();
 that can present some challenges.</p>
 <p>One workaround would be to copy WebGL1 extensions to the WebGL context at init time.
 That way the rest of your code can stay the same. Example:</p>
-<pre>
+<pre class="prettyprint">
 var gl = someCanvas.getContext("webgl");
 var haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object"));
 
@@ -336,7 +336,7 @@ function getAndApplyExtension(gl, name) {
   }
 </pre>
 <p>Now your code can mostly just work the same on both. Example:</p>
-<pre>
+<pre class="prettyprint">
 if (haveVAOs) {
   var someVAO = gl.createVertexArray();
   ...
@@ -345,7 +345,7 @@ if (haveVAOs) {
 }
 </pre>
 <p>The alternative would be having to do something like this</p>
-<pre>
+<pre class="prettyprint">
 if (haveVAOs) {
   if (isWebGL2)
      someVAO = gl.createVertexArray();
