@@ -5,13 +5,13 @@ WebGL2 is nearly 100% backward compatible with WebGL1.
 If you only use WebGL1 features then then there are
 only 2 differences.
 
-1.  You use `"webgl2"` ins tead of `"webgl"` when calling `getContext`
+1.  You use `"webgl2"` instead of `"webgl"` when calling `getContext`
 
-        var gl = someCanvas.getContext("webgl2);
+        var gl = someCanvas.getContext("webgl2");
 
     Note: there is no "experimental-webgl2". The browser vendors got
     together and decided no more prefixing things because websites
-    get dependant on the prefix.
+    get dependent on the prefix.
 
 2.  Many extensions are a standard part of WebGL2 and so not available
     as extensions
@@ -285,7 +285,7 @@ There are a few caveats though:
     I created a VAO for that geometry and set up the attributes
     and `ELEMENT_ARRAY_BUFFER`. I then created some more
     geometry. When that geometry setup its indices, because
-    I still add the previous VAO bound setting up the indices
+    I still had the previous VAO bound setting up the indices
     effected the `ELEMENT_ARRAY_BUFFER` binding for the previous
     VAO. It took me several hours to debug.
 
@@ -313,7 +313,7 @@ vs in webgl2
 </p>
 <pre class="prettyprint">
 var someVAO = gl.createVertexArray();
-<pre>
+</pre>
 <p>As you can see if you want your code to run in both WebGL1 and WebGL2
 that can present some challenges.</p>
 <p>One workaround would be to copy WebGL1 extensions to the WebGL context at init time.
