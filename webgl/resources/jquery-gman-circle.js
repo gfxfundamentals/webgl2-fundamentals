@@ -49,9 +49,6 @@
 
       canvas.width = this.options.width;
       canvas.height = this.options.height;
-      poop = this.element.get(0);
-      console.log(canvas.width);
-      console.log(canvas.height);
       canvas.onselectstart = function() { return false; }
 
       var ctx = canvas.getContext("2d");
