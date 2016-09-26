@@ -79,15 +79,12 @@ body.iframe {
   display: none;
 }
 .iframe .divcavnas {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
 }
-.iframe>canvas {
-  width: 100%;
-  height: 100%;
-}
-
 .iframe canvas {
+  width: 100vw;
+  height: 100vh;
   border: none;
 }
 
@@ -102,9 +99,30 @@ body.iframe {
     width: 200px;
 }
 
+.console {
+    font-family: monospace;
+    max-height: 50%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: auto;
+    background: #DDD;
+}
+.console>div {
+    white-space: pre-wrap;
+    border-top: 1px solid black;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+}
+.console>.error {
+    background: red;
+    color: white;
+}
+
 @media (max-width: 390px) {
   canvas {
-    max-width: 300px !important;
+    gmax-width: 300px !important;
   }
   pre {
     font-size: xx-small !important;
