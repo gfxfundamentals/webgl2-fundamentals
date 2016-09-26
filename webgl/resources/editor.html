@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <style>
 html {
   box-sizing: border-box;
@@ -7,7 +8,16 @@ html {
 }
 body {
     margin: 0;
+    font-family: sans-serif;
 }
+a {
+    text-decoration: none;
+    color: inherit;
+}
+iframe {
+    border: none;
+}
+
 .frame {
     min-width: 100vw;
     min-height: 100vh;
@@ -15,55 +25,122 @@ body {
     max-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: red;
+    background: #444;
+    color: #AAA;
 
 }
 .tabs {
     flex: 0 0 auto;
     display: flex;
-    background: blue;
+    justify-content: space-between;
+    align-items: center;
+    background: #666;
 }
 .panes {
+    display: flex;
     flex: 1 1 auto;
-    width: 100%;
-    background: purple;
 }
-.editor {
-    flex: 1 1 auto;
-    background: green;
+.panes>div {
+    display: none;
+    flex: 1 1 50%;
+    position: relative;
     overflow: auto;
 }
-.editor>div {
-    width: 100%;
+.editor {
+    g-overflow: auto;
 }
-
 .result {
-    flex: 1 1 auto;
-    background: orange;
     overflow: auto;
 }
 .result>iframe {
     width: 100%;
+    height: 100%;
+}
+.other>div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    height: 100%;
+    font-size: xx-large;
+}
+.tabs>div {
+    padding: 0.125em;
+}
+.panebuttons>button {
+    padding: 0.5em;
+    border: none;
+    background: #AAA;
+    border-bottom: 5px solid black;
+    margin: 0.25em;
+    width: 5em;
+}
+.panebuttons>button:focus {
+    outline: none;
+}
+.panelogo {
+    font-size: medium;
+}
+.panelogo>*>* {
+    vertical-align: middle;
+    display: inline-block;
+    color: #CCC;
+}
+.show {
+    background: #FFF !important;
+    border-bottom: none !important;
+    border-top: 5px solid #666 !important;
+}
+.button-result {
+    margin-left: 5em !important;
 }
 
+/*
+.gutter {
+  background-color: #eee;
+
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+  background-image: url('grips/vertical.png');
+  cursor: ew-resize;
+}
+
+.gutter.gutter-vertical {
+  background-image: url('grips/horizontal.png');
+  cursor: ns-resize;
+}
+
+.split {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+*/
 
 </style>
 <body>
 <div class="frame">
     <div class="tabs">
-        <div>source</div>
-        <div>result</div>
+        <div class="panebuttons">
+            <button class="button-js">JS</button>
+            <button class="button-html">HTML</button>
+            <button class="button-css">CSS</button>
+            <button class="button-result">Result</button>
+            <button class="button-run">Run</button>
+        </div>
+        <div class="panelogo">
+          <div><a href="/">WebGL2Fundamentals&nbsp;</a><a href="/"><img src="/webgl/lessons/resources/webgl2fundamentals-icon-256.png" width="32" height="32"/></a></div>
+        </div>
     </div>
     <div class="panes">
-        <div class="editor">
-            <div>
-
-            </div>
-        </div>
-        <div class="result">
-            <iframe>
-
-            </iframe>
+        <div class="js"></div>
+        <div class="html"></div>
+        <div class="css"></div>
+        <div class="result"><iframe></iframe></div>
+        <div class="other">
+          <div><a href="/">WebGL2Fundamentals&nbsp;</a><a href="/"><img src="/webgl/lessons/resources/webgl2fundamentals-icon-256.png" width="64" height="64"/></a></div>
         </div>
     </div>
 </div>
