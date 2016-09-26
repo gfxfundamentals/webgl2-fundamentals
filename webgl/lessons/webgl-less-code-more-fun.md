@@ -416,7 +416,7 @@ Here's an example were we have a non-indexed triangle and an indexed quad. Becau
 we're using `webglUtils.drawBufferInfo` the code doesn't have to change when we
 switch data.
 
-{{{example url="../webgl-less-code-more-fun-quad-drawbufferinfo.html" }}}
+{{{example url="../webgl-less-code-more-fun-drawbufferinfo.html" }}}
 
 Anyway, this is the style I try to write my own WebGL programs.
 For the lessons on these tutorials though I've felt like I have to use the standard **verbose**

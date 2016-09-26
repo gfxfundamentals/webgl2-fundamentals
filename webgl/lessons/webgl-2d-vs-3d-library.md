@@ -34,17 +34,13 @@ with lights.
 Here's the code in three.js to display this
 
 <pre class="prettyprint showlinemods">
-  // Setup WebGL.
-  var c = document.getElementById("c");
-  renderer = new THREE.WebGLRenderer();
-  renderer.setSize(c.clientWidth, c.clientHeight);
+  // Setup.
+  renderer = new THREE.WebGLRenderer({canvas: document.querySelector("#canvas")});
   c.appendChild(renderer.domElement);
 
   // Make and setup a camera.
-  camera = new THREE.PerspectiveCamera(
-      70, c.clientWidth / c.clientHeight, 1, 1000);
+  camera = new THREE.PerspectiveCamera(70, 1, 1, 1000);
   camera.position.z = 400;
-  camera.updateProjectionMatrix();
 
   // Make a scene
   scene = new THREE.Scene();

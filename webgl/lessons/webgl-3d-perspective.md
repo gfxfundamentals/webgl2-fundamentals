@@ -317,7 +317,7 @@ Finally, it figures out how much to scale things in Z so that stuff at zFar ends
 
 Here's a diagram of the matrix in action.
 
-{{{example url="../frustum-diagram.html" width="400" height="600" }}}
+{{{diagram url="../frustum-diagram.html" width="400" height="600" }}}
 
 That shape that looks like a 4 sided cone the cubes are spinning in is called a "frustum".
 The matrix takes the space inside the frustum and converts that to clip space. `zNear` defines where
