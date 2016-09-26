@@ -1021,7 +1021,7 @@
           origConsole.error(e);
         }
       }
-      console.log("line:", lineNo, ":", msg);
+      console.error("line:", lineNo, ":", msg);
       origConsole.error(e.error);
     });
   }
