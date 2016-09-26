@@ -23,21 +23,16 @@ body, document {
     left: 10px;
     top: 130px;
 }
-#container {
-  position: relative;
-}
 </style>
 </head>
 <body>
 <div class="description">
 Show how mips are important for depth<br/>
 </div>
-<div id="container">
-  <canvas id="canvas" width="400" height="300"></canvas>
-  <div id="uiContainer">
-    <div id="ui">
-      <div id="b">Click to switch texture</div>
-    </div>
+<canvas id="canvas" width="400" height="300"></canvas>
+<div id="uiContainer">
+  <div id="ui">
+    <div id="b">Click to switch texture</div>
   </div>
 </div>
 </body>
@@ -93,6 +88,7 @@ var zDepth = 50;
 function main() {
   // Get A WebGL context
   var canvas = document.getElementById("canvas");
+  webglLessonsHelper.setupLesson(canvas);
 
   // this mess is to make the number of pixels
   // in the canvas match the number of pixels
@@ -108,7 +104,6 @@ function main() {
   canvas.width = Math.floor(canvas.width * dpr);
   canvas.height = Math.floor(canvas.height * dpr);
 
-  webglLessonsHelper.setupLesson(canvas);
   /** @type {WebGLRenderingContext} */
   var gl = canvas.getContext("webgl2", {antialias: false});
   if (!gl) {
