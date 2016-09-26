@@ -1,7 +1,8 @@
 
 function getQuery(s) {
   var query = {};
-  s = s === undefined ? window.location.search.substring(1) : s;
+  s = s === undefined ? window.location.search : s;
+  s = s.substring(1);
   s.split('&').forEach(function(pair) {
       var parts = pair.split('=').map(decodeURIComponent);
       query[parts[0]] = parts[1];
@@ -30,6 +31,7 @@ function fixSourceLinks(url, source) {
   var linkRE = /href="/g
   var imageSrcRE = /image\.src = "/g;
   var loadImagesRE = /loadImages(\s*)\((\s*)\[([^]*?)\](\s*),/g;
+  var loadImageRE = /(loadImageAndCreateTextureInfo)\(('|")/g;
   var quoteRE = /"(.*?)"/g;
 
   var u = new URL(window.location.origin + url);
@@ -37,6 +39,7 @@ function fixSourceLinks(url, source) {
   source = source.replace(srcRE, 'src="' + prefix);
   source = source.replace(linkRE, 'href="' + prefix);
   source = source.replace(imageSrcRE, 'image.src = "' + prefix);
+  source = source.replace(loadImageRE, '$1($2' + prefix);
   source = source.replace(loadImagesRE, function(match, p1, p2, p3, p4) {
       p3 = p3.replace(quoteRE, '"' + prefix + '$1"');
       return `loadImages${p1}(${p2}[${p3}]${p4},`;
@@ -123,7 +126,8 @@ function main() {
 
 
 var blobUrl;
-function getSourceBlob() {
+function getSourceBlob(options) {
+  options = options || {};
   if (blobUrl) {
     URL.revokeObjectURL(blobUrl);
   }
@@ -131,6 +135,11 @@ function getSourceBlob() {
   source = source.replace('${html}', htmlParts.html.editor.getValue());
   source = source.replace('${css}', htmlParts.css.editor.getValue());
   source = source.replace('${js}', htmlParts.js.editor.getValue());
+  source = source.replace('<head>', '<head>\n<script match="false">webglLessonSettings = ' + JSON.stringify(options) + ";</script>");
+
+  var scriptNdx = source.indexOf('<script>');
+  g.numLinesBeforeScript = (source.substring(0, scriptNdx).match(/\n/g) || []).length;
+
   var blob = new Blob([source], {type: 'text/html'});
   blobUrl = URL.createObjectURL(blob);
   return blobUrl;
@@ -159,6 +168,9 @@ function setupEditor() {
     });
   });
 
+  g.fullscreen = document.querySelector(".button-fullscreen");
+  g.fullscreen.addEventListener('click', toggleFullscreen);
+
   g.run = document.querySelector(".button-run");
   g.run.addEventListener('click', run);
 
@@ -181,13 +193,26 @@ function setupEditor() {
   window.addEventListener('resize', resize);
 
   showOtherIfAllPanesOff();
+  document.querySelector(".other .loading").style.display = "none";
 
   resize();
-  run();
+  run({glDebug: false});
 }
 
-function run() {
-  g.iframe.src = getSourceBlob();
+function toggleFullscreen() {
+  try {
+    toggleIFrameFullscreen(window.document);
+    resize();
+    run();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+function run(options) {
+  g.setPosition = false;
+  var url = getSourceBlob(options);
+  g.iframe.src = url;
 }
 
 function addClass(elem, className) {
@@ -209,8 +234,27 @@ function removeClass(elem, className) {
   }
   if (parts.length !== numParts) {
     elem.className = parts.join(" ");
+    return true;
+  }
+  return false;
+}
+
+function toggleClass(elem, className) {
+  if (!removeClass(elem, className)) {
+    addClass(elem, className);
   }
 }
+
+function toggleIFrameFullscreen(childDocument) {
+  var iframes = window.parent.document.querySelectorAll("iframe");
+  [].forEach.call(iframes, function(iframe) {
+    if (iframe.contentDocument === childDocument) {
+      toggleClass(iframe, "fullscreen");
+    }
+  });
+  toggleClass(childDocument.body, "fullscreen");
+}
+
 
 function addRemoveClass(elem, className, add) {
   if (add) {
@@ -256,11 +300,26 @@ function showOtherIfAllPanesOff() {
   g.other.style.display = paneOn ? "none" : "block";
 }
 
+function getActualLineNumberAndMoveTo(lineNo, colNo) {
+  var actualLineNo = lineNo - g.numLinesBeforeScript;
+  if (!g.setPosition) {
+    // Only set the first position
+    g.setPosition = true;
+    htmlParts.js.editor.setPosition({
+      lineNumber: actualLineNo,
+      column: colNo,
+    });
+    htmlParts.js.editor.revealLineInCenterIfOutsideViewport(actualLineNo);
+    htmlParts.js.editor.focus();
+  }
+  return actualLineNo;
+}
+
 function runEditor(parent, source, language) {
   return monaco.editor.create(parent, {
     value: source,
     language: language,
-    lineNumbers: false,
+    //lineNumbers: false,
     theme: 'vs-dark',
     disableTranslate3d: true,
  //   model: null,
@@ -268,8 +327,21 @@ function runEditor(parent, source, language) {
   });
 }
 
-require.config({ paths: { 'vs': '/monaco-editor/min/vs' }});
-require(['vs/editor/editor.main'], main);
+function start() {
+  var query = getQuery();
+  var parentQuery = getQuery(window.parent.location.search);
+  var isSmallish = window.navigator.userAgent.match(/Android|iPhone|iPod|Windows Phone/i);
+  if (isSmallish || parentQuery.noEditor) {
+    var url = query.url;
+    window.location.href = url;
+  } else {
+    require.config({ paths: { 'vs': '/monaco-editor/min/vs' }});
+    require(['vs/editor/editor.main'], main);
+  }
+}
+
+start();
+
 
 
 
