@@ -328,7 +328,7 @@ the canvas is displayed. **You should always set the size you want a canvas with
 more flexible than any other method.
 
 To make the number of pixels in the canvas match the size it's displayed
-[I'm using a helper function but you can read about it here](webgl-resizing-the-canvas.html).
+[I'm using a helper function you can read about here](webgl-resizing-the-canvas.html).
 
 In nearly all of these samples the canvas size is 400x300 pixels if the sample is run in its own window
 but stretches to fill the available space if it's in side an iframe like it is on this page.
@@ -336,7 +336,7 @@ By letting CSS determine the size and then adjusting to match we easily handle b
 
     webglUtils.resizeCanvasToMatchDisplaySize(gl.canvas);
 
-We need tell WebGL how to convert from the clip space
+We need to tell WebGL how to convert from the clip space
 values we'll be setting `gl_Position` to back into pixels, often called screen space.
 To do this we call `gl.viewport` and pass it the current size of the canvas.
 
