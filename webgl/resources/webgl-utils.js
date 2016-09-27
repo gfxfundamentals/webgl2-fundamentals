@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function (root, factory) {  // eslint-disable-line
+(function(root, factory) {  // eslint-disable-line
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define([], function() {
@@ -40,7 +40,8 @@
     root.webglUtils = factory.call(root);
   }
 }(this, function() {
-  "use strict";  // eslint-disable-line
+  "use strict";
+
   var topWindow = this;
 
   /** @module webgl-utils */
