@@ -143,7 +143,7 @@ Now that we have written the 2 shader functions lets get started with WebGL
 
 First we need an HTML canvas element
 
-     <canvas id="c" width="400" height="300"></canvas>
+     <canvas id="c"></canvas>
 
 Then in JavaScript we can look that up
 
@@ -322,19 +322,45 @@ note that from the point of view of our GLSL vertex shader the `a_position` attr
 default to `0, 0, 0, 1` so this attribute will get its first 2 values (x and y)
 from our buffer. The z, and w will be the default 0 and 1 respectively.
 
+Before we draw we should resize the canvas to match it's display size. Canvas's just like Images have 2 sizes.
+The number of pixels actually in them and separately the size they are displayed. CSS determines the size
+the canvas is displayed. **You should always set the size you want a canvas with CSS** since it is far far
+more flexible than any other method.
+
+To make the number of pixels in the canvas match the size it's displayed
+[I'm using a helper function but you can read about it here](webgl-resizing-the-canvas.html).
+
+In nearly all of these samples the canvas size is 400x300 pixels if the sample is run in its own window
+but stretches to fill the available space if it's in side an iframe like it is on this page.
+By letting CSS determine the size and then adjusting to match we easily handle both of these cases.
+
+    webglUtils.resizeCanvasToMatchDisplaySize(gl.canvas);
+
 We need tell WebGL how to convert from the clip space
 values we'll be setting `gl_Position` to back into pixels, often called screen space.
-To do this we call `gl.viewport`
+To do this we call `gl.viewport` and pass it the current size of the canvas.
 
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
 This tells WebGL the -1 +1 clip space maps to 0 -> `gl.canvas.width` for x and 0 -> `gl.canvas.height`
-for y. Note the viewport settings default to the **initial** size of our canvas. If we never
-change the size of the canvas we might not need to set the viewport.
+for y.
 
-Finally we need to tell WebGL which shader program to execute.
+We clear the canvas. `0, 0, 0, 0` are r, g, b, alpha so in this case we're making the canvas transparent.
 
+    // Clear the canvas
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+Next we need to tell WebGL which shader program to execute.
+
+    // Tell it to use our program (pair of shaders)
     gl.useProgram(program);
+
+Then we need to tell it which set of buffers use and how to pull data out of those buffers to
+supply to the attributes
+
+    // Bind the attribute/buffer set we want.
+    gl.bindVertexArray(vao);
 
 After all that we can finally ask WebGL to execute our GLSL program.
 
@@ -359,7 +385,8 @@ triangle will be drawn at clip space coordinates
       0, 0.5,
       0.7, 0,
 
-Converting from clip space to screen sapce WebGL is going to draw a triangle at
+Converting from clip space to screen space WebGL is going to draw a triangle at. If the canvas size
+happned to be 400x300 we'd get something like this
 
      clip space      screen space
        0, 0       ->   200, 150
