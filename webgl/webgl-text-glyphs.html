@@ -12,7 +12,7 @@
 <script src="resources/primitives.js"></script>
 </head>
 <body>
-<canvas id="canvas" width="400" height="300"></canvas>
+<canvas id="canvas"></canvas>
 </body>
 <script>
 "use strict";
@@ -205,10 +205,6 @@ function main() {
     u_color: [0, 0, 0, 1],  // black
   };
 
-  function radToDeg(r) {
-    return r * 180 / Math.PI;
-  }
-
   function degToRad(d) {
     return d * Math.PI / 180;
   }
@@ -230,6 +226,8 @@ function main() {
     var deltaTime = now - then;
     // Remember the current time for the next frame.
     then = now;
+
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
     // Every frame increase the rotation a little.
     rotation[1] += rotationSpeed * deltaTime;
@@ -263,7 +261,6 @@ function main() {
     var up = [0, 1, 0];
     var cameraMatrix = m4.lookAt(cameraPosition, target, up);
     var viewMatrix = m4.inverse(cameraMatrix);
-    var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
 
     var textPositions = [];
 

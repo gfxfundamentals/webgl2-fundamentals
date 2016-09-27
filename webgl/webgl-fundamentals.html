@@ -54,8 +54,9 @@ function createShader(gl, type, source) {
     return shader;
   }
 
-  console.log(gl.getShaderInfoLog(shader));
+  console.log(gl.getShaderInfoLog(shader));  // eslint-disable-line
   gl.deleteShader(shader);
+  return undefined;
 }
 
 function createProgram(gl, vertexShader, fragmentShader) {
@@ -68,8 +69,9 @@ function createProgram(gl, vertexShader, fragmentShader) {
     return program;
   }
 
-  console.log(gl.getProgramInfoLog(program));
+  console.log(gl.getProgramInfoLog(program));  // eslint-disable-line
   gl.deleteProgram(program);
+  return undefined;
 }
 
 function main() {
@@ -122,7 +124,7 @@ function main() {
   var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
   var offset = 0;        // start at the beginning of the buffer
   gl.vertexAttribPointer(
-      positionAttributeLocation, size, type, normalize, stride, offset)
+      positionAttributeLocation, size, type, normalize, stride, offset);
 
   // Tell WebGL how to convert from clip space to pixels
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);

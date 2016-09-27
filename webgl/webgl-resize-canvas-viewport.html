@@ -52,7 +52,7 @@ void main() {
 function main() {
   // Get A WebGL context
   var canvas = document.getElementById("canvas");
-  webglLessonsHelper.setupLesson(canvas, undefined, {resize: false, title: false});
+  webglLessonsHelper.setupLesson(canvas, {title: false});
   /** @type {WebGLRenderingContext} */
   var gl = canvas.getContext("webgl2");
   if (!gl) {
@@ -78,10 +78,8 @@ function main() {
   var positions = [
     -2, -2,
      2, 2,
-  ]
+  ];
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-
-  var buffer = gl.createBuffer();
 
   // Create a vertex array object (attribute state)
   var vao = gl.createVertexArray();
@@ -98,7 +96,7 @@ function main() {
   var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
   var offset = 0;        // start at the beginning of the buffer
   gl.vertexAttribPointer(
-      positionAttributeLocation, size, type, normalize, stride, offset)
+      positionAttributeLocation, size, type, normalize, stride, offset);
 
   requestAnimationFrame(drawScene);
 
@@ -145,8 +143,8 @@ function resize(canvas) {
   var displayHeight = canvas.clientHeight;
 
   // Check if the canvas is not the same size.
-  if (canvas.width  != displayWidth ||
-      canvas.height != displayHeight) {
+  if (canvas.width  !== displayWidth ||
+      canvas.height !== displayHeight) {
 
     // Make the canvas the same size
     canvas.width  = displayWidth;

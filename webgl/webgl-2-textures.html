@@ -87,7 +87,7 @@ function loadImages(urls, callback) {
   var onImageLoad = function() {
     --imagesToLoad;
     // If all the images are loaded call the callback.
-    if (imagesToLoad == 0) {
+    if (imagesToLoad === 0) {
       callback(images);
     }
   };
@@ -152,7 +152,7 @@ function render(images) {
   var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
   var offset = 0;        // start at the beginning of the buffer
   gl.vertexAttribPointer(
-      positionAttributeLocation, size, type, normalize, stride, offset)
+      positionAttributeLocation, size, type, normalize, stride, offset);
 
   // provide texture coordinates for the rectangle.
   var texCoordBuffer = gl.createBuffer();
@@ -163,7 +163,8 @@ function render(images) {
       0.0,  1.0,
       0.0,  1.0,
       1.0,  0.0,
-      1.0,  1.0]), gl.STATIC_DRAW);
+      1.0,  1.0,
+  ]), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(texCoordAttributeLocation);
   var size = 2;          // 2 components per iteration
   var type = gl.FLOAT;   // the data is 32bit floats
@@ -171,7 +172,7 @@ function render(images) {
   var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
   var offset = 0;        // start at the beginning of the buffer
   gl.vertexAttribPointer(
-      texCoordAttributeLocation, size, type, normalize, stride, offset)
+      texCoordAttributeLocation, size, type, normalize, stride, offset);
 
   // Create a texture.
   var texture = gl.createTexture();
@@ -192,7 +193,7 @@ function render(images) {
     var mipLevel = 0;               // the largest mip
     var internalFormat = gl.RGBA;   // format we want in the texture
     var srcFormat = gl.RGBA;        // format of data we are supplying
-    var srcType = gl.UNSIGNED_BYTE  // type of data we are supplying
+    var srcType = gl.UNSIGNED_BYTE; // type of data we are supplying
     gl.texImage2D(gl.TEXTURE_2D,
                   mipLevel,
                   internalFormat,
@@ -246,10 +247,6 @@ function render(images) {
   gl.drawArrays(primitiveType, offset, count);
 }
 
-function randomInt(range) {
-  return Math.floor(Math.random() * range);
-}
-
 function setRectangle(gl, x, y, width, height) {
   var x1 = x;
   var x2 = x + width;
@@ -261,7 +258,8 @@ function setRectangle(gl, x, y, width, height) {
      x1, y2,
      x1, y2,
      x2, y1,
-     x2, y2]), gl.STATIC_DRAW);
+     x2, y2,
+  ]), gl.STATIC_DRAW);
 }
 
 main();

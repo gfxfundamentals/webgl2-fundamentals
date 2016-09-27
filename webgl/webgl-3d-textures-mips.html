@@ -11,7 +11,7 @@
 <div class="description">
 Show how mips are important for stability and color<br/>
 </div>
-<canvas id="canvas" width="400" height="300"></canvas>
+<canvas id="canvas"></canvas>
 </body>
 <script src="resources/webgl-utils.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script>
@@ -66,20 +66,6 @@ function main() {
   var canvas = document.getElementById("canvas");
 
   webglLessonsHelper.setupLesson(canvas);
-
-  // this mess is to make the number of pixels
-  // in the canvas match the number of pixels
-  // it will be displayed even on a hi-dpi display
-  // because we want to make sure there's no extra
-  // filtering. This is not the normal way to do
-  // this so please don't copy :P
-  var dpr = window.devicePixelRatio || 1;
-  var originalCanvasWidth = canvas.width;
-  var originalCanvasHeight = canvas.height;
-  canvas.style.width = canvas.width + "px";
-  canvas.style.height = canvas.height + "px";
-  canvas.width = Math.floor(canvas.width * dpr);
-  canvas.height = Math.floor(canvas.height * dpr);
 
   /** @type {WebGLRenderingContext} */
   var gl = canvas.getContext("webgl2", {antialias: false});
@@ -143,14 +129,10 @@ function main() {
   gl.vertexAttribPointer(
       texcoordAttributeLocation, size, type, normalize, stride, offset);
 
-
+  var allocateFBTexture = true;
   var framebuffer = gl.createFramebuffer();
   var fbTexture = gl.createTexture();
-  var framebufferWidth = originalCanvasWidth / 4;
-  var framebufferHeight = originalCanvasHeight / 4;
   gl.bindTexture(gl.TEXTURE_2D, fbTexture);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, framebufferWidth, framebufferHeight,
-                0, gl.RGBA, gl.UNSIGNED_BYTE, null);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -177,14 +159,9 @@ function main() {
   image.addEventListener('load', function() {
     // Now that the image has loaded make copy it to the texture.
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
     gl.generateMipmap(gl.TEXTURE_2D);
   });
-
-
-  function radToDeg(r) {
-    return r * 180 / Math.PI;
-  }
 
   function degToRad(d) {
     return d * Math.PI / 180;
@@ -199,6 +176,16 @@ function main() {
   // Draw the scene.
   function drawScene(time) {
     time *= 0.001;  // convert to seconds
+
+    if (webglUtils.resizeCanvasToDisplaySize(gl.canvas, window.devicePixelRatio) || allocateFBTexture) {
+      allocateFBTeture = false;
+      var framebufferWidth = gl.canvas.clientWidth / 4;
+      var framebufferHeight = gl.canvas.clientHeight / 4;
+      gl.bindTexture(gl.TEXTURE_2D, fbTexture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, framebufferWidth, framebufferHeight,
+                    0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    }
+
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
     gl.viewport(0, 0, framebufferWidth, framebufferHeight);
@@ -250,9 +237,8 @@ function main() {
     ];
     var xSpacing = 1.2;
     var ySpacing = 0.7;
-    var zDistance = 30;
     settings.forEach(function(s) {
-      var z = -5 + s.z; Math.cos(time * 0.3) * zDistance - zDistance;
+      var z = -5 + s.z;
       var r = Math.abs(z) * Math.sin(fieldOfViewRadians * 0.5);
       var x = Math.sin(time * 0.2) * r;
       var y = Math.cos(time * 0.2) * r * 0.5;
@@ -285,11 +271,12 @@ function main() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     gl.bindTexture(gl.TEXTURE_2D, fbTexture);
-    gl.uniformMatrix4fv(matrixLocation, false,
-      [ 2, 0, 0, 0,
-        0, 2, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1]);
+    gl.uniformMatrix4fv(matrixLocation, false, [
+      2, 0, 0, 0,
+      0, 2, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1,
+    ]);
 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLES, 0, 1 * 6);

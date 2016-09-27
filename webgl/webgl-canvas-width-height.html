@@ -36,7 +36,7 @@ h1 {
 </style>
 </head>
 <body>
-<canvas id="canvas" width="400" height="300"></canvas>
+<canvas id="canvas"></canvas>
 <div class="description">resize this window tall and thin or short and wide.<br/>Notice the F does NOT keep the correct aspect</div>
 </body>
 <script src="resources/webgl-utils.js"></script>
@@ -78,7 +78,7 @@ void main() {
 function main() {
   // Get A WebGL context
   var canvas = document.getElementById("canvas");
-  webglLessonsHelper.setupLesson(canvas, {}, {dontResize:true});
+  webglLessonsHelper.setupLesson(canvas);
   /** @type {WebGLRenderingContext} */
   var gl = canvas.getContext("webgl2");
   if (!gl) {
@@ -132,6 +132,8 @@ function main() {
 
   // Draw the scene.
   function drawScene() {
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
     // Tell WebGL how to convert from clip space to pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
@@ -195,7 +197,8 @@ function setGeometry(gl) {
           30, 90,
           30, 90,
           67, 60,
-          67, 90]),
+          67, 90,
+      ]),
       gl.STATIC_DRAW);
 }
 

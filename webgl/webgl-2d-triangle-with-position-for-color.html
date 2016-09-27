@@ -11,7 +11,7 @@
 <div class="description">
 Drag sliders to translate, rotate, and scale.
 </div>
-<canvas id="canvas" width="400" height="300"></canvas>
+<canvas id="canvas"></canvas>
 <div id="uiContainer">
   <div id="ui">
     <div id="x"></div>
@@ -116,7 +116,7 @@ function main() {
     return function(event, ui) {
       translation[index] = ui.value;
       drawScene();
-    }
+    };
   }
 
   function updateAngle(event, ui) {
@@ -129,11 +129,13 @@ function main() {
     return function(event, ui) {
       scale[index] = ui.value;
       drawScene();
-    }
+    };
   }
 
   // Draw the scene.
   function drawScene() {
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
     // Clear the canvas
@@ -169,7 +171,8 @@ function setGeometry(gl) {
       new Float32Array([
              0, -100,
            150,  125,
-          -175,  100]),
+          -175,  100,
+      ]),
       gl.STATIC_DRAW);
 }
 

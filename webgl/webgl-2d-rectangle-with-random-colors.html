@@ -11,7 +11,7 @@
 <div class="description">
 Drag sliders to translate, rotate, and scale.
 </div>
-<canvas id="canvas" width="400" height="300"></canvas>
+<canvas id="canvas"></canvas>
 <div id="uiContainer">
   <div id="ui">
     <div id="x"></div>
@@ -132,7 +132,7 @@ function main() {
     return function(event, ui) {
       translation[index] = ui.value;
       drawScene();
-    }
+    };
   }
 
   function updateAngle(event, ui) {
@@ -145,11 +145,13 @@ function main() {
     return function(event, ui) {
       scale[index] = ui.value;
       drawScene();
-    }
+    };
   }
 
   // Draw the scene.
   function drawScene() {
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
     // Clear the canvas
@@ -189,7 +191,8 @@ function setGeometry(gl) {
           -150,  100,
            150, -100,
           -150,  100,
-           150,  100]),
+           150,  100,
+      ]),
       gl.STATIC_DRAW);
 }
 
@@ -197,22 +200,16 @@ function setGeometry(gl) {
 // that make the rectangle.
 function setColors(gl) {
   // Pick 2 random colors.
-  var r1 = Math.random();
-  var b1 = Math.random();
-  var g1 = Math.random();
-  var r2 = Math.random();
-  var b2 = Math.random();
-  var g2 = Math.random();
-
   gl.bufferData(
       gl.ARRAY_BUFFER,
-      new Float32Array(
-        [ Math.random(), Math.random(), Math.random(), 1,
+      new Float32Array([
           Math.random(), Math.random(), Math.random(), 1,
           Math.random(), Math.random(), Math.random(), 1,
           Math.random(), Math.random(), Math.random(), 1,
           Math.random(), Math.random(), Math.random(), 1,
-          Math.random(), Math.random(), Math.random(), 1]),
+          Math.random(), Math.random(), Math.random(), 1,
+          Math.random(), Math.random(), Math.random(), 1,
+      ]),
       gl.STATIC_DRAW);
 }
 

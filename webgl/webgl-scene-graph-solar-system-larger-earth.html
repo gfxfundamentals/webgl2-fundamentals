@@ -11,7 +11,7 @@
 <div class="description">
 Simulating a solar system using a scene graph.
 </div>
-<canvas id="canvas" width="400" height="300"></canvas>
+<canvas id="canvas"></canvas>
 </body>
 <script src="resources/webgl-utils.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script>
@@ -86,7 +86,7 @@ Node.prototype.updateWorldMatrix = function(matrix) {
   }
 
   // now process all the children
-  var worldMatrix = this.worldMatrix
+  var worldMatrix = this.worldMatrix;
   this.children.forEach(function(child) {
     child.updateWorldMatrix(worldMatrix);
   });
@@ -114,14 +114,14 @@ function main() {
             {
               vertsPerColor: 1,
               rand: function(ndx, channel) {
-                if (channel == 0) {
+                if (channel === 0) {
                   last = 128 + Math.random() * 128 | 0;
                 }
                 return channel < 3 ? last : 255;
-              }
+              },
             })
       );
-  };
+  }
 
   var sphereBufferInfo = createFlattenedVertices(gl, primitives.createSphereVertices(10, 12, 6));
 
@@ -134,22 +134,7 @@ function main() {
     return d * Math.PI / 180;
   }
 
-  function rand(min, max) {
-    if (max === undefined) {
-      max = min;
-      min = 0;
-    }
-    return Math.random() * (max - min) + min;
-  }
-
-  function emod(x, n) {
-    return x >= 0 ? (x % n) : ((n - (-x % n)) % n);
-  };
-
-
-  var cameraAngleRadians = degToRad(0);
   var fieldOfViewRadians = degToRad(60);
-  var cameraHeight = 50;
 
   var objectsToDraw = [];
   var objects = [];
@@ -217,6 +202,8 @@ function main() {
   // Draw the scene.
   function drawScene(time) {
     time *= 0.001;
+
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
     gl.enable(gl.CULL_FACE);
     gl.enable(gl.DEPTH_TEST);

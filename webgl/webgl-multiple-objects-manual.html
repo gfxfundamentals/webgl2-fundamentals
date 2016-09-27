@@ -11,7 +11,7 @@
 <div class="description">
 Draw multiple objects manually
 </div>
-<canvas id="canvas" width="400" height="300"></canvas>
+<canvas id="canvas"></canvas>
 </body>
 <script src="resources/webgl-utils.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script>
@@ -73,10 +73,10 @@ function main() {
               vertsPerColor: 6,
               rand: function(ndx, channel) {
                 return channel < 3 ? ((128 + Math.random() * 128) | 0) : 255;
-              }
+              },
             })
       );
-  };
+  }
 
   var sphereBufferInfo = createFlattenedVertices(gl, primitives.createSphereVertices(10, 12, 6));
   var cubeBufferInfo   = createFlattenedVertices(gl, primitives.createCubeVertices(20));
@@ -93,9 +93,7 @@ function main() {
     return d * Math.PI / 180;
   }
 
-  var cameraAngleRadians = degToRad(0);
   var fieldOfViewRadians = degToRad(60);
-  var cameraHeight = 50;
 
   // Uniforms for each object.
   var sphereUniforms = {
@@ -128,6 +126,8 @@ function main() {
   // Draw the scene.
   function drawScene(time) {
     time = time * 0.0005;
+
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
     gl.enable(gl.CULL_FACE);
     gl.enable(gl.DEPTH_TEST);

@@ -11,7 +11,7 @@
 <div class="description">
 Textured F with Fs, front quads mapped to a portion of the texture.
 </div>
-<canvas id="canvas" width="400" height="300"></canvas>
+<canvas id="canvas"></canvas>
 </body>
 <script src="resources/webgl-utils.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script>
@@ -146,14 +146,9 @@ function main() {
   image.addEventListener('load', function() {
     // Now that the image has loaded make copy it to the texture.
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
     gl.generateMipmap(gl.TEXTURE_2D);
   });
-
-
-  function radToDeg(r) {
-    return r * 180 / Math.PI;
-  }
 
   function degToRad(d) {
     return d * Math.PI / 180;
@@ -165,7 +160,7 @@ function main() {
   var modelXRotationRadians = degToRad(0);
   var modelYRotationRadians = degToRad(0);
 
-  var then = 0
+  var then = 0;
 
   requestAnimationFrame(drawScene);
 
@@ -177,6 +172,8 @@ function main() {
     var deltaTime = now - then;
     // Remember the current time for the next frame.
     then = now;
+
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
     // Animate the rotation
     modelXRotationRadians += 1.2 * deltaTime;
@@ -366,7 +363,8 @@ function setGeometry(gl) {
           0, 150,  30,
           0,   0,   0,
           0, 150,  30,
-          0, 150,   0]);
+          0, 150,   0,
+  ]);
 
   // Center the F around the origin and Flip it around. We do this because
   // we're in 3D now with and +Y is up where as before when we started with 2D
@@ -520,7 +518,8 @@ function setTexcoords(gl) {
         1, 1,
         0, 0,
         1, 1,
-        1, 0]),
+        1, 0,
+      ]),
       gl.STATIC_DRAW);
 }
 

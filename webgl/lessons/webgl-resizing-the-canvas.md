@@ -82,8 +82,8 @@ JavaScript check what size that element is being displayed.
       var displayHeight = canvas.clientHeight;
 
       // Check if the canvas is not the same size.
-      if (canvas.width  != displayWidth ||
-          canvas.height != displayHeight) {
+      if (canvas.width  !== displayWidth ||
+          canvas.height !== displayHeight) {
 
         // Make the canvas the same size
         canvas.width  = displayWidth;
@@ -157,8 +157,8 @@ function resize(canvas) {
   var displayHeight = Math.floor(canvas.clientHeight * cssToRealPixels);
 
   // Check if the canvas is not the same size.
-  if (canvas.width  != displayWidth ||
-      canvas.height != displayHeight) {
+  if (canvas.width  !== displayWidth ||
+      canvas.height !== displayHeight) {
 
     // Make the canvas the same size
     canvas.width  = displayWidth;

@@ -39,7 +39,7 @@
     // Browser globals
     root.webglUtils = factory.call(root);
   }
-}(this, function () {
+}(this, function() {
   "use strict";  // eslint-disable-line
   var topWindow = this;
 
@@ -235,6 +235,7 @@
   function getBindPointForSamplerType(gl, type) {
     if (type === gl.SAMPLER_2D)   return gl.TEXTURE_2D;        // eslint-disable-line
     if (type === gl.SAMPLER_CUBE) return gl.TEXTURE_CUBE_MAP;  // eslint-disable-line
+    return undefined;
   }
 
   /**
@@ -333,8 +334,8 @@
       }
       if (type === gl.BOOL_VEC4) {
         return function(v) {
-          gl.uniform4iv(location, v); }
-        ;
+          gl.uniform4iv(location, v);
+        };
       }
       if (type === gl.FLOAT_MAT2) {
         return function(v) {
@@ -737,6 +738,7 @@
         return ext;
       }
     }
+    return undefined;
   }
 
   /**
@@ -1169,20 +1171,20 @@
    *
    * @param {WebGLRenderingContext} gl A WebGLRenderingContext
    * @param {module:webgl-utils.BufferInfo} bufferInfo as returned from createBufferInfoFromArrays
-   * @param {enum} [primitives] eg (gl.TRIANGLES, gl.LINES, gl.POINTS, gl.TRIANGLE_STRIP, ...)
+   * @param {enum} [primitiveType] eg (gl.TRIANGLES, gl.LINES, gl.POINTS, gl.TRIANGLE_STRIP, ...)
    * @param {number} [count] An optional count. Defaults to bufferInfo.numElements
    * @param {number} [offset] An optional offset. Defaults to 0.
    * @memberOf module:webgl-utils
    */
-  function drawBufferInfo(gl, bufferInfo, primitives, count, offset) {
+  function drawBufferInfo(gl, bufferInfo, primitiveType, count, offset) {
     var indices = bufferInfo.indices;
-    var primitives = primitives === undefined ? gl.TRIANGLES : primitives;
+    primitiveType = primitiveType === undefined ? gl.TRIANGLES : primitiveType;
     var numElements = count === undefined ? bufferInfo.numElements : count;
     offset = offset === undefined ? offset : 0;
     if (indices) {
-      gl.drawElements(primitives, numElements, gl.UNSIGNED_SHORT, offset);
+      gl.drawElements(primitiveType, numElements, gl.UNSIGNED_SHORT, offset);
     } else {
-      gl.drawArrays(primitives, offset, numElements);
+      gl.drawArrays(primitiveType, offset, numElements);
     }
   }
 

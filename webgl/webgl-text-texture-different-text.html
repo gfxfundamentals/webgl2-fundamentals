@@ -6,14 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>WebGL Text - Textures different textures</title>
 <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
-<style>
-* {
-  box-sizing: border-box;
-}
-#ui {
-    width: 200px;
-}
-</style>
 </head>
 <body>
 <canvas id="canvas" width="400" height="300"></canvas>
@@ -184,10 +176,6 @@ function main() {
 //    u_texture: textTex,
   };
 
-  function radToDeg(r) {
-    return r * 180 / Math.PI;
-  }
-
   function degToRad(d) {
     return d * Math.PI / 180;
   }
@@ -209,6 +197,8 @@ function main() {
     var deltaTime = now - then;
     // Remember the current time for the next frame.
     then = now;
+
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
     // Every frame increase the rotation a little.
     rotation[1] += rotationSpeed * deltaTime;
@@ -242,7 +232,6 @@ function main() {
     var up = [0, 1, 0];
     var cameraMatrix = m4.lookAt(cameraPosition, target, up);
     var viewMatrix = m4.inverse(cameraMatrix);
-    var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
 
     var textPositions = [];
 

@@ -6,14 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Make Glyph Texture Atlas</title>
 <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
-<style>
-* {
-  box-sizing: border-box;
-}
-#ui {
-    width: 200px;
-}
-</style>
 </head>
 <body>
 </body>
@@ -72,15 +64,15 @@ function makeGlyphCanvas(ctx, maxWidthOfTexture, heightOfLetters, baseLine, padd
   // We have to save the canvas settings because changing the size
   // of a canvas resets all the settings
   var settings = saveProperties(ctx);
-  ctx.canvas.width = (rows == 1) ? x : maxWidthOfTexture;
+  ctx.canvas.width = (rows === 1) ? x : maxWidthOfTexture;
   ctx.canvas.height = rows * heightOfLetters;
   restoreProperties(settings, ctx);
 
   // Draw the letters into the canvas
-  for (var ii = 0; ii < letters.length; ++ii) {
-    var letter = letters[ii];
-    var glyphInfo = glyphInfos[letter];
-    var t = ctx.fillText(letter, glyphInfo.x, glyphInfo.y + baseLine);
+  for (jj = 0; jj < letters.length; ++jj) {
+    var l = letters[jj];
+    var glyphInfo = glyphInfos[l];
+    ctx.fillText(l, glyphInfo.x, glyphInfo.y + baseLine);
   }
 
   return glyphInfos;

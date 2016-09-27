@@ -49,7 +49,7 @@ body, document {
 Show texture wrapping modes<br/>
 </div>
 <div id="container">
-  <canvas id="canvas" width="400" height="300"></canvas>
+  <canvas id="canvas"></canvas>
   <div id="gridContainer">
     <svg version="1.1"
         id="grid"
@@ -244,38 +244,27 @@ function main() {
   image.addEventListener('load', function() {
     // Now that the image has loaded make copy it to the texture.
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
     gl.generateMipmap(gl.TEXTURE_2D);
     drawScene();
   });
 
-
-  function radToDeg(r) {
-    return r * 180 / Math.PI;
-  }
-
-  function degToRad(d) {
-    return d * Math.PI / 180;
-  }
-
-  // First let's make some variables
-  // to hold the translation,
-  var fieldOfViewRadians = degToRad(60);
-
   var wrapS = gl.REPEAT;
   var wrapT = gl.REPEAT;
 
-  document.querySelector("#wrap_s0").addEventListener('click', function() { wrapS = gl.REPEAT;          drawScene(); });
-  document.querySelector("#wrap_s1").addEventListener('click', function() { wrapS = gl.CLAMP_TO_EDGE;   drawScene(); });
-  document.querySelector("#wrap_s2").addEventListener('click', function() { wrapS = gl.MIRRORED_REPEAT; drawScene(); });
-  document.querySelector("#wrap_t0").addEventListener('click', function() { wrapT = gl.REPEAT;          drawScene(); });
-  document.querySelector("#wrap_t1").addEventListener('click', function() { wrapT = gl.CLAMP_TO_EDGE;   drawScene(); });
-  document.querySelector("#wrap_t2").addEventListener('click', function() { wrapT = gl.MIRRORED_REPEAT; drawScene(); });
+  document.querySelector("#wrap_s0").addEventListener('click', function() { wrapS = gl.REPEAT;          drawScene(); });  // eslint-disable-line
+  document.querySelector("#wrap_s1").addEventListener('click', function() { wrapS = gl.CLAMP_TO_EDGE;   drawScene(); });  // eslint-disable-line
+  document.querySelector("#wrap_s2").addEventListener('click', function() { wrapS = gl.MIRRORED_REPEAT; drawScene(); });  // eslint-disable-line
+  document.querySelector("#wrap_t0").addEventListener('click', function() { wrapT = gl.REPEAT;          drawScene(); });  // eslint-disable-line
+  document.querySelector("#wrap_t1").addEventListener('click', function() { wrapT = gl.CLAMP_TO_EDGE;   drawScene(); });  // eslint-disable-line
+  document.querySelector("#wrap_t2").addEventListener('click', function() { wrapT = gl.MIRRORED_REPEAT; drawScene(); });  // eslint-disable-line
 
   drawScene();
 
   // Draw the scene.
   function drawScene() {
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
     // Tell WebGL how to convert from clip space to pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 

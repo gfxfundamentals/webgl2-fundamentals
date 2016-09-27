@@ -11,7 +11,7 @@
 <div class="description">
 Draw multiple objects by list with optimization checks
 </div>
-<canvas id="canvas" width="400" height="300"></canvas>
+<canvas id="canvas"></canvas>
 </body>
 <script src="resources/webgl-utils.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script>
@@ -74,10 +74,10 @@ function main() {
               vertsPerColor: 6,
               rand: function(ndx, channel) {
                 return channel < 3 ? ((128 + Math.random() * 128) | 0) : 255;
-              }
+              },
             })
       );
-  };
+  }
 
   var sphereBufferInfo = createFlattenedVertices(gl, primitives.createSphereVertices(10, 12, 6));
   var cubeBufferInfo   = createFlattenedVertices(gl, primitives.createCubeVertices(20));
@@ -104,11 +104,9 @@ function main() {
 
   function emod(x, n) {
     return x >= 0 ? (x % n) : ((n - (-x % n)) % n);
-  };
+  }
 
-  var cameraAngleRadians = degToRad(0);
   var fieldOfViewRadians = degToRad(60);
-  var cameraHeight = 50;
 
   // put the shapes in an array so it's easy to pick them at random
   var shapes = [
@@ -163,6 +161,8 @@ function main() {
   function drawScene(time) {
     time = time * 0.0005;
 
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
     gl.enable(gl.CULL_FACE);
     gl.enable(gl.DEPTH_TEST);
 
@@ -198,7 +198,7 @@ function main() {
 
     objectsToDraw.forEach(function(object) {
       var programInfo = object.programInfo;
-      var vertexArray = object.vertexArray
+      var vertexArray = object.vertexArray;
 
       if (programInfo !== lastUsedProgramInfo) {
         lastUsedProgramInfo = programInfo;

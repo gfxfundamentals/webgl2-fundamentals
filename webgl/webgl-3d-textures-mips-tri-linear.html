@@ -29,7 +29,7 @@ body, document {
 <div class="description">
 Show how mips are important for depth<br/>
 </div>
-<canvas id="canvas" width="400" height="300"></canvas>
+<canvas id="canvas"></canvas>
 <div id="uiContainer">
   <div id="ui">
     <div id="b">Click to switch texture</div>
@@ -89,20 +89,6 @@ function main() {
   // Get A WebGL context
   var canvas = document.getElementById("canvas");
   webglLessonsHelper.setupLesson(canvas);
-
-  // this mess is to make the number of pixels
-  // in the canvas match the number of pixels
-  // it will be displayed even on a hi-dpi display
-  // because we want to make sure there's no extra
-  // filtering. This is not the normal way to do
-  // this so please don't copy :P
-  var dpr = window.devicePixelRatio || 1;
-  var originalCanvasWidth = canvas.width;
-  var originalCanvasHeight = canvas.height;
-  canvas.style.width = canvas.width + "px";
-  canvas.style.height = canvas.height + "px";
-  canvas.width = Math.floor(canvas.width * dpr);
-  canvas.height = Math.floor(canvas.height * dpr);
 
   /** @type {WebGLRenderingContext} */
   var gl = canvas.getContext("webgl2", {antialias: false});
@@ -212,16 +198,11 @@ function main() {
   image.addEventListener('load', function() {
     // Now that the image has loaded make copy it to the texture.
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.generateMipmap(gl.TEXTURE_2D);
     drawScene();
   });
-
-
-  function radToDeg(r) {
-    return r * 180 / Math.PI;
-  }
 
   function degToRad(d) {
     return d * Math.PI / 180;
@@ -245,7 +226,11 @@ function main() {
   drawScene();
 
   // Draw the scene.
-  function drawScene(time) {
+  function drawScene() {
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas, window.devicePixelRatio);
+
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
     gl.clearColor(0, 0, 0, 1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 

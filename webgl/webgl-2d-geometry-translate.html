@@ -11,7 +11,7 @@
 <div class="description">
 Drag sliders to translate.
 </div>
-<canvas id="canvas" width="400" height="300"></canvas>
+<canvas id="canvas"></canvas>
 <div id="uiContainer">
   <div id="ui">
     <div id="x"></div>
@@ -124,10 +124,12 @@ function main() {
     return function(event, ui) {
       translation[index] = ui.value;
       drawScene();
-    }
+    };
   }
 
   function drawScene() {
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
     // Tell WebGL how to convert from clip space to pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
@@ -158,11 +160,6 @@ function main() {
     var count = 18;
     gl.drawArrays(primitiveType, offset, count);
   }
-}
-
-// Returns a random integer from 0 to range - 1.
-function randomInt(range) {
-  return Math.floor(Math.random() * range);
 }
 
 // Fill the current ARRAY_BUFFER buffer
@@ -196,7 +193,8 @@ function setGeometry(gl, x, y) {
           x + thickness, y + thickness * 3,
           x + thickness, y + thickness * 3,
           x + width * 2 / 3, y + thickness * 2,
-          x + width * 2 / 3, y + thickness * 3]),
+          x + width * 2 / 3, y + thickness * 3,
+      ]),
       gl.STATIC_DRAW);
 }
 

@@ -7,13 +7,6 @@
     <title>WebGL Text - HTML Canvas2D</title>
 <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
 <style>
-* {
-  box-sizing: border-box;
-}
-#ui {
-    width: 200px;
-}
-
 .container {
     position: relative;
     overflow: none;
@@ -34,8 +27,8 @@
 HTML Text Canvas2D
 </div>
 <div class="container">
-  <canvas id="canvas" width="400" height="300"></canvas>
-  <canvas id="text" width="400" height="300"></canvas>
+  <canvas id="canvas"></canvas>
+  <canvas id="text"></canvas>
 </div>
 </body>
 <script src="resources/webgl-utils.js"></script>
@@ -154,10 +147,6 @@ function main() {
   gl.vertexAttribPointer(
       colorAttributeLocation, size, type, normalize, stride, offset);
 
-
-  function radToDeg(r) {
-    return r * 180 / Math.PI;
-  }
 
   function degToRad(d) {
     return d * Math.PI / 180;
@@ -397,7 +386,8 @@ function setGeometry(gl) {
           0, 150,  30,
           0,   0,   0,
           0, 150,  30,
-          0, 150,   0]),
+          0, 150,   0,
+      ]),
       gl.STATIC_DRAW);
 }
 
@@ -532,7 +522,8 @@ function setColors(gl) {
         160, 160, 220,
         160, 160, 220,
         160, 160, 220,
-        160, 160, 220]),
+        160, 160, 220,
+      ]),
       gl.STATIC_DRAW);
 }
 

@@ -91,7 +91,7 @@ var image = new Image();
 image.src = "resources/leaves.jpg";  // MUST BE SAME DOMAIN!!!
 image.onload = function() {
   render(image);
-}
+};
 
 function render(image) {
   // Get A WebGL context
@@ -141,7 +141,7 @@ function render(image) {
   var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
   var offset = 0;        // start at the beginning of the buffer
   gl.vertexAttribPointer(
-      positionAttributeLocation, size, type, normalize, stride, offset)
+      positionAttributeLocation, size, type, normalize, stride, offset);
 
   // provide texture coordinates for the rectangle.
   var texCoordBuffer = gl.createBuffer();
@@ -152,7 +152,8 @@ function render(image) {
       0.0,  1.0,
       0.0,  1.0,
       1.0,  0.0,
-      1.0,  1.0]), gl.STATIC_DRAW);
+      1.0,  1.0,
+  ]), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(texCoordAttributeLocation);
   var size = 2;          // 2 components per iteration
   var type = gl.FLOAT;   // the data is 32bit floats
@@ -160,7 +161,7 @@ function render(image) {
   var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
   var offset = 0;        // start at the beginning of the buffer
   gl.vertexAttribPointer(
-      texCoordAttributeLocation, size, type, normalize, stride, offset)
+      texCoordAttributeLocation, size, type, normalize, stride, offset);
 
   // Pass in the canvas resolution so we can convert from
   // pixels to clipspace in the shader
@@ -168,15 +169,19 @@ function render(image) {
 
   var kernels = {
     normal: [0, 0, 0, 0, 1, 0, 0, 0, 0],
-    gaussianBlur: [0.045, 0.122, 0.045, 0.122,
-                   0.332, 0.122, 0.045, 0.122, 0.045],
+    gaussianBlur: [
+       0.045, 0.122, 0.045, 0.122,
+       0.332, 0.122, 0.045, 0.122, 0.045,
+    ],
     gaussianBlur2: [1, 2, 1, 2, 4, 2, 1, 2, 1],
     gaussianBlur3: [0, 1, 0, 1, 1, 1, 0, 1, 0],
     unsharpen: [-1, -1, -1, -1, 9, -1, -1, -1, -1],
-    sharpness: [0,-1,0,-1,5,-1,0,-1,0],
+    sharpness: [0, -1, 0, -1, 5, -1, 0, -1, 0],
     sharpen: [-1, -1, -1, -1, 16, -1, -1, -1, -1],
-    edgeDetect: [-0.125, -0.125, -0.125, -0.125,
-                 1, -0.125, -0.125, -0.125, -0.125],
+    edgeDetect: [
+      -0.125, -0.125, -0.125, -0.125,
+      1, -0.125, -0.125, -0.125, -0.125,
+    ],
     edgeDetect2: [-1, -1, -1, -1, 8, -1, -1, -1, -1],
     edgeDetect3: [-5, 0, 0, 0, 0, 0, 0, 0, 5],
     edgeDetect4: [-1, -1, -1, 0, 0, 0, 1, 1, 1],
@@ -186,10 +191,14 @@ function render(image) {
     sobelVertical: [1, 0, -1, 2, 0, -2, 1, 0, -1 ],
     previtHorizontal: [1, 1, 1, 0, 0, 0, -1, -1, -1 ],
     previtVertical: [1, 0, -1, 1, 0, -1, 1, 0, -1],
-    boxBlur: [0.111, 0.111, 0.111, 0.111,
-              0.111, 0.111, 0.111, 0.111, 0.111],
-    triangleBlur: [ 0.0625, 0.125, 0.0625,
-                    0.125, 0.25, 0.125, 0.0625, 0.125, 0.0625]
+    boxBlur: [
+      0.111, 0.111, 0.111, 0.111,
+      0.111, 0.111, 0.111, 0.111, 0.111,
+    ],
+    triangleBlur: [
+      0.0625, 0.125, 0.0625,
+      0.125, 0.25, 0.125, 0.0625, 0.125, 0.0625,
+    ],
   };
 
   // Setup UI to pick kernels.
@@ -199,7 +208,7 @@ function render(image) {
     input.type = "radio";
     input.name = "kernel";
     input.value = name;
-    if (name == 'edgeDetect') {
+    if (name === 'edgeDetect') {
       input.checked = "checked";
     }
     ui.appendChild(input);
@@ -208,7 +217,7 @@ function render(image) {
     input.onclick = function(name) {
       return function() {
         drawWithKernel(name);
-      }
+      };
     }(name);
   }
 
@@ -263,10 +272,6 @@ function render(image) {
   }
 }
 
-function randomInt(range) {
-  return Math.floor(Math.random() * range);
-}
-
 function setRectangle(gl, x, y, width, height) {
   var x1 = x;
   var x2 = x + width;
@@ -278,7 +283,8 @@ function setRectangle(gl, x, y, width, height) {
      x1, y2,
      x1, y2,
      x2, y1,
-     x2, y2]), gl.STATIC_DRAW);
+     x2, y2,
+  ]), gl.STATIC_DRAW);
 }
 
 </script>

@@ -11,7 +11,7 @@
 <div class="description">
 Drag slider to move camera.
 </div>
-<canvas id="canvas" width="400" height="300"></canvas>
+<canvas id="canvas"></canvas>
 <div id="uiContainer">
   <div id="ui">
     <div id="cameraAngle"></div>
@@ -141,7 +141,6 @@ function main() {
 
   // First let's make some variables
   // to hold the translation,
-  var color = [Math.random(), Math.random(), Math.random(), 1];
   var fieldOfViewRadians = degToRad(60);
   var cameraAngleRadians = degToRad(0);
 
@@ -159,6 +158,8 @@ function main() {
   function drawScene() {
     var numFs = 5;
     var radius = 200;
+
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
     // Tell WebGL how to convert from clip space to pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -252,7 +253,7 @@ function setGeometry(gl) {
   return positions.length / 3;
 }
 
-function setColors(gl, numElements) {
+function setColors(gl) {
   var normals = HeadData.normals;
   var colors = new Uint8Array(normals.length);
   var offset = 0;
@@ -277,7 +278,7 @@ var m4 = {
       f / aspect, 0, 0, 0,
       0, f, 0, 0,
       0, 0, (near + far) * rangeInv, -1,
-      0, 0, near * far * rangeInv * 2, 0
+      0, 0, near * far * rangeInv * 2, 0,
     ];
   },
 
@@ -292,38 +293,38 @@ var m4 = {
   },
 
   multiply: function(a, b) {
-    var a00 = a[0*4+0];
-    var a01 = a[0*4+1];
-    var a02 = a[0*4+2];
-    var a03 = a[0*4+3];
-    var a10 = a[1*4+0];
-    var a11 = a[1*4+1];
-    var a12 = a[1*4+2];
-    var a13 = a[1*4+3];
-    var a20 = a[2*4+0];
-    var a21 = a[2*4+1];
-    var a22 = a[2*4+2];
-    var a23 = a[2*4+3];
-    var a30 = a[3*4+0];
-    var a31 = a[3*4+1];
-    var a32 = a[3*4+2];
-    var a33 = a[3*4+3];
-    var b00 = b[0*4+0];
-    var b01 = b[0*4+1];
-    var b02 = b[0*4+2];
-    var b03 = b[0*4+3];
-    var b10 = b[1*4+0];
-    var b11 = b[1*4+1];
-    var b12 = b[1*4+2];
-    var b13 = b[1*4+3];
-    var b20 = b[2*4+0];
-    var b21 = b[2*4+1];
-    var b22 = b[2*4+2];
-    var b23 = b[2*4+3];
-    var b30 = b[3*4+0];
-    var b31 = b[3*4+1];
-    var b32 = b[3*4+2];
-    var b33 = b[3*4+3];
+    var a00 = a[0 * 4 + 0];
+    var a01 = a[0 * 4 + 1];
+    var a02 = a[0 * 4 + 2];
+    var a03 = a[0 * 4 + 3];
+    var a10 = a[1 * 4 + 0];
+    var a11 = a[1 * 4 + 1];
+    var a12 = a[1 * 4 + 2];
+    var a13 = a[1 * 4 + 3];
+    var a20 = a[2 * 4 + 0];
+    var a21 = a[2 * 4 + 1];
+    var a22 = a[2 * 4 + 2];
+    var a23 = a[2 * 4 + 3];
+    var a30 = a[3 * 4 + 0];
+    var a31 = a[3 * 4 + 1];
+    var a32 = a[3 * 4 + 2];
+    var a33 = a[3 * 4 + 3];
+    var b00 = b[0 * 4 + 0];
+    var b01 = b[0 * 4 + 1];
+    var b02 = b[0 * 4 + 2];
+    var b03 = b[0 * 4 + 3];
+    var b10 = b[1 * 4 + 0];
+    var b11 = b[1 * 4 + 1];
+    var b12 = b[1 * 4 + 2];
+    var b13 = b[1 * 4 + 3];
+    var b20 = b[2 * 4 + 0];
+    var b21 = b[2 * 4 + 1];
+    var b22 = b[2 * 4 + 2];
+    var b23 = b[2 * 4 + 3];
+    var b30 = b[3 * 4 + 0];
+    var b31 = b[3 * 4 + 1];
+    var b32 = b[3 * 4 + 2];
+    var b33 = b[3 * 4 + 3];
     return [
       b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
       b00 * a01 + b01 * a11 + b02 * a21 + b03 * a31,
@@ -499,14 +500,16 @@ var m4 = {
       d * ((tmp_18 * m12 + tmp_23 * m32 + tmp_15 * m02) -
            (tmp_22 * m32 + tmp_14 * m02 + tmp_19 * m12)),
       d * ((tmp_22 * m22 + tmp_16 * m02 + tmp_21 * m12) -
-           (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02))
+           (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02)),
     ];
   },
 
   cross: function(a, b) {
-    return [a[1] * b[2] - a[2] * b[1],
-            a[2] * b[0] - a[0] * b[2],
-            a[0] * b[1] - a[1] * b[0]];
+    return [
+       a[1] * b[2] - a[2] * b[1],
+       a[2] * b[0] - a[0] * b[2],
+       a[0] * b[1] - a[1] * b[0],
+    ];
   },
 
   subtractVectors: function(a, b) {
@@ -544,8 +547,9 @@ var m4 = {
     var dst = [];
     for (var i = 0; i < 4; ++i) {
       dst[i] = 0.0;
-      for (var j = 0; j < 4; ++j)
+      for (var j = 0; j < 4; ++j) {
         dst[i] += v[j] * m[j * 4 + i];
+      }
     }
     return dst;
   },

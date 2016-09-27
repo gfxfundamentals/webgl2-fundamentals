@@ -11,7 +11,7 @@
 <div class="description">
 Drag sliders to translate, rotate, and scale.
 </div>
-<canvas id="canvas" width="400" height="300"></canvas>
+<canvas id="canvas"></canvas>
 <div id="uiContainer">
   <div id="ui">
     <div id="fieldOfView"></div>
@@ -148,7 +148,6 @@ function main() {
   var translation = [-150, 0, -360];
   var rotation = [degToRad(190), degToRad(40), degToRad(30)];
   var scale = [1, 1, 1];
-  var color = [Math.random(), Math.random(), Math.random(), 1];
   var fieldOfViewRadians = degToRad(60);
 
   drawScene();
@@ -174,7 +173,7 @@ function main() {
     return function(event, ui) {
       translation[index] = ui.value;
       drawScene();
-    }
+    };
   }
 
   function updateRotation(index) {
@@ -183,18 +182,20 @@ function main() {
       var angleInRadians = degToRad(angleInDegrees);
       rotation[index] = angleInRadians;
       drawScene();
-    }
+    };
   }
 
   function updateScale(index) {
     return function(event, ui) {
       scale[index] = ui.value;
       drawScene();
-    }
+    };
   }
 
   // Draw the scene.
   function drawScene() {
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
     // Tell WebGL how to convert from clip space to pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
@@ -368,7 +369,8 @@ function setGeometry(gl) {
           0, 150,  30,
           0,   0,   0,
           0, 150,  30,
-          0, 150,   0]),
+          0, 150,   0,
+      ]),
       gl.STATIC_DRAW);
 }
 
@@ -503,7 +505,8 @@ function setColors(gl) {
         160, 160, 220,
         160, 160, 220,
         160, 160, 220,
-        160, 160, 220]),
+        160, 160, 220,
+      ]),
       gl.STATIC_DRAW);
 }
 
@@ -519,7 +522,7 @@ var m4 = {
       f / aspect, 0, 0, 0,
       0, f, 0, 0,
       0, 0, (near + far) * rangeInv, -1,
-      0, 0, near * far * rangeInv * 2, 0
+      0, 0, near * far * rangeInv * 2, 0,
     ];
   },
 
@@ -534,38 +537,38 @@ var m4 = {
   },
 
   multiply: function(a, b) {
-    var a00 = a[0*4+0];
-    var a01 = a[0*4+1];
-    var a02 = a[0*4+2];
-    var a03 = a[0*4+3];
-    var a10 = a[1*4+0];
-    var a11 = a[1*4+1];
-    var a12 = a[1*4+2];
-    var a13 = a[1*4+3];
-    var a20 = a[2*4+0];
-    var a21 = a[2*4+1];
-    var a22 = a[2*4+2];
-    var a23 = a[2*4+3];
-    var a30 = a[3*4+0];
-    var a31 = a[3*4+1];
-    var a32 = a[3*4+2];
-    var a33 = a[3*4+3];
-    var b00 = b[0*4+0];
-    var b01 = b[0*4+1];
-    var b02 = b[0*4+2];
-    var b03 = b[0*4+3];
-    var b10 = b[1*4+0];
-    var b11 = b[1*4+1];
-    var b12 = b[1*4+2];
-    var b13 = b[1*4+3];
-    var b20 = b[2*4+0];
-    var b21 = b[2*4+1];
-    var b22 = b[2*4+2];
-    var b23 = b[2*4+3];
-    var b30 = b[3*4+0];
-    var b31 = b[3*4+1];
-    var b32 = b[3*4+2];
-    var b33 = b[3*4+3];
+    var a00 = a[0 * 4 + 0];
+    var a01 = a[0 * 4 + 1];
+    var a02 = a[0 * 4 + 2];
+    var a03 = a[0 * 4 + 3];
+    var a10 = a[1 * 4 + 0];
+    var a11 = a[1 * 4 + 1];
+    var a12 = a[1 * 4 + 2];
+    var a13 = a[1 * 4 + 3];
+    var a20 = a[2 * 4 + 0];
+    var a21 = a[2 * 4 + 1];
+    var a22 = a[2 * 4 + 2];
+    var a23 = a[2 * 4 + 3];
+    var a30 = a[3 * 4 + 0];
+    var a31 = a[3 * 4 + 1];
+    var a32 = a[3 * 4 + 2];
+    var a33 = a[3 * 4 + 3];
+    var b00 = b[0 * 4 + 0];
+    var b01 = b[0 * 4 + 1];
+    var b02 = b[0 * 4 + 2];
+    var b03 = b[0 * 4 + 3];
+    var b10 = b[1 * 4 + 0];
+    var b11 = b[1 * 4 + 1];
+    var b12 = b[1 * 4 + 2];
+    var b13 = b[1 * 4 + 3];
+    var b20 = b[2 * 4 + 0];
+    var b21 = b[2 * 4 + 1];
+    var b22 = b[2 * 4 + 2];
+    var b23 = b[2 * 4 + 3];
+    var b30 = b[3 * 4 + 0];
+    var b31 = b[3 * 4 + 1];
+    var b32 = b[3 * 4 + 2];
+    var b33 = b[3 * 4 + 3];
     return [
       b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
       b00 * a01 + b01 * a11 + b02 * a21 + b03 * a31,

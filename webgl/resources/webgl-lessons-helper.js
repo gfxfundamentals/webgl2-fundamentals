@@ -39,19 +39,10 @@
     // Browser globals
     root.webglLessonsHelper = factory.call(root);
   }
-}(this, function () {
-  var topWindow = this;
+}(this, function() {
+  "use strict";
 
-  function getQuery(s) {
-    var query = {};
-    s = s === undefined ? window.location.search : s;
-    s = s.substring(1);
-    s.split('&').forEach(function(pair) {
-        var parts = pair.split('=').map(decodeURIComponent);
-        query[parts[0]] = parts[1];
-    });
-    return query;
-  }
+  var topWindow = this;
 
   /**
    * Check if the page is embedded.
@@ -68,10 +59,12 @@
       try {
         document.getElementsByTagName("html")[0].className = "iframe";
       } catch (e) {
+        // eslint-disable-line
       }
       try {
         document.body.className = "iframe";
       } catch (e) {
+        // eslint-disable-line
       }
     }
   }
@@ -171,24 +164,14 @@
    * Gets a WebGL context.
    * makes its backing store the size it is displayed.
    * @param {HTMLCanvasElement} canvas a canvas element.
-   * @param {WebGLContextCreationAttirbutes} [opt_attribs] optional webgl context creation attributes
    * @param {module:webgl-utils.GetWebGLContextOptions} [opt_options] options
    * @memberOf module:webgl-utils
    */
-  function setupLesson(canvas, opt_attribs, opt_options) {
-    var attribs = opt_attribs || {};
+  function setupLesson(canvas, opt_options) {
     var options = opt_options || {};
 
     if (isInIFrame()) {
       updateCSSIfInIFrame();
-
-      // make the canvas backing store the size it's displayed.
-      if (canvas && !options.dontResize && options.resize !== false) {
-        var width = canvas.clientWidth;
-        var height = canvas.clientHeight;
-        canvas.width = width;
-        canvas.height = height;
-      }
     } else if (!options.noTitle && options.title !== false) {
       var title = document.title;
       var h1 = document.createElement("h1");
@@ -342,15 +325,50 @@
   ** MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
   */
 
+  /**
+   * Types of contexts we have added to map
+   */
+  var mappedContextTypes = {};
+
+  /**
+   * Map of numbers to names.
+   * @type {Object}
+   */
+  var glEnums = {};
+
+  /**
+   * Map of names to numbers.
+   * @type {Object}
+   */
+  var enumStringToValue = {};
+
+  /**
+   * Initializes this module. Safe to call more than once.
+   * @param {!WebGLRenderingContext} ctx A WebGL context. If
+   *    you have more than one context it doesn't matter which one
+   *    you pass in, it is only used to pull out constants.
+   */
+  function addEnumsForContext(ctx, type) {
+    if (!mappedContextTypes[type]) {
+      mappedContextTypes[type] = true;
+      for (var propertyName in ctx) {
+        if (typeof ctx[propertyName] === 'number') {
+          glEnums[ctx[propertyName]] = propertyName;
+          enumStringToValue[propertyName] = ctx[propertyName];
+        }
+      }
+    }
+  }
+
   function enumArrayToString(enums) {
     if (enums.length) {
-      var enums = [];
+      var enumStrings = [];
       for (var i = 0; i < enums.length; ++i) {
-        enums.push(glEnumToString(enums[i]));
+        enums.push(glEnumToString(enums[i]));  // eslint-disable-line
       }
-      return '[' + enums.join(', ') + ']';
+      return '[' + enumStrings.join(', ') + ']';
     }
-    return enums.toString();
+    return enumStrings.toString();
   }
 
   function makeBitFieldToStringFunc(enums) {
@@ -361,13 +379,13 @@
         var enumValue = enumStringToValue[enums[i]];
         if ((value & enumValue) !== 0) {
           orResult |= enumValue;
-          orEnums.push(glEnumToString(enumValue));
+          orEnums.push(glEnumToString(enumValue));  // eslint-disable-line
         }
       }
       if (orResult === value) {
         return orEnums.join(' | ');
       } else {
-        return glEnumToString(value);
+        return glEnumToString(value);  // eslint-disable-line
       }
     };
   }
@@ -593,41 +611,6 @@
   };
 
   /**
-   * Types of contexts we have added to map
-   */
-  var mappedContextTypes = {};
-
-  /**
-   * Map of numbers to names.
-   * @type {Object}
-   */
-  var glEnums = {};
-
-  /**
-   * Map of names to numbers.
-   * @type {Object}
-   */
-  var enumStringToValue = {};
-
-  /**
-   * Initializes this module. Safe to call more than once.
-   * @param {!WebGLRenderingContext} ctx A WebGL context. If
-   *    you have more than one context it doesn't matter which one
-   *    you pass in, it is only used to pull out constants.
-   */
-  function addEnumsForContext(ctx, type) {
-    if (!mappedContextTypes[type]) {
-      mappedContextTypes[type] = true;
-      for (var propertyName in ctx) {
-        if (typeof ctx[propertyName] == 'number') {
-          glEnums[ctx[propertyName]] = propertyName;
-          enumStringToValue[propertyName] = ctx[propertyName];
-        }
-      }
-    }
-  }
-
-  /**
    * Gets an string version of an WebGL enum.
    *
    * Example:
@@ -652,9 +635,9 @@
    * @return {string} The value as a string.
    */
   function glFunctionArgToString(functionName, numArgs, argumentIndex, value) {
-    var funcInfo = glValidEnumContexts[functionName];
-    if (funcInfo !== undefined) {
-      var funcInfo = funcInfo[numArgs];
+    var funcInfos = glValidEnumContexts[functionName];
+    if (funcInfos !== undefined) {
+      var funcInfo = funcInfos[numArgs];
       if (funcInfo !== undefined) {
         var argType = funcInfo[argumentIndex];
         if (argType) {
@@ -685,38 +668,23 @@
    */
   function glFunctionArgsToString(functionName, args) {
     // apparently we can't do args.join(",");
-    var argStr = "";
+    var argStrs = [];
     var numArgs = args.length;
     for (var ii = 0; ii < numArgs; ++ii) {
-      argStr += ((ii == 0) ? '' : ', ') +
-          glFunctionArgToString(functionName, numArgs, ii, args[ii]);
+      argStrs.push(glFunctionArgToString(functionName, numArgs, ii, args[ii]));
     }
-    return argStr;
-  };
-
+    return argStrs.join(", ");
+  }
 
   function makePropertyWrapper(wrapper, original, propertyName) {
-    //log("wrap prop: " + propertyName);
-    wrapper.__defineGetter__(propertyName, function() {
+    wrapper.__defineGetter__(propertyName, function() {  // eslint-disable-line
       return original[propertyName];
     });
     // TODO(gmane): this needs to handle properties that take more than
     // one value?
-    wrapper.__defineSetter__(propertyName, function(value) {
-      //log("set: " + propertyName);
+    wrapper.__defineSetter__(propertyName, function(value) {  // eslint-disable-line
       original[propertyName] = value;
     });
-  }
-
-  // Makes a function that calls a function on another object.
-  function makeFunctionWrapper(original, functionName) {
-    //log("wrap fn: " + functionName);
-    var f = original[functionName];
-    return function() {
-      //log("call: " + functionName);
-      var result = f.apply(original, arguments);
-      return result;
-    };
   }
 
   /**
@@ -747,16 +715,9 @@
     options.sharedState = sharedState;
 
     var errorFunc = options.errorFunc || function(err, functionName, args) {
-          // apparently we can't do args.join(",");
-          var argStr = "";
-          var numArgs = args.length;
-          for (var ii = 0; ii < numArgs; ++ii) {
-            argStr += ((ii == 0) ? '' : ', ') +
-                glFunctionArgToString(functionName, numArgs, ii, args[ii]);
-          }
-          console.error("WebGL error "+ glEnumToString(err) + " in "+ functionName +
-              "(" + argStr + ")");
-        };
+      console.error("WebGL error " + glEnumToString(err) + " in " + functionName +  // eslint-disable-line
+          "(" + glFunctionArgsToString(functionName, args) + ")");
+    };
 
     // Holds booleans for each GL error so after we get the error ourselves
     // we can still return it to the client app.
@@ -795,12 +756,29 @@
         }
         var result = ctx[functionName].apply(ctx, arguments);
         var err = errCtx.getError();
-        if (err != 0) {
+        if (err !== 0) {
           glErrorShadow[err] = true;
           errorFunc(err, functionName, arguments);
         }
         check();
         return result;
+      };
+    }
+
+    function makeGetExtensionWrapper(ctx, wrapped) {
+      return function() {
+        var extensionName = arguments[0];
+        var ext = sharedState.wrappers[extensionName];
+        if (!ext) {
+          ext = wrapped.apply(ctx, arguments);
+          if (ext) {
+            var origExt = ext;
+            ext = makeDebugContext(ext, options);
+            sharedState.wrappers[extensionName] = { wrapper: ext, orig: origExt };
+            addEnumsForContext(origExt, extensionName);
+          }
+        }
+        return ext;
       };
     }
 
@@ -812,20 +790,7 @@
           wrapper[propertyName] = makeErrorWrapper(ctx, propertyName);
         } else {
           var wrapped = makeErrorWrapper(ctx, propertyName);
-          wrapper[propertyName] = function () {
-            var extensionName = arguments[0];
-            var ext = sharedState.wrappers[extensionName];
-            if (!ext) {
-              ext = wrapped.apply(ctx, arguments);
-              if (ext) {
-                var origExt = ext;
-                ext = makeDebugContext(ext, options);
-                sharedState.wrappers[extensionName] = { wrapper: ext, orig: origExt };
-                addEnumsForContext(origExt, extensionName);
-              }
-            }
-            return ext;
-          };
+          wrapper[propertyName] = makeGetExtensionWrapper(ctx, wrapped);
         }
       } else {
         makePropertyWrapper(wrapper, ctx, propertyName);
@@ -866,11 +831,11 @@
       if (isUserScript) {
         try {
           lineNo = window.parent.getActualLineNumberAndMoveTo(lineNo, colNo);
-        } catch (e) {
-          origConsole.error(e);
+        } catch (ex) {
+          origConsole.error(ex);
         }
       }
-      console.error("line:", lineNo, ":", msg);
+      console.error("line:", lineNo, ":", msg);  // eslint-disable-line
       origConsole.error(e.error);
     });
   }
@@ -901,12 +866,12 @@
               var isOpera = (!!window.opr) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
               // Firefox 1.0+
               var isFirefox = typeof window.InstallTrigger !== 'undefined';
-              // Safari <= 9 "[object HTMLElementConstructor]"
-              var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
-              // Internet Explorer 6-11
-              var isIE = /*@cc_on!@*/false || !!document.documentMode;
-              // Edge 20+
-              var isEdge = !isIE && !!window.StyleMedia;
+              //// Safari <= 9 "[object HTMLElementConstructor]"
+              //var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+              //// Internet Explorer 6-11
+              //var isIE = /*@cc_on!@*/false || !!document.documentMode;
+              //// Edge 20+
+              //var isEdge = !isIE && !!window.StyleMedia;
               // Chrome 1+
               var isChrome = !!window.chrome && !!window.chrome.webstore;
 
@@ -932,6 +897,7 @@
                       funcName: userFnName,
                     };
                   }
+                  return undefined;
                 };
               } else if (isFirefox) {
                 lineNdx = 2;
@@ -947,6 +913,7 @@
                       colNo: colNo,
                     };
                   }
+                  return undefined;
                 };
               }
 
@@ -976,7 +943,7 @@
                 }
               }
 
-              console.error(
+              console.error(  // eslint-disable-line
                   "WebGL error" + lineInfo, glEnumToString(err), "in",
                   funcName, "(", enumedArgs.join(", "), ")");
 
@@ -1001,6 +968,7 @@
     showNeedWebGL2: showNeedWebGL2,
     setupSlider: setupSlider,
     makeDebugContext: makeDebugContext,
+    glFunctionArgsToString: glFunctionArgsToString,
   };
 
 }));

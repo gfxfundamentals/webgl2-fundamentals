@@ -11,7 +11,7 @@
 <div class="description">
 Uses a few utility functions so there's much less code.
 </div>
-<canvas id="canvas" width="400" height="300"></canvas>
+<canvas id="canvas"></canvas>
 <div id="uiContainer">
   <div id="ui">
     <button id="toggle"></button>
@@ -130,9 +130,7 @@ function main() {
     return d * Math.PI / 180;
   }
 
-  var cameraAngleRadians = degToRad(0);
   var fieldOfViewRadians = degToRad(60);
-  var cameraHeight = 50;
 
   var uniformsThatAreTheSameForAllObjects = {
     u_lightWorldPos:         [-50, 30, 100],
@@ -205,6 +203,8 @@ function main() {
   // Draw the scene.
   function drawScene(time) {
     time = 5 + time * 0.0001;
+
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
     gl.enable(gl.DEPTH_TEST);
 

@@ -11,7 +11,7 @@
 <div class="description">
 Textured Cube with a different image on each face<br/>
 </div>
-<canvas id="canvas" width="400" height="300"></canvas>
+<canvas id="canvas"></canvas>
 </body>
 <script src="resources/webgl-utils.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script>
@@ -147,14 +147,10 @@ function main() {
   image.addEventListener('load', function() {
     // Now that the image has loaded make copy it to the texture.
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
     gl.generateMipmap(gl.TEXTURE_2D);
   });
 
-
-  function radToDeg(r) {
-    return r * 180 / Math.PI;
-  }
 
   function degToRad(d) {
     return d * Math.PI / 180;
@@ -179,6 +175,8 @@ function main() {
     var deltaTime = time - then;
     // Remember the current time for the next frame.
     then = time;
+
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
     // Animate the rotation
     modelYRotationRadians += -0.7 * deltaTime;
