@@ -742,7 +742,9 @@
   /**
    * Resize a canvas to match the size its displayed.
    * @param {HTMLCanvasElement} canvas The canvas to resize.
-   * @param {boolean} true if the canvas was resized.
+   * @param {number} [multiplier] amount to multiply by.
+   *    Pass in window.devicePixelRatio for native pixels.
+   * @return {boolean} true if the canvas was resized.
    * @memberOf module:webgl-utils
    */
   function resizeCanvasToDisplaySize(canvas, multiplier) {
