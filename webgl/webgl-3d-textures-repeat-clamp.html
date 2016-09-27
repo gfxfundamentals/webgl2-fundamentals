@@ -26,6 +26,11 @@ body, document {
     left: 1px;
     width: 400px;
     height: 300px;
+    g-background: rgba(255, 0, 0, 0.2);
+}
+#gridContainer>svg {
+    width: 100%;
+    height: 100%;
 }
 #uiContainer {
     left: 15px;
@@ -48,12 +53,12 @@ Show texture wrapping modes<br/>
   <div id="gridContainer">
     <svg version="1.1"
         id="grid"
-        viewBox="0 0 400 300"
+        viewBox="-50 -50 400 300"
         fill="none"
         stroke="none"
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink">
-      <g transform="matrix(2.15, 0, 0, 2.15, 200, 64)">
+      <g transform="matrix(1, 0, 0, 1, 0, 0)">
          <g stroke-width="0.25" stroke="#000000">
            <line x1="0"  y1="80" x2="0"  y2="85"/>
            <line x1="16" y1="80" x2="16" y2="85"/>
@@ -62,12 +67,12 @@ Show texture wrapping modes<br/>
            <line x1="64" y1="80" x2="64" y2="85"/>
            <line x1="80" y1="80" x2="80" y2="85"/>
 
-           <line y1="0"  x1="-5" y2="0"  x2="0" />
-           <line y1="16" x1="-5" y2="16" x2="0" />
-           <line y1="32" x1="-5" y2="32" x2="0" />
-           <line y1="48" x1="-5" y2="48" x2="0" />
-           <line y1="64" x1="-5" y2="64" x2="0" />
-           <line y1="80" x1="-5" y2="80" x2="0" />
+           <line y1="0"  x1="85" y2="0"  x2="80" />
+           <line y1="16" x1="85" y2="16" x2="80" />
+           <line y1="32" x1="85" y2="32" x2="80" />
+           <line y1="48" x1="85" y2="48" x2="80" />
+           <line y1="64" x1="85" y2="64" x2="80" />
+           <line y1="80" x1="85" y2="80" x2="80" />
          </g>
          <g fill="#000000" font-size="5" font-family="monospace" text-anchor="middle">
            <text x="0"  y="90">-3</text>
@@ -76,12 +81,12 @@ Show texture wrapping modes<br/>
            <text x="48" y="90">0</text>
            <text x="64" y="90">1</text>
            <text x="80" y="90">2</text>
-           <text y="1"  x="-10">4</text>
-           <text y="17" x="-10">3</text>
-           <text y="33" x="-10">2</text>
-           <text y="49" x="-10">1</text>
-           <text y="65" x="-10">0</text>
-           <text y="81" x="-10">-1</text>
+           <text y="1"  x="90">4</text>
+           <text y="17" x="90">3</text>
+           <text y="33" x="90">2</text>
+           <text y="49" x="90">1</text>
+           <text y="65" x="90">0</text>
+           <text y="81" x="90">-1</text>
          </g>
       </g>
     </svg>
@@ -162,6 +167,8 @@ function main() {
     webglLessonsHelper.showNeedWebGL2(canvas);
     return;
   }
+
+  var gridContainer = document.getElementById("gridContainer");
 
   // Use our boilerplate utils to compile the shaders and link into a program
   var program = webglUtils.createProgramFromSources(gl,
@@ -279,9 +286,6 @@ function main() {
     // turn on depth testing
     gl.enable(gl.DEPTH_TEST);
 
-    // tell webgl to cull faces
-    gl.enable(gl.CULL_FACE);
-
     // Tell it to use our program (pair of shaders)
     gl.useProgram(program);
 
@@ -289,29 +293,24 @@ function main() {
     gl.bindVertexArray(vao);
 
     // Compute the matrix
-    var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-    var zNear = 1;
-    var zFar = 2000;
-    var projectionMatrix = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
+    var scaleFactor = 2.5;
+    var size = 80 * scaleFactor;
+    var x = gl.canvas.clientWidth / 2 - size / 2;
+    var y = gl.canvas.clientHeight - size - 60;
+    gridContainer.style.left = (x - 50 * scaleFactor) + 'px';
+    gridContainer.style.top  = (y - 50 * scaleFactor) + 'px';
+    gridContainer.style.width  = (scaleFactor * 400) + 'px';
+    gridContainer.style.height = (scaleFactor * 300) + 'px';
 
-    var cameraPosition = [0, 0, 2];
-    var up = [0, 1, 0];
-    var target = [0, 0, 0];
-
-    // Compute the camera's matrix using look at.
-    var cameraMatrix = m4.lookAt(cameraPosition, target, up);
-
-    // Make a view matrix from the camera matrix.
-    var viewMatrix = m4.inverse(cameraMatrix);
-
-    var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
+    var matrix = m4.orthographic(0, gl.canvas.clientWidth, gl.canvas.clientHeight, 0, -1, 1);
+    matrix = m4.translate(matrix, x, y, 0);
+    matrix = m4.scale(matrix, size, size, 1);
+    matrix = m4.translate(matrix, 0.5, 0.5, 0);
 
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
-
-    var matrix = m4.translate(viewProjectionMatrix, 0.50, 0, 0);
 
     // Set the matrix.
     gl.uniformMatrix4fv(matrixLocation, false, matrix);
@@ -328,12 +327,12 @@ function main() {
 // with the values that define plane
 function setGeometry(gl) {
   var positions = new Float32Array([
+      -0.5, -0.5,  0.5,
       -0.5,  0.5,  0.5,
-      -0.5, -0.5,  0.5,
-       0.5,  0.5,  0.5,
-      -0.5, -0.5,  0.5,
        0.5, -0.5,  0.5,
+      -0.5,  0.5,  0.5,
        0.5,  0.5,  0.5,
+       0.5, -0.5,  0.5,
   ]);
 
   gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
