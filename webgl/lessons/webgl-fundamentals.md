@@ -26,7 +26,7 @@ Nearly all of the entire WebGL API is about setting up state for these pairs of 
 For each thing you want to draw you setup a bunch of state then execute a pair of functions by calling
 `gl.drawArrays` or `gl.drawElements` which executes your shaders on the GPU.
 
-Any data you want those functions to have accesse to must be provided to the GPU. There are 4 ways
+Any data you want those functions to have access to must be provided to the GPU. There are 4 ways
 a shader can receive data.
 
 1. Attributes, Buffers, and Vertex Arrays
