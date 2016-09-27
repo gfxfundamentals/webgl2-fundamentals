@@ -4,15 +4,26 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     eslint: {
-      target: [
-        'webgl/resources/webgl-utils.js',
-        'webgl/resources/primitives.js',
-        'webgl/resources/2d-math.js',
-        'webgl/resources/3d-math.js',
-      ],
-      options: {
-        config: 'build/conf/eslint.json',
-        //rulesdir: ['build/rules'],
+      lib: {
+        src: [
+          'webgl/resources/webgl-utils.js',
+          'webgl/resources/webgl-lessons-helper.js',
+          'webgl/resources/primitives.js',
+          'webgl/resources/2d-math.js',
+          'webgl/resources/3d-math.js',
+        ],
+        options: {
+          config: 'build/conf/eslint.json',
+          //rulesdir: ['build/rules'],
+        },
+      },
+      examples: {
+        src: [
+          'webgl/*.html',
+        ],
+        options: {
+          configFile: 'build/conf/eslint-examples.json',
+        },
       },
     },
     jsdoc: {
