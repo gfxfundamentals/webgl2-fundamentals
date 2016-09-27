@@ -130,6 +130,8 @@ function main() {
       texcoordAttributeLocation, size, type, normalize, stride, offset);
 
   var allocateFBTexture = true;
+  var framebufferWidth;   // set at render time
+  var framebufferHeight;  // set at render time
   var framebuffer = gl.createFramebuffer();
   var fbTexture = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, fbTexture);
@@ -178,14 +180,13 @@ function main() {
     time *= 0.001;  // convert to seconds
 
     if (webglUtils.resizeCanvasToDisplaySize(gl.canvas, window.devicePixelRatio) || allocateFBTexture) {
-      allocateFBTeture = false;
-      var framebufferWidth = gl.canvas.clientWidth / 4;
-      var framebufferHeight = gl.canvas.clientHeight / 4;
+      allocateFBTexture = false;
+      framebufferWidth = gl.canvas.clientWidth / 4;
+      framebufferHeight = gl.canvas.clientHeight / 4;
       gl.bindTexture(gl.TEXTURE_2D, fbTexture);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, framebufferWidth, framebufferHeight,
                     0, gl.RGBA, gl.UNSIGNED_BYTE, null);
     }
-
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
     gl.viewport(0, 0, framebufferWidth, framebufferHeight);

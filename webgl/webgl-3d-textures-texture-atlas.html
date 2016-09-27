@@ -151,7 +151,6 @@ function main() {
     gl.generateMipmap(gl.TEXTURE_2D);
   });
 
-
   function degToRad(d) {
     return d * Math.PI / 180;
   }
@@ -177,6 +176,9 @@ function main() {
     then = time;
 
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
+    // Tell WebGL how to convert from clip space to pixels
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
     // Animate the rotation
     modelYRotationRadians += -0.7 * deltaTime;

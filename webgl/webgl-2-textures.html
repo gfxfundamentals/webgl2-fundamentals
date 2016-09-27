@@ -213,6 +213,8 @@ function render(images) {
   // Note: we're assuming both images are the same size.
   setRectangle(gl, 0, 0, images[0].width, images[0].height);
 
+  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
   // Tell WebGL how to convert from clip space to pixels
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
