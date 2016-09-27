@@ -334,7 +334,7 @@ In nearly all of these samples the canvas size is 400x300 pixels if the sample i
 but stretches to fill the available space if it's in side an iframe like it is on this page.
 By letting CSS determine the size and then adjusting to match we easily handle both of these cases.
 
-    webglUtils.resizeCanvasToMatchDisplaySize(gl.canvas);
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
 We need to tell WebGL how to convert from the clip space
 values we'll be setting `gl_Position` to back into pixels, often called screen space.
