@@ -141,7 +141,7 @@ At draw time
         sphereYRotation);
 
     // Set the uniforms we just computed
-    webglUtils.setUniforms(programInfo.uniformSetters, sphereUniforms);
+    webglUtils.setUniforms(programInfo, sphereUniforms);
 
     webglUtils.drawBufferInfo(gl, sphereBufferInfo);
 
@@ -157,7 +157,7 @@ At draw time
         cubeYRotation);
 
     // Set the uniforms we just computed
-    webglUtils.setUniforms(programInfo.uniformSetters, cubeUniforms);
+    webglUtils.setUniforms(programInfo, cubeUniforms);
 
     webglUtils.drawBufferInfo(gl, cubeBufferInfo);
 
@@ -173,7 +173,7 @@ At draw time
         coneYRotation);
 
     // Set the uniforms we just computed
-    webglUtils.setUniforms(programInfo.uniformSetters, coneUniforms);
+    webglUtils.setUniforms(programInfo, coneUniforms);
 
     webglUtils.drawBufferInfo(gl, coneBufferInfo);
 
