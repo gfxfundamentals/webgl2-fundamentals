@@ -37,16 +37,16 @@
 (function(root, factory) {  // eslint-disable-line
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['./webgl-utils', './webgl-3d-math'], factory);
+    define(['./webgl-utils', './3d-math'], factory);
   } else {
     // Browser globals
     root.primitives = factory.call(root);
   }
-}(this, function(webglUtils, math3d) {
+}(this, function(webglUtils, m4) {
   "use strict";
 
   webglUtils = webglUtils || this.webglUtils;
-  math3d = math3d || this.math3d;
+  m4 = m4 || this.m4;
 
   function allButIndices(name) {
     return name !== "indices";
@@ -170,7 +170,7 @@
    * @memberOf module:primitives
    */
   function reorientDirections(array, matrix) {
-    applyFuncToV3Array(array, matrix, math3d.transformDirection);
+    applyFuncToV3Array(array, matrix, m4.transformDirection);
     return array;
   }
 
@@ -196,7 +196,7 @@
    * @memberOf module:primitives
    */
   function reorientPositions(array, matrix) {
-    applyFuncToV3Array(array, matrix, math3d.transformPoint);
+    applyFuncToV3Array(array, matrix, m4.transformPoint);
     return array;
   }
 
@@ -332,7 +332,7 @@
     depth = depth || 1;
     subdivisionsWidth = subdivisionsWidth || 1;
     subdivisionsDepth = subdivisionsDepth || 1;
-    matrix = matrix || math3d.makeIdentity();
+    matrix = matrix || m4.makeIdentity();
 
     var numVertices = (subdivisionsWidth + 1) * (subdivisionsDepth + 1);
     var positions = webglUtils.createAugmentedTypedArray(3, numVertices);
