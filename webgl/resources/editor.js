@@ -90,9 +90,14 @@ function parseHTML(url, html) {
   var bodyRE = /<body>([^]*?)<\/body>/i;
   var inlineScriptRE = /<script>([^]*?)<\/script>/i;
   var externalScriptRE = /<script\s*src\s*=\s*"(.*?)"\s*>\s*<\/script>/ig;
+  var hasCanvasInCSSRE = /canvas/;
+  var hasCanvasStyleInHTMLRE = /<canvas[^>]+?style[^>]+?>/;
+  var cssLinkRE = /<link ([^>]+?)>/;
+  var isCSSLinkRE = /type="text\/css"|rel="stylesheet"/;
+  var hrefRE = /href="([^"]+)"/;
 
   var obj = { html: html };
-  htmlParts.css.source = getHTMLPart(styleRE, obj, '<style>${css}</style>');
+  htmlParts.css.source = getHTMLPart(styleRE, obj, '<style>\n${css}</style>');
   htmlParts.html.source = getHTMLPart(bodyRE, obj, '<body>${html}</body>');
   htmlParts.js.source = getHTMLPart(inlineScriptRE, obj, '<script>${js}</script>');
   html = obj.html;
@@ -104,6 +109,40 @@ function parseHTML(url, html) {
   });
 
   htmlParts.html.source += scripts + '\n';
+
+  // add style section if there is non
+  if (html.indexOf("${css}") < 0) {
+    html = html.replace("</head>", "<style>\n${css}</style>\n</head>");
+  }
+
+  // add css if there is none
+  if (!hasCanvasInCSSRE.test(htmlParts.css.source) && !hasCanvasStyleInHTMLRE.test(htmlParts.html.source)) {
+    htmlParts.css.source = `body {
+  margin: 0;
+}
+canvas {
+  width: 100vw;
+  height: 100vh;
+  display: block;
+}
+` + htmlParts.css.source;
+  }
+
+  var links = '';
+  html = html.replace(cssLinkRE, function(p0, p1) {
+    if (isCSSLinkRE.test(p1)) {
+      var m = hrefRE.exec(p1);
+      if (m) {
+        links += `@import url("${m[1]}");\n`;
+      }
+      return '';
+    } else {
+      return p0;
+    }
+  });
+
+  htmlParts.css.source = links + htmlParts.css.source;
+
   g.html = html;
 }
 
@@ -331,7 +370,8 @@ function start() {
   var query = getQuery();
   var parentQuery = getQuery(window.parent.location.search);
   var isSmallish = window.navigator.userAgent.match(/Android|iPhone|iPod|Windows Phone/i);
-  if (isSmallish || parentQuery.noEditor) {
+  var isEdge = window.navigator.userAgent.match(/Edge/i);
+  if (isEdge || isSmallish || parentQuery.editor === 'false') {
     var url = query.url;
     window.location.href = url;
   } else {
