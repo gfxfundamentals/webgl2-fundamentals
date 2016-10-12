@@ -9,7 +9,7 @@ canvas { border: 1px solid black; }
 </head>
 <body>
 <h1 class="description">3D in WebGL</h1>
-<p><canvas id="c" width="400" height="300"></canvas></p>
+<p><canvas id="c"></canvas></p>
 <p class="description"><a href="3d-in-canvas.html">compare to 3D in Canvas</a></p>
 </body>
 <script src="../../resources/webgl-utils.js"></script>
@@ -17,26 +17,6 @@ canvas { border: 1px solid black; }
 <script src="3d-math.js"></script>
 <script>
 "use strict";
-
-var vs = `#version 300 es
-
-in vec4 a_position;
-uniform mat4 u_worldViewProjection;
-
-void main() {
-   gl_Position = u_worldViewProjection * a_position;
-}
-`;
-
-var fs = `#version 300 es
-precision mediump float;
-
-out vec4 outColor;
-
-void main() {
-   outColor = vec4(0,0,0,1);
-}
-`;
 
 var m = ThreeDMath;
 window.onload = main;
@@ -68,22 +48,19 @@ function main() {
   ];
 
   var canvas = document.getElementById("c");
-  webglLessonsHelper.setupLesson(canvas);
-  var gl = canvas.getContext("webgl2");
+  var gl = canvas.getContext("webgl");
   if (!gl) {
-    webglLessonsHelper.showNeedWebGL2(canvas);
+    webglLessonsHelper.showNeedWebGL(canvas);
     return;
   }
 
-  var program = webglUtils.createProgramFromSources(gl, [vs, fs]);
+  var program = webglUtils.createProgramFromScripts(
+      gl, ["2d-vertex-shader", "2d-fragment-shader"]);
   gl.useProgram(program);
 
   var positionLoc = gl.getAttribLocation(program, "a_position");
   var worldViewProjectionLoc =
       gl.getUniformLocation(program, "u_worldViewProjection");
-
-  var vao = gl.createVertexArray();
-  gl.bindVertexArray(vao);
 
   var buffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -104,10 +81,13 @@ function main() {
   function render(clock) {
     clock *= 0.001;
 
-    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+    var scale = 4;
 
-    // Tell WebGL how to convert from clip space to pixels
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas, window.devicePixelRatio);
+
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+    gl.clear(gl.COLOR_BUFFER_BIT);
 
     var fieldOfView = Math.PI * 0.25;
     var aspect = canvas.clientWidth / canvas.clientHeight;
@@ -129,6 +109,21 @@ function main() {
     requestAnimationFrame(render);
   }
   requestAnimationFrame(render);
+}
+</script>
+<!-- vertex shader -->
+<script id="2d-vertex-shader" type="x-shader/x-vertex">
+attribute vec4 a_position;
+uniform mat4 u_worldViewProjection;
+
+void main() {
+   gl_Position = u_worldViewProjection * a_position;
+}
+</script>
+<!-- fragment shader -->
+<script id="2d-fragment-shader" type="x-shader/x-fragment">
+void main() {
+   gl_FragColor = vec4(0,0,0,1);
 }
 </script>
 </html>

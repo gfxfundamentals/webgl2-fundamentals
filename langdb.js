@@ -1,5 +1,8 @@
 window.langDB = {
   "articles": {
+    "webgl-setup-and-installation.html": {
+      "en": true
+    },
     "webgl1-to-webgl2-fundamentals.html": {
       "en": true
     },
@@ -30,19 +33,19 @@ window.langDB = {
     "webgl-text-glyphs.html": {
       "en": true
     },
-    "webgl-text-texture.html": {
-      "en": true
-    },
-    "webgl-text-html.html": {
-      "en": true
-    },
     "webgl-drawing-multiple-things.html": {
+      "en": true
+    },
+    "webgl-text-canvas2d.html": {
       "en": true
     },
     "webgl-scene-graph.html": {
       "en": true
     },
-    "webgl-text-canvas2d.html": {
+    "webgl-text-texture.html": {
+      "en": true
+    },
+    "webgl-text-html.html": {
       "en": true
     },
     "webgl-resizing-the-canvas.html": {
@@ -75,19 +78,19 @@ window.langDB = {
     "webgl-3d-orthographic.html": {
       "en": true
     },
+    "webgl-boilerplate.html": {
+      "en": true
+    },
     "webgl-fundamentals.html": {
       "en": true
     },
-    "webgl-and-alpha.html": {
-      "en": true
-    },
-    "webgl-image-processing-continued.html": {
+    "webgl-how-it-works.html": {
       "en": true
     },
     "webgl-image-processing.html": {
       "en": true
     },
-    "webgl-how-it-works.html": {
+    "webgl-image-processing-continued.html": {
       "en": true
     },
     "webgl-2d-translation.html": {
@@ -102,7 +105,7 @@ window.langDB = {
     "webgl-2d-matrices.html": {
       "en": true
     },
-    "webgl-boilerplate.html": {
+    "webgl-and-alpha.html": {
       "en": true
     }
   },
