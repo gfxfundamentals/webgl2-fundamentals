@@ -278,7 +278,7 @@ if (window.$) {
     main();
   });
 } else {
-  window.addEventListener('load', main);
+  main();
 }
 
 
