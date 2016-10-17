@@ -76,7 +76,7 @@ Then we need to provide 3D data.
   ...
 
   // Fill the current ARRAY_BUFFER buffer
-// with the values that define a letter 'F'.
+  // with the values that define a letter 'F'.
   function setGeometry(gl) {
     gl.bufferData(
         gl.ARRAY_BUFFER,
@@ -314,8 +314,8 @@ And here's that sample.
 The first problem we have is that our geometry is a flat F which makes it
 hard to see any 3D.  To fix that let's expand the geometry to 3D.  Our
 current F is made of 3 rectangles, 2 triangles each.  To make it 3D will
-require a total of 16 rectangles. the 3 rectangles on the front, 3 on the back,
-1 on the left, 4 on the right, 3 on the bottoms
+require a total of 16 rectangles.  the 3 rectangles on the front, 3 on the
+back, 1 on the left, 4 on the right, 3 on the bottoms
 
 <img class="webgl_center" width="300" src="resources/3df.svg" />
 
@@ -538,13 +538,17 @@ We can turn on this feature nearly as simply as we turned on culling with
 
 We also need to clear the depth buffer back to 1.0 before we start drawing.
 
-<pre class="prettyprint showlinemods">
+```
   // Draw the scene.
   function drawScene() {
+
+    ...
+
     // Clear the canvas AND the depth buffer.
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
     ...
-</pre>
+```
 
 And now we get
 
