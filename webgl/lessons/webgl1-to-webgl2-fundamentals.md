@@ -4,66 +4,6 @@ Description: The differences between WebGLFundamentals.org and WebGL2Fundamental
 If you previously read [webglfundamentals.org](http://webglfundamentals.org)
 there are some differences that you should be aware of.
 
-## Matrix Math
-
-The biggest difference is the a change to the 2d and 3d math libraries.
-On webglfundamentals.org the libraries were standalone functions like
-
-    makeTranslation
-    makeScale
-
-On webgl2fundamentals.org the libraries have been changed
-to be more library like as in
-
-    m4.translation
-    m4.scale
-
-The most important difference though is the order of multiplication
-has changed. On webglfundamentals.org you might see multiplication like
-this
-
-    var matrix = makeIdentity();
-    matrix = matrixMultiply(matrix, worldMatrix);
-    matrix = matrixMultiply(matrix, viewMatrix);
-    matrix = matrixMultiply(matrix, projectionMatrix);
-
-On webgl2fundamentals.org that has order has changed
-
-    var matrix = m4.identity();
-    matrix = m4.multiply(matrix, projectionMatrix);
-    matrix = m4.multiply(matrix, viewMatrix);
-    matrix = m4.multiply(matrix, worldMatrix);
-
-It was pointed out to me this is the more common
-order.
-
-On top of that I've added multiply in place style
-functions. In other words, on webglfundamentals.org
-you might see this
-
-    var translationMatrix = makeTranslation(tx, ty, tz);
-    var rotationMatrix = makeZRotation(angle);
-    var scaleMatrix = makeScale(sx, sy, sz);
-
-    var worldMatrix = makeIdentity();
-    worldMatrix = matrixMultiply(matrix, scaleMatrix);
-    worldMatrix = matrixMultiply(matrix, rotationMatrix);
-    worldMatrix = matrixMultiply(matrix, translationMatrix);
-
-On webgl2fundamentals.org that would be shortened to this
-
-    var worldMatrix = m4.identity();
-    worldMatrix = m4.translate(worldMatrix, tx, ty, tz);
-    worldMatrix = m4.zRotate(worldMatrix, angle);
-    worldMatrix = m4.scale(worldMatrix, sx, sy, sz);
-
-Note the difference in the names of the functions.
-The functions `m4.translation`, `m4.zRotation`, `m4.scaling`
-repectively make a translation, z rotation, and scaling matrix.
-Where as, the functions `m4.translate`, `m4.zRotate`, `m4.scale`
-are verbs and translate, z rotate, and scale the matrix
-passed into them.
-
 ## Multiline Template Literals
 
 On webglfundamentals.org nearly all scripts are stored
