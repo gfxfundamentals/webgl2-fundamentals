@@ -1021,7 +1021,7 @@
    * @return {Vector4} dst or new Vector4 if not provided
    * @memberOf module:webgl-3d-math
    */
-  function transformVector(v, m, dst) {
+  function transformVector(m, v, dst) {
     dst = dst || new Float32Array(4);
     for (var i = 0; i < 4; ++i) {
       dst[i] = 0.0;

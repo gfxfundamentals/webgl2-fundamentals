@@ -243,7 +243,7 @@ function setGeometry(gl) {
   var positions = new Float32Array(HeadData.positions);
   var matrix = m4.scale(m4.yRotation(Math.PI), 6, 6, 6);
   for (var ii = 0; ii < positions.length; ii += 3) {
-    var vector = m4.transformVector([positions[ii + 0], positions[ii + 1], positions[ii + 2], 1], matrix);
+    var vector = m4.transformVector(matrix, [positions[ii + 0], positions[ii + 1], positions[ii + 2], 1]);
     positions[ii + 0] = vector[0];
     positions[ii + 1] = vector[1];
     positions[ii + 2] = vector[2];
