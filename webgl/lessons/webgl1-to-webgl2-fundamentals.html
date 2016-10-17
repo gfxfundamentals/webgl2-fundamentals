@@ -69,51 +69,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <div class="col-sm-8 lesson-main">
       <p>If you previously read <a href="http://webglfundamentals.org">webglfundamentals.org</a>
 there are some differences that you should be aware of.</p>
-<h2 id="matrix-math">Matrix Math</h2>
-<p>The biggest difference is the a change to the 2d and 3d math libraries.
-On webglfundamentals.org the libraries were standalone functions like</p>
-<pre><code>makeTranslation
-makeScale
-</code></pre><p>On webgl2fundamentals.org the libraries have been changed
-to be more library like as in</p>
-<pre><code>m4.translation
-m4.scale
-</code></pre><p>The most important difference though is the order of multiplication
-has changed. On webglfundamentals.org you might see multiplication like
-this</p>
-<pre><code>var matrix = makeIdentity();
-matrix = matrixMultiply(matrix, worldMatrix);
-matrix = matrixMultiply(matrix, viewMatrix);
-matrix = matrixMultiply(matrix, projectionMatrix);
-</code></pre><p>On webgl2fundamentals.org that has order has changed</p>
-<pre><code>var matrix = m4.identity();
-matrix = m4.multiply(matrix, projectionMatrix);
-matrix = m4.multiply(matrix, viewMatrix);
-matrix = m4.multiply(matrix, worldMatrix);
-</code></pre><p>It was pointed out to me this is the more common
-order.</p>
-<p>On top of that I&#39;ve added multiply in place style
-functions. In other words, on webglfundamentals.org
-you might see this</p>
-<pre><code>var translationMatrix = makeTranslation(tx, ty, tz);
-var rotationMatrix = makeZRotation(angle);
-var scaleMatrix = makeScale(sx, sy, sz);
-
-var worldMatrix = makeIdentity();
-worldMatrix = matrixMultiply(matrix, scaleMatrix);
-worldMatrix = matrixMultiply(matrix, rotationMatrix);
-worldMatrix = matrixMultiply(matrix, translationMatrix);
-</code></pre><p>On webgl2fundamentals.org that would be shortened to this</p>
-<pre><code>var worldMatrix = m4.identity();
-worldMatrix = m4.translate(worldMatrix, tx, ty, tz);
-worldMatrix = m4.zRotate(worldMatrix, angle);
-worldMatrix = m4.scale(worldMatrix, sx, sy, sz);
-</code></pre><p>Note the difference in the names of the functions.
-The functions <code>m4.translation</code>, <code>m4.zRotation</code>, <code>m4.scaling</code>
-repectively make a translation, z rotation, and scaling matrix.
-Where as, the functions <code>m4.translate</code>, <code>m4.zRotate</code>, <code>m4.scale</code>
-are verbs and translate, z rotate, and scale the matrix
-passed into them.</p>
 <h2 id="multiline-template-literals">Multiline Template Literals</h2>
 <p>On webglfundamentals.org nearly all scripts are stored
 in non-javascript <code>&lt;script&gt;</code> tags.</p>
