@@ -401,8 +401,8 @@ is the same as
       mix(v1.z, v2.z, f),
       mix(v1.w, v2.w, f));
 
-You can see a list of all the GLSL functions on the last page of [the WebGL
-Reference Card](https://www.khronos.org/files/webgl/webgl-reference-card-2_0.pdf).
+You can see a list of all the GLSL functions on the last 3 pages of [the OpenGL ES 3.0
+Reference Card](https://www.khronos.org/files/opengles3-quick-reference-card.pdf)
 If you like really dry and verbose stuff you can try
 [the GLSL ES 3.00 spec](https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf).
 
