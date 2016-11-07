@@ -179,7 +179,7 @@ var m4 = {
     ];
   },
 
-  xRotation: function(angleInRadians) {
+  zRotation: function(angleInRadians) {
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
 
@@ -633,5 +633,3 @@ though, even though we don't supply a 'w' it defaults to 1 which is what
 we need for the matrix math to work.
 </p>
 </div>
-
-
