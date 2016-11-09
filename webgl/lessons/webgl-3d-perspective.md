@@ -64,7 +64,7 @@ void main() {
 *  vec4 position = u_matrix * a_position;
 
   // Adjust the z to divide by
-+  float zToDivideBy = (1.0 + position.z) * u_fudgeFactor;
++  float zToDivideBy = 1.0 + position.z * u_fudgeFactor;
 
   // Divide x and y by z.
 *  gl_Position = vec4(position.xy / zToDivideBy, position.zw);
@@ -367,5 +367,3 @@ see 2 units when it's at zNear we need to move it pretty far away from the origi
 Now it represents -1 to +1 units across.
 </p>
 </div>
-
-
