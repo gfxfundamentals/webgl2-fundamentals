@@ -63,7 +63,7 @@ the browser to stretch the canvas to fill the window with CSS. Example
             height: 100vh;
             display: block;
           }
-        <style>
+        </style>
       </head>
       <body>
         <canvas id="c"></canvas>
