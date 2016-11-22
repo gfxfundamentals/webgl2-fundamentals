@@ -313,9 +313,9 @@ to the attribute. In other words now this attribute is bound to
 `positionBuffer`. That means we're free to bind something else to the `ARRAY_BUFFER` bind point.
 The attribute will continue to use `positionBuffer`.
 
-note that from the point of view of our GLSL vertex shader the `a_position` attribute was a `vec4`
+Note that from the point of view of our GLSL vertex shader the `a_position` attribute was a `vec4`
 
-    attribute vec4 a_position;
+    in vec4 a_position;
 
 `vec4` is a 4 float value. In JavaScript you could think of it something like
 `a_position = {x: 0, y: 0, z: 0, w: 0}`. Above we set `size = 2`. Attributes
