@@ -369,7 +369,7 @@ var Builder = function(outBaseDir) {
       }
       return Promise.resolve();
     }).then(function() {
-      applyTemplateToFile("build/templates/index.template", path.join(options.lessons, "index.md"), path.join(options.lessons, "index.html"), {
+      applyTemplateToFile("build/templates/index.template", path.join(options.lessons, "index.md"), path.join(g_outBaseDir, options.lessons, "index.html"), {
         table_of_contents: "<ul>" + toc.join("\n") + "</ul>",
         templateOptions: g_langInfo,
       });
@@ -408,7 +408,7 @@ var Builder = function(outBaseDir) {
     copyFile(path.join(g_outBaseDir, "webgl/lessons/atom.xml"), path.join(g_outBaseDir, "atom.xml"));
     copyFile(path.join(g_outBaseDir, "webgl/lessons/index.html"), path.join(g_outBaseDir, "index.html"));
 
-    applyTemplateToFile("build/templates/index.template", "contributors.md", "contributors.html", {
+    applyTemplateToFile("build/templates/index.template", "contributors.md", path.join(g_outBaseDir, "contributors.html"), {
       table_of_contents: "",
       templateOptions: "",
     });
