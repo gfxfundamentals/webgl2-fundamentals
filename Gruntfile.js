@@ -1,6 +1,22 @@
 "use strict";
 
+const path = require('path');
+const fs = require('fs');
+
 module.exports = function(grunt) {
+
+  const s_ignoreRE = /\.(md|py|sh|enc)$/i;
+  function noMds(filename) {
+    return !s_ignoreRE.test(filename);
+  }
+
+  function notFolder(filename) {
+    return !fs.statSync(filename).isDirectory();
+  }
+
+  function noMdsNoFolders(filename) {
+    return noMds(filename) && notFolder(filename);
+  }
 
   grunt.initConfig({
     eslint: {
@@ -36,22 +52,33 @@ module.exports = function(grunt) {
           'docs.md',
         ],
         options: {
-          destination: 'docs',
+          destination: 'out/docs',
           configure: 'build/conf/jsdoc.conf.json',
           template: 'build/jsdoc-template/template',
         },
       },
     },
+    copy: {
+      main: {
+        files: [
+          { expand: false, src: '*', dest: 'out/', filter: noMdsNoFolders, },
+          { expand: true, src: 'webgl/**', dest: 'out/', filter: noMds, },
+          { expand: true, src: 'monaco-editor/**', dest: 'out/', },
+          { expand: true, src: '3rdparty/**', dest: 'out/', },
+        ],
+      },
+    },
     clean: [
-      'docs',
+      'out',
     ],
   });
 
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-jsdoc');
 
-  grunt.registerTask('build', function() {
+  grunt.registerTask('buildlessons', function() {
     var buildStuff = require('./build/js/build');
     var finish = this.async();
     buildStuff().then(function() {
@@ -59,6 +86,8 @@ module.exports = function(grunt) {
     }).done();
   });
 
-  grunt.registerTask('default', ['eslint', 'build', 'clean', 'jsdoc']);
+  grunt.registerTask('build', ['clean', 'copy', 'buildlessons']);
+
+  grunt.registerTask('default', ['eslint', 'build', 'jsdoc']);
 };
 

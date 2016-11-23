@@ -131,13 +131,14 @@ Handlebars.registerHelper('image', function(options) {
   return templateManager.apply("build/templates/image.template", options.hash);
 });
 
-var Builder = function() {
+var Builder = function(outBaseDir) {
 
   var g_articlesByLang = {};
   var g_articles = [];
   var g_langInfo;
   var g_langs;
   var g_langDB = {};
+  var g_outBaseDir = outBaseDir;
 
   var extractHeader = (function() {
     var headerRE = /([A-Z0-9_-]+): (.*?)$/i;
@@ -219,15 +220,16 @@ var Builder = function() {
     var html = marked(info.content);
     html = insertHandlebars(info, html);
     html = replaceParams(html, [opt_extra, g_langInfo]);
+    const relativeOutName = outFileName.replace(/\\/g, '/').substring(g_outBaseDir.length);
     metaData['content'] = html;
     metaData['langs'] = g_langs;
     metaData['src_file_name'] = contentFileName.replace(/\\/g, '/');
-    metaData['dst_file_name'] = outFileName.replace(/\\/g, '/');
+    metaData['dst_file_name'] = relativeOutName;
     metaData['basedir'] = "";
     metaData['toc'] = opt_extra.toc;
     metaData['templateOptions'] = opt_extra.templateOptions;
     metaData['langInfo'] = g_langInfo;
-    metaData['url'] = "http://webgl2fundamentals.org/" + outFileName.replace(/\\/g, '/');
+    metaData['url'] = "http://webgl2fundamentals.org/" + relativeOutName;
     metaData['screenshot'] = "http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg";
     var basename = path.basename(contentFileName, ".md");
     [".jpg", ".png"].forEach(function(ext) {
@@ -247,7 +249,7 @@ var Builder = function() {
     files.forEach(function(fileName) {
       var ext = path.extname(fileName);
       var baseName = fileName.substr(0, fileName.length - ext.length);
-      var outFileName = baseName + ".html";
+      var outFileName = path.join(outBaseDir, baseName + ".html");
       applyTemplateToFile(templatePath, fileName, outFileName, extra);
     });
 
@@ -361,7 +363,7 @@ var Builder = function() {
       });
 
       try {
-        writeFileIfChanged(path.join(options.lessons, "atom.xml"), feed.render('atom-1.0'));
+        writeFileIfChanged(path.join(g_outBaseDir, options.lessons, "atom.xml"), feed.render('atom-1.0'));
       } catch (err) {
         return Promise.reject(err);
       }
@@ -401,10 +403,10 @@ var Builder = function() {
       langs: g_langDB,
     };
     var langJS = "window.langDB = " + JSON.stringify(langInfo, null, 2);
-    writeFileIfChanged("langdb.js", langJS);
-    writeFileIfChanged("sitemap.xml", sm.toString());
-    copyFile("webgl/lessons/atom.xml",  "atom.xml");
-    copyFile("webgl/lessons/index.html",  "index.html");
+    writeFileIfChanged(path.join(g_outBaseDir, "langdb.js"), langJS);
+    writeFileIfChanged(path.join(g_outBaseDir, "sitemap.xml"), sm.toString());
+    copyFile(path.join(g_outBaseDir, "webgl/lessons/atom.xml"), path.join(g_outBaseDir, "atom.xml"));
+    copyFile(path.join(g_outBaseDir, "webgl/lessons/index.html"), path.join(g_outBaseDir, "index.html"));
 
     applyTemplateToFile("build/templates/index.template", "contributors.md", "contributors.html", {
       table_of_contents: "",
@@ -415,7 +417,7 @@ var Builder = function() {
 
 };
 
-var b = new Builder();
+var b = new Builder("out");
 
 var readdirs = function(dirpath) {
   var dirsOnly = function(filename) {
