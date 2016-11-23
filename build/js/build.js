@@ -245,7 +245,7 @@ var Builder = function(outBaseDir) {
   };
 
   var applyTemplateToFiles = function(templatePath, filesSpec, extra) {
-    var files = glob.sync(filesSpec);
+    var files = glob.sync(filesSpec).sort();
     files.forEach(function(fileName) {
       var ext = path.extname(fileName);
       var baseName = fileName.substr(0, fileName.length - ext.length);
@@ -299,11 +299,6 @@ var Builder = function(outBaseDir) {
     g_langInfo = hanson.parse(fs.readFileSync(path.join(options.lessons, "langinfo.hanson"), {encoding: "utf8"}));
 
     applyTemplateToFiles(options.template, path.join(options.lessons, "webgl*.md"), options);
-
-    var toc = [];
-    g_articles.forEach(function(article) {
-      toc.push('<li><a href="' + article.dst_file_name + '">' + article.title + '</a></li>');
-    });
 
     var tasks = g_articles.map(function(article, ndx) {
       return function() {
@@ -369,8 +364,10 @@ var Builder = function(outBaseDir) {
       }
       return Promise.resolve();
     }).then(function() {
+      // this used to insert a table of contents
+      // but it was useless being auto-generated
       applyTemplateToFile("build/templates/index.template", path.join(options.lessons, "index.md"), path.join(g_outBaseDir, options.lessons, "index.html"), {
-        table_of_contents: "<ul>" + toc.join("\n") + "</ul>",
+        table_of_contents: "",
         templateOptions: g_langInfo,
       });
       return Promise.resolve();
