@@ -1,9 +1,9 @@
 window.langDB = {
   "articles": {
-    "webgl-setup-and-installation.html": {
+    "webgl-drawing-multiple-things.html": {
       "en": true
     },
-    "webgl-drawing-multiple-things.html": {
+    "webgl-2-textures.html": {
       "en": true
     },
     "webgl-2d-matrices.html": {
@@ -81,7 +81,7 @@ window.langDB = {
     "webgl-scene-graph.html": {
       "en": true
     },
-    "webgl-2-textures.html": {
+    "webgl-setup-and-installation.html": {
       "en": true
     },
     "webgl-shaders-and-glsl.html": {
