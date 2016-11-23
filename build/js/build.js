@@ -3,18 +3,19 @@ module.exports = function () { // wrapper in case we're in module_context mode
 
 "use strict";
 
-var args       = require('minimist')(process.argv.slice(2));
-var cache      = new (require('inmemfilecache'));
-var Feed       = require('feed');
-var fs         = require('fs');
-var glob       = require('glob');
-var Handlebars = require('handlebars');
-var hanson     = require('hanson');
-var marked     = require('marked');
-var path       = require('path');
-var Promise    = require('promise');
-var sitemap    = require('sitemap');
-var utils      = require('./utils');
+const args       = require('minimist')(process.argv.slice(2));
+const cache      = new (require('inmemfilecache'));
+const Feed       = require('feed');
+const fs         = require('fs');
+const glob       = require('glob');
+const Handlebars = require('handlebars');
+const hanson     = require('hanson');
+const marked     = require('marked');
+const path       = require('path');
+const Promise    = require('promise');
+const sitemap    = require('sitemap');
+const utils      = require('./utils');
+const moment     = require('moment');
 
 //process.title = "build";
 
@@ -300,7 +301,17 @@ var Builder = function(outBaseDir) {
 
     applyTemplateToFiles(options.template, path.join(options.lessons, "webgl*.md"), options);
 
-    var tasks = g_articles.map(function(article, ndx) {
+    function utcMomentFromGitLog(result) {
+      const dateStr = result.stdout.split("\n")[0].trim();
+      let utcDateStr = dateStr
+        .replace(/"/g, "")   // WTF to these quotes come from!??!
+        .replace(" ", "T")
+        .replace(" ", "")
+        .replace(/(\d\d)$/, ':$1');
+      return moment.utc(utcDateStr);
+    }
+
+    const tasks = g_articles.map((article, ndx) => {
       return function() {
         return executeP('git', [
           'log',
@@ -308,21 +319,32 @@ var Builder = function(outBaseDir) {
           '--name-only',
           '--diff-filter=A',
           article.src_file_name,
-        ]).then(function(result) {
-          var dateStr = result.stdout.split("\n")[0];
-          article.date = new Date(Date.parse(dateStr));
+        ]).then((result) => {
+          article.dateAdded = utcMomentFromGitLog(result);
         });
       };
-    });
+    }).concat(g_articles.map((article, ndx) => {
+       return function() {
+         return executeP('git', [
+           'log',
+           '--format="%ci"',
+           '--name-only',
+           '--max-count=1',
+           article.src_file_name,
+         ]).then((result) => {
+           article.dateModified = utcMomentFromGitLog(result);
+         });
+       };
+    }));
 
     return tasks.reduce(function(cur, next){
         return cur.then(next);
     }, Promise.resolve()).then(function() {
       var articles = g_articles.filter(function(article) {
-        return article.date != undefined;
+        return article.dateAdded != undefined;
       });
       articles = articles.sort(function(a, b) {
-        return a.date > b.date ? -1 : (a.date < b.date ? 1 : 0);
+        return b.dateAdded - a.dateAdded;
       });
 
       var feed = new Feed({
@@ -330,7 +352,9 @@ var Builder = function(outBaseDir) {
         description:    g_langInfo.description,
         link:           g_langInfo.link,
         image:          'http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg',
-        updated:        articles[0].date,
+        date:           articles[0].dateModified.toDate(),
+        published:      articles[0].dateModified.toDate(),
+        updated:        articles[0].dateModified.toDate(),
         author: {
           name:       'WebGL2Fundamenals Contributors',
           link:       'http://webgl2fundamentals.org/contributors.html',
@@ -350,7 +374,8 @@ var Builder = function(outBaseDir) {
           ],
           // contributor: [
           // ],
-          date:           article.date,
+          date:           article.dateModified.toDate(),
+          published:      article.dateAdded.toDate(),
           // image:          posts[key].image
         });
 
