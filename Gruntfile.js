@@ -69,7 +69,7 @@ module.exports = function(grunt) {
       },
     },
     clean: [
-      'out',
+      'out/**/*',
     ],
   });
 
