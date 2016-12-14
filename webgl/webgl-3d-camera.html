@@ -25,6 +25,7 @@ See http://webglfundamentals.org/webgl/lessons/webgl-boilerplate.html
 and http://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
 -->
 <script src="resources/webgl-utils.js"></script>
+<script src="resources/webgl-lessons-ui.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
 <script>
 "use strict";
@@ -149,7 +150,7 @@ function main() {
   drawScene();
 
   // Setup a ui.
-  webglLessonsHelper.setupSlider("#cameraAngle", {value: radToDeg(cameraAngleRadians), slide: updateCameraAngle, min: -360, max: 360});
+  webglLessonsUI.setupSlider("#cameraAngle", {value: radToDeg(cameraAngleRadians), slide: updateCameraAngle, min: -360, max: 360});
 
   function updateCameraAngle(event, ui) {
     cameraAngleRadians = degToRad(ui.value);

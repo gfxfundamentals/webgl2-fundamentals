@@ -26,6 +26,7 @@ See http://webglfundamentals.org/webgl/lessons/webgl-boilerplate.html
 and http://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
 -->
 <script src="resources/webgl-utils.js"></script>
+<script src="resources/webgl-lessons-ui.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
 <script>
 "use strict";
@@ -121,8 +122,8 @@ function main() {
   drawScene();
 
   // Setup a ui.
-  webglLessonsHelper.setupSlider("#x", {slide: updatePosition(0), max: gl.canvas.width });
-  webglLessonsHelper.setupSlider("#y", {slide: updatePosition(1), max: gl.canvas.height});
+  webglLessonsUI.setupSlider("#x", {slide: updatePosition(0), max: gl.canvas.width });
+  webglLessonsUI.setupSlider("#y", {slide: updatePosition(1), max: gl.canvas.height});
 
   function updatePosition(index) {
     return function(event, ui) {
