@@ -74,12 +74,10 @@ all cases.
 
    code like
 
-       setupLesson(canvas);
        var program = createProgramFromScripts(...)
 
    is now
 
-       webglLessonHelper.setupLesson(canvas);
        webglUtils.createProgramFromSources(...);
 
    I hope this makes it more clear what those functions
