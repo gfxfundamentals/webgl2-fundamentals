@@ -41,8 +41,14 @@ Drag effects to re-order
 </body>
 <script src="resources/jquery-1.7.1.min.js"></script>
 <script src="resources/jquery.tablednd_0_5.js"></script>
+<!--
+for most samples webgl-utils only provides shader compiling/linking and
+canvas resizing because why clutter the examples with code that's the same in every sample.
+See http://webgl2fundamentals.org/webgl/lessons/webgl-boilerplate.html
+and http://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+-->
 <script src="resources/webgl-utils.js"></script>
-<script src="resources/webgl-lessons-helper.js"></script>
+<script src="resources/webgl-lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
 <script>
 "use strict";
 
@@ -128,10 +134,8 @@ function render(image) {
   // Get A WebGL context
   /** @type {HTMLCanvasElement} */
   var canvas = document.getElementById("canvas");
-  webglLessonsHelper.setupLesson(canvas);
   var gl = canvas.getContext("webgl2");
   if (!gl) {
-    webglLessonsHelper.showNeedWebGL2(canvas);
     return;
   }
 

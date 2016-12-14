@@ -19,8 +19,15 @@
 </div>
 </body>
 </html>
+<!--
+for most samples webgl-utils only provides shader compiling/linking and
+canvas resizing because why clutter the examples with code that's the same in every sample.
+See http://webgl2fundamentals.org/webgl/lessons/webgl-boilerplate.html
+and http://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+-->
+<script src="../../resources/webgl-lessons-ui.js"></script>
 <script src="../../resources/webgl-utils.js"></script>
-<script src="../../resources/webgl-lessons-helper.js"></script>
+<script src="../../resources/webgl-lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
 <script src="../../resources/2d-math.js"></script>
 <script src="diagram.js"></script>
 <script>
@@ -30,7 +37,7 @@ function main() {
   var ctx = document.getElementById("canvas").getContext("2d");
   var direction = 0;
 
-  webglLessonsHelper.setupSlider("#rotation", {value: m3.radToDeg(direction), slide: updateDirection, min: -70, max: 70 });
+  webglLessonsUI.setupSlider("#rotation", {value: m3.radToDeg(direction), slide: updateDirection, min: -70, max: 70 });
 
   function updateDirection(event, ui) {
     direction = m3.degToRad(ui.value);
