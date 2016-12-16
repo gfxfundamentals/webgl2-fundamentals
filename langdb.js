@@ -1,12 +1,12 @@
 window.langDB = {
   "articles": {
-    "webgl-3d-orthographic.html": {
-      "en": true
-    },
     "webgl-3d-perspective.html": {
       "en": true
     },
     "webgl-drawing-multiple-things.html": {
+      "en": true
+    },
+    "webgl-2d-matrices.html": {
       "en": true
     },
     "webgl-2d-matrix-stack.html": {
@@ -33,10 +33,10 @@ window.langDB = {
     "webgl-3d-lighting-point.html": {
       "en": true
     },
-    "webgl-2-textures.html": {
+    "webgl-3d-orthographic.html": {
       "en": true
     },
-    "webgl-2d-matrices.html": {
+    "webgl-2-textures.html": {
       "en": true
     },
     "webgl-3d-textures.html": {
