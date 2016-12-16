@@ -862,7 +862,7 @@
         }
         var ctx = oldFn.apply(this, arguments);
         if (!ctx && isWebGL) {
-          showNeedWebGL(this);
+          showNeedWebGL2(this);
         }
         return ctx;
       };
