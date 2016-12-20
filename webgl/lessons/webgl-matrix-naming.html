@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/webgl-getting-webgl2.md. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/webgl-matrix-naming.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -34,23 +34,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="How to use WebGL2" />
+<meta property="og:title" content="WebGL Matrix Naming" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="Getting a WebGL2 capable browser" />
-<meta property="og:url" content="http://webgl2fundamentals.org//webgl/lessons/webgl-getting-webgl2.html" />
+<meta property="og:description" content="Common names for matrices" />
+<meta property="og:url" content="http://webgl2fundamentals.org//webgl/lessons/webgl-matrix-naming.html" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@greggman" />
 <meta name="twitter:creator" content="@greggman" />
 <meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="How to use WebGL2" />
-<meta name="twitter:url" content="http://webgl2fundamentals.org//webgl/lessons/webgl-getting-webgl2.html" />
-<meta name="twitter:description" content="Getting a WebGL2 capable browser" />
+<meta name="twitter:title" content="WebGL Matrix Naming" />
+<meta name="twitter:url" content="http://webgl2fundamentals.org//webgl/lessons/webgl-matrix-naming.html" />
+<meta name="twitter:description" content="Common names for matrices" />
 <meta name="twitter:image:src" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>How to use WebGL2</title>
+<title>WebGL Matrix Naming</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/webgl/lessons/resources/base.css" type="text/css" />
 <link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
@@ -63,31 +63,59 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>How to use WebGL2</h1>
+    <h1>WebGL Matrix Naming</h1>
   </div>
   <div class="row">
     <div class="col-sm-8 lesson-main">
-      <p>As of September 13, 2016 WebGL2 is still an experimental web technology.
-It is available in both Firefox 48 and Chrome 53.</p>
-<p>To enable it:</p>
+      <p>This post is a continuation of a series of posts about WebGL. The first
+<a href="webgl-fundamentals.html">started with fundamentals</a> and the previous
+was <a href="webgl-3d-cameras.html">about 3d cameras</a>.</p>
+<p>As the entire site has pointed out pretty much everything about WebGL is
+100% up to you. Except for a few pre-defined names like <code>gl_Position</code>
+almost everything about WebGL is defined by you, the programmer.</p>
+<p>That said there are some common or semi-common naming conventions. Especially
+when related to matrices. I don&#39;t know who first game up with these names. I
+think I learned them <a href="http://www.nvidia.com/object/using_sas.html">from NVidia&#39;s Standard Annotations and Semantics</a>.
+That&#39;s a little more formal as it was a way to try to make shaders work
+in more situations by deciding on specific names. It&#39;s kind of out of date
+but the basics are still around.</p>
+<p>Here&#39;s the list from my head</p>
 <ul>
-<li><p>In Firefox</p>
-<ol>
-<li>Go to <code>about:config</code></li>
-<li>search for <code>webgl2</code></li>
-<li>double click on <code>webgl.enable-prototype-webgl2</code> until the value is <code>true</code></li>
-<li>restart Firefox</li>
-</ol>
+<li><p>world matrix (or sometimes model matrix)</p>
+<p>a matrix that takes the vertices of a model and moves them to world space</p>
 </li>
-<li><p>In Chrome</p>
-<ol>
-<li>Go to <code>about:flags</code></li>
-<li>Press Ctrl-F or Cmd-F and search for <code>webgl 2.0</code></li>
-<li>Find <code>WebGL 2.0 Prototype</code> and click <code>enable</code></li>
-<li>restart Chrome</li>
-</ol>
+<li><p>camera matrix</p>
+<p>a matrix that positions the camera in the world. Another way of saying
+that is it&#39;s the <em>world matrix</em> for the camera.</p>
+</li>
+<li><p>view matrix</p>
+<p>a matrix that moves everything else in the world in front of the camera.
+This is the inverse of the <em>camera matrix</em>.</p>
+</li>
+<li><p>projection matrix</p>
+<p>a matrix and converts a frustum of space into clip space or some orthographic
+space into clip space. Another way of thinking about this is it&#39;s the matrix
+returned by your matrix math library&#39;s <code>perspective</code> and/or <code>ortho</code> or
+<code>orthographic</code> function.</p>
+</li>
+<li><p>local matrix</p>
+<p>when using <a href="webgl-scene-graph.html">a scene graph</a> the local matrix is the
+matrix at any particular node on the graph before mutlipying with any other
+nodes.</p>
 </li>
 </ul>
+<p>If a shader needs a combination of these they are usually listed right to left
+even though in the shader they&#39;d be multiplied <em>on the right</em>. For example:</p>
+<pre><code>worldViewProjection = projection * view * world
+</code></pre><p>The other two common things to do with a matrix are to take the inverse</p>
+<pre><code>viewMatrix = inverse(cameraMatrix)
+</code></pre><p>And to transpose</p>
+<pre><code>worldInverseTranpose = transpose(inverse(world))
+</code></pre><p>Hopefully knowing these terms you can look at someone else&#39;s shader
+and if you&#39;re lucky they used names that are close to or similar to
+these ones. Then you can hopefully derive what those shaders are
+actually doing.</p>
+<p>Now let&#39;s <a href="webgl-animation.html">learn about animation next</a>.</p>
 
       <hr/>
       <div>
@@ -98,8 +126,8 @@ It is available in both Firefox 48 and Chrome 53.</p>
         <script type="text/javascript">
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
-            var disqus_identifier = 'How to use WebGL2';
-            var disqus_title = 'How to use WebGL2';
+            var disqus_identifier = 'WebGL Matrix Naming';
+            var disqus_title = 'WebGL Matrix Naming';
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
             (function() {
