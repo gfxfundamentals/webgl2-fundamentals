@@ -315,7 +315,9 @@ where on the path the target is. Then you compute where on the path the target w
 in the future. Plug those 2 values into your `lookAt` function and you'll get a matrix that makes
 your object follow the path and orient toward the path as well.
 
-Let's [learn about animation next](webgl-animation.html).
+Before you go on you might want to check out [this short note on matrix naming](webgl-matrix-naming.html).
+
+Otherwise let's [learn about animation next](webgl-animation.html).
 
 <div class="webgl_bottombar">
 <h3>lookAt standards</h3>
