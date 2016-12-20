@@ -50,6 +50,7 @@ A list of articles I'd like to write or see written
     *   spot lighting
     *   normal maps
     *   shadow maps
+    *   fog
 *   text
     *   glyph cache
 *   post processing
@@ -60,12 +61,24 @@ A list of articles I'd like to write or see written
     *   RGB glitch, CRT distortion, scanlines
     *   color mapping
 *   Creative coding
+    *   ramp lighting - toon shading
+    *   outlines
     *   color palettes
     *   indexed everything
     *   tilemaps
+    *   depth sprites
+    *   skinning
+    *   histogram
+    *   vsa
+    *   shadertoy
+    *   sdf
 *   code organization
     *   scene graph
         *   putting lights and camera in scene graph
+        *   LODs
+        *   frustum culling
+        *   grid culling
+        *   oct-tree culling
 *   Physically based rendering
 
 
