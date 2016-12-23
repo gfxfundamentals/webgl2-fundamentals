@@ -126,10 +126,10 @@ function main() {
   gl.enable(gl.DEPTH_TEST);
 
   // setup GLSL program
-  var programInfo = webglUtils.createProgramInfo(gl, [vertexShaderSource, fragmentShaderSource]);
-
-  var bufferInfo = window.primitives.createSphereBufferInfo(gl, 5, 48, 24);
-  var vao = webglUtils.createVAOFromBufferInfo(gl, programInfo, bufferInfo);
+  var programInfo = twgl.createProgramInfo(gl, [vertexShaderSource, fragmentShaderSource]);
+  twgl.setAttributePrefix("a_");  // Tell the webglUtils to match position with a_position etc..
+  var bufferInfo = twgl.primitives.createSphereBufferInfo(gl, 5, 48, 24);
+  var vao = twgl.createVAOFromBufferInfo(gl, programInfo, bufferInfo);
 
   function degToRad(d) {
     return d * Math.PI / 180;
@@ -213,7 +213,7 @@ function main() {
   function drawScene(time) {
     time *= 0.001;  // convert to seconds
 
-    webglUtils.resizeCanvasToDisplaySize(canvas);
+    twgl.resizeCanvasToDisplaySize(canvas);
 
     // Set the viewport to match the canvas
     gl.viewport(0, 0, canvas.width, canvas.height);
@@ -241,7 +241,7 @@ function main() {
     gl.bindVertexArray(vao);
 
     // Set the uniforms that are the same for all objects.
-    webglUtils.setUniforms(programInfo, uniformsThatAreTheSameForAllObjects);
+    twgl.setUniforms(programInfo, uniformsThatAreTheSameForAllObjects);
 
     // Draw objects
     objects.forEach(function(object) {
@@ -258,10 +258,10 @@ function main() {
       m4.transpose(m4.inverse(worldMatrix), uniformsThatAreComputedForEachObject.u_worldInverseTranspose);
 
       // Set the uniforms we just computed
-      webglUtils.setUniforms(programInfo, uniformsThatAreComputedForEachObject);
+      twgl.setUniforms(programInfo, uniformsThatAreComputedForEachObject);
 
       // Set the uniforms that are specific to the this object.
-      webglUtils.setUniforms(programInfo, object.materialUniforms);
+      twgl.setUniforms(programInfo, object.materialUniforms);
 
       // Draw the geometry.
       gl.drawElements(gl.TRIANGLES, bufferInfo.numElements, gl.UNSIGNED_SHORT, 0);

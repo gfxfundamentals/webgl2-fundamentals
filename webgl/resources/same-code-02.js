@@ -89,12 +89,13 @@ function main() {
 
 
   // setup GLSL program
-  var programInfo = webglUtils.createProgramInfo(gl, [vertexShaderSource, fragmentShaderSource]);
+  var programInfo = twgl.createProgramInfo(gl, [vertexShaderSource, fragmentShaderSource]);
 
-  var bufferInfo = webglUtils.createBufferInfoFromArrays(gl, model);
+  twgl.setAttributePrefix("a_");  // Tell the webglUtils to match position with a_position etc..
+  var bufferInfo = twgl.createBufferInfoFromArrays(gl, model);
   var vao = gl.createVertexArray();
   gl.bindVertexArray(vao);
-  webglUtils.setBuffersAndAttributes(gl, programInfo.attribSetters, bufferInfo);
+  twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
 
 
   function degToRad(d) {
@@ -152,7 +153,7 @@ function main() {
 
   // Draw the scene.
   function drawScene(time) {
-    webglUtils.resizeCanvasToDisplaySize(canvas);
+    twgl.resizeCanvasToDisplaySize(canvas);
 
     time *= 0.001;  // convert to seconds
 
@@ -189,7 +190,7 @@ function main() {
     gl.bindVertexArray(vao);
 
     // Set the uniforms that are the same for all objects.
-    webglUtils.setUniforms(programInfo.uniformSetters, uniformsThatAreTheSameForAllObjects);
+    twgl.setUniforms(programInfo, uniformsThatAreTheSameForAllObjects);
 
     // Draw objects
     var num = 4;
@@ -209,7 +210,7 @@ function main() {
           m4.transpose(m4.inverse(worldMatrix), uniformsThatAreComputedForEachObject.u_worldInverseTranspose);
 
           // Set the uniforms we just computed
-          webglUtils.setUniforms(programInfo.uniformSetters, uniformsThatAreComputedForEachObject);
+          twgl.setUniforms(programInfo, uniformsThatAreComputedForEachObject);
 
           // Set a color for this object.
           materialUniforms.u_diffuse[0] = xx / num * 0.5 + 0.5;
@@ -217,7 +218,7 @@ function main() {
           materialUniforms.u_diffuse[2] = zz / num * 0.5 + 0.5;
 
           // Set the uniforms that are specific to the this object.
-          webglUtils.setUniforms(programInfo.uniformSetters, materialUniforms);
+          twgl.setUniforms(programInfo, materialUniforms);
 
           // Draw the geometry.
           gl.drawArrays(gl.TRIANGLES, 0, bufferInfo.numElements);

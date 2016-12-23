@@ -14,15 +14,14 @@ Uses a few utility functions so there's much less code.
 <canvas id="canvas"></canvas>
 </body>
 <!--
-for most samples webgl-utils only provides shader compiling/linking and
-canvas resizing because why clutter the examples with code that's the same in every sample.
-See http://webgl2fundamentals.org/webgl/lessons/webgl-boilerplate.html
-and http://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+This sample uses TWGL (Tiny WebGL) to hide the clutter.
+Otherwise the sample would be full of code not related to the point of the sample.
+For more info see http://webgl2fundamentals.org/webgl/lessons/webgl-less-code-more-fun.html
 -->
-<script src="resources/webgl-utils.js"></script>
+<script src="resources/twgl-full.min.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
 <script src="resources/3d-math.js"></script>
-<script src="resources/primitives.js"></script>
+<script src="resources/flattened-primitives.js"></script>
 <script>
 "use strict";
 
@@ -66,20 +65,20 @@ function main() {
     return;
   }
 
-  var createFlattenedVertices = function(gl, vertices) {
-    return webglUtils.createBufferInfoFromArrays(gl, primitives.makeRandomVertexColors(primitives.deindexVertices(vertices), { vertsPerColor: 6 }));
-  };
+  // Tell the twgl to match position with a_position, n
+  // normal with a_normal etc..
+  twgl.setAttributePrefix("a_");
 
-  var sphereBufferInfo = createFlattenedVertices(gl, primitives.createSphereVertices(10, 12, 6));
-  var cubeBufferInfo   = createFlattenedVertices(gl, primitives.createCubeVertices(20));
-  var coneBufferInfo   = createFlattenedVertices(gl, primitives.createTruncatedConeVertices(10, 0, 20, 12, 1, true, false));
+  var sphereBufferInfo = flattenedPrimitives.createSphereBufferInfo(gl, 10, 12, 6);
+  var cubeBufferInfo   = flattenedPrimitives.createCubeBufferInfo(gl, 20);
+  var coneBufferInfo   = flattenedPrimitives.createTruncatedConeBufferInfo(gl, 10, 0, 20, 12, 1, true, false);
 
   // setup GLSL program
-  var programInfo = webglUtils.createProgramInfo(gl, [vs, fs]);
+  var programInfo = twgl.createProgramInfo(gl, [vs, fs]);
 
-  var sphereVAO = webglUtils.createVAOFromBufferInfo(gl, programInfo, sphereBufferInfo);
-  var cubeVAO   = webglUtils.createVAOFromBufferInfo(gl, programInfo, cubeBufferInfo);
-  var coneVAO   = webglUtils.createVAOFromBufferInfo(gl, programInfo, coneBufferInfo);
+  var sphereVAO = twgl.createVAOFromBufferInfo(gl, programInfo, sphereBufferInfo);
+  var cubeVAO   = twgl.createVAOFromBufferInfo(gl, programInfo, cubeBufferInfo);
+  var coneVAO   = twgl.createVAOFromBufferInfo(gl, programInfo, coneBufferInfo);
 
   function degToRad(d) {
     return d * Math.PI / 180;
@@ -102,7 +101,7 @@ function main() {
   function drawScene(time) {
     time = time * 0.0005;
 
-    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+    twgl.resizeCanvasToDisplaySize(gl.canvas);
 
     // Tell WebGL how to convert from clip space to pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -140,9 +139,9 @@ function main() {
     uniforms.u_matrix = computeMatrix(viewProjectionMatrix, [0, 0, 0], time, time);
 
     // Set the uniforms we just computed
-    webglUtils.setUniforms(programInfo, uniforms);
+    twgl.setUniforms(programInfo, uniforms);
 
-    webglUtils.drawBufferInfo(gl, sphereBufferInfo);
+    twgl.drawBufferInfo(gl, sphereBufferInfo);
 
     // ------ Draw the cube --------
 
@@ -152,9 +151,9 @@ function main() {
     uniforms.u_matrix = computeMatrix(viewProjectionMatrix, [-40, 0, 0], time, -time);
 
     // Set the uniforms we just computed
-    webglUtils.setUniforms(programInfo, uniforms);
+    twgl.setUniforms(programInfo, uniforms);
 
-    webglUtils.drawBufferInfo(gl, cubeBufferInfo);
+    twgl.drawBufferInfo(gl, cubeBufferInfo);
 
     // ------ Draw the cone --------
 
@@ -164,9 +163,9 @@ function main() {
     uniforms.u_matrix = computeMatrix(viewProjectionMatrix, [40, 0, 0], -time, time);
 
     // Set the uniforms we just computed
-    webglUtils.setUniforms(programInfo, uniforms);
+    twgl.setUniforms(programInfo, uniforms);
 
-    webglUtils.drawBufferInfo(gl, coneBufferInfo);
+    twgl.drawBufferInfo(gl, coneBufferInfo);
 
     requestAnimationFrame(drawScene);
   }

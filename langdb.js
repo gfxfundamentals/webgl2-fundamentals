@@ -3,13 +3,13 @@ window.langDB = {
     "webgl-matrix-naming.html": {
       "en": true
     },
-    "webgl-fundamentals.html": {
-      "en": true
-    },
-    "webgl-resizing-the-canvas.html": {
-      "en": true
-    },
     "webgl-drawing-multiple-things.html": {
+      "en": true
+    },
+    "webgl-2d-matrices.html": {
+      "en": true
+    },
+    "webgl-2d-matrix-stack.html": {
       "en": true
     },
     "webgl-2d-rotation.html": {
@@ -57,7 +57,7 @@ window.langDB = {
     "webgl-2d-drawimage.html": {
       "en": true
     },
-    "webgl-2-textures.html": {
+    "webgl-fundamentals.html": {
       "en": true
     },
     "webgl-getting-webgl2.html": {
@@ -75,10 +75,10 @@ window.langDB = {
     "webgl-less-code-more-fun.html": {
       "en": true
     },
-    "webgl-2d-matrices.html": {
+    "webgl-2-textures.html": {
       "en": true
     },
-    "webgl-2d-matrix-stack.html": {
+    "webgl-resizing-the-canvas.html": {
       "en": true
     },
     "webgl-scene-graph.html": {

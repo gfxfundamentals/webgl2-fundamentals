@@ -169,15 +169,8 @@ void main() {
 </div>
 </body>
 </html>
-<!--
-for most samples webgl-utils only provides shader compiling/linking and
-canvas resizing because why clutter the examples with code that's the same in every sample.
-See http://webgl2fundamentals.org/webgl/lessons/webgl-boilerplate.html
-and http://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
--->
-<script src="../../resources/webgl-utils.js"></script>
-<script src="../../resources/webgl-lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
 <script src="../../resources/twgl-full.min.js"></script>
+<script src="../../resources/webgl-lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
 <script>
 "use strict";
 var m4 = twgl.m4;
@@ -475,7 +468,7 @@ function CreateApp(gl) {
   pickPoints();
 
   function drawModel(programInfo, bufferInfo, type, uniforms, world) {
-    m4.multiply(world, viewProjection, worldViewProjection);
+    m4.multiply(viewProjection, world, worldViewProjection);
     if (uniforms.u_worldInverseTranspose) {
       m4.inverse(world, uniforms.u_worldInverseTranspose);
       m4.transpose(uniforms.u_worldInverseTranspose, uniforms.u_worldInverseTranspose);
@@ -483,7 +476,7 @@ function CreateApp(gl) {
     gl.useProgram(programInfo.program);
     twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
     twgl.setUniforms(programInfo, sharedUniforms, uniforms);
-    twgl.drawBufferInfo(gl, type, bufferInfo);
+    twgl.drawBufferInfo(gl, bufferInfo, type);
   }
 
   function degToRad(deg) {
@@ -521,7 +514,7 @@ function CreateApp(gl) {
         up,
         viewInverse);
     m4.inverse(viewInverse, view);
-    m4.multiply(view, projection, viewProjection);
+    m4.multiply(projection, view, viewProjection);
     m4.inverse(viewProjection, inverseViewProjection);
 
     m4.scaling([gridScale, gridScale, gridScale], world);
@@ -736,7 +729,7 @@ function main() {
 
   var gl = twgl.getWebGLContext(canvas, {alpha: true, preMultipliedAlpha: false});
   if (!gl) {
-    return false;
+    return;
   }
 
   twgl.resizeCanvasToDisplaySize(gl.canvas, window.devicePixelRatio);

@@ -11,15 +11,13 @@
 <canvas id="canvas"></canvas>
 </body>
 <!--
-for most samples webgl-utils only provides shader compiling/linking and
-canvas resizing because why clutter the examples with code that's the same in every sample.
-See http://webgl2fundamentals.org/webgl/lessons/webgl-boilerplate.html
-and http://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+This sample uses TWGL (Tiny WebGL) to hide the clutter.
+Otherwise the sample would be full of code not related to the point of the sample.
+For more info see http://webgl2fundamentals.org/webgl/lessons/webgl-less-code-more-fun.html
 -->
-<script src="resources/webgl-utils.js"></script>
+<script src="resources/twgl-full.min.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
 <script src="resources/3d-math.js"></script>
-<script src="resources/primitives.js"></script>
 <script>
 "use strict";
 
@@ -118,20 +116,24 @@ function main() {
     return;
   }
 
+  // tell twgl to match program to a_program and
+  // normal to a_normal etc...
+  twgl.setAttributePrefix("a_");
+
   // setup GLSL programs
-  var fProgramInfo = webglUtils.createProgramInfo(
+  var fProgramInfo = twgl.createProgramInfo(
       gl, [fVertexShaderSource, fFragmentShaderSource]);
-  var textProgramInfo = webglUtils.createProgramInfo(
+  var textProgramInfo = twgl.createProgramInfo(
       gl, [textVertexShaderSource, textFragmentShaderSource]);
 
   // Create data for 'F'
-  var fBufferInfo = primitives.create3DFBufferInfo(gl);
-  var fVAO = webglUtils.createVAOFromBufferInfo(
+  var fBufferInfo = twgl.primitives.create3DFBufferInfo(gl);
+  var fVAO = twgl.createVAOFromBufferInfo(
       gl, fProgramInfo, fBufferInfo);
 
   // Create a unit quad for the 'text'
-  var textBufferInfo = primitives.createXYQuadBufferInfo(gl, 1);
-  var textVAO = webglUtils.createVAOFromBufferInfo(
+  var textBufferInfo = twgl.primitives.createXYQuadBufferInfo(gl, 1);
+  var textVAO = twgl.createVAOFromBufferInfo(
       gl, textProgramInfo, textBufferInfo);
 
   // create text textures, one for each F
@@ -202,7 +204,7 @@ function main() {
     // Remember the current time for the next frame.
     then = now;
 
-    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+    twgl.resizeCanvasToDisplaySize(gl.canvas);
 
     // Every frame increase the rotation a little.
     rotation[1] += rotationSpeed * deltaTime;
@@ -261,9 +263,9 @@ function main() {
 
         fUniforms.u_matrix = m4.multiply(projectionMatrix, fViewMatrix);
 
-        webglUtils.setUniforms(fProgramInfo, fUniforms);
+        twgl.setUniforms(fProgramInfo, fUniforms);
 
-        webglUtils.drawBufferInfo(gl, fBufferInfo);
+        twgl.drawBufferInfo(gl, fBufferInfo);
       }
     }
 
@@ -300,10 +302,10 @@ function main() {
       m4.copy(textMatrix, textUniforms.u_matrix);
       textUniforms.u_texture = tex.texture;
 
-      webglUtils.setUniforms(textProgramInfo, textUniforms);
+      twgl.setUniforms(textProgramInfo, textUniforms);
 
       // Draw the text.
-      webglUtils.drawBufferInfo(gl, textBufferInfo);
+      twgl.drawBufferInfo(gl, textBufferInfo);
     });
 
     requestAnimationFrame(drawScene);

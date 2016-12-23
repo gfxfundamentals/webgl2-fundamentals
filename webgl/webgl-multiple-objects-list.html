@@ -14,15 +14,14 @@ Draw multiple objects using a list
 <canvas id="canvas"></canvas>
 </body>
 <!--
-for most samples webgl-utils only provides shader compiling/linking and
-canvas resizing because why clutter the examples with code that's the same in every sample.
-See http://webgl2fundamentals.org/webgl/lessons/webgl-boilerplate.html
-and http://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+This sample uses TWGL (Tiny WebGL) to hide the clutter.
+Otherwise the sample would be full of code not related to the point of the sample.
+For more info see http://webgl2fundamentals.org/webgl/lessons/webgl-less-code-more-fun.html
 -->
-<script src="resources/webgl-utils.js"></script>
+<script src="resources/twgl-full.min.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
 <script src="resources/3d-math.js"></script>
-<script src="resources/primitives.js"></script>
+<script src="resources/flattened-primitives.js"></script>
 <script>
 "use strict";
 
@@ -68,30 +67,20 @@ function main() {
     return;
   }
 
-  function createFlattenedVertices(gl, vertices) {
-    return webglUtils.createBufferInfoFromArrays(
-        gl,
-        primitives.makeRandomVertexColors(
-            primitives.deindexVertices(vertices),
-            {
-              vertsPerColor: 6,
-              rand: function(ndx, channel) {
-                return channel < 3 ? ((128 + Math.random() * 128) | 0) : 255;
-              },
-            })
-      );
-  }
+  // Tell the twgl to match position with a_position, n
+  // normal with a_normal etc..
+  twgl.setAttributePrefix("a_");
 
-  var sphereBufferInfo = createFlattenedVertices(gl, primitives.createSphereVertices(10, 12, 6));
-  var cubeBufferInfo   = createFlattenedVertices(gl, primitives.createCubeVertices(20));
-  var coneBufferInfo   = createFlattenedVertices(gl, primitives.createTruncatedConeVertices(10, 0, 20, 12, 1, true, false));
+  var sphereBufferInfo = flattenedPrimitives.createSphereBufferInfo(gl, 10, 12, 6);
+  var cubeBufferInfo   = flattenedPrimitives.createCubeBufferInfo(gl, 20);
+  var coneBufferInfo   = flattenedPrimitives.createTruncatedConeBufferInfo(gl, 10, 0, 20, 12, 1, true, false);
 
   // setup GLSL program
-  var programInfo = webglUtils.createProgramInfo(gl, [vs, fs]);
+  var programInfo = twgl.createProgramInfo(gl, [vs, fs]);
 
-  var sphereVAO = webglUtils.createVAOFromBufferInfo(gl, programInfo, sphereBufferInfo);
-  var cubeVAO   = webglUtils.createVAOFromBufferInfo(gl, programInfo, cubeBufferInfo);
-  var coneVAO   = webglUtils.createVAOFromBufferInfo(gl, programInfo, coneBufferInfo);
+  var sphereVAO = twgl.createVAOFromBufferInfo(gl, programInfo, sphereBufferInfo);
+  var cubeVAO   = twgl.createVAOFromBufferInfo(gl, programInfo, cubeBufferInfo);
+  var coneVAO   = twgl.createVAOFromBufferInfo(gl, programInfo, coneBufferInfo);
 
   function degToRad(d) {
     return d * Math.PI / 180;
@@ -152,7 +141,7 @@ function main() {
   function drawScene(time) {
     time = time * 0.0005;
 
-    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+    twgl.resizeCanvasToDisplaySize(gl.canvas);
 
     // Tell WebGL how to convert from clip space to pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -213,9 +202,9 @@ function main() {
       gl.bindVertexArray(object.vertexArray);
 
       // Set the uniforms we just computed
-      webglUtils.setUniforms(programInfo, object.uniforms);
+      twgl.setUniforms(programInfo, object.uniforms);
 
-      webglUtils.drawBufferInfo(gl, object.bufferInfo);
+      twgl.drawBufferInfo(gl, object.bufferInfo);
     });
 
     requestAnimationFrame(drawScene);

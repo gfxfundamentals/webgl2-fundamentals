@@ -5,6 +5,8 @@ const fs = require('fs');
 
 module.exports = function(grunt) {
 
+  require('load-grunt-tasks')(grunt);
+
   const s_ignoreRE = /\.(md|py|sh|enc)$/i;
   function noMds(filename) {
     return !s_ignoreRE.test(filename);
@@ -24,7 +26,7 @@ module.exports = function(grunt) {
         src: [
           'webgl/resources/webgl-utils.js',
           'webgl/resources/webgl-lessons-helper.js',
-          'webgl/resources/primitives.js',
+          'webgl/resources/flattened-primitives.js',
           'webgl/resources/2d-math.js',
           'webgl/resources/3d-math.js',
         ],
@@ -45,7 +47,6 @@ module.exports = function(grunt) {
     jsdoc: {
       docs: {
         src: [
-          'webgl/resources/primitives.js',
           'webgl/resources/2d-math.js',
           'webgl/resources/3d-math.js',
           'webgl/resources/webgl-utils.js',
@@ -72,11 +73,6 @@ module.exports = function(grunt) {
       'out/**/*',
     ],
   });
-
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-eslint');
-  grunt.loadNpmTasks('grunt-jsdoc');
 
   grunt.registerTask('buildlessons', function() {
     var buildStuff = require('./build/js/build');

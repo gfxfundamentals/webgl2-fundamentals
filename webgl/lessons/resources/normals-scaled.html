@@ -101,15 +101,8 @@ void main() {
   <pre id="sp2" style="position: absolute; text-align: center; left: 50%; top: 0; color: white; transform: translateX(-50%);">unscaled</pre>
 </body>
 </html>
-<!--
-for most samples webgl-utils only provides shader compiling/linking and
-canvas resizing because why clutter the examples with code that's the same in every sample.
-See http://webgl2fundamentals.org/webgl/lessons/webgl-boilerplate.html
-and http://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
--->
-<script src="../../resources/webgl-utils.js"></script>
-<script src="../../resources/webgl-lessons-helper.js"></script> <!-- you can and should delete this script. it is only used on the site to help with errors -->
 <script src="../../resources/twgl-full.min.js"></script>
+<script src="../../resources/webgl-lessons-helper.js"></script> <!-- you can and should delete this script. it is only used on the site to help with errors -->
 <script>
 "use strict";
 var m4 = twgl.m4;
@@ -321,7 +314,7 @@ function CreateApp(gl) {
   }
 
   function drawModel(programInfo, bufferInfo, type, uniforms, world, useWorldForWorldInverseTranspose) {
-    m4.multiply(world, viewProjection, worldViewProjection);
+    m4.multiply(viewProjection, world, worldViewProjection);
     if (useWorldForWorldInverseTranspose) {
       m4.copy(world, worldInverseTranspose);
     } else {
@@ -331,7 +324,7 @@ function CreateApp(gl) {
     gl.useProgram(programInfo.program);
     twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
     twgl.setUniforms(programInfo, sharedUniforms, uniforms);
-    twgl.drawBufferInfo(gl, type, bufferInfo);
+    twgl.drawBufferInfo(gl, bufferInfo, type);
   }
 
   function degToRad(deg) {
@@ -378,7 +371,7 @@ function CreateApp(gl) {
         [0, 0, -1],
         viewInverse);
     m4.inverse(viewInverse, view);
-    m4.multiply(view, projection, viewProjection);
+    m4.multiply(projection, view, viewProjection);
     m4.inverse(viewProjection, inverseViewProjection);
 
     var scale = 6 + Math.sin(time * 0.0003) * 4;
@@ -435,7 +428,7 @@ function main() {
 
   var gl = twgl.getWebGLContext(canvas, {alpha: true, preMultipliedAlpha: false});
   if (!gl) {
-    return false;
+    return;
   }
 
   twgl.resizeCanvasToDisplaySize(gl.canvas, window.devicePixelRatio);

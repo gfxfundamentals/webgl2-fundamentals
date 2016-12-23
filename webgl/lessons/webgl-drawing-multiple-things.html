@@ -197,9 +197,9 @@ sphereUniforms.u_matrix = computeMatrix(
     sphereYRotation);
 
 // Set the uniforms we just computed
-webglUtils.setUniforms(programInfo, sphereUniforms);
+twgl.setUniforms(programInfo, sphereUniforms);
 
-webglUtils.drawBufferInfo(gl, sphereBufferInfo);
+twgl.drawBufferInfo(gl, sphereBufferInfo);
 
 // ------ Draw the cube --------
 
@@ -213,9 +213,9 @@ cubeUniforms.u_matrix = computeMatrix(
     cubeYRotation);
 
 // Set the uniforms we just computed
-webglUtils.setUniforms(programInfo, cubeUniforms);
+twgl.setUniforms(programInfo, cubeUniforms);
 
-webglUtils.drawBufferInfo(gl, cubeBufferInfo);
+twgl.drawBufferInfo(gl, cubeBufferInfo);
 
 // ------ Draw the cone --------
 
@@ -229,9 +229,9 @@ coneUniforms.u_matrix = computeMatrix(
     coneYRotation);
 
 // Set the uniforms we just computed
-webglUtils.setUniforms(programInfo, coneUniforms);
+twgl.setUniforms(programInfo, coneUniforms);
 
-webglUtils.drawBufferInfo(gl, coneBufferInfo);
+twgl.drawBufferInfo(gl, coneBufferInfo);
 </code></pre><p>And here&#39;s that</p>
 <p><div>
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/../webgl-multiple-objects-manual.html"></iframe>
@@ -247,7 +247,7 @@ using each program.</p>
 <li>A shader program (and its uniform and attribute info)</li>
 <li>A vertex array (that contains attribute settings)</li>
 <li>The uniforms needed to draw that thing with the given shader.</li>
-<li>The count to pass to gl.draw and whether or not to call gl.drawArrays or gl.drawElements</li>
+<li>The count to pass to gl.drawXXX and whether or not to call gl.drawArrays or gl.drawElements</li>
 </ol>
 <p>So, a simple simplification would be to make an array of things to draw and in that array
 put the 4 things togehter</p>
@@ -312,10 +312,10 @@ objectsToDraw.forEach(function(object) {
   gl.bindVertexArray(object.vertexArray);
 
   // Set the uniforms.
-  webglUtils.setUniforms(programInfo, object.uniforms);
+  twgl.setUniforms(programInfo, object.uniforms);
 
   // Draw
-  webglUtils.draw(gl, bufferInfo);
+  twgl.drawBufferInfo(gl, bufferInfo);
 });
 </code></pre><p>And this is arguably the main rendering loop of most 3D engines in existence. Somewhere
 some code or codes decide what goes into the list of <code>objectsToDraw</code> and the number
@@ -330,7 +330,7 @@ goes in that list with actually calling the <code>gl.draw___</code> functions.</
 <h2 id="drawing-transparent-things-and-multiple-lists">Drawing Transparent Things and Multiple Lists</h2>
 <p>In the example above there is just one list to draw. This works because all the objects
 are opaque. If we want to draw transpaent objects though they must be drawn back to front
-with the furthest objects appearing first. On the other hand, for speed, for opaque
+with the furthest objects getting drawn first. On the other hand, for speed, for opaque
 objects we want to draw front to back, that&#39;s because the DEPTH_TEST means that the GPU
 will not execute our fragment shader for any pixels that would be behind other things.
 so we want to draw the stuff in front first.</p>
@@ -431,7 +431,7 @@ using my recommended optimizations so I removed that section.
     <li><a href="/webgl/lessons/webgl-3d-orthographic.html">WebGL2 - Orthographic 3D</a></li>
     <li><a href="/webgl/lessons/webgl-3d-perspective.html">WebGL2 3D Perspective</a></li>
     <li><a href="/webgl/lessons/webgl-3d-camera.html">WebGL2 3D - Cameras</a></li>
-    <li><a href="/webgl/lessons/webgl-matrix-naming.html">WebGL2 3D - Cameras</a></li>
+    <li><a href="/webgl/lessons/webgl-matrix-naming.html">WebGL2 3D - Matrix Naming</a></li>
   </ul>
   <li>Lighting</li>
   <ul>

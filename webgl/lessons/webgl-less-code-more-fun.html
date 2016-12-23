@@ -209,12 +209,12 @@ gl.uniform1f(u_specularFactorLoc, specularFactor);
 gl.drawArrays(...);
 </code></pre><p>That&#39;s a lot of typing.</p>
 <p>There are lots of ways to simplify this. One suggestion is to ask WebGL to tell us all
-the uniforms and locations and then setup functions to set them for us. We can then pass in
-JavaScript objects to set our settings much more easily. If that&#39;s clear as mud well,
-our code would look something like this</p>
+the uniforms, attributes and their locations and then setup functions to set them for us.
+We can then pass in JavaScript objects to set our settings much more easily.
+If that&#39;s clear as mud well, our code would look something like this</p>
 <pre><code>// At initialiation time
-var uniformSetters = webglUtils.createUniformSetters(gl, program);
-var attribSetters  = webglUtils.createAttributeSetters(gl, program);
+var uniformSetters = twgl.createUniformSetters(gl, program);
+var attribSetters  = twgl.createAttributeSetters(gl, program);
 
 // Setup all the buffers and attributes
 var attribs = {
@@ -222,7 +222,7 @@ var attribs = {
   a_normal:   { buffer: normalBuffer,   numComponents: 3, },
   a_texcoord: { buffer: texcoordBuffer, numComponents: 2, },
 };
-var vao = webglUtils.createVAOAndSetAttributes(
+var vao = twgl.createVAOAndSetAttributes(
     gl, attribSetters, attribs);
 
 // At init time or draw time depending on use.
@@ -247,14 +247,14 @@ gl.useProgram(program);
 gl.bindAttribArray(vao);
 
 // Set all the uniforms and textures used.
-webglUtils.setUniforms(uniformSetters, uniforms);
+twgl.setUniforms(uniformSetters, uniforms);
 
 gl.drawArrays(...);
 </code></pre><p>That seems a heck of a lot smaller, easier, and less code to me.</p>
-<p>You can even use multiple JavaScript objects if it suits you. For example</p>
+<p>You can even use multiple JavaScript objects for the uniforms if it suits you. For example</p>
 <pre><code>// At initialiation time
-var uniformSetters = webglUtils.createUniformSetters(gl, program);
-var attribSetters  = webglUtils.createAttributeSetters(gl, program);
+var uniformSetters = twgl.createUniformSetters(gl, program);
+var attribSetters  = twgl.createAttributeSetters(gl, program);
 
 // Setup all the buffers and attributes
 var attribs = {
@@ -262,7 +262,7 @@ var attribs = {
   a_normal:   { buffer: normalBuffer,   numComponents: 3, },
   a_texcoord: { buffer: texcoordBuffer, numComponents: 2, },
 };
-var vao = webglUtils.createVAOAndSetAttributes(gl, attribSetters, attribs);
+var vao = twgl.createVAOAndSetAttributes(gl, attribSetters, attribs);
 
 // At init time or draw time depending
 var uniformsThatAreTheSameForAllObjects = {
@@ -314,12 +314,12 @@ gl.useProgram(program);
 
 // Bind the VAO that has all our buffers and attribute settings
 gl.bindAttribArray(vao);
-webglUtils.setUniforms(uniformSetters, uniformThatAreTheSameForAllObjects);
+twgl.setUniforms(uniformSetters, uniformThatAreTheSameForAllObjects);
 
 objects.forEach(function(object) {
   computeMatricesForObject(object, uniformsThatAreComputedForEachObject);
-  webglUtils.setUniforms(uniformSetters, uniformThatAreComputedForEachObject);
-  webglUtils.setUniforms(unifromSetters, objects.materialUniforms);
+  twgl.setUniforms(uniformSetters, uniformThatAreComputedForEachObject);
+  twgl.setUniforms(unifromSetters, objects.materialUniforms);
   gl.drawArrays(...);
 });
 </code></pre><p>Here&#39;s an example using these helper functions</p>
@@ -356,8 +356,8 @@ var arrays = {
    normal:   { numComponents: 3, data: [0, 0, 1, 0, 0, 1, 0, 0, 1],        },
 };
 
-var bufferInfo = webglUtils.createBufferInfoFromArrays(gl, arrays);
-var vao = webglUtils.createVAOFromBufferInfo(gl, setters, bufferInfo);
+var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
+var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
 </code></pre><p>Much shorter!</p>
 <p>Here&#39;s that</p>
 <p><div>
@@ -378,7 +378,8 @@ var arrays = {
    indices:  { numComponents: 3, data: [0, 1, 2, 1, 2, 3],                       },
 };
 
-var bufferInfo = webglUtils.createBufferInfoFromTypedArray(gl, arrays);
+var bufferInfo = twgl.createBufferInfoFromTypedArray(gl, arrays);
+var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
 </code></pre><p>and at render time we can call <code>gl.drawElements</code> instead of <code>gl.drawArrays</code>.</p>
 <pre><code>...
 
@@ -419,11 +420,11 @@ the shader. For attibutes WebGL will set <code>w = 1</code> automatically. But t
 know the user&#39;s intent since what they declared in their shader might not match the number of
 components they provide.</p>
 <p>Looking for more patterns there&#39;s this</p>
-<pre><code>var program = webglUtils.createProgramFromSources(gl, [vs, fs]);
-var uniformSetters = webglUtils.createUniformSetters(gl, program);
-var attribSetters  = webglUtils.createAttributeSetters(gl, program);
+<pre><code>var program = twgl.createProgramFromSources(gl, [vs, fs]);
+var uniformSetters = twgl.createUniformSetters(gl, program);
+var attribSetters  = twgl.createAttributeSetters(gl, program);
 </code></pre><p>Let&#39;s simplify that too into just</p>
-<pre><code>var programInfo = webglUtils.createProgramInfo(gl, [&quot;vertexshader&quot;, &quot;fragmentshader&quot;]);
+<pre><code>var programInfo = twgl.createProgramInfo(gl, [&quot;vertexshader&quot;, &quot;fragmentshader&quot;]);
 </code></pre><p>Which returns something like</p>
 <pre><code>programInfo = {
    program: WebGLProgram,  // program we just compiled
@@ -440,14 +441,14 @@ multiple programs since it automatically keeps the setters with the program they
 </p>
 <p>One more, sometimes we have data that has no indices and we have to call
 <code>gl.drawArrays</code>. Other times do have indices and we have to call <code>gl.drawElements</code>.
-Given the data we have we easily check which by looking at <code>bufferInfo.indices</code>.
+Given the data we have we can easily check which by looking at <code>bufferInfo.indices</code>.
 If it exists we need to call <code>gl.drawElements</code>. If not we need to call <code>gl.drawArrays</code>.
-So there&#39;s a function, <code>webglUtils.drawBufferInfo</code> that does that. It&#39;s used like this</p>
-<pre><code>webglUtils.drawBufferInfo(gl, bufferInfo);
+So there&#39;s a function, <code>twgl.drawBufferInfo</code> that does that. It&#39;s used like this</p>
+<pre><code>twgl.drawBufferInfo(gl, bufferInfo);
 </code></pre><p>If you don&#39;t pass a 3rd parameter for the type of primitive to draw it assumes
-<code>gl.TRIANGLE</code>.</p>
+<code>gl.TRIANGLES</code>.</p>
 <p>Here&#39;s an example were we have a non-indexed triangle and an indexed quad. Because
-we&#39;re using <code>webglUtils.drawBufferInfo</code> the code doesn&#39;t have to change when we
+we&#39;re using <code>twgl.drawBufferInfo</code> the code doesn&#39;t have to change when we
 switch data.</p>
 <p><div>
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/../webgl-less-code-more-fun-drawbufferinfo.html"></iframe>
@@ -460,11 +461,10 @@ For the lessons on these tutorials though I&#39;ve felt like I have to use the s
 ways so people don&#39;t get confused about what is WebGL and what is my own style. At some point
 though showing all the steps gets in the way of the point so going forward some lessons will
 be using this style.</p>
-<p>Feel free to use this style in your own code. The functions <code>webglUtils.createProgramInfo</code>, <code>webglUtils.createVAOAndSetAttributes</code>,
-<code>webglUtils.createBufferInfoFromArrays</code>, and <code>webglUtils.setUniforms</code> are included in the
-<a href="https://github.com/greggman/webgl-fundamentals/blob/master/webgl/resources/webgl-utils.js"><code>webgl-utils.js</code></a>
-file used by all the samples. If you want something slightly more organized check out <a href="http://twgljs.org">TWGL.js</a>
-which is what I actually use.</p>
+<p>Feel free to use this style in your own code. The functions <code>twgl.createProgramInfo</code>,
+<code>twgl.createVAOAndSetAttributes</code>, <code>twgl.createBufferInfoFromArrays</code>, and <code>twgl.setUniforms</code>
+etc... are part of a library I wrote based off these ideas. <a href="http://twgljs.org">It&#39;s called <code>TWGL</code></a>.
+It rhymes with wiggle and it stands for <code>Tiny WebGL</code>.</p>
 <p>Next up, <a href="webgl-drawing-multiple-things.html">drawing multiple things</a>.</p>
 <div class="webgl_bottombar">
 <h3>Can we use the setters directly?</h3>
@@ -474,7 +474,7 @@ directly like this.
 </p>
 <pre class="prettyprint">
 // At initialiation time
-var uniformSetters = webglUtils.createUniformSetters(program);
+var uniformSetters = twgl.createUniformSetters(program);
 
 // At draw time
 uniformSetters.u_ambient([1, 0, 0, 1]); // set the ambient color to red.
@@ -528,12 +528,12 @@ void main() {
 <p>Notice I just added a line that sets <code>outColor</code> to a constant color.
 Most drivers will see that none of the previous lines in the file actually contribute
 to the result. As such they'll optimize out all of our uniforms. The next time we run the program
-when we call <code>webgl.createUniformSetters</code> it won't create a setter for <code>u_ambient</code> so the
+when we call <code>twgl.createUniformSetters</code> it won't create a setter for <code>u_ambient</code> so the
 code above that calls <code>uniformSetters.u_ambient()</code> directly will fail with</p>
 <pre class="prettyprint">
 TypeError: undefined is not a function
 </pre>
-<p><code>webglUtils.setUniforms</code> solves that issue. It only sets those uniforms that actually exist</p>
+<p><code>twgl.setUniforms</code> solves that issue. It only sets those uniforms that actually exist</p>
 </div>
 
 
@@ -598,7 +598,7 @@ TypeError: undefined is not a function
     <li><a href="/webgl/lessons/webgl-3d-orthographic.html">WebGL2 - Orthographic 3D</a></li>
     <li><a href="/webgl/lessons/webgl-3d-perspective.html">WebGL2 3D Perspective</a></li>
     <li><a href="/webgl/lessons/webgl-3d-camera.html">WebGL2 3D - Cameras</a></li>
-    <li><a href="/webgl/lessons/webgl-matrix-naming.html">WebGL2 3D - Cameras</a></li>
+    <li><a href="/webgl/lessons/webgl-matrix-naming.html">WebGL2 3D - Matrix Naming</a></li>
   </ul>
   <li>Lighting</li>
   <ul>
