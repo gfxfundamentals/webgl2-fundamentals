@@ -159,14 +159,14 @@ gl.drawArrays(...);
 That's a lot of typing.
 
 There are lots of ways to simplify this. One suggestion is to ask WebGL to tell us all
-the uniforms and locations and then setup functions to set them for us. We can then pass in
-JavaScript objects to set our settings much more easily. If that's clear as mud well,
-our code would look something like this
+the uniforms, attributes and their locations and then setup functions to set them for us.
+We can then pass in JavaScript objects to set our settings much more easily.
+If that's clear as mud well, our code would look something like this
 
 ```
 // At initialiation time
-var uniformSetters = webglUtils.createUniformSetters(gl, program);
-var attribSetters  = webglUtils.createAttributeSetters(gl, program);
+var uniformSetters = twgl.createUniformSetters(gl, program);
+var attribSetters  = twgl.createAttributeSetters(gl, program);
 
 // Setup all the buffers and attributes
 var attribs = {
@@ -174,7 +174,7 @@ var attribs = {
   a_normal:   { buffer: normalBuffer,   numComponents: 3, },
   a_texcoord: { buffer: texcoordBuffer, numComponents: 2, },
 };
-var vao = webglUtils.createVAOAndSetAttributes(
+var vao = twgl.createVAOAndSetAttributes(
     gl, attribSetters, attribs);
 
 // At init time or draw time depending on use.
@@ -199,19 +199,19 @@ gl.useProgram(program);
 gl.bindAttribArray(vao);
 
 // Set all the uniforms and textures used.
-webglUtils.setUniforms(uniformSetters, uniforms);
+twgl.setUniforms(uniformSetters, uniforms);
 
 gl.drawArrays(...);
 ```
 
 That seems a heck of a lot smaller, easier, and less code to me.
 
-You can even use multiple JavaScript objects if it suits you. For example
+You can even use multiple JavaScript objects for the uniforms if it suits you. For example
 
 ```
 // At initialiation time
-var uniformSetters = webglUtils.createUniformSetters(gl, program);
-var attribSetters  = webglUtils.createAttributeSetters(gl, program);
+var uniformSetters = twgl.createUniformSetters(gl, program);
+var attribSetters  = twgl.createAttributeSetters(gl, program);
 
 // Setup all the buffers and attributes
 var attribs = {
@@ -219,7 +219,7 @@ var attribs = {
   a_normal:   { buffer: normalBuffer,   numComponents: 3, },
   a_texcoord: { buffer: texcoordBuffer, numComponents: 2, },
 };
-var vao = webglUtils.createVAOAndSetAttributes(gl, attribSetters, attribs);
+var vao = twgl.createVAOAndSetAttributes(gl, attribSetters, attribs);
 
 // At init time or draw time depending
 var uniformsThatAreTheSameForAllObjects = {
@@ -271,12 +271,12 @@ gl.useProgram(program);
 
 // Bind the VAO that has all our buffers and attribute settings
 gl.bindAttribArray(vao);
-webglUtils.setUniforms(uniformSetters, uniformThatAreTheSameForAllObjects);
+twgl.setUniforms(uniformSetters, uniformThatAreTheSameForAllObjects);
 
 objects.forEach(function(object) {
   computeMatricesForObject(object, uniformsThatAreComputedForEachObject);
-  webglUtils.setUniforms(uniformSetters, uniformThatAreComputedForEachObject);
-  webglUtils.setUniforms(unifromSetters, objects.materialUniforms);
+  twgl.setUniforms(uniformSetters, uniformThatAreComputedForEachObject);
+  twgl.setUniforms(unifromSetters, objects.materialUniforms);
   gl.drawArrays(...);
 });
 ```
@@ -315,8 +315,8 @@ Looks like a pattern we can simplify as well.
        normal:   { numComponents: 3, data: [0, 0, 1, 0, 0, 1, 0, 0, 1],        },
     };
 
-    var bufferInfo = webglUtils.createBufferInfoFromArrays(gl, arrays);
-    var vao = webglUtils.createVAOFromBufferInfo(gl, setters, bufferInfo);
+    var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
+    var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
 
 Much shorter!
 
@@ -337,7 +337,8 @@ with your `indices` so when you bind that VAO you can call
        indices:  { numComponents: 3, data: [0, 1, 2, 1, 2, 3],                       },
     };
 
-    var bufferInfo = webglUtils.createBufferInfoFromTypedArray(gl, arrays);
+    var bufferInfo = twgl.createBufferInfoFromTypedArray(gl, arrays);
+    var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
 
 and at render time we can call `gl.drawElements` instead of `gl.drawArrays`.
 
@@ -380,13 +381,13 @@ components they provide.
 
 Looking for more patterns there's this
 
-    var program = webglUtils.createProgramFromSources(gl, [vs, fs]);
-    var uniformSetters = webglUtils.createUniformSetters(gl, program);
-    var attribSetters  = webglUtils.createAttributeSetters(gl, program);
+    var program = twgl.createProgramFromSources(gl, [vs, fs]);
+    var uniformSetters = twgl.createUniformSetters(gl, program);
+    var attribSetters  = twgl.createAttributeSetters(gl, program);
 
 Let's simplify that too into just
 
-    var programInfo = webglUtils.createProgramInfo(gl, ["vertexshader", "fragmentshader"]);
+    var programInfo = twgl.createProgramInfo(gl, ["vertexshader", "fragmentshader"]);
 
 Which returns something like
 
@@ -403,17 +404,17 @@ multiple programs since it automatically keeps the setters with the program they
 
 One more, sometimes we have data that has no indices and we have to call
 `gl.drawArrays`. Other times do have indices and we have to call `gl.drawElements`.
-Given the data we have we easily check which by looking at `bufferInfo.indices`.
+Given the data we have we can easily check which by looking at `bufferInfo.indices`.
 If it exists we need to call `gl.drawElements`. If not we need to call `gl.drawArrays`.
-So there's a function, `webglUtils.drawBufferInfo` that does that. It's used like this
+So there's a function, `twgl.drawBufferInfo` that does that. It's used like this
 
-    webglUtils.drawBufferInfo(gl, bufferInfo);
+    twgl.drawBufferInfo(gl, bufferInfo);
 
 If you don't pass a 3rd parameter for the type of primitive to draw it assumes
-`gl.TRIANGLE`.
+`gl.TRIANGLES`.
 
 Here's an example were we have a non-indexed triangle and an indexed quad. Because
-we're using `webglUtils.drawBufferInfo` the code doesn't have to change when we
+we're using `twgl.drawBufferInfo` the code doesn't have to change when we
 switch data.
 
 {{{example url="../webgl-less-code-more-fun-drawbufferinfo.html" }}}
@@ -424,11 +425,10 @@ ways so people don't get confused about what is WebGL and what is my own style. 
 though showing all the steps gets in the way of the point so going forward some lessons will
 be using this style.
 
-Feel free to use this style in your own code. The functions `webglUtils.createProgramInfo`, `webglUtils.createVAOAndSetAttributes`,
-`webglUtils.createBufferInfoFromArrays`, and `webglUtils.setUniforms` are included in the
-[`webgl-utils.js`](https://github.com/greggman/webgl-fundamentals/blob/master/webgl/resources/webgl-utils.js)
-file used by all the samples. If you want something slightly more organized check out [TWGL.js](http://twgljs.org)
-which is what I actually use.
+Feel free to use this style in your own code. The functions `twgl.createProgramInfo`,
+`twgl.createVAOAndSetAttributes`, `twgl.createBufferInfoFromArrays`, and `twgl.setUniforms`
+etc... are part of a library I wrote based off these ideas. [It's called `TWGL`](http://twgljs.org).
+It rhymes with wiggle and it stands for `Tiny WebGL`.
 
 Next up, [drawing multiple things](webgl-drawing-multiple-things.html).
 
@@ -440,7 +440,7 @@ directly like this.
 </p>
 <pre class="prettyprint">
 // At initialiation time
-var uniformSetters = webglUtils.createUniformSetters(program);
+var uniformSetters = twgl.createUniformSetters(program);
 
 // At draw time
 uniformSetters.u_ambient([1, 0, 0, 1]); // set the ambient color to red.
@@ -494,11 +494,11 @@ void main() {
 <p>Notice I just added a line that sets <code>outColor</code> to a constant color.
 Most drivers will see that none of the previous lines in the file actually contribute
 to the result. As such they'll optimize out all of our uniforms. The next time we run the program
-when we call <code>webgl.createUniformSetters</code> it won't create a setter for <code>u_ambient</code> so the
+when we call <code>twgl.createUniformSetters</code> it won't create a setter for <code>u_ambient</code> so the
 code above that calls <code>uniformSetters.u_ambient()</code> directly will fail with</p>
 <pre class="prettyprint">
 TypeError: undefined is not a function
 </pre>
-<p><code>webglUtils.setUniforms</code> solves that issue. It only sets those uniforms that actually exist</p>
+<p><code>twgl.setUniforms</code> solves that issue. It only sets those uniforms that actually exist</p>
 </div>
 
