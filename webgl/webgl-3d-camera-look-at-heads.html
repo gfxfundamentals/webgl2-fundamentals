@@ -148,16 +148,24 @@ function main() {
   // to hold the translation,
   var fieldOfViewRadians = degToRad(60);
   var cameraAngleRadians = degToRad(0);
+  var cameraHeight = 50;
 
   drawScene();
 
   // Setup a ui.
   webglLessonsUI.setupSlider("#cameraAngle", {value: radToDeg(cameraAngleRadians), slide: updateCameraAngle, min: -360, max: 360});
+  webglLessonsUI.setupSlider("#cameraHeight", {value: cameraHeight, slide: updateCameraHeight, min: -200, max: 200});
 
   function updateCameraAngle(event, ui) {
     cameraAngleRadians = degToRad(ui.value);
     drawScene();
   }
+
+  function updateCameraHeight(event, ui) {
+    cameraHeight = ui.value;
+    drawScene();
+  }
+
 
   // Draw the scene.
   function drawScene() {
@@ -196,7 +204,7 @@ function main() {
 
     // Use matrix math to compute a position on the circle.
     var cameraMatrix = m4.yRotation(cameraAngleRadians);
-    cameraMatrix = m4.translate(cameraMatrix, 0, 50, radius * 1.5);
+    cameraMatrix = m4.translate(cameraMatrix, 0, cameraHeight, radius * 1.5);
 
     // Get the camera's postion from the matrix we computed
     var cameraPosition = [
@@ -209,9 +217,6 @@ function main() {
 
     // Compute the camera's matrix using look at.
     var cameraMatrix = m4.lookAt(cameraPosition, fPosition, up);
-
-    // Make a view matrix from the camera matrix.
-    var viewMatrix = m4.inverse(cameraMatrix);
 
     // Make a view matrix from the camera matrix.
     var viewMatrix = m4.inverse(cameraMatrix);
@@ -548,7 +553,7 @@ var m4 = {
     ];
   },
 
-  transformVector: function(v, m) {
+  transformVector: function(m, v) {
     var dst = [];
     for (var i = 0; i < 4; ++i) {
       dst[i] = 0.0;

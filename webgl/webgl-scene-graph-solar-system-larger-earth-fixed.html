@@ -14,15 +14,14 @@ Simulating a solar system using a scene graph.
 <canvas id="canvas"></canvas>
 </body>
 <!--
-for most samples webgl-utils only provides shader compiling/linking and
-canvas resizing because why clutter the examples with code that's the same in every sample.
-See http://webgl2fundamentals.org/webgl/lessons/webgl-boilerplate.html
-and http://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+This sample uses TWGL (Tiny WebGL) to hide the clutter.
+Otherwise the sample would be full of code not related to the point of the sample.
+For more info see http://webgl2fundamentals.org/webgl/lessons/webgl-less-code-more-fun.html
 -->
-<script src="resources/webgl-utils.js"></script>
+<script src="resources/twgl-full.min.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
 <script src="resources/3d-math.js"></script>
-<script src="resources/primitives.js"></script>
+<script src="resources/flattened-primitives.js"></script>
 <script>
 "use strict";
 
@@ -109,30 +108,16 @@ function main() {
     return;
   }
 
-  function createFlattenedVertices(gl, vertices) {
-    var last;
-    return webglUtils.createBufferInfoFromArrays(
-        gl,
-        primitives.makeRandomVertexColors(
-            primitives.deindexVertices(vertices),
-            {
-              vertsPerColor: 1,
-              rand: function(ndx, channel) {
-                if (channel === 0) {
-                  last = 128 + Math.random() * 128 | 0;
-                }
-                return channel < 3 ? last : 255;
-              },
-            })
-      );
-  }
+  // Tell the twgl to match position with a_position, n
+  // normal with a_normal etc..
+  twgl.setAttributePrefix("a_");
 
-  var sphereBufferInfo = createFlattenedVertices(gl, primitives.createSphereVertices(10, 12, 6));
+  var sphereBufferInfo = flattenedPrimitives.createSphereBufferInfo(gl, 10, 12, 6);
 
   // setup GLSL program
-  var programInfo = webglUtils.createProgramInfo(gl, [vs, fs]);
+  var programInfo = twgl.createProgramInfo(gl, [vs, fs]);
 
-  var sphereVAO = webglUtils.createVAOFromBufferInfo(gl, programInfo, sphereBufferInfo);
+  var sphereVAO = twgl.createVAOFromBufferInfo(gl, programInfo, sphereBufferInfo);
 
   function degToRad(d) {
     return d * Math.PI / 180;
@@ -215,7 +200,7 @@ function main() {
   function drawScene(time) {
     time *= 0.001;
 
-    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+    twgl.resizeCanvasToDisplaySize(gl.canvas);
 
     // Tell WebGL how to convert from clip space to pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -257,7 +242,7 @@ function main() {
 
     // ------ Draw the objects --------
 
-    webglUtils.drawObjectList(gl, objectsToDraw);
+    twgl.drawObjectList(gl, objectsToDraw);
 
     requestAnimationFrame(drawScene);
   }

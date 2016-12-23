@@ -167,9 +167,13 @@ function render(image) {
   gl.vertexAttribPointer(
       texCoordAttributeLocation, size, type, normalize, stride, offset);
 
-  // Pass in the canvas resolution so we can convert from
-  // pixels to clipspace in the shader
-  gl.uniform2f(resolutionLocation, gl.canvas.width, gl.canvas.height);
+
+  var tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
   var kernels = {
     normal: [0, 0, 0, 0, 1, 0, 0, 0, 0],
@@ -229,8 +233,8 @@ function render(image) {
   // it (2 triangles)
   var buffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.enableVertexAttribArray(positionLocation);
-  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(positionAttributeLocation);
+  gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
 
   setRectangle( gl, 0, 0, image.width, image.height);
 

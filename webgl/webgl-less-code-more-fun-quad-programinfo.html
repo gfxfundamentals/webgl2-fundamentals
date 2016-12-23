@@ -14,15 +14,13 @@ Uses a few utility functions so there's much less code.
 <canvas id="canvas"></canvas>
 </body>
 <!--
-for most samples webgl-utils only provides shader compiling/linking and
-canvas resizing because why clutter the examples with code that's the same in every sample.
-See http://webgl2fundamentals.org/webgl/lessons/webgl-boilerplate.html
-and http://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+This sample uses TWGL (Tiny WebGL) to hide the clutter.
+Otherwise the sample would be full of code not related to the point of the sample.
+For more info see http://webgl2fundamentals.org/webgl/lessons/webgl-less-code-more-fun.html
 -->
-<script src="resources/webgl-utils.js"></script>
+<script src="resources/twgl-full.min.js"></script>
 <script src="resources/webgl-lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
 <script src="resources/3d-math.js"></script>
-<script src="resources/primitives.js"></script>
 <script src="resources/texture-utils.js"></script>
 <script src="resources/chroma.min.js"></script>
 <script>
@@ -104,6 +102,10 @@ function main() {
     return;
   }
 
+  // Tell the twgl to match position with a_position, n
+  // normal with a_normal etc..
+  twgl.setAttributePrefix("a_");
+
   // an indexed quad
   var arrays = {
      position: [0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 10, 0],
@@ -111,12 +113,12 @@ function main() {
      normal:   [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
      indices:  [0, 1, 2, 1, 2, 3],
   };
-  var bufferInfo = webglUtils.createBufferInfoFromArrays(gl, arrays);
+  var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
 
   // setup GLSL program
-  var programInfo = webglUtils.createProgramInfo(gl, [vs, fs]);
+  var programInfo = twgl.createProgramInfo(gl, [vs, fs]);
 
-  var vao = webglUtils.createVAOFromBufferInfo(
+  var vao = twgl.createVAOFromBufferInfo(
       gl, programInfo, bufferInfo);
 
   function degToRad(d) {
@@ -179,7 +181,7 @@ function main() {
   function drawScene(time) {
     time = 5 + time * 0.0001;
 
-    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+    twgl.resizeCanvasToDisplaySize(gl.canvas);
 
     // Tell WebGL how to convert from clip space to pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -208,7 +210,7 @@ function main() {
     gl.bindVertexArray(vao);
 
     // Set the uniforms that are the same for all objects.
-    webglUtils.setUniforms(programInfo, uniformsThatAreTheSameForAllObjects);
+    twgl.setUniforms(programInfo, uniformsThatAreTheSameForAllObjects);
 
     // Draw objects
     objects.forEach(function(object) {
@@ -225,10 +227,10 @@ function main() {
       m4.transpose(m4.inverse(worldMatrix), uniformsThatAreComputedForEachObject.u_worldInverseTranspose);
 
       // Set the uniforms we just computed
-      webglUtils.setUniforms(programInfo, uniformsThatAreComputedForEachObject);
+      twgl.setUniforms(programInfo, uniformsThatAreComputedForEachObject);
 
       // Set the uniforms that are specific to the this object.
-      webglUtils.setUniforms(programInfo, object.materialUniforms);
+      twgl.setUniforms(programInfo, object.materialUniforms);
 
       // Draw the geometry.
       gl.drawElements(gl.TRIANGLES, bufferInfo.numElements, gl.UNSIGNED_SHORT, 0);

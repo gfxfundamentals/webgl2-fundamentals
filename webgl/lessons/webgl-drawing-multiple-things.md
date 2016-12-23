@@ -141,9 +141,9 @@ At draw time
         sphereYRotation);
 
     // Set the uniforms we just computed
-    webglUtils.setUniforms(programInfo, sphereUniforms);
+    twgl.setUniforms(programInfo, sphereUniforms);
 
-    webglUtils.drawBufferInfo(gl, sphereBufferInfo);
+    twgl.drawBufferInfo(gl, sphereBufferInfo);
 
     // ------ Draw the cube --------
 
@@ -157,9 +157,9 @@ At draw time
         cubeYRotation);
 
     // Set the uniforms we just computed
-    webglUtils.setUniforms(programInfo, cubeUniforms);
+    twgl.setUniforms(programInfo, cubeUniforms);
 
-    webglUtils.drawBufferInfo(gl, cubeBufferInfo);
+    twgl.drawBufferInfo(gl, cubeBufferInfo);
 
     // ------ Draw the cone --------
 
@@ -173,9 +173,9 @@ At draw time
         coneYRotation);
 
     // Set the uniforms we just computed
-    webglUtils.setUniforms(programInfo, coneUniforms);
+    twgl.setUniforms(programInfo, coneUniforms);
 
-    webglUtils.drawBufferInfo(gl, coneBufferInfo);
+    twgl.drawBufferInfo(gl, coneBufferInfo);
 
 And here's that
 
@@ -190,7 +190,7 @@ This is another place where it's a good idea to simplify. There are effectively 
 1.  A shader program (and its uniform and attribute info)
 2.  A vertex array (that contains attribute settings)
 3.  The uniforms needed to draw that thing with the given shader.
-4.  The count to pass to gl.draw and whether or not to call gl.drawArrays or gl.drawElements
+4.  The count to pass to gl.drawXXX and whether or not to call gl.drawArrays or gl.drawElements
 
 So, a simple simplification would be to make an array of things to draw and in that array
 put the 4 things togehter
@@ -260,10 +260,10 @@ But the drawing code is now just a simple loop
       gl.bindVertexArray(object.vertexArray);
 
       // Set the uniforms.
-      webglUtils.setUniforms(programInfo, object.uniforms);
+      twgl.setUniforms(programInfo, object.uniforms);
 
       // Draw
-      webglUtils.draw(gl, bufferInfo);
+      twgl.drawBufferInfo(gl, bufferInfo);
     });
 
 
@@ -278,7 +278,7 @@ goes in that list with actually calling the `gl.draw___` functions.
 
 In the example above there is just one list to draw. This works because all the objects
 are opaque. If we want to draw transpaent objects though they must be drawn back to front
-with the furthest objects appearing first. On the other hand, for speed, for opaque
+with the furthest objects getting drawn first. On the other hand, for speed, for opaque
 objects we want to draw front to back, that's because the DEPTH_TEST means that the GPU
 will not execute our fragment shader for any pixels that would be behind other things.
 so we want to draw the stuff in front first.
