@@ -28,7 +28,7 @@
     return function(gl) {
       var arrays = createVerticesFunc.apply(null,  Array.prototype.slice.call(arguments, 1));
       return createFlattenedVertices(gl, arrays, vertsPerColor);
-    }
+    };
   }
 
   // These functions make primitives with semi-random vertex colors.
