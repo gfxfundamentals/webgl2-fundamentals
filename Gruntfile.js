@@ -26,7 +26,7 @@ module.exports = function(grunt) {
         src: [
           'webgl/resources/webgl-utils.js',
           'webgl/resources/webgl-lessons-helper.js',
-          'webgl/resources/primitives.js',
+          'webgl/resources/flattened-primitives.js',
           'webgl/resources/2d-math.js',
           'webgl/resources/3d-math.js',
         ],
@@ -47,7 +47,6 @@ module.exports = function(grunt) {
     jsdoc: {
       docs: {
         src: [
-          'webgl/resources/primitives.js',
           'webgl/resources/2d-math.js',
           'webgl/resources/3d-math.js',
           'webgl/resources/webgl-utils.js',
