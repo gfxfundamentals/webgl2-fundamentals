@@ -289,9 +289,9 @@ Connecting them now looks like this
 And we only need to update the orbits
 
     // update the local matrices for each object.
-    =m4.multiply(m4.yRotation(0.01), sunNode.localMatrix  , sunNode.localMatrix);
-    =m4.multiply(m4.yRotation(0.01), earthNode.localMatrix, earthNode.localMatrix);
-    =m4.multiply(m4.yRotation(0.01), moonNode.localMatrix , moonNode.localMatrix);
+    -m4.multiply(m4.yRotation(0.01), sunNode.localMatrix  , sunNode.localMatrix);
+    -m4.multiply(m4.yRotation(0.01), earthNode.localMatrix, earthNode.localMatrix);
+    -m4.multiply(m4.yRotation(0.01), moonNode.localMatrix , moonNode.localMatrix);
     +m4.multiply(m4.yRotation(0.01), earthOrbitNode.localMatrix, earthOrbitNode.localMatrix);
     +m4.multiply(m4.yRotation(0.01), moonOrbitNode.localMatrix, moonOrbitNode.localMatrix);
 

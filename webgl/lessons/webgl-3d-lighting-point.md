@@ -334,9 +334,9 @@ and of course
 
 and
 
-    // set the light color
+    +  // set the light color
     +  gl.uniform3fv(lightColorLocation, normalize([1, 0.6, 0.6]));  // red light
-    // set the specular color
+    +  // set the specular color
     +  gl.uniform3fv(specularColorLocation, normalize([1, 0.6, 0.6]));  // red light
 
 {{{example url="../webgl-3d-lighting-point-color.html" }}}
