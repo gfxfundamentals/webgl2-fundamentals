@@ -90,6 +90,7 @@ function parseHTML(url, html) {
   var bodyRE = /<body>([^]*?)<\/body>/i;
   var inlineScriptRE = /<script>([^]*?)<\/script>/i;
   var externalScriptRE = /<script\s*src\s*=\s*"(.*?)"\s*>\s*<\/script>/ig;
+  var dataScriptRE = /<script (.*?)>([^]*?)<\/script>/ig;
   var hasCanvasInCSSRE = /canvas/;
   var hasCanvasStyleInHTMLRE = /<canvas[^>]+?style[^>]+?>/;
   var cssLinkRE = /<link ([^>]+?)>/;
@@ -108,6 +109,13 @@ function parseHTML(url, html) {
     return '';
   });
 
+  var dataScripts = '';
+  htm = html.replace(dataScriptRE, function(p1, p1, p2) {
+    dataScripts += '\n<script ' + p1 + '>' + p2 + '</script>';
+    return '';
+  });
+
+  htmlParts.html.source += dataScripts;
   htmlParts.html.source += scripts + '\n';
 
   // add style section if there is non
@@ -240,7 +248,7 @@ function setupEditor() {
 
 function toggleFullscreen() {
   try {
-    toggleIFrameFullscreen(window.document);
+    toggleIFrameFullscreen(window);
     resize();
     run();
   } catch (e) {
@@ -279,19 +287,20 @@ function removeClass(elem, className) {
 }
 
 function toggleClass(elem, className) {
-  if (!removeClass(elem, className)) {
+  if (removeClass(elem, className)) {
+    return false;
+  } else {
     addClass(elem, className);
+    return true;
   }
 }
 
-function toggleIFrameFullscreen(childDocument) {
-  var iframes = window.parent.document.querySelectorAll("iframe");
-  [].forEach.call(iframes, function(iframe) {
-    if (iframe.contentDocument === childDocument) {
-      toggleClass(iframe, "fullscreen");
-    }
-  });
-  toggleClass(childDocument.body, "fullscreen");
+function toggleIFrameFullscreen(childWindow) {
+  const frame = childWindow.frameElement;
+  if (frame) {
+    const isFullScreen = toggleClass(frame, "fullscreen");
+    frame.ownerDocument.body.style.overflow = isFullScreen ? "hidden" : "";
+  }
 }
 
 
