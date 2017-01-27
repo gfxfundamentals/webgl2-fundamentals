@@ -10,6 +10,14 @@ function getQuery(s) {
   return query;
 }
 
+const getFQUrl = (function() {
+  const a = document.createElement("a");
+  return function getFQUrl(url) {
+    a.href = url;
+    return a.href;
+  };
+}());
+
 function getHTML(url, callback) {
   var req = new XMLHttpRequest();
   req.open("GET", url, true);
@@ -27,21 +35,30 @@ function getHTML(url, callback) {
 }
 
 function fixSourceLinks(url, source) {
-  var srcRE = /src="/g;
-  var linkRE = /href="/g
-  var imageSrcRE = /image\.src = "/g;
+  var srcRE = /(src=)"(.*?)"/g;
+  var linkRE = /(href=)"(.*?")/g
+  var imageSrcRE = /((?:image|img)\.src = )"(.*?)"/g;
+  var loadImageRE = /(loadImageAndCreateTextureInfo)\(('|")(.*?)('|")/g;
   var loadImagesRE = /loadImages(\s*)\((\s*)\[([^]*?)\](\s*),/g;
-  var loadImageRE = /(loadImageAndCreateTextureInfo)\(('|")/g;
   var quoteRE = /"(.*?)"/g;
 
   var u = new URL(window.location.origin + url);
   var prefix = u.origin + dirname(u.pathname);
-  source = source.replace(srcRE, 'src="' + prefix);
-  source = source.replace(linkRE, 'href="' + prefix);
-  source = source.replace(imageSrcRE, 'image.src = "' + prefix);
-  source = source.replace(loadImageRE, '$1($2' + prefix);
+
+  function addPrefix(url) {
+    return url.indexOf("://") < 0 ? (prefix + url) : url;
+  }
+  function makeLinkFQed(match, p1, url) {
+    return p1 + '"' + addPrefix(url) + '"'
+  }
+  source = source.replace(srcRE, makeLinkFQed);
+  source = source.replace(linkRE, makeLinkFQed);
+  source = source.replace(imageSrcRE, makeLinkFQed);
+  source = source.replace(loadImageRE, function(match, fn, q1, url, q2) {
+    return fn + '(' + q1 + addPrefix(url) + q2;
+  });
   source = source.replace(loadImagesRE, function(match, p1, p2, p3, p4) {
-      p3 = p3.replace(quoteRE, '"' + prefix + '$1"');
+      p3 = p3.replace(quoteRE, '"' + addPrefix(p3) + '"');
       return `loadImages${p1}(${p2}[${p3}]${p4},`;
   });
 
@@ -87,10 +104,11 @@ function parseHTML(url, html) {
   html = html.replace(/<div class="description">[^]*?<\/div>/, '');
 
   var styleRE = /<style>([^]*?)<\/style>/i;
+  var titleRE = /<title>([^]*?)<\/title>/i;
   var bodyRE = /<body>([^]*?)<\/body>/i;
   var inlineScriptRE = /<script>([^]*?)<\/script>/i;
-  var externalScriptRE = /<script\s*src\s*=\s*"(.*?)"\s*>\s*<\/script>/ig;
-  var dataScriptRE = /<script (.*?)>([^]*?)<\/script>/ig;
+  var externalScriptRE = /(<!--(?:(?!-->)[\s\S])*?-->\n){0,1}<script\s*src\s*=\s*"(.*?)"\s*>\s*<\/script>/ig;
+  var dataScriptRE = /(<!--(?:(?!-->)[\s\S])*?-->\n){0,1}<script (.*?)>([^]*?)<\/script>/ig;
   var hasCanvasInCSSRE = /canvas/;
   var hasCanvasStyleInHTMLRE = /<canvas[^>]+?style[^>]+?>/;
   var cssLinkRE = /<link ([^>]+?)>/;
@@ -103,15 +121,22 @@ function parseHTML(url, html) {
   htmlParts.js.source = getHTMLPart(inlineScriptRE, obj, '<script>${js}</script>');
   html = obj.html;
 
+  var tm = titleRE.exec(html);
+  if (tm) {
+    g.title = tm[1];
+  }
+
   var scripts = ''
-  html = html.replace(externalScriptRE, function(p0, p1) {
-    scripts += '\n<script src="' + p1 + '"></script>';
+  html = html.replace(externalScriptRE, function(p0, p1, p2) {
+    p1 = p1 || '';
+    scripts += '\n' + p1 + '<script src="' + p2 + '"></script>';
     return '';
   });
 
   var dataScripts = '';
-  htm = html.replace(dataScriptRE, function(p1, p1, p2) {
-    dataScripts += '\n<script ' + p1 + '>' + p2 + '</script>';
+  html = html.replace(dataScriptRE, function(p1, p1, p2, p3) {
+    p1 = p1 || '';
+    dataScripts += '\n' + p1 + '<script ' + p2 + '>' + p3 + '</script>';
     return '';
   });
 
@@ -161,6 +186,7 @@ function cantGetHTML(e) {
 
 function main() {
   var query = getQuery();
+  g.url = getFQUrl(query.url);
   getHTML(query.url, function(err, html) {
     if (err) {
       console.log(err);
@@ -203,6 +229,98 @@ function resize() {
   });
 }
 
+function addCORSSupport(js) {
+  if (/requestCORS/.test(js)) {
+    return js;
+  }
+
+  let found = false;
+  js = js.replace(/^( +)(img|image)(\.src = )(.*?);.*?$/mg, function(match, indent, variable, code, url) {
+    found = true;
+    return indent + "requestCORSIfNotSameOrigin(" + variable + ", " + url + ")\n" +
+           indent + variable + code + url + ";"
+  });
+  if (found) {
+    js += `
+
+// This is needed if the images are not on the same domain
+// NOTE: The server providing the images must give CORS permissions
+// in order to be able to use the image with WebGL. Most sites
+// do NOT give permission.
+// See: http://webglfundamentals.org/webgl/lessons/webgl-cors-permission.html
+function requestCORSIfNotSameOrigin(img, url) {
+  if ((new URL(url)).origin !== window.location.origin) {
+    img.crossOrigin = "";
+  }
+}
+`;
+  }
+  return js;
+}
+
+function openInCodepen() {
+  const comment = `// ${g.title}
+// from ${g.url}
+
+  `;
+  const pen = {
+    title                 : g.title,
+    description           : "from: " + g.url,
+    tags                  : ["webgl", "webglfundamentals.org"],
+    editors               : "101",
+    html                  : htmlParts.html.editor.getValue(),
+    css                   : htmlParts.css.editor.getValue(),
+    js                    : comment + addCORSSupport(htmlParts.js.editor.getValue()),
+  };
+
+  const elem = document.createElement("div");
+  elem.innerHTML = `
+    <form method="POST" target="_blank" action="https://codepen.io/pen/define" class="hidden">'
+      <input type="hidden" name="data">
+      <input type="submit" />
+    "</form>"
+  `;
+  elem.querySelector("input[name=data]").value = JSON.stringify(pen);
+  window.frameElement.ownerDocument.body.appendChild(elem);
+  elem.querySelector("form").submit();
+  window.frameElement.ownerDocument.body.removeChild(elem);
+}
+
+function openInJSFiddle() {
+  const comment = `// ${g.title}
+// from ${g.url}
+
+  `;
+  const pen = {
+    title                 : g.title,
+    description           : "from: " + g.url,
+    tags                  : ["webgl", "webglfundamentals.org"],
+    editors               : "101",
+    html                  : htmlParts.html.editor.getValue(),
+    css                   : htmlParts.css.editor.getValue(),
+    js                    : comment + htmlParts.js.editor.getValue(),
+  };
+
+  const elem = document.createElement("div");
+  elem.innerHTML = `
+    <form method="POST" target="_black" action="https://jsfiddle.net/api/mdn/" class="hidden">
+      <input type="hidden" name="html" />
+      <input type="hidden" name="css" />
+      <input type="hidden" name="js" />
+      <input type="hidden" name="title" />
+      <input type="hidden" name="wrap" value="b" />
+      <input type="submit" />
+    </form>
+  `;
+  elem.querySelector("input[name=html]").value = htmlParts.html.editor.getValue();
+  elem.querySelector("input[name=css]").value = htmlParts.css.editor.getValue();
+  elem.querySelector("input[name=js]").value = comment + addCORSSupport(htmlParts.js.editor.getValue());
+  elem.querySelector("input[name=title]").value = g.title;
+  window.frameElement.ownerDocument.body.appendChild(elem);
+  elem.querySelector("form").submit();
+  window.frameElement.ownerDocument.body.removeChild(elem);
+}
+
 function setupEditor() {
 
   forEachHTMLPart(function(info, ndx, name) {
@@ -223,6 +341,9 @@ function setupEditor() {
 
   g.iframe = document.querySelector(".result>iframe");
   g.other = document.querySelector(".panes .other");
+
+  document.querySelector(".button-codepen").addEventListener('click', openInCodepen);
+  document.querySelector(".button-jsfiddle").addEventListener('click', openInJSFiddle);
 
   g.result = document.querySelector(".panes .result");
   g.resultButton = document.querySelector(".button-result");
