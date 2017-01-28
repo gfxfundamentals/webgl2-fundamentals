@@ -263,8 +263,19 @@ There are a few caveats though:
         layout(location = 2) in vec3 a_normal;
         layout(location = 3) in vec4 a_color;
 
-    Sets the locations of the 4 attributes. This means you
-    can force them to be comptible across multiple shader
+    Sets the locations of the 4 attributes.
+
+    You can also still do it the WebGL1 way by calling
+    `gl.bindAttribLocation` before calling `gl.linkProgram`.
+
+    For example:
+
+        gl.bindAttribLocation(someProgram, 0, "a_position");
+        gl.bindAttribLocation(someProgram, 1, "a_texcoord");
+        gl.bindAttribLocation(someProgram, 2, "a_normal");
+        gl.bindAttribLocation(someProgram, 3, "a_color");
+
+    This means you can force them to be comptible across multiple shader
     programs. If one program doesn't need all attributes
     the attributes they do need will still be assigned to
     the same locations
@@ -272,7 +283,13 @@ There are a few caveats though:
     If you don't do this you'll need different VAOs for
     different shader programs when using same geometry OR
     you'll need to just do the WebGL1 thing and not use
-    VAOs and always setup attributes at render time.
+    VAOs and always setup attributes at render time which is slow.
+
+    NOTE: of the 2 methods above I'm leaning toward using
+    `gl.bindAttribLocation` because it's easy to have it in one
+    place in my code where as the method of using `layout(location = ?)` has
+    to be in all shaders so in the interest of D.R.Y. `gl.bindAttribLocation`
+    seems better. Maybe I using a shader generator then there'd be no difference.
 
 2.  Always unbind the VAO when you're done
 

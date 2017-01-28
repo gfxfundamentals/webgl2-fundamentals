@@ -51,13 +51,12 @@ all cases.
 
 ## Other minor changes
 
-*  I tried to re-structure many samples just slight to show the most common patterns
+*  I tried to re-structure many samples slightly just to show the most common patterns
 
    For example most apps generally set global WebGL state like blending, culling, depth testing
-   in their render loop since those settings often change several times.
-
-   On webglfundamentals.org I set them at init time because for the example
-   they only needed to be set once but that's not a common pattern.
+   in their render loop since those settings often change several time where as on
+   webglfundamentals.org I set them at init time because for the example they only needed to be
+   set once but that's not a common pattern.
 
 *  I set the viewport in all samples
 
@@ -66,7 +65,7 @@ all cases.
 
 *  I removed jquery.
 
-   Back when I started it was still maybe still not common to
+   Back when I started it was maybe still not common to
    support `&lt;input type="range"&gt;` but now it's supported
    everywhere.
 
