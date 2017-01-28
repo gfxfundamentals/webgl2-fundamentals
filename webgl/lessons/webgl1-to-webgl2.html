@@ -259,15 +259,27 @@ In GLSL 300 es you can do this in the shader</p>
 layout(location = 1) in vec2 a_texcoord;
 layout(location = 2) in vec3 a_normal;
 layout(location = 3) in vec4 a_color;
-</code></pre><p>Sets the locations of the 4 attributes. This means you
-can force them to be comptible across multiple shader
+</code></pre><p>Sets the locations of the 4 attributes.</p>
+<p>You can also still do it the WebGL1 way by calling
+<code>gl.bindAttribLocation</code> before calling <code>gl.linkProgram</code>.</p>
+<p>For example:</p>
+<pre><code>gl.bindAttribLocation(someProgram, 0, &quot;a_position&quot;);
+gl.bindAttribLocation(someProgram, 1, &quot;a_texcoord&quot;);
+gl.bindAttribLocation(someProgram, 2, &quot;a_normal&quot;);
+gl.bindAttribLocation(someProgram, 3, &quot;a_color&quot;);
+</code></pre><p>This means you can force them to be comptible across multiple shader
 programs. If one program doesn&#39;t need all attributes
 the attributes they do need will still be assigned to
 the same locations</p>
 <p>If you don&#39;t do this you&#39;ll need different VAOs for
 different shader programs when using same geometry OR
 you&#39;ll need to just do the WebGL1 thing and not use
-VAOs and always setup attributes at render time.</p>
+VAOs and always setup attributes at render time which is slow.</p>
+<p>NOTE: of the 2 methods above I&#39;m leaning toward using
+<code>gl.bindAttribLocation</code> because it&#39;s easy to have it in one
+place in my code where as the method of using <code>layout(location = ?)</code> has
+to be in all shaders so in the interest of D.R.Y. <code>gl.bindAttribLocation</code>
+seems better. Maybe I using a shader generator then there&#39;d be no difference.</p>
 </li>
 <li><p>Always unbind the VAO when you&#39;re done</p>
 <pre><code>gl.bindVertexArray(null);
