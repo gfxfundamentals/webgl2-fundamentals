@@ -132,7 +132,7 @@ Next we need a fragment shader
     out vec4 outColor;
 
     void main() {
-      // Just set the ouput to a constant redish-purple
+      // Just set the output to a constant redish-purple
       outColor = vec4(1, 0, 0.5, 1);
     }
 
@@ -149,7 +149,7 @@ Then in JavaScript we can look that up
 
      var canvas = document.getElementById("c");
 
-Now we can create a WebGLRenderingContext
+Now we can create a WebGL2RenderingContext
 
      var gl = canvas.getContext("webgl2");
      if (!gl) {
@@ -186,7 +186,7 @@ multiline template strings.
     out vec4 outColor;
 
     void main() {
-      // Just set the ouput to a constant redish-purple
+      // Just set the output to a constant redish-purple
       outColor = vec4(1, 0, 0.5, 1);
     }
     `;
@@ -285,7 +285,7 @@ WebGL can try to use that hint to optimize certain things. `gl.STATIC_DRAW` tell
 we are not likely to change this data much.
 
 Now that we've put data in the a buffer we need to tell the attribute how to get data
-out of it. First we need to create a collection of attributes called a Vertex Array Object.
+out of it. First we need to create a collection of attribute state called a Vertex Array Object.
 
     var vao = gl.createVertexArray();
 
@@ -294,7 +294,9 @@ will apply to that set of attribute state
 
     gl.bindVertexArray(vao);
 
-Now we finally setup the attributes in the vertex array. First off we need to turn the attribute on
+Now we finally setup the attributes in the vertex array. First off we need to turn the attribute on.
+This tells WebGL we want to get data out of a buffer. If we don't turn on the attribute
+then the attribute will have a constant value.
 
     gl.enableVertexAttribArray(positionAttributeLocation);
 
@@ -322,7 +324,7 @@ Note that from the point of view of our GLSL vertex shader the `a_position` attr
 default to `0, 0, 0, 1` so this attribute will get its first 2 values (x and y)
 from our buffer. The z, and w will be the default 0 and 1 respectively.
 
-Before we draw we should resize the canvas to match it's display size. Canvases just like Images have 2 sizes.
+Before we draw we should resize the canvas to match its display size. Canvases just like Images have 2 sizes.
 The number of pixels actually in them and separately the size they are displayed. CSS determines the size
 the canvas is displayed. **You should always set the size you want a canvas with CSS** since it is far far
 more flexible than any other method.
@@ -394,7 +396,7 @@ happned to be 400x300 we'd get something like this
      0.7, 0       ->   340, 150
 
 WebGL will now render that triangle. For every pixel it is about to draw WebGL will call our fragment shader.
-Our fragment shader just sets `gl_FragColor` to `1, 0, 0.5, 1`. Since the Canvas is an 8bit
+Our fragment shader just sets `outColor` to `1, 0, 0.5, 1`. Since the Canvas is an 8bit
 per channel canvas that means WebGL is going to write the values `[255, 0, 127, 255]` into the canvas.
 
 Here's a live version
@@ -419,7 +421,7 @@ let's change the shader so we can supply the position in pixels and have
 it convert to clipspace for us. Here's the new vertex shader
 
     -  in vec4 a_position;
-    *  in vec2 a_position;
+    +  in vec2 a_position;
 
     +  uniform vec2 u_resolution;
 
@@ -531,7 +533,10 @@ And here's the new code that draws 50 rectangles in random places and random col
         gl.uniform4f(colorLocation, Math.random(), Math.random(), Math.random(), 1);
 
         // Draw the rectangle.
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        var primitiveType = gl.TRIANGLES;
+        var offset = 0;
+        var count = 6;
+        gl.drawArrays(primitiveType, offset, count);
       }
     }
 
