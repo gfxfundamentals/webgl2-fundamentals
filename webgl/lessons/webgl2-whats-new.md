@@ -118,11 +118,6 @@ the same as power of 2 textures.
 In WebGL1 a loop in a shader had to use a constant integer expression.
 WebGL2 removes that limit (in GLSL 300 es)
 
-## Indexing sampler arrays restiction removed
-
-In WebGL1 you could only index an array of samplers with constants.
-In WebGL2 that restriction is removed.
-
 ## Matrix functions in GLSL
 
 In WebGL1 if needed to get the inverse of a matrix you had to
