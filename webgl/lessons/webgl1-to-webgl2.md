@@ -209,7 +209,7 @@ was global WebGL state. You can imagine it like this
 
 Calling functions like `gl.vertexAttribPointer`, `gl.enableVertexAttribArray`, and
 `gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ??)` would effect that global state.
-Before each thing you wanted to draw you needed to setup all the attirbutes and if you
+Before each thing you wanted to draw you needed to setup all the attributes and if you
 were drawing indexed data you needed to set the `ELEMENT_ARRAY_BUFFER`.
 
 With Vertex Array Objects that entire `attributeState` above becomes a *Vertex Array*.
@@ -289,7 +289,7 @@ There are a few caveats though:
     `gl.bindAttribLocation` because it's easy to have it in one
     place in my code where as the method of using `layout(location = ?)` has
     to be in all shaders so in the interest of D.R.Y. `gl.bindAttribLocation`
-    seems better. Maybe I using a shader generator then there'd be no difference.
+    seems better. Maybe if I was using a shader generator then there'd be no difference.
 
 2.  Always unbind the VAO when you're done
 
