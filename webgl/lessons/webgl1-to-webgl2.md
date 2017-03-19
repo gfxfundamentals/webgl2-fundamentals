@@ -181,6 +181,33 @@ in WebGL1 textures that were not a power of 2 could not have mips.
 In WebGL2 that limit is removed. Non-power of 2 texture work exactly
 the same as power of 2 textures.
 
+## Floating Point Framebuffer Attachments
+
+In WebGL1 to check for support for rendering to a floating point texture
+you would first check for and enable the `OES_texture_float` extension, then
+you'd create a floating point texture, attach it to a framebuffer, and call
+`gl.checkFramebufferStatus` to see if it returned `gl.FRAMEBUFFER_COMPLETE`.
+
+In WebGL2 you need to check for and enable `EXT_color_buffer_float` or else
+`gl.checkFramebufferStatus` will never return `gl.FRAMEBUFFER_COMPLETE` for
+a floating point texture.
+
+Note that this is also true for `HALF_FLOAT` framebuffer attachments as well.
+
+> If your curious this was a *bug* in the WebLG1 spec. What happened is WebGL1
+> shipped and `OES_texture_float` was added and it was just assumed the correct
+> way to use it for rendering was to create a texture, attach it a framebuffer,
+> and check its status. Later someone pointed out according the spec that was
+> not enough because the spec says colors written in a fragment shader are
+> always clamped to 0 to 1. `EXT_color_buffer_float` removes that clampping
+> restriction but since WebGL had already been shipping for a year or so
+> it would have broken many web sites to enforce the restriction. For WebGL2
+> they were able to fix it and so now you must enable `EXT_color_buffer_float`
+> to use floating point textures as framebuffer attachments.
+>
+> NOTE that AFAIK, as of March 2017 very few mobile devices support rendering to
+> floating point textures.
+
 ## Vertex Array Objects
 
 Of all the features above the one feature I personally think you should
