@@ -198,6 +198,29 @@ all of the following are standard features</p>
 <p>in WebGL1 textures that were not a power of 2 could not have mips.
 In WebGL2 that limit is removed. Non-power of 2 texture work exactly
 the same as power of 2 textures.</p>
+<h2 id="floating-point-framebuffer-attachments">Floating Point Framebuffer Attachments</h2>
+<p>In WebGL1 to check for support for rendering to a floating point texture
+you would first check for and enable the <code>OES_texture_float</code> extension, then
+you&#39;d create a floating point texture, attach it to a framebuffer, and call
+<code>gl.checkFramebufferStatus</code> to see if it returned <code>gl.FRAMEBUFFER_COMPLETE</code>.</p>
+<p>In WebGL2 you need to check for and enable <code>EXT_color_buffer_float</code> or else
+<code>gl.checkFramebufferStatus</code> will never return <code>gl.FRAMEBUFFER_COMPLETE</code> for
+a floating point texture.</p>
+<p>Note that this is also true for <code>HALF_FLOAT</code> framebuffer attachments as well.</p>
+<blockquote>
+<p>If your curious this was a <em>bug</em> in the WebLG1 spec. What happened is WebGL1
+shipped and <code>OES_texture_float</code> was added and it was just assumed the correct
+way to use it for rendering was to create a texture, attach it a framebuffer,
+and check its status. Later someone pointed out according the spec that was
+not enough because the spec says colors written in a fragment shader are
+always clamped to 0 to 1. <code>EXT_color_buffer_float</code> removes that clampping
+restriction but since WebGL had already been shipping for a year or so
+it would have broken many web sites to enforce the restriction. For WebGL2
+they were able to fix it and so now you must enable <code>EXT_color_buffer_float</code>
+to use floating point textures as framebuffer attachments.</p>
+<p>NOTE that AFAIK, as of March 2017 very few mobile devices support rendering to
+floating point textures.</p>
+</blockquote>
 <h2 id="vertex-array-objects">Vertex Array Objects</h2>
 <p>Of all the features above the one feature I personally think you should
 always ALWAYS use is vertex array objects. Everything else it really
