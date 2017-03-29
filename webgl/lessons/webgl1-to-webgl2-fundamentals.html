@@ -99,17 +99,17 @@ of using WebGL2 if you&#39;re not going to use WebGL2 shaders.</p>
 they are a standard feature of WebGL2. <a href="webgl1-to-webgl2.html#Vertex-Array-Objects">I think they should
 be used everywhere</a>.
 In fact I almost think I should go back
-to webglfundamentals.org and use them everywhere <a href="https://github.com/greggman/oes-vertex-array-object/">using a
+to webglfundamentals.org and use them everywhere <a href="https://github.com/greggman/oes-vertex-array-object-polyfill">using
 a polyfill</a>
 for those few places they are not available. There is arguably zero
 downside and your code gets easier and more efficient in almost
 all cases.</p>
 <h2 id="other-minor-changes">Other minor changes</h2>
 <ul>
-<li><p>I tried to re-structure many samples slightly just to show the most common patterns</p>
+<li><p>I tried to re-structure many samples slightly to show the most common patterns</p>
 <p>For example most apps generally set global WebGL state like blending, culling, depth testing
 in their render loop since those settings often change several time where as on
-webglfundamentals.org I set them at init time because for the example they only needed to be
+webglfundamentals.org I set them at init time because they only needed to be
 set once but that&#39;s not a common pattern.</p>
 </li>
 <li><p>I set the viewport in all samples</p>
@@ -118,7 +118,7 @@ don&#39;t actually need it but it&#39;s needed in just about all real world code
 </li>
 <li><p>I removed jquery.</p>
 <p>Back when I started it was maybe still not common to
-support <code>&amp;lt;input type=&quot;range&quot;&amp;gt;</code> but now it&#39;s supported
+support <code>&lt;input type=&quot;range&quot;&gt;</code> but now it&#39;s supported
 everywhere.</p>
 </li>
 <li><p>I made all helper functions have a prefix</p>
@@ -138,7 +138,7 @@ WebGL1 will be mostly replaced by WebGL2 because all the browsers
 are on auto update. Firefox and Chrome will ship WebGL2 soon covering
 a large percentage of users on desktop and Android. If Apple and Microsoft
 add WebGL2 support to Safari macOS, Safari iOS and Edge respectively
-then probably the majority of people will be covered by WebGL1
+then probably the majority of people will be covered
 and we can all just move on to WebGL2.</p>
 <p>Hopefully I&#39;ll find time to add more articles.
 Given the point above, from now on all new articles will be WebGL2 only
