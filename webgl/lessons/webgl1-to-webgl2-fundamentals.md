@@ -43,19 +43,19 @@ Vertex Array Objects are an optional feature on WebGL1 but
 they are a standard feature of WebGL2. [I think they should
 be used everywhere](webgl1-to-webgl2.html#Vertex-Array-Objects).
 In fact I almost think I should go back
-to webglfundamentals.org and use them everywhere [using a
-a polyfill](https://github.com/greggman/oes-vertex-array-object/)
+to webglfundamentals.org and use them everywhere [using
+a polyfill](https://github.com/greggman/oes-vertex-array-object-polyfill)
 for those few places they are not available. There is arguably zero
 downside and your code gets easier and more efficient in almost
 all cases.
 
 ## Other minor changes
 
-*  I tried to re-structure many samples slightly just to show the most common patterns
+*  I tried to re-structure many samples slightly to show the most common patterns
 
    For example most apps generally set global WebGL state like blending, culling, depth testing
    in their render loop since those settings often change several time where as on
-   webglfundamentals.org I set them at init time because for the example they only needed to be
+   webglfundamentals.org I set them at init time because they only needed to be
    set once but that's not a common pattern.
 
 *  I set the viewport in all samples
@@ -66,7 +66,7 @@ all cases.
 *  I removed jquery.
 
    Back when I started it was maybe still not common to
-   support `&lt;input type="range"&gt;` but now it's supported
+   support `<input type="range">` but now it's supported
    everywhere.
 
 *  I made all helper functions have a prefix
@@ -91,7 +91,7 @@ WebGL1 will be mostly replaced by WebGL2 because all the browsers
 are on auto update. Firefox and Chrome will ship WebGL2 soon covering
 a large percentage of users on desktop and Android. If Apple and Microsoft
 add WebGL2 support to Safari macOS, Safari iOS and Edge respectively
-then probably the majority of people will be covered by WebGL1
+then probably the majority of people will be covered
 and we can all just move on to WebGL2.
 
 Hopefully I'll find time to add more articles.
