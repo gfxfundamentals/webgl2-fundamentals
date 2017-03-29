@@ -9,11 +9,11 @@ there are some differences that you should be aware of.
 On webglfundamentals.org nearly all scripts are stored
 in non-javascript `<script>` tags.
 
-    &lt;script id="vertexshader" type="not-js"&gt;
+    <script id="vertexshader" type="not-js">;
     shader
     goes
     here
-    &lt;/script&gt;
+    </script>;
 
     ...
 
