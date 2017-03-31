@@ -3,10 +3,10 @@ window.langDB = {
     "webgl-cors-permission.html": {
       "en": true
     },
-    "webgl-matrix-naming.html": {
+    "webgl-drawing-multiple-things.html": {
       "en": true
     },
-    "webgl-drawing-multiple-things.html": {
+    "webgl-2d-matrices.html": {
       "en": true
     },
     "webgl-2d-matrix-stack.html": {
@@ -78,7 +78,7 @@ window.langDB = {
     "webgl-less-code-more-fun.html": {
       "en": true
     },
-    "webgl-2d-matrices.html": {
+    "webgl-matrix-naming.html": {
       "en": true
     },
     "webgl-resizing-the-canvas.html": {
