@@ -22,11 +22,10 @@ for webgl-utils, m3, m4, and webgl-lessons-ui.
 -->
 <script src="../../resources/webgl-utils.js"></script>
 <script src="../../resources/webgl-lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
-<script src="m4.js"></script>
+<script src="../../resources/m4.js"></script>
 <script>
 "use strict";
 
-var m = ThreeDMath;
 window.onload = main;
 
 function main() {
@@ -64,7 +63,7 @@ function main() {
 
     var scale = 2;
 
-    webglUtils.resizeCanvasToDisplaySize(ctx.canvas);
+    webglUtils.resizeCanvasToDisplaySize(ctx.canvas, window.devicePixelRatio);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save();
@@ -75,17 +74,17 @@ function main() {
 
     var fieldOfView = Math.PI * 0.25;
     var aspect = canvas.clientWidth / canvas.clientHeight;
-    var projection = m.perspective(fieldOfView, aspect, 1, 500);
+    var projection = m4.perspective(fieldOfView, aspect, 1, 500);
     var radius = 5;
     var eye = [
-        Math.sin(clock) * radius,
-        1,
-        Math.cos(clock) * radius];
+        Math.sin(-clock) * radius,
+        1.5,
+        Math.cos(-clock) * radius];
     var target = [0, 0, 0];
-    var up = [0, 1, 0];
-    var view = m.lookAt(eye, target, up);
+    var up = [0, -1, 0];
+    var view = m4.inverse(m4.lookAt(eye, target, up));
 
-    var worldViewProjection = m.multiplyMatrix(view, projection);
+    var worldViewProjection = m4.multiply(projection, view);
 
     drawLines(cubeVertices, indices, worldViewProjection);
     ctx.restore();
@@ -98,7 +97,7 @@ function main() {
     // transform points
     var points = [];
     for (var ii = 0; ii < cubeVertices.length; ii += 3) {
-      points.push(m.transformPoint(
+      points.push(m4.transformPoint(
         worldViewProjection,
         [cubeVertices[ii + 0], cubeVertices[ii + 1], cubeVertices[ii + 2]]));
     }
