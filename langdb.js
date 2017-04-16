@@ -1,9 +1,9 @@
 window.langDB = {
   "articles": {
-    "webgl-cors-permission.html": {
+    "webgl-3d-geometry-lathe.html": {
       "en": true
     },
-    "webgl-drawing-multiple-things.html": {
+    "webgl-cors-permission.html": {
       "en": true
     },
     "webgl-2d-matrices.html": {
@@ -25,6 +25,9 @@ window.langDB = {
       "en": true
     },
     "webgl-3d-camera.html": {
+      "en": true
+    },
+    "webgl-2-textures.html": {
       "en": true
     },
     "webgl-3d-lighting-directional.html": {
@@ -54,10 +57,10 @@ window.langDB = {
     "webgl-boilerplate.html": {
       "en": true
     },
-    "webgl-2-textures.html": {
+    "webgl-2d-drawimage.html": {
       "en": true
     },
-    "webgl-2d-drawimage.html": {
+    "webgl-drawing-multiple-things.html": {
       "en": true
     },
     "webgl-fundamentals.html": {
