@@ -21,11 +21,10 @@ for webgl-utils, m3, m4, and webgl-lessons-ui.
 -->
 <script src="../../resources/webgl-utils.js"></script>
 <script src="../../resources/webgl-lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
-<script src="m4.js"></script>
+<script src="../../resources/m4.js"></script>
 <script>
 "use strict";
 
-var m = ThreeDMath;
 window.onload = main;
 
 function main() {
@@ -97,17 +96,17 @@ function main() {
 
     var fieldOfView = Math.PI * 0.25;
     var aspect = canvas.clientWidth / canvas.clientHeight;
-    var projection = m.perspective(fieldOfView, aspect, 0.0001, 500);
+    var projection = m4.perspective(fieldOfView, aspect, 0.0001, 500);
     var radius = 5;
     var eye = [
         Math.sin(clock) * radius,
-        1,
+        1.5,
         Math.cos(clock) * radius];
     var target = [0, 0, 0];
     var up = [0, 1, 0];
-    var view = m.lookAt(eye, target, up);
+    var view = m4.inverse(m4.lookAt(eye, target, up));
 
-    var worldViewProjection = m.multiplyMatrix(view, projection);
+    var worldViewProjection = m4.multiply(projection, view);
     gl.uniformMatrix4fv(
         worldViewProjectionLoc, false, worldViewProjection);
 
