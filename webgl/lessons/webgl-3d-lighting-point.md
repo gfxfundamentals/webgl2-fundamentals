@@ -67,7 +67,7 @@ Here's all that in context
     +
     +  // compute the vector of the surface to the light
     +  // and pass it to the fragment shader
-    +  v_surfaceToLight = normalize(u_lightWorldPosition - surfaceWorldPosition);
+    +  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
     }
 
 Now in the fragment shader we need to normalize the surface to light vector
@@ -198,7 +198,7 @@ and pass it to the fragment shader.
 
       // compute the vector of the surface to the light
       // and pass it to the fragment shader
-      v_surfaceToLight = normalize(u_lightWorldPosition - surfaceWorldPosition);
+      v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
 
     +  // compute the vector of the surface to the view/camera
     +  // and pass it to the fragment shader
