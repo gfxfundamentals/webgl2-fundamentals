@@ -329,5 +329,3 @@ fragment shader and interpolated (or varied) between the vertices for each pixel
 See <a href="webgl-how-it-works.html">How it works</a> for more details.
 </p>
 </div>
-
-
