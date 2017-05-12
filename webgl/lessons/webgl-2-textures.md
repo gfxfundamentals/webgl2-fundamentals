@@ -232,7 +232,7 @@ We could have done this
 ```
   gl.activeTexture(gl.TEXTURE0 + 0);
   gl.bindTexture(gl.TEXTURE_2D, textures[0]);
-  gl.activeTexture(gl.TEXTURE1 + 1);
+  gl.activeTexture(gl.TEXTURE0 + 1);
   gl.bindTexture(gl.TEXTURE_2D, textures[1]);
 ```
 
