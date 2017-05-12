@@ -163,22 +163,22 @@ Some things I should go over.
 
 The simple way to think of texture units is something like this: All of the texture functions
 work on the "active texture unit". The "active texture unit" is just a global variable
-that's the index of the texture unit you want to work with. Each texture unit has 2 targets.
-The TEXTURE_2D target and the TEXTURE_CUBE_MAP target. Every texture function works with the specified
-target on the current active texture unit. If you were to implement
-WebGL in JavaScript it would look something like this
+that's the index of the texture unit you want to work with. Each texture unit in WebGL2 has 4 targets.
+The TEXTURE_2D target, TEXTURE_3D target, TEXTURE_2D_ARRAY target, and the TEXTURE_CUBE_MAP target.
+Every texture function works with the specified target on the current active texture unit.
+If you were to implement WebGL in JavaScript it would look something like this
 
 ```
 var getContext = function() {
   var textureUnits = [
-    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, },
-    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, },
-    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, },
-    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, },
-    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, },
-    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, },
-    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, },
-    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, },
+    { TEXTURE_2D: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, TEXTURE_CUBE_MAP: null, },
+    { TEXTURE_2D: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, TEXTURE_CUBE_MAP: null, },
+    { TEXTURE_2D: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, TEXTURE_CUBE_MAP: null, },
+    { TEXTURE_2D: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, TEXTURE_CUBE_MAP: null, },
+    { TEXTURE_2D: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, TEXTURE_CUBE_MAP: null, },
+    { TEXTURE_2D: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, TEXTURE_CUBE_MAP: null, },
+    { TEXTURE_2D: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, TEXTURE_CUBE_MAP: null, },
+    { TEXTURE_2D: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, TEXTURE_CUBE_MAP: null, },
   ];
   var activeTextureUnit = 0;
 
@@ -194,10 +194,16 @@ var getContext = function() {
     textureUnits[activeTextureUnit][target] = texture;
   };
 
-  var texImage2D = function(target, ... args ...) {
+  var texImage2D = function(target, ...args) {
     // Call texImage2D on the current texture on the active texture unit
     var texture = textureUnits[activeTextureUnit][target];
-    texture.image2D(...args...);
+    texture.image2D(...args);
+  };
+
+  var texImage3D = function(target, ...args) {
+    // Call texImage3D on the current texture on the active texture unit
+    var texture = textureUnits[activeTextureUnit][target];
+    texture.image3D(...args);
   };
 
   // return the WebGL API
@@ -205,6 +211,7 @@ var getContext = function() {
     activeTexture: activeTexture,
     bindTexture: bindTexture,
     texImage2D: texImage2D,
+    texImage3D: texImage3D,
   }
 };
 ```
