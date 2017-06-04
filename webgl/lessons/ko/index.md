@@ -10,7 +10,7 @@ WebGL2 처음부터 끝까지. 마술은 없다.
 WebGL 1.0에 관심이 있다면 [여기에](http://webglfundamentals.org) 방문하십시오. 이미 WebGL1에 익숙하다면 이 글들을 보고 싶을 것입니다.
 
 <ul>
-<li><a href="/webgl/lessons/ko/webgl-getting-webgl2.html">How to use WebGL2</a></li>
+<li><a href="/webgl/lessons/ko/webgl-getting-webgl2.html">WebGL2 사용하기</a></li>
 <li><a href="/webgl/lessons/webgl2-whats-new.html">What's new in WebGL2</a></li>
 <li><a href="/webgl/lessons/webgl1-to-webgl2.html">Moving from WebGL1 to WebGL2</a></li>
 <li><a href="/webgl/lessons/webgl1-to-webgl2-fundamentals.html">Differences from WebGLFundamentals.org to WebGL2Fundamentals.org</a></li>
