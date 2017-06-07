@@ -17,9 +17,9 @@ vertex shader들의 역활은 vertex위치를 계산 하는 것입니다. 함수
 
    버퍼(Buffers)는 GPU에 올라가는 바이너리 데이터 배열입니다. 물론 버퍼에 원하는 값을 자유롭게 넣을 수 있지만 일반적으로 위치, 법선, 텍스처 좌표, 점 색상 등과 같은 항목을 포함하고 있습니다.
 
-   Attributes는 버퍼에서 데이터를 가져오고 버텍스 쉐이더에 전달하는 방법을 지정하는데 사용됩니다. 예를들어 위치를 3개의 32비트 부동 소수점으로 버퍼에 넣을 수 있습니다. 특정한 attribute에게 어느 버퍼에서 위치 뺴낼지, 어떤 데이터 형식이 와야 되는지(3개의 컴포넌트 32비트 부동소수점), 버퍼에서 어떤 위치에서 오프셋이 시작되는지 그리고 한 위치에서 다음 위치로 이동할떄 얼마큼 바이트를 이동할 것인지 알려줘야 합니다.
+   Attributes는 버퍼에서 데이터를 가져오고 버텍스 쉐이더에 전달하는 방법을 지정하는데 사용됩니다. 예를들어 위치를 3개의 32비트 부동 소수점으로 버퍼에 넣을 수 있습니다. 특정한 attribute에게 어느 버퍼에서 위치 뺴낼지, 어떤 데이터 형식이 이여야 되는지(3개의 컴포넌트 32비트 부동소수점), 버퍼에서 어떤 위치에서 오프셋이 시작되는지 그리고 한 위치에서 다음 위치로 이동할떄 얼마큼 바이트를 이동할 것인지 알려줘야 합니다.
 
-   Buffers는 무작위로 접근할수 없습니다. 대신 버텍스쉐이더가 지정한 횟수 만큼 실행합니다. 실행될 떄마다 각 지정된 버퍼에서 다음 값이 attribute에 할당됩니다.
+   Buffers는 무작위로 접근할수 없습니다. 대신 버텍스 쉐이더가 지정한 횟수 만큼 실행합니다. 실행될 떄마다 각 지정된 버퍼에서 다음 값이 attribute에 할당됩니다.
 
    사용될 각각 버퍼로부터 데이터를 추출하는 방법에 대한 attributes 상태는 VAO (Vertex Array Object)로 수집됩니다.
 
@@ -41,7 +41,7 @@ WebGL은 오직 2가지에만 관여 합니다. 클립 공간 좌표와 색상.
 WebGL을 사용하는 프로그래머로서 할일는 이 2가지를 WebGL에 제공하는 것입니다.
 이를 하기위해 2개의 "쉐이더"를 제공합니다. 버텍스 쉐이더(Vertex shader)는 클립 공간 좌표를 프래그먼트 쉐이더는(Fragment shader)는 색상을 제공합니다.
 
-클립 공간 좌표는 캔버스 크기에 상관없이 항상 -1에서 +1까지를 이용합니다. 여기에 간단한 WebGL을 보여주는 간단한 WebGL 예제가 있습니다.
+클립 공간 좌표는 캔버스 크기에 상관없이 항상 -1에서 +1까지를 사용합니다. 여기에 간단한 WebGL을 보여주는 간단한 WebGL 예제가 있습니다.
 
 버텍스 쉐이더(vertex shader)부터 시작해 보겠습니다.
 
@@ -74,7 +74,7 @@ WebGL을 사용하는 프로그래머로서 할일는 이 2가지를 WebGL에 �
       var stride = 4;
       var size = 4;
       for (var i = 0; i < count; ++i) {
-         positionBuffer부터 다음 4개 값들을 a_position attribute에 복사합니다.
+         // positionBuffer부터 다음 4개 값들을 a_position attribute에 복사합니다.
          attributes.a_position = positionBuffer.slice((offset + i) * stide, size);
          runVertexShader();
          ...
@@ -87,42 +87,39 @@ WebGL을 사용하는 프로그래머로서 할일는 이 2가지를 WebGL에 �
 
     #version 300 es
 
-    // fragment shaders don't have a default precision so we need
-    // to pick one. mediump is a good default. It means "medium precision"
+    // 프래그먼트 쉐이더는 기본 정밀도를 가지고 있지 않으므로 선언을 해야합니다.
+    // mediump은 기본값으로 적당합니다. "중간 정도 정밀도"를 의미합니다.
     precision mediump float;
 
-    // we need to declare an output for the fragment shader
+    // 프래그먼트 쉐이더(fragment shader)에서 출력을 선언 해야합니다.
     out vec4 outColor;
 
     void main() {
-      // Just set the output to a constant redish-purple
+      // 붉은-보라색으로 출력하게 설정합니다.
       outColor = vec4(1, 0, 0.5, 1);
     }
 
-Above we declared `outColor` as our fragment shader's output. We're setting `outColor` to `1, 0, 0.5, 1`
-which is 1 for red, 0 for green, 0.5 for blue, 1 for alpha. Colors in WebGL go from 0 to 1.
+위에서 fragment shader의 출력으로 `outColor`를 선언했습니다. `outColor`를 `1, 0, 0.5, 1`으로 설정했고 1은 빨간색, 0은 초록색, 0.5는 파랑색 마지막 1은 알파입니다. WebGL에서 색상은 0에서 1를 사용합니다.
 
-Now that we have written the 2 shader functions lets get started with WebGL
+이제 2개의 쉐이더 함수를 작성 해서 WebGL을 시작할 수 있습니다.
 
-First we need an HTML canvas element
+첫번째로 HTML canvas 요소가 필요합니다.
 
      <canvas id="c"></canvas>
 
-Then in JavaScript we can look that up
+그다음 자바스크립트에서 찾아볼수 있습니다.
 
      var canvas = document.getElementById("c");
 
-Now we can create a WebGL2RenderingContext
+이제 WebGL2RenderingContext 생성할수 있습니다.
 
      var gl = canvas.getContext("webgl2");
      if (!gl) {
-        // no webgl2 for you!
+        // webgl2를 사용할수 없습니다!
         ...
 
-Now we need to compile those shaders to put them on the GPU so first we need to get them into strings.
-You can create your GLSL strings any way you normally create strings in JavaScript. For example by concatenating,
-by using AJAX to download them, by putting them in non-javascript script tags, or in this case in
-multiline template strings.
+이제 쉐이더 프로그램을 컴파일하여 GPU에 넣어야 하기 떄문에 먼저 쉐이더를 문자열로 가져와야 합니다.
+JavaScript로 문자열을 만드는 일반적인 방법으로 GLSL 문자열을 만들 수 있습니다. 예를 들어, AJAX를 사용하여 연결하거나, 자바 스크립트가 아닌 스크립트 태그에 삽입하거나, 아래 처럼 여러 줄 템플릿 문자열에 삽입하여 연결할 수 있습니다.
 
     var vertexShaderSource = `#version 300 es
 
@@ -154,17 +151,17 @@ multiline template strings.
     }
     `;
 
-In fact, most 3D engines generate GLSL shaders on the fly using various types of templates, concatenation, etc.
-For the samples on this site though none of them are complex enough to need to generate GLSL at runtime.
+실제 대부분 3D 엔진은 다양한 유형의 템플릿, concatenation등을 사용하여 GLSL 쉐이더들을 즉석으로 생성합니다.
+이 사이트의 예제는 런타임에 GLSL을 생성 할만큼 복잡하지는 않습니다.
 
-> NOTE: `#version 300 es` **MUST BE THE VERY FIRST LINE OF YOUR SHADER**. No comments or
-> blank lines are allowed before it! `#version 300 es` tells WebGL2 you want to use WebGL2's
-> shader language called GLSL ES 3.00. If you don't put that as the first line the shader
-> language defaults to WebGL 1.0's GLSL ES 1.00 which has many differences and far less features.
+> NOTE: `#version 300 es`는 **반드시 첫번째 라인에 작성해야합니다**. 그전에 주석이나 빈줄을 사용할 수 없습니다!
+> `#version 300 es`는 WebGL2에 WebGL2를 사용하라고 알려줍니다.
+> 쉐이더 언어는 GLSL ES 3.0이라고 부릅니다. 만약 첫번쨰 라인에 작성을 하지 않았다면
+> 쉐이더 언어는 WebGL ES 1.0으로 설정이 되는데 이는 많은 차이점이 있고 기능이 훨씬 적습니다.
 
-Next we need a function that will create a shader, upload the GLSL source, and compile the shader.
-Note I haven't written any comments because it should be clear from the names of the functions
-what is happening.
+다음으로 쉐이더를 만들고, GLSL 소스를 전달하고, 쉐이더를 컴파일하는 함수가 필요합니다.
+참고로 함수의 이름에서 무엇이 일어나는지 분명하기 떄문에 아무런 주석도 작성하지 않았습니다.
+
 
     function createShader(gl, type, source) {
       var shader = gl.createShader(type);
@@ -179,12 +176,12 @@ what is happening.
       gl.deleteShader(shader);
     }
 
-We can now call that function to create the 2 shaders
+이제 이 함수를 호출하여 2개의 쉐이더를 생성할수 있습니다.
 
     var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
     var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 
-We then need to *link* those 2 shaders into a *program*
+그런 다음 이 두개의 쉐이더를 *프로그램*으로 *링크* 해야합니다.
 
     function createProgram(gl, vertexShader, fragmentShader) {
       var program = gl.createProgram();
@@ -200,33 +197,30 @@ We then need to *link* those 2 shaders into a *program*
       gl.deleteProgram(program);
     }
 
-And call it
+그런 다음 호출합니다.
 
     var program = createProgram(gl, vertexShader, fragmentShader);
 
-Now that we've created a GLSL program on the GPU we need to supply data to it.
-The majority of the WebGL API is about setting up state to supply data to our GLSL programs.
-In this case our only input to our GLSL program is `a_position` which is an attribute.
-The first thing we should do is look up the location of the attribute for the program
-we just created
+이제 GPU에 GLSL 프로그램을 만들었고 이제 데이터를 제공해야합니다.
+대부분의 WebGL API는 GLSL 프로그램에 데이터를 제공하도록 상태를 설정하는 것입니다.
+여기 GLSL 프로그램에서는 오직 attribute `a_position`만 입력하면 됩니다.
+가장 먼저 해야 할일은 방금 작성한 프로그램을 위해서 attribute의 위치를 찾는것 입니다.
 
     var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
 
-Looking up attribute locations (and uniform locations) is something you should
-do during initialization, not in your render loop.
+attribute의 위치(또는 uniform 위치)를 찾는 것은 초기화 과정에서 해야하는 하는 일이며 랜더 루프(render loop)에서는 하지 말아야 합니다.
 
-Attributes get their data from buffers so we need to create a buffer
+Attributes는 버퍼에서 데이터를 가져오기 때문에 버퍼를 생성해야 합니다.
 
     var positionBuffer = gl.createBuffer();
 
-WebGL lets us manipulate many WebGL resources on global bind points.
-You can think of bind points as internal global variables inside WebGL.
-First you bind a resource to a bind point. Then, all other functions
-refer to the resource through the bind point. So, let's bind the position buffer.
+WebGL은 많은 WebGL 리소스들을 전역 바인드 포인트(bind points)로 처리합니다.
+바인드 포인트(bind point)를 WebGL의 내부 전역 변수로 생각할수 있습니다.
+먼저 리소스를 바인드 포인트(bind pont)에 바인드합니다. 그런 다음 다른 모든 함수들이 바인드 포인트를 통해 리소르를 참조합니다. 그러므로 포인트 버퍼를 바인드 해봅시다.
 
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
-Now we can put data in that buffer by referencing it through the bind point
+이제 바인트 포인트를 통해 버퍼를 참조함으로써 버퍼에 데이터를 넣을 수 있습니다.
 
     // three 2d points
     var positions = [
@@ -236,122 +230,91 @@ Now we can put data in that buffer by referencing it through the bind point
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-There's a lot going on here. The first thing is we have `positions` which is a
-JavaScript array. WebGL on other hand needs strongly typed data so the part
-`new Float32Array(positions)` creates a new array of 32bit floating point numbers
-and copies the values from `positions`. `gl.bufferData` then copies that data to
-the `positionBuffer` on the GPU. It's using the position buffer because we bound
-it to the `ARRAY_BUFFER` bind point above.
+여기에 많은 것들이 있습니다. 먼저 자바스크립트 배열인 `positions`이 있습니다. 반면 WebGL은 강력한 형식의 데이터를 필요하므로 `new Float32Array(positions)` 부분은 `positions`으로 부터 값을 복사해 새로운 32비트 부동소수점형 배열을 생성합니다. `gl.bufferData`는 데이터를 GPU에 있는 `positionBuffer`에 복사합니다. 위에서 `ARRAY_BUFFER` 바인드 포인트로 바인드 했기 떄문에 position buffer를 사용합니다.
 
-The last argument, `gl.STATIC_DRAW` is a hint to WebGL about how we'll use the data.
-WebGL can try to use that hint to optimize certain things. `gl.STATIC_DRAW` tells WebGL
-we are not likely to change this data much.
+마지막 매개변수 `gl.STATIC_DRAW`는 WebGL에 데이터를 어떻게 사용할 것인지에 대한 힌트입니다. WebGL은 확실한 것(certain things?)들을 최적화하기 위해 이 힌트를 사용 할 수 있습니다. `gl.STATIC_DRAW`는 이 데이터를 많이 변경하지는 않을 것이라고 알려줍니다.
 
-Now that we've put data in the a buffer we need to tell the attribute how to get data
-out of it. First we need to create a collection of attribute state called a Vertex Array Object.
+이제 데이터를 버퍼에 넣었고 attribute에게 데이터를 가져오는 방법을 알려줘야 합니다. 먼저 Vertex Array Object라고 불리는 attribute 상태 콜렉션을 생성해야합니다.
 
     var vao = gl.createVertexArray();
 
-And we need to make that the current vertex array so that all of our attribute settings
-will apply to that set of attribute state
+모든 attribute 설정이 attribute 상태 모음(콜렉션?)에 적용하기 위해서 현재의 버텍스 배열을 만들어야합니다.
 
     gl.bindVertexArray(vao);
 
-Now we finally setup the attributes in the vertex array. First off we need to turn the attribute on.
-This tells WebGL we want to get data out of a buffer. If we don't turn on the attribute
-then the attribute will have a constant value.
+이제 마침내 버텍스 배열에 attributes를 설정했습니다. 먼저 attribute를 작동 시켜야합니다. 이는 WebGL에 버퍼에서 데이터를 가져오고 싶다고 알려주는 것입니다. attributes을 작동 시키지 않으면 attributes는 상수 값을 가지고 올 것입니다.
 
     gl.enableVertexAttribArray(positionAttributeLocation);
 
-Then we need to specify how to pull the data out
+그런 다음 데이터를 가져오는 방법을 지정해야 합니다.
 
-    var size = 2;          // 2 components per iteration
-    var type = gl.FLOAT;   // the data is 32bit floats
-    var normalize = false; // don't normalize the data
-    var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-    var offset = 0;        // start at the beginning of the buffer
+    var size = 2;          // 한번 실행할 때마다 2개 구성 요소 사용
+    var type = gl.FLOAT;   // 데이터는 32비트 소수점
+    var normalize = false; // 정규화 되지 않은 데이터
+    var stride = 0;        // 0 은 실행할 떄마다 `size * sizeof(type)`만큼 다음 위치로 이동합니다.
+    var offset = 0;        // 버퍼 처음 부터 시작한다.
     gl.vertexAttribPointer(
         positionAttributeLocation, size, type, normalize, stride, offset)
 
-A hidden part of `gl.vertexAttribPointer` is that it binds the current `ARRAY_BUFFER`
-to the attribute. In other words now this attribute is bound to
-`positionBuffer`. That means we're free to bind something else to the `ARRAY_BUFFER` bind point.
-The attribute will continue to use `positionBuffer`.
+`gl.vertexAttribPointer`의 숨겨진 부분은 현재 `ARRAY_BUFFER`를 attribute에 바인하는것 입니다. 다시 말해서 이 attribute는 `positionBuffer`에 바인드 됬습니다. 이는 자유롭게 다른 `ARRAY_BUFFER` 바인트 포인트(bind point)를 바인드 할 수 있음을 의미합니다.
+attribute은 `positionBuffer`를 계속 사용합니다.
 
-Note that from the point of view of our GLSL vertex shader the `a_position` attribute was a `vec4`
+GLSL 버텍스 쉐이더의 관점에서 `a_position` attribute는 `vec4`입니다.
 
     in vec4 a_position;
 
-`vec4` is a 4 float value. In JavaScript you could think of it something like
-`a_position = {x: 0, y: 0, z: 0, w: 0}`. Above we set `size = 2`. Attributes
-default to `0, 0, 0, 1` so this attribute will get its first 2 values (x and y)
-from our buffer. The z, and w will be the default 0 and 1 respectively.
+`vec4`는 4 개의 소수점 값입니다. 자바스크립트 에서는 `a_position = {x: 0, y: 0, z: 0, w: 0}`와 같은 것이라고 생각할 수 있습니다. 위에서 `size = 2`라고 설정했습니다. Attributes에서 기본값은 이므로 버퍼에서 처음 2개 값(x와 y)을 가져옵니다. z와 w는 각각 기본값 0과 1이 될 것입니다.
 
-Before we draw we should resize the canvas to match its display size. Canvases just like Images have 2 sizes.
-The number of pixels actually in them and separately the size they are displayed. CSS determines the size
-the canvas is displayed. **You should always set the size you want a canvas with CSS** since it is far far
-more flexible than any other method.
+그리기 전에 캔버스 크기를 디스플레이 크기와 일치하도록 조정 해야합니다. 캔버스에는 이미지와 마찬가지로 2 가지 크기가 있습니다.
+실제로 안에있는 픽셀의 수와 표시되는 크기가 따로 있습니다. CSS는 캔버스가 표시되는 크기를 결정합니다. 다른 방법보다 훨씬 유연하기 때문에 원하는 **항상 캔버스 크기를 CSS로 설정해야 합니다**.
 
-To make the number of pixels in the canvas match the size it's displayed
-[I'm using a helper function you can read about here](webgl-resizing-the-canvas.html).
+검사버튼 삭제버튼 캔버스에서 보이는 크기와 픽셀 수를 일치 시키기 위해서 [여기에서 볼 수 있는 헬퍼 함수를 사용하고 있습니다.](webgl-resizing-the-canvas.html)
 
-In nearly all of these samples the canvas size is 400x300 pixels if the sample is run in its own window
-but stretches to fill the available space if it's in side an iframe like it is on this page.
-By letting CSS determine the size and then adjusting to match we easily handle both of these cases.
+거의 모든 예제에서 캔버스 크기는 예제가 자체 창에서 실행되는 경우 400x300픽셀 이지만 이 페이지 처럼 iframe를 사용한다면 공간을 채우기 위해 늘어날수 있습니다. CSS가 크기를 결정하도록 하고 이에 맞춰서 일치하게 조정하면 두 가지 경우를 모두 쉽게 처리 할 수 있습니다.
 
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
-We need to tell WebGL how to convert from the clip space
-values we'll be setting `gl_Position` to back into pixels, often called screen space.
-To do this we call `gl.viewport` and pass it the current size of the canvas.
+WebGL에게 어떻게 클립 공간 값을 화면 공간이라고 하는 픽셀로 변환을 할것인지 알려줘야합니다.
+이를 위해서 `gl.viewport`를 호출하고 현재의 캔버스 크기를 넘겨줍니다.
 
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-This tells WebGL the -1 +1 clip space maps to 0 -> `gl.canvas.width` for x and 0 -> `gl.canvas.height`
-for y.
+이렇게 하면 WebGL에 -1 ~ +1 클립 공간이 0 -> `gl.canvas.width`는 x에 0 -> `gl.canvas.height`는 y로 맵핑됩니다.
 
-We clear the canvas. `0, 0, 0, 0` are r, g, b, alpha so in this case we're making the canvas transparent.
+캔버스를 지웁니다. `0, 0, 0, 0`는 r, g, b, alpha 이므로 여기에서는 캔버스를 투명하게 만듭니다.
 
-    // Clear the canvas
+    // 캔버스 지우기
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-Next we need to tell WebGL which shader program to execute.
+다음으로 WebGL에 실행할 쉐이더 프로그램을 알려야 합니다.
 
-    // Tell it to use our program (pair of shaders)
+    // 사용할 프로그램을 알립니다.(쉐이더 쌍)
     gl.useProgram(program);
 
-Then we need to tell it which set of buffers use and how to pull data out of those buffers to
-supply to the attributes
+사용하는 버퍼 집합과 attributes에 제공하기 위해 이 버퍼들 중에서 어떻게 데이터를 가져 올 것인지 알려 주워야 합니다.
 
-    // Bind the attribute/buffer set we want.
+    // 원하는 attribute/buffer를 바인드 해야합니다.
     gl.bindVertexArray(vao);
 
-After all that we can finally ask WebGL to execute our GLSL program.
+이제 WebGL에 GLSL 프로그램을 실행하라고 요청할 수 있습니다.
 
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
     var count = 3;
     gl.drawArrays(primitiveType, offset, count);
 
-Because the count is 3 this will execute our vertex shader 3 times. The first time `a_position.x` and `a_position.y`
-in our vertex shader attribute will be set to the first 2 values from the positionBuffer.
-The 2nd time `a_position.xy` will be set to the 2nd two values. The last time it will be
-set to the last 2 values.
+count가 3개이기 때문에 버텍스 쉐이더는 3번 실행됩니다. 처음에는 버텍스 쉐이더 attribute에서 `a_position.x`와 `a_position.y`가 positionBuffer의 처음 2개의 값으로 설정됩니다. 2번쨰에는 `a_position.xy` 2번쨰 2개의 값으로 설정 됩니다. 마지막으로 마지막 2개의 값으로 설정됩니다.
 
-Because we set `primitiveType` to `gl.TRIANGLES`, each time our vertex shader is run 3 times
-WebGL will draw a triangle based on the 3 values we set `gl_Position` to. No matter what size
-our canvas is those values are in clip space coordinates that go from -1 to 1 in each direction.
+`primitiveType`이 `gl.TRIANGLES`으로 설정 되었기 떄문에, 버텍스 쉐이더가 3번 실행 될때 마다 WebGL은 `gl_Position`을 설정한 3개의 값에 따라 삼각형을 그립니다. 캔버스 크기에 상관없이 이값들은 클립 공간 좌표에 있으며 각 방향에서 -1 에서 1로 바뀝니다.
 
-Because our vertex shader is simply copying our positionBuffer values to `gl_Position` the
-triangle will be drawn at clip space coordinates
+버텍스 쉐이더는 단순히 positionBuffer 값을 `gl_Position`로 복사하기 떄문에 삼각형은 클립 공간 좌표에 그려집니다.
 
       0, 0,
       0, 0.5,
       0.7, 0,
 
-Converting from clip space to screen space WebGL is going to draw a triangle at. If the canvas size
-happned to be 400x300 we'd get something like this
+클립 공간에서 변환된 스크린 공간에 WebgGL은 삼각형을 그릴 것입니다. 만약 캔버스 크기가 400x300 인 경우 다음과 같이 표시됩니다.
 
      clip space      screen space
        0, 0       ->   200, 150
