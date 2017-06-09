@@ -64,10 +64,12 @@ window.langDB = {
       "en": true
     },
     "webgl-fundamentals.html": {
-      "en": true
+      "en": true,
+      "ko": true
     },
     "webgl-getting-webgl2.html": {
-      "en": true
+      "en": true,
+      "ko": true
     },
     "webgl-how-it-works.html": {
       "en": true
@@ -115,13 +117,18 @@ window.langDB = {
       "en": true
     },
     "webgl2-whats-new.html": {
-      "en": true
+      "en": true,
+      "ko": true
     }
   },
   "langs": {
     "en": {
       "lang": "en",
       "language": "English"
+    },
+    "ko": {
+      "lang": "ko",
+      "language": "한국어"
     }
   }
 }
