@@ -3,7 +3,7 @@ Description: 기본으로 시작하는 첫 번째 WebGL2 강의
 
 제일 중요한 걸 먼저 말하자면, 이 글은 WebGL2에 관한 글입니다. 만약 WebGL1.0에 관심이 있다면 [여기를 방문하십시오](http://webglfundamentals.org). 알아야 할 것은 WebGL2는 [WebGL1과 거의 100% 역호환이 됩니다](webgl1-backward-compatibility.html). 즉, 일단 WebGL2를 사용하면 원래 사용 의도처럼 사용할 수 있습니다. 이 튜토리얼은 이 방향을 따름니다.
 
-WebGL은 종종 3D API로 간주됩니다. 사람들은 "WebGL과 *마법* 을 사용해서 멋진 3D를 만들어야지" 라고 합니다. 실제로 WebGL은 단순히 레스트화 엔진일 뿐입니다. WebGL은 제공한 코드에 기반하여 점, 선 및 삼각형들을 그립니다. 원하는 것을 하기 위해 WebGL이 다른 일을 하도록 하는 것은 점, 선 및 삼각형들을 사용하는 코드를 제공하는 것에 달려있습니다.
+WebGL은 종종 3D API로 간주됩니다. 사람들은 "WebGL과 *마법*을 사용해서 멋진 3D를 만들어야지" 라고 합니다. 실제로 WebGL은 단순히 레스트화 엔진일 뿐입니다. WebGL은 제공한 코드에 기반하여 점, 선 및 삼각형들을 그립니다. 원하는 것을 하기 위해 WebGL이 다른 일을 하도록 하는 것은 점, 선 및 삼각형들을 사용하는 코드를 제공하는 것에 달려있습니다.
 
 WebGL은 컴퓨터의 GPU에서 실행됩니다. 따라서 GPU에서 실행되는 코드를 제공해야합니다. 두개 함수 쌍 형태로 코드를 제공해야합니다. 이 두 개의 함수는 버텍스 쉐이더(vertex shader)와 프래그먼트 쉐이더(fragment shader)라고 불리며 각각은 C/C++같이 매우 엄격한 타입을 가지고 있는 [GLSL](webgl-shaders-and-glsl.html)(GL Shader Language)으로 작성돼 있습니다. 이 두 쌍을 합쳐서 *프로그램(program)* 이라고 부릅니다.
 
@@ -60,7 +60,7 @@ WebGL을 사용하는 프로그래머로서 할일는 이 2가지를 WebGL에 �
 
 실행 될떄 모든 코드를 GLSL대신 JavaScript로 작성을 한다면 다음과 같이 쓰일 것이라고 생각할수 있습니다.
 
-    // *** PSUEDO CODE!! ***
+    // *** 수도 코드!! ***
 
     var positionBuffer = [
       0, 0, 0, 0,
@@ -123,30 +123,29 @@ JavaScript로 문자열을 만드는 일반적인 방법으로 GLSL 문자열을
 
     var vertexShaderSource = `#version 300 es
 
-    // an attribute is an input (in) to a vertex shader.
-    // It will receive data from a buffer
+    // attribute는 버텍스 쉐이더에 대한 입력(in)입니다.
+    // 버퍼로 부터 받은 데이터입니다.
     in vec4 a_position;
 
-    // all shaders have a main function
+    // 모든 쉐이더는 main 함수를 가지고 있습니다.
     void main() {
 
-      // gl_Position is a special variable a vertex shader
-      // is responsible for setting
+      // gl_Position는 버텍스 쉐이더가 설정을 담당하는 내장 변수입니다.
       gl_Position = a_position;
     }
     `;
 
     var fragmentShaderSource = `#version 300 es
 
-    // fragment shaders don't have a default precision so we need
-    // to pick one. mediump is a good default. It means "medium precision"
+    // 프래그먼트 쉐이더는 기본 정밀도를 가지고 있지 않으므로 선언을 해야합니다.
+    // mediump은 기본값으로 적당합니다. "중간 정도 정밀도"를 의미합니다.
     precision mediump float;
 
-    // we need to declare an output for the fragment shader
+    // 프래그먼트 쉐이더(fragment shader)에서 출력을 선언 해야합니다.
     out vec4 outColor;
 
     void main() {
-      // Just set the output to a constant redish-purple
+      // 붉은-보라색으로 출력하게 설정합니다.
       outColor = vec4(1, 0, 0.5, 1);
     }
     `;
@@ -154,7 +153,7 @@ JavaScript로 문자열을 만드는 일반적인 방법으로 GLSL 문자열을
 실제 대부분 3D 엔진은 다양한 유형의 템플릿, concatenation등을 사용하여 GLSL 쉐이더들을 즉석으로 생성합니다.
 이 사이트의 예제는 런타임에 GLSL을 생성 할만큼 복잡하지는 않습니다.
 
-> NOTE: `#version 300 es`는 **반드시 첫번째 라인에 작성해야합니다**. 그전에 주석이나 빈줄을 사용할 수 없습니다!
+> 노트: `#version 300 es`는 **반드시 첫번째 라인에 작성해야합니다**. 그전에 주석이나 빈줄을 사용할 수 없습니다!
 > `#version 300 es`는 WebGL2에 WebGL2를 사용하라고 알려줍니다.
 > 쉐이더 언어는 GLSL ES 3.0이라고 부릅니다. 만약 첫번쨰 라인에 작성을 하지 않았다면
 > 쉐이더 언어는 WebGL ES 1.0으로 설정이 되는데 이는 많은 차이점이 있고 기능이 훨씬 적습니다.
