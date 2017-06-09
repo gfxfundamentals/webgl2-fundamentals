@@ -274,7 +274,7 @@ GLSL 버텍스 쉐이더의 관점에서 `a_position` attribute는 `vec4`입니�
 
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
-WebGL에게 어떻게 클립 공간 값을 화면 공간이라고 하는 픽셀로 변환을 할것인지 알려줘야합니다.
+WebGL에게 어떻게 클립 공간 값을 화면 공간이라고 불리는 픽셀로 변환을 할것인지 알려줘야합니다.
 이를 위해서 `gl.viewport`를 호출하고 현재의 캔버스 크기를 넘겨줍니다.
 
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -316,35 +316,25 @@ count가 3개이기 때문에 버텍스 쉐이더는 3번 실행됩니다. 처�
 
 클립 공간에서 변환된 스크린 공간에 WebgGL은 삼각형을 그릴 것입니다. 만약 캔버스 크기가 400x300 인 경우 다음과 같이 표시됩니다.
 
-     clip space      screen space
+      클립 공간          화면 공간
        0, 0       ->   200, 150
        0, 0.5     ->   200, 225
      0.7, 0       ->   340, 150
 
-WebGL will now render that triangle. For every pixel it is about to draw WebGL will call our fragment shader.
-Our fragment shader just sets `outColor` to `1, 0, 0.5, 1`. Since the Canvas is an 8bit
-per channel canvas that means WebGL is going to write the values `[255, 0, 127, 255]` into the canvas.
+WebGL은 이제 삼각형을 렌더링할 것입니다. WebGL이 그릴 모든 픽셀은 프레그먼트 쉐이더(fragment shader)를 호출합니다. 프레그먼트 쉐이더(fragment shader)는 단순히 `outColor`를 `1, 0, 0.5, 1`으로 설정합니다. 캔버스는 채널당 8비트 캔버스이기 때문에 WebGL은 `[255, 0, 127, 255]`값을 캔버스에 씁니다.
 
-Here's a live version
+여기에 라이브 버전이 있습니다.
 
 {{{example url="../webgl-fundamentals.html" }}}
 
-In the case above you can see our vertex shader is doing nothing
-but passing on our position data directly. Since the position data is
-already in clipspace there is no work to do. *If you want 3D it's up to you
-to supply shaders that convert from 3D to clipspace because WebGL is only
-a rasterization API*.
+위의 경우 버텍스 쉐이더(vertex shader)가 아무것도 하지 않고 위치 직접 데이터를 전달 하는 것을 볼 수 있습니다. 위치 데이터가 이미 클립 공간에 있으므로 다른 작업을 할 필요가 없습니다. *만약 3D를 원하다면 WebGL은 래스터화(rasterization) API이기 떄문에 3D를 클립 공간으로 변환하는 제공하는 쉐이더를 제공해야 합니다.*.
 
-You might be wondering why does the triangle start in the middle and go to toward the top right.
-Clip space in `x` goes from -1 to +1. That means 0 is in the center and positive values will
-be to the right of that.
+왜 삼각형이 가운데에서 시작하여 오른쪽 상단으로 이동하는지 궁금해 할 것입니다.
+`x`의 클립 공간은 -1에서 +1 사이입니다. 이는 0이 가운데 있고 양수 값이 오른쪽에 있다는 것을 의미합니다.
 
-As for why it's on the top, in clip space -1 is at the bottom and +1 is at the top. That means
-0 is in the center and so positive numbers will be above the center.
+상단에 있는 이유는 클립 공간에서 -1는 하단에 +1은 상단에 있기 떄문입니다. 즉 0은 가운데 이고 양수값은 가운데보다 위에 있기 떄문입니다.
 
-For 2D stuff you would probably rather work in pixels than clipspace so
-let's change the shader so we can supply the position in pixels and have
-it convert to clipspace for us. Here's the new vertex shader
+2D의 경우 클립 공간보다 픽셀 단위로 더 작업을 해야 하므로 픽셀 단위로 위치를 제공하고 클립 공간으로 변환할 수 있게 쉐이더를 변경해야 합니다. 여기에 새로운 버텍스 쉐이더가 있습니다.
 
     -  in vec4 a_position;
     +  in vec2 a_position;
@@ -352,31 +342,27 @@ it convert to clipspace for us. Here's the new vertex shader
     +  uniform vec2 u_resolution;
 
       void main() {
-    +    // convert the position from pixels to 0.0 to 1.0
+    +    // 픽셀 위치를 0.0에서 1.0로 변환합니다.
     +    vec2 zeroToOne = a_position / u_resolution;
     +
-    +    // convert from 0->1 to 0->2
+    +    // 0 -> 1에서 0 -> 2로 변환
     +    vec2 zeroToTwo = zeroToOne * 2.0;
     +
-    +    // convert from 0->2 to -1->+1 (clipspace)
+    +    // 0 -> 2 에서 -1 -> +1 변환(클립 공간)
     +    vec2 clipSpace = zeroToTwo - 1.0;
     +
     *    gl_Position = vec4(clipSpace, 0, 1);
       }
 
-Some things to notice about the changes. We changed `a_position` to a `vec2` since we're
-only using `x` and `y` anyway. A `vec2` is similar to a `vec4` but only has `x` and `y`.
+변경 사항에 대해 알아야 할 것들이 있습니다.  `x`와 `y`만 사용하기 떄문에 `a_position`를 `vec2`로 변경했습니다. `vec2`는 `vec4`와 비슷하지만 오직 `x`와 `y`만 가지고 있습니다.
 
-Next we added a `uniform` called `u_resolution`. To set that we need to look up its location.
+다음으로 `u_resolution`이라 불리는 `uniform`를 추가했습니다. 설정 하기 위해서 위치를 찾아야합니다.
 
     var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
 
-The rest should be clear from the comments. By setting `u_resolution` to the resolution
-of our canvas the shader will now take the positions we put in `positionBuffer` supplied
-in pixels coordinates and convert them to clip space.
+나머지는 주석에서 명확해야 합니다. `u_resolution`을 캔버스의 해상도로 설정함으로써 이제 쉐이더는 픽셀 좌표로 제공되는`positionBuffer`에 넣은 위치를 클립 공간으로 변환 합니다.
 
-Now we can change our position values from clip space to pixels. This time we're going to draw a rectangle
-made from 2 triangles, 3 points each.
+이제 위치 값을 클립 공간에서 픽셀로 변경할 수 있습니다. 이번에는 각각 3개의 포인트를 가진 2개의 삼각형으로 만든 직사각형을 그립니다.
 
     var positions = [
     *  10, 20,
@@ -388,48 +374,38 @@ made from 2 triangles, 3 points each.
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-And after we set which program to use we can set the value for the uniform we created.
-Use program is like `gl.bindBuffer` above in that it sets the current program. After
-that all the `gl.uniformXXX` functions set uniforms on the current program.
+사용할 프로그램을 설정한 후에 생성한 uniform 값을 설정할 수 있습니다. 프로그램을 사용한다는 것은 현재 프로그램을 설정한다는 점에서 위의`gl.bindBuffer`와 같습니다. 이후 모든 `gl.uniformXXX`함수는 현재 프로그램에서 uniforms을 설정합니다.
 
     gl.useProgram(program);
 
-    // Pass in the canvas resolution so we can convert from
-    // pixels to clipspace in the shader
+    // 쉐이더 픽섹에서 클립 공간으로 변환 할 수 있도록 캔버스 해상도를 전달합니다.
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
-And of course to draw 2 triangles we need to have WebGL call our vertex shader 6 times
-so we need to change the `count` to `6`.
+그리고 물론 2개의 삼각형을 그리기 위해서 버텍스 쉐이더를 6번 호출해야 하므로 `count`를 `6`으로 변경 해야합니다.
 
-    // draw
+    // 그리기
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
     *var count = 6;
     gl.drawArrays(primitiveType, offset, count);
 
-And here it is
+여기에 예제가 있습니다.
 
-Note: This example and all following examples use [`webgl-utils.js`](/webgl/resources/webgl-utils.js)
-which contains functions to compile and link the shaders. No reason to clutter the examples
-with that [boilerplate](webgl-boilerplate.html) code.
+참고: 이 예제와 다음 나오는 모든 예제들은 컴파일하고 쉐이더를 연결하는 함수를 포함하는 [`webgl-utils.js`](/webgl/resources/webgl-utils.js)를 사용합니다. 예제를 복잡하게 만들 필요 없이 [boilerplate](webgl-boilerplate.html) 코드를 사용합니다.
 
 {{{example url="../webgl-2d-rectangle.html" }}}
 
-Again you might notice the rectangle is near the bottom of that area. WebGL considers the bottom left
-corner to be 0,0. To get it to be the more traditional top left corner used for 2d graphics APIs
-we can just flip the clip space y coordinate.
+다시 말하자면 사각형이 해당 영역의 거의 아래쪽에 있음을 알 수 있습니다. WebGL은 왼쪽 하단 구석을 0,0으로 간주합니다. 전통적인 왼쪽 상단 모서리를 2D 그래픽 API에서 사용하려면 클립 공간 y좌표를 뒤집어서 사용 할 수 있습니다.
 
     *   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 
-And now our rectangle is where we expect it.
+이제 직사각형이 예상한곳에 있습니다.
 
 {{{example url="../webgl-2d-rectangle-top-left.html" }}}
 
-Let's make the code that defines a rectangle into a function so
-we can call it for different sized rectangles. While we're at it
-we'll make the color settable.
+다른 크기의 직사각형들을 호출 할수 있도록 함수에서 직사각형을 정의하는 코드를 작성 합시다. 이를 하기전에(While we're at it?) 색상을 설정 가능하게 만들것입니다.
 
-First we make the fragment shader take a color uniform input.
+먼저 프레그먼트 쉐이더(fragment shader)가 색상 uniform을 입력할 수 있게 해야 합니다.
 
     #version 300 es
 
@@ -444,21 +420,21 @@ First we make the fragment shader take a color uniform input.
     *  outColor = u_color;
     }
 
-And here's the new code that draws 50 rectangles in random places and random colors.
+여기에 랜덤 위치와 랜덤 색상으로 50개의 직사각형을 그리는 새로운 코드가 있습니다.
 
       var colorLocation = gl.getUniformLocation(program, "u_color");
       ...
 
-      // draw 50 random rectangles in random colors
+      // 랜덤 색상으로 50개의 랜덤 직사각형을 그립니다.
       for (var ii = 0; ii < 50; ++ii) {
         // Setup a random rectangle
         setRectangle(
             gl, randomInt(300), randomInt(300), randomInt(300), randomInt(300));
 
-        // Set a random color.
+        // 랜덤 색상 설정
         gl.uniform4f(colorLocation, Math.random(), Math.random(), Math.random(), 1);
 
-        // Draw the rectangle.
+        // 직사각형 그리기.
         var primitiveType = gl.TRIANGLES;
         var offset = 0;
         var count = 6;
@@ -466,12 +442,12 @@ And here's the new code that draws 50 rectangles in random places and random col
       }
     }
 
-    // Returns a random integer from 0 to range - 1.
+    // 0과 -1사이의 정수를 반환합니다.
     function randomInt(range) {
       return Math.floor(Math.random() * range);
     }
 
-    // Fills the buffer with the values that define a rectangle.
+    // 버퍼에 직사각형을 정의하는 값을 채웁니다.
 
     function setRectangle(gl, x, y, width, height) {
       var x1 = x;
@@ -493,39 +469,22 @@ And here's the new code that draws 50 rectangles in random places and random col
          x2, y2]), gl.STATIC_DRAW);
     }
 
-And here's the rectangles.
+여기에 직사각형들이 있습니다.
 
 {{{example url="../webgl-2d-rectangles.html" }}}
 
-I hope you can see that WebGL is actually a pretty simple API.
-Okay, simple might be the wrong word. What it does is simple. It just
-executes 2 user supplied functions, a vertex shader and fragment shader and
-draws triangles, lines, or points.
-While it can get more complicated to do 3D that complication is
-added by you, the programmer, in the form of more complex shaders.
-The WebGL API itself is just a rasterizer and conceptually fairly simple.
+여러분들이 실제로는 WebGL이 매우 간단한 API라는 것을 알았길 바랍니다.
+좋습니다. 간단하다는 말은 아마 잘못된 단어 일수도 있지만 하는일은 간단합니다. 사용자가 제공한 2개의 함수 버텍스 쉐이더와 프래그먼트 쉐이더를 실행하고 삼각형, 선 또는 점을 그립니다.
+프로그래머인 여러분들이 더 복잡한 쉐이더의 형태로 3D를 더 추가 하면서 더 복잡해 질수 있지만.
+WebGL API 자체는 단순히 레스터라이저(rasterizer)이며 개념적으로 매우 간단합니다.
 
-We covered a small example that showed how to supply data in an attribute and 2 uniforms.
-It's common to have multiple attributes and many uniforms. Near the top of this article
-we also mentioned *varyings* and *textures*. Those will show up in subsequent lessons.
+우리는 어떻게 데이터가 attribute와 2개의 uniforms에 제공되는지를 보여주는 작은 예제를 다루었습니다.
+여러개의 attributes과 많은 uniform을 갖는 것이 일반적입니다. 이 글의 맨위에서 *varyings* 과 *textures*에 대해서 언급을 했습니다. 이것들은 이후의 수업에서 소개가 될 것입니다.
 
-Before we move on I want to mention that for *most* applications updating
-the data in a buffer like we did in `setRectangle` is not common. I used that
-example because I thought it was easiest to explain since it shows pixel coordinates
-as input and demonstrates doing a small amount of math in GLSL. It's not wrong, there
-are plenty of cases where it's the right thing to do, but you should [keep reading to find out
-the more common way to position, orient and scale things in WebGL](webgl-2d-translation.html).
+계속하기 전에 *대부분*의 어플리케이션은 `setRectangle`에서 했던것 처럼 버퍼의 데이터를 업데이트하는 것이 일반적이지 않다는 것을 언급하고자 합니다. 이를 사용했던 것은 이 예제에서는 입력을 픽셀 좌표를 표시하고 GLSL에서 간단한 수학을 사용하는 것을 보여주기 때문에 이를 설명하는데 쉬운 방법이라고 생각 했기 때문입니다. 이것이 틀린 것은 아니고, 올바르게 하는 많은 경우가 있지만 [WebGL에서 물체의 위치, 방향, 크기를 지정하는 일반적인 방법을 찾으려면 여기를 방문하십시오](webgl-2d-translation.html).
 
-If you're 100% new to WebGL and have no idea what GLSL is or shaders or what the GPU does
-then checkout [the basics of how WebGL really works](webgl-how-it-works.html).
+WebGL을 완전히 새로 배우고 GLSL 또는 쉐이더나 GPU가 무엇을 하는지 전혀 모르는 경우 [WebGL 실제 작동 원리 기초](webgl-how-it-works.html)를 확인하십시오.
 
-You should also, at least briefly read about [the boilerplate code used here](webgl-boilerplate.html)
-that is used in most of the examples. You should also at least skim
-[how to draw mulitple things](webgl-drawing-multiple-things.html) to give you some idea
-of how more typical WebGL apps are structured because unfortunately nearly all the examples
-only draw one thing and so do not show that structure.
+또한 대부분의 예제에서 사용된 [여기서 사용한 boilerplate 코드](webgl-boilerplate.html)를 최소한 간단하게 읽어야합니다. 거의 모든 예제들은 오직 한가지 것만 그리고 구조가 어떻게 되있는지 볼수 없기 때문에 일반적인 WebGL앱이 구조화 되어 있는지에 대한 어떻게 몇가지 아이디어를 얻기 위해 최소한 [여러가지를 그리는 법](webgl-drawing-multiple-things.html)을 봐야 합니다.
 
-Otherwise from here you can go in 2 directions. If you are interested in image procesing
-I'll show you [how to do some 2D image processing](webgl-image-processing.html).
-If you are interesting in learning about translation,
-rotation and scale then [start here](webgl-2d-translation.html).
+아니면 여기 2가지 방향으로 갈 수 있습니다. 이미지 처리에 관심이 있다면 [몇가지 2D 이미지 처리 방법]((webgl-image-processing.html)를 보시면 됩니다. 위치, 회전, 크기에 대하여 관심이 있다면 [여기서 시작하시면 됩니다](webgl-2d-translation.html).
