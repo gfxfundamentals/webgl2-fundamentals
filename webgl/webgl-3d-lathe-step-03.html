@@ -78,7 +78,7 @@ void main() {
 
   // compute the vector of the surface to the view/camera
   // and pass it to the fragment shader
-  v_surfaceToView = normalize(u_viewWorldPosition - surfaceWorldPosition);
+  v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition;
 }
 `;
 
@@ -113,7 +113,11 @@ void main() {
 `;
 
 const specularShader = `#version 300 es
-precision mediump float;
+#if GL_FRAGMENT_PRECISION_HIGH
+  precision highp float;
+#else
+  precision mediump float;
+#endif
 
 // Passed in from the vertex shader.
 in vec3 v_normal;
