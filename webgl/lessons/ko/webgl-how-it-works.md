@@ -228,28 +228,23 @@ table.vertex_table td {
 
 그리 흥미롭지는 않았지만 둘 이상의 속성을 사용하고 버텍스 쉐이더에서 프래그먼트 쉐이더로 데이터를 전달하는 방법을 배웠습니다. 만약에 [이미지 처리 예제](webgl-image-processing.html)를 보게 된다면 텍스처 좌표를 전달하기 위해 추가적인 속성(attribute)을 전달 하는 것을 볼수 있을 것입니다.
 
-##What do these buffer and attibute commands do?
+##버퍼와 속성(attribute) 명령은 무엇을 합니까?
 
-Buffers are the way of getting vertex and other per vertex data onto the
-GPU.  `gl.createBuffer` creates a buffer.
-`gl.bindBuffer` sets that buffer as the buffer to be worked on.
-`gl.bufferData` copies data into the current buffer.
+버퍼는 버텍스 및 다른 버텍스 데이터를 GPU에 가져오는 방법입니다. `gl.createBuffer`는 버퍼를 생성합니다. `gl.bindBuffer`는 버퍼를 작업 할 버퍼로 설정합니다. `gl.bufferData`는 데이터를 현재 버퍼로 복사합니다.
 
-Once the data is in the buffer we need to tell WebGL how to get data out
-of it and provide it to the vertex shader's attributes.
+데이터가 버퍼에 있으면 WebGL에 데이터를 가져오고 버텍스 쉐이더 속성(attribute)에 제공하는 방법을 알려 주어야 합니다.
 
-To do this, first we ask WebGL what locations it assigned to the
-attributes.  For example in the code above we have
+이를 위해 먼저 WebGL에 어떤 위치에 속성(attribute)를 할당 했는지 물어봅니다. 예를 들어 위의 코드에서는 다음과 같습니다.
 
-    // look up where the vertex data needs to go.
+    // 버텍스 데이터가 어디로 가야 하는지 찾습니다.
     var positionLocation = gl.getAttribLocation(program, "a_position");
     var colorLocation = gl.getAttribLocation(program, "a_color");
 
-Once we know the location of the attribute we then issue 2 commands.
+속성(attribute)의 위치를 알게 되면 2개의 명령을 실행합니다.
 
     gl.enableVertexAttribArray(location);
 
-This command tells WebGL we want to supply data from a buffer.
+이 명령어는 WebGL에 버퍼로 부터 데이터를 제공 할 것을 지시합니다.
 
     gl.vertexAttribPointer(
         location,
@@ -259,45 +254,27 @@ This command tells WebGL we want to supply data from a buffer.
         strideToNextPieceOfData,
         offsetIntoBuffer);
 
-And this command tells WebGL to get data from the buffer that was last
-bound with gl.bindBuffer, how many components per vertex (1 - 4), what the
-type of data is (`BYTE`, `FLOAT`, `INT`, `UNSIGNED_SHORT`, etc...), the stride
-which means how many bytes to skip to get from one piece of data to the
-next piece of data, and an offset for how far into the buffer our data is.
+그리고 이 명령어는 WebGL에게 gl.bindBuffer로 마지막으로 바인드된 버퍼에서 데이터를 가저오고, 버텍스당 컴포넌트 구성 수(1 - 4), 데이터 타입은 무엇인지 (`BYTE`, `FLOAT`, `INT`, `UNSIGNED_SHORT`, 등등...), stride는 한개의 데이터 조각에서 다음 데이터로 넘어가는데 몇 바이트를 건너 뛰어야 하는지 의미하며 offset은 버퍼에서 데이터가 얼마나 떨어져 있는지를 의미합니다.
 
-Number of components is always 1 to 4.
+컴포넌트의 수는 항상 1에서 4입니다.
 
-If you are using 1 buffer per type of data then both stride and offset can
-always be 0.  0 for stride means "use a stride that matches the type and
-size".  0 for offset means start at the beginning of the buffer.  Setting
-them to values other than 0 is more complicated and though it might have some
-benefits in terms of performance it's not worth the complication unless
-you are trying to push WebGL to its absolute limits.
+한 타입의 데이터 당 1개의 버퍼를 사용하는 경우 stride와 offset 모두 항상 0이됩니다. 0인 stride의 의미는 "타입과 크기가 일치하는 stride 사용"입니다. 0인 offset의 버퍼의 시작 부분에서 시작을 의미합니다.값들 0이 아닌 다른 값으로 설정하는 것은 성능면에서 이점이 있을지라도 더 복잡하고 WebGL을 절대적인 한계에 밀어 넣지 않을려면 구지 복잡할 가치는 없습니다.
 
-I hope that clears up buffers and attributes.
+이제 버퍼와 속성(attribute)에 대해서 정리가 되었기를 바랍니다.
 
-Next let's go over [shaders and GLSL](webgl-shaders-and-glsl.html).
+다음으로 [쉐이더와 GLSL](webgl-shaders-and-glsl.html)을 살펴 보겠습니다.
 
-<div class="webgl_bottombar"><h3>What's normalizeFlag for in vertexAttribPointer?</h3>
+<div class="webgl_bottombar"><h3>vertexAttribPointer의 normalizeFlag는 무엇입니까?</h3>
 <p>
-The normalize flag is for all the non floating point types. If you pass
-in false then values will be interpreted as the type they are. BYTE goes
-from -128 to 127, UNSIGNED_BYTE goes from 0 to 255, SHORT goes from -32768 to 32767 etc...
+정규화 플래그(flag)는 모든 비 부동 소수점 타입에 대한 플래그입니다. false를 전달하면 값은 각자 가지고 타입으로 해석됩니다. BYTE는 -128에서 127까지, UNSIGNED_BYTE는 0에서 255까지 SHORT는 -32768에서 32767까지 등등...
 </p>
 <p>
-If you set the normalize flag to true then the values of a BYTE (-128 to 127)
-represent the values -1.0 to +1.0, UNSIGNED_BYTE (0 to 255) become 0.0 to +1.0.
-A normalized SHORT also goes from -1.0 to +1.0 it just has more resolution than a BYTE.
+정규화 플래그를 true로 설정하면 BYTE(-128 에서 127)의 값은 -1.0에서 +1.0 값들로 되고 UNSIGNED_BYTE(0에서 255)는  0.0에서 1.0으로 바뀌며 정규화된 SHORT 또한 -1.0에서 +1.0으로 되고 이는 BYTE보다 더 많은 해상도를 가집니다.
 </p>
 <p>
-The most common use for normalized data is for colors. Most of the time colors
-only go from 0.0 to 1.0. Using a full float each for red, green, blue and alpha
-would use 16 bytes per vertex per color. If you have complicated geometry that
-can add up to a lot of bytes. Instead you could convert your colors to UNSIGNED_BYTEs
-where 0 represents 0.0 and 255 represents 1.0. Now you'd only need 4 bytes per color
-per vertex, a 75% savings.
+정규화된 데이터의 가장 일반적인 용도는 색상입니다. 대부분의 경우 색상은 0.0에서 1.0까지만 가능합니다. 빨강, 초록, 파랑 그리고 알파에 대해 각각 모든 소수점을 사용하면 버텍스당 색상느 16바이트를 사용하게 됩니다. 복잡한 geometry가 있는 경우 더 많은 바이트를 추가 할 수 있습니다. 이 대신 색상들을 0은 0.0으로 되고 255는 1.0으로 되는 UNSIGNED_BYTE으로 변환 할 수 있습니다. 이제 버텍스당 컬러는 4 바이트만 필요하므로 75%의 비용 절감 효과가 있습니다.
 </p>
-<p>Let's change our code to do this. When we tell WebGL how to extract our colors we'd use</p>
+<p>이를 위해 코드를 변경해 보겠습니다. WevG에게 사용할 색상을 가져오는 방법을 말할떄 입니다. </p>
 <pre class="prettyprint showlinemods">
   var size = 4;
 *  var type = gl.UNSIGNED_BYTE;
@@ -306,7 +283,7 @@ per vertex, a 75% savings.
   var offset = 0;
   gl.vertexAttribPointer(colorLocation, size, type, normalize, stride, offset);
 </pre>
-<p>And when we fill out our buffer with colors we'd use</p>
+<p>그 다음 버퍼를 사용할 색상으로 채울때 입니다.</p>
 <pre class="prettyprint showlinemods">
 // Fill the buffer with colors for the 2 triangles
 // that make the rectangle.
@@ -332,7 +309,7 @@ function setColors(gl) {
 }
 </pre>
 <p>
-Here's that sample.
+여기에 예제가 있습니다.
 </p>
 
 {{{example url="../webgl-2d-rectangle-with-2-byte-colors.html" }}}
