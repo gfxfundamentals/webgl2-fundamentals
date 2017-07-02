@@ -3,13 +3,13 @@ Description: 쉐이더란 무엇이며 GLSL는 무엇입니까>
 
 이 글은 [WebGL 기초](webgl-fundamentals.html)에서 이어지는 글입니다. 만약 WebGL의 작동 방식에 대하여 읽지 않았다면 [먼저 읽어 보십시오](webgl-how-it-works.html).
 
-전에 쉐이더와 GLSL에 대하여 이야기 했지만 구체적인 세부 사항은 언급하지 않았습니다. I think I was hoping it would be clear by example but let's try to make it clearer just in case.
+전에 쉐이더와 GLSL에 대하여 이야기 했지만 구체적인 세부 사항은 언급하지 않았습니다. 예시에 의해 명확해질거라 생각하지만, 이번 경우에 한해서는 더 명확히 될수 있도록 노력해봅시다.
 
 [작동 방식](webgl-how-it-works.html)에서 언급된 것처럼 WebGL는 무언가를 그릴때 마다 2개의 쉐이더를 필요합니다. *vertex shader*와 *fragment shader*입니다. 각 쉐이더는 *함수*입니다. 버텍스 쉐이더와 프래그먼트 쉐이더는 같이 쉐이더 프로그램(또는 그냥 프로그램)으로 연결되어 집니다. 일반적인 WebGL 앱에는 많은 쉐이더 프로그램이 있습니다.
 
 ## 버텍스 쉐이더
 
-버텍스 쉐이더의 일은 클립 공간 좌표를 생성하는 것입니다. 항상 다음과 같은 형식을 취합니다.
+버텍스 쉐이더의 일은 클립 공간 좌표를 생성하는 것입니다. 항상 다음과 같은 형식을 가집니다.
 
     #version 300 es
     void main() {
@@ -18,45 +18,44 @@ Description: 쉐이더란 무엇이며 GLSL는 무엇입니까>
 
 쉐이더는 버텍스당 한번 호출됩니다. 호출 될 떄마다 특수 전역 변수 `gl_Position`를 클립 공간 좌표로 설정해야 합니다.
 
-Vertex shaders need data. They can get that data in 3 ways.
+버텍스 쉐이더는 데이터가 필요합니다. 3가지 방법으로 데이터를 받을 수 있습니다.
 
-1.  [Attributes](#attributes) (data pulled from buffers)
-2.  [Uniforms](#uniforms) (values that stay the same during for all vertices of a single draw call)
-3.  [Textures](#textures-in-vertex-shaders) (data from pixels/texels)
+1.  [Attributes](#attributes) (버퍼에서 가져온 데이터)
+2.  [Uniforms](#uniforms) (draw를 호출할떄 마다 모든 정점에서 동일하게 유지되는 값)
+3.  [Textures](#textures-in-vertex-shaders) (픽셀 / 텍셀 데이터)
 
 ### Attributes
 
-The most common way for a vertex shader to get data is through buffers and *attributes*.
-[How it works](webgl-how-it-works.html) covered buffers and
-attributes. You create buffers,
+버텍스 쉐이더에서 데이터를 얻는 가장 일반적인 방법은 버퍼와 *attributes*를 이용하는 것입니다.
+[작동 방식](webgl-how-it-works.html)에서 버퍼와 속성(attributes)에 대해서 다룹니다.
+버퍼를 만듭니다.
 
     var buf = gl.createBuffer();
 
-put data in those buffers
+이 버퍼에 데이터를 넣습니다.
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.bufferData(gl.ARRAY_BUFFER, someData, gl.STATIC_DRAW);
 
-Then, given a shader program you made you look up the location of its attributes,
+그런 다음 생성한 쉐이더 프로그램로 속성(attributes)의 위치를 찾아봅니다.
 
     var positionLoc = gl.getAttribLocation(someShaderProgram, "a_position");
 
-then tell WebGL how to pull data out of those buffers and into the attribute
+그다음 WebGL에 버퍼에서 데이터를 가져와서 속성(attribute)으로 전달하는 방법을 알려줍니다.
 
-    // turn on getting data out of a buffer for this attribute
+    // 속성(attribute)에 전달할 데이터를 버퍼에서 가져오는 기능을 켭니다.
     gl.enableVertexAttribArray(positionLoc);
 
     var numComponents = 3;  // (x, y, z)
     var type = gl.FLOAT;
-    var normalize = false;  // leave the values as they are
-    var offset = 0;         // start at the beginning of the buffer
-    var stride = 0;         // how many bytes to move to the next vertex
-                            // 0 = use the correct stride for type and numComponents
+    var normalize = false;  // 값을 그대로 둡니다.
+    var offset = 0;         // 버퍼의 시작 부분
+    var stride = 0;         // 다음 버텍스로 이동할 바이트 수
+                            // 0 = 타입과 numComponents에 따른 적절한 폭을 사용합니다.
 
     gl.vertexAttribPointer(positionLoc, numComponents, type, false, stride, offset);
 
-In [WebGL fundamentals](webgl-fundamentals.html) we showed that we can do no math
-in the shader and just pass the data directly through.
+[WebGL 기초](webgl-fundamentals.html)에서 쉐이더에서 수식을 쓰지 않고 직접 데이터를 전달할 수 있음을 보았습니다.
 
     #version 300 es
 
@@ -66,16 +65,14 @@ in the shader and just pass the data directly through.
        gl_Position = a_position;
     }
 
-If we put clipspace vertices into our buffers it will work.
+클립 공간 버텍스를 버퍼에 넣는다면 작동 할 것입니다.
 
-Attributes can use `float`, `vec2`, `vec3`, `vec4`, `mat2`, `mat3`, `mat4`,
-`int`, `ivec2`, `ivec3`, `ivec4`, `uint`, `uvec2`, `uvec3`, `uvec4` as types.
+속성(Attributes)은 `float`, `vec2`, `vec3`, `vec4`, `mat2`, `mat3`, `mat4`,
+`int`, `ivec2`, `ivec3`, `ivec4`, `uint`, `uvec2`, `uvec3`, `uvec4`를 타입으로 사용할 수 있습니다.
 
 ### Uniforms
 
-For a vertex shader uniforms are values passed to the vertex shader that stay the same
-for all vertices in a draw call. As a very simple example we could add an offset to
-the vertex shader above
+버텍스 쉐이더의 경우, uniforms은 draw를 호출할떄 모든 버텍스에서 동일하게 유지되는 버텍스 쉐이더에 전달되는 값입니다. 간단한 예로 오프셋을 위 버텍스 쉐이더에 추가 할수 있습니다.
 
     #version 300 es
 
@@ -86,55 +83,53 @@ the vertex shader above
        gl_Position = a_position + u_offset;
     }
 
-And now we could offset every vertex by a certain amount. First we'd look up the
-location of the uniform
+이제 모든 버텍스마다 특정한 수만큼 offset를 처리할 수 있습니다. 먼저 uniform의 위치부터 찾아야 합니다.
 
     var offsetLoc = gl.getUniformLocation(someProgram, "u_offset");
 
-And then before drawing we'd set the uniform
+그런 다음 그리기 전에 uniform을 설정 했습니다.
 
     gl.uniform4fv(offsetLoc, [1, 0, 0, 0]);  // offset it to the right half the screen
 
-Uniforms can be many types. For each type you have to call the corresponding function to set it.
+Uniforms은 여러 타입이 될 수 있습니다. 각 타입별로 해당 함수를 호출하여 설정 해야합니다.
 
-    gl.uniform1f (floatUniformLoc, v);                 // for float
-    gl.uniform1fv(floatUniformLoc, [v]);               // for float or float array
-    gl.uniform2f (vec2UniformLoc,  v0, v1);            // for vec2
-    gl.uniform2fv(vec2UniformLoc,  [v0, v1]);          // for vec2 or vec2 array
-    gl.uniform3f (vec3UniformLoc,  v0, v1, v2);        // for vec3
-    gl.uniform3fv(vec3UniformLoc,  [v0, v1, v2]);      // for vec3 or vec3 array
-    gl.uniform4f (vec4UniformLoc,  v0, v1, v2, v4);    // for vec4
-    gl.uniform4fv(vec4UniformLoc,  [v0, v1, v2, v4]);  // for vec4 or vec4 array
+    gl.uniform1f (floatUniformLoc, v);                 // float
+    gl.uniform1fv(floatUniformLoc, [v]);               // float 또는 float array
+    gl.uniform2f (vec2UniformLoc,  v0, v1);            // vec2
+    gl.uniform2fv(vec2UniformLoc,  [v0, v1]);          // vec2 또는 vec2 array
+    gl.uniform3f (vec3UniformLoc,  v0, v1, v2);        // vec3
+    gl.uniform3fv(vec3UniformLoc,  [v0, v1, v2]);      // vec3 또는 vec3 array
+    gl.uniform4f (vec4UniformLoc,  v0, v1, v2, v4);    // vec4
+    gl.uniform4fv(vec4UniformLoc,  [v0, v1, v2, v4]);  // vec4 또는 vec4 array
 
-    gl.uniformMatrix2fv(mat2UniformLoc, false, [  4x element array ])  // for mat2 or mat2 array
-    gl.uniformMatrix3fv(mat3UniformLoc, false, [  9x element array ])  // for mat3 or mat3 array
-    gl.uniformMatrix4fv(mat4UniformLoc, false, [ 16x element array ])  // for mat4 or mat4 array
+    gl.uniformMatrix2fv(mat2UniformLoc, false, [  4x element array ])  // mat2 또는 mat2 array
+    gl.uniformMatrix3fv(mat3UniformLoc, false, [  9x element array ])  // mat3 또는 mat3 array
+    gl.uniformMatrix4fv(mat4UniformLoc, false, [ 16x element array ])  // mat4 또는 mat4 array
 
-    gl.uniform1i (intUniformLoc,   v);                 // for int
-    gl.uniform1iv(intUniformLoc, [v]);                 // for int or int array
-    gl.uniform2i (ivec2UniformLoc, v0, v1);            // for ivec2
-    gl.uniform2iv(ivec2UniformLoc, [v0, v1]);          // for ivec2 or ivec2 array
-    gl.uniform3i (ivec3UniformLoc, v0, v1, v2);        // for ivec3
-    gl.uniform3iv(ivec3UniformLoc, [v0, v1, v2]);      // for ivec3 or ivec3 array
-    gl.uniform4i (ivec4UniformLoc, v0, v1, v2, v4);    // for ivec4
-    gl.uniform4iv(ivec4UniformLoc, [v0, v1, v2, v4]);  // for ivec4 or ivec4 array
+    gl.uniform1i (intUniformLoc,   v);                 // int
+    gl.uniform1iv(intUniformLoc, [v]);                 // int 또는 int array
+    gl.uniform2i (ivec2UniformLoc, v0, v1);            // ivec2
+    gl.uniform2iv(ivec2UniformLoc, [v0, v1]);          // ivec2 또는 ivec2 array
+    gl.uniform3i (ivec3UniformLoc, v0, v1, v2);        // ivec3
+    gl.uniform3iv(ivec3UniformLoc, [v0, v1, v2]);      // ivec3 또는 ivec3 array
+    gl.uniform4i (ivec4UniformLoc, v0, v1, v2, v4);    // ivec4
+    gl.uniform4iv(ivec4UniformLoc, [v0, v1, v2, v4]);  // ivec4 또는 ivec4 array
 
-    gl.uniform1u (intUniformLoc,   v);                 // for uint
-    gl.uniform1uv(intUniformLoc, [v]);                 // for uint or uint array
-    gl.uniform2u (ivec2UniformLoc, v0, v1);            // for uvec2
-    gl.uniform2uv(ivec2UniformLoc, [v0, v1]);          // for uvec2 or uvec2 array
-    gl.uniform3u (ivec3UniformLoc, v0, v1, v2);        // for uvec3
-    gl.uniform3uv(ivec3UniformLoc, [v0, v1, v2]);      // for uvec3 or uvec3 array
-    gl.uniform4u (ivec4UniformLoc, v0, v1, v2, v4);    // for uvec4
-    gl.uniform4uv(ivec4UniformLoc, [v0, v1, v2, v4]);  // for uvec4 or uvec4 array
+    gl.uniform1u (intUniformLoc,   v);                 // uint
+    gl.uniform1uv(intUniformLoc, [v]);                 // uint 또는 uint array
+    gl.uniform2u (ivec2UniformLoc, v0, v1);            // uvec2
+    gl.uniform2uv(ivec2UniformLoc, [v0, v1]);          // uvec2 또는 uvec2 array
+    gl.uniform3u (ivec3UniformLoc, v0, v1, v2);        // uvec3
+    gl.uniform3uv(ivec3UniformLoc, [v0, v1, v2]);      // uvec3 또는 uvec3 array
+    gl.uniform4u (ivec4UniformLoc, v0, v1, v2, v4);    // uvec4
+    gl.uniform4uv(ivec4UniformLoc, [v0, v1, v2, v4]);  // uvec4 또는 uvec4 array
 
-    // for sampler2D, sampler3D, samplerCube, samplerCubeShader, sampler2DShadow,
-    // sampler2DArray, sampler2DArrayShadow
+    // sampler2D, sampler3D, samplerCube, samplerCubeShader, sampler2DShadow,
+    // sampler2DArray, sampler2DArrayShadow를 위해 사용
     gl.uniform1i (samplerUniformLoc,   v);
     gl.uniform1iv(samplerUniformLoc, [v]);
 
-There's also types `bool`, `bvec2`, `bvec3`, and `bvec4`. They use either the `gl.uniform?f?`, `gl.uniform?i?`,
-or `gl.uniform?u?` functions.
+`bool`, `bvec2`, `bvec3` `bvec4`같은 타입도 있습니다. 이 타입들도  `gl.uniform?f?`, `gl.uniform?i?`, `gl.uniform?u?`같은 함수를 사용합니다.
 
 Note that for an array you can set all the uniforms of the array at once. For example
 
