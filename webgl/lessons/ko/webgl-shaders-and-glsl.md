@@ -89,7 +89,7 @@ Description: 쉐이더란 무엇이며 GLSL는 무엇입니까>
 
 그런 다음 그리기 전에 uniform을 설정 했습니다.
 
-    gl.uniform4fv(offsetLoc, [1, 0, 0, 0]);  // offset it to the right half the screen
+    gl.uniform4fv(offsetLoc, [1, 0, 0, 0]);  // 오프셋은 화면의 오른쪽 반입니다.
 
 Uniforms은 여러 타입이 될 수 있습니다. 각 타입별로 해당 함수를 호출하여 설정 해야합니다.
 
@@ -131,31 +131,30 @@ Uniforms은 여러 타입이 될 수 있습니다. 각 타입별로 해당 함�
 
 `bool`, `bvec2`, `bvec3` `bvec4`같은 타입도 있습니다. 이 타입들도  `gl.uniform?f?`, `gl.uniform?i?`, `gl.uniform?u?`같은 함수를 사용합니다.
 
-Note that for an array you can set all the uniforms of the array at once. For example
+배열의 경우 모든 배열의 유니폼들을 한꺼번에 설정 할수 있습니다. 예를들어
 
-    // in shader
+    // 쉐이더에서
     uniform vec2 u_someVec2[3];
 
-    // in JavaScript at init time
+    // 자바스립트에서 초기화될떄
     var someVec2Loc = gl.getUniformLocation(someProgram, "u_someVec2");
 
-    // at render time
-    gl.uniform2fv(someVec2Loc, [1, 2, 3, 4, 5, 6]);  // set the entire array of u_someVec3
+    // 랜더링 될떄
+    gl.uniform2fv(someVec2Loc, [1, 2, 3, 4, 5, 6]);  // u_someVec3의 전체 배열을 설정 합니다.
 
-But if you want to set individual elements of the array you must look up the location of
-each element individually.
+만약에 배열의 각 요소별로 설정 하기를 원한다면 각자 요소의 위치를 찾아야 합니다.
 
-    // in JavaScript at init time
+    // 자바스립트에서 초기화될떄
     var someVec2Element0Loc = gl.getUniformLocation(someProgram, "u_someVec2[0]");
     var someVec2Element1Loc = gl.getUniformLocation(someProgram, "u_someVec2[1]");
     var someVec2Element2Loc = gl.getUniformLocation(someProgram, "u_someVec2[2]");
 
-    // at render time
-    gl.uniform2fv(someVec2Element0Loc, [1, 2]);  // set element 0
-    gl.uniform2fv(someVec2Element1Loc, [3, 4]);  // set element 1
-    gl.uniform2fv(someVec2Element2Loc, [5, 6]);  // set element 2
+    // 랜더링 될떄
+    gl.uniform2fv(someVec2Element0Loc, [1, 2]);  // 요소를 0로 설정
+    gl.uniform2fv(someVec2Element1Loc, [3, 4]);  // 요소를 1로 설정
+    gl.uniform2fv(someVec2Element2Loc, [5, 6]);  // 요소를 2로 설정
 
-Similarly if you create a struct
+비슷하게 다음과 같은 구조체를 만든다면
 
     struct SomeStruct {
       bool active;
@@ -163,58 +162,55 @@ Similarly if you create a struct
     };
     uniform SomeStruct u_someThing;
 
-you have to look up each field individually
+각 필드 위치를 개별적으로 찾아야 합니다.
 
     var someThingActiveLoc = gl.getUniformLocation(someProgram, "u_someThing.active");
     var someThingSomeVec2Loc = gl.getUniformLocation(someProgram, "u_someThing.someVec2");
 
-### Textures in Vertex Shaders
+### 버텍스 쉐이더에서 텍스처
 
-See [Textures in Fragment Shaders](#textures-in-fragment-shaders).
+[버텍스 쉐이더에서 텍스처]를 참조 하세요.(#textures-in-fragment-shaders).
 
-## Fragment Shader
+## 프레그먼트 쉐이더
 
-A Fragment Shader's job is to provide a color for the current pixel being rasterized.
-It always takes the form
+프래그먼트 쉐이더(Fragment Shader)의 역활은 현재 레스터화 되는 픽셀에 색상을 제공하는 것입니다.
+항상 다음과 같은 형식을 가집니다.
 
     #version 300 es
     precision mediump float;
 
-    out vec4 outColor;  // you can pick any name
+    out vec4 outColor;  // 아무 이름을 사용 할수 있습니다.
 
     void main() {
        outColor = doMathToMakeAColor;
     }
 
-Your fragment shader is called once per pixel. Each time it's called you are required
-to set your out variable to some color.
+프래그먼트 쉐이더는 픽셀당 한번씩 호출 됩니다. 호출 될 때마다 out 변수를 색으로 설정해야합니다.
 
-Fragment shaders need data. They can get data in 3 ways
+프래그먼트 쉐이더는 데이터가 필요합니다. 3가지 방법으로 데이터를 가져올 수 있습니다.
 
-1.  [Uniforms](#uniforms) (values that stay the same for every pixel of a single draw call)
-2.  [Textures](#textures-in-fragment-shaders) (data from pixels/texels)
-3.  [Varyings](#varyings) (data passed from the vertex shader and interpolated)
+1.  [Uniforms](#uniforms) (한번 호출 할때 모든 픽셀에서 동일하게 유지되는 데이터)
+2.  [Textures](#textures-in-fragment-shaders) (픽셀/텍셀에서 가져온 데이터)
+3.  [Varyings](#varyings) (버텍스 쉐이더에서 데이터가 전달되고 보간된 데이터)
 
-### Uniforms in Fragment Shaders
+### 유니폼에서 프래그먼트 쉐이더
 
-See [Uniforms in Vertex Shaders](#uniforms).
+[유니폼에서 버텍스 쉐이더](#uniforms)를 참조 해 주세요.
 
 ### Textures in Fragment Shaders
 
-Getting a value from a texture in a shader we create a `sampler2D` uniform and use the GLSL
-function `texture` to extract a value from it.
+쉐이더에서 텍스처에서 값들을 얻으려면 `sampler2D` 유니폼을 생성하고 GLSL함수 `texture`를 사용하여 값을 추출합니다.
 
     precision mediump float;
 
     uniform sampler2D u_texture;
 
     void main() {
-       vec2 texcoord = vec2(0.5, 0.5)  // get a value from the middle of the texture
+       vec2 texcoord = vec2(0.5, 0.5)  // 텍스처 중간에 있는 값을 얻습니다.
        gl_FragColor = texture(u_texture, texcoord);
     }
 
-What data comes out of the texture is [dependent on many settings](webgl-3d-textures.html).
-At a minimum we need to create and put data in the texture, for example
+[설정에 따라서](webgl-3d-textures.html) 텍스처에서 나오는 데이터는 달라집니다. 최소한 텍스처에 데이터를 넣어야 합니다. 예를 들어
 
     var tex = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -236,17 +232,17 @@ At a minimum we need to create and put data in the texture, for example
                   type,
                   data);
 
-Then look up the uniform location in the shader program
+그런 다음 쉐이더 프로그램에서 유니폼 위치를 찾습니다.
 
     var someSamplerLoc = gl.getUniformLocation(someProgram, "u_texture");
 
-WebGL then requires you to bind it to a texture unit
+WebGL은 텍스처 유닛에 연결을 해야합니다.
 
     var unit = 5;  // Pick some texture unit
     gl.activeTexture(gl.TEXTURE0 + unit);
     gl.bindTexture(gl.TEXTURE_2D, tex);
 
-And tell the shader which unit you bound the texture to
+텍스처 바인딩 한 유닛을 쉐이더에게 알려줍니다.
 
     gl.uniform1i(someSamplerLoc, unit);
 
