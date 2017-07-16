@@ -287,20 +287,15 @@ varying를 사용하기 위해서는 varying들을 버텍스와 프래그먼트 
 
 ## GLSL
 
-GLSL stands for [Graphics Library Shader Language](https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf).
-It's the language shaders are written
-in. It has some special semi unique features that are certainly not common in JavaScript.
-It's designed to do the math that is commonly needed to compute things for rasterizing
-graphics. So for example it has built in types like `vec2`, `vec3`, and `vec4` which
-represent 2 values, 3 values, and 4 values respectively. Similarly it has `mat2`, `mat3`
-and `mat4` which represent 2x2, 3x3, and 4x4 matrices. You can do things like multiply
-a `vec` by a scalar.
+GLSL은 [Graphics Library Shader Language](https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf)의 약자입니다.
+
+이는 쉐이더에 쓰이는 언어입니다. Java script에서 흔히 볼 수 없는 어느정도 특별한 고유 기능이 있습니다. 그래픽 레스터화를 위한 계산하는데 일반적으로 필요한 수학적 계산을 수행하도록 설계되어 있습니다. 그래서 예를 들어 `vec2`, `vec3`, `vec4`와 같이 두개의 값, 세개의 값, 네개의 값을 가각 표현하는 타입이 있습니다. 비슷하게 `mat2`, `mat3`, `mat4`는 2x2, 3x3, 4x4 행렬을 표현합니다. 스칼라를 `vec`에 곱하는 것을 할 수 있습니다.
 
     vec4 a = vec4(1, 2, 3, 4);
     vec4 b = a * 2.0;
-    // b is now vec4(2, 4, 6, 8);
+    // b는 이제 vec4(2, 4, 6, 8)입니다.;
 
-Similarly it can do matrix multiplication and vector to matrix multiplication
+마찬가지로 행렬 곱셉과 벡터를 행렬 곱셈에 수행 할 수 있습니다.
 
     mat4 a = ???
     mat4 b = ???
@@ -309,71 +304,68 @@ Similarly it can do matrix multiplication and vector to matrix multiplication
     vec4 v = ???
     vec4 y = c * v;
 
-It also has various selectors for the parts of a vec. For a vec4
+또한 vec의 부분을 선택하는 다양한 방법이 있습니다. vec4를 보자면
 
     vec4 v;
 
-*   `v.x` is the same as `v.s` and `v.r` and `v[0]`.
-*   `v.y` is the same as `v.t` and `v.g` and `v[1]`.
-*   `v.z` is the same as `v.p` and `v.b` and `v[2]`.
-*   `v.w` is the same as `v.q` and `v.a` and `v[3]`.
+*   `v.x`는 `v.s`이나 `v.r`이나 `v[0]과 똑같은 값을 나타냅니다.`.
+*   `v.y`는 `v.t`이나 `v.g`이나 `v[1]과 똑같은 값을 나타냅니다.`.
+*   `v.z`는 `v.p`이나 `v.b`이나 `v[2]과 똑같은 값을 나타냅니다.`.
+*   `v.w`는 `v.q`이나 `v.a`이나 `v[3]과 똑같은 값을 나타냅니다.`.
 
-It it able to *swizzle* vec components which means you can swap or repeat components.
+vec 구성 요소를 *swizzle* 할 수 있으므로 구성 요소를 교체하거나 반복 할 수 있습니다.
 
     v.yyyy
 
-is the same as
+는 다음과 같습니다.
 
     vec4(v.y, v.y, v.y, v.y)
 
-Similarly
+마찬가지로
 
     v.bgra
 
-is the same as
+는 다음과 같습니다.
 
     vec4(v.b, v.g, v.r, v.a)
 
-When constructing a vec or a mat you can supply multiple parts at once. So for example
+vec이나 mat를 구성할떄 한번에 여러 부분을 제공 할 수 있습니다. 그래서 예를 들면
 
     vec4(v.rgb, 1)
 
-Is the same as
+는 다음과 같습니다.
 
     vec4(v.r, v.g, v.b, 1)
 
-One thing you'll likely get caught up on is that GLSL is very type strict.
+주의 해야 할 한가지는 GLSL은 타입에 대하여 매우 엄격합니다.
 
-    float f = 1;  // ERROR 1 is an int. You can't assign an int to a float
+    float f = 1;  // ERROR 1은 int입니다. float에 int를 할당 할 수 없습니다.
 
-The correct way is one of these
+올바른 방법은 다음 중 하나입니다.
 
-    float f = 1.0;      // use float
-    float f = float(1)  // cast the integer to a float
+    float f = 1.0;      // float 사용
+    float f = float(1)  // float에 정수를 캐스팅합니다.
 
-The example above of `vec4(v.rgb, 1)` doesn't complain about the `1` because `vec4` is
-casting the things inside just like `float(1)`.
+위 예제에서 `vec4(v.rgb, 1)`는 `vec4`가 내부적으로 `float(1)`와 같이 캐스팅하기 때문에 `1`에 대하여 불평하지 않습니다.
 
-GLSL has a bunch of built in functions. Many of them operate on multiple components at once.
-So for example
+GLSL는 많은 내장 함수를 가지고 있습니다. 대부분이 다양한 구성 요소에 대해 똑같이 작동합니다. 예를 들어
 
     T sin(T angle)
 
-Means T can be `float`, `vec2`, `vec3` or `vec4`. If you pass in `vec4` you get `vec4` back
-which the sine of each of the components. In other words if `v` is a `vec4` then
+T의 의미는  `float`, `vec2`, `vec3` 또는 `vec4` 일 수 있습니다. 만약에`vec4`를 전달한다면 구성요소 각각이 sine된 `vec4`를 돌려 받습니다. 다시말해 `v`가 `vec4`이라면
 
     vec4 s = sin(v);
 
-is the same as
+는 다음과 같습니다.
 
     vec4 s = vec4(sin(v.x), sin(v.y), sin(v.z), sin(v.w));
 
-Sometimes one argument is a float and the rest is `T`. That means that float will be applied
-to all the components. For example if `v1` and `v2` are `vec4` and `f` is a float then
+<!-- 검수 필요 -->
+만약에 하나의 매개변수가 부동소수점이고 나머지는 `T`이라고 해봅시다. 이 의미는 부동소수점이 모든 구성 요소에 적용된다는 의미입니다. 예를들어 `v1`, `v2`가 `vec4`이고 `f`가 부동소수점이면
 
     vec4 m = mix(v1, v2, f);
 
-is the same as
+는 다음과 같습니다.
 
     vec4 m = vec4(
       mix(v1.x, v2.x, f),
@@ -381,23 +373,13 @@ is the same as
       mix(v1.z, v2.z, f),
       mix(v1.w, v2.w, f));
 
-You can see a list of all the GLSL functions on the last 3 pages of [the OpenGL ES 3.0
-Reference Card](https://www.khronos.org/files/opengles3-quick-reference-card.pdf)
-If you like really dry and verbose stuff you can try
-[the GLSL ES 3.00 spec](https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf).
+[OpenGL ES 3.0 참조 카드](https://www.khronos.org/files/opengles3-quick-reference-card.pdf) 마지막 3 페이지에서 모든 GLSL 함수 목록을 볼 수 있으며 만약에 정말로 딱딱하고 장활한 것들을 좋아한다면 [the GLSL ES 3.00 스펙](https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf)를 시도해 볼 수 있습니다.
 
-## Putting it all togehter
+## 하나로 모으기
 
-That's the point of this entire series of posts. WebGL is all about creating various shaders, supplying
-the data to those shaders and then calling `gl.drawArrays`, `gl.drawElements`, etc to have WebGL process
-the vertices by calling the current vertex shader for each vertex and then render pixels by calling the
-the current fragment shader for each pixel.
+<!-- 번역 필요 -->
+That's the point of this entire series of posts. WebGL는 다양한 쉐이더를 생성하고, 데이터를 이 쉐이더들에 제공하고 `gl.drawArrays`, `gl.drawElements`등을 호출하여 WebGL이 각 버텍스들을 각 버텍스마다 현재 버텍스 쉐이더를 호출하여 처리하고 픽셀들을 각 픽셀마다 현재 프래그먼트 쉐이더를 호출하여 랜더링 하는 것에 대한 것입니다.
 
-Actually creating the shaders requires several lines of code. Since those lines are the same in
-most WebGL programs and since once written you can pretty much ignore them [how to compile GLSL shaders
-and link them into a shader program is covered here](webgl-boilerplate.html).
+실제로 쉐이더를 생성하는 것은 몇 줄의 코드만 필요합니다. 이 줄들은 대부분의 WebGL 프로그램에서 동일하고 한번 쓰여 졌기 때문에 [GLSL 쉐이더를 컴파일하고 쉐이더 프로그램에 링크하는 방법](webgl-boilerplate.html)은 무시할 수 있습니다.
 
-If you're just starting from here you can go in 2 directions. If you are interested in image procesing
-I'll show you [how to do some 2D image processing](webgl-image-processing.html).
-If you are interesting in learning about translation,
-rotation and scale then [start here](webgl-2d-translation.html).
+여기서 시작한다면 2가지 방향으로 갈수 있습니다. 이미지 처리에 관심이 있다면 [2D 이미지 처리 방법](webgl-image-processing.html)를 보면 됩니다. 만약에 이동, 회전, 크기변환에 관심이 있다면 [여기서 시작](webgl-2d-translation.html)하시면 됩니다.
