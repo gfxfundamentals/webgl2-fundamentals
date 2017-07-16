@@ -248,15 +248,12 @@ WebGL은 텍스처 유닛에 연결을 해야합니다.
 
 ### Varyings
 
-A varying is a way to pass a value from a vertex shader to a fragment shader which we
-covered in [how it works](webgl-how-it-works.html).
+varying는 버텍스 쉐이더에서 [작동 방법]((webgl-how-it-works.html))에서 보았던 프래그먼트 쉐이더로 값을 전달하는 방법입니다.
 
-To use a varying we need to declare matching varyings in both a vertex and fragment shader.
-We set the *out* varying in the vertex shader with some value per vertex. When WebGL draws pixels
-it will optionallinterpolate between those values and pass them to the corresponding *in* varying in
-the fragment shader
+varying를 사용하기 위해서는 varying들을 버텍스와 프래그먼트 쉐이더 두곳에서 일치하게 선언을 해야합니다.
+버텍스 쉐이더는 버텍스당 특정 값을 *out* varying에 설정합니다. WebGL은 픽셀을 그릴떄 선택 사항으로 해당 값을 보간하고 프래먼트 쉐이더에서 *in*에 상응하는 varying에 전달합니다.
 
-Vertex shader
+버텍스 쉐이더
 
     #version 300 es
 
@@ -271,7 +268,7 @@ Vertex shader
     +  v_positionWithOffset = a_position + u_offset;
     }
 
-Fragment shader
+프래그 먼트 쉐이더
 
     #version 300 es
     precision mediump float;
@@ -286,9 +283,7 @@ Fragment shader
     +  outColor = color;
     }
 
-The example above is a mostly nonsense example. It doesn't generally make sense to
-directly copy the clipspace values to the fragment shader and use them as colors. Nevertheless
-it will work and produce colors.
+위의 예제는 거의 무의미한 예제입니다. 일반적으로 클립 공간 값을 프래그먼트 쉐이더로 직접 복사하고 색상으로 사용하지는 않습니다. 그럼에도 불구하고 잘 작동하고 색상을 만들어 냅니다.
 
 ## GLSL
 
