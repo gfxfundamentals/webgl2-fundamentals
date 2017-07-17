@@ -382,4 +382,4 @@ That's the point of this entire series of posts. WebGL는 다양한 쉐이더를
 
 실제로 쉐이더를 생성하는 것은 몇 줄의 코드만 필요합니다. 이 줄들은 대부분의 WebGL 프로그램에서 동일하고 한번 쓰여 졌기 때문에 [GLSL 쉐이더를 컴파일하고 쉐이더 프로그램에 링크하는 방법](webgl-boilerplate.html)은 무시할 수 있습니다.
 
-여기서 시작한다면 2가지 방향으로 갈수 있습니다. 이미지 처리에 관심이 있다면 [2D 이미지 처리 방법](webgl-image-processing.html)를 보면 됩니다. 만약에 이동, 회전, 크기변환에 관심이 있다면 [여기서 시작](webgl-2d-translation.html)하시면 됩니다.
+여기서 2가지 방향으로 시작 할 수 있습니다. 이미지 처리에 관심이 있다면 [2D 이미지 처리 방법](webgl-image-processing.html)를 보면 됩니다. 만약에 이동, 회전, 크기변환에 관심이 있다면 [여기서 시작](webgl-2d-translation.html)하시면 됩니다.
