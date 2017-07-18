@@ -100,18 +100,17 @@ WebGL2는 텍스처 좌표를 사용하여 텍스처를 읽을수 있는 기능�
      <!-- Bind it to texture unit 0' 2D bind point -->
     +  gl.bindTexture(gl.TEXTURE_2D, texture);
     +
-    +  // Set the parameters so we don't need mips and so we're not filtering
-    +  // and we don't repeat
+    +  // 매개 변수를 설정하여 밉맵스가 필요 없으므로 필터링 하지 않고 반복도 하지 않습니다.
     +  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     +  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     +  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     +  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     +
     +  // 텍스처로 이미지 업로드
-    +  var mipLevel = 0;               // the largest mip
-    +  var internalFormat = gl.RGBA;   // format we want in the texture
-    +  var srcFormat = gl.RGBA;        // format of data we are supplying
-    +  var srcType = gl.UNSIGNED_BYTE  // type of data we are supplying
+    +  var mipLevel = 0;               // 가장큰 민맵
+    +  var internalFormat = gl.RGBA;   // 텍스처에서 원하는 포맷
+    +  var srcFormat = gl.RGBA;        // 제공하는 데이터의 포맷
+    +  var srcType = gl.UNSIGNED_BYTE  // 제공하는 데이터의 타입
     +  gl.texImage2D(gl.TEXTURE_2D,
     +                mipLevel,
     +                internalFormat,
@@ -121,21 +120,20 @@ WebGL2는 텍스처 좌표를 사용하여 텍스처를 읽을수 있는 기능�
 
       ...
 
-      // Tell it to use our program (pair of shaders)
+      // 프로그램을 사용하라고 알려줍니다.(쉐이더 쌍)
       gl.useProgram(program);
 
-      // Pass in the canvas resolution so we can convert from
-      // pixels to clipspace in the shader
+      // 캔버스에 쉐이더에서 픽셀에서 클립공간으로 변환 할수 있게 해상도를 전달합니다.
       gl.uniform2f(resolutionLocation, gl.canvas.width, gl.canvas.height);
 
-    +  // Tell the shader to get the texture from texture unit 0
+    +  // 쉐이더에 텍스처 유닛 0에서 텍스처를 가져오라고 알려줍니다.
     +  gl.uniform1i(imageLocation, 0);
 
-    +  // Bind the position buffer so gl.bufferData that will be called
-    +  // in setRectangle puts data in the position buffer
+    +  // position 버퍼를 바인딩하여 setRectangle에서 호출 될
+    +  // gl.bufferData가 position 버퍼에 데이터를 넣습니다.
     +  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     +
-    +  // Set a rectangle the same size as the image.
+    +  // 사각형의 크기를 이미지와 같은 크기로 설정합니다.
     +  setRectangle(gl, 0, 0, image.width, image.height);
 
     }
@@ -144,7 +142,7 @@ WebGL2는 텍스처 좌표를 사용하여 텍스처를 읽을수 있는 기능�
 
 {{{example url="../webgl-2d-image.html" }}}
 
-너무 과하지 않게 이미지를 조작해봅시다. 빨강색이랑 파랑색을 바꾸는 건 어떨까요?
+너무 과하지 않게 이미지를 조작해봅시다. 빨간색이랑 파란색을 바꾸는 건 어떨까요?
 
     ...
     outColor = texture2D(u_image, v_texCoord).bgra;
@@ -154,10 +152,8 @@ WebGL2는 텍스처 좌표를 사용하여 텍스처를 읽을수 있는 기능�
 
 {{{example url="../webgl-2d-image-red2blue.html" }}}
 
-What if we want to do image processing that actually looks at other
-pixels? Since WebGL references textures in texture coordinates which
-go from 0.0 to 1.0 then we can calculate how much to move for 1 pixel
- with the simple math <code>onePixel = 1.0 / textureSize</code>.
+만약에 실제로 다른 픽셀들에서 다른 모양을 가지는 이미치 처리를 한다면 어떻까요? WebGL은 0.0에서 1.0까지인 텍스처 좌표에서 텍스처들을 참조하므로 간단한 계산 <code>onePixel = 1.0 / textureSize</code>을 통해 1픽셀에 얼마큼 이동하는지를 계산할 수 있습니다.
+
 
 Here's a fragment shader that averages the left and right pixels of
 each pixel in the texture.
