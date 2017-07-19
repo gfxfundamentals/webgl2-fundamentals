@@ -155,29 +155,28 @@ WebGL2는 텍스처 좌표를 사용하여 텍스처를 읽을수 있는 기능�
 만약에 실제로 다른 픽셀들에서 다른 모양을 가지는 이미치 처리를 한다면 어떻까요? WebGL은 0.0에서 1.0까지인 텍스처 좌표에서 텍스처들을 참조하므로 간단한 계산 <code>onePixel = 1.0 / textureSize</code>을 통해 1픽셀에 얼마큼 이동하는지를 계산할 수 있습니다.
 
 
-Here's a fragment shader that averages the left and right pixels of
-each pixel in the texture.
+다음은 텍스처에서 각 픽셀의 왼쪽 오른쪽 픽셀을 평균화하는 프래그먼트 쉐이더 입니다.
 
 ```
 #version 300 es
 
-// fragment shaders don't have a default precision so we need
-// to pick one. mediump is a good default. It means "medium precision"
+// 프래그먼트 쉐이더는 기본 정밀도 가지고 있지 않으므로 선택해야 합니다.
+// mediump는 기본으로 괜찮습니다. "중간 정밀도"를 의미합니다.
 precision mediump float;
 
-// our texture
+// 텍스처
 uniform sampler2D u_image;
 
-// the texCoords passed in from the vertex shader.
+// texCoords는 버텍스 쉐이더에서 전달됩니다.
 in vec2 v_texCoord;
 
-// we need to declare an output for the fragment shader
+// 프래그먼트 쉐이더 출력을 선언 해야합니다.
 out vec4 outColor;
 
 void main() {
 +  vec2 onePixel = vec2(1) / vec2(textureSize(u_image, 0));
 +
-+  // average the left, middle, and right pixels.
++  // 왼쪽, 중간, 오른쪽 픽셀의 평균값
 +  outColor = (
 +      texture(u_image, v_texCoord) +
 +      texture(u_image, v_texCoord + vec2( onePixel.x, 0.0)) +
@@ -185,39 +184,32 @@ void main() {
 }
 ```
 
-Compare to the un-blurred image above.
+위의 예제와 비교해서 흐리지 않은지 비교해보세요.
 
 {{{example url="../webgl-2d-image-blend.html" }}}
 
-Now that we know how to reference other pixels let's use a convolution kernel
-to do a bunch of common image processing. In this case we'll use a 3x3 kernel.
-A convolution kernel is just a 3x3 matrix where each entry in the matrix represents
-how much to multiply the 8 pixels around the pixel we are rendering. We then
-divide the result by the weight of the kernel (the sum of all values in the kernel)
-or 1.0, whichever is greater. [Here's a pretty good article on it](http://docs.gimp.org/en/plug-in-convmatrix.html).
-And [here's another article showing some actual code if
-you were to write this by hand in C++](http://www.codeproject.com/KB/graphics/ImageConvolution.aspx).
+이제 다른 픽셀을 참조하는 방법을 알았으니 컨벤션 커널(convolution kernel)을 사용하여 일반적인 이미지 처리를 해보겠습니다. 여기에서는 3x3 커널을 사용할 것입니다. 컨번션 커널은 단순히 3x3 행렬이며 여기서 행렬의 각 항목은 렌더랑 픽셀 주위에 있는 8개의 픽셀에 얼만큼 곱할 것인지를 나타냅니다. 그 다음 결과를 커널 가중치(커널의 모든 값들의 합)나 1.0 중 큰 값으로 나눕니다. [여기서 꽤 좋은 읽을거리가 있습니다](http://docs.gimp.org/en/plug-in-convmatrix.html). 그리고 [C++으로 직접 작성하면 어떤지 실제 코드를 보여주는 다른 읽을거리가 있습니다](http://www.codeproject.com/KB/graphics/ImageConvolution.aspx).
 
-In our case we're going to do that work in the shader so here's the new fragment shader.
+우리의 경우 쉐이더에서 이 작업을 수행할 것이므로 여기에 새로운 프래그먼트 쉐이더가 있습니다.
 
 ```
 #version 300 es
 
-// fragment shaders don't have a default precision so we need
-// to pick one. mediump is a good default. It means "medium precision"
+// 프래그먼트 쉐이더는 기본 정밀도 가지고 있지 않으므로 선택해야 합니다.
+// mediump는 기본으로 괜찮습니다. "중간 정밀도"를 의미합니다.
 precision mediump float;
 
-// our texture
+// 텍스처
 uniform sampler2D u_image;
 
-// the convolution kernal data
+// 컨벤션 커널 데이터
 uniform float u_kernel[9];
 uniform float u_kernelWeight;
 
-// the texCoords passed in from the vertex shader.
+// texCoords는 버텍스 쉐이더에서 전달됩니다.
 in vec2 v_texCoord;
 
-// we need to declare an output for the fragment shader
+// 프래그먼트 쉐이더 출력을 선언 해야합니다.
 out vec4 outColor;
 
 void main() {
@@ -237,7 +229,7 @@ void main() {
 }
 ```
 
-In JavaScript we need to supply a convolution kernel and its weight
+자바스크립트에서 컨벤션 커널과 가중치를 제공해야 합니다.
 
      function computeKernelWeight(kernel) {
        var weight = kernel.reduce(function(prev, curr) {
@@ -261,54 +253,45 @@ In JavaScript we need to supply a convolution kernel and its weight
      gl.uniform1f(kernelWeightLocation, computeKernelWeight(edgeDetectKernel));
      ...
 
-And voila... Use the drop down list to select different kernels.
+그리고 드랍 다운 목록을 사용하여 다른 커널을 사용해 보세요.
 
 {{{example url="../webgl-2d-image-3x3-convolution.html" }}}
 
-I hope this article has convinced you image processing in WebGL is pretty simple. Next up
-I'll go over [how to apply more than one effect to the image](webgl-image-processing-continued.html).
+이 글을 통해 WebGL에서의 이미지 처리가 매우 간단하다고 확신이 들어기를 바랍니다. 다음으로 [이미지에 두 두가지 이상의 효과를 적용하는 방법](webgl-image-processing-continued.html)을 살펴 보겠습니다.
 
 <div class="webgl_bottombar">
-<h3>What are texture units?</h3>
-When you call <code>gl.draw???</code> your shader can reference textures. Textures are bound
-to texture units. While the user's machine might support more all WebGL2 implementations are
-required to support at least 16 texture units. Which texture unit each sampler uniform
-references is set by looking up the location of that sampler uniform and then setting the
-index of the texture unit you want it to reference.
+<h3>텍스쳐 유닛(texture units)이란 무엇 입니까?</h3>
+<code>gl.draw???</code>를 호출할때 쉐이더는 텍스처를 참조 할 수 있습니다. 텍스처들은 텍스처 유닛에 바운딩됩니다. 사용자의 머신은 더 많은 WebGL2 구현들을 지원할 수도 있지만 적어도 16 개의 텍스처 유닛을 지원해야합니다. 각 샘플러 유닛이 참조하는 텍스쳐 유닛은 샘플러의 위치를 찾고 참조하길 원하는 텍스처 유닛의 인덱스를 설정합니다.
 
-For example:
+예제:
 <pre class="prettyprint showlinemods">
-var textureUnitIndex = 6; // use texture unit 6.
+var textureUnitIndex = 6; // 텍스쳐 유닛 6 사용
 var u_imageLoc = gl.getUniformLocation(
     program, "u_image");
 gl.uniform1i(u_imageLoc, textureUnitIndex);
 </pre>
 
-To set textures on different units you call gl.activeTexture and then bind the texture you want on that unit. Example
+다른 텍스쳐들을 다른 유닛에 설정하기 위해 gl.activeTexture를 호출하고 원하는 유닛으로 텍스처를 바인딩 하면 됩니다.
 
 <pre class="prettyprint showlinemods">
-// Bind someTexture to texture unit 6.
+// 텍스처를 텍스쳐 유닛 6에 바인드 합니다.
 gl.activeTexture(gl.TEXTURE6);
 gl.bindTexture(gl.TEXTURE_2D, someTexture);
 </pre>
 
-This works too
+다음도 작동합니다.
 
 <pre class="prettyprint showlinemods">
-var textureUnitIndex = 6; // use texture unit 6.
-// Bind someTexture to texture unit 6.
+var textureUnitIndex = 6; // 텍스쳐 유닛 6 사용.
+// 텍스처를 텍스쳐 유닛 6에 바인드 합니다.
 gl.activeTexture(gl.TEXTURE0 + textureUnitIndex);
 gl.bindTexture(gl.TEXTURE_2D, someTexture);
 </pre>
 </div>
 
 <div class="webgl_bottombar">
-<h3>What's with the a_, u_, and v_ prefixes in from of variables in GLSL?</h3>
+<h3>GLSL 변수에서 a_, u_, v_ 접두어는 무엇입니까?</h3>
 <p>
-That's just a naming convention. They are not required but for me it makes it easier to see at a glance
-where the values are coming from. a_ for attributes which is the data provided by buffers. u_ for uniforms
-which are inputs to the shaders, v_ for varyings which are values passed from a vertex shader to a
-fragment shader and interpolated (or varied) between the vertices for each pixel drawn.
-See <a href="webgl-how-it-works.html">How it works</a> for more details.
+이는 단지 네이밍 컨벤션 입니다. 꼭 필요하지는 않지만 어디서 값이 오는지 한눈에 보기 쉽게 해줍니다. a_는 버퍼에서 제공된 데이터를 나타내는 attributes, v_는 버텍스 쉐이더에서 프래그먼트 쉐이더로 전달하고 그려지는 각 픽셀의 꼭지점 사이에 보간 (또는 변화) 된 값들을 나타내는 varyings를 나타냅니다. <a href="webgl-how-it-works.html">작동 방법</a>에서 더 자세히 알수 있습니다.
 </p>
 </div>
