@@ -1,12 +1,12 @@
 window.langDB = {
   "articles": {
+    "webgl-data-textures.html": {
+      "en": true
+    },
+    "webgl-render-to-texture.html": {
+      "en": true
+    },
     "webgl-3d-geometry-lathe.html": {
-      "en": true
-    },
-    "webgl-cors-permission.html": {
-      "en": true
-    },
-    "webgl-2d-matrices.html": {
       "en": true
     },
     "webgl-2d-matrix-stack.html": {
@@ -57,6 +57,9 @@ window.langDB = {
     "webgl-boilerplate.html": {
       "en": true
     },
+    "webgl-cors-permission.html": {
+      "en": true
+    },
     "webgl-2d-drawimage.html": {
       "en": true
     },
@@ -84,6 +87,9 @@ window.langDB = {
       "en": true
     },
     "webgl-matrix-naming.html": {
+      "en": true
+    },
+    "webgl-2d-matrices.html": {
       "en": true
     },
     "webgl-resizing-the-canvas.html": {

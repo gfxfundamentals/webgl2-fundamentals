@@ -336,7 +336,7 @@ for <code>depth</code> it will be <code>-depth / 2</code> to <code>+depth / 2</c
 hard to see any 3D.  To fix that let&#39;s expand the geometry to 3D.  Our
 current F is made of 3 rectangles, 2 triangles each.  To make it 3D will
 require a total of 16 rectangles.  the 3 rectangles on the front, 3 on the
-back, 1 on the left, 4 on the right, 3 on the bottoms</p>
+back, 1 on the left, 4 on the right, 2 on the tops, 3 on the bottoms.</p>
 <p><img class="webgl_center" width="300" src="resources/3df.svg" /></p>
 <p>That&#39;s quite a few to list out here.
 16 rectangles with 2 triangles per rectangle and 3 vertices per triangle is 96
@@ -454,6 +454,12 @@ function setColors(gl) {
 that 3D &#39;F&#39;, front, back, sides, etc get drawn in the order they appear in
 our geometry data.  That doesn&#39;t give us quite the desired results as sometimes
 the ones in the back get drawn after the ones in the front.</p>
+<p><img class="webgl_center" width="163" height="190" src="resources/polygon-drawing-order.gif" /></p>
+<p>The <span style="background: rgb(200, 70, 120); color: white; padding: 0.25em">redish part</span> is
+the <strong>front</strong> of the &#39;F&#39;  but because it&#39;s the first part of our data
+it is drawn first and then the other triangles behind it get drawn
+after covering it up. For example the  <span style="background: rgb(80, 70, 200); color: white; padding: 0.25em">purple part</span>
+is actually the back of the &#39;F&#39;. It gets drawn 2nd because it comes 2nd in our data.</p>
 <p>Triangles in WebGL have the concept of front facing and back facing.  A
 front facing triangle has its vertices go in a clockwise direction.  A
 back facing triangle has its vertices go in a counter clockwise direction</p>
@@ -696,8 +702,13 @@ we need for the matrix math to work.
   <li>Textures</li>
   <ul>
     <li><a href="/webgl/lessons/webgl-3d-textures.html">WebGL2 3D - Textures</a></li>
+    <li><a href="/webgl/lessons/webgl-data-textures.html">WebGL2 - Data Textures</a></li>
     <li><a href="/webgl/lessons/webgl-2-textures.html">WebGL2 - Using 2 or More Textures</a></li>
     <li><a href="/webgl/lessons/webgl-cors-permission.html">WebGL2 - Cross Origin Images</a></li>
+  </ul>
+  <li>Rendering To A Texture</li>
+  <ul>
+    <li><a href="/webgl/lessons/webgl-render-to-texture.html">WebGL2 - Render to Texture</a></li>
   </ul>
   </li>
   <li>Techniques</li>
