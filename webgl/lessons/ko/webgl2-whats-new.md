@@ -25,9 +25,9 @@ WebGL1에서 이를 할 수 있었지만 오직 텍스처 좌표(0.0에서 1.0)�
 
     vec4 values = texelFetch(sampler, ivec2Position, lod);
 
-## Lots of texture formats
+## 다양한 텍스처 포맷
 
-WebGL1 had just a few texture formats. WebGL2 has TONS!
+WebGL1에서는 단지 몇 가지 텍스처 포맷만 있엇습니다. WebGL2에는 아주 많아 졌습니다!
 
 *   `RGBA32I`
 *   `RGBA32UI`
@@ -82,18 +82,13 @@ WebGL1 had just a few texture formats. WebGL2 has TONS!
 *   `DEPTH_COMPONENT24`
 *   `DEPTH_COMPONENT16`
 
-## 3D Textures
+## 3D 텍스쳐
 
-3D texture are just that. Textures that have 3 dimensions.
+3D 텍스처 입니다. 3차원을 가진 텍스처입니다.
 
-## Texture arrays
+## 텍스처 배열
 
-A texture array is very similar to a 3D texture except that
-each slice is considered a separate texture. All the slices
-have to be the same size but this is a great way to give
-a shader access to hundreds of textures even though it
-only has a relatively small number of texture units. You can
-select the slice in your shader
+텍스처 배열은 각 부분이 별도의 텍스처로 간주된다는 점을 제외하면 3D 텍스처와 매우 비슷합니다. 모든 부분들이 같은 크기여야 하지만 쉐이더에 비교적 적은 수의 텍스처 단위를 가지고있는 수많은 텍스처에 접근하는 좋은 방법입니다. 쉐이더에서 부분(slice)를 선택할 수 있습니다.
 
     vec4 color = texture(someSampler2DArray, vec3(u, v, slice));
 
