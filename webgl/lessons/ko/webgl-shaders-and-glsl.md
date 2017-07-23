@@ -9,7 +9,7 @@ Description: 쉐이더란 무엇이며 GLSL는 무엇입니까>
 
 ## 버텍스 쉐이더
 
-버텍스 쉐이더의 일은 클립 공간 좌표를 생성하는 것입니다. 항상 다음과 같은 형식을 가집니다.
+버텍스 쉐이더의 일은 클립 공간 좌표를 생성하는 것입니다. 항상 다음과 같은 형태을 가집니다.
 
     #version 300 es
     void main() {
@@ -27,8 +27,8 @@ Description: 쉐이더란 무엇이며 GLSL는 무엇입니까>
 ### Attributes
 
 버텍스 쉐이더에서 데이터를 얻는 가장 일반적인 방법은 버퍼와 *attributes*를 이용하는 것입니다.
-[작동 방식](webgl-how-it-works.html)에서 버퍼와 속성(attributes)에 대해서 다룹니다.
-버퍼를 만듭니다.
+[작동 방식](webgl-how-it-works.html)에서 버퍼와 속성(attributes)에 대해서 다뤘습니다.
+우선 버퍼를 만듭니다.
 
     var buf = gl.createBuffer();
 
@@ -83,7 +83,7 @@ Description: 쉐이더란 무엇이며 GLSL는 무엇입니까>
        gl_Position = a_position + u_offset;
     }
 
-이제 모든 버텍스마다 특정한 수만큼 offset를 처리할 수 있습니다. 먼저 uniform의 위치부터 찾아야 합니다.
+이제 모든 버텍스마다 지정한 수 만큼 오프셋을 지정 할 수 있습니다. 먼저 uniform의 위치부터 찾아야 합니다.
 
     var offsetLoc = gl.getUniformLocation(someProgram, "u_offset");
 
@@ -169,7 +169,7 @@ Uniforms은 여러 타입이 될 수 있습니다. 각 타입별로 해당 함�
 
 ### 버텍스 쉐이더에서 텍스처
 
-[버텍스 쉐이더에서 텍스처]를 참조 하세요.(#textures-in-fragment-shaders).
+[버텍스 쉐이더에서 텍스처](#textures-in-fragment-shaders)를 참조 하세요..
 
 ## 프레그먼트 쉐이더
 
@@ -248,7 +248,7 @@ WebGL은 텍스처 유닛에 연결을 해야합니다.
 
 ### Varyings
 
-varying는 버텍스 쉐이더에서 [작동 방법]((webgl-how-it-works.html))에서 보았던 프래그먼트 쉐이더로 값을 전달하는 방법입니다.
+varying는 버텍스 쉐이더에서 [작동 방법](webgl-how-it-works.html)에서 보았던 프래그먼트 쉐이더로 값을 전달하는 방법입니다.
 
 varying를 사용하기 위해서는 varying들을 버텍스와 프래그먼트 쉐이더 두곳에서 일치하게 선언을 해야합니다.
 버텍스 쉐이더는 버텍스당 특정 값을 *out* varying에 설정합니다. WebGL은 픽셀을 그릴떄 선택 사항으로 해당 값을 보간하고 프래먼트 쉐이더에서 *in*에 상응하는 varying에 전달합니다.
@@ -377,7 +377,6 @@ T의 의미는  `float`, `vec2`, `vec3` 또는 `vec4` 일 수 있습니다. 만�
 
 ## 하나로 모으기
 
-<!-- 번역 필요 -->
 That's the point of this entire series of posts. WebGL는 다양한 쉐이더를 생성하고, 데이터를 이 쉐이더들에 제공하고 `gl.drawArrays`, `gl.drawElements`등을 호출하여 WebGL이 각 버텍스들을 각 버텍스마다 현재 버텍스 쉐이더를 호출하여 처리하고 픽셀들을 각 픽셀마다 현재 프래그먼트 쉐이더를 호출하여 랜더링 하는 것에 대한 것입니다.
 
 실제로 쉐이더를 생성하는 것은 몇 줄의 코드만 필요합니다. 이 줄들은 대부분의 WebGL 프로그램에서 동일하고 한번 쓰여 졌기 때문에 [GLSL 쉐이더를 컴파일하고 쉐이더 프로그램에 링크하는 방법](webgl-boilerplate.html)은 무시할 수 있습니다.
