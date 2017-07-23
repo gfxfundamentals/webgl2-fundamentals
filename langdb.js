@@ -75,13 +75,15 @@ window.langDB = {
       "ko": true
     },
     "webgl-how-it-works.html": {
-      "en": true
+      "en": true,
+      "ko": true
     },
     "webgl-image-processing-continued.html": {
       "en": true
     },
     "webgl-image-processing.html": {
-      "en": true
+      "en": true,
+      "ko": true
     },
     "webgl-less-code-more-fun.html": {
       "en": true
@@ -102,7 +104,8 @@ window.langDB = {
       "en": true
     },
     "webgl-shaders-and-glsl.html": {
-      "en": true
+      "en": true,
+      "ko": true
     },
     "webgl-text-canvas2d.html": {
       "en": true
