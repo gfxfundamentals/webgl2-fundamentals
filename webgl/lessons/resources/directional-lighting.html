@@ -3,16 +3,9 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>WebGL2 - Directional Lighting Diagram</title>
 <link type="text/css" href="../../resources/webgl-tutorials.css" rel="stylesheet" />
-<style>
-#ui {
-    width: 200px;
-}
-#rotation>canvas {
-    background-color: rgba(255, 255, 255, 0.6) !important;
-}
-</style>
 </head>
 <body>
 <div class="description">
@@ -35,20 +28,35 @@ for webgl-utils, m3, m4, and webgl-lessons-ui.
 -->
 <script src="../../resources/webgl-lessons-ui.js"></script>
 <script src="../../resources/webgl-utils.js"></script>
-<script src="../../resources/webgl-lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
+<script src="../../resources/webgl-lessons-helper.js"></script> <!-- you can and should delete this script. it is only used on the site to help with errors -->
 <script src="../../resources/m3.js"></script>
 <script src="diagram.js"></script>
 <script>
 "use strict";
 
 function main() {
+  const opt = getQueryParams();
+  const lang = {
+    lightDir: opt.lightDir || "light direction",
+    dot: opt.dot || "dot(reverseLightDirection,surfaceDirection) = ",
+    surface1: opt.surface1 || "surface",
+    surface2: opt.surface2 || "direction",
+  };
   var ctx = document.getElementById("canvas").getContext("2d");
   var direction = 0;
 
-  webglLessonsUI.setupSlider("#rotation", {value: m3.radToDeg(direction), slide: updateDirection, min: -180, max: 180 });
+  function radToDeg(rad) {
+    return rad * 180 / Math.PI;
+  }
+
+  function degToRad(deg) {
+    return deg * Math.PI / 180;
+  }
+
+  webglLessonsUI.setupSlider("#rotation", {value: radToDeg(direction), slide: updateDirection, min: -180, max: 180 });
 
   function updateDirection(event, ui) {
-    direction = m3.degToRad(ui.value);
+    direction = degToRad(ui.value);
     render();
   }
 
@@ -86,7 +94,7 @@ function main() {
       diagram.arrow(ctx, 0, -20, 0, 20, false, true, 0.5);
       ctx.restore();
     }
-    ctx.fillText("light direction", 0, -30);
+    ctx.fillText(lang.lightDir, 0, -30);
 
     ctx.restore();
 
@@ -105,15 +113,15 @@ function main() {
     ctx.stroke();
 
     ctx.fillStyle = "#FFF";
-    ctx.fillText("dot(reverseLightDirection,surfaceDirection) = " + d.toFixed(2), 0, 10);
+    ctx.fillText(lang.dot + d.toFixed(2), 0, 10);
 
     var nx = 0;
     var ny = -20;
     ctx.fillStyle = "#080";
     ctx.strokeStyle = "#080";
     diagram.arrow(ctx, 0, 0, nx, ny, false, true);
-    ctx.fillText("surface", nx, ny - 22);
-    ctx.fillText("direction", nx, ny - 14);
+    ctx.fillText(lang.surface1, nx, ny - 22);
+    ctx.fillText(lang.surface2, nx, ny - 14);
 
     ctx.restore();
 
@@ -122,6 +130,19 @@ function main() {
   render();
 
   window.addEventListener('resize', render);
+}
+
+function getQueryParams() {
+  var params = {};
+  if (window.location.search) {
+    window.location.search.substring(1).split("&").forEach(function(pair) {
+      var keyValue = pair.split("=").map(function (kv) {
+        return decodeURIComponent(kv);
+      });
+      params[keyValue[0]] = keyValue[1];
+    });
+  }
+  return params;
 }
 
 main();
