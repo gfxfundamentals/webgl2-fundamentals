@@ -3,6 +3,7 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>WebGL2 - Surface Reflection Diagram</title>
 <link type="text/css" href="../../resources/webgl-tutorials.css" rel="stylesheet" />
 </head>
@@ -28,20 +29,32 @@ for webgl-utils, m3, m4, and webgl-lessons-ui.
 -->
 <script src="../../resources/webgl-lessons-ui.js"></script>
 <script src="../../resources/webgl-utils.js"></script>
-<script src="../../resources/webgl-lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
+<script src="../../resources/webgl-lessons-helper.js"></script> <!-- you can and should delete this script. it is only used on the site to help with errors -->
 <script src="../../resources/m3.js"></script>
 <script src="diagram.js"></script>
 <script>
 "use strict";
 
 function main() {
+  const opt = getQueryParams();
+  const lang = {
+    reflection: opt.reflection || "reflection",
+  };
   var ctx = document.getElementById("canvas").getContext("2d");
   var surfaceAngle = 0;
 
-  webglLessonsUI.setupSlider("#rotation", {value: m3.radToDeg(surfaceAngle), slide: updateSurfaceAngle, min: -40, max: 40 });
+  function radToDeg(rad) {
+    return rad * 180 / Math.PI;
+  }
+
+  function degToRad(deg) {
+    return deg * Math.PI / 180;
+  }
+
+  webglLessonsUI.setupSlider("#rotation", {value: radToDeg(surfaceAngle), slide: updateSurfaceAngle, min: -40, max: 40 });
 
   function updateSurfaceAngle(event, ui) {
-    surfaceAngle = m3.degToRad(ui.value);
+    surfaceAngle = degToRad(ui.value);
     render();
   }
 
@@ -97,7 +110,7 @@ function main() {
     ctx.translate(0, rl / 2);
     ctx.rotate(Math.PI * -0.5);
     ctx.translate(0, 7);
-    ctx.fillText("relfection", 0, 0);
+    ctx.fillText(lang.reflection, 0, 0);
     ctx.restore();
 
 //    var h = normalize(-ix + r[0], -iy + r[1]);
@@ -159,6 +172,19 @@ function main() {
     ctx.restore();
   }
   render();
+}
+
+function getQueryParams() {
+  var params = {};
+  if (window.location.search) {
+    window.location.search.substring(1).split("&").forEach(function(pair) {
+      var keyValue = pair.split("=").map(function (kv) {
+        return decodeURIComponent(kv);
+      });
+      params[keyValue[0]] = keyValue[1];
+    });
+  }
+  return params;
 }
 
 main();
