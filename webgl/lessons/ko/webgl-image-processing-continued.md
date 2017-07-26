@@ -202,14 +202,8 @@ Description: WebGL에 있는 여러 이미지 처리 기술을 적용하는 방�
 WebGL은 (클립 공간)[webgl-fundamentals.html]에서 픽셀로 변환을 합니다. 이 작업은`gl.viewport` 설정을 기반으로합니다. 프레임 버퍼는 캔버스와 크기가 다르기 때문에 텍스처 또는 캔버스에 랜더링할 것인지에 따라
  뷰표트를 적절히 설정이 필요합니다.
 
-Finally in the [original example](webgl-fundamentals.html) we flipped the Y
-coordinate when rendering because WebGL displays the canvas with 0,0 being the
-bottom left corner instead of the more traditional for 2D top left. That's not
-needed when rendering to a framebuffer. Because the framebuffer is never
-displayed, which part is top and bottom is irrelevant. All that matters is
-that pixel 0,0 in the framebuffer corresponds to 0,0 in our calculations.
-To deal with this I made it possible to set whether to flip or not by
-adding one more uniform input into the shader call `u_flipY`.
+
+마지막으로 [원래 예제](webgl-fundamentals.html)에서 WebGL은 전통적인 2D에서 왼쪽 상단과 달리 왼쪽 아래를 0.0으로 캔버스를 보여주기 떄문에 렌더링 할떄 Y좌표를 뒤집었습니다. 이는 프레임 버퍼를 할때에는 필요가 없습니다. 프레임 버퍼는 보여지지 않기 떄문에 어느부분이 위인지 아래인지는 상관이 없습니다. 중요한 것은 픽셀 0이고 0은 프레임버퍼의 0에 해당한다는 것입니다. 이 문제를 해결하기 위해 쉐이더 `u_flipY`이라 불리는 하나 이상의 유니폼 입력을 추가하여 뒤집을지 아닌지 설정 할 수 있게 만들었습니다.
 
 ```
 ...
@@ -223,7 +217,7 @@ void main() {
 }
 ```
 
-And then we can set it when we render with
+그리고 렌더링 할 때 설정할 수 있습니다.
 
 ```
   ...
@@ -231,27 +225,16 @@ And then we can set it when we render with
 
   ...
 
-+  // don't flip
++  // 뒤집지 않는다.
 +  gl.uniform1f(flipYLocation, 1);
 
   ...
 
-+  // flip
++  // 뒤집는다
 +  gl.uniform1f(flipYLocation, -1);
 ```
 
-I kept this example simple by using a single GLSL program that can achieve
-multiple effects. If you wanted to do full on image processing you'd probably
-need many GLSL programs. A program for hue, saturation and luminance adjustment.
-Another for brightness and contrast. One for inverting, another for adjusting
-levels, etc. You'd need to change the code to switch GLSL programs and update
-the parameters for that particular program. I'd considered writing that example
-but it's an exercise best left to the reader because multiple GLSL programs each
-with their own parameter needs probably means some major refactoring to keep it
-all from becoming a big mess of spaghetti.
+이 예제에서는 간단하게 단일 GLSL 프로그램을 사용해서 다양한 효과들을 적용 할 수 있도록 했습니다. 만약에 이미지 처리에 전념하고 싶다면 많은 더 GLSL프로그램이 필요할 것입니다. 색조, 채도 및 휘도 조정를 위한 프로그램이 있고, 밝기와 대비를 위한 프로그램, 반전용, 또 다른 레벨을 조정하는용 등이 있습니다. GLSL 프로그램을 전환하고 특정 프로그램에 대한 매개 변수를 업데이트하려면 코드를 변경해야합니다. 이 글에서 이 예제를 작성하는것을 고려해 보았지만 여러 GLSL프로그램은 각자 매개변수가 필요하고 아마도 거대한 스파게티 난장판이 되지 않도록 중요한 부분에 리펙토링이 필요로 할 것이기 때문에 연습으로 남겨두는게 좋은 방법이라고 생각되어 남겨 두었습니다.
 
-I hope this and the preceding examples have made WebGL seem a little more
-approachable and I hope starting with 2D helps make WebGL a little easier to
-understand. If I find the time I'll try to write [a few more articles](webgl-2d-translation.html)
-about how to do 3D as well as more details on [what WebGL is really doing under the hood](webgl-how-it-works.html).
-For a next step consider learning [how to use 2 or more textures](webgl-2-textures.html).
+위에 본 예제와 전에 본 예제를 통해 WebGL에 더 가까워지고 2D로 시작하면서 WebGL을 좀더 쉽게 사용할 수 있기를 바랍니다. 만약에 시간이 된다면 3D의 작동 방법에 대한 [몇 가지 글들](webgl-2d-translation.html)과 [WebGL이 실제로 수행하는 작업](webgl-how-it-works.html)에 대한 더 자세한 글을 을 작성하려고 합니다.
+다음 단계는 [2개 이상의 텍스처 사용법](webgl-2-textures.html)를 배우는 것입니다.
