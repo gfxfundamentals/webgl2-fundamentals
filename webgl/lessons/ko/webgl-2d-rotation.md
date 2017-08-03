@@ -1,7 +1,7 @@
 ﻿Title: WebGL 2D 회전
 Description: 2D에서 회전 하는 방법
 
-이 글은 WebGL에 대한 게시물 시리즈에서 이어지는 글입니다. 첫 번쨰는 [기초로 시작](webgl-fundamentals.html)이였으며 바로 전은 [기하학에 대한 이동](webgl-2d-translation.html)이였습니다.
+이 글은 WebGL 게시글 시리즈에서 이어지는 글입니다. 첫 번쨰는 [기초로 시작](webgl-fundamentals.html)이였으며 바로 전은 [기하학에 대한 이동](webgl-2d-translation.html)이였습니다.
 
 
 I'm going to admit right up front I have no idea if how I explain this
