@@ -1,5 +1,8 @@
 window.langDB = {
   "articles": {
+    "webgl-3d-perspective-correct-texturemapping.html": {
+      "en": true
+    },
     "webgl-data-textures.html": {
       "en": true
     },
@@ -7,9 +10,6 @@ window.langDB = {
       "en": true
     },
     "webgl-3d-geometry-lathe.html": {
-      "en": true
-    },
-    "webgl-2d-matrix-stack.html": {
       "en": true
     },
     "webgl-2d-rotation.html": {
@@ -37,6 +37,9 @@ window.langDB = {
       "en": true
     },
     "webgl-3d-orthographic.html": {
+      "en": true
+    },
+    "webgl-2d-matrices.html": {
       "en": true
     },
     "webgl-3d-perspective.html": {
@@ -91,7 +94,7 @@ window.langDB = {
     "webgl-matrix-naming.html": {
       "en": true
     },
-    "webgl-2d-matrices.html": {
+    "webgl-2d-matrix-stack.html": {
       "en": true
     },
     "webgl-resizing-the-canvas.html": {
