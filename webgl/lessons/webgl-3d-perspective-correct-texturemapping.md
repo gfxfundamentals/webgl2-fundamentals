@@ -212,7 +212,17 @@ proves `X * MULT / MULT(W)` is still just `X` and same for `Y`. But, the
 colors are different. What's going on?
 
 It turns out WebGL uses `W` to implement perspective correct
-texturemapping.
+texturemapping or rather to do perspective correct interpolation
+of varyings.
+
+In fact to make it easier to see let's hack the fragment shader to this
+
+    outColor = vec4(fract(v_brightness * 10.), 0, 0, 1);  // reds
+
+multplying `v_brightness` by 10 will make the value go from 0 to 10. `fract` will
+just keep the fractional part so it will go 0 to 1, 0 to 1, 0 to 1, 10 times.
+
+{{{example url="../webgl-clipspace-rectangles-with-varying-non-1-w-repeat.html" }}}
 
 A linear interpolation from one value to another would be this
 formula
@@ -269,9 +279,13 @@ WebGL do the division for us. Well here are the results.
 
 We still get a 3D cube but the textures are getting warped. This 
 is because by not passing `W` as it was before WebGL is not able to do
-perspective correct texture mapping. If you recall `W` was our
+perspective correct texture mapping. Or more correctly, WebGL is not
+able to do perspective correct interpolation of varying.
+
+If you recall `W` was our
 `Z` value from our [perspective matrix](webgl-3d-perspective.html)).
-With `W` just being `1` WebGL just ends up doing a linear interpolation. In fact if you take the equation above
+With `W` just being `1` WebGL just ends up doing a linear interpolation.
+In fact if you take the equation above
 
      result = (1 - t) * a / aW + t * b / bW
               -----------------------------
