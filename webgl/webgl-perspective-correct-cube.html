@@ -4,12 +4,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>WebGL2 - Textures - Texture Atlas</title>
+<title>WebGL - Perspective Correct Textured Cube (the default)</title>
 <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
+<style>
+canvas {
+    background: #444;
+}
+</style>
 </head>
 <body>
 <div class="description">
-Textured Cube with a different image on each face<br/>
+Perspective Correct Textured Cube (the default) <br/>
 </div>
 <canvas id="canvas"></canvas>
 </body>
@@ -71,7 +76,6 @@ function main() {
   // Get A WebGL context
   /** @type {HTMLCanvasElement} */
   var canvas = document.getElementById("canvas");
-
   var gl = canvas.getContext("webgl2");
   if (!gl) {
     return;
@@ -85,11 +89,9 @@ function main() {
   var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
   var texcoordAttributeLocation = gl.getAttribLocation(program, "a_texcoord");
 
-  // look up uniform locations
+  // lookup uniforms
   var matrixLocation = gl.getUniformLocation(program, "u_matrix");
-
-  // Create a buffer
-  var positionBuffer = gl.createBuffer();
+  var textureLocation = gl.getUniformLocation(program, "u_texture");
 
   // Create a vertex array object (attribute state)
   var vao = gl.createVertexArray();
@@ -97,13 +99,15 @@ function main() {
   // and make it the one we're currently working with
   gl.bindVertexArray(vao);
 
-  // Turn on the attribute
-  gl.enableVertexAttribArray(positionAttributeLocation);
-
+  // Create a buffer for positions
+  var positionBuffer = gl.createBuffer();
   // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  // Set Geometry.
+  // Put the positions in the buffer
   setGeometry(gl);
+
+  // Turn on the attribute
+  gl.enableVertexAttribArray(positionAttributeLocation);
 
   // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
   var size = 3;          // 3 components per iteration
@@ -114,10 +118,10 @@ function main() {
   gl.vertexAttribPointer(
       positionAttributeLocation, size, type, normalize, stride, offset);
 
-  // create the texcoord buffer, make it the current ARRAY_BUFFER
-  // and copy in the texcoord values
+  // provide texture coordinates for the rectangle.
   var texcoordBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
+  // Set Texcoords.
   setTexcoords(gl);
 
   // Turn on the attribute
@@ -141,27 +145,30 @@ function main() {
   // bind to the TEXTURE_2D bind point of texture unit 0
   gl.bindTexture(gl.TEXTURE_2D, texture);
 
-  // Fill the texture with a 1x1 blue pixel.
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
-                new Uint8Array([0, 0, 255, 255]));
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-
-  // Asynchronously load an image
-  var image = new Image();
-  image.src = "resources/noodles.jpg";
-  image.addEventListener('load', function() {
-    // Now that the image has loaded make copy it to the texture.
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+  // Fill the texture with a 4x4 LUMINANCE pixel.
+  {
+    const level = 0;
+    const format = gl.LUMINANCE;
+    const type = gl.UNSIGNED_BYTE;
+    const border = 0;
+    const width = 4;
+    const height = 4;
+    const pixels = new Uint8Array([
+      255, 128, 255, 128,
+      128, 255, 128, 255,
+      255, 128, 255, 128,
+      128, 255, 128, 255,
+    ]);
+    gl.texImage2D(gl.TEXTURE_2D, level, format, width, height, border,
+                  format, type, pixels);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.generateMipmap(gl.TEXTURE_2D);
-  });
+  }
 
   function degToRad(d) {
     return d * Math.PI / 180;
   }
 
-  // First let's make some variables
-  // to hold the translation,
   var fieldOfViewRadians = degToRad(60);
   var modelXRotationRadians = degToRad(0);
   var modelYRotationRadians = degToRad(0);
@@ -224,6 +231,9 @@ function main() {
 
     // Set the matrix.
     gl.uniformMatrix4fv(matrixLocation, false, matrix);
+
+    // Tell the sampler to use texture unit 0
+    gl.uniform1i(textureLocation, 0);
 
     // Draw the geometry.
     var primitiveType = gl.TRIANGLES;
@@ -294,48 +304,47 @@ function setTexcoords(gl) {
       gl.ARRAY_BUFFER,
       new Float32Array(
         [
-        // select the bottom left image
-        0   , 0  ,
-        0   , 0.5,
-        0.25, 0  ,
-        0   , 0.5,
-        0.25, 0.5,
-        0.25, 0  ,
-        // select the bottom middle image
-        0.25, 0  ,
-        0.5 , 0  ,
-        0.25, 0.5,
-        0.25, 0.5,
-        0.5 , 0  ,
-        0.5 , 0.5,
-        // select to bottom right image
-        0.5 , 0  ,
-        0.5 , 0.5,
-        0.75, 0  ,
-        0.5 , 0.5,
-        0.75, 0.5,
-        0.75, 0  ,
-        // select the top left image
-        0   , 0.5,
-        0.25, 0.5,
-        0   , 1  ,
-        0   , 1  ,
-        0.25, 0.5,
-        0.25, 1  ,
-        // select the top middle image
-        0.25, 0.5,
-        0.25, 1  ,
-        0.5 , 0.5,
-        0.25, 1  ,
-        0.5 , 1  ,
-        0.5 , 0.5,
-        // select the top right image
-        0.5 , 0.5,
-        0.75, 0.5,
-        0.5 , 1  ,
-        0.5 , 1  ,
-        0.75, 0.5,
-        0.75, 1  ,
+          0, 0,
+          0, 1,
+          1, 0,
+          0, 1,
+          1, 1,
+          1, 0,
+
+          0, 0,
+          0, 1,
+          1, 0,
+          1, 0,
+          0, 1,
+          1, 1,
+
+          0, 0,
+          0, 1,
+          1, 0,
+          0, 1,
+          1, 1,
+          1, 0,
+
+          0, 0,
+          0, 1,
+          1, 0,
+          1, 0,
+          0, 1,
+          1, 1,
+
+          0, 0,
+          0, 1,
+          1, 0,
+          0, 1,
+          1, 1,
+          1, 0,
+
+          0, 0,
+          0, 1,
+          1, 0,
+          1, 0,
+          0, 1,
+          1, 1,
 
       ]),
       gl.STATIC_DRAW);
