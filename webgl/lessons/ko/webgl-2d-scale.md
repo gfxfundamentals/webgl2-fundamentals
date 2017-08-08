@@ -5,8 +5,7 @@ Description: 2D에서 크기 변환하는 방법
 
 크기 변환은 [이동만큼 쉽습니다](webgl-2d-translation.html).
 
-We multiply the position by our desired scale. Here are the changes
-from our [previous sample](webgl-2d-rotation.html).
+위치에 원하는 크기 만큼 곱합니다. 다음은 [이전 예제](webgl-2d-rotation.html)에서 변경한 것 입니다.
 
 ```
 #version 300 es
@@ -19,19 +18,19 @@ uniform vec2 u_rotation;
 +uniform vec2 u_scale;
 
 void main() {
-+  // Scale the positon
++  // 위치 크기 변환
 +  vec2 scaledPosition = a_position * u_scale;
 
-  // Rotate the position
+  // 위치 회전
   vec2 rotatedPosition = vec2(
 *     scaledPosition.x * u_rotation.y + scaledPosition.y * u_rotation.x,
 *     scaledPosition.y * u_rotation.y - scaledPosition.x * u_rotation.x);
 
-  // Add in the translation.
+  // 이동 추가
   vec2 position = rotatedPosition + u_translation;
 ```
 
-and we add the JavaScript needed to set the scale when we draw.
+그 다음으로 그릴 때 크기를 설정하는데 필요한 자바스크립트를 추가합니다
 
 ```
   ...
@@ -43,40 +42,39 @@ and we add the JavaScript needed to set the scale when we draw.
 +  var scale = [1, 1];
 
 
-   // Draw the scene.
+   // scene 그리기
    function drawScene() {
      webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
-     // Tell WebGL how to convert from clip space to pixels
+     // WebGL에 클립공간에서 픽셀로 변환 하는 방법을 전달합니다
      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-     // Clear the canvas
+     // 캔버스 지우기
      gl.clearColor(0, 0, 0, 0);
      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-     // Tell it to use our program (pair of shaders)
+     // 사용할 프로그램(쉐이더 쌍)을 전달합니다
      gl.useProgram(program);
 
-     // Bind the attribute/buffer set we want.
+     // 원하는 속성(attribute)/버퍼(buffer)를 연결 합니다.
      gl.bindVertexArray(vao);
 
-     // Pass in the canvas resolution so we can convert from
-     // pixels to clipspace in the shader
+     // 캔버스로 해상도를 쉐이더의 픽셀에서 클립공간으로 변환 할수 있게 전달합니다.
      gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
-     // Set the color.
+     // 색상 설정
      gl.uniform4fv(colorLocation, color);
 
-     // Set the translation.
+     // 이동 설정
      gl.uniform2fv(translationLocation, translation);
 
-     // Set the rotation.
+     // 회전 설정
      gl.uniform2fv(rotationLocation, rotation);
 
-+     // Set the scale.
++     // 크기 설정
 +     gl.uniform2fv(scaleLocation, scale);
 
-     // Draw the rectangle.
+     // 직사각형 그리기.
      var primitiveType = gl.TRIANGLES;
      var offset = 0;
      var count = 18;
@@ -84,18 +82,15 @@ and we add the JavaScript needed to set the scale when we draw.
    }
 ```
 
-And now we have scale. Drag the sliders.
+이제 크기 변환을 가졋습니다. 슬라이더를 드래그 해보세요.
 
 {{{example url="../webgl-2d-geometry-scale.html" }}}
 
-One thing to notice is that scaling by a negative value flips our geometry.
+한 가지 주의해야 할 점은 음의 값으로 크기 변환을 하게 된다면 지오메트리가 뒤집힌다는 것입니다.
 
-Another thing to notice is it scales from 0, 0 which for our F is the
-top left corner. That makes sense since we're multiplying the positions
-by the scale they will move away from 0, 0. You can probably
-imagine ways to fix that. For example you could add another translation
-before you scale, a *pre scale* translation. Another solution would be
-to change the actual F position data. We'll go over another way soon.
+또 하나 주의해야 할 점은 0에서 크기 변환입니다. 우리가 그린 F에서 0은 왼쪽 위 코너입니다. 이는 위치에 크기를 곱하기 떄문에 0을 항상 0으로 이동하게 만듭니다.
+아마 고칠수 있는 방법을 생각해 볼수 있을 것입니다. 예를들어 크기 변환을 하기전에 다른 이동을 하는 *크기 변환전* 이동을 추가할 수 있습니다.
+다른 방법은 실제 F의 위치 데이터를 변경하는 것입니다. 우리는 다른 방법으로 할 것입니다.
 
 I hope these last 3 posts were helpful in understanding
 [translation](webgl-2d-translation.html), [rotation](webgl-2d-rotation.html)
