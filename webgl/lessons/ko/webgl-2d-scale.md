@@ -92,26 +92,15 @@ void main() {
 아마 고칠수 있는 방법을 생각해 볼수 있을 것입니다. 예를들어 크기 변환을 하기전에 다른 이동을 하는 *크기 변환전* 이동을 추가할 수 있습니다.
 다른 방법은 실제 F의 위치 데이터를 변경하는 것입니다. 우리는 다른 방법으로 할 것입니다.
 
-I hope these last 3 posts were helpful in understanding
-[translation](webgl-2d-translation.html), [rotation](webgl-2d-rotation.html)
-and scale. Next we'll go over [the magic that is matrices](webgl-2d-matrices.html)
-that combines all 3 of these into a much simpler and often more useful form.
+마지막 3개의 글을 통해 [이동](webgl-2d-translation.html), [회전](webgl-2d-rotation.html) 그리고 크기 변환 를 이해하는데 도움이 되었기를 바랍니다. 다음은 이 세가지를 간단하고 더 유용한 형태로 결합하는 [행렬들](webgl-2d-matrices.html)을 살펴볼 것 입니다.
 
 <div class="webgl_bottombar">
-<h3>Why an 'F'?</h3>
+<h3>왜 'F' 입니까?</h3>
 <p>
-The first time I saw someone use an 'F' was on a texture.
-The 'F' itself is not important. What is important is that
-you can tell its orientation from any direction. If we
-used a heart ❤ or a triangle △ for example we couldn't
-tell if it was flipped horizontally. A circle ○ would be
-even worse. A colored rectangle would arguably work with
-different colors on each corner but then you'd have to remember
-which corner was which. An F's orientation is instantly recognizable.
+처음에는 다른 사람이 'F'를 사용하는 것을 보았습니다. 'F' 자체는 중요하지 않습니다. 중요한 것은 어떤 방향에서든 그 방향을 알 수 있다는 것입니다. 예를 들어 하트 ❤ 또는 삼각형 △을 사용했다면 수평으로 뒤집혔는지 알 수 없습니다. ○ 원은 더욱 알기 어렵습니다. 색깔이있는 직사각형은 틀림없이 각 모서리에서 다른 색상으로 작동하지만 어느 모서리가 어떤 색깔인지 기억해야합니다. F의 방향은 바로 인식 할 수 있습니다.
 </p>
 <img src="../resources/f-orientation.svg" class="webgl_center"/>
 <p>
-Any shape that you can tell the orientation of would work,
-I've just used 'F' ever since I was 'F'irst introduced to the idea.
+방향을 알수 있는 어떤 모양도 작동할 것입니다. 단지 아이디어가 'F'irst로 소개 되었기 떄문에 'F'를 사용 했습니다.
 </p>
 </div>
