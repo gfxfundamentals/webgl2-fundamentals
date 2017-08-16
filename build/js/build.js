@@ -16,6 +16,7 @@ const Promise    = require('promise');
 const sitemap    = require('sitemap');
 const utils      = require('./utils');
 const moment     = require('moment');
+const url        = require('url');
 
 //process.title = "build";
 
@@ -69,6 +70,23 @@ function replaceParams(str, params) {
   return template(params);
 }
 
+function encodeQuery(query) {
+  if (!query) {
+    return '';
+  }
+  return '?' + query.split("&").map(function(pair) {
+    return pair.split("=").map(function (kv) {
+      return encodeURIComponent(decodeURIComponent(kv));
+    }).join('=');
+  }).join('&');
+}
+
+function encodeUrl(src) {
+  const u = url.parse(src);
+  u.search = encodeQuery(u.query);
+  return url.format(u);
+}
+
 function TemplateManager() {
   var templates = {};
 
@@ -106,6 +124,8 @@ Handlebars.registerHelper('example', function(options) {
   options.hash.height  = options.hash.height ? "height: " + options.hash.height + "px;" : "";
   options.hash.caption = options.hash.caption || options.data.root.defaultExampleCaption;
   options.hash.examplePath = options.data.root.examplePath;
+  options.hash.encodedUrl = encodeURIComponent(encodeUrl(options.hash.url));
+  options.hash.url = encodeUrl(options.hash.url);
   return templateManager.apply("build/templates/example.template", options.hash);
 });
 
@@ -115,6 +135,7 @@ Handlebars.registerHelper('diagram', function(options) {
   options.hash.height = options.hash.height || "300";
   options.hash.examplePath = options.data.root.examplePath;
   options.hash.className = options.hash.className || "";
+  options.hash.url = encodeUrl(options.hash.url);
 
   return templateManager.apply("build/templates/diagram.template", options.hash);
 });
@@ -290,6 +311,7 @@ var Builder = function(outBaseDir, options) {
   var getLanguageSelection = function(lang) {
     var lessons = lang.lessons || ("webgl/lessons/" + lang.lang);
     var langInfo = hanson.parse(fs.readFileSync(path.join(lessons, "langinfo.hanson"), {encoding: "utf8"}));
+    langInfo.langCode = langInfo.langCode || lang.lang;
     g_langDB[lang.lang] = {
       lang: lang.lang,
       language: langInfo.language,

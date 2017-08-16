@@ -76,7 +76,9 @@ This is the template for the main page for each language
 #### `toc.html`
 
 This is the table of contents for the language. It is included on both the index
-and on each article. It's up to if you want to link to English articles for non-translated articles or not
+and on each article. It's up to if you want to link to English articles for non-translated articles.
+The build system will create a placeholder for every English article for which there is no
+corresponding article in that langauge. It will be filled the `missing` message from above.
 
 #### Translation notes
 
@@ -86,6 +88,37 @@ links in one article that links to another article but that other article has no
 This way you don't have to go back and fix already translated articles. Just translate one article
 at a time and leave the links as is. They'll link to placeholders until someone translates the missing
 articles.
+
+### UI localization
+
+Some of the diagrams allow passing translations for the UI and other text.
+
+For example if there is a slider named "rotation"
+you can add "?ui-rotation=girar" at the end of the URL for the diagram. For 2 or more translations
+separate them with a `&`. Certain characters are disallowed in URLs like `=`, `#`, `&` etc. For those
+use their uri encoding.
+
+For diagram labels you'll have to look inside the code. For example for the
+directional lighting diagram near the start of the code it looks like this
+
+```
+const lang = {
+  lightDir: opt.lightDir || "light direction",
+  dot: opt.dot || "dot(reverseLightDirection,surfaceDirection) = ",
+  surface1: opt.surface1 || "surface",
+  surface2: opt.surface2 || "direction",
+};
+```
+
+Which means you can localize the labels like this
+
+```
+{{{diagram url="resources/directional-lighting.html?lightDir=光線方向&surface1=オブジェクト&surface2=表面方向&dot=dot(光線反対方向,表面方向)%20%3D%20&ui-rotation=角度" caption="方向を回転してみて" width="500" height="400"}}}
+```
+
+For testing reference the sample directly in your browser. For example
+
+[`http://localhost:8080/webgl/lessons/resources/directional-lighting.html?lightDir=光線方向&surface1=オブジェクト&surface2=表面方向&dot=dot(光線反対方向,表面方向)%20%3D%20&ui-rotation=角度`](http://webgl2fundamentals.org/webgl/lessons/resources/directional-lighting.html?lightDir=光線方向&surface1=オブジェクト&surface2=表面方向&dot=dot(光線反対方向,表面方向)%20%3D%20&ui-rotation=角度)
 
 ### To build
 
