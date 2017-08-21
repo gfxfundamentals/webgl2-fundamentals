@@ -370,7 +370,7 @@ void main() {
       },
       ...
 
-Now we can simplify the shader even more. Here's the entire new vertex shader.
+이제 쉐이더를 더 단순화 할 수 있습니다. 여기에 새로운 버텍스 쉐이더가 있습니다.
 
     #version 300 es
 
@@ -379,30 +379,29 @@ Now we can simplify the shader even more. Here's the entire new vertex shader.
     uniform mat3 u_matrix;
 
     void main() {
-      // Multiply the position by the matrix.
+      // 위치에 행렬을 곱합니다.
       gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
     }
 
-And in JavaScript we need to multiply by the projection matrix
+그리고 JavaScript에서는 투영 행렬을 곱해야합니다.
 
 ```
-  // Draw the scene.
+  // scene 그리기.
   function drawScene() {
     ...
--    // Pass in the canvas resolution so we can convert from
--    // pixels to clipspace in the shader
+-    // 쉐이더에서 픽셀에서 클립공간으로 변환 할 수 있게 캔버스 해상도를 전달합니다.
 -    gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
     ...
 
-    // Compute the matrices
+    // 행렬 계산
 +    var projectionMatrix = m3.projection(
 +        gl.canvas.clientWidth, gl.canvas.clientHeight);
     var translationMatrix = m3.translation(translation[0], translation[1]);
     var rotationMatrix = m3.rotation(rotationInRadians);
     var scaleMatrix = m3.scaling(scale[0], scale[1]);
 
-    // Multiply the matrices.
+    // 행렬 곱하기
 *    var matrix = m3.multiply(projectionMatrix, translationMatrix);
 *    matrix = m3.multiply(matrix, rotationMatrix);
     matrix = m3.multiply(matrix, scaleMatrix);
@@ -410,15 +409,11 @@ And in JavaScript we need to multiply by the projection matrix
   }
 ```
 
-We also removed the code that set the resolution. With this last step we've gone
-from a rather complicated shader with 6-7 steps to a very simple shader with only
-1 step all due to the magic of matrix math.
+해상도를 설정하는 코드를 제거 했습니다. 마지막 단계에서는 6-7단계의 다소 복잡한 쉐이더에서 1단계의 매우 간단한 쉐이더가 되었으면 이 모든것이 행렬 계산의 마술입니다.
 
 {{{example url="../webgl-2d-geometry-matrix-transform-with-projection.html" }}}
 
-Before we move on let's simplifiy a little bit. While it's common to generate
-various matrices and separately multiply them together it's also common to just
-multiply them as we go. Effectively we could functions like this
+더 나아 가기 전에 조금 더 간단하게 해봅시다. 다양한 매트릭스를 생성하고 개별적으로 곱하는 것이 일반적이지만, 또한 생성할 때마다 곱하는 것도 일반적입니다. 효과적으로 다음과 같은 함수를 만들 수 있습니다.
 
 ```
 var m3 = {
@@ -442,36 +437,35 @@ var m3 = {
 };
 ```
 
-This would let us change 7 lines of matrix code above to just 4 lines like this
+이렇게 하면 위의 행렬 7줄을 다음과 같이 5줄로 바꿀 수 있습니다.
 
 ```
-// Compute the matrix
+// 행렬 계산
 var matrix = m3.projection(gl.canvas.clientWidth, gl.canvas.clientHeight);
 matrix = m3.translate(matrix, translation[0], translation[1]);
 matrix = m3.rotate(matrix, rotationInRadians);
 matrix = m3.scale(matrix, scale[0], scale[1]);
 ```
 
-And here's that
+여기에 결과가 있습니다.
 
 {{{example url="../webgl-2d-geometry-matrix-transform-simpler-functions.html" }}}
 
-One last thing, we saw above order matters. In the first example we had
+마지막으로 위에서 순서 문제를 보았습니다. 첫 번쨰 예에서는
 
     translation * rotation * scale
 
-and in the second we had
+두 번쨰 에제에서는
 
     scale * rotation * translation
 
-And we saw how they are different.
+그리고 이들이 어떻게 다른지를 보았습니다.
 
-The are 2 ways to look at matrices. Given the expression
+행렬을 보는 두 가지 방법이 있습니다. 표현식을 감안할 때
 
     projectionMat * translationMat * rotationMat * scaleMat * position
 
-The first way which many people find natural is to start on the right and work
-to the left
+많은 사람들이 자연스럽게 발견하는 첫 번쨰 방법은 오른쪽에서 시작하여 왼쪽으로 작업하는 것 입니다.
 
 First we mutiply the positon by the scale matrix to get a scaled postion
 
