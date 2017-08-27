@@ -467,60 +467,56 @@ matrix = m3.scale(matrix, scale[0], scale[1]);
 
 많은 사람들이 자연스럽게 발견하는 첫 번쨰 방법은 오른쪽에서 시작하여 왼쪽으로 작업하는 것 입니다.
 
-First we mutiply the positon by the scale matrix to get a scaled postion
+먼저 크기 변환 행렬을 위치에 곱하여 scaledPosition를 얻습니다.
 
     scaledPosition = scaleMat * position
 
-Then we multiply the scaledPostion by the rotation matrix to get a rotatedScaledPosition
+그런 다음 scaledPosition를에 회전 행렬을 곱하여 rotatedScaledPosition를 얻습니다.
 
     rotatedScaledPosition = rotationMat * scaledPosition
 
-Then we multiply the rotatedScaledPositon by the translation matrix to get a
-translatedRotatedScaledPosition
+그런 다음 rotatedScaledPositon에 이동 행렬을 곱하여 translatedRotatedScaledPosition를 얻습니다.
 
     translatedRotatedScaledPosition = translationMat * rotatedScaledPosition
 
-And finally we multiple that by the projection matrix to get clipspace positions
+마지막으로 투영 행렬을 곱하여 클립 공간 위치를 얻습니다.
 
     clipspacePosition = projectioMatrix * translatedRotatedScaledPosition
 
-The 2nd way to look at matrices is reading from left to right. In that case
-each matrix changes the *space" respesented by the canvas. The canvas starts
-with representing clipspace (-1 to +1) in each direction. Each matrix applied
-from left to right changes the space represented by the canvas.
+2번쨰 방법은 왼쪽에서 오른쪽으로 행렬을 읽는 것 입니다. 이 경우 각 행렬은 캔버스가 나타내는 *공간"을 변경합니다. 캔버스는 각 방향에서 클립 공간(-1에서 +1)을 나타내는 것으로에서 시작합니다. 왼쪽에서 오른쪽으로 적용된 각 행렬은 캔버스가 나타내는 공간을 변경합니다.
 
-Step 1:  no matrix (or the identiy matrix)
+1 단계:  행렬이 없을떄(또는 단위 행렬)
 
-> {{{diagram url="resources/matrix-space-change.html?stage=0" caption="clip space" }}}
+> {{{diagram url="resources/matrix-space-change.html?stage=0" caption="클립 공간" }}}
 >
-> The white area is the canvas. Blue is outside the canvas. We're in clip space.
-> Positions passed in need to be in clip space
+> 흰색 영역은 캔버스입니다. 파랑색은 캔버스 밖입니다. 우리는 클립 공간에 있습니다.
+> 전달 된 위치가 클립 공간에 있어야 합니다.
 
-Step 2:  `matrix = m3.projection(gl.canvas.clientWidth, gl.canvas.clientHeight)`;
+2 단계:  `matrix = m3.projection(gl.canvas.clientWidth, gl.canvas.clientHeight)`;
 
-> {{{diagram url="resources/matrix-space-change.html?stage=1" caption="from clip space to pixel space" }}}
+> {{{diagram url="resources/matrix-space-change.html?stage=1" caption="클립 공간에서 픽셀 공간으로" }}}
 >
-> We're now in pixel space. X = 0 to 400, Y = 0 to 300 with 0,0 at the top left.
-> Positions passed using this matrix in need to be in pixel space. The flash you see
-> is when the space flips from positive Y = up to positive Y = down.
+> 우리는 이제 픽셀 공간에 있습니다. X = 0 ~ 400, Y = 0 ~ 300, 왼쪽 상단은 0,0 입니다.
+> 이 행렬을 사용하여 전달된 위치는 픽셀 공간에 있어야 합니다.
+> 공간이 Y 위치가 위에서 Y 위치 아래로 뒤집힐떄 할떄 휙 지나가는 것을 볼수 있습니다.
 
-Step 3:  `matrix = m3.translate(matrix, tx, ty);`
+3 단계:  `matrix = m3.translate(matrix, tx, ty);`
 
-> {{{diagram url="resources/matrix-space-change.html?stage=2" caption="move origin to tx, ty" }}}
+> {{{diagram url="resources/matrix-space-change.html?stage=2" caption="원점에서 tx, ty 만큼 이동" }}}
 >
-> The origin has now been moved to tx, ty (150, 100). The space has moved.
+> 원점은 이제 tx, ty (150, 100)만큼 이동 되었으며, 공간이 이동했습니다.
 
-Step 4:  `matrix = m3.rotate(matrix, rotationInRadians);`
+4 단계:  `matrix = m3.rotate(matrix, rotationInRadians);`
 
-> {{{diagram url="resources/matrix-space-change.html?stage=3" caption="rotate 33 degrees" }}}
+> {{{diagram url="resources/matrix-space-change.html?stage=3" caption="33도 회전" }}}
 >
-> The space has been rotated around tx, ty
+> 공간이 tx, ty만큼 회전합니다.
 
 Step 5:  `matrix = m3.scale(matrix, sx, sy);`
 
-> {{{diagram url="resources/matrix-space-change.html?stage=4" capture="scale the space" }}}
+> {{{diagram url="resources/matrix-space-change.html?stage=4" capture="공간 크기 변환" }}}
 >
-> The previously rotated space with its center at tx, ty has been scaled 2 in x, 1.5 in y
+> tx, ty가 중심이던 전에 회전된 공간은 x가 2배, y가 1.5배만큼 크기 변환이 되었습니다.
 
 In the shader we then do `gl_Position = matrix * position;`. The `position` values are effectively in this final space.
 
