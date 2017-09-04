@@ -518,48 +518,32 @@ Step 5:  `matrix = m3.scale(matrix, sx, sy);`
 >
 > tx, ty가 중심이던 전에 회전된 공간은 x가 2배, y가 1.5배만큼 크기 변환이 되었습니다.
 
-In the shader we then do `gl_Position = matrix * position;`. The `position` values are effectively in this final space.
+쉐이더에서 우리는 `gl_Position = matrix * position;`를 수행합니다. `position` 값은 최종 공간에서 실제로 나타납니다.
 
-Use which ever way you feel is easier to understand.
+이해하기 쉬운 느낌이 드는 걸로 사용하면 됩니다.
 
-I hope these posts have helped demystify matrix math. If you want
-to stick with 2D I'd suggest checking out [recreating canvas 2d's
-drawImage function](webgl-2d-drawimage.html) and following that
-into [recreating canvas 2d's matrix stack](webgl-2d-matrix-stack.html).
+이 글이 행렬 수학을 이해하기 쉽게 해주는데 도움이 되었기를 바랍니다. 2D를 더하고 싶다면 [캔버스 2d drawImage 함수 재 작성](webgl-2d-drawimage.html)를 확인 한 다음 [캔버스 2d 행렬 스택 재 작성](webgl-2d-matrix-stack.html)를 보시면 됩니다.
 
-Otherwise next [we'll move on to 3D](webgl-3d-orthographic.html).
-In 3D the matrix math follows the same principles and usage.
-I started with 2D to hopefully keep it simple to understand.
+그럴지 않으면 다음으로 [3D로 이동할 것입니다](webgl-3d-orthographic.html). 3D에서 행렬 수학은 동일한 원칙과 사용법을 따릅니다. 2D로 시작하여 이해하기 쉽도록하기 시작했습니다.
 
-Also, if you really want to become an expert
-in matrix math [check out this amazing videos](https://www.youtube.com/watch?v=kjBOesZCoqc&list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab).
+물론 행렬 수학의 전문가가 되고 싶다면 [이 놀라운 동영상을 보세요](https://www.youtube.com/watch?v=kjBOesZCoqc&list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab).
 
 <div class="webgl_bottombar">
-<h3>What are <code>clientWidth</code> and <code>clientHeight</code>?</h3>
-<p>Up until this point whenever I referred to the canvas's dimensions
-I used <code>canvas.width</code> and <code>canvas.height</code>
-but above when I called <code>m3.projection</code> I instead used
-<code>canvas.clientWidth</code> and <code>canvas.clientHeight</code>.
-Why?</p>
-<p>Projection matrixes are concerned with how to take clipspace
-(-1 to +1 in each dimension) and convert it back
-to pixels. But, in the browser, there are 2 types of pixels we are
-dealing with. One is the number of pixels in
-the canvas itself. So for example a canvas defined like this.</p>
+<h3><code>clientWidth</code>이랑 <code>clientHeight</code>는 무엇입니까?</h3>
+<p>이 시점까지는 캔버스의 크기를 참조 할 때마다 <code> m3.projection </ code>을 호출했을 때 위의 <code> canvas.width </ code>와 <code> canvas.height </ code> 대신 <code> canvas.clientWidth </ code> 및 <code> canvas.clientHeight </ code>를 사용했습니다.
+왜일까요?</p>
+<p>투영 행렬은 클립 공간(각 차원에서 -1에서 +1)을 가져 와서 다시 픽셀로 변환하는 방법과 관련이 있습니다. 그러나 브라우저에는 두 가지 유형의 픽셀이 있습니다. 하나는 캔버스 자체의 픽셀 수입니다. 예를 들어 이렇게 정의 된 캔버스입니다.</p>
 <pre class="prettyprint">
   &lt;canvas width="400" height="300"&gt;&lt;/canvas&gt;
 </pre>
-<p>or one defined like this</p>
+<p>아니면 다음과 같이 정의됩니다.</p>
 <pre class="prettyprint">
   var canvas = document.createElement("canvas");
   canvas.width = 400;
   canvas.height = 300;
 </pre>
-<p>both contain an image 400 pixels wide by 300 pixels tall.
-But, that size is separate from what size
-the browser actually displays that 400x300 pixel canvas.
-CSS defines what size the canvas is displayed.
-For example if we made a canvas like this.</p>
+<p>둘 다 400 픽셀 x 300 픽셀 높이의 이미지를 포함합니다. 하지만이 크기는 브라우저가 실제로 400x300 픽셀 캔버스를 표시하는 크기와 별개입니다. CSS는 캔버스가 표시되는 크기를 정의합니다.
+예를 들어 우리가 이렇게 캔버스를 만들었다면.</p>
 <pre class="prettyprint"><!>
   &lt;style&gt;
   canvas {
@@ -570,23 +554,10 @@ For example if we made a canvas like this.</p>
   ...
   &lt;canvas width="400" height="300">&lt;/canvas&gt;
 </pre>
-<p>The canvas will be displayed whatever size its container is.
-That's likely not 400x300.</p>
-<p>Here are two examples that set the canvas's CSS display size to
-100% so the canvas is stretched
-out to fill the page. The first one uses <code>canvas.width</code>
-and <code>canvas.height</code>. Open it in a new
-window and resize the window. Notice how the 'F'
-doesn't have the correct aspect. It gets
-distorted.</p>
+<p>컨테이너의 크기에 상관없이 캔버스가 표시됩니다. 400x300이 아닙니다.</p>
+<p>다음은 캔버스의 CSS 표시 크기를 100 %로 설정하여 캔버스가 페이지를 채우도록 펼쳐지는 두 가지 예입니다. 첫 번째는 <code> canvas.width </ code>와 <code> canvas.height </ code>를 사용합니다. 새 창에서 열어 창 크기를 조정해보세요. 'F'가 어떻게 맞는 모양을 가지지 않는지 확인해보세요. 왜곡됩니다.</p>
 {{{example url="../webgl-canvas-width-height.html" width="500" height="150" }}}
-<p>In this second example we use <code>canvas.clientWidth</code>
-and <code>canvas.clientHeight</code>. <code>canvas.clientWidth</code>
-and <code>canvas.clientHeight</code> report
-the size the canvas is actually being displayed by the browser so
-in this case, even though the canvas still only has 400x300 pixels
-since we're defining our aspect ratio based on the size the canvas
-is being displayed the <code>F</code> always looks correct.</p>
+<p>두 번째 예제에서는 <code> canvas.clientWidth </ code>와 <code> canvas.clientHeight </ code>를 사용합니다. <code> canvas.clientWidth </ code>와<code> canvas.clientHeight </ code>는 브라우저에서 실제로 캔버스가 표시되는 크기를 표시합니다. 이 경우 캔버스는 여전히 400x300 픽셀 밖에 없지만 캔버스가 표시되는 크기에 따라 가로 세로 비율을 정의하면 <code> F </ code>가 항상 올바르게 보입니다.</p>
 {{{example url="../webgl-canvas-clientwidth-clientheight.html" width="500" height="150" }}}
 <p>Most apps that allow their canvases to be resized try to make
 the <code>canvas.width</code> and <code>canvas.height</code> match
