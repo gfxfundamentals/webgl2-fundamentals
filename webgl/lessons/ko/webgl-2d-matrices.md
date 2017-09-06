@@ -559,17 +559,6 @@ Step 5:  `matrix = m3.scale(matrix, sx, sy);`
 {{{example url="../webgl-canvas-width-height.html" width="500" height="150" }}}
 <p>두 번째 예제에서는 <code> canvas.clientWidth </ code>와 <code> canvas.clientHeight </ code>를 사용합니다. <code> canvas.clientWidth </ code>와<code> canvas.clientHeight </ code>는 브라우저에서 실제로 캔버스가 표시되는 크기를 표시합니다. 이 경우 캔버스는 여전히 400x300 픽셀 밖에 없지만 캔버스가 표시되는 크기에 따라 가로 세로 비율을 정의하면 <code> F </ code>가 항상 올바르게 보입니다.</p>
 {{{example url="../webgl-canvas-clientwidth-clientheight.html" width="500" height="150" }}}
-<p>Most apps that allow their canvases to be resized try to make
-the <code>canvas.width</code> and <code>canvas.height</code> match
-the <code>canvas.clientWidth</code> and <code>canvas.clientHeight</code>
-because they want there to be
-one pixel in the canvas for each pixel displayed by the browser.
-But, as we've seen above, that's not
-the only option. That means, in almost all cases, it's more
-technically correct to compute a
-projection matrix's aspect ratio using <code>canvas.clientHeight</code>
-and <code>canvas.clientWidth</code>. Then you'll get the correct aspect
-regardless of whether or not the width and height of the canvas
-match the size the browser draws the canvas.
+<p>regardless
 </p>
 </div>
