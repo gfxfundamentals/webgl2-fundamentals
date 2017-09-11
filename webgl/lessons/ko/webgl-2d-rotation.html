@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/ko/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/ko/webgl-2d-rotation.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of Gregg Tavares. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of Gregg Tavares. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,23 +36,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL 2D Rotation" />
+<meta property="og:title" content="WebGL 2D 회전" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="How to rotate in 2D" />
+<meta property="og:description" content="2D에서 회전 하는 방법" />
 <meta property="og:url" content="http://webgl2fundamentals.org//webgl/lessons/ko/webgl-2d-rotation.html" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@greggman" />
 <meta name="twitter:creator" content="@greggman" />
 <meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL 2D Rotation" />
+<meta name="twitter:title" content="WebGL 2D 회전" />
 <meta name="twitter:url" content="http://webgl2fundamentals.org//webgl/lessons/ko/webgl-2d-rotation.html" />
-<meta name="twitter:description" content="How to rotate in 2D" />
+<meta name="twitter:description" content="2D에서 회전 하는 방법" />
 <meta name="twitter:image:src" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>WebGL 2D Rotation</title>
+<title>WebGL 2D 회전</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/webgl/lessons/resources/base.css" type="text/css" />
 <link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
@@ -63,13 +65,182 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL 2D Rotation</h1>
+    <h1>WebGL 2D 회전</h1>
   </div>
   <div class="row">
     <div class="col-sm-8 lesson-main">
-      <p>죄송합니다. 이 문서는 아직 자원 봉사자들이 한국어로 번역하지 않았습니다. <a href="https://github.com/greggman/webgl-fundamentals">번역을 도와주세요!</a>! 😄</p>
-<p><a href="/webgl/lessons/webgl-2d-rotation.html">원본보기</a>.</p>
+      <p>이 글은 WebGL 게시글 시리즈에서 이어지는 글입니다. 첫 번쨰는 <a href="webgl-fundamentals.html">기초로 시작</a>이였으며 바로 전은 <a href="webgl-2d-translation.html">기하학에 대한 이동</a>이였습니다.</p>
+<p>I&#39;m going to admit right up front I have no idea if how I explain this
+ will make sense but what the heck, might as well try.</p>
+<p>먼저 &quot;단위 원(unit circle)&quot;라고 불리는 것을 소개 하고자 합니다. 만약 중학교 수학을 기억한다면(잠자면 안됩니다!) 원은 반지름(radius)을 가지고 있습니다. 원의 반지름(radius)은 원의 중심으로 부터 원의 가장자리 까지의 거리입니다. 단위 원은 반지름(radius)이 1인 원 입니다.</p>
+<p>여기에 단위 원이 있습니다.</p>
+<p><div>
+  <iframe class="webgl_example " style="width: 300px; height: 300px;" src="/webgl/lessons/../unit-circle.html"></iframe>
+</div>
 
+</p>
+<p>파란색 핸들을 원 주위로 드래그하면 X 와 Y의 위치가 변경됩니다. 이는 보여 원위의 그 지점의 위치를 나타냅니다. 상단에서 Y는 1이고 X는 0입니다. 오른쪽에서 X는 1이고 Y는 0입니다.</p>
+<p>초등학교 3학년 수학에서 무언가에 1을 곱하면 같은 값을 유지한다는 것을 기억할 것입니다. 그러므로 123 * 1 = 123. 아주 기본이죠? 단위원에서 반지름이 1.0인 것도 1입니다. 회전할떄도 1입니다. 그러므로 이 단위원으로 무언가를 곱할수 있고 마술이 일어나서 회전하는것 뺴고는 1을 곱하는것과 같습니다.</p>
+<p>단위 원에 임의의 점 X와 Y를 정할것이고 <a href="webgl-2d-translation.html">전에 했던 예제</a>에 지오메트리(geometry)에 곱할것입니다.</p>
+<p>여기에 업데이트된 쉐이더가 있습니다.</p>
+<pre><code>#version 300 es
+
+in vec2 a_position;
+
+uniform vec2 u_resolution;
+uniform vec2 u_translation;
++uniform vec2 u_rotation;
+
+void main() {
++ // 위치 회전
++  vec2 rotatedPosition = vec2(
++     a_position.x * u_rotation.y + a_position.y * u_rotation.x,
++     a_position.y * u_rotation.y - a_position.x * u_rotation.x);
+
+  // 이동 추가
+* vec2 position = rotatedPosition + u_translation;
+
+...
+</code></pre><p>그리고 자바스크립트를 업데이트하여 이 두 값을 전달할 수 있게 합니다.</p>
+<pre><code>  ...
+
++  var rotationLocation = gl.getUniformLocation(program, &quot;u_rotation&quot;);
+
+  ...
+
++  var rotation = [0, 1];
+
+  ...
+
+  // scene 그리기.
+  function drawScene() {
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
+    // WebGL에 클립 공간에서 픽셀로 변환하는 방법을 전달합니다.
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+    // 캔버스 지우기
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    // 사용할 프로그램(쉐이더 쌍)을 전달합니다
+    gl.useProgram(program);
+
+    // 원하는 속성(attribute)/버퍼(buffer)를 연결 합니다.
+    gl.bindVertexArray(vao);
+
+    // 캔버스로 해상도를 쉐이더의 픽셀에서 클립공간으로 변환 할수 있게 전달합니다.
+    gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+
+    // 색상 설정
+    gl.uniform4fv(colorLocation, color);
+
+    // 이동 설정
+    gl.uniform2fv(translationLocation, translation);
+
++    // 회전 설정
++    gl.uniform2fv(rotationLocation, rotation);
+
+    // 사각형 그리기
+    var primitiveType = gl.TRIANGLES;
+    var offset = 0;
+    var count = 18;
+    gl.drawArrays(primitiveType, offset, count);
+  }
+</code></pre><p>여기에 결과가 있습니다. 회전하기 위해 원의 핸들을 드래그하거나 이동하기 위해 슬라이더를 드래그하십시오.</p>
+<p><div>
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-rotation.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-rotation.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+</p>
+<p>왜 작동할까요? 음, 수학을 봐 봅시다.</p>
+<pre class="webgl_center">
+    rotatedX = a_position.x * u_rotation.y + a_position.y * u_rotation.x;
+    rotatedY = a_position.y * u_rotation.y - a_position.x * u_rotation.x;
+</pre>
+
+<p>직사각형이 있고 회전하려고 한다고 가정해 보겠습니다. 회전하기 전에 오른쪽 위 구석이 3.0, 9.0에 있습니다. 12 방향에서 시계 방향으로 30도 단위 점을 찍어 봅시다.</p>
+<p><img src="../resources/rotate-30.png" class="webgl_center" /></p>
+<p>원에서 위치는 0.5와 0.87입니다.</p>
+<pre class="webgl_center">
+   3.0 * 0.87 + 9.0 * 0.50 = 7.1
+   9.0 * 0.87 - 3.0 * 0.50 = 6.3
+</pre>
+
+<p>이것이 바로 우리가 필요한 것 입니다.</p>
+<p><img src="../resources/rotation-drawing.svg" width="500" class="webgl_center"/></p>
+<p>시계 방향으로 60도 회전도 똑같습니다.</p>
+<p><img src="../resources/rotate-60.png" class="webgl_center" /></p>
+<p>원에서 위치는 0.87과 0.5입니다.</p>
+<pre class="webgl_center">
+   3.0 * 0.50 + 9.0 * 0.87 = 9.3
+   9.0 * 0.50 - 3.0 * 0.87 = 1.9
+</pre>
+
+<p>점을 시계 방향으로 오른쪽으로 돌릴 때 X 값이 커지고 Y 값이 작아지는 것을 볼 수 있습니다. 90도를 지나 가면 X는 다시 작아지고 Y는 점점 커질 것입니다. 이 패턴이 회전으로 제공됩니다.</p>
+<p>단위원의 점에 대한 또 다른 이름이 있습니다. 사인과 코사인이라고 불리는 것입니다. 주어진 각도에 대하여 다음과 같이 사인과 코사인을 찾을 수 있습니다.</p>
+<pre><code>function printSineAndCosineForAnAngle(angleInDegrees) {
+  var angleInRadians = angleInDegrees * Math.PI / 180;
+  var s = Math.sin(angleInRadians);
+  var c = Math.cos(angleInRadians);
+  console.log(&quot;s = &quot; + s + &quot; c = &quot; + c);
+}
+</code></pre><p>자바스크립트 콘솔에 코드를 복사하고 붙혀 넣고 <code>printSineAndCosignForAngle(30)</code>을 치면 <code>s = 0.49 c = 0.87</code>(주의: 숫자를 반올립 했습니다.)을 볼 수 있습니다.</p>
+<p>이 모든 것들을 함께 사용하면 원하는 각도로 지오메트리(geometry)를 회전 할 수 있습니다. 회전하려는 각도의 사인 및 코사인으로 회전을 설정하면됩니다.</p>
+<pre><code>  ...
+  var angleInRadians = angleInDegrees * Math.PI / 180;
+  rotation[0] = Math.sin(angleInRadians);
+  rotation[1] = Math.cos(angleInRadians);
+</code></pre><p>여기에 각도 설정이 있는 버전이 있습니다. 이동 또는 회전할 슬라이더를 드래그 하십시오.</p>
+<p><div>
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-rotation-angle.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-rotation-angle.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+</p>
+<p>이해가 됐기를 바랍니다. <a href="webgl-2d-scale.html">다음도 간단한 것입니다. 크기</a>.</p>
+<div class="webgl_bottombar"><h3>라디안(radians)이란 무엇 입니까?</h3>
+<p>
+라디안(Radians)은 원, 회전 및 각도와 함꼐 사용되는 측정 단위 입니다. 마치 우리가 인치, 야드, 미터 등 거리를 측정 할 수 있는 것처럼 라디안으로 각도를 측정 할 수 있습니다.
+</p>
+<p>
+수학에서 미터법 측정이 야드파운드법 측정 보다 쉽다는 것을 알고 있을 것입니다. 인치에서 피트로 이동하려면 12로 나눠야 합니다. 인치에서 야드로 이동하려면 36을 나눠야 합니다.
+ 여러분들을 어떨지 모르겠지만 저는 36을 나누는 것은 머릿속에서 잘 계산이 안됩니다. 미터법을 사용하면 훨씬 쉽습니다. 밀리미터에서 센터미터로 이동하려면 10으로 나누면 됩니다. 밀리 미터에서 미터로 갈려면 1000으로 나누면 됩니다. 머리속에서 1000을 계산하는 것은 할 수 있습니다.
+</p>
+<p>
+라디안(Radians)과 각도(degrees)도 비슷합니다. 각도(Degrees)는 수학을 어렵게 만들고 라디안(Radians)은 수학을 쉽게 만듭니다. 원에는 360도(degrees)가 있지만 라디안(radians)에는 2π만 있습니다. 따라서 전체 회전은 2π 라디안입니다. 절반은 1π 라디안 입니다. 1/4 회전, 즉 90도 회전은 1/2π 라디안 입니다. 그래서 무언가를 90도 회전 시키고 싶다면 <code>Math.PI * 0.5</code>를 사용하면 됩니다. 45도를 회전 시키고 싶다면 <code>Math.PI * 0.25</code>를 사용하면 됩니다.
+</p>
+<p>
+각도, 원 또는 회전을 포함하는 거의 모든 수학은 라디안으로 생각하면 시작하면 매우 간단하게 작동합니다. 그러니 한번 시도해 보세요. UI 디스플레이를 제외하고 각도(degrees)가 아닌 라디안(radians)을 사용하십시오.
+</p>
+</div>
+
+      <hr class="lesson-comment-sep" />
+      <div class="lesson-comments">
+        <div>질문? <a href="http://stackoverflow.com/questions/tagged/webgl">stackoverflow에서 질문하기</a>.</div>
+        <div>이슈/버그? <a href="http://github.com/greggman/webgl-fundamentals/issues">깃헙에서 이슈만들기</a>.</div>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL 2D 회전';
+            var disqus_title = 'WebGL 2D 회전';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
     </div>
     <div class="col-sm-3 col-sm-offset-1 lesson-sidebar">
         <select id="language">
@@ -92,14 +263,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li>이미지 처리</li>
   <ul>
     <li><a href="/webgl/lessons/ko/webgl-image-processing.html">WebGL2 이미지 처리</a></li>
-    <li><a href="/webgl/lessons/webgl-image-processing-continued.html">WebGL2 Image Processing Continued</a></li>
+    <li><a href="/webgl/lessons/ko/webgl-image-processing-continued.html">WebGL2 이미지 처리 심화</a></li>
   </ul>
-  <li>2D translation, rotation, scale, matrix math</li>
+  <li>2D 이동, 회전, 크기 변환 행렬 계산</li>
   <ul>
-    <li><a href="/webgl/lessons/webgl-2d-translation.html">WebGL2 2D Translation</a></li>
-    <li><a href="/webgl/lessons/webgl-2d-rotation.html">WebGL2 2D Rotation</a></li>
-    <li><a href="/webgl/lessons/webgl-2d-scale.html">WebGL2 2D Scale</a></li>
-    <li><a href="/webgl/lessons/webgl-2d-matrices.html">WebGL2 2D Matrices</a></li>
+    <li><a href="/webgl/lessons/ko/webgl-2d-translation.html">WebGL2 2D 이동</a></li>
+    <li><a href="/webgl/lessons/ko/webgl-2d-rotation.html">WebGL2 2D 회전</a></li>
+    <li><a href="/webgl/lessons/ko/webgl-2d-scale.html">WebGL2 2D 크기</a></li>
+    <li><a href="/webgl/lessons/ko/webgl-2d-matrices.html">WebGL2 2D 행렬</a></li>
   </ul>
   <li>3D</li>
   <ul>

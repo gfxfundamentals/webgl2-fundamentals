@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/ko/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/ko/webgl-2d-translation.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of Gregg Tavares. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of Gregg Tavares. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,23 +36,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL 2D Translation" />
+<meta property="og:title" content="WebGL 2D 이동" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="How to translate in 2D" />
+<meta property="og:description" content="2D 에서 이동하는 방법" />
 <meta property="og:url" content="http://webgl2fundamentals.org//webgl/lessons/ko/webgl-2d-translation.html" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@greggman" />
 <meta name="twitter:creator" content="@greggman" />
 <meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL 2D Translation" />
+<meta name="twitter:title" content="WebGL 2D 이동" />
 <meta name="twitter:url" content="http://webgl2fundamentals.org//webgl/lessons/ko/webgl-2d-translation.html" />
-<meta name="twitter:description" content="How to translate in 2D" />
+<meta name="twitter:description" content="2D 에서 이동하는 방법" />
 <meta name="twitter:image:src" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>WebGL 2D Translation</title>
+<title>WebGL 2D 이동</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/webgl/lessons/resources/base.css" type="text/css" />
 <link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
@@ -63,13 +65,238 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL 2D Translation</h1>
+    <h1>WebGL 2D 이동</h1>
   </div>
   <div class="row">
     <div class="col-sm-8 lesson-main">
-      <p>죄송합니다. 이 문서는 아직 자원 봉사자들이 한국어로 번역하지 않았습니다. <a href="https://github.com/greggman/webgl-fundamentals">번역을 도와주세요!</a>! 😄</p>
-<p><a href="/webgl/lessons/webgl-2d-translation.html">원본보기</a>.</p>
+      <p>3D를 하기전에 잠시 2D를 해봅시다. 이 글은 몇몇 분들에게는 매우 당연하겠지만 몇 가지 글들을 더 접해 보면서 어느 정도 더 이해보려 합니다.</p>
+<p>이 글은 <a href="webgl-fundamentals.html">WebGL 기초</a>로 시작한 시리즈에서 이어지는 글입니다. 만약 아직 읽지 않았다면 읽고 난 후 이 글을 읽는 것을 추천합니다.</p>
+<p>이동(Translation)는 무언가를 &quot;움직인다&quot;라는 의미를 가진 멋진 수학적 이름입니다. 물론 여기서는 기하학을 말하는게 적합하지만 문장을 영어에서 일본어로 옮기는 것을 생각해 봅시다. <a href="webgl-fundamentals.html">첫번째 게시글</a>에 있는 예제 코드의 <code>setRectangle</code>에 변경된 값을 전달하여 사각형을 쉽게 이동할 수 있습니다. 여기에 <a href="webgl-fundamentals.html">이전 에제</a>를 기반으로 한 예제가 있습니다.</p>
+<pre><code>+  // 먼저 사각형의 높이, 너비, 이동(translation)을 가지고 있는 몇 가지 변수들을 만들어 봅시다.
++  var translation = [0, 0];
++  var width = 100;
++  var height = 30;
++  var color = [Math.random(), Math.random(), Math.random(), 1];
++
++  // 다음 모든 것을 다시 그리는 함수를 만들어 봅시다.
++  // 이 함수를 이동(translation)을 업데이트하고 호출 할 것입니다..
 
+  // scene 그리기.
+  function drawScene() {
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
+    // WebGL에 클립 공간에서 픽셀로 변환하는 방법을 알려줍니다.
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+    // 캔버스 지우기
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    // 사용할 프로그램(쉐이더 쌍)을 전달합니다
+    gl.useProgram(program);
+
+    // 원하는 속성(attribute)/버퍼(buffer)를 연결 합니다.
+    gl.bindVertexArray(vao);
+
+    // 캔버스로 해상도를 쉐이더의 픽셀에서 클립공간으로 변환 할수 있게 전달합니다.
+    gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+
+    // 직사각형 위치로 버퍼(buffer) 위치 업데이트
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+*    setRectangle(gl, translation[0], translation[1], width, height);
+
+    // 색상 설정
+    gl.uniform4fv(colorLocation, color);
+
+    // 사각형 그리기.
+    var primitiveType = gl.TRIANGLES;
+    var offset = 0;
+    var count = 6;
+    gl.drawArrays(primitiveType, offset, count);
+  }
+</code></pre><p>아래 예제에서 <code>translation[0]</code>와 <code>translation[1]</code>를 업데이트하고 변경 될떄 <code>drawScene</code>를 호출할 몇 가지 슬라이더들을 첨부 했습니다.</p>
+<p><div>
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-translate.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle-translate.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+</p>
+<p>지금까지는 그런대로 좋습니다. 그러나 이제 더 복잡한 모양으로 똑같은 일을 하고 싶다고 상상해 보십시오.</p>
+<p>6개의 삼각형으로 구성된 &#39;F&#39;를 그려야 한다고 가정 해 봅시다.</p>
+<p><img src="../resources/polygon-f.svg" width="200" height="270" class="webgl_center"></p>
+<p>이제 다음 코드에 따라 <code>setRectangle</code>을 이와 비슷하게 변경해야 합니다.</p>
+<pre><code>// 현재 ARRAY_BUFFER 버퍼에 문자 &#39;F&#39;를 정의하는 값들로 채웁니다.
+function setGeometry(gl, x, y) {
+  var width = 100;
+  var height = 150;
+  var thickness = 30;
+  gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([
+          // 왼쪽 열
+          x, y,
+          x + thickness, y,
+          x, y + height,
+          x, y + height,
+          x + thickness, y,
+          x + thickness, y + height,
+
+          // 위 가로(rung)
+          x + thickness, y,
+          x + width, y,
+          x + thickness, y + thickness,
+          x + thickness, y + thickness,
+          x + width, y,
+          x + width, y + thickness,
+
+          // 중간 가로(rung)
+          x + thickness, y + thickness * 2,
+          x + width * 2 / 3, y + thickness * 2,
+          x + thickness, y + thickness * 3,
+          x + thickness, y + thickness * 3,
+          x + width * 2 / 3, y + thickness * 2,
+          x + width * 2 / 3, y + thickness * 3]),
+      gl.STATIC_DRAW);
+}
+</code></pre><p>확장하기에는 좋지 않다는 것을 볼 수 있을 것입니다. 수백 또는 수천 줄의 복잡한 지오메트리(geometry)를 그리려면 꽤 복잡한 코드를 작성해야 합니다. 뿐만 아니라 Javascript를 그릴 때마다 모든 포인트들을 업데이트해야 합니다</p>
+<p>이보다 더 간단한 방법이 있습니다. 지오메트리(geometry)를 업데이트하고 쉐이더(shader)에서 이동을 하면 됩니다.</p>
+<p>여기에 새로운 쉐이더가 있습니다.</p>
+<pre><code>#version 300 es
+
+// attribute는 쉐이더로 입력(in)되는 것 입니다. 버퍼로 부터 데이터를 받아 옵니다.
+in vec4 a_position;
+
+// 캔버스의 해상도를 전달하는 데 사용됩니다.
+uniform vec2 u_resolution;
+
++// 위치에 추가될 이동(translation)
++uniform vec2 u_translation;
+
+// 모든 쉐이더는 main 함수를 가져야 합니다.
+void main() {
++  // 입력된 이동(translation) 추가
++  vec2 position = a_position + u_translation;
+
+  // 픽셀 위치를 0.0에서 1.0으로 변환 합니다.
+*  vec2 zeroToOne = position / u_resolution;
+
+  // 0 -&gt; 1에서 0 -&gt; 2로 변환
+  vec2 zeroToTwo = zeroToOne * 2.0;
+
+  // 0 -&gt; 2에서 -1 -&gt; + 1 (클립 공간)로 변환
+  vec2 clipSpace = zeroToTwo - 1.0;
+
+  gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+}
+</code></pre><p>코드를 약간 재구성할 것입니다. 하나의 지오메트리를 한 번만 설정하면 됩니다.</p>
+<pre><code>// 현재 ARRAY_BUFFER 버퍼에 문자 &#39;F&#39;를 정의하는 값들로 채웁니다.
+function setGeometry(gl) {
+  gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([
+          // 왼쪽 열
+          0, 0,
+          30, 0,
+          0, 150,
+          0, 150,
+          30, 0,
+          30, 150,
+
+          // 위 가로(rung)
+          30, 0,
+          100, 0,
+          30, 30,
+          30, 30,
+          100, 0,
+          100, 30,
+
+          // 중간 가로(rung)
+          30, 60,
+          67, 60,
+          30, 90,
+          30, 90,
+          67, 60,
+          67, 90]),
+      gl.STATIC_DRAW);
+}
+</code></pre><p>그런 다음 원하는 이동(translation)을 그리기 전에 <code>u_translation</code> 업데이트를 해야 합니다.</p>
+<pre><code>  ...
+
++  var translationLocation = gl.getUniformLocation(
++             program, &quot;u_translation&quot;);
+
+  ...
+
++  // 지오메트리(Geometry) 설정.
++  setGeometry(gl);
+
+  ...
+
+  // scene 그리기.
+  function drawScene() {
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
+    // WebGL에 클립공간에서 픽셀로 변환 하는 방법을 전달합니다
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+    // 사용할 프로그램(쉐이더 쌍)을 전달합니다
+    gl.useProgram(program);
+
+    // 원하는 속성(attribute)/버퍼(buffer)를 연결 합니다.
+    gl.bindVertexArray(vao);
+
+    // 캔버스로 해상도를 쉐이더의 픽셀에서 클립공간으로 변환 할수 있게 전달합니다.
+    gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+
+    // 색상 설정
+    gl.uniform4fv(colorLocation, color);
+
++    // 이동(translation) 설정.
++    gl.uniform2fv(translationLocation, translation);
+
+    // 직사각형 그리기
+    var primitiveType = gl.TRIANGLES;
+    var offset = 0;
+*    var count = 18;
+    gl.drawArrays(primitiveType, offset, count);
+  }
+</code></pre><p><code>setGeometry</code>는 한번만 호출 됩니다. 더 이상 <code>drawScene</code>안에 있지 않습니다.</p>
+<p>그리고 그 예가 여기 있습니다. 다시 말하지만 슬라이더를 드레그하여 이동(translation)를 업데이트 하십시오.</p>
+<p><div>
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-translate-better.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-translate-better.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+</p>
+<p>이제 그릴떄 WebGL이 거의 모든 것을 하고 있습니다. 하고 있는 모든 작업은 이동(translation)을 설정하고 그리기를 요구하는 것 입니다. 지오메트리(geometry)가 수만개의 포인트를 가지게 되더라도 주요 코드는 유지 될 것입니다.</p>
+<p>원하다면 <a target="_blank" href="../webgl-2d-geometry-translate.html">포인트들을 업데이트 하기위해 복잡한 자바스크립트를 사용하는 버전</a>과 비교 할수 있습니다.</p>
+<p>이 예제가 너무 당연하지 않았기를 바랍니다. <a href="webgl-2d-rotation.html">다음 글에서 회전</a>을 알아 볼 것입니다.</p>
+
+      <hr class="lesson-comment-sep" />
+      <div class="lesson-comments">
+        <div>질문? <a href="http://stackoverflow.com/questions/tagged/webgl">stackoverflow에서 질문하기</a>.</div>
+        <div>이슈/버그? <a href="http://github.com/greggman/webgl-fundamentals/issues">깃헙에서 이슈만들기</a>.</div>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL 2D 이동';
+            var disqus_title = 'WebGL 2D 이동';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
     </div>
     <div class="col-sm-3 col-sm-offset-1 lesson-sidebar">
         <select id="language">
@@ -92,14 +319,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li>이미지 처리</li>
   <ul>
     <li><a href="/webgl/lessons/ko/webgl-image-processing.html">WebGL2 이미지 처리</a></li>
-    <li><a href="/webgl/lessons/webgl-image-processing-continued.html">WebGL2 Image Processing Continued</a></li>
+    <li><a href="/webgl/lessons/ko/webgl-image-processing-continued.html">WebGL2 이미지 처리 심화</a></li>
   </ul>
-  <li>2D translation, rotation, scale, matrix math</li>
+  <li>2D 이동, 회전, 크기 변환 행렬 계산</li>
   <ul>
-    <li><a href="/webgl/lessons/webgl-2d-translation.html">WebGL2 2D Translation</a></li>
-    <li><a href="/webgl/lessons/webgl-2d-rotation.html">WebGL2 2D Rotation</a></li>
-    <li><a href="/webgl/lessons/webgl-2d-scale.html">WebGL2 2D Scale</a></li>
-    <li><a href="/webgl/lessons/webgl-2d-matrices.html">WebGL2 2D Matrices</a></li>
+    <li><a href="/webgl/lessons/ko/webgl-2d-translation.html">WebGL2 2D 이동</a></li>
+    <li><a href="/webgl/lessons/ko/webgl-2d-rotation.html">WebGL2 2D 회전</a></li>
+    <li><a href="/webgl/lessons/ko/webgl-2d-scale.html">WebGL2 2D 크기</a></li>
+    <li><a href="/webgl/lessons/ko/webgl-2d-matrices.html">WebGL2 2D 행렬</a></li>
   </ul>
   <li>3D</li>
   <ul>

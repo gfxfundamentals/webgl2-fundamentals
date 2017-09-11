@@ -13,13 +13,16 @@ window.langDB = {
       "en": true
     },
     "webgl-2d-rotation.html": {
-      "en": true
+      "en": true,
+      "ko": true
     },
     "webgl-2d-scale.html": {
-      "en": true
+      "en": true,
+      "ko": true
     },
     "webgl-2d-translation.html": {
-      "en": true
+      "en": true,
+      "ko": true
     },
     "webgl-2d-vs-3d-library.html": {
       "en": true
@@ -37,10 +40,12 @@ window.langDB = {
       "en": true
     },
     "webgl-3d-orthographic.html": {
-      "en": true
+      "en": true,
+      "ko": true
     },
     "webgl-2d-matrices.html": {
-      "en": true
+      "en": true,
+      "ko": true
     },
     "webgl-3d-perspective.html": {
       "en": true
@@ -82,7 +87,8 @@ window.langDB = {
       "ko": true
     },
     "webgl-image-processing-continued.html": {
-      "en": true
+      "en": true,
+      "ko": true
     },
     "webgl-image-processing.html": {
       "en": true,

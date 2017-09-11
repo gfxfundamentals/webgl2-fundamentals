@@ -128,7 +128,7 @@ void main() {
 </div>
 
 </p>
-<p>사각형을 이동, 크기 조절 및 회전합니다. 색상은 클립공간에서 계산 되기 때문에 사각형과 함께 움직이지 않습니다. 사각형은 배경에 상대적입니다.</p>
+<p>사각형은 이동, 크기 조절 및 회전합니다. 색상은 클립공간에서 계산 되기 때문에 사각형과 함께 움직이지 않습니다. 사각형은 배경에 상대적입니다.</p>
 <p>이제 이것에 대해 생각해 봅시다. 우리는 오직 3개의 버텍스만 계산 했습니다. 버텍스 쉐이더는 3번만 호출 되기 때문에 3개의색을 계산하지만 삼각형은 이보다 더 다양한 색상을 사용합니다. 이것이 <em>varying</em>이라 불리는 이유입니다.</p>
 <p>WebGL은 각 버텍스에 대해 3개의 값을 계산하고 삼각형을 이 버텍스에 대해 계산한 값들 사이에 보간을 하는 레스터라이즈화(rasterizes)합니다. 각 픽셀 마다 프레그머트 쉐이더를 해당 픽셀에 보간된 값과 함께 호출합니다.</p>
 <p>위 예제에서 3개의 버텍스로 시작을 했습니다.</p>
@@ -292,7 +292,7 @@ var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
     normalizeFlag,
     strideToNextPieceOfData,
     offsetIntoBuffer);
-</code></pre><p>그리고 이 명령어는 WebGL에게 gl.bindBuffer로 마지막으로 바인드된 버퍼에서 데이터를 가저오고, 버텍스당 컴포넌트 구성 수(1 - 4), 데이터 타입은 무엇인지 (<code>BYTE</code>, <code>FLOAT</code>, <code>INT</code>, <code>UNSIGNED_SHORT</code>, 등등...), stride는 한개의 데이터 조각에서 다음 데이터로 넘어가는데 몇 바이트를 건너 뛰어야 하는지 의미하며 offset은 버퍼에서 데이터가 얼마나 떨어져 있는지를 의미합니다.</p>
+</code></pre><p>그리고 이 명령어는 WebGL에게 gl.bindBuffer로 마지막으로 바인드된 버퍼에서 데이터를 가져오고, 버텍스당 컴포넌트 구성 수(1 - 4), 데이터 타입은 무엇인지 (<code>BYTE</code>, <code>FLOAT</code>, <code>INT</code>, <code>UNSIGNED_SHORT</code>, 등등...), stride는 한개의 데이터 조각에서 다음 데이터로 넘어가는데 몇 바이트를 건너 뛰어야 하는지 의미하며 offset은 버퍼에서 데이터가 얼마나 떨어져 있는지를 의미합니다.</p>
 <p>컴포넌트의 수는 항상 1에서 4입니다.</p>
 <p>한 타입의 데이터 당 1개의 버퍼를 사용하는 경우 stride와 offset 모두 항상 0이됩니다. 0인 stride의 의미는 &quot;타입과 크기가 일치하는 stride 사용&quot;입니다. 0인 offset의 버퍼의 시작 부분에서 시작을 의미합니다.값들 0이 아닌 다른 값으로 설정하는 것은 성능면에서 이점이 있을지라도 더 복잡하고 WebGL을 절대적인 한계에 밀어 넣지 않을려면 구지 복잡할 가치는 없습니다.</p>
 <p>이제 버퍼와 속성(attribute)에 대해서 정리가 되었기를 바랍니다.</p>
@@ -400,14 +400,14 @@ function setColors(gl) {
   <li>이미지 처리</li>
   <ul>
     <li><a href="/webgl/lessons/ko/webgl-image-processing.html">WebGL2 이미지 처리</a></li>
-    <li><a href="/webgl/lessons/webgl-image-processing-continued.html">WebGL2 Image Processing Continued</a></li>
+    <li><a href="/webgl/lessons/ko/webgl-image-processing-continued.html">WebGL2 이미지 처리 심화</a></li>
   </ul>
-  <li>2D translation, rotation, scale, matrix math</li>
+  <li>2D 이동, 회전, 크기 변환 행렬 계산</li>
   <ul>
-    <li><a href="/webgl/lessons/webgl-2d-translation.html">WebGL2 2D Translation</a></li>
-    <li><a href="/webgl/lessons/webgl-2d-rotation.html">WebGL2 2D Rotation</a></li>
-    <li><a href="/webgl/lessons/webgl-2d-scale.html">WebGL2 2D Scale</a></li>
-    <li><a href="/webgl/lessons/webgl-2d-matrices.html">WebGL2 2D Matrices</a></li>
+    <li><a href="/webgl/lessons/ko/webgl-2d-translation.html">WebGL2 2D 이동</a></li>
+    <li><a href="/webgl/lessons/ko/webgl-2d-rotation.html">WebGL2 2D 회전</a></li>
+    <li><a href="/webgl/lessons/ko/webgl-2d-scale.html">WebGL2 2D 크기</a></li>
+    <li><a href="/webgl/lessons/ko/webgl-2d-matrices.html">WebGL2 2D 행렬</a></li>
   </ul>
   <li>3D</li>
   <ul>
