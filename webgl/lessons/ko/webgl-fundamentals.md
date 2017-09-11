@@ -278,7 +278,7 @@ WebGL에게 어떻게 클립 공간 값을 화면 공간이라고 불리는 픽�
 
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-이렇게 하면 WebGL에 -1 ~ +1 클립 공간이 0 -> `gl.canvas.width`는 x에 0 -> `gl.canvas.height`는 y로 맵핑됩니다.
+이렇게 하면 WebGL에 -1 ~ +1 클립 공간이 0 &lt;-&gt; `gl.canvas.width`는 x에 0 &lt;-&gt; `gl.canvas.height`는 y로 맵핑됩니다.
 
 캔버스를 지웁니다. `0, 0, 0, 0`는 r, g, b, alpha 이므로 여기에서는 캔버스를 투명하게 만듭니다.
 
