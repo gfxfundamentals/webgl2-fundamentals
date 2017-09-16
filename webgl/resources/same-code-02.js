@@ -43,9 +43,8 @@ uniform float u_shininess;
 uniform float u_specularFactor;
 
 vec4 lit(float l ,float h, float m) {
-  l = l * .5 + .5;
   return vec4(1.0,
-              abs(l),
+              pow(l, 2.5),
               (l > 0.0) ? pow(max(0.0, h), m) : 0.0,
               1.0);
 }
@@ -111,7 +110,7 @@ function main() {
   var uniformsThatAreTheSameForAllObjects = {
     u_lightWorldPos:         [5000, 3000, 10000],
     u_viewInverse:           m4.identity(),
-    u_lightColor:            [1.5, 1.5, 1.5, 1],
+    u_lightColor:            [1, 1, 1, 1],
   };
 
   var uniformsThatAreComputedForEachObject = {
@@ -121,10 +120,10 @@ function main() {
   };
 
   var materialUniforms = {
-    u_ambient:               [0, 0, 0, 0],
-    u_diffuse:               [0, 0, 0, 1],
+    u_ambient:               [.75, 0, 0, 0],
+    u_diffuse:               [1, 1, 1, 1],
     u_specular:              [1, 1, 1, 1],
-    u_shininess:             10,
+    u_shininess:             100,
     u_specularFactor:        1,
   };
 
@@ -161,7 +160,7 @@ function main() {
     gl.viewport(0, 0, canvas.width, canvas.height);
 
     // Clear the canvas AND the depth buffer.
-    gl.clearColor( 1, 1, 1, 1 );
+    gl.clearColor(71/255 * .8, 255/255 * .8, 176/255 * .8, 1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     gl.enable(gl.CULL_FACE);
@@ -213,9 +212,9 @@ function main() {
           twgl.setUniforms(programInfo, uniformsThatAreComputedForEachObject);
 
           // Set a color for this object.
-          materialUniforms.u_diffuse[0] = xx / num * 0.5 + 0.5;
-          materialUniforms.u_diffuse[1] = yy / num * 0.5 + 0.5;
-          materialUniforms.u_diffuse[2] = zz / num * 0.5 + 0.5;
+//          materialUniforms.u_diffuse[0] = 1;
+//          materialUniforms.u_diffuse[1] = 1;
+//          materialUniforms.u_diffuse[2] = 1;
 
           // Set the uniforms that are specific to the this object.
           twgl.setUniforms(programInfo, materialUniforms);
