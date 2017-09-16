@@ -54,12 +54,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <title>WebGL2 기초들</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/base.css" type="text/css" />
 <link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
 <body>
+<div class="webgl_navbar">
+  <div>
+    <div class="language">
+    <a href="/webgl/lessons/webgl-fundamentals.html">English</a>
+    <a href="/webgl/lessons/ko/webgl-fundamentals.html">한국어</a>
+</div>
+
+
+    <a href="#toc"></a>
+  </div>
+</div>
 <div class="webgl_header">
-  <h1><a href="/">WebGL2Fundamentals.org</a></h1>
+  <h1><a href="/webgl/lessons/ko/">WebGL2Fundamentals.org</a></h1>
 </div>
 
 
@@ -67,8 +77,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="lesson-title">
     <h1>WebGL2 기초들</h1>
   </div>
-  <div class="row">
-    <div class="col-sm-8 lesson-main">
+  <div class="lesson">
+    <div class="lesson-main">
       <p>제일 중요한 걸 먼저 말하자면, 이 글은 WebGL2에 관한 글입니다. 만약 WebGL1.0에 관심이 있다면 <a href="http://webglfundamentals.org">여기를 방문하십시오</a>. 알아야 할 것은 WebGL2는 <a href="webgl1-backward-compatibility.html">WebGL1과 거의 100% 역호환이 됩니다</a>. 즉, 일단 WebGL2를 사용하면 원래 사용 의도처럼 사용할 수 있습니다. 이 튜토리얼은 이 방향을 따름니다.</p>
 <p>WebGL은 종종 3D API로 간주됩니다. 사람들은 &quot;WebGL과 <em>마법</em>을 사용해서 멋진 3D를 만들어야지&quot; 라고 합니다. 실제로 WebGL은 단순히 레스트화 엔진일 뿐입니다. WebGL은 제공한 코드에 기반하여 점, 선 및 삼각형들을 그립니다. 원하는 것을 하기 위해 WebGL이 다른 일을 하도록 하는 것은 점, 선 및 삼각형들을 사용하는 코드를 제공하는 것에 달려있습니다.</p>
 <p>WebGL은 컴퓨터의 GPU에서 실행됩니다. 따라서 GPU에서 실행되는 코드를 제공해야합니다. 두개 함수 쌍 형태로 코드를 제공해야합니다. 이 두 개의 함수는 버텍스 쉐이더(vertex shader)와 프래그먼트 쉐이더(fragment shader)라고 불리며 각각은 C/C++같이 매우 엄격한 타입을 가지고 있는 <a href="webgl-shaders-and-glsl.html">GLSL</a>(GL Shader Language)으로 작성돼 있습니다. 이 두 쌍을 합쳐서 <em>프로그램(program)</em> 이라고 부릅니다.</p>
@@ -306,7 +316,7 @@ gl.drawArrays(primitiveType, offset, count);
  0.7, 0       -&gt;   340, 150
 </code></pre><p>WebGL은 이제 삼각형을 렌더링할 것입니다. WebGL이 그릴 모든 픽셀은 프레그먼트 쉐이더(fragment shader)를 호출합니다. 프레그먼트 쉐이더(fragment shader)는 단순히 <code>outColor</code>를 <code>1, 0, 0.5, 1</code>으로 설정합니다. 캔버스는 채널당 8비트 캔버스이기 때문에 WebGL은 <code>[255, 0, 127, 255]</code>값을 캔버스에 씁니다.</p>
 <p>여기에 라이브 버전이 있습니다.</p>
-<p><div>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-fundamentals.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-fundamentals.html" target="_blank">click here to open in a separate window</a>
 </div>
@@ -361,7 +371,7 @@ var offset = 0;
 gl.drawArrays(primitiveType, offset, count);
 </code></pre><p>여기에 예제가 있습니다.</p>
 <p>참고: 이 예제와 다음 나오는 모든 예제들은 컴파일하고 쉐이더를 연결하는 함수를 포함하는 <a href="/webgl/resources/webgl-utils.js"><code>webgl-utils.js</code></a>를 사용합니다. 예제를 복잡하게 만들 필요 없이 <a href="webgl-boilerplate.html">boilerplate</a> 코드를 사용합니다.</p>
-<p><div>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle.html" target="_blank">click here to open in a separate window</a>
 </div>
@@ -370,7 +380,7 @@ gl.drawArrays(primitiveType, offset, count);
 <p>다시 말하자면 사각형이 해당 영역의 거의 아래쪽에 있음을 알 수 있습니다. WebGL은 왼쪽 하단 구석을 0,0으로 간주합니다. 전통적인 왼쪽 상단 모서리를 2D 그래픽 API에서 사용하려면 클립 공간 y좌표를 뒤집어서 사용 할 수 있습니다.</p>
 <pre><code>*   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 </code></pre><p>이제 직사각형이 예상한곳에 있습니다.</p>
-<p><div>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-top-left.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle-top-left.html" target="_blank">click here to open in a separate window</a>
 </div>
@@ -438,7 +448,7 @@ function setRectangle(gl, x, y, width, height) {
      x2, y2]), gl.STATIC_DRAW);
 }
 </code></pre><p>여기에 직사각형들이 있습니다.</p>
-<p><div>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangles.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangles.html" target="_blank">click here to open in a separate window</a>
 </div>
@@ -455,37 +465,16 @@ WebGL API 자체는 단순히 레스터라이저(rasterizer)이며 개념적으�
 <p>또한 대부분의 예제에서 사용된 <a href="webgl-boilerplate.html">여기서 사용한 boilerplate 코드</a>를 최소한 간단하게 읽어야합니다. 거의 모든 예제들은 오직 한가지 것만 그리고 구조가 어떻게 되있는지 볼수 없기 때문에 일반적인 WebGL앱이 구조화 되어 있는지에 대한 어떻게 몇가지 아이디어를 얻기 위해 최소한 <a href="webgl-drawing-multiple-things.html">여러가지를 그리는 법</a>을 봐야 합니다.</p>
 <p>아니면 여기 2가지 방향으로 갈 수 있습니다. 이미지 처리에 관심이 있다면 <a href="(webgl-image-processing.html">몇가지 2D 이미지 처리 방법</a>를 보시면 됩니다. 위치, 회전, 크기에 대하여 관심이 있다면 <a href="webgl-2d-translation.html">여기서 시작하시면 됩니다</a>.</p>
 
-      <hr class="lesson-comment-sep" />
-      <div class="lesson-comments">
-        <div>질문? <a href="http://stackoverflow.com/questions/tagged/webgl">stackoverflow에서 질문하기</a>.</div>
-        <div>이슈/버그? <a href="http://github.com/greggman/webgl-fundamentals/issues">깃헙에서 이슈만들기</a>.</div>
-
-        <div id="disqus_thread"></div>
-        <script type="text/javascript">
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
-            var disqus_identifier = 'WebGL2 기초들';
-            var disqus_title = 'WebGL2 기초들';
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
-                    return;
-                }
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-      </div>
     </div>
-    <div class="col-sm-3 col-sm-offset-1 lesson-sidebar">
-        <select id="language">
-</select>
+    <div class="lesson-sidebar">
+        <div class="language">
+    <a href="/webgl/lessons/webgl-fundamentals.html">English</a>
+    <a href="/webgl/lessons/ko/webgl-fundamentals.html">한국어</a>
+</div>
 
-        <ul>
+
+        <div id="toc">
+          <ul>
   <li>기초</li>
   <ul>
     <li><a href="/webgl/lessons/ko/webgl-getting-webgl2.html">WebGL2 사용하기</a></li>
@@ -572,6 +561,31 @@ WebGL API 자체는 단순히 레스터라이저(rasterizer)이며 개념적으�
   <li><a href="https://github.com/greggman/webgl2-fundamentals">github</a></li>
 </ul>
 
+        </div>
+    </div>
+    <div class="lesson-comments">
+        <div>질문? <a href="http://stackoverflow.com/questions/tagged/webgl">stackoverflow에서 질문하기</a>.</div>
+        <div>이슈/버그? <a href="http://github.com/greggman/webgl-fundamentals/issues">깃헙에서 이슈만들기</a>.</div>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 기초들';
+            var disqus_title = 'WebGL2 기초들';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
@@ -579,8 +593,6 @@ WebGL API 자체는 단순히 레스터라이저(rasterizer)이며 개념적으�
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
 <script src="/webgl/lessons/resources/lesson.js"></script>
-<script src="/langdb.js"></script>
-<script src="/webgl/lessons/resources/languages.js"></script>
 <script src="//cdn.webglstats.com/stat.js" defer="defer" async="async"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
