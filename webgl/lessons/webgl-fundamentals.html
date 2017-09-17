@@ -79,7 +79,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>First things first, this articles are about WebGL2. If you&#39;re interested in WebGL 1.0
+      <p>First things first, these articles are about WebGL2. If you&#39;re interested in WebGL 1.0
 <a href="http://webglfundamentals.org">please go here</a>. Note that WebGL 2 is <a href="webgl1-backward-compatibility.html">nearly 100% backward
 compatible with WebGL 1</a>. That said, once you enable
 WebGL 2 you might as well use it as it was meant to be used. These tutorials follow
@@ -113,7 +113,7 @@ per position. You would tell a particular attribute which buffer to pull the pos
 of data it should pull out (3 component 32 bit floating point numbers), what offset
 in the buffer the positions start, and how many bytes to get from one position to the next.</p>
 <p>Buffers are not random access. Instead a vertex shaders is executed a specified number
-of times. Each time it&#39;s executed the next value from each specified buffers is pulled
+of times. Each time it&#39;s executed the next value from each specified buffer is pulled
 out assigned to an attribute.</p>
 <p>The state of attributes, which buffers to use for each one and how to pull out data
 from those buffers, is collected into a vertex array object (VAO).</p>
@@ -312,7 +312,7 @@ it to the <code>ARRAY_BUFFER</code> bind point above.</p>
 <p>The last argument, <code>gl.STATIC_DRAW</code> is a hint to WebGL about how we&#39;ll use the data.
 WebGL can try to use that hint to optimize certain things. <code>gl.STATIC_DRAW</code> tells WebGL
 we are not likely to change this data much.</p>
-<p>Now that we&#39;ve put data in the a buffer we need to tell the attribute how to get data
+<p>Now that we&#39;ve put data in a buffer we need to tell the attribute how to get data
 out of it. First we need to create a collection of attribute state called a Vertex Array Object.</p>
 <pre><code>var vao = gl.createVertexArray();
 </code></pre><p>And we need to make that the current vertex array so that all of our attribute settings
@@ -334,7 +334,7 @@ gl.vertexAttribPointer(
 to the attribute. In other words now this attribute is bound to
 <code>positionBuffer</code>. That means we&#39;re free to bind something else to the <code>ARRAY_BUFFER</code> bind point.
 The attribute will continue to use <code>positionBuffer</code>.</p>
-<p>Note that from the point of view of our GLSL vertex shader the <code>a_position</code> attribute was a <code>vec4</code></p>
+<p>Note that from the point of view of our GLSL vertex shader the <code>a_position</code> attribute is a <code>vec4</code></p>
 <pre><code>in vec4 a_position;
 </code></pre><p><code>vec4</code> is a 4 float value. In JavaScript you could think of it something like
 <code>a_position = {x: 0, y: 0, z: 0, w: 0}</code>. Above we set <code>size = 2</code>. Attributes
@@ -347,7 +347,7 @@ more flexible than any other method.</p>
 <p>To make the number of pixels in the canvas match the size it&#39;s displayed
 <a href="webgl-resizing-the-canvas.html">I&#39;m using a helper function you can read about here</a>.</p>
 <p>In nearly all of these samples the canvas size is 400x300 pixels if the sample is run in its own window
-but stretches to fill the available space if it&#39;s in side an iframe like it is on this page.
+but stretches to fill the available space if it&#39;s inside an iframe like it is on this page.
 By letting CSS determine the size and then adjusting to match we easily handle both of these cases.</p>
 <pre><code>webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 </code></pre><p>We need to tell WebGL how to convert from the clip space
@@ -356,7 +356,7 @@ To do this we call <code>gl.viewport</code> and pass it the current size of the 
 <pre><code>gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 </code></pre><p>This tells WebGL the -1 +1 clip space maps to 0 &lt;-&gt; <code>gl.canvas.width</code> for x and 0 &lt;-&gt; <code>gl.canvas.height</code>
 for y.</p>
-<p>We clear the canvas. <code>0, 0, 0, 0</code> are r, g, b, alpha so in this case we&#39;re making the canvas transparent.</p>
+<p>We clear the canvas. <code>0, 0, 0, 0</code> are red, green, blue, alpha respectively so in this case we&#39;re making the canvas transparent.</p>
 <pre><code>// Clear the canvas
 gl.clearColor(0, 0, 0, 0);
 gl.clear(gl.COLOR_BUFFER_BIT);
@@ -384,7 +384,7 @@ triangle will be drawn at clip space coordinates</p>
 <pre><code>  0, 0,
   0, 0.5,
   0.7, 0,
-</code></pre><p>Converting from clip space to screen space WebGL is going to draw a triangle at. If the canvas size
+</code></pre><p>Converting from clip space to screen space if the canvas size
 happned to be 400x300 we&#39;d get something like this</p>
 <pre><code> clip space      screen space
    0, 0       -&gt;   200, 150
@@ -449,7 +449,7 @@ made from 2 triangles, 3 points each.</p>
 ];
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 </code></pre><p>And after we set which program to use we can set the value for the uniform we created.
-Use program is like <code>gl.bindBuffer</code> above in that it sets the current program. After
+<code>gl.useProgram</code> is like <code>gl.bindBuffer</code> above in that it sets the current program. After
 that all the <code>gl.uniformXXX</code> functions set uniforms on the current program.</p>
 <pre><code>gl.useProgram(program);
 
