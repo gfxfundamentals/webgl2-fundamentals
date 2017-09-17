@@ -1,7 +1,7 @@
 Title: WebGL2 Fundamentals
 Description: Your first WebGL2 lesson starting with the fundamentals
 
-First things first, this articles are about WebGL2. If you're interested in WebGL 1.0
+First things first, these articles are about WebGL2. If you're interested in WebGL 1.0
 [please go here](http://webglfundamentals.org). Note that WebGL 2 is [nearly 100% backward
 compatible with WebGL 1](webgl1-backward-compatibility.html). That said, once you enable
 WebGL 2 you might as well use it as it was meant to be used. These tutorials follow
@@ -43,7 +43,7 @@ a shader can receive data.
    in the buffer the positions start, and how many bytes to get from one position to the next.
 
    Buffers are not random access. Instead a vertex shaders is executed a specified number
-   of times. Each time it's executed the next value from each specified buffers is pulled
+   of times. Each time it's executed the next value from each specified buffer is pulled
    out assigned to an attribute.
 
    The state of attributes, which buffers to use for each one and how to pull out data
@@ -284,7 +284,7 @@ The last argument, `gl.STATIC_DRAW` is a hint to WebGL about how we'll use the d
 WebGL can try to use that hint to optimize certain things. `gl.STATIC_DRAW` tells WebGL
 we are not likely to change this data much.
 
-Now that we've put data in the a buffer we need to tell the attribute how to get data
+Now that we've put data in a buffer we need to tell the attribute how to get data
 out of it. First we need to create a collection of attribute state called a Vertex Array Object.
 
     var vao = gl.createVertexArray();
@@ -315,7 +315,7 @@ to the attribute. In other words now this attribute is bound to
 `positionBuffer`. That means we're free to bind something else to the `ARRAY_BUFFER` bind point.
 The attribute will continue to use `positionBuffer`.
 
-Note that from the point of view of our GLSL vertex shader the `a_position` attribute was a `vec4`
+Note that from the point of view of our GLSL vertex shader the `a_position` attribute is a `vec4`
 
     in vec4 a_position;
 
@@ -333,7 +333,7 @@ To make the number of pixels in the canvas match the size it's displayed
 [I'm using a helper function you can read about here](webgl-resizing-the-canvas.html).
 
 In nearly all of these samples the canvas size is 400x300 pixels if the sample is run in its own window
-but stretches to fill the available space if it's in side an iframe like it is on this page.
+but stretches to fill the available space if it's inside an iframe like it is on this page.
 By letting CSS determine the size and then adjusting to match we easily handle both of these cases.
 
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
@@ -347,7 +347,7 @@ To do this we call `gl.viewport` and pass it the current size of the canvas.
 This tells WebGL the -1 +1 clip space maps to 0 &lt;-&gt; `gl.canvas.width` for x and 0 &lt;-&gt; `gl.canvas.height`
 for y.
 
-We clear the canvas. `0, 0, 0, 0` are r, g, b, alpha so in this case we're making the canvas transparent.
+We clear the canvas. `0, 0, 0, 0` are red, green, blue, alpha respectively so in this case we're making the canvas transparent.
 
     // Clear the canvas
     gl.clearColor(0, 0, 0, 0);
@@ -387,7 +387,7 @@ triangle will be drawn at clip space coordinates
       0, 0.5,
       0.7, 0,
 
-Converting from clip space to screen space WebGL is going to draw a triangle at. If the canvas size
+Converting from clip space to screen space if the canvas size
 happned to be 400x300 we'd get something like this
 
      clip space      screen space
@@ -463,7 +463,7 @@ made from 2 triangles, 3 points each.
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
 And after we set which program to use we can set the value for the uniform we created.
-Use program is like `gl.bindBuffer` above in that it sets the current program. After
+`gl.useProgram` is like `gl.bindBuffer` above in that it sets the current program. After
 that all the `gl.uniformXXX` functions set uniforms on the current program.
 
     gl.useProgram(program);
