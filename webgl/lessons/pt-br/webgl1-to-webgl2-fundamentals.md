@@ -50,7 +50,7 @@ e seu código fica mais fácil e eficiente em quase todos os casos.
 
 ## Outras pequenas mudanças
 
-*  Eu tentei reestruturar algumas amostras para mostrar um pouco os padrões mais comuns
+*  Eu tentei reestruturar algumas amostras para demonstrar um pouco os padrões mais comuns
 
    Por exemplo, a maioria dos aplicativos geralmente configura o estado global do WebGL como mesclagem (blending), eliminação (culling), teste de profundidade (depth testing)
    no seu loop de renderização, uma vez que essas configurações geralmente mudam várias vezes como no
