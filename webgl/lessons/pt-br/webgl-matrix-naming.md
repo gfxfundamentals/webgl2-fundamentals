@@ -1,5 +1,5 @@
-Título: Nomenclaturas das Matrizes WebGL
-Descrição: Nomenclaturas comuns das matrizes
+Title: Nomenclaturas das Matrizes WebGL
+Description: Nomenclaturas comuns das matrizes
 
 Esta publicação é a continuação de uma série de postagens sobre o WebGL. O primeiro artigo
 [apresentou os fundamentos do WebGL](webgl-fundamentals.html) e o anterior
