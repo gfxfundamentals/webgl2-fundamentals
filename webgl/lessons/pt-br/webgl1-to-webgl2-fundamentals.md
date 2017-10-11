@@ -1,5 +1,5 @@
-Título: Diferenças do WebGLFundamentals.org
-Descrição: As diferenças entre WebGLFundamentals.org e o WebGL2Fundamentals.org
+Title: Diferenças do WebGLFundamentals.org
+Description: As diferenças entre WebGLFundamentals.org e o WebGL2Fundamentals.org
 
 Se você leu anteriormente [webglfundamentals.org](http://webglfundamentals.org)
 há algumas diferenças que você deve estar ciente.

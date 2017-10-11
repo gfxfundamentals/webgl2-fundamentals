@@ -1,4 +1,4 @@
-Título: Fundamentos de WebGL2
+Title: Fundamentos de WebGL2
 
 WebGL2 do início. Sem Mágica.
 
