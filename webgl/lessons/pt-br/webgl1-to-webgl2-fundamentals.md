@@ -93,7 +93,7 @@ adicionarem suporte ao WebGL2 no Safari macOS, Safari iOS e Edge, respectivament
 então, provavelmente, a maioria das pessoas estarão cobertas com o suporte
 e todos nós poderemos simplesmente avançar para o WebGL2.
 
-Esperançosamente, eu irei encontrar tempo suficiente para adicionar mais artigos.
+Espero que, eu encontre tempo suficiente para adicionar mais artigos.
 Dito isso, a partir de agora, novos artigos serão sobre o WebGL, apenas.
 Eu acho.
 
