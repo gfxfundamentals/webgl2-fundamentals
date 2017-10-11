@@ -19,7 +19,7 @@ em tags non-javascript `<script>`.
 
     var vertexShaderSource = document.getElementById("vertexshader").text;
 
-On webgl2fundamentals.org I've switched to using
+No webgl2fundamentals.org mudei completamente para o uso de
 literais de templates multilinhas
 
     var vertexShaderSource = `
@@ -94,7 +94,7 @@ então, provavelmente, a maioria das pessoas estarão cobertas com o suporte
 e todos nós poderemos simplesmente avançar para o WebGL2.
 
 Esperançosamente, eu irei encontrar tempo suficiente para adicionar mais artigos.
-Dito isso,a partir de agora, novos artigos serão sobre o WebGL, apenas.
+Dito isso, a partir de agora, novos artigos serão sobre o WebGL, apenas.
 Eu acho.
 
 
