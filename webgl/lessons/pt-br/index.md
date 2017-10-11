@@ -7,7 +7,7 @@ Eles não são artigos antigos reanalisados do OpenGL, como muitos outros na net
 Eles são totalmente novos, descartando as antigas idéias desatualizadas e disponibilizando à você uma compreensão completa do que o WebGL realmente é e como ele realmente funciona.
 
 Estes artigos são especificamente sobre o WebGL2.
-Se você está interessando no WebGL 1.0, por favor, [vá aqui](http://webglfundamentals.org)
+Se você está interessando no WebGL 1.0, por favor, [clique aqui](http://webglfundamentals.org)
 Se você já está familiarizado com o WebGL1, talvez esteja interessado em conferir estes artigos
 
 <ul>
