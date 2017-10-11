@@ -3,8 +3,8 @@ Title: Fundamentos de WebGL2
 WebGL2 do início. Sem Mágica.
 
 Estes são um conjunto de artigos que ensinam WebGL2 a partir de seus princípios básicos.
-Eles não são artigos antigos reanalisados do OpenGL, como muitos outros na net.
-Eles são totalmente novos, descartando as antigas idéias desatualizadas e disponibilizando à você uma compreensão completa do que o WebGL realmente é e como ele realmente funciona.
+Estes artigos não são antigos e reanalisados do OpenGL, como muitos outros disponíveis na internet.
+São totalmente novos, descartando as ideias antigas e desatualizadas, disponibilizando à você uma compreensão completa do que o WebGL realmente é, e como ele realmente funciona.
 
 Estes artigos são especificamente sobre o WebGL2.
 Se você está interessando no WebGL 1.0, por favor, [clique aqui](http://webglfundamentals.org)
