@@ -1,12 +1,12 @@
-Title: WebGL2 What's New
-Description: What's new in WebGL2
+Title: WebGL2 O que há de novo
+Description: O que há de novo no WebGL2
 
-WebGL2 is a pretty significant upgrade from WebGL1.
-If you're comming from WebGL1 and you want to know
-how to adjust your code so you can take advantage
-of WebGL2 [see this article](webgl1-to-webgl2.html).
+WebGL2 é uma atualização bastante significativa do WebGL1.
+Se você está vindo do WebGL1 e quer saber
+como ajustar seu código para que você possa aproveitar
+do WebGL2 [veja este artigo](webgl1-to-webgl2.html).
 
-Here's the short list in no particular order
+Aqui está uma pequena lista sem uma ordem específica
 
 ## Vertex Array Objects always available
 
