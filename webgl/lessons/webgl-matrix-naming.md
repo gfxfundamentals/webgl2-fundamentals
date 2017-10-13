@@ -35,12 +35,7 @@ Here's the list from my head
 *   projection matrix
 
     a matrix and converts a frustum of space into clip space or some orthographic
-    space into clip space. 
-	
-	Outra forma de pensar a respeito disso é que, a matriz retornada
-	pela funçãao `ortographic` ou `ortho` e/ou `perspective` da biblioteca math.
-	
-	Another way of thinking about this is it's the matrix
+    space into clip space. Another way of thinking about this is it's the matrix
     returned by your matrix math library's `perspective` and/or `ortho` or
     `orthographic` function.
 
