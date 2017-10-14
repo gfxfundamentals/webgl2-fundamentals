@@ -78,20 +78,20 @@ Isso também é bom
 Ou você poderia fazer com que suas funções de compilação de shader tirem
 as primeiras linhas em branco.
 
-### Changes in GLSL 300 es from GLSL 100
+### Mudanças em GLSL 300 es de GLSL 100
 
-There are several changes you'll need to make to your shaders
-on top of adding the version string above
+Há várias mudanças que você precisa para fazer o seus shaders
+de cima para adicionar a cadeia de versão anterior
 
 #### `attribute` -> `in`
 
-In GLSL 100 you might have
+No GLSL 100 você pode ter
 
     attribute vec4 a_position;
     attribute vec2 a_texcoord;
     attribute vec3 a_normal;
 
-In GLSL 300 es that becomes
+Em GLSL 300 es se torna
 
     in vec4 a_position;
     in vec2 a_texcoord;
@@ -99,31 +99,31 @@ In GLSL 300 es that becomes
 
 #### `varying` to `in` / `out`
 
-In GLSL 100 you might declare a varying in both the vertex
-and fragment shaders like this
+No GLSL 100, você pode declarar uma variação tanto no vertex
+como nos fragmentos shaders como esse
 
     varying vec2 v_texcoord;
     varying vec3 v_normal;
 
-In GLSL 300 es in the vertex shader the varyings become
+Em GLSL 300 es no vertex shader as variações se tornam
 
     out vec2 v_texcoord;
     out vec3 v_normal;
 
-And in the fragment shader they become
+E no fragmento shader eles se tornam
 
     in vec2 v_texcoord;
     in vec3 v_normal;
 
-#### No more `gl_FragColor`
+#### Não mais `gl_FragColor`
 
-In GLSL 100 your fragment shader would set the special
-variable `gl_FragColor` to set the output of the shader.
+No GLSL 100, seu fragmento shader configuraria a variável
+especial `gl_FragColor` para definir a saída do shader.
 
     gl_FragColor = vec4(1, 0, 0, 1);  // red
 
-In GLSL 300 es you declare your own output variable and
-then set it.
+Em GLSL 300 es, você declara sua própria variável de saída e
+depois configura-a.
 
     out vec4 myOutputColor;
 
@@ -131,12 +131,12 @@ then set it.
        myOutputColor = vec4(1, 0, 0, 1);  // red
     }
 
-Note: You can pick any name you want but names can **not** start with
-`gl_` so you can't just make `out vec4 gl_FragColor`
+Nota: Você pode escolher qualquer nome que desejar, mas os nomes **não** podem começar
+com `gl_`, então você não pode simplesmente fazer `out vec4 gl_FragColor`
 
 #### `texture2D` -> `texture` etc.
 
-In GLSL 100 you'd get a color from a texture like this
+No GLSL 100 você obtém uma cor de uma textura como essa
 
     uniform sampler2D u_some2DTexture;
     uniform samplerCube u_someCubeTexture;
@@ -146,8 +146,8 @@ In GLSL 100 you'd get a color from a texture like this
     vec4 color1 = texture2D(u_some2DTexture, ...);
     vec4 color2 = textureCube(u_someCubeTexture, ...);
 
-In GLSL 300es the texture functions automatically know
-what to do based on the sampler type so now it's just
+No GLSL 300es, as funções de textura sabem automaticamente o
+que fazer com base no tipo de amostrador, então agora é apenas
 `texture`
 
     uniform sampler2D u_some2DTexture;
@@ -158,55 +158,55 @@ what to do based on the sampler type so now it's just
     vec4 color1 = texture(u_some2DTexture, ...);
     vec4 color2 = texture(u_someCubeTexture, ...);
 
-## Features you can take for granted
+## Características que você pode dar como certo
 
-In WebGL1 many features were optional extensions. In WebGL2
-all of the following are standard features
+No WebGL1, muitos recursos eram extensões opcionais. No WebGL2,
+todos os itens seguintes são características padrão
 
-* Depth Textures ([WEBGL_depth_texture](https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/))
-* Floating Point Textures ([OES_texture_float](https://www.khronos.org/registry/webgl/extensions/OES_texture_float/)/[OES_texture_float_linear](https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/))
-* Vertex Array Objects ([OES_vertex_array_object](https://www.khronos.org/registry/webgl/extensions/OES_vertex_array_object/))
-* Standard Derivatives ([OES_standard_derivatives](https://www.khronos.org/registry/webgl/extensions/OES_standard_derivatives/))
-* Instanced Drawing ([ANGLE_instanced_arrays](https://www.khronos.org/registry/webgl/extensions/ANGLE_instanced_arrays/))
-* UNSIGNED_INT indices ([OES_element_index_uint](https://www.khronos.org/registry/webgl/extensions/OES_element_index_uint/))
-* Setting `gl_FragDepth` ([EXT_frag_depth](https://www.khronos.org/registry/webgl/extensions/EXT_frag_depth/))
-* Blend Equation MIN/MAX ([EXT_blend_minmax](https://www.khronos.org/registry/webgl/extensions/EXT_blend_minmax/))
-* Direct texture LOD access ([EXT_shader_texture_lod](https://www.khronos.org/registry/webgl/extensions/EXT_shader_texture_lod/))
-* Multiple Draw Buffers ([WEBGL_draw_buffers](https://www.khronos.org/registry/webgl/extensions/WEBGL_draw_buffers/))
-* Texture access in vertex shaders
+* Texturas de profundidade ([WEBGL_depth_texture](https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/))
+* Texturas de ponto flutuante ([OES_texture_float](https://www.khronos.org/registry/webgl/extensions/OES_texture_float/)/[OES_texture_float_linear](https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/))
+* Objetos Vertex Array ([OES_vertex_array_object](https://www.khronos.org/registry/webgl/extensions/OES_vertex_array_object/))
+* Derivados Padrão ([OES_standard_derivatives](https://www.khronos.org/registry/webgl/extensions/OES_standard_derivatives/))
+* Desenho Instanciado ([ANGLE_instanced_arrays](https://www.khronos.org/registry/webgl/extensions/ANGLE_instanced_arrays/))
+* Índices UNSIGNED_INT ([OES_element_index_uint](https://www.khronos.org/registry/webgl/extensions/OES_element_index_uint/))
+* Configurando `gl_FragDepth` ([EXT_frag_depth](https://www.khronos.org/registry/webgl/extensions/EXT_frag_depth/))
+* Misturar Equação MIN / MAX ([EXT_blend_minmax](https://www.khronos.org/registry/webgl/extensions/EXT_blend_minmax/))
+* Acesso direto a textura LOD ([EXT_shader_texture_lod](https://www.khronos.org/registry/webgl/extensions/EXT_shader_texture_lod/))
+* Múltiplos Draw Buffers ([WEBGL_draw_buffers](https://www.khronos.org/registry/webgl/extensions/WEBGL_draw_buffers/))
+* Acesso de textura no vertex shaders
 
-## Non-Power of 2 Texture Support
+## Non-Power de 2 Suporte de Textura
 
-in WebGL1 textures that were not a power of 2 could not have mips.
-In WebGL2 that limit is removed. Non-power of 2 texture work exactly
-the same as power of 2 textures.
+nas texturas WebGL1 que não tinham um poder de 2 não podiam ter mips.
+No WebGL2, esse limite é removido. Non-power de 2 texturas funciona exatamente
+como a potência de 2 texturas.
 
-## Floating Point Framebuffer Attachments
+## Anexos do Framebuffer do ponto flutuante
 
-In WebGL1 to check for support for rendering to a floating point texture
-you would first check for and enable the `OES_texture_float` extension, then
-you'd create a floating point texture, attach it to a framebuffer, and call
-`gl.checkFramebufferStatus` to see if it returned `gl.FRAMEBUFFER_COMPLETE`.
+No WebGL1 para verificar se há suporte para a renderização para uma textura
+de ponto flutuante, primeiro você verificaria e ativaria a extensão `OES_texture_float`, 
+então você criaria uma textura de ponto flutuante, ligaria-a a um framebuffer e chamaria
+`gl.checkFramebufferStatus` veja se ele retornou  `gl.FRAMEBUFFER_COMPLETE`.
 
-In WebGL2 you need to check for and enable `EXT_color_buffer_float` or else
-`gl.checkFramebufferStatus` will never return `gl.FRAMEBUFFER_COMPLETE` for
-a floating point texture.
+No WebGL2 você precisa verificar e ativar `EXT_color_buffer_float` ou então
+`gl.checkFramebufferStatus` nunca retornará `gl.FRAMEBUFFER_COMPLETE` para
+uma textura de ponto flutuante.
 
-Note that this is also true for `HALF_FLOAT` framebuffer attachments as well.
+Observe que isso também é verdadeiro para os anexos framebuffer `HALF_FLOAT`.
 
-> If you're curious this was a *bug* in the WebLG1 spec. What happened is WebGL1
-> shipped and `OES_texture_float` was added and it was just assumed the correct
-> way to use it for rendering was to create a texture, attach it a framebuffer,
-> and check its status. Later someone pointed out according the spec that was
-> not enough because the spec says colors written in a fragment shader are
-> always clamped to 0 to 1. `EXT_color_buffer_float` removes that clampping
-> restriction but since WebGL had already been shipping for a year or so
-> it would have broken many web sites to enforce the restriction. For WebGL2
-> they were able to fix it and so now you must enable `EXT_color_buffer_float`
-> to use floating point textures as framebuffer attachments.
+> Se você tem curiosidade, esse foi um erro na especificação WebLG1. O que aconteceu foi o envio 
+> da WebGL1 e o `OES_texture_float` foi adicionado e apenas assumiu que a maneira correta
+> de usá-lo para renderizar era criar uma textura, anexá-la um framebuffer
+> e verificar seu status. Mais tarde, alguém apontou de acordo com a especificação que
+> não era suficiente porque a especificação diz que as cores escritas em um fragmento shader são
+> sempre restritos de 0 a 1. `EXT_color_buffer_float` remove essa restrição
+> de clampping, mas como o WebGL já havia sido enviado há um ano ou teria quebrado
+> muitos sites para reforçar a restrição. Para o WebGL2 eles conseguiram corrigi-lo
+> e agora você deve habilitar o `EXT_color_buffer_float`
+> para usar as texturas de ponto flutuante como anexos framebuffer.
 >
-> NOTE that AFAIK, as of March 2017 very few mobile devices support rendering to
-> floating point textures.
+> Observe que o AFAIK, a partir de março de 2017, poucos dispositivos móveis suportam renderização
+> para texturas de ponto flutuante.
 
 ## Vertex Array Objects
 
