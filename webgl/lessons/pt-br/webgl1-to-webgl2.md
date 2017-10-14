@@ -37,16 +37,16 @@ Caso contrário, todas as suas coisas WebGL1 devem funcionar.
 Dito isso, para tirar proveito da maioria dos recursos da WebGL2 você precisará fazer
 algumas mudanças.
 
-## Switch to GLSL 300 es
+## Mude para GLSL 300 es
 
-The biggest change is you should upgrade your shaders to GLSL 3.00 ES. To do
-that the first line of your shaders needs to be
+A maior mudança é que você deve atualizar seus shaders para GLSL 3,00 ES. Para
+fazer isso, a primeira linha de seus shaders precisa ser
 
     #version 300 es
 
-**NOTE: THIS HAS TO BE THE FIRST LINE! No comments, no blank lines before it allowed.**
+**NOTA: ESTA TEM QUE SER A PRIMEIRA LINHA! Sem comentários, sem linhas em branco antes de permitir.**
 
-In other words this is bad
+Em outras palavras, isso é ruim
 
     // BAD!!!!                +---There's a new line here!
     // BAD!!!!                V
@@ -55,7 +55,7 @@ In other words this is bad
     ..
     `;
 
-This is bad too
+Isso também é ruim
 
     <!-- BAD!!                   V<- there's a new line here
     <script id="vs" type="notjs">
@@ -63,20 +63,20 @@ This is bad too
     ...
     </script>
 
-This is good
+Isso é bom
 
     var vertexShaderSource = `#version 300 es
     ...
     `;
 
-This is good too
+Isso também é bom
 
     <script id="vs" type="notjs">#version 300 es
     ...
     </script>
 
-Or you could make your shader compiling functions strip
-the first blank lines.
+Ou você poderia fazer com que suas funções de compilação de shader tirem
+as primeiras linhas em branco.
 
 ### Changes in GLSL 300 es from GLSL 100
 
