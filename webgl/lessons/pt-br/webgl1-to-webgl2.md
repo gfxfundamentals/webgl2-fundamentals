@@ -208,15 +208,15 @@ Observe que isso também é verdadeiro para os anexos framebuffer `HALF_FLOAT`.
 > Observe que o AFAIK, a partir de março de 2017, poucos dispositivos móveis suportam renderização
 > para texturas de ponto flutuante.
 
-## Vertex Array Objects
+## Objetos Vertex Array
 
-Of all the features above the one feature I personally think you should
-always ALWAYS use is vertex array objects. Everything else it really
-depends on what you're trying to do but vertex array objects in particular
-seem like a basic feature that should always be used.
+De todos os recursos acima de um recurso, eu pessoalmente acho que você
+sempre deve SEMPRE usar os objetos do vertex array. Tudo realmente
+depende do que você está tentando fazer, mas os objetos do vertex array, em particular,
+parecem um recurso básico que sempre deve ser usado.
 
-In WebGL1 without vertex array objects all the data about attributes
-was global WebGL state. You can imagine it like this
+Na WebGL1 sem objetos vertex array todos os dados sobre atributos
+foram para o estado WebGL global. Você pode imaginar isso assim
 
     var glState = {
       attributeState: {
@@ -234,26 +234,26 @@ was global WebGL state. You can imagine it like this
       },
    }
 
-Calling functions like `gl.vertexAttribPointer`, `gl.enableVertexAttribArray`, and
-`gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ??)` would effect that global state.
-Before each thing you wanted to draw you needed to setup all the attributes and if you
-were drawing indexed data you needed to set the `ELEMENT_ARRAY_BUFFER`.
+Chamar funções como `gl.vertexAttribPointer`,` gl.enableVertexAttribArray` e
+`gl.bindBuffer (gl.ELEMENT_ARRAY_BUFFER, ??)` afetariam esse estado global.
+Antes de cada coisa que você queria desenhar, você precisava configurar todos os atributos e, se você
+estivesse desenhando dados indexados, você precisava configurar o `ELEMENT_ARRAY_BUFFER`.
 
-With Vertex Array Objects that entire `attributeState` above becomes a *Vertex Array*.
+Com objeto Vertex Array, todo o `attributeState` acima se torna um *Vertex Array*.
 
-In other words
+Em outras palavras
 
     var someVAO = gl.createVertexArray();
 
-Makes a new instance of the thing above called `attributeState`.
+Faz uma nova instância da coisa acima chamada `attributeState`.
 
     gl.bindVertexArray(someVAO);
 
-Is equivilent to
+É equivalente a
 
     glState.attributeState = someVAO;
 
-What that means is you should setup all of your attributes at init time now.
+O que isto significa é que você deve configurar todos os seus atributos em tempo de inicialização agora.
 
     // at init time
     for each model / geometry / ...
@@ -267,56 +267,56 @@ What that means is you should setup all of your attributes at init time now.
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
       gl.bindVertexArray(null);
 
-Then at render time to use a particular geometry all you need to do
-is
+Então no tempo de renderização para usar uma geometria particular, tudo o que você precisa fazer 
+é
 
     gl.bindVertexArray(vaoForGeometry);
 
-In WebGL1 the init loop object would have appeared at render time.
-This is a HUGE speed up!
+No WebGL1, o objeto de loop de inicialização teria aparecido no tempo de renderização.
+Esta é uma grande velocidade!
 
-There are a few caveats though:
+Há algumas advertências:
 
-1.  attribute locations are program dependent.
+1.  Os locais de atributo dependem do programa.
 
-    If you're going to use the same geometry with multiple
-    programs consider manually assinging attribute locations.
-    In GLSL 300 es you can do this in the shader
+    Se você estiver usando a mesma geometria com vários programas,
+    considere atribuir manualmente locais de atributo.
+    No GLSL 300 es você pode fazer isso no shader
 
-    For example:
+    Por example:
 
         layout(location = 0) in vec4 a_position;
         layout(location = 1) in vec2 a_texcoord;
         layout(location = 2) in vec3 a_normal;
         layout(location = 3) in vec4 a_color;
 
-    Sets the locations of the 4 attributes.
+    Define os locais dos 4 atributos.
 
-    You can also still do it the WebGL1 way by calling
-    `gl.bindAttribLocation` before calling `gl.linkProgram`.
+    Você ainda pode fazer o modo WebGL1 chamando
+    `gl.bindAttribLocation` antes de chamar `gl.linkProgram`.
 
-    For example:
+    Por example:
 
         gl.bindAttribLocation(someProgram, 0, "a_position");
         gl.bindAttribLocation(someProgram, 1, "a_texcoord");
         gl.bindAttribLocation(someProgram, 2, "a_normal");
         gl.bindAttribLocation(someProgram, 3, "a_color");
 
-    This means you can force them to be comptible across multiple shader
-    programs. If one program doesn't need all attributes
-    the attributes they do need will still be assigned to
-    the same locations
+    Isso significa que você pode forçá-los a serem compatíveis em vários programas de
+    shader. Se um programa não precisa de todos os atributos,
+    os atributos que eles precisam ainda serão atribuídos
+    aos mesmos locais
 
-    If you don't do this you'll need different VAOs for
-    different shader programs when using same geometry OR
-    you'll need to just do the WebGL1 thing and not use
-    VAOs and always setup attributes at render time which is slow.
+    Se você não fizer isso, você precisará de VAOs diferentes
+    para diferentes programas de shader ao usar a mesma geometria OR,
+    você precisará apenas fazer a WebGL1 e não usar
+    VAOs e sempre configurar atributos no tempo de renderização, o que é lento.
 
-    NOTE: of the 2 methods above I'm leaning toward using
-    `gl.bindAttribLocation` because it's easy to have it in one
-    place in my code where as the method of using `layout(location = ?)` has
-    to be in all shaders so in the interest of D.R.Y. `gl.bindAttribLocation`
-    seems better. Maybe if I was using a shader generator then there'd be no difference.
+    NOTA: dos 2 métodos acima, eu me inclino para usar o 
+    `gl.bindAttribLocation`  porque é fácil tê-lo em um lugar no meu código onde,
+    o método de usar layout `layout(location = ?)` deve
+    estar em todos os shaders, então, no interesse de DRY `gl.bindAttribLocation`
+    parece melhor. Talvez, se eu estivesse usando um gerador de shader, não haveria diferença.
 
 2.  Always unbind the VAO when you're done
 
