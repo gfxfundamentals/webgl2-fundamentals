@@ -19,7 +19,7 @@ Se você já está familiarizado com a WebGL1, talvez esteja interessado em conf
 
 #Table of Contents
 
-{{{include "webgl/lessons/toc.html"}}}
+{{{include "webgl/lessons/pt-br/toc.html"}}}
 
 
 <!--
