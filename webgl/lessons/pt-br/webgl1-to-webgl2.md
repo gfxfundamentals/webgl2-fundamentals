@@ -318,32 +318,32 @@ Há algumas advertências:
     estar em todos os shaders, então, no interesse de DRY `gl.bindAttribLocation`
     parece melhor. Talvez, se eu estivesse usando um gerador de shader, não haveria diferença.
 
-2.  Always unbind the VAO when you're done
+2.  Sempre desvincular o VAO quando terminar
 
         gl.bindVertexArray(null);
 
-    This just comes from my own experience. If you look above
-    the `ELEMENT_ARRAY_BUFFER` state is part of a Vertex Array.
+    Isso só vem da minha própria experiência. Se você olhar acima, o
+    estado `ELEMENT_ARRAY_BUFFER` faz parte de uma Vertex Array.
 
-    So, I ran into this issue. I created some geometry, then
-    I created a VAO for that geometry and set up the attributes
-    and `ELEMENT_ARRAY_BUFFER`. I then created some more
-    geometry. When that geometry setup its indices, because
-    I still had the previous VAO bound setting up the indices
-    effected the `ELEMENT_ARRAY_BUFFER` binding for the previous
-    VAO. It took me several hours to debug.
+    Então, encontrei esse problema. Eu criei uma geometria, então
+    criei um VAO para essa geometria e configurei os atributos
+    e `ELEMENT_ARRAY_BUFFER`. Então criei mais
+    geometria. Quando essa geometria configurou seus índices, porque
+    eu ainda tinha o anterior VAO ligado configuração os índices
+    efectuados a `ELEMENT_ARRAY_BUFFER` vinculativo para o anterior
+    VAO. Levei várias horas para depurar.
 
-    So, my suggestion is never leave a VAO bound if you're done
-    with it. Either immediately bind the next VAO you're going
-    to use or if you're done bind `null`
+    Então, minha sugestão nunca é deixar um link VAO se você terminar
+    com isso. Ou vincule imediatamente o próximo VAO que você vai
+    usar ou, se tiver terminado, vincule `null`
 
-That's my personal short list of things to be aware of when switching
-from WebGL1 to WebGL2. [There's even more stuff you can do in WebGL2 though](webgl2-whats-new.html).
+Essa é minha pequena lista pessoal de coisas a serem conhecidas ao mudar
+de WebGL1 para WebGL2. [Há ainda mais coisas que você pode fazer no WebGL2 embora](webgl2-whats-new.html).
 
 <div class="webgl_bottombar">
-<h3>Making WebGL1 extensions look like WebGL2</h3>
-<p>Functions that were on extensions in WebGL1 are now on the main
-context in WebGL2. For example in WebGL</p>
+<h3>Fazendo as extensões WebGL1 parecer WebGL2</h3>
+<p>As funções que estavam em extensões no WebGL1 estão agora no contexto principal
+no WebGL2. Por exemplo, no WebGL</p>
 <pre class="prettyprint">
 var ext = gl.getExtension("OES_vertex_array_object");
 if (!ext) {
@@ -353,15 +353,15 @@ if (!ext) {
 }
 </pre>
 <p>
-vs in webgl2
+vs em webgl2
 </p>
 <pre class="prettyprint">
 var someVAO = gl.createVertexArray();
 </pre>
-<p>As you can see if you want your code to run in both WebGL1 and WebGL2
-that can present some challenges.</p>
-<p>One workaround would be to copy WebGL1 extensions to the WebGL context at init time.
-That way the rest of your code can stay the same. Example:</p>
+<p>Acomo você pode ver se você deseja que seu código seja executado tanto no WebGL1 quanto no WebGL2,
+que pode apresentar alguns desafios.</p>
+<p>Uma solução seria copiar extensões WebGL1 ao contexto WebGL em tempo de inicialização.
+Dessa forma, o resto do seu código pode permanecer o mesmo. Exemplo:</p>
 <pre class="prettyprint">
 var gl = someCanvas.getContext("webgl");
 var haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object"));
@@ -388,7 +388,7 @@ function getAndApplyExtension(gl, name) {
     }
   }
 </pre>
-<p>Now your code can mostly just work the same on both. Example:</p>
+<p>Agora, seu código pode funcionar da mesma forma em ambos. Exemplo:</p>
 <pre class="prettyprint">
 if (haveVAOs) {
   var someVAO = gl.createVertexArray();
@@ -397,7 +397,7 @@ if (haveVAOs) {
   ... do whatever for no VAOs.
 }
 </pre>
-<p>The alternative would be having to do something like this</p>
+<p>A alternativa seria ter que fazer algo assim</p>
 <pre class="prettyprint">
 if (haveVAOs) {
   if (isWebGL2)
@@ -410,8 +410,8 @@ if (haveVAOs) {
   ... do whatever for no VAOs.
 }
 </pre>
-<p>Note: In the case of Vertex Array Objects in particular I suggest you <a href="https://github.com/greggman/oes-vertex-array-object-polyfill">use a polyfill</a>
-so you'll have them everywhere. VAOs are available on most systems. Those few system
-where they aren't available the polyfill will handle for you and your code
-can stay simple.</p>
+<p>Nota: No caso dos objetos Vertex Array em particular, sugiro que você <a href="https://github.com/greggman/oes-vertex-array-object-polyfill">use a polyfill</a>
+para que você os tenha em todos os lugares. Os VAOs estão disponíveis na maioria dos sistemas.
+Aqueles poucos sistemas onde eles não estão disponíveis o polyfill irá lidar com você e seu código
+pode ficar simples.</p>
 </div>
