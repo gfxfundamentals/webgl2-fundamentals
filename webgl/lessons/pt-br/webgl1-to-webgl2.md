@@ -1,23 +1,23 @@
-Title: WebGL2 from WebGL1
-Description: How to move from WebGL1 to WebGL2
+Title: WebGL2 da WebGL1
+Description: Como passar da WebGL1 para a WebGL2
 
-WebGL2 is nearly 100% backward compatible with WebGL1.
-If you only use WebGL1 features then then there are
-only 2 differences.
+WebGL2 é quase 100% compatível com o WebGL1.
+Se você usar apenas os recursos da WebGL1, então há
+apenas 2 diferenças.
 
-1.  You use `"webgl2"` instead of `"webgl"` when calling `getContext`
+1.  Você usa `" webgl2 "` em vez de `" webgl "` ao chamar `getContext`
 
         var gl = someCanvas.getContext("webgl2");
 
-    Note: there is no "experimental-webgl2". The browser vendors got
-    together and decided no more prefixing things because websites
-    get dependent on the prefix.
+    Nota: não há "experimental-webgl2". Os fornecedores do navegador se
+    reuniram e decidiram não mais prefixar coisas porque os sites
+    dependem do prefixo.
 
-2.  Many extensions are a standard part of WebGL2 and so not available
-    as extensions
+2.  Muitas extensões são uma parte padrão da WebGL2 e, portanto, não estão disponíveis
+    como extensões
 
-    For example Vertex Array Objects `OES_vertex_array_object` is a
-    standard feature of WebGL2. So for example in WebGL1 you'd do this
+    Por exemplo, objeto Vertex Array `OES_vertex_array_object` é uma
+    característica padrão da WebGL2. Então, por exemplo, na WebGL1 você faria isso
 
         var ext = gl.getExtension("OES_vertex_array_object");
         if (!ext) {
@@ -26,16 +26,16 @@ only 2 differences.
           var someVAO = ext.createVertexArrayOES();
         }
 
-    In WebGL2 you'd do this
+    Na WebGL2 você faria isso
 
         var someVAO = gl.createVertexArray();
 
-    Because it just exists.
+    Porque ele só existe.
 
-Otherwise all your WebGL1 stuff should just work.
+Caso contrário, todas as suas coisas WebGL1 devem funcionar.
 
-That being said to take advantage of most WebGL2 features you'll need to make
-some changes.
+Dito isso, para tirar proveito da maioria dos recursos da WebGL2 você precisará fazer
+algumas mudanças.
 
 ## Switch to GLSL 300 es
 
