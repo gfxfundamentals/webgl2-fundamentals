@@ -317,7 +317,7 @@ void main() {
         lmat = m4.multiply(m4.yRotation(lightRotationY), lmat);
         // get the zAxis from the matrix
         // negate it because lookAt looks down the -Z axis
-        lightDirection = [-lmat[8], -lmat[9],-lmat[10]];
+        lightDirection = [-lmat[8], -lmat[9], -lmat[10]];
     }
 
     gl.uniform3fv(lightDirectionLocation, lightDirection);
@@ -460,7 +460,8 @@ function setGeometry(gl) {
           0, 150,  30,
           0,   0,   0,
           0, 150,  30,
-          0, 150,   0]);
+          0, 150,   0,
+      ]);
 
   // Center the F around the origin and Flip it around. We do this because
   // we're in 3D now with and +Y is up where as before when we started with 2D
@@ -469,7 +470,7 @@ function setGeometry(gl) {
   // We could do by changing all the values above but I'm lazy.
   // We could also do it with a matrix at draw time but you should
   // never do stuff at draw time if you can do it at init time.
-  var matrix = m4.xRotation(Math.PI),
+  var matrix = m4.xRotation(Math.PI);
   matrix = m4.translate(matrix, -50, -75, -15);
 
   for (var ii = 0; ii < positions.length; ii += 3) {
@@ -610,7 +611,8 @@ function setNormals(gl) {
           -1, 0, 0,
           -1, 0, 0,
           -1, 0, 0,
-          -1, 0, 0]);
+          -1, 0, 0,
+      ]);
   gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
 }
 
