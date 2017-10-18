@@ -21,7 +21,7 @@ apenas 2 diferenças.
 
         var ext = gl.getExtension("OES_vertex_array_object");
         if (!ext) {
-          // tell user they don't have the required extension or work around it
+          // Diga ao usuário que ele não têm a extensão necessária ou trabalhar em torno dela
         } else {
           var someVAO = ext.createVertexArrayOES();
         }
@@ -48,8 +48,8 @@ fazer isso, a primeira linha de seus shaders precisa ser
 
 Em outras palavras, isso é ruim
 
-    // BAD!!!!                +---There's a new line here!
-    // BAD!!!!                V
+    // RUIM!!!!                +---Há uma nova linha aqui!
+    // RUIM!!!!                V
     var vertexShaderSource = `
     #version 300 es
     ..
@@ -57,7 +57,7 @@ Em outras palavras, isso é ruim
 
 Isso também é ruim
 
-    <!-- BAD!!                   V<- there's a new line here
+    <!-- RUIM!!                   V<- há uma nova linha aqui!
     <script id="vs" type="notjs">
     #version 300 es
     ...
@@ -255,7 +255,7 @@ Faz uma nova instância da coisa acima chamada `attributeState`.
 
 O que isto significa é que você deve configurar todos os seus atributos em tempo de inicialização agora.
 
-    // at init time
+    // no tempo inicial
     for each model / geometry / ...
       var vao = gl.createVertexArray()
       gl.bindVertexArray(vao);
@@ -347,7 +347,7 @@ no WebGL2. Por exemplo, no WebGL</p>
 <pre class="prettyprint">
 var ext = gl.getExtension("OES_vertex_array_object");
 if (!ext) {
-  // tell user they don't have the required extension or work around it
+  // Diga ao usuário que ele não têm a extensão necessária ou trabalhar em torno dela
 } else {
   var someVAO = ext.createVertexArrayOES();
 }
@@ -378,7 +378,7 @@ function getAndApplyExtension(gl, name) {
   for (var key in ext) {
     var val = ext[key];
     if (typeof(val) === 'function') {
-      // remove suffix (eg: bindVertexArrayOES -> bindVertexArray)
+      // remover sufixo (ex: bindVertexArrayOES -> bindVertexArray)
       var unsuffixedKey = key.replace(suffixRE, '');
       if (key.substing)
       gl[unprefixedKey] = ext[key].bind(ext);
