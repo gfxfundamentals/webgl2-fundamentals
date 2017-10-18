@@ -1,13 +1,13 @@
 Title: Nomenclaturas das Matrizes WebGL
 Description: Nomenclaturas comuns das matrizes
 
-Esta publicação é a continuação de uma série de postagens sobre o WebGL. O primeiro artigo
-[apresentou os fundamentos do WebGL](webgl-fundamentals.html) e o anterior
+Esta publicação é a continuação de uma série de postagens sobre a WebGL. O primeiro artigo
+[apresentou os fundamentos da WebGL](webgl-fundamentals.html) e o anterior
 foi [sobre câmeras 3D](webgl-3d-cameras.html).
 
-Como todo o site falou que, praticamente tudo no WebGL é
-100% feito por você. Com excessão de alguns nomes pré-definidos como `gl_Position`,
-quase tudo no WebGL é definido por você, programador.
+Como todo o site falou que, praticamente tudo na WebGL é
+100% feito por você - com excessão de alguns nomes pré-definidos como `gl_Position` -
+quase tudo na WebGL poderá ser definido por você, programador.
 
 Dito isto, existem algumas convenções de nomenclatura comuns ou semi-comuns. Especialmente
 quando se trata de matrizes. Eu não sei quem apresentou primeiro essas nomenclaturas. Eu
@@ -59,8 +59,8 @@ E para transpor
     worldInverseTranpose = transpose(inverse(world))
 
 Espero que conhecendo esses termos, você possa olhar para o shader de outra pessoa
-e se você tiver sorte, eles usaram nomes que são parecidos ou muito semelhantes
-a esses. E então, você poderá aproveitar o que esses Shaders estão
+e, se você tiver sorte, eles usaram nomes que são parecidos ou muito semelhantes
+a esses apresentados aqui. Então, você poderá aproveitar o que esses shaders estão
 fazendo.
 
 Agora vamos [aprender sobre animação, a seguir](webgl-animation.html).
