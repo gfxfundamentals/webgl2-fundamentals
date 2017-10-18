@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>WebGL2 - 3D Point Lighting Specular</title>
+<title>WebGL - 3D Spot Lighting with falloff</title>
 <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
 </head>
 <body>
@@ -15,6 +15,10 @@ Drag slider to rotate F.
 <div id="uiContainer">
   <div id="ui">
     <div id="fRotation"></div>
+    <div id="lightRotationX"></div>
+    <div id="lightRotationY"></div>
+    <div id="innerLimit"></div>
+    <div id="outerLimit"></div>
   </div>
 </div>
 </body>
@@ -27,15 +31,21 @@ for webgl-utils, m3, m4, and webgl-lessons-ui.
 -->
 <script src="resources/webgl-utils.js"></script>
 <script src="resources/webgl-lessons-ui.js"></script>
-<script src="resources/webgl-lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
+<script src="resources/webgl-lessons-helper.js"></script> <!-- you can and should delete this script. it is only used on the site to help with errors -->
 <script src="resources/m4.js"></script>
 <script>
 "use strict";
 
-var vertexShaderSource = `#version 300 es
+function main() {
+  // Get A WebGL context
+  /** @type {HTMLCanvasElement} */
+  var canvas = document.getElementById("canvas");
+  var gl = canvas.getContext("webgl2");
+  if (!gl) {
+    return;
+  }
 
-// an attribute is an input (in) to a vertex shader.
-// It will receive data from a buffer
+  const vertexShaderSource = `#version 300 es
 in vec4 a_position;
 in vec3 a_normal;
 
@@ -46,12 +56,11 @@ uniform mat4 u_world;
 uniform mat4 u_worldViewProjection;
 uniform mat4 u_worldInverseTranspose;
 
-// varyings to pass values to the fragment shader
 out vec3 v_normal;
+
 out vec3 v_surfaceToLight;
 out vec3 v_surfaceToView;
 
-// all shaders have a main function
 void main() {
   // Multiply the position by the matrix.
   gl_Position = u_worldViewProjection * a_position;
@@ -72,23 +81,26 @@ void main() {
 }
 `;
 
-var fragmentShaderSource = `#version 300 es
-
+  const fragmentShaderSource = `#version 300 es
 precision mediump float;
 
-// Passed in and varied from the vertex shader.
+// Passed in from the vertex shader.
 in vec3 v_normal;
 in vec3 v_surfaceToLight;
 in vec3 v_surfaceToView;
 
 uniform vec4 u_color;
+uniform float u_shininess;
+uniform vec3 u_lightDirection;
+uniform float u_innerLimit;          // in dot space
+uniform float u_outerLimit;          // in dot space
 
 // we need to declare an output for the fragment shader
 out vec4 outColor;
 
 void main() {
   // because v_normal is a varying it's interpolated
-  // so it will not be a uint vector. Normalizing it
+  // we it will not be a uint vector. Normalizing it
   // will make it a unit vector again
   vec3 normal = normalize(v_normal);
 
@@ -96,10 +108,12 @@ void main() {
   vec3 surfaceToViewDirection = normalize(v_surfaceToView);
   vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);
 
-  // compute the light by taking the dot product
-  // of the normal to the light's reverse direction
-  float light = dot(normal, surfaceToLightDirection);
-  float specular = dot(normal, halfVector);
+  float dotFromDirection = dot(surfaceToLightDirection,
+                               -u_lightDirection);
+  float limitRange = u_innerLimit - u_outerLimit;
+  float inLight = clamp((dotFromDirection - u_outerLimit) / limitRange, 0.0, 1.0);
+  float light = inLight * dot(normal, surfaceToLightDirection);
+  float specular = inLight * pow(dot(normal, halfVector), u_shininess);
 
   outColor = u_color;
 
@@ -112,16 +126,7 @@ void main() {
 }
 `;
 
-function main() {
-  // Get A WebGL context
-  /** @type {HTMLCanvasElement} */
-  var canvas = document.getElementById("canvas");
-  var gl = canvas.getContext("webgl2");
-  if (!gl) {
-    return;
-  }
-
-  // Use our boilerplate utils to compile the shaders and link into a program
+  // setup GLSL program
   var program = webglUtils.createProgramFromSources(gl,
       [vertexShaderSource, fragmentShaderSource]);
 
@@ -129,18 +134,21 @@ function main() {
   var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
   var normalAttributeLocation = gl.getAttribLocation(program, "a_normal");
 
-  // look up uniform locations
-  var worldViewProjectionLocation =
-      gl.getUniformLocation(program, "u_worldViewProjection");
-  var worldInverseTransposeLocation =
-      gl.getUniformLocation(program, "u_worldInverseTranspose");
+  // lookup uniforms
+  var worldViewProjectionLocation = gl.getUniformLocation(program, "u_worldViewProjection");
+  var worldInverseTransposeLocation = gl.getUniformLocation(program, "u_worldInverseTranspose");
   var colorLocation = gl.getUniformLocation(program, "u_color");
+  var shininessLocation = gl.getUniformLocation(program, "u_shininess");
+  var lightDirectionLocation = gl.getUniformLocation(program, "u_lightDirection");
+  var innerLimitLocation = gl.getUniformLocation(program, "u_innerLimit");
+  var outerLimitLocation = gl.getUniformLocation(program, "u_outerLimit");
   var lightWorldPositionLocation =
       gl.getUniformLocation(program, "u_lightWorldPosition");
   var viewWorldPositionLocation =
       gl.getUniformLocation(program, "u_viewWorldPosition");
   var worldLocation =
       gl.getUniformLocation(program, "u_world");
+
 
   // Create a vertex array object (attribute state)
   var vao = gl.createVertexArray();
@@ -150,6 +158,9 @@ function main() {
 
   // Turn on the attribute
   gl.enableVertexAttribArray(positionAttributeLocation);
+
+  // Create a buffer
+  var positionBuffer = gl.createBuffer();
 
   // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -192,18 +203,46 @@ function main() {
     return d * Math.PI / 180;
   }
 
-  // First let's make some variables
-  // to hold the translation,
   var fieldOfViewRadians = degToRad(60);
   var fRotationRadians = 0;
+  var shininess = 150;
+  var lightRotationX = 0;
+  var lightRotationY = 0;
+  var lightDirection = [0, 0, 1];  // this is computed in updateScene
+  var innerLimit = degToRad(10);
+  var outerLimit = degToRad(20);
 
   drawScene();
 
   // Setup a ui.
   webglLessonsUI.setupSlider("#fRotation", {value: radToDeg(fRotationRadians), slide: updateRotation, min: -360, max: 360});
+  webglLessonsUI.setupSlider("#lightRotationX", {value: lightRotationX, slide: updatelightRotationX, min: -2, max: 2, precision: 2, step: 0.001});
+  webglLessonsUI.setupSlider("#lightRotationY", {value: lightRotationY, slide: updatelightRotationY, min: -2, max: 2, precision: 2, step: 0.001});
+  webglLessonsUI.setupSlider("#innerLimit", {value: radToDeg(innerLimit), slide: updateInnerLimit, min: 0, max: 180});
+  webglLessonsUI.setupSlider("#outerLimit", {value: radToDeg(outerLimit), slide: updateOuterLimit, min: 0, max: 180});
 
   function updateRotation(event, ui) {
     fRotationRadians = degToRad(ui.value);
+    drawScene();
+  }
+
+  function updatelightRotationX(event, ui) {
+    lightRotationX = ui.value;
+    drawScene();
+  }
+
+  function updatelightRotationY(event, ui) {
+    lightRotationY = ui.value;
+    drawScene();
+  }
+
+  function updateInnerLimit(event, ui) {
+    innerLimit = degToRad(ui.value);
+    drawScene();
+  }
+
+  function updateOuterLimit(event, ui) {
+    outerLimit = degToRad(ui.value);
     drawScene();
   }
 
@@ -214,15 +253,15 @@ function main() {
     // Tell WebGL how to convert from clip space to pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-    // Clear the canvas
-    gl.clearColor(0, 0, 0, 0);
+    // Clear the canvas AND the depth buffer.
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // turn on depth testing
-    gl.enable(gl.DEPTH_TEST);
-
-    // tell webgl to cull faces
+    // Turn on culling. By default backfacing triangles
+    // will be culled.
     gl.enable(gl.CULL_FACE);
+
+    // Enable the depth buffer
+    gl.enable(gl.DEPTH_TEST);
 
     // Tell it to use our program (pair of shaders)
     gl.useProgram(program);
@@ -230,7 +269,7 @@ function main() {
     // Bind the attribute/buffer set we want.
     gl.bindVertexArray(vao);
 
-    // Compute the matrix
+    // Compute the projection matrix
     var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
     var zNear = 1;
     var zFar = 2000;
@@ -245,35 +284,51 @@ function main() {
     // Make a view matrix from the camera matrix.
     var viewMatrix = m4.inverse(cameraMatrix);
 
-    // create a viewProjection matrix. This will both apply perspective
-    // AND move the world so that the camera is effectively the origin
+    // Compute a view projection matrix
     var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
 
-    // Draw a F at the origin with rotation
+    // Draw a F at the origin
     var worldMatrix = m4.yRotation(fRotationRadians);
+
+    // Multiply the matrices.
     var worldViewProjectionMatrix = m4.multiply(viewProjectionMatrix, worldMatrix);
     var worldInverseMatrix = m4.inverse(worldMatrix);
     var worldInverseTransposeMatrix = m4.transpose(worldInverseMatrix);
 
     // Set the matrices
-    gl.uniformMatrix4fv(
-        worldLocation, false,
-        worldMatrix);
-    gl.uniformMatrix4fv(
-        worldViewProjectionLocation, false,
-        worldViewProjectionMatrix);
-    gl.uniformMatrix4fv(
-        worldInverseTransposeLocation, false,
-        worldInverseTransposeMatrix);
+    gl.uniformMatrix4fv(worldViewProjectionLocation, false, worldViewProjectionMatrix);
+    gl.uniformMatrix4fv(worldInverseTransposeLocation, false, worldInverseTransposeMatrix);
+    gl.uniformMatrix4fv(worldLocation, false, worldMatrix);
 
     // Set the color to use
     gl.uniform4fv(colorLocation, [0.2, 1, 0.2, 1]); // green
 
     // set the light position
-    gl.uniform3fv(lightWorldPositionLocation, [20, 30, 60]);
+    const lightPosition = [40, 60, 120];
+    gl.uniform3fv(lightWorldPositionLocation, lightPosition);
 
     // set the camera/view position
     gl.uniform3fv(viewWorldPositionLocation, camera);
+
+    // set the shininess
+    gl.uniform1f(shininessLocation, shininess);
+
+    // set the spotlight uniforms
+
+    // since we don't have a plane like most spotlight examples
+    // let's point the spot light at the F
+    {
+        var lmat = m4.lookAt(lightPosition, target, up);
+        lmat = m4.multiply(m4.xRotation(lightRotationX), lmat);
+        lmat = m4.multiply(m4.yRotation(lightRotationY), lmat);
+        // get the zAxis from the matrix
+        // negate it because lookAt looks down the -Z axis
+        lightDirection = [-lmat[8], -lmat[9], -lmat[10]];
+    }
+
+    gl.uniform3fv(lightDirectionLocation, lightDirection);
+    gl.uniform1f(innerLimitLocation, Math.cos(innerLimit));
+    gl.uniform1f(outerLimitLocation, Math.cos(outerLimit));
 
     // Draw the geometry.
     var primitiveType = gl.TRIANGLES;
@@ -283,8 +338,7 @@ function main() {
   }
 }
 
-// Fill the current ARRAY_BUFFER buffer
-// with the values that define a letter 'F'.
+// Fill the buffer with the values that define a letter 'F'.
 function setGeometry(gl) {
   var positions = new Float32Array([
           // left column front
@@ -414,7 +468,7 @@ function setGeometry(gl) {
           0,   0,   0,
           0, 150,  30,
           0, 150,   0,
-  ]);
+      ]);
 
   // Center the F around the origin and Flip it around. We do this because
   // we're in 3D now with and +Y is up where as before when we started with 2D
@@ -427,7 +481,7 @@ function setGeometry(gl) {
   matrix = m4.translate(matrix, -50, -75, -15);
 
   for (var ii = 0; ii < positions.length; ii += 3) {
-    var vector = m4.transformVector(matrix, [positions[ii + 0], positions[ii + 1], positions[ii + 2], 1]);
+    var vector = m4.transformPoint(matrix, [positions[ii + 0], positions[ii + 1], positions[ii + 2], 1]);
     positions[ii + 0] = vector[0];
     positions[ii + 1] = vector[1];
     positions[ii + 2] = vector[2];
@@ -565,12 +619,11 @@ function setNormals(gl) {
           -1, 0, 0,
           -1, 0, 0,
           -1, 0, 0,
-  ]);
+      ]);
   gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
 }
 
 main();
 </script>
 </html>
-
 
