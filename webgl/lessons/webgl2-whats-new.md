@@ -1,10 +1,17 @@
 Title: WebGL2 O que há de novo
 Description: O que há de novo no WebGL2
 
+<<<<<<< HEAD
 WebGL2 é uma atualização bastante significativa do WebGL1.
 Se você está vindo do WebGL1 e quer saber
 como ajustar seu código para que você possa aproveitar
 do WebGL2 [veja este artigo](webgl1-to-webgl2.html).
+=======
+WebGL2 is a pretty significant upgrade from WebGL1.
+If you're coming from WebGL1 and you want to know
+how to adjust your code so you can take advantage
+of WebGL2 [see this article](webgl1-to-webgl2.html).
+>>>>>>> master
 
 Aqui está uma pequena lista sem uma ordem específica
 
@@ -18,7 +25,7 @@ always use them](webgl1-to-webgl2.html#Vertex-Array-Objects).
 ## The size of a texture is available to shaders.
 
 In WebGL1 if your shader needed to know the size of
-a texture you had to pass the size in uniform manaully.
+a texture you had to pass the size in uniform manually.
 In WebGL2 you can call
 
     vec2 size = textureSize(sampler, lod)
@@ -29,9 +36,9 @@ To get the size of any lod of a texture
 
 It's often convenient to store large arrays of data in a texture.
 In WebGL 1 you could do that but you could only address textures
-with texture cooridnates (0.0 to 1.0). In WebGL2 you can look
+with texture coordinates (0.0 to 1.0). In WebGL2 you can look
 up values from a texture by pixel/texel coordinates directly
-making array access slighly easier
+making array access slightly easier
 
     vec4 values = texelFetch(sampler, ivec2Position, lod);
 
@@ -127,7 +134,7 @@ pass it in as a uniform. In WebGL2 GLSL 300 es there's the built in
 ## Common compressed textures
 
 In WebGL1 there are various compressed texture formats
-that are hardware dependent. S3TC was bascially desktop only.
+that are hardware dependent. S3TC was basically desktop only.
 PVTC was iOS only. Etc..
 
 In WebGL2 these formats are supposed to be supported everywhere
@@ -152,7 +159,7 @@ from a buffer. The advantages are
    outside of WebGL
 
    In WebGL1 if you had 16 uniforms that would require
-   16 calls to `gl.uinformXXX`. That is relatively slow.
+   16 calls to `gl.uniformXXX`. That is relatively slow.
    In WebGL2 if you use
    a Uniform Buffer Object you can set the values in
    a typed array all inside JavaScript which means it's
@@ -190,7 +197,7 @@ from a buffer. The advantages are
 
    Then at runtime you could create one global uniform buffer
    object, one model uniform buffer object per model, one
-   light uinform buffer object per light and one uniform buffer
+   light uniform buffer object per light and one uniform buffer
    object per material.
 
    To draw any particular item assuming all the values are
@@ -225,7 +232,7 @@ In WebGL2 you can optionally use sampler objects. With
 samplers, all the filtering and repeat/clamping parameters
 that were part of a texture move to the sampler. This means
 a single texture can be sampled in different ways. Repeating
-or clampped. Filtered or not filtered.
+or clamped. Filtered or not filtered.
 
 A mini side rant: I've written 6 game engines. I've never
 personally ever had a artist need to filter textures in
@@ -271,7 +278,7 @@ devices supported them. In WebGL2 that count is required to be at least 16.
 ## Multi-Sampled renderbuffers
 
 In WebGL1 the canvas itself could be anti-aliased with the GPU's built in
-multi-sample system but there was no support for user controlled mutli-sampling. In WebGL2
+multi-sample system but there was no support for user controlled multi-sampling. In WebGL2
 you can now make multi-sampled renderbuffers.
 
 ## Occlusion Queries
