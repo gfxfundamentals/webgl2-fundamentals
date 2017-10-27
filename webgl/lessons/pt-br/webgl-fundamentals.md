@@ -193,17 +193,18 @@ em literais de templates multilinha.
     }
     `;
 
-In fact, most 3D engines generate GLSL shaders on the fly using various types of templates, concatenation, etc.
-For the samples on this site though none of them are complex enough to need to generate GLSL at runtime.
+Na verdade, a maioria dos motores 3D geram shaders GLSL com case em vários tipos de templates, concatenação, etc.
+Para as amostras neste site, nenhuma delas é suficientemente complexa para precisar
+gerar GLSL em tempo de execução.
 
-> NOTE: `#version 300 es` **MUST BE THE VERY FIRST LINE OF YOUR SHADER**. No comments or
-> blank lines are allowed before it! `#version 300 es` tells WebGL2 you want to use WebGL2's
-> shader language called GLSL ES 3.00. If you don't put that as the first line the shader
-> language defaults to WebGL 1.0's GLSL ES 1.00 which has many differences and far less features.
+> NOTE: `#version 300 es` **DEVE SER A PRIMEIRA LINHA DO SEUS SHADER**. Nenhum comentário ou
+> linhas em branco são permitidas antes dele! `#version 300 es` diz para a WebGL2 que você deseja
+> usar a linguagem de shader da WebGL2, chamada GLSL ES 3.00. Se você não colocar isso como a primeira linha, a linguagem padrão
+> do shader será definida para a da WebGL 1.0, a GLSL ES 1.00 que possui muitas diferenças e bem menos recursos.
 
-Next we need a function that will create a shader, upload the GLSL source, and compile the shader.
-Note I haven't written any comments because it should be clear from the names of the functions
-what is happening.
+Em seguida, precisamos de uma função que irá criar uma shader, faça o upload da fonte GLSL e compile o shader.
+Note que eu não escrevi nenhum comentários visto que através do nome das funções é fácil
+compreender o que está acontecendo.
 
     function createShader(gl, type, source) {
       var shader = gl.createShader(type);
@@ -218,12 +219,12 @@ what is happening.
       gl.deleteShader(shader);
     }
 
-We can now call that function to create the 2 shaders
+Agora podemos chamar essa função para criar os 2 shaders
 
     var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
     var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 
-We then need to *link* those 2 shaders into a *program*
+Nós, então, precisamos *linkar* aqueles 2 shaders em um *program*
 
     function createProgram(gl, vertexShader, fragmentShader) {
       var program = gl.createProgram();
@@ -239,35 +240,35 @@ We then need to *link* those 2 shaders into a *program*
       gl.deleteProgram(program);
     }
 
-And call it
+E chame isso
 
     var program = createProgram(gl, vertexShader, fragmentShader);
 
-Now that we've created a GLSL program on the GPU we need to supply data to it.
-The majority of the WebGL API is about setting up state to supply data to our GLSL programs.
-In this case our only input to our GLSL program is `a_position` which is an attribute.
-The first thing we should do is look up the location of the attribute for the program
-we just created
+Agora que criamos um programa GLSL na GPU, precisamos fornecer dados para ele.
+A maioria da API da WebGL se trata de configurar o estado para fornecer dados aos nossos programas GLSL.
+Nesse caso, nossa única entrada para o nosso programa GLSL é `a_position`, que por sua vez, é um atributo.
+A primeira coisa que devemos fazer é procurar a localização do atributo para o programa
+que nós acabamos de criar
 
     var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
 
-Looking up attribute locations (and uniform locations) is something you should
-do during initialization, not in your render loop.
+Procurar posições de atributos (e locais uniformes) é algo que você deve
+fazer durante a inicialização, e não no seu loop de renderização.
 
-Attributes get their data from buffers so we need to create a buffer
+Atributos obtêm seus dados através de buffers, então, nós precisamos criar um buffer
 
     var positionBuffer = gl.createBuffer();
 
-WebGL lets us manipulate many WebGL resources on global bind points.
-You can think of bind points as internal global variables inside WebGL.
-First you bind a resource to a bind point. Then, all other functions
-refer to the resource through the bind point. So, let's bind the position buffer.
+A WebGL nos permite manipular muitos recursos da WebGL em pontos de consolidação global.
+Você pode pensar em pontos de ligação como variáveis internas globais dentro da WebGL.
+Primeiro, você vincula um recurso a um ponto de ligação. E então, todas as outras funções
+ao recurso através do ponto de ligação. Então, vamos vincular o buffer de posição.
 
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
-Now we can put data in that buffer by referencing it through the bind point
+Agora podemos colocar dados nesse buffer, referenciando-o através do ponto de ligação
 
-    // three 2d points
+    // três pontos 2d
     var positions = [
       0, 0,
       0, 0.5,
@@ -275,74 +276,75 @@ Now we can put data in that buffer by referencing it through the bind point
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-There's a lot going on here. The first thing is we have `positions` which is a
-JavaScript array. WebGL on other hand needs strongly typed data so the part
-`new Float32Array(positions)` creates a new array of 32bit floating point numbers
-and copies the values from `positions`. `gl.bufferData` then copies that data to
-the `positionBuffer` on the GPU. It's using the position buffer because we bound
-it to the `ARRAY_BUFFER` bind point above.
+Há muita coisa acontecendo aqui. A primeira coisa que temos é `positions`, que é um
+array em JavaScript. A WebGL, por outro lado, precisa de dados fortemente tipados, e então
+a parte `new Float32Array(position)` cria uma nova matriz de números de pontos flutuantes de 32 bits
+e copia os valores de `positions`. Então, `gl.bufferData` copia esses dados para o `positionBuffer` na GPU. O
+buffer de posição está sendo usado porque nós o vinculamos ao ponto de ligação `ARRAY_BUFFER` acima.
 
-The last argument, `gl.STATIC_DRAW` is a hint to WebGL about how we'll use the data.
-WebGL can try to use that hint to optimize certain things. `gl.STATIC_DRAW` tells WebGL
-we are not likely to change this data much.
+O último argumento, `gl.STATIC_DRAW` é uma dica para a WebGL sobre como usaremos os dados.
+A WebGL pode tentar usar essa sugestão para otimizar certas coisas. `gl.STATIC_DRAW` diz para a WebGL
+que não é provável que mudemos muito esses dados.
 
-Now that we've put data in a buffer we need to tell the attribute how to get data
-out of it. First we need to create a collection of attribute state called a Vertex Array Object.
+Agora que colocamos dados em um buffer, precisamos mostrar ao atributo como obter os dados dele.
+Primeiro, precisamos criar uma coleção do estado do atributo denominada Vertex Array Object.
 
     var vao = gl.createVertexArray();
 
-And we need to make that the current vertex array so that all of our attribute settings
-will apply to that set of attribute state
+E precisamos fazer com que ele seja o vertex array atual para que todas as nossas
+configurações de atributos se apliquem a esse conjunto de estado de atributos
 
     gl.bindVertexArray(vao);
 
-Now we finally setup the attributes in the vertex array. First off we need to turn the attribute on.
-This tells WebGL we want to get data out of a buffer. If we don't turn on the attribute
-then the attribute will have a constant value.
+Finalmente, nós configuramos os atributos no vertex array. Em primeiro lugar, precisamos ativar o atributo.
+Isso fala para a WebGL que queremos tirar dados de um buffer. Se não ativarmos o atributo, então, o atributo
+terá um valor constante.
 
     gl.enableVertexAttribArray(positionAttributeLocation);
 
-Then we need to specify how to pull the data out
+Então, nós precisamos especificar como obter os dados
 
-    var size = 2;          // 2 components per iteration
-    var type = gl.FLOAT;   // the data is 32bit floats
-    var normalize = false; // don't normalize the data
-    var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-    var offset = 0;        // start at the beginning of the buffer
+    var size = 2;          // 2 componentes por iteração
+    var type = gl.FLOAT;   // os dados são floats de 32bits
+    var normalize = false; // não normalize os dados
+    var stride = 0;        // 0 = mover para frente size * sizeof(type) cada iteração para obter a próxima posição
+    var offset = 0;        // comece no início do buffer
     gl.vertexAttribPointer(
         positionAttributeLocation, size, type, normalize, stride, offset)
 
-A hidden part of `gl.vertexAttribPointer` is that it binds the current `ARRAY_BUFFER`
-to the attribute. In other words now this attribute is bound to
-`positionBuffer`. That means we're free to bind something else to the `ARRAY_BUFFER` bind point.
-The attribute will continue to use `positionBuffer`.
+Uma parte oculta da `gl.vertexAttribPointer` é que ela vincula o atual `ARRAY_BUFFER`
+ao atributo. Em outras palavras, agora esse atributo é obrigado a vincular o `positionBuffer`.
+Isso significa que estamos livres para ligar outra coisa ao ponto de ligação `ARRAY_BUFFER`;
+O atributo continuará usando o `positionBuffer`.
 
-Note that from the point of view of our GLSL vertex shader the `a_position` attribute is a `vec4`
+Observe que, do ponto de vista do nosso GLSL vertex shader, o atributo `a_position` é um `vec4`
 
     in vec4 a_position;
 
-`vec4` is a 4 float value. In JavaScript you could think of it something like
-`a_position = {x: 0, y: 0, z: 0, w: 0}`. Above we set `size = 2`. Attributes
-default to `0, 0, 0, 1` so this attribute will get its first 2 values (x and y)
-from our buffer. The z, and w will be the default 0 and 1 respectively.
+`vec4` é um 4 float value. Em JavaScript, você poderia pensar em algo como
+`a_position = {x: 0, y: 0, z: 0, w: 0}`. Acima, nós definimos `size = 2`. Atributos
+padrão para `0, 0, 0, 1` então esse atributo receberá seus primeiros 2 valores (x e y)
+do nosso buffer. O z e o w, será o padrão 0 e 1, respectivamente.
 
-Before we draw we should resize the canvas to match its display size. Canvases just like Images have 2 sizes.
-The number of pixels actually in them and separately the size they are displayed. CSS determines the size
-the canvas is displayed. **You should always set the size you want a canvas with CSS** since it is far far
-more flexible than any other method.
+Antes de desenharmos, devemos redimensionar nosso canvas (ou nossa tela) para corresponder com o nosso tamanho de exibição. As telas, como as imagens, possuem 2 tamanhos.
+O número real de pixels em si e separadamente o tamanho que eles são exibidos.
+O CSS determina o tamanho que o canvas é exibido. **Você sempre deve definir o tamanho que deseja
+uma tela com o CSS**, pois é muito mais flexível do que qualquer outro método.
 
-To make the number of pixels in the canvas match the size it's displayed
-[I'm using a helper function you can read about here](webgl-resizing-the-canvas.html).
+Para fazer com que o número de pixels na tela coincida com o tamanho exibido
+[eu faço o uso de um helper, mais detalhes aqui](webgl-resizing-the-canvas.html).
 
-In nearly all of these samples the canvas size is 400x300 pixels if the sample is run in its own window
-but stretches to fill the available space if it's inside an iframe like it is on this page.
-By letting CSS determine the size and then adjusting to match we easily handle both of these cases.
+Em quase todas essas amostras, o tamanho da tela é de 400x300 pixels se a anistra for executada 
+em sua própria janela, mas ela se estende para preencher o espaço disponível se estiver dentro de um iframe
+como ele está nesta página.
+Ao permitir que o CSS determine o tamanho e, em seguida, ajuste seus tamanho para  corresponder ao da tela,
+nós facilmente manipulamos ambos os casos.
 
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
-We need to tell WebGL how to convert from the clip space
-values we'll be setting `gl_Position` to back into pixels, often called screen space.
-To do this we call `gl.viewport` and pass it the current size of the canvas.
+Precisamos dizer ao WebGL como converter valores do clip space,
+nós vamos configurar o `gl_Position` de volta para pixels, muitas vezes chamado de screen space.
+Para isso, chamamos `gl.viewport` e passamos o tamanho atual da tela (canvas).
 
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
