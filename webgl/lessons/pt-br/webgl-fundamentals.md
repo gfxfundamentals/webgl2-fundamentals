@@ -69,34 +69,34 @@ Há quatro maneiras de como um shader é capaz de obter dados.
 
 ## WebGL Hello World
 
-WebGL only cares about 2 things. Clipspace coordinates and colors.
-Your job as a programmer using WebGL is to provide WebGL with those 2 things.
-You provide your 2 "shaders" to do this. A Vertex shader which provides the
-clipspace coordinates and a fragment shader that provides the color.
+A WebGL se preocupa apenas com 2 coisas. Coordenadas do Clispace e cores.
+Seu trabalho como programador usando a WebGL é fornecer WebGL com essas 2 coisas.
+Você fornece seus 2 "shaders" para fazer isso. Um vexter shader que fornece fornece as
+coordenadas do Clispace e um fragment shader que fornece a cor.
 
-Clipspace coordinates always go from -1 to +1 no matter what size your
-canvas is. Here is a simple WebGL example that shows WebGL in its simplest form.
+As coordenadas do Clispace sempre vão de -1 a +1, independentemente do tamanho do seu canvas.
+Aqui está um simples exemplo da WebGL que a mostra em sua forma mais simples.
 
-Let's start with a vertex shader
+Vamos começar com um vertex shader
 
     #version 300 es
 
-    // an attribute is an input (in) to a vertex shader.
-    // It will receive data from a buffer
+    // um atributo é um input (in) para um vertex shader.
+    // ele receberá dados de um buffer
     in vec4 a_position;
 
-    // all shaders have a main function
+    // todos os shaders possuem uma função main
     void main() {
 
-      // gl_Position is a special variable a vertex shader
-      // is responsible for setting
+      // gl_Position é uma variável especial de um vertex shader
+      // é responsável pela configuração
       gl_Position = a_position;
     }
 
-When executed, if the entire thing was written in JavaScript instead of GLSL
-you could imagine it would be used like this
+Quando executada, se toda a coisa fosse escrita em JavaScript em vez de GLSL
+você poderia imaginar que isso seria utilizado como o exemplo abaixo
 
-    // *** PSUEDO CODE!! ***
+    // *** PSUEDO CÓDIGO!! ***
 
     var positionBuffer = [
       0, 0, 0, 0,
@@ -110,85 +110,85 @@ you could imagine it would be used like this
       var stride = 4;
       var size = 4;
       for (var i = 0; i < count; ++i) {
-         // copy the next 4 values from positionBuffer to the a_position attribute
+         // copia os 4 próximos valores do positionBuffer para o atributo a_position
          attributes.a_position = positionBuffer.slice((offset + i) * stide, size);
          runVertexShader();
          ...
          doSomethingWith_gl_Position();
     }
 
-In reality it's not quite that simple because `positionBuffer` would need to be converted to binary
-data (see below) and so the actual computation for getting data out of the buffer
-would be a little different but hopefully this gives you an idea of how a vertex
-shader will be executed.
+Na realidade, não é tão simples porque o `positionBuffer` precisa ser convertido em dados
+binários (veja abaixo) e, portanto, o cálculo real para obter os dados do buffer
+seria um pouco diferente, mas espero que isso lhe dê uma ideia de como um vertex shader
+será executado.
 
-Next we need a fragment shader
+Em seguida, nós precisamos de um fragment shader
 
     #version 300 es
 
-    // fragment shaders don't have a default precision so we need
-    // to pick one. mediump is a good default. It means "medium precision"
+    // fragment shaders não tem uma precisão padrão, então nós precisamos
+    // escolher uma. mediump é um bom valor padrão. Do Inglês "medium precision", significa "precisão média"
     precision mediump float;
 
-    // we need to declare an output for the fragment shader
+    // precisamos declarar um output para o fragment shader
     out vec4 outColor;
 
     void main() {
-      // Just set the output to a constant redish-purple
+      // Simplesmente defina o output para um constante com uma cor avermelhada-roxa
       outColor = vec4(1, 0, 0.5, 1);
     }
 
-Above we declared `outColor` as our fragment shader's output. We're setting `outColor` to `1, 0, 0.5, 1`
-which is 1 for red, 0 for green, 0.5 for blue, 1 for alpha. Colors in WebGL go from 0 to 1.
+Acima, nós declaramos `outColor` como um output do nosso fragment shader. Estamos definindo `outColor` com os valores `1, 0, 0.5, 1`
+sendo 1 para vermelho, 0 para verde, 0.5 para azul, 1 para alpha. As cores na WebGL vão de 0 a 1.
 
-Now that we have written the 2 shader functions lets get started with WebGL
+Agora que nós escrevemos as duas funções shaders, vamos iniciar com a WebGL
 
-First we need an HTML canvas element
+Primeiro precisaremos de um elemento canvas do HTML
 
      <canvas id="c"></canvas>
 
-Then in JavaScript we can look that up
+Então, em JavaScript, podemos obtê-lo da seguinte forma
 
      var canvas = document.getElementById("c");
 
-Now we can create a WebGL2RenderingContext
+Agora podemos criar um WebGL2RenderingContext
 
      var gl = canvas.getContext("webgl2");
      if (!gl) {
-        // no webgl2 for you!
+        // sem webgl2 pra você!
         ...
 
-Now we need to compile those shaders to put them on the GPU so first we need to get them into strings.
-You can create your GLSL strings any way you normally create strings in JavaScript. For example by concatenating,
-by using AJAX to download them, by putting them in non-javascript script tags, or in this case in
-multiline template strings.
+Agora precisamos compilar esses shaders para colocá-los na GPU, então primeiro precisaremos inseri-los em strings.
+Você criar suas strings GLSL da maneira que você normalmente cria strings em JavaScript. Por exemplo, concatenando,
+usando AJAX para obtê-las, colocando-as em tags de script non-javascript, ou neste caso,
+em literais de templates multilinha.
 
     var vertexShaderSource = `#version 300 es
 
-    // an attribute is an input (in) to a vertex shader.
-    // It will receive data from a buffer
+    // um atributo é um input (in) para um vertex shader.
+    // ele receberá dados de um buffer
     in vec4 a_position;
-
-    // all shaders have a main function
+	
+	// todos os shaders possuem uma função main
     void main() {
 
-      // gl_Position is a special variable a vertex shader
-      // is responsible for setting
-      gl_Position = a_position;
+    // gl_Position é uma variável especial de um vertex shader
+    // é responsável pela configuração
+    gl_Position = a_position;
     }
     `;
 
     var fragmentShaderSource = `#version 300 es
 
-    // fragment shaders don't have a default precision so we need
-    // to pick one. mediump is a good default. It means "medium precision"
+    // fragment shaders não tem uma precisão padrão, então nós precisamos
+    // escolher uma. mediump é um bom valor padrão. Do Inglês "medium precision", significa "precisão média"
     precision mediump float;
 
-    // we need to declare an output for the fragment shader
+    // precisamos declarar um output para o fragment shader
     out vec4 outColor;
 
     void main() {
-      // Just set the output to a constant redish-purple
+      // Simplesmente defina o output para um constante com uma cor avermelhada-roxa
       outColor = vec4(1, 0, 0.5, 1);
     }
     `;
