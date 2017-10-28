@@ -1,27 +1,27 @@
-Title: WebGL2 Image Processing
-Description: How to image process in WebGL
+Title: Processamento de imagem WebGL2
+Description: Como processar imagens na WebGL
 
-Image processing is easy in WebGL. How easy? Read below.
+O processamento de imagens é fácil na WebGL. Quão fácil? Leia abaixo.
 
-This is a continuation from [WebGL2 Fundamentals](webgl-fundamentals.html).
-If you haven't read that I'd suggest [going there first](webgl-fundamentals.html).
+Esta é uma continuação de [Fundamentos da WebGL2](webgl-fundamentals.html).
+Se você não leu, eu sugiro [ir lá primeiro](webgl-fundamentals.html).
 
-To draw images in WebGL we need to use textures. Similarly to the way
-WebGL expects clipspace coordinates when rendering instead of pixels,
-WebGL generally expects texture coordinates when reading a texture.
-Texture coordinates go from 0.0 to 1.0 no matter the dimensions of the texture.
+Para desenhar imagens na WebGL precisamos usar texturas. Da mesma forma que a
+WebGL espera coordenadas de clippace ao renderizar em vez de pixels,
+WebGL geralmente espera coordenadas de textura ao ler uma textura.
+As coordenadas da textura variam de 0,0 a 1,0 independentemente das dimensões da textura.
 
-WebGL2 adds the ability to read a texture using pixel coordinates as well.
-Which way is best is up to you. I feel like it's more common to use
-texture coordinates than pixel coordinates.
+WebGL2 adiciona a capacidade de ler uma textura usando coordenadas de pixels também.
+Qual caminho é melhor depende de você. Sinto que é mais comum usar as 
+coordenadas de textura do que as coordenadas de pixels.
 
-Since we are only drawing a single rectangle (well, 2 triangles)
-we need to tell WebGL which place in the texture each point in the
-rectangle corresponds to. We'll pass this information from the vertex
-shader to the fragment shader using a special kind of variable called
-a 'varying'. It's called a varying because it varies. [WebGL will
-interpolate the values](webgl-how-it-works.html) we provide in the
-vertex shader as it draws each pixel using the fragment shader.
+Uma vez que estamos apenas desenhando um único retângulo (bem, 2 triângulos),
+precisamos dizer a WebGL qual lugar na textura em que cada ponto do
+retângulo corresponde. Vamos passar esta informação do vertex
+para o fragmento shader usando um tipo especial de variável chamado
+de 'varying'. É chamado de varying porque isso varia. [WebGL irá
+interpolar os valores](webgl-how-it-works.html) que fornecemos no
+vertex shader pois desenha cada pixel usando o fragmento shader.
 
 Using [the vertex shader from the end of the previous post](webgl-fundamentals.html)
 we need to add an attribute to pass in texture coordinates and then
