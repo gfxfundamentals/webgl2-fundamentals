@@ -591,7 +591,7 @@ também mencionamos *varyings* e *texturas*. Isso aparecerá em lições subsequ
 Antes de avançarmos, quero mencionar que para *a maioria das* aplicações em atualização
 os dados em um buffer, como fizemos em `setRectangle`, não são comuns. Usei esso
 exemplo porque pensei que era mais fácil de explicar porque mostra coordenadas de pixels
-como entrada e demonstra como fazer uma pequena quantidade de matemática na GLSL. Não é errado, há
+como entrada e demonstra como fazer uma pequena quantidade de cálculos na GLSL. Não é errado, há
 muitos os casos em que isso é o certo a se fazer, mas você deve [continuar lendo para descobrir
 a maneira mais comum de posicionar, orientar e dimensionar coisas na WebGL](webgl-2d-translation.html).
 
