@@ -202,39 +202,39 @@ void main() {
 }
 ```
 
-Compare to the un-blurred image above.
+Compare com a imagem não borrada acima.
 
 {{{example url="../webgl-2d-image-blend.html" }}}
 
-Now that we know how to reference other pixels let's use a convolution kernel
-to do a bunch of common image processing. In this case we'll use a 3x3 kernel.
-A convolution kernel is just a 3x3 matrix where each entry in the matrix represents
-how much to multiply the 8 pixels around the pixel we are rendering. We then
-divide the result by the weight of the kernel (the sum of all values in the kernel)
-or 1.0, whichever is greater. [Here's a pretty good article on it](http://docs.gimp.org/en/plug-in-convmatrix.html).
-And [here's another article showing some actual code if
-you were to write this by hand in C++](http://www.codeproject.com/KB/graphics/ImageConvolution.aspx).
+Agora que sabemos como fazer referência a outros pixels, vamos usar um convolution kernel
+para fazer varios processamentos de imagem comum. Neste caso, usaremos um kernel 3x3.
+Um convolution kernel é apenas uma matriz de 3x3, onde cada entrada na matriz representa
+o quanto para multiplicar os 8 pixels ao redor do pixel que estamos renderizando. Em seguida,
+dividimos o resultado pelo peso do kernel (a soma de todos os valores no kernel)
+ou 1,0, o que for maior. [Aqui está um artigo muito bom sobre isso](http://docs.gimp.org/en/plug-in-convmatrix.html).
+E [aqui está outro artigo que mostra algum código real se
+você escrevesse isso manualmente em C ++](http://www.codeproject.com/KB/graphics/ImageConvolution.aspx).
 
-In our case we're going to do that work in the shader so here's the new fragment shader.
+No nosso caso, vamos fazer isso funcionar no shader, então aqui está o novo fragmento de shader.
 
 ```
 #version 300 es
 
-// fragment shaders don't have a default precision so we need
-// to pick one. mediump is a good default. It means "medium precision"
+// fragmentos shaders não têm uma precisão padrão, então precisamos
+// para escolher um. O médio é um bom padrão. Significa "precisão média"
 precision mediump float;
 
-// our texture
+// nossa textura
 uniform sampler2D u_image;
 
-// the convolution kernal data
+// os dados do convolution kernal
 uniform float u_kernel[9];
 uniform float u_kernelWeight;
 
-// the texCoords passed in from the vertex shader.
+// o texCoords passou do vertex shader.
 in vec2 v_texCoord;
 
-// we need to declare an output for the fragment shader
+// precisamos declarar uma saída para o fragmento shader
 out vec4 outColor;
 
 void main() {
@@ -254,7 +254,7 @@ void main() {
 }
 ```
 
-In JavaScript we need to supply a convolution kernel and its weight
+Em JavaScript, precisamos fornecer um convolution kernel e seu peso
 
      function computeKernelWeight(kernel) {
        var weight = kernel.reduce(function(prev, curr) {
@@ -273,17 +273,17 @@ In JavaScript we need to supply a convolution kernel and its weight
          -1, -1, -1
      ];
 
-    // set the kernel and it's weight
+    // definir o kernel e seu peso
      gl.uniform1fv(kernelLocation, edgeDetectKernel);
      gl.uniform1f(kernelWeightLocation, computeKernelWeight(edgeDetectKernel));
      ...
 
-And voila... Use the drop down list to select different kernels.
+Aí está... Use a lista suspensa para selecionar diferentes kernels.
 
 {{{example url="../webgl-2d-image-3x3-convolution.html" }}}
 
-I hope this article has convinced you image processing in WebGL is pretty simple. Next up
-I'll go over [how to apply more than one effect to the image](webgl-image-processing-continued.html).
+Espero que este artigo tenha convencido que o processamento de imagens na WebGL é bastante simples. Em seguida,
+falarei como [aplicar mais de um efeito à imagem](webgl-image-processing-continued.html).
 
 <div class="webgl_bottombar">
 <h3>What are texture units?</h3>
