@@ -7,11 +7,11 @@ Esta é uma continuação de [Fundamentos da WebGL2](webgl-fundamentals.html).
 Se você não leu, eu sugiro [ir lá primeiro](webgl-fundamentals.html).
 
 Para desenhar imagens na WebGL precisamos usar texturas. Da mesma forma que a
-WebGL espera coordenadas de clippace ao renderizar em vez de pixels,
-WebGL geralmente espera coordenadas de textura ao ler uma textura.
+WebGL espera coordenadas de clipspace ao renderizar em vez de pixels,
+a WebGL geralmente espera coordenadas de textura ao ler uma textura.
 As coordenadas da textura variam de 0,0 a 1,0 independentemente das dimensões da textura.
 
-WebGL2 adiciona a capacidade de ler uma textura usando coordenadas de pixels também.
+A WebGL2 adiciona a capacidade de ler uma textura usando coordenadas de pixels também.
 Qual caminho é melhor depende de você. Sinto que é mais comum usar as 
 coordenadas de textura do que as coordenadas de pixels.
 
