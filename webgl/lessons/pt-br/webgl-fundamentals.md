@@ -61,9 +61,9 @@ Há quatro maneiras de como um shader é capaz de obter dados.
    para se colocar em uma textura são dados de imagem, mas as apenas dados e podem facilmente
    conter algo diferente das cores.
 
-4. Variáveis
+4. Varyings
 
-   As variáveis são uma maneira de um vertex shader passar dados para um fragment shader. Dependendo
+   As Varyings são uma maneira de um vertex shader passar dados para um fragment shader. Dependendo
    do que está sendo renderizado, pontos, linhas, ou triângulos, os valores definidos em uma variável
    por um vertex shader serão interpolados enquanto o fragment shader é executado.
 
@@ -586,7 +586,7 @@ A própria API da WebGL é apenas um rasterizador e, conceitualmente, bastante s
 
 Cobrimos um pequeno exemplo que mostrou como fornecer dados em um atributo e 2 uniforms.
 É comum ter múltiplos atributos e muitos uniforms. Perto do topo deste artigo
-também mencionamos *variáveis* e *texturas*. Isso aparecerá em lições subsequentes.
+também mencionamos *varyings* e *texturas*. Isso aparecerá em lições subsequentes.
 
 Antes de avançarmos, quero mencionar que para *a maioria das* aplicações em atualização
 os dados em um buffer, como fizemos em `setRectangle`, não são comuns. Usei esso
