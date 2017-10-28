@@ -23,9 +23,9 @@ de 'varying'. É chamado de varying porque isso varia. [WebGL irá
 interpolar os valores](webgl-how-it-works.html) que fornecemos no
 vertex shader pois desenha cada pixel usando o fragmento shader.
 
-Using [the vertex shader from the end of the previous post](webgl-fundamentals.html)
-we need to add an attribute to pass in texture coordinates and then
-pass those on to the fragment shader.
+Usando [o vertex shader do final da publicação anterior](webgl-fundamentals.html)
+precisamos adicionar um atributo para passar em coordenadas de textura e depois
+passar para o fragmento shader.
 
     ...
 
@@ -37,27 +37,27 @@ pass those on to the fragment shader.
 
     void main() {
        ...
-    +   // pass the texCoord to the fragment shader
-    +   // The GPU will interpolate this value between points
+    +   // passe o texCoord para o fragmento shader
+    +   // O GPU irá interpolar esse valor entre pontos
     +   v_texCoord = a_texCoord;
     }
 
-Then we supply a fragment shader to look up colors from the texture.
+Então, fornecemos um fragmento shader para procurar cores da textura.
 
     #version 300 es
     precision mediump float;
 
-    // our texture
+    // nossa textura
     uniform sampler2D u_image;
 
-    // the texCoords passed in from the vertex shader.
+    // O texCoords passou do vertex shader.
     in vec2 v_texCoord;
 
-    // we need to declare an output for the fragment shader
+    // precisamos declarar uma saída para o fragmento shader
     out vec4 outColor;
 
     void main() {
-       // Look up a color from the texture.
+       // Procure uma cor da textura.
        outColor = texture(u_image, v_texCoord);
     }
 
