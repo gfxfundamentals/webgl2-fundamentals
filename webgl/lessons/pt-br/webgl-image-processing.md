@@ -61,14 +61,14 @@ Então, fornecemos um fragmento shader para procurar cores da textura.
        outColor = texture(u_image, v_texCoord);
     }
 
-Finally we need to load an image, create a texture and copy the image
-into the texture. Because we are in a browser images load asynchronously
-so we have to re-arrange our code a little to wait for the texture to load.
-Once it loads we'll draw it.
+Finalmente, precisamos carregar uma imagem, criar uma textura e copiar a imagem
+para a textura. Como estamos em imagens de um navegador, carregamos de forma assíncrona,
+então devemos reorganizar nosso código um pouco para aguardar o carregamento da textura.
+Uma vez que carregada, vamos desenhá-la.
 
     +function main() {
     +  var image = new Image();
-    +  image.src = "http://someimage/on/our/server";  // MUST BE SAME DOMAIN!!!
+    +  image.src = "http://someimage/on/our/server";  // DEVE SER MESMO DOMÍNIO!!!
     +  image.onload = function() {
     +    render(image);
     +  }
@@ -76,17 +76,17 @@ Once it loads we'll draw it.
 
     function render(image) {
       ...
-      // look up where the vertex data needs to go.
+      // procure onde os dados do vértice precisam ir.
       var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
     +  var texCoordAttributeLocation = gl.getAttribLocation(program, "a_texCoord");
 
-      // lookup uniforms
+      // uniformes de pesquisa
       var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
     +  var imageLocation = gl.getUniformLocation(program, "u_image");
 
       ...
 
-    +  // provide texture coordinates for the rectangle.
+    +  // fornecer coordenadas de textura para o retângulo.
     +  var texCoordBuffer = gl.createBuffer();
     +  gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
     +  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
@@ -97,29 +97,29 @@ Once it loads we'll draw it.
     +      1.0,  0.0,
     +      1.0,  1.0]), gl.STATIC_DRAW);
     +  gl.enableVertexAttribArray(texCoordAttributeLocation);
-    +  var size = 2;          // 2 components per iteration
-    +  var type = gl.FLOAT;   // the data is 32bit floats
-    +  var normalize = false; // don't normalize the data
-    +  var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-    +  var offset = 0;        // start at the beginning of the buffer
+    +  var size = 2;          // 2 componentes por iteração
+    +  var type = gl.FLOAT;   // os dados são floats de 32bit 
+    +  var normalize = false; // não normalize os dados
+    +  var stride = 0;        // 0 = mover para o tamanho * sizeof (tipo) cada iteração para obter a próxima posição
+    +  var offset = 0;        // comece no início do buffer
     +  gl.vertexAttribPointer(
     +      texCoordAttributeLocation, size, type, normalize, stride, offset)
     +
-    +  // make unit 0 the active texture uint
+    +  // faça da unidade 0 a unidade de textura ativa
     +  // (ie, the unit all other texture commands will affect
     +  gl.activeTexture(gl.TEXTURE0 + 0);
     +
-    +  // Bind it to texture unit 0' 2D bind point
+    +  // Vincule a unidade de textura 0' ponto de ligação 2D
     +  gl.bindTexture(gl.TEXTURE_2D, texture);
     +
-    +  // Set the parameters so we don't need mips and so we're not filtering
-    +  // and we don't repeat
+    +  // Defina os parâmetros para que não precisemos de mips e por isso não estamos filtrando
+    +  // e não repetindo
     +  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     +  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     +  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     +  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     +
-    +  // Upload the image into the texture.
+    +  // Carregue a imagem para a textura.
     +  var mipLevel = 0;               // the largest mip
     +  var internalFormat = gl.RGBA;   // format we want in the texture
     +  var srcFormat = gl.RGBA;        // format of data we are supplying
@@ -133,21 +133,21 @@ Once it loads we'll draw it.
 
       ...
 
-      // Tell it to use our program (pair of shaders)
+      // Diga para usar nosso programa (par de shaders)
       gl.useProgram(program);
 
-      // Pass in the canvas resolution so we can convert from
-      // pixels to clipspace in the shader
+      // Passe na resolução da tela para que possamos converter
+      // pixels para clipspace no shader
       gl.uniform2f(resolutionLocation, gl.canvas.width, gl.canvas.height);
 
-    +  // Tell the shader to get the texture from texture unit 0
+    +  // Diga ao shader para obter a textura da unidade de textura 0
     +  gl.uniform1i(imageLocation, 0);
 
-    +  // Bind the position buffer so gl.bufferData that will be called
-    +  // in setRectangle puts data in the position buffer
+    +  // Vincule o buffer de posição para que gl.bufferData seja chamado
+    +  // em setRectangle para colocar dados no buffer de posição
     +  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     +
-    +  // Set a rectangle the same size as the image.
+    +  // Defina um retângulo do mesmo tamanho que a imagem.
     +  setRectangle(gl, 0, 0, image.width, image.height);
 
     }
