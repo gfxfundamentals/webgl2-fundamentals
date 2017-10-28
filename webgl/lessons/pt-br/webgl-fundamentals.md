@@ -348,81 +348,82 @@ Para isso, chamamos `gl.viewport` e passamos o tamanho atual da tela (canvas).
 
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-This tells WebGL the -1 +1 clip space maps to 0 &lt;-&gt; `gl.canvas.width` for x and 0 &lt;-&gt; `gl.canvas.height`
-for y.
+Isso diz para a WebGL que o clip space -1 +1 mapeia para o 0 &lt;-&gt; `gl.canvas.width` para x e 0 &lt;-&gt; `gl.canvas.height`
+para y.
 
-We clear the canvas. `0, 0, 0, 0` are red, green, blue, alpha respectively so in this case we're making the canvas transparent.
+Agora, nós limpamos nosso canvas. `0, 0, 0, 0` são vermelho, verde, azul, alpha, respectivamente, então, nesse caso, estamos definindo o canvas como transparente.
 
-    // Clear the canvas
+    // Limpar o canvas
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-Next we need to tell WebGL which shader program to execute.
+Em seguida, precisamos dizer ao WebGL qual shader é executado.
 
-    // Tell it to use our program (pair of shaders)
+    // Fala para usar nosso program (par de shaders)
     gl.useProgram(program);
 
-Then we need to tell it which set of buffers use and how to pull data out of those buffers to
-supply to the attributes
+Então precisamos informar qual é o conjunto de buffers usar e como obter os dados desses buffers
+e então fornecer os dados aos atributos
 
-    // Bind the attribute/buffer set we want.
+    // Vincule o atributo/buffer que desejamos.
     gl.bindVertexArray(vao);
 
-After all that we can finally ask WebGL to execute our GLSL program.
+
+Depois de tudo o que fizeemos, finalmente, podemos pedir a WebGL que execute o nosso programa GLSL.
 
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
     var count = 3;
     gl.drawArrays(primitiveType, offset, count);
 
-Because the count is 3 this will execute our vertex shader 3 times. The first time `a_position.x` and `a_position.y`
-in our vertex shader attribute will be set to the first 2 values from the positionBuffer.
-The 2nd time `a_position.xy` will be set to the 2nd two values. The last time it will be
-set to the last 2 values.
+Como a contagem é 3, isso executará o nosso vertex shader 3 vezes. A primeira vez `a_position.x` e `a_position.y`
+em nosso atributo vertex shader será configurado para os dois primeiros valores do positionBuffer.
+A segunda vez `a_position.xy` será configurado para os dois segundos valores. Na última vez, ele será
+configurado para os últimos 2 valores.
 
-Because we set `primitiveType` to `gl.TRIANGLES`, each time our vertex shader is run 3 times
-WebGL will draw a triangle based on the 3 values we set `gl_Position` to. No matter what size
-our canvas is those values are in clip space coordinates that go from -1 to 1 in each direction.
+Como definimos `primitiveType` para `gl.TRIANGLES`, cada vez que nosso vertex shader é executado 3 vezes,
+a WebGL desenhará um triângulo com base nos 3 valores que definimos em `gl_Position`. Não importa o tamanho da
+nossa tela, esses valores estão nas coordenadas do nosso clip space que vão de -1 a 1 em cada direção.
 
-Because our vertex shader is simply copying our positionBuffer values to `gl_Position` the
-triangle will be drawn at clip space coordinates
+Como o nosso vertex shader está simplesmente copiando os valores do nosso positionbuffer para a `gl_Position`, o
+o triângulo será desenhado nas coordenadas do clip space
 
       0, 0,
       0, 0.5,
       0.7, 0,
 
-Converting from clip space to screen space if the canvas size
-happned to be 400x300 we'd get something like this
+Convertendo do clip space para o espaço da tela se o tamanho da tela
+passasse ser 400x300, nós teríamos algo assim
 
      clip space      screen space
        0, 0       ->   200, 150
        0, 0.5     ->   200, 225
      0.7, 0       ->   340, 150
 
-WebGL will now render that triangle. For every pixel it is about to draw WebGL will call our fragment shader.
-Our fragment shader just sets `outColor` to `1, 0, 0.5, 1`. Since the Canvas is an 8bit
-per channel canvas that means WebGL is going to write the values `[255, 0, 127, 255]` into the canvas.
+A WebGL agora renderizará esse triângulo. Para cada pixel que está prestes a desenhar, a WebGL chamará o nosso fragment shader.
+Nosso fragment shader apenas define a `outColor` para `1, 0, 0.5, 1`. Como o Canvas é um canvas de 8bits
+por canal, significa que, a WebGL vai escrever os seguintes valores `[255, 0, 127, 255]` na tela.
 
-Here's a live version
+Aqui está um exemplo já pronto
 
 {{{example url="../webgl-fundamentals.html" }}}
 
-In the case above you can see our vertex shader is doing nothing
-but passing on our position data directly. Since the position data is
-already in clipspace there is no work to do. *If you want 3D it's up to you
-to supply shaders that convert from 3D to clipspace because WebGL is only
-a rasterization API*.
+No caso acima, você pode ver que o nosso vertex shader não está fazendo nada
+além de passar nossos dados de posição diretamente. Como os dados da posição já
+estão no clipspace, não há trabalho a fazer. *Se você quer objetos 3D, só depende de você
+fornecer shaders que convertam de 3D para clipspace porque a WebGL é, apenas,
+uma API de rasterização*.
 
-You might be wondering why does the triangle start in the middle and go to toward the top right.
-Clip space in `x` goes from -1 to +1. That means 0 is in the center and positive values will
-be to the right of that.
+Você pode estar se perguntando por que o triângulo começa no meio e vai para o canto superior direito.
+O clip space em `x` vai de -1 a +1. Isso significa que o 0 está no centro e os valores positivos
+irão para à direita dele.
 
-As for why it's on the top, in clip space -1 is at the bottom and +1 is at the top. That means
-0 is in the center and so positive numbers will be above the center.
+Quanto ao porquê está no topo, o clip space -1 está na parte inferior e +1 está no topo.
+Isso significa que, o 0 está no centro e os números positivos estarão acima do centro.
 
-For 2D stuff you would probably rather work in pixels than clipspace so
-let's change the shader so we can supply the position in pixels and have
-it convert to clipspace for us. Here's the new vertex shader
+Para coisas 2D, você provavelmente iria preferir trabalhar em pixels do que com o clipspace
+então vamos mudar o shader para que possamos fornecer a posição em pixels e
+convertê-lo em um clipspace para nós. Aqui está o novo vertex shader
 
     -  in vec4 a_position;
     +  in vec2 a_position;
@@ -430,31 +431,31 @@ it convert to clipspace for us. Here's the new vertex shader
     +  uniform vec2 u_resolution;
 
       void main() {
-    +    // convert the position from pixels to 0.0 to 1.0
+    +    // converte a posição dos pixels de 0.0 para 1.0
     +    vec2 zeroToOne = a_position / u_resolution;
     +
-    +    // convert from 0->1 to 0->2
+    +    // converte de 0->1 para 0->2
     +    vec2 zeroToTwo = zeroToOne * 2.0;
     +
-    +    // convert from 0->2 to -1->+1 (clipspace)
+    +    // converte de 0->2 para -1->+1 (clipspace)
     +    vec2 clipSpace = zeroToTwo - 1.0;
     +
     *    gl_Position = vec4(clipSpace, 0, 1);
       }
 
-Some things to notice about the changes. We changed `a_position` to a `vec2` since we're
-only using `x` and `y` anyway. A `vec2` is similar to a `vec4` but only has `x` and `y`.
+Algumas coisas que devemos notar sobre as mudanças. Nós mudamos a `a_position` para um `vec2` já que nós
+estamos apenas usando `x` e `y`. Um `vec2` é semelhante a um `vec4`, porém, possui apenas `x` e `y`.
 
-Next we added a `uniform` called `u_resolution`. To set that we need to look up its location.
+Em seguida, adicionamos um `uniform` chamado `u_resolution`. Para definir que precisamos procurar por sua localização.
 
     var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
 
-The rest should be clear from the comments. By setting `u_resolution` to the resolution
-of our canvas the shader will now take the positions we put in `positionBuffer` supplied
-in pixels coordinates and convert them to clip space.
+O reste deve estar claro a partir dos comentários. Ao configurar `u_resolution` para a resolução
+do nosso canvas, o shader vai agora tomar as posições que colocamos no `positionBuffer` fornecido
+nas coordenadas dos pixels e convertê-los em clip space.
 
-Now we can change our position values from clip space to pixels. This time we're going to draw a rectangle
-made from 2 triangles, 3 points each.
+Agora podemos alterar os valores da nossa posição do clip space para pixels. Desta vez,
+vamos desenhar um retângulo feito de 2 triângulos, 3 pontos, cada.
 
     var positions = [
     *  10, 20,
@@ -466,48 +467,48 @@ made from 2 triangles, 3 points each.
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-And after we set which program to use we can set the value for the uniform we created.
-`gl.useProgram` is like `gl.bindBuffer` above in that it sets the current program. After
-that all the `gl.uniformXXX` functions set uniforms on the current program.
+E depois de definirmos qual programa usar, podemos definir o valor do uniform que criamos.
+`gl.useProgram` é como `gl.bindBuffer` acima, em que ele define o programa atual.
+Depois de tudo, as funções `gl.uniformXXX` definem os uniforms no programa atual.
 
     gl.useProgram(program);
 
-    // Pass in the canvas resolution so we can convert from
-    // pixels to clipspace in the shader
+	// Passa a resolução do canvas, assim nós podemos converter
+	// de pixels para clipspace no shader
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
-And of course to draw 2 triangles we need to have WebGL call our vertex shader 6 times
-so we need to change the `count` to `6`.
+E, claro, para desenhar dois triângulos, precisamos que a WebGL chame nosso vertex shader 6 vezes,
+para isso, precisamos mudar o `count` para `6`.
 
-    // draw
+    // desenha
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
     *var count = 6;
     gl.drawArrays(primitiveType, offset, count);
 
-And here it is
+E aqui está
 
-Note: This example and all following examples use [`webgl-utils.js`](/webgl/resources/webgl-utils.js)
-which contains functions to compile and link the shaders. No reason to clutter the examples
-with that [boilerplate](webgl-boilerplate.html) code.
+Nota: Este exemplo e todos os exemplos a seguir usam [`webgl-utils.js`](/webgl/resources/webgl-utils.js)
+que contém funções para compilar e vincular os shaders. Não há nenhuma razão para desordenar os
+exemplos com o [boilerplate](webgl-boilerplate.html).
 
 {{{example url="../webgl-2d-rectangle.html" }}}
 
-Again you might notice the rectangle is near the bottom of that area. WebGL considers the bottom left
-corner to be 0,0. To get it to be the more traditional top left corner used for 2d graphics APIs
-we can just flip the clip space y coordinate.
+Novamente, você pode notar que o retângulo está perto do fundo dessa área. A WebGL considera que o canto 
+inferior esquerdo é 0,0. Para que ele seja o tradicional canto superior esquerdo, usado nas APIS de gráficos
+2D, nós podemos simplesmente virar a coordenada y do clipspace.
 
     *   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 
-And now our rectangle is where we expect it.
+E agora o nosso retângulo está aonde esperavamos.
 
 {{{example url="../webgl-2d-rectangle-top-left.html" }}}
 
-Let's make the code that defines a rectangle into a function so
-we can call it for different sized rectangles. While we're at it
-we'll make the color settable.
+Vamos fazer o código que define um retângulo em uma função para
+podermos chamá-lo para retângulos de diferentes tamanhos. Enquanto estamos nisso,
+nós tornaremos a cor ajustável.
 
-First we make the fragment shader take a color uniform input.
+Primeiro fazemos o fragment shader pegar uma color uniform input.
 
     #version 300 es
 
@@ -522,21 +523,21 @@ First we make the fragment shader take a color uniform input.
     *  outColor = u_color;
     }
 
-And here's the new code that draws 50 rectangles in random places and random colors.
+E aqui está o novo código que desenha 50 retângulos com cores e locais aleatórios.
 
       var colorLocation = gl.getUniformLocation(program, "u_color");
       ...
 
-      // draw 50 random rectangles in random colors
+      // desenha 50 retângulos com cores e locais aleatórios
       for (var ii = 0; ii < 50; ++ii) {
-        // Setup a random rectangle
+        // Define um retângulo aleatório
         setRectangle(
             gl, randomInt(300), randomInt(300), randomInt(300), randomInt(300));
 
-        // Set a random color.
+        // Define uma cor aleatória.
         gl.uniform4f(colorLocation, Math.random(), Math.random(), Math.random(), 1);
 
-        // Draw the rectangle.
+        // Desenha o retângulo.
         var primitiveType = gl.TRIANGLES;
         var offset = 0;
         var count = 6;
@@ -544,12 +545,12 @@ And here's the new code that draws 50 rectangles in random places and random col
       }
     }
 
-    // Returns a random integer from 0 to range - 1.
+    // Retorna um inteiro aleatório entre o intervalo de 0 e - 1.
     function randomInt(range) {
       return Math.floor(Math.random() * range);
     }
 
-    // Fills the buffer with the values that define a rectangle.
+    // Preenche o buffer com os valores que definem um retângulo.
 
     function setRectangle(gl, x, y, width, height) {
       var x1 = x;
@@ -557,10 +558,10 @@ And here's the new code that draws 50 rectangles in random places and random col
       var y1 = y;
       var y2 = y + height;
 
-      // NOTE: gl.bufferData(gl.ARRAY_BUFFER, ...) will affect
-      // whatever buffer is bound to the `ARRAY_BUFFER` bind point
-      // but so far we only have one buffer. If we had more than one
-      // buffer we'd want to bind that buffer to `ARRAY_BUFFER` first.
+      // NOTA: gl.bufferData(gl.ARRAY_BUFFER, ...) afetará
+      // qualquer buffer que esteja vinculado ao `ARRAY_BUFFER`,
+      // mas até agora temos apenas um buffer. Se tivessémos mais de um
+      // buffer, gostaríamos de vincular este buffer a `ARRAY_BUFFER` primeiro.
 
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
          x1, y1,
@@ -571,39 +572,38 @@ And here's the new code that draws 50 rectangles in random places and random col
          x2, y2]), gl.STATIC_DRAW);
     }
 
-And here's the rectangles.
+E aqui está os retângulos.
 
 {{{example url="../webgl-2d-rectangles.html" }}}
 
-I hope you can see that WebGL is actually a pretty simple API.
-Okay, simple might be the wrong word. What it does is simple. It just
-executes 2 user supplied functions, a vertex shader and fragment shader and
-draws triangles, lines, or points.
-While it can get more complicated to do 3D that complication is
-added by you, the programmer, in the form of more complex shaders.
-The WebGL API itself is just a rasterizer and conceptually fairly simple.
+Espero que você veja que a WebGL é realmente uma API bastante simples.
+Tudo bem, simples pode ser a palavra errada. Mas o que ela faz é simples. Ela apenas
+executa 2 funções fornecidas pelo usuário, um vertex shader e um fragment shader e
+desenha triângulos, linhas ou pontos.
+Embora possa ser mais complicado fazer uma abordagem 3D, essa complicação é
+definida por você, o programador, sob a forma de shaders mais complexos.
+A própria API da WebGL é apenas um rasterizador e, conceitualmente, bastante simples.
 
-We covered a small example that showed how to supply data in an attribute and 2 uniforms.
-It's common to have multiple attributes and many uniforms. Near the top of this article
-we also mentioned *varyings* and *textures*. Those will show up in subsequent lessons.
+Cobrimos um pequeno exemplo que mostrou como fornecer dados em um atributo e 2 uniforms.
+É comum ter múltiplos atributos e muitos uniforms. Perto do topo deste artigo
+também mencionamos *variáveis* e *texturas*. Isso aparecerá em lições subsequentes.
 
-Before we move on I want to mention that for *most* applications updating
-the data in a buffer like we did in `setRectangle` is not common. I used that
-example because I thought it was easiest to explain since it shows pixel coordinates
-as input and demonstrates doing a small amount of math in GLSL. It's not wrong, there
-are plenty of cases where it's the right thing to do, but you should [keep reading to find out
-the more common way to position, orient and scale things in WebGL](webgl-2d-translation.html).
+Antes de avançarmos, quero mencionar que para *a maioria das* aplicações em atualização
+os dados em um buffer, como fizemos em `setRectangle`, não são comuns. Usei esso
+exemplo porque pensei que era mais fácil de explicar porque mostra coordenadas de pixels
+como entrada e demonstra como fazer uma pequena quantidade de matemática na GLSL. Não é errado, há
+muitos os casos em que isso é o certo a se fazer, mas você deve [continuar lendo para descobrir
+a maneira mais comum de posicionar, orientar e dimensionar coisas na WebGL](webgl-2d-translation.html).
 
-If you're 100% new to WebGL and have no idea what GLSL is or shaders or what the GPU does
-then checkout [the basics of how WebGL really works](webgl-how-it-works.html).
+Se você é 100% leigo na WebGL e não tem ideia do que é GLSL ou shaders ou o que a GPU faz, então,
+em seguida, verifique [os conceitos básicos de como a WebGL realmente funciona] (webgl-how-it-works.html).(webgl-how-it-works.html).
 
-You should also, at least briefly read about [the boilerplate code used here](webgl-boilerplate.html)
-that is used in most of the examples. You should also at least skim
-[how to draw mulitple things](webgl-drawing-multiple-things.html) to give you some idea
-of how more typical WebGL apps are structured because unfortunately nearly all the examples
-only draw one thing and so do not show that structure.
+Você também deve, pelo menos, ler brevemente sobre [o código boilerplate usado aqui](webgl-boilerplate.html)
+que é usado na maioria dos exemplos. Você também deve, pelo menos ver
+[como desenhar múltiplas coisas](webgl-drawing-multiple-things.html) para ter uma ideia de como
+as aplicações em WebGL são estruturadas porque, infelizmente, apenas desenha algo e, portanto, não mostra essa estrutura.
 
-Otherwise from here you can go in 2 directions. If you are interested in image procesing
-I'll show you [how to do some 2D image processing](webgl-image-processing.html).
-If you are interesting in learning about translation,
-rotation and scale then [start here](webgl-2d-translation.html).
+Caso contrário, a partir daqui você pode ir em duas direções. Se você está interessado em processar imagens
+Vou lhes mostrar [como fazer algum processamento de imagem 2D](webgl-image-processing.html).
+Se você está interessado em aprender sobre translação, rotação e escala, então,
+[comece aqui](webgl-2d-translation.html).
