@@ -152,49 +152,49 @@ Uma vez que carregada, vamos desenhá-la.
 
     }
 
-And here's the image rendered in WebGL.
+E aqui está a imagem renderizada na WebGL.
 
 {{{example url="../webgl-2d-image.html" }}}
 
-Not too exciting so let's manipulate that image. How about just
-swapping red and blue?
+Não muito emocionante, então vamos manipular essa imagem. Que tal simplesmente 
+trocar vermelho e azul?
 
     ...
     outColor = texture2D(u_image, v_texCoord).bgra;
     ...
 
-And now red and blue are swapped.
+E agora vermelho e azul foram trocados.
 
 {{{example url="../webgl-2d-image-red2blue.html" }}}
 
-What if we want to do image processing that actually looks at other
-pixels? Since WebGL references textures in texture coordinates which
-go from 0.0 to 1.0 then we can calculate how much to move for 1 pixel
- with the simple math <code>onePixel = 1.0 / textureSize</code>.
+E se quisermos processar imagens que realmente olhem para outros
+pixels? Uma vez que a WebGL faz referência a texturas em coordenadas de textura que
+variam de 0,0 a 1,0, podemos calcular o quanto move 1 pixel
+ com o simples math <code>onePixel = 1.0 / textureSize</code>.
 
-Here's a fragment shader that averages the left and right pixels of
-each pixel in the texture.
+Aqui está um fragmento que mede os pixels esquerdo e direito de
+cada pixel na textura.
 
 ```
 #version 300 es
 
-// fragment shaders don't have a default precision so we need
-// to pick one. mediump is a good default. It means "medium precision"
+// fragmentos shaders não têm uma precisão padrão, então precisamos
+// para escolher um. O médio é um bom padrão. Significa "precisão média"
 precision mediump float;
 
-// our texture
+// nossa textura
 uniform sampler2D u_image;
 
-// the texCoords passed in from the vertex shader.
+// o texCoords passou do vertex shader.
 in vec2 v_texCoord;
 
-// we need to declare an output for the fragment shader
+// precisamos declarar uma saída para o fragmento shader
 out vec4 outColor;
 
 void main() {
 +  vec2 onePixel = vec2(1) / vec2(textureSize(u_image, 0));
 +
-+  // average the left, middle, and right pixels.
++  // média dos pixels esquerdo, médio e direito.
 +  outColor = (
 +      texture(u_image, v_texCoord) +
 +      texture(u_image, v_texCoord + vec2( onePixel.x, 0.0)) +
