@@ -286,47 +286,47 @@ Espero que este artigo tenha convencido que o processamento de imagens na WebGL 
 falarei como [aplicar mais de um efeito à imagem](webgl-image-processing-continued.html).
 
 <div class="webgl_bottombar">
-<h3>What are texture units?</h3>
-When you call <code>gl.draw???</code> your shader can reference textures. Textures are bound
-to texture units. While the user's machine might support more all WebGL2 implementations are
-required to support at least 16 texture units. Which texture unit each sampler uniform
-references is set by looking up the location of that sampler uniform and then setting the
-index of the texture unit you want it to reference.
+<h3>O que são unidades de textura?</h3>
+Quando você chama <code>gl.draw???</code> seu shader pode fazer referência a texturas. Texturas estão vinculadas
+com unidades de texturas. Embora a máquina do usuário possa suportar, todas as implementações WebGL2 
+são necessárias suportar pelo menos 16 unidades de textura. Qual unidade de textura cada referência
+uniforme de amostras é definida procurando a localização dessa amostra uniforme e, em seguida, ajuste o
+índice da unidade de textura que você deseja que ela faça referência.
 
-For example:
+Por exemplo:
 <pre class="prettyprint showlinemods">
-var textureUnitIndex = 6; // use texture unit 6.
+var textureUnitIndex = 6; // use a unidade de textura 6.
 var u_imageLoc = gl.getUniformLocation(
     program, "u_image");
 gl.uniform1i(u_imageLoc, textureUnitIndex);
 </pre>
 
-To set textures on different units you call gl.activeTexture and then bind the texture you want on that unit. Example
+Para definir texturas em diferentes unidades, chame gl.activeTexture e, em seguida, vincule a textura desejada nessa unidade. Exemplo
 
 <pre class="prettyprint showlinemods">
-// Bind someTexture to texture unit 6.
+// Vincule someTexture à unidade de textura 6.
 gl.activeTexture(gl.TEXTURE6);
 gl.bindTexture(gl.TEXTURE_2D, someTexture);
 </pre>
 
-This works too
+Isso também funciona
 
 <pre class="prettyprint showlinemods">
-var textureUnitIndex = 6; // use texture unit 6.
-// Bind someTexture to texture unit 6.
+var textureUnitIndex = 6; // use a unidade de textura 6.
+// Vincule someTexture à unidade de textura 6.
 gl.activeTexture(gl.TEXTURE0 + textureUnitIndex);
 gl.bindTexture(gl.TEXTURE_2D, someTexture);
 </pre>
 </div>
 
 <div class="webgl_bottombar">
-<h3>What's with the a_, u_, and v_ prefixes in from of variables in GLSL?</h3>
+<h3>O que são os prefixos a_, u_ e v_ de variáveis no GLSL?</h3>
 <p>
-That's just a naming convention. They are not required but for me it makes it easier to see at a glance
-where the values are coming from. a_ for attributes which is the data provided by buffers. u_ for uniforms
-which are inputs to the shaders, v_ for varyings which are values passed from a vertex shader to a
-fragment shader and interpolated (or varied) between the vertices for each pixel drawn.
-See <a href="webgl-how-it-works.html">How it works</a> for more details.
+Isso é apenas uma convenção de nomeação. Eles não são necessários, mas para mim é mais fácil ver de relance de onde
+os valores estão vindo. a_ para atributos que são os dados fornecidos por buffers. u_ para uniformes
+que são inputs para os shaders, v_ para variações que são valores passados de um vertex shader para um
+fragmento shader e interpolados (ou variados) entre os vértices para cada pixel desenhado.
+Veja <a href="webgl-how-it-works.html">Como funciona</a> para mais detalhes.
 </p>
 </div>
 
