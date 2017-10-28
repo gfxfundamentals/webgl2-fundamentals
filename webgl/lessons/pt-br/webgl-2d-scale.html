@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/pt-br/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/pt-br/webgl-2d-scale.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of Gregg Tavares. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of Gregg Tavares. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,23 +36,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL 2D Scale" />
+<meta property="og:title" content="Escala 2D WebGL" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="How to scale in 2D" />
+<meta property="og:description" content="Como escalar em 2D" />
 <meta property="og:url" content="http://webgl2fundamentals.org/webgl/lessons/pt-br/webgl-2d-scale.html" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@greggman" />
 <meta name="twitter:creator" content="@greggman" />
 <meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL 2D Scale" />
+<meta name="twitter:title" content="Escala 2D WebGL" />
 <meta name="twitter:url" content="http://webgl2fundamentals.org/webgl/lessons/pt-br/webgl-2d-scale.html" />
-<meta name="twitter:description" content="How to scale in 2D" />
+<meta name="twitter:description" content="Como escalar em 2D" />
 <meta name="twitter:image:src" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>WebGL 2D Scale</title>
+<title>Escala 2D WebGL</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
@@ -74,12 +76,125 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL 2D Scale</h1>
+    <h1>Escala 2D WebGL</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>Sentimos muito, mas este artigo não foi traduzido, ainda! <a href="https://github.com/greggman/webgl2-fundamentals">Traduções são sempre bem vindas</a>! 😄</p>
-<p><a href="/webgl/lessons/webgl-2d-scale.html">Aqui está o link para o artigo original, em Inglês, por enquanto</a>.</p>
+      <p>Esta publicação é uma continuação de uma série de postagens sobre a WebGL.
+O primeiro artigo <a href="webgl-fundamentals.html">abordou os fundamentos</a> e o
+e o anterior foi <a href="webgl-2d-rotation.html">sobre rotação 2D</a>.</p>
+<p>Escalas em 2D é tão <a href="webgl-2d-translation.html">fácil quanto translação</a>.</p>
+<p>Nós multiplicamos a posição pela escala desejada. Aqui estão algumas alterações
+do nosso <a href="webgl-2d-rotation.html">exemplo anterior</a>.</p>
+<pre><code>#version 300 es
+
+in vec2 a_position;
+
+uniform vec2 u_resolution;
+uniform vec2 u_translation;
+uniform vec2 u_rotation;
++uniform vec2 u_scale;
+
+void main() {
++  // Escala a posição
++  vec2 scaledPosition = a_position * u_scale;
+
+  // Rotaciona a posição
+  vec2 rotatedPosition = vec2(
+*     scaledPosition.x * u_rotation.y + scaledPosition.y * u_rotation.x,
+*     scaledPosition.y * u_rotation.y - scaledPosition.x * u_rotation.x);
+
+  // Adiciona a translação.
+  vec2 position = rotatedPosition + u_translation;
+</code></pre><p>e adicionamos o JavaScript necessário para definir a escala quando desenhamos.</p>
+<pre><code>  ...
+
++  var scaleLocation = gl.getUniformLocation(program, &quot;u_scale&quot;);
+
+  ...
+
++  var scale = [1, 1];
+
+
+   // Desenha a cena.
+   function drawScene() {
+     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
+     // Fala para a WebGL como converter de clip space para pixels
+     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+     // Limpa o canvas
+     gl.clearColor(0, 0, 0, 0);
+     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+     // Fala para usar o nosso program (nosso par de shaders)
+     gl.useProgram(program);
+
+     // Vincula o conjunto atributo/buffer que desejamos.
+     gl.bindVertexArray(vao);
+
+     // Passa a resolução do canvas, assim podemos converter de
+     // pixels para clipspace no shader
+     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+
+     // Define a cor.
+     gl.uniform4fv(colorLocation, color);
+
+     // Define a translação.
+     gl.uniform2fv(translationLocation, translation);
+
+     // Define a rotação.
+     gl.uniform2fv(rotationLocation, rotation);
+
++     // Define a escala.
++     gl.uniform2fv(scaleLocation, scale);
+
+     // Desenha o retângulo.
+     var primitiveType = gl.TRIANGLES;
+     var offset = 0;
+     var count = 18;
+     gl.drawArrays(primitiveType, offset, count);
+   }
+</code></pre><p>E agora temos uma escala. Arraste os sliders para mudar os efeitos.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-scale.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-scale.html" target="_blank">clique aqui para abrir em uma janela separada</a>
+</div>
+
+</p>
+<p>Uma coisa a notar é que a escala por um valor negativo vira a nossa forma geométrica.</p>
+<p>Outra coisa a notar é que a escala 0, 0, que para nosso F é o
+canto superior esquerdo. Isso faz sentido porque estamos multiplicando as posições
+pela nossa escala, assim, eles vão se afastar de 0, 0. Você pode provavelmente
+imaginar maneiras de corrigir isso. Por exemplo, você pode adicionar outra translação
+antes de realizar uma escala, uma translação <em>pre scale</em>. Outra solução seria
+alterar os dados reais da posição F. Demonstraremos outra solução em breve.</p>
+<p>Espero que essas últimas 3 postagens tenham sido úteis na compreensão de
+<a href="webgl-2d-translation.html">translação</a>, <a href="webgl-2d-rotation.html">rotação</a>
+e escala. Em seguida, vamos abordar <a href="webgl-2d-matrices.html">a mágica que são as matrizes</a>
+que combina todos estes 3 artigos em uma forma muito mais simples e mil vezes mais útil.</p>
+<div class="webgl_bottombar">
+<h3>Por que um 'F'?</h3>
+<p>
+A primeira vez que vi alguém usar um 'F' foi em uma textura.
+O 'F' em si não é importante. O que importa é que
+você pode indicar sua orientação a partir de qualquer direção. Se nós
+usássemos um coração ❤ ou um triângulo △, por exemplo, nós não poderíamos
+se o objeto foi invertido horizontalmente. Um círculo então, seria
+muito pior. Um retângulo colorido possivelmente funcionaria com
+cores diferentes em cada canto, mas você teria que lembrar
+quem é cada canto. Já a orientação de F é reconhencida instantaneamente.
+</p>
+<img src="../resources/f-orientation.svg" class="webgl_center"/>
+<p>
+Qualquer forma que você pudesse dizer qual a sua orientação funcionaria,
+eu simplesmente usei o 'F' desde que fui apresentado pela primeira vez à ideia.
+</p>
+</div>
+
+
+
+
 
     </div>
     <div class="lesson-sidebar">
@@ -90,7 +205,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>
+        <div id="toc">
+          <ul>
   <li>Fundamentos</li>
   <ul>
     <li><a href="/webgl/lessons/pt-br/webgl-getting-webgl2.html">Como utilizar a WebGL2</a></li>
@@ -183,6 +299,31 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://github.com/greggman/webgl2-fundamentals">github</a></li>
 </ul>
 
+        </div>
+    </div>
+    <div class="lesson-comments">
+        <div>Dúvidas? <a href="http://stackoverflow.com/questions/tagged/webgl2">Pergunte no stackoverflow</a>.</div>
+        <div>Problemas/Bug? <a href="http://github.com/greggman/webgl2-fundamentals/issues">Pergunte no github</a>.</div>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'Escala 2D WebGL';
+            var disqus_title = 'Escala 2D WebGL';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
