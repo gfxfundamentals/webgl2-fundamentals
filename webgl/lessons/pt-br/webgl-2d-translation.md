@@ -158,17 +158,17 @@ void main() {
 }
 ```
 
-and we'll restructure the code a little. For one we only need to set
-the geometry once.
+e vamos reestruturar o código um pouco. Por um lado, só precisa definir
+a geometria uma vez.
 
 ```
-// Fill the current ARRAY_BUFFER buffer
-// with the values that define a letter 'F'.
+// Preencha o atual buffer ARRAY_BUFFER
+// com os valores que definem uma letra 'F'.
 function setGeometry(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
       new Float32Array([
-          // left column
+          // coluna esquerda
           0, 0,
           30, 0,
           0, 150,
@@ -176,7 +176,7 @@ function setGeometry(gl) {
           30, 0,
           30, 150,
 
-          // top rung
+          // primeiro degrau
           30, 0,
           100, 0,
           30, 30,
@@ -184,7 +184,7 @@ function setGeometry(gl) {
           100, 0,
           100, 30,
 
-          // middle rung
+          // segundo nível
           30, 60,
           67, 60,
           30, 90,
@@ -195,8 +195,8 @@ function setGeometry(gl) {
 }
 ```
 
-Then we just need to update `u_translation` before we draw with the
-translation that we desire.
+Então precisamos atualizar `u_translation` antes de desenhar com a
+translação que desejamos.
 
 ```
   ...
@@ -206,35 +206,35 @@ translation that we desire.
 
   ...
 
-+  // Set Geometry.
++  // Definir geometria.
 +  setGeometry(gl);
 
   ...
 
-  // Draw scene.
+  // Desenhe a cena.
   function drawScene() {
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
-    // Tell WebGL how to convert from clip space to pixels
+    // Diga a WebGL como converter de clip space para pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-    // Tell it to use our program (pair of shaders)
+    // Diga para usar nosso programa (par de shaders)
     gl.useProgram(program);
 
-    // Bind the attribute/buffer set we want.
+    // Vincule o conjunto de atributos/buffers que queremos.
     gl.bindVertexArray(vao);
 
-    // Pass in the canvas resolution so we can convert from
-    // pixels to clipspace in the shader
+    // Passe na resolução da tela para que possamos converter
+    // pixels para clipspace no shader
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
-    // Set the color.
+    // Defina a cor.
     gl.uniform4fv(colorLocation, color);
 
-+    // Set the translation.
++    // Defina a translação.
 +    gl.uniform2fv(translationLocation, translation);
 
-    // Draw the rectangle.
+    // Desenhe o retângulo.
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
 *    var count = 18;
@@ -242,21 +242,21 @@ translation that we desire.
   }
 ```
 
-Notice `setGeometry` is called only once. It is no longer inside `drawScene`.
+Observe que `setGeometry` é chamado apenas uma vez. Já não está dentro do `drawScene`.
 
-And here's that example. Again, drag the sliders to update the translation.
+E aqui esse exemplo. Mais uma vez, arraste os controles deslizantes para atualizar a tradução.
 
 {{{example url="../webgl-2d-geometry-translate-better.html" }}}
 
-Now when we draw, WebGL is doing practically everything. All we are doing is
-setting a translation and asking it to draw. Even if our geometry had tens
-of thousands of points the main code would stay the same.
+Agora, quando desenhamos, a WebGL está fazendo praticamente tudo. Tudo o que estamos
+fazendo é estabelecer uma translação e pedir para desenhar. Mesmo que a nossa geometria tivesse
+dezenas de milhares de pontos, o código principal ficaria o mesmo.
 
-If you want you can compare <a target="_blank" href="../webgl-2d-geometry-translate.html">
-the version that uses the complex JavaScript
-above to update all the points</a>.
+Se você quiser, você pode comparar <a target="_blank" href="../webgl-2d-geometry-translate.html">
+a versão usa o JavaScript complexo
+acima para atualizar todos os pontos</a>.
 
-I hope this example was not too obvious. In the [next article we'll move
-on to rotation](webgl-2d-rotation.html).
+Espero que este exemplo não seja muito óbvio. No [próximo artigo, passaremos
+para a rotação](webgl-2d-rotation.html).
 
 
