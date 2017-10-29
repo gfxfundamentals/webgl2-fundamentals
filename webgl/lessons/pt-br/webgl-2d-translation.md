@@ -1,21 +1,21 @@
-Title: WebGL 2D Translation
-Description: How to translate in 2D
+Title: Translação 2D WebGL2
+Description: Como transladar em 2d
 
-Before we move on to 3D let's stick with 2D for a little while longer.
-Bear with me please. This article might seem exceedingly obvious to
-some but I'll build up to a point in a few articles.
+Antes de passar para o 3D vamos ficar com 2D para um pouco mais.
+Vem comigo, por favor. Este artigo pode parecer extremamente óbvio para
+alguns, mas vou construir até um certo ponto em alguns artigos.
 
-This article is a continuation of a series starting with
-[WebGL Fundamentals](webgl-fundamentals.html). If you haven't read them
-I suggest you read at least the first one, then come back here.
+Este artigo é uma continuação de uma série que começa com os
+[Fundamentos da WebGL2](webgl-fundamentals.html). Se você não os leu,
+sugiro que você leia pelo menos o primeiro, então volte aqui.
 
-Translation is some fancy math name that basically means "to move"
-something. I suppose moving a sentence from English to Japanese fits
-as well but in this case we're talking about moving geometry. Using
-the sample code we ended up with in [the first post](webgl-fundamentals.html)
-you could easily translate our rectangle just by changing the values
-passed to `setRectangle` right? Here's a sample based on our
-[previous sample](webgl-fundamentals.html).
+A translação é um nome de matemática extravagante que basicamente significa "mover"
+algo. Suponho que a mudança de uma frase do inglês para o japonês também
+se ajuste, mas neste caso estamos falando sobre a geometria em movimento. Usando
+o código de exemplo que fizemos [no primeiro post](webgl-fundamentals.html)
+você poderia facilmente transladar nosso retângulo apenas mudando os valores
+passados para `setRectangle` certo? Aqui está uma amostra baseada em nossa
+[amostra anterior](webgl-fundamentals.html).
 
 ```
 +  // First let's make some variables
