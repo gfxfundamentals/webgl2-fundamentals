@@ -18,46 +18,46 @@ passados para `setRectangle` certo? Aqui está uma amostra baseada em nossa
 [amostra anterior](webgl-fundamentals.html).
 
 ```
-+  // First let's make some variables
-+  // to hold the translation, width and height of the rectangle
++  // Primeiro vamos fazer algumas variáveis
++  // para manter a translação, largura e altura do retângulo
 +  var translation = [0, 0];
 +  var width = 100;
 +  var height = 30;
 +  var color = [Math.random(), Math.random(), Math.random(), 1];
 +
-+  // Then let's make a function to
-+  // re-draw everything. We can call this
-+  // function after we update the translation.
++  // Então vamos fazer uma função para
++  // recomeçar tudo. Podemos chamar essa
++  // função depois de atualizar a translação.
 
-  // Draw a the scene.
+  // Desenhe uma cena.
   function drawScene() {
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
-    // Tell WebGL how to convert from clip space to pixels
+    // Diga a WebGL como converter do clip space para pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-    // Clear the canvas
+    // Limpe a tela
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // Tell it to use our program (pair of shaders)
+    // Diga para usar nosso programa (par de shaders)
     gl.useProgram(program);
 
-    // Bind the attribute/buffer set we want.
+    // Vincule o conjunto de atributos/buffers que queremos.
     gl.bindVertexArray(vao);
 
-    // Pass in the canvas resolution so we can convert from
-    // pixels to clipspace in the shader
+    // Passe na resolução da tela para que possamos converter de
+    // pixels para clipspace no shader
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
-    // Update the position buffer with rectangle positions
+    // Atualize o buffer de posição com posições do retângulo
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 *    setRectangle(gl, translation[0], translation[1], width, height);
 
-    // Set a the color.
+    // Defina a cor.
     gl.uniform4fv(colorLocation, color);
 
-    // Draw the rectangle.
+    // Desenhe o retângulo.
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
     var count = 6;
@@ -65,24 +65,24 @@ passados para `setRectangle` certo? Aqui está uma amostra baseada em nossa
   }
 ```
 
-In the example below I've attached a couple of sliders that will update
-`translation[0]` and `translation[1]` and call `drawScene` anytime they change.
-Drag the sliders to translate the rectangle.
+No exemplo abaixo, anexei um par de controladores que atualizarão
+`translation[0]` e `translation[1]` e chama `drawScene` sempre que mudarem.
+Arraste os controladores para transladar o retângulo.
 
 {{{example url="../webgl-2d-rectangle-translate.html" }}}
 
-So far so good. But now imagine we wanted to do the same thing with a
-more complicated shape.
+Por enquanto, tudo bem. Mas agora imagine que queríamos fazer o mesmo com uma
+forma mais complicada.
 
-Let's say we wanted to draw an 'F' that consists of 6 triangles like this.
+Digamos que queríamos desenhar um 'F' que consiste em 6 triângulos como este.
 
 <img src="../resources/polygon-f.svg" width="200" height="270" class="webgl_center">
 
-Well, following our current code we'd have to change `setRectangle`
-to something more like this.
+Bem, seguindo nosso código atual, teríamos que mudar o `setRectangle`
+para algo mais parecido com isso.
 
 ```
-// Fill the current ARRAY_BUFFER buffer with the values that define a letter 'F'.
+// Preencha o atual buffer ARRAY_BUFFER com os valores que definem uma letra 'F'.
 function setGeometry(gl, x, y) {
   var width = 100;
   var height = 150;
@@ -117,41 +117,41 @@ function setGeometry(gl, x, y) {
 }
 ```
 
-You can hopefully see that's not going to scale well. If we want to
-draw some very complex geometry with hundreds or thousands of lines we'd
-have to write some pretty complex code. On top of that, every time we
-draw JavaScript has to update all the points.
+Você pode ver que não vai se dimensionar bem. Se quisermos
+desenhar uma geometria muito complexa com centenas ou milhares de linhas,
+teríamos que escrever um código bastante complexo. Além disso, cada vez que
+desenhamos, o JavaScript tem que atualizar todos os pontos.
 
-There's a simpler way. Just upload the geometry and do the translation
-in the shader.
+Há uma maneira mais simples. Basta carregar a geometria e fazer a translação
+no shader.
 
-Here's the new shader
+Aqui está o novo shader
 
 ```
 #version 300 es
 
-// an attribute is an input (in) to a vertex shader.
-// It will receive data from a buffer
+// um atributo é um input (in) para um vertex shader.
+// Ele receberá dados de um buffer
 in vec4 a_position;
 
-// Used to pass in the resolution of the canvas
+// Usado para passar na resolução da tela
 uniform vec2 u_resolution;
 
-+// translation to add to position
++// translação para adicionar à posição
 +uniform vec2 u_translation;
 
-// all shaders have a main function
+// todos os shaders têm uma função principal
 void main() {
-+  // Add in the translation
++  // Adicionar na translação
 +  vec2 position = a_position + u_translation;
 
-  // convert the position from pixels to 0.0 to 1.0
+  // converta a posição de pixels de 0,0 a 1,0
 *  vec2 zeroToOne = position / u_resolution;
 
-  // convert from 0->1 to 0->2
+  // converter de 0-> 1 para 0-> 2
   vec2 zeroToTwo = zeroToOne * 2.0;
 
-  // convert from 0->2 to -1->+1 (clipspace)
+  // converter de 0-> 2 para -1 -> + 1 (clipspace)
   vec2 clipSpace = zeroToTwo - 1.0;
 
   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
