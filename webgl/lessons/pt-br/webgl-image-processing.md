@@ -80,7 +80,7 @@ Uma vez que carregada, vamos desenhá-la.
       var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
     +  var texCoordAttributeLocation = gl.getAttribLocation(program, "a_texCoord");
 
-      // uniformes de pesquisa
+      // uniforms de pesquisa
       var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
     +  var imageLocation = gl.getUniformLocation(program, "u_image");
 
@@ -172,7 +172,7 @@ pixels? Uma vez que a WebGL faz referência a texturas em coordenadas de textura
 variam de 0,0 a 1,0, podemos calcular o quanto move 1 pixel
  com o simples math <code>onePixel = 1.0 / textureSize</code>.
 
-Aqui está um fragmento que mede os pixels esquerdo e direito de
+Aqui está um fragmento que mede os pixels esquerdos e direitos de
 cada pixel na textura.
 
 ```
@@ -215,7 +215,7 @@ ou 1,0, o que for maior. [Aqui está um artigo muito bom sobre isso](http://docs
 E [aqui está outro artigo que mostra algum código real se
 você escrevesse isso manualmente em C ++](http://www.codeproject.com/KB/graphics/ImageConvolution.aspx).
 
-No nosso caso, vamos fazer isso funcionar no shader, então aqui está o novo fragmento de shader.
+No nosso caso, vamos fazer isso funcionar no shader, então aqui está o novo fragment shader.
 
 ```
 #version 300 es
@@ -282,7 +282,7 @@ Aí está... Use a lista suspensa para selecionar diferentes kernels.
 
 {{{example url="../webgl-2d-image-3x3-convolution.html" }}}
 
-Espero que este artigo tenha convencido que o processamento de imagens na WebGL é bastante simples. Em seguida,
+Espero que este artigo tenha o convencido de que o processamento de imagens na WebGL é bastante simples. Em seguida,
 falarei como [aplicar mais de um efeito à imagem](webgl-image-processing-continued.html).
 
 <div class="webgl_bottombar">
@@ -323,7 +323,7 @@ gl.bindTexture(gl.TEXTURE_2D, someTexture);
 <h3>O que são os prefixos a_, u_ e v_ de variáveis no GLSL?</h3>
 <p>
 Isso é apenas uma convenção de nomeação. Eles não são necessários, mas para mim é mais fácil ver de relance de onde
-os valores estão vindo. a_ para atributos que são os dados fornecidos por buffers. u_ para uniformes
+os valores estão vindo. a_ para atributos que são os dados fornecidos por buffers. u_ para uniforms
 que são inputs para os shaders, v_ para variações que são valores passados de um vertex shader para um
 fragmento shader e interpolados (ou variados) entre os vértices para cada pixel desenhado.
 Veja <a href="webgl-how-it-works.html">Como funciona</a> para mais detalhes.

@@ -128,7 +128,7 @@ Agora vamos fazer um conjunto de kernels e, em seguida, uma lista deles para se 
   ];
 ```
 
-E, finalmente, vamos aplicar cada um, o ping ponging de qual texturas estamos renderizando também 
+E, finalmente, vamos aplicar a cada um, o ping ponging de qual texturas estamos renderizando também 
 
 ```
   function drawEffects() {
@@ -218,7 +218,7 @@ Nesse caso, você deve vincular o framebuffer e depois chamar
 Se sim, você está pronto para ir. Caso contrário, você precisará dizer ao usuário que
 recorra a outra coisa. Felizmente a WebGL2 suporta muitos formatos e combinações.
 
-WebGL tem que converter de [clipspace](webgl-fundamentals.html) novamente em pixels.
+A WebGL tem que converter de [clipspace](webgl-fundamentals.html) novamente em pixels.
 Ela faz isso com base nas configurações de `gl.viewport`. Uma vez que os framebuffers
 em que estamos renderizando são de tamanho diferente da tela que precisamos para configurar
 a viewport adequadamente, isso depende se estamos renderizando uma textura ou na tela.
