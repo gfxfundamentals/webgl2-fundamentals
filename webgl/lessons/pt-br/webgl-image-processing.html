@@ -149,7 +149,7 @@ function render(image) {
   var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 +  var texCoordAttributeLocation = gl.getAttribLocation(program, &quot;a_texCoord&quot;);
 
-  // uniformes de pesquisa
+  // uniforms de pesquisa
   var resolutionLocation = gl.getUniformLocation(program, &quot;u_resolution&quot;);
 +  var imageLocation = gl.getUniformLocation(program, &quot;u_image&quot;);
 
@@ -243,7 +243,7 @@ outColor = texture2D(u_image, v_texCoord).bgra;
 pixels? Uma vez que a WebGL faz referência a texturas em coordenadas de textura que
 variam de 0,0 a 1,0, podemos calcular o quanto move 1 pixel
  com o simples math <code>onePixel = 1.0 / textureSize</code>.</p>
-<p>Aqui está um fragmento que mede os pixels esquerdo e direito de
+<p>Aqui está um fragmento que mede os pixels esquerdos e direitos de
 cada pixel na textura.</p>
 <pre><code>#version 300 es
 
@@ -284,7 +284,7 @@ dividimos o resultado pelo peso do kernel (a soma de todos os valores no kernel)
 ou 1,0, o que for maior. <a href="http://docs.gimp.org/en/plug-in-convmatrix.html">Aqui está um artigo muito bom sobre isso</a>.
 E <a href="http://www.codeproject.com/KB/graphics/ImageConvolution.aspx">aqui está outro artigo que mostra algum código real se
 você escrevesse isso manualmente em C ++</a>.</p>
-<p>No nosso caso, vamos fazer isso funcionar no shader, então aqui está o novo fragmento de shader.</p>
+<p>No nosso caso, vamos fazer isso funcionar no shader, então aqui está o novo fragment shader.</p>
 <pre><code>#version 300 es
 
 // fragmentos shaders não têm uma precisão padrão, então precisamos
@@ -348,7 +348,7 @@ void main() {
 </div>
 
 </p>
-<p>Espero que este artigo tenha convencido que o processamento de imagens na WebGL é bastante simples. Em seguida,
+<p>Espero que este artigo tenha o convencido de que o processamento de imagens na WebGL é bastante simples. Em seguida,
 falarei como <a href="webgl-image-processing-continued.html">aplicar mais de um efeito à imagem</a>.</p>
 <div class="webgl_bottombar">
 <h3>O que são unidades de textura?</h3>
@@ -388,7 +388,7 @@ gl.bindTexture(gl.TEXTURE_2D, someTexture);
 <h3>O que são os prefixos a_, u_ e v_ de variáveis no GLSL?</h3>
 <p>
 Isso é apenas uma convenção de nomeação. Eles não são necessários, mas para mim é mais fácil ver de relance de onde
-os valores estão vindo. a_ para atributos que são os dados fornecidos por buffers. u_ para uniformes
+os valores estão vindo. a_ para atributos que são os dados fornecidos por buffers. u_ para uniforms
 que são inputs para os shaders, v_ para variações que são valores passados de um vertex shader para um
 fragmento shader e interpolados (ou variados) entre os vértices para cada pixel desenhado.
 Veja <a href="webgl-how-it-works.html">Como funciona</a> para mais detalhes.

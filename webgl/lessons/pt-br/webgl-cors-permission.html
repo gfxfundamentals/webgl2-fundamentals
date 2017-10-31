@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/pt-br/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/pt-br/webgl-cors-permission.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of Gregg Tavares. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of Gregg Tavares. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -37,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <meta property="og:title" content="WebGL - Cross Origin Images" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="Using images across domains" />
+<meta property="og:description" content="Usando imagens em vários domínios" />
 <meta property="og:url" content="http://webgl2fundamentals.org/webgl/lessons/pt-br/webgl-cors-permission.html" />
 
 <meta name="twitter:card" content="summary_large_image" />
@@ -46,7 +48,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <meta name="twitter:domain" content="webgl2fundamentals.org" />
 <meta name="twitter:title" content="WebGL - Cross Origin Images" />
 <meta name="twitter:url" content="http://webgl2fundamentals.org/webgl/lessons/pt-br/webgl-cors-permission.html" />
-<meta name="twitter:description" content="Using images across domains" />
+<meta name="twitter:description" content="Usando imagens em vários domínios" />
 <meta name="twitter:image:src" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
@@ -78,8 +80,118 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>Sentimos muito, mas este artigo não foi traduzido, ainda! <a href="https://github.com/greggman/webgl2-fundamentals">Traduções são sempre bem vindas</a>! 😄</p>
-<p><a href="/webgl/lessons/webgl-cors-permission.html">Aqui está o link para o artigo original, em Inglês, por enquanto</a>.</p>
+      <p>Este artigo é um de uma série de artigos sobre a WebGL. Se você não leu
+eles te sugiro <a href="webgl-fundamentals.html">iniciar com uma lição anterior</a>.</p>
+<p>Na WebGL é comum baixar imagens e depois carregá-las para a GPU para serem
+usadas como texturas. Há vários exemplos aqui que fazem isso. Por
+exemplo, o artigo sobre <a href="webgl-image-processing.html">processamento de imagem</a>, o
+artigo sobre <a href="webgl-3d-textures.html">texturas</a> e o artigo
+<a href="webgl-2d-drawimage.html">implementando 2d drawImage</a>.</p>
+<p>Normalmente, baixamos uma imagem da forma abaixo</p>
+<pre><code>// creates a texture info { width: w, height: h, texture: tex }
+// The texture will start with 1x1 pixels and be updated
+// when the image has loaded
+function loadImageAndCreateTextureInfo(url) {
+  var tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  // Fill the texture with a 1x1 blue pixel.
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+                new Uint8Array([0, 0, 255, 255]));
+
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+  var textureInfo = {
+    width: 1,   // we don&#39;t know the size until it loads
+    height: 1,
+    texture: tex,
+  };
+  var img = new Image();
+  img.addEventListener(&#39;load&#39;, function() {
+    textureInfo.width = img.width;
+    textureInfo.height = img.height;
+
+    gl.bindTexture(gl.TEXTURE_2D, textureInfo.texture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+    gl.generateMipmap(gl.TEXTURE_2D);
+  });
+  img.src = url;
+
+  return textureInfo;
+}
+</code></pre><p>O problema é que as imagens podem ter dados privados nelas (por exemplo, um captcha, uma assinatura, uma imagem nua, ...).
+Uma página da web muitas vezes tem anúncios e outras coisas que não estão no controle direto da página e, portanto, o navegador precisa prevenir
+que essas coisas vejam o conteúdo dessas imagens privadas.</p>
+<p>Apenas usando <code>&lt;img src =&quot;private.jpg&quot;&gt;</code> não é um problema porque, embora a imagem seja exibida pelo
+navegador, um script não pode ver os dados dentro da imagem. <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">A API Canvas2D</a>
+possui uma maneira de ver dentro da imagem. Primeiro, você desenha a imagem na tela</p>
+<pre><code>ctx.drawImage(someImg, 0, 0);
+</code></pre><p>E então, você obtêm os dados</p>
+<pre><code>var data = ctx.getImageData(0, 0, width, heigh);
+</code></pre><p>Mas, se a imagem que você desenhou veio de um domínio diferente, o navegador marcará o canvas como <em>tainted</em> e
+você receberá um erro de segurança ao chamar <code>ctx.getImageData</code></p>
+<p>a WebGL tem que levá-la até mesmo um passo adiante. Na WebGL <code>gl.readPixels</code> é uma chamada equivocada para <code>ctx.getImageData</code>,
+então você pensaria que talvez apenas bloqueando isso seria suficiente, mas isso acontece mesmo que você não consiga ler os pixels
+diretamente, você pode criar sombreadores, que levam mais tempo para serem executados com base nas cores da imagem. Usando essa informação
+você pode usar o tempo para efetivamente olhar dentro da imagem indiretamente e descobrir seus conteúdos.</p>
+<p>Assim, a WebGL simplesmente proíbe todas as imagens que não são do mesmo domínio. Por exemplo, aqui está uma amostra curta
+que desenha um retângulo rotativo com uma textura de outro domínio.
+Observe que a textura nunca carrega e nós recebemos um erro</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-cors-permission-bad.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-cors-permission-bad.html" target="_blank">clique aqui para abrir em uma janela separada</a>
+</div>
+
+</p>
+<p>Como podemos resolver isso?</p>
+<h2 id="usando-cors">Usando CORS</h2>
+<p>CORS = Cross Origin Resource Sharing. É uma maneira para a página web solicitar permissão ao servidor de imagem
+para usar a imagem.</p>
+<p>Para fazer isso, definimos o atributo <code>crossOrigin</code> com algo, em seguida, quando o navegador tenta obter a
+imagem do servidor, se não for o mesmo domínio, o navegador pedirá permissão CORS.</p>
+<pre><code>...
++    img.crossOrigin = &quot;&quot;;   // ask for CORS permission
+    img.src = url;
+</code></pre><p>A string em que você define <code>crossOrigin</code> é enviada para o servidor. O servidor pode ver essa string e decidir
+se irá lhe dar permissão. A maioria dos servidores que oferecem suporte a CORS não olham para a string, eles apenas
+dão permissão a todos. É por isso que definir a string como vazia funciona. Tudo que isso significa, neste caso,
+é &quot;pedir permissão&quot; vs dizer <code>img.crossOrigin = &quot;bob&quot;</code> significaria &quot;pedir permissão para &#39;bob&#39;&quot;.</p>
+<p>Por que não vemos sempre essa permissão? Porque pedir permissão realizaria 2 requisições HTTP, então é
+mais lento do que não perguntar. Se sabemos que estamos no mesmo domínio ou sabemos que não usaremos a imagem para nada,
+exceto img tags e/ou canvas2d, então não há motivos para configurar o <code>crossDomain</code> porque ele
+vai tornar as coisas muito mais lentas.</p>
+<p>Podemos fazer uma função que verifique se a imagem que estamos tentando carregar está na mesma origem e se não estiver,
+então, define o atributo <code>crossOrigin</code>.</p>
+<pre><code>function requestCORSIfNotSameOrigin(img, url) {
+  if ((new URL(url)).origin !== window.location.origin) {
+    img.crossOrigin = &quot;&quot;;
+  }
+}
+</code></pre><p>E podemos usá-lo assim</p>
+<pre><code>...
++requestCORSIfNotSameOrigin(img, url);
+img.src = url;
+</code></pre><p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-cors-permission-good.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-cors-permission-good.html" target="_blank">clique aqui para abrir em uma janela separada</a>
+</div>
+
+</p>
+<p>É importante notar que pedir permissão NÃO significa que você terá permissão.
+Isso depende do servidor. As páginas do Github dão permissão, o flickr.com dá permissão,
+imgur.com dá permissão, mas a maioria dos sites não.</p>
+<div class="webgl_bottombar">
+<h3>Fazendo o Apache conceder permissão CORS</h3>
+<p>Se você estiver executando um site com o Apache e você tiver o plugin mod_rewrite instalado
+cocê pode conceder apoio CORS geral ao colocar</p>
+<pre class="prettyprint">
+    Header set Access-Control-Allow-Origin "*"
+</pre>
+<p>
+No arquivo, <code>.htaccess</code>, apropriado.
+</p>
+</div>
+
 
     </div>
     <div class="lesson-sidebar">
@@ -90,7 +202,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>
+        <div id="toc">
+          <ul>
   <li>Fundamentos</li>
   <ul>
     <li><a href="/webgl/lessons/pt-br/webgl-getting-webgl2.html">Como utilizar a WebGL2</a></li>
@@ -183,6 +296,31 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://github.com/greggman/webgl2-fundamentals">github</a></li>
 </ul>
 
+        </div>
+    </div>
+    <div class="lesson-comments">
+        <div>Dúvidas? <a href="http://stackoverflow.com/questions/tagged/webgl2">Pergunte no stackoverflow</a>.</div>
+        <div>Problemas/Bug? <a href="http://github.com/greggman/webgl2-fundamentals/issues">Pergunte no github</a>.</div>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL - Cross Origin Images';
+            var disqus_title = 'WebGL - Cross Origin Images';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>

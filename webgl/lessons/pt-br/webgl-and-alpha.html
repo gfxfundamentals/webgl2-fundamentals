@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/pt-br/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/pt-br/webgl-and-alpha.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of Gregg Tavares. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of Gregg Tavares. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,23 +36,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL and Alpha" />
+<meta property="og:title" content="Alfa e a WebGL" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="How alpha in WebGL is different than alpha in OpenGL" />
+<meta property="og:description" content="Como o alfa no WebGL é diferente do alfa no OpenGL" />
 <meta property="og:url" content="http://webgl2fundamentals.org/webgl/lessons/pt-br/webgl-and-alpha.html" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@greggman" />
 <meta name="twitter:creator" content="@greggman" />
 <meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL and Alpha" />
+<meta name="twitter:title" content="Alfa e a WebGL" />
 <meta name="twitter:url" content="http://webgl2fundamentals.org/webgl/lessons/pt-br/webgl-and-alpha.html" />
-<meta name="twitter:description" content="How alpha in WebGL is different than alpha in OpenGL" />
+<meta name="twitter:description" content="Como o alfa no WebGL é diferente do alfa no OpenGL" />
 <meta name="twitter:image:src" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>WebGL and Alpha</title>
+<title>Alfa e a WebGL</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
@@ -74,12 +76,102 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL and Alpha</h1>
+    <h1>Alfa e a WebGL</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>Sentimos muito, mas este artigo não foi traduzido, ainda! <a href="https://github.com/greggman/webgl2-fundamentals">Traduções são sempre bem vindas</a>! 😄</p>
-<p><a href="/webgl/lessons/webgl-and-alpha.html">Aqui está o link para o artigo original, em Inglês, por enquanto</a>.</p>
+      <p>Eu notei que alguns desenvolvedores do OpenGL têm problemas com a forma como a WebGL
+trata o alfa no backbuffer (ou seja, a tela), então eu pensei,
+pode ser bom analisar algumas das diferenças entre a WebGL e a OpenGL
+em relação ao alfa.</p>
+<p>A maior diferença entra a OpenGL e a WebGL é que a OpenGL
+rendezira em um backbuffer que não está composto por nada,
+ou então, não está composto com nada pelo gerenciador de janelas do
+sistema operacional, sendo assim, não importa qual o valor do seu alfa.</p>
+<p>A WebGL é composta pelo navegador com a página Web e o
+padrão é usar o alfa pré-multiplicado igualmente como as tags
+de imagens com arquivos .png <code>&lt;img&gt;</code> que possuem transparência e tags
+de canvas em 2D.</p>
+<p>A WebGL tem várias maneiras de tornar isso mais parecido com a OpenGL.</p>
+<h3 id="-1-diga-a-webgl-que-voc-deseja-que-ela-seja-composta-com-alfa-n-o-pr-multiplicado">#1) Diga a WebGL que você deseja que ela seja composta com alfa não pré-multiplicado</h3>
+<pre><code>gl = canvas.getContext(&quot;webgl2&quot;, {
+  premultipliedAlpha: false  // Ask for non-premultiplied alpha
+});
+</code></pre><p>O padrão é true.</p>
+<p>Claro que o resultado ainda será composto na página com qualquer que seja a cor
+de fundo, ela vai acabar indo para debaixo da tela (a cor do background, 
+a cor de background do container, o background da página,
+inclusive as coisas que estiverem por trás do canvas, caso possuam um z-index &gt; 0, etc ....)
+em outras palavras, a cor no CSS irá definir essa área da página.</p>
+<p>Uma boa maneira de encontrar se você tem algum problema com o alfa é configurar o
+fundo da tela para uma cor brilhante como o vermelho. Você verá imediatamente
+o que está acontecendo.</p>
+<pre><code>&lt;canvas style=&quot;background: red;&quot;&gt;&lt;canvas&gt;
+</code></pre><p>Você também pode configurá-lo como preto, o que irá ocultar quaisquer problemas com o alfa que você tenha.</p>
+<h3 id="-2-diga-a-webgl-que-voc-n-o-deseja-o-alpha-no-backbuffer">#2) Diga a WebGL que você não deseja o alpha no backbuffer</h3>
+<pre><code>gl = canvas.getContext(&quot;webgl&quot;, { alpha: false }};
+</code></pre><p>Isso fará com que ele atue mais como a OpenGL, já que o backbuffer só terá
+RGB. Esta é provavelmente a melhor opção porque um bom navegador pode ver que
+você não tem um valor alfa e então, otimiza a forma como a WebGL é composto. Claro,
+isso também significa que na verdade não terá alfa no backbuffer, então, se você estiver
+usando alpha no backbuffer para algum propósito isso pode não funcionar para você.
+Poucos aplicativos que eu conheço usam alpha no backbuffer. Eu acho que isso
+deveria ter sido definido como o padrão.</p>
+<h3 id="-3-limpar-o-alfa-no-final-da-sua-renderiza-o">#3) Limpar o alfa no final da sua renderização</h3>
+<pre><code>..
+renderScene();
+..
+// Set the backbuffer&#39;s alpha to 1.0 by
+
+// Setting the clear color to 1
+gl.clearColor(1, 1, 1, 1);
+
+// Telling WebGL to only affect the alpha channel
+gl.colorMask(false, false, false, true);
+
+// clear
+gl.clear(gl.COLOR_BUFFER_BIT);
+</code></pre><p>Limpar é geralmente muito rápido, já que há um tratamento especial para ele na maioria dos
+hardwares. Eu fiz isso em muitos das minhas primeiras demonstrações da WebGL. Se eu fosse inteligente, eu teria mudado para o
+método # 2 acima. Talvez eu faça isso logo depois de publicar isso. Parece que
+a maioria das bibliotecas WebGL deve usar esse método como padrão. Esses poucos desenvolvedores,
+que realmente estão usando alfa para efeitos de composição podem pedir isso. o
+O resto apenas obterá o melhor desempenho e menos surpresas.</p>
+<h3 id="-4-limpe-o-alfa-uma-vez-ent-o-n-o-o-renderize-mais">#4) Limpe o alfa uma vez, então, não o renderize mais</h3>
+<pre><code>// At init time. Clear the back buffer.
+gl.clearColor(1,1,1,1);
+gl.clear(gl.COLOR_BUFFER_BIT);
+
+// Turn off rendering to alpha
+gl.colorMask(true, true, true, false);
+</code></pre><p>Claro que, se você estiver processando seus próprios quadros, você precisará girar
+renderizando para o alfa novamente e depois desligar ele novamente quando você mudar para
+renderização do canvas.</p>
+<h3 id="-5-manipula-o-de-imagens">#5) Manipulação de imagens</h3>
+<p>Por padrão, se você estiver carregando imagens com alfa na WebGL, a WebGL irá
+forneces os valores como estão no arquivo, com os valores das cores não
+pré-multiplicados. Isso geralmente é o que eu costumava usar para programas OpenGL
+porque é 100% sem perdas, enquanto pré-multiplicado tem perdas.</p>
+<pre><code>1, 0.5, 0.5, 0  // RGBA
+</code></pre><p>É um possível valor não pré-multiplicado, enquanto um valor pré-multiplicado é um
+valor impossível porque <code>a = 0</code> que significa <code>r</code>, <code>g</code> e <code>b</code> têm
+de ser zero.</p>
+<p>Ao carregar uma imagem, você pode fazer com que a WebGL pré-multiplique o alfa, se desejar.
+Você pode fazer isso configurando <code>UNPACK_PREMULTIPLY_ALPHA_WEBGL</code> para true, por exemplo</p>
+<pre><code>gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+</code></pre><p>O padrão é false.</p>
+<p>Esteja ciente de que a maioria, senão todas as implementações de Canvas 2D, funcionam com
+o alfa pré-multiplicado. Isso significa que quando você os transfere para a WebGL e
+<code>UNPACK_PREMULTIPLY_ALPHA_WEBGL</code> é falso, a WebGL os converterá
+de volta a um valor não pré-multiplicado.</p>
+<h3 id="-6-usando-uma-equa-o-blending-que-funciona-com-alfa-pr-multiplicado-">#6) Usando uma equação blending que funciona com alfa pré-multiplicado.</h3>
+<p>Quase todas as aplicações OpenGL que escrevi ou trabalharei, usam</p>
+<pre><code>gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+</code></pre><p>Isso funciona para texturas alfa não pré-multiplicadas.</p>
+<p>Se você realmente quiser trabalhar com texturas alfa pré-multiplicadas, então o que você
+provavelmente quer é</p>
+<pre><code>gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+</code></pre><p>Esses são os métodos que conheço. Se você souber de mais, por favor, publique-os abaixo.</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -90,7 +182,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>
+        <div id="toc">
+          <ul>
   <li>Fundamentos</li>
   <ul>
     <li><a href="/webgl/lessons/pt-br/webgl-getting-webgl2.html">Como utilizar a WebGL2</a></li>
@@ -183,6 +276,31 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://github.com/greggman/webgl2-fundamentals">github</a></li>
 </ul>
 
+        </div>
+    </div>
+    <div class="lesson-comments">
+        <div>Dúvidas? <a href="http://stackoverflow.com/questions/tagged/webgl2">Pergunte no stackoverflow</a>.</div>
+        <div>Problemas/Bug? <a href="http://github.com/greggman/webgl2-fundamentals/issues">Pergunte no github</a>.</div>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'Alfa e a WebGL';
+            var disqus_title = 'Alfa e a WebGL';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
