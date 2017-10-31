@@ -17,7 +17,7 @@ Se você já está familiarizado com a WebGL1, talvez esteja interessado em conf
 <li><a href="/webgl/lessons/webgl1-to-webgl2-fundamentals.html">Diferenças entre a WebGLFundamentals.org e a WebGL2Fundamentals.org</a></li>
 </ul>
 
-#Table of Contents
+#Índice
 
 {{{include "webgl/lessons/pt-br/toc.html"}}}
 
@@ -27,6 +27,3 @@ Se você já está familiarizado com a WebGL1, talvez esteja interessado em conf
 {{{table_of_contents}}}
 
 -->
-
-
-
