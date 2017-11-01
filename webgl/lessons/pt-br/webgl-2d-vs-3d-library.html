@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/pt-br/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/pt-br/webgl-2d-vs-3d-library.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of Gregg Tavares. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of Gregg Tavares. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,23 +36,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL - Rasterization vs 3D libraries" />
+<meta property="og:title" content="WebGL - Rasterização vs Bibliotecas 3D" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="Why WebGL is not a 3D library and why it matters." />
+<meta property="og:description" content="Por que WebGL não é uma biblioteca 3D e por que isso importa." />
 <meta property="og:url" content="http://webgl2fundamentals.org/webgl/lessons/pt-br/webgl-2d-vs-3d-library.html" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@greggman" />
 <meta name="twitter:creator" content="@greggman" />
 <meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL - Rasterization vs 3D libraries" />
+<meta name="twitter:title" content="WebGL - Rasterização vs Bibliotecas 3D" />
 <meta name="twitter:url" content="http://webgl2fundamentals.org/webgl/lessons/pt-br/webgl-2d-vs-3d-library.html" />
-<meta name="twitter:description" content="Why WebGL is not a 3D library and why it matters." />
+<meta name="twitter:description" content="Por que WebGL não é uma biblioteca 3D e por que isso importa." />
 <meta name="twitter:image:src" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>WebGL - Rasterization vs 3D libraries</title>
+<title>WebGL - Rasterização vs Bibliotecas 3D</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
@@ -74,12 +76,204 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL - Rasterization vs 3D libraries</h1>
+    <h1>WebGL - Rasterização vs Bibliotecas 3D</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>Sentimos muito, mas este artigo não foi traduzido, ainda! <a href="https://github.com/greggman/webgl2-fundamentals">Traduções são sempre bem vindas</a>! 😄</p>
-<p><a href="/webgl/lessons/webgl-2d-vs-3d-library.html">Aqui está o link para o artigo original, em Inglês, por enquanto</a>.</p>
+      <p>Esta publicação é um tipo de tópico secundário em uma série de postagens sobre o WebGL.
+O primeiro <a href="webgl-fundamentals.html">começou com o fundamentos</a></p>
+<p>Estou escrevendo isso porque a minha afirmação de que o WebGL é uma API de rasterização e não uma API 3D
+mexe com o nervo de algumas pessoas. Não tenho certeza por que eles se sentem ameaçados
+ou o que quer que os deixe tão chateados por eu ter chamado a WebGL de uma API de rasterização.</p>
+<p>Provavelmente tudo é uma questão de perspectiva. Posso dizer que uma faca é uma
+utensílio para comer, outra pessoa pode dizer que uma faca é uma ferramenta e ainda outra
+pessoa pode dizer que uma faca é uma arma.</p>
+<p>No caso da WebGL, porém, há uma razão pela qual acho importante
+chamar a WebGL de uma API de rasterização e isso é especificamente devido à quantidade de conhecimento
+matemática com relação ao 3D que você precisa saber para usar a WebGL para desenhar qualquer coisa em 3D.</p>
+<p>Eu diria que qualquer coisa que se chame biblioteca 3D, deve ser capaz de fazer os
+objetos em 3D para você. Você deve poder dar à biblioteca alguns dados em 3D,
+alguns parâmetros materiais, algumas luzes e ela deve desenhar o objeto 3D para você.
+A WebGL (e OpenGL ES 2.0+) são usados para desenhar 3D, mas nãom se encaixa na
+descrição.</p>
+<p>Para dar uma anologia, C++ não &quot;processa palavras&quot; fora da caixa. Nós
+não dizemos que o C++ é um &quot;processador de texto&quot;, mesmo que os processadores de texto possam ser
+escritos em C++. Da mesma forma, a WebGL não tira gráficos 3D da caixa.
+Você pode escrever uma biblioteca que irá desenhar gráficos 3D com a WebGL, mas por si só,
+ela não faz gráficos 3D.</p>
+<p>Para dar um exemplo adicional, suponha que queremos desenhar um cubo em 3D
+com luzes.</p>
+<p>Aqui está o código em three.js para fazer isso</p>
+<pre class="prettyprint showlinemods">
+  // Setup.
+  renderer = new THREE.WebGLRenderer({canvas: document.querySelector("#canvas")});
+  c.appendChild(renderer.domElement);
+
+  // Make and setup a camera.
+  camera = new THREE.PerspectiveCamera(70, 1, 1, 1000);
+  camera.position.z = 400;
+
+  // Make a scene
+  scene = new THREE.Scene();
+
+  // Make a cube.
+  var geometry = new THREE.BoxGeometry(200, 200, 200);
+
+  // Make a material
+  var material = new THREE.MeshPhongMaterial({
+    ambient: 0x555555,
+    color: 0x555555,
+    specular: 0xffffff,
+    shininess: 50,
+    shading: THREE.SmoothShading
+  });
+
+  // Create a mesh based on the geometry and material
+  mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
+
+  // Add 2 lights.
+  light1 = new THREE.PointLight(0xff0040, 2, 0);
+  light1.position.set(200, 100, 300);
+  scene.add(light1);
+
+  light2 = new THREE.PointLight(0x0040ff, 2, 0);
+  light2.position.set(-200, 100, 300);
+  scene.add(light2);
+</pre>
+
+<p>e aqui é exibido.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/resources%2Fthree-js-cube-with-lights.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/resources/three-js-cube-with-lights.html" target="_blank">clique aqui para abrir em uma janela separada</a>
+</div>
+
+</p>
+<p>Aqui está o código similar em OpenGL (não ES) para exibir um cubo com 2 luzes.</p>
+<pre class="prettyprint showlinemods">
+  // Setup
+  glViewport(0, 0, width, height);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluPerspective(70.0, width / height, 1, 1000);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+
+  glClearColor(0.0, 0.0, 0.0, 0.0);
+  glEnable(GL_DEPTH_TEST);
+  glShadeModel(GL_SMOOTH);
+  glEnable(GL_LIGHTING);
+
+  // Setup 2 lights
+  glEnable(GL_LIGHT0);
+  glEnable(GL_LIGHT1);
+  float light0_position[] = {  200, 100, 300, };
+  float light1_position[] = { -200, 100, 300, };
+  float light0_color[] = { 1, 0, 0.25, 1, };
+  float light1_color[] = { 0, 0.25, 1, 1, };
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_color);
+  glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_color);
+  glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
+  glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
+...
+
+  // Draw a cube.
+  static int count = 0;
+  ++count;
+
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glLoadIdentity();
+  double angle = count * 0.1;
+  glTranslatef(0, 0, -400);
+  glRotatef(angle, 0, 1, 0);
+
+  glBegin(GL_TRIANGLES);
+  glNormal3f(0, 0, 1);
+  glVertex3f(-100, -100, 100);
+  glVertex3f( 100, -100, 100);
+  glVertex3f(-100,  100, 100);
+  glVertex3f(-100,  100, 100);
+  glVertex3f( 100, -100, 100);
+  glVertex3f( 100,  100, 100);
+
+  /*
+  ...
+  ... repeat for 5 more faces of cube
+  ...
+  */
+
+  glEnd();
+</pre>
+
+
+<p>Observe como precisamos quase nenhum conhecimento de matemática para 3D para qualquer um desses
+exemplos. Compare isso com a WebGL. Não vou escrever o código
+necessário para a WebGL. O código não é muito maior. Não é
+sobre a quantidade de linhas necessárias. É sobre a quantidade de <strong>conhecimento</strong>
+necessário. Nas duas bibliotecas 3D, elas cuidam do 3D. Você dá-lhes
+uma posição de câmera e um campo de visão, algumas luzes e um cubo. Eles
+lidam com o resto. Em outras palavras: são bibliotecas em 3D.</p>
+<p>Na WebGL, por outro lado, você precisa saber matemática matricial, normalizada
+coordenadas, produtos cruzados, produtos ponto, interpolação variável, cálculos
+especulares de iluminação e todos os tipos de outras coisas que muitas vezes levam meses
+ou anos para entender completamente.</p>
+<p>O principal ponto de uma biblioteca 3D é ter esse conhecimento construído para que você
+não precise desse conhecimento, você só pode confiar na biblioteca para
+lidar com isso por você. Isso foi verdade para a OpenGL original, como mostrado acima.
+É verdade para outras bibliotecas em 3D, como three.js. Mas não é verdade para a OpenGL
+ES 2.0+ ou a WebGL.</p>
+<p>Parece desleal chamar a WebGL de uma biblioteca 3D. Um usuário que vem para a WebGL
+pensará &quot;oh, biblioteca 3D. Legal. Isso fará todo o 3D para mim&quot; e depois encontre,
+da maneira mais difícil, não, esse não é o caso.</p>
+<p>Podemos dar um passo adiante. Aqui está um desenho de um wireframe 3D de um
+cubo em Canvas.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/resources%2F3d-in-canvas.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/resources/3d-in-canvas.html" target="_blank">clique aqui para abrir em uma janela separada</a>
+</div>
+
+</p>
+<p>E aqui está o desenho de um wireframe de um cubo na WebGL.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/resources%2F3d-in-webgl.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/resources/3d-in-webgl.html" target="_blank">clique aqui para abrir em uma janela separada</a>
+</div>
+
+</p>
+<p>Se você inspecionar o código, verá que não há muita diferença em termos
+da quantidade de conhecimento ou até mesmo o código. Em última análise
+a versão do Canvas faz um loop sobre os vértices, faz os cálculos que FORNECEMOS e
+desenha algumas linhas em 2D. A versão da WebGL faz a mesma coisa, exceto, os cálculos que
+FORNECEMOS no GLSL e executados pela GPU.</p>
+<p>O ponto desta última demostração é mostrar que efetivamente a WebGL é
+apenas um mecanismo de rasterização, semelhante ao Canvas 2D. Certo,
+a WebGL possui recursos que o ajudam a implementar o 3D. A WebGL tem uma profundidade de
+buffer que faz a classificação de profundidade muito mais fácil do que um sistema sem. A WebGL
+também tem várias funções de matemática incorporadas, que são muito úteis para fazer cálculos
+3D, embora não haja nenhum argumento que os torne 3D. Eles são uma biblioteca de
+cálculos. Você os usa para matemática, seja ou não que matemática voltada para 1D, 2D, 3D,
+tanto faz. Mas, em última análise, a WebGL apenas rasteriza. Você deve fornecer
+coordenadas de clipespace que represente o que você deseja desenhar. Certo,
+você fornece um x, y, z, w e ele divide por W antes de renderizar, mas isso,
+dificilmente, é suficiente para qualificar a WebGL como uma biblioteca 3D. Nas bibliotecas 3D você
+fornece dados em 3D, e as bibliotecas cuidam de calcular os pontos do clipspace de 3D.g</p>
+<p>Espero que você, pelo menos, entenda o que eu quero dizer quando digo que a WebGL
+não é uma biblioteca 3D. Espero que você também perceba que uma biblioteca 3D deve
+lidar com o 3D para você. A OpenGL fez isso. Three.js faz isso. Mas a OpenGL ES 2.0 e a WebGL,
+não. Portanto, eles argumentam que não pertencem à mesma categoria ampla de
+&quot;Bibliotecas 3D&quot;.</p>
+<p>The point of all of this is to give a developer that is new to WebGL
+an understanding of WebGL at its core. Knowing that WebGL is not a
+3D library and that they have to provide all the knowledge themselves
+lets them know what&#39;s next for them and whether they want to pursue
+that 3D math knowledge or instead choose a 3D library to handle it
+for them. It also removes much of the mystery of how it works.</p>
+<p>O objetivo de tudo isso é dar a um desenvolvedor que é novo na WebGL,
+uma compreensão da WebGL e de seu núcleo. Sabendo que a WebGL não é uma
+biblioteca 3D e que eles têm que fornecer todo o conhecimento em si,
+permite que eles saibam o que está por vir e se querem seguir com
+o conhecimento matemático necessário para 3D ou, em vez disso, escolher uma biblioteca 3D para lidar com isso
+para eles. Isso também deve remover uma boa parte do mistério de como ela funciona.</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -90,7 +284,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>
+        <div id="toc">
+          <ul>
   <li>Fundamentos</li>
   <ul>
     <li><a href="/webgl/lessons/pt-br/webgl-getting-webgl2.html">Como utilizar a WebGL2</a></li>
@@ -183,6 +378,31 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://github.com/greggman/webgl2-fundamentals">github</a></li>
 </ul>
 
+        </div>
+    </div>
+    <div class="lesson-comments">
+        <div>Dúvidas? <a href="http://stackoverflow.com/questions/tagged/webgl2">Pergunte no stackoverflow</a>.</div>
+        <div>Problemas/Bug? <a href="http://github.com/greggman/webgl2-fundamentals/issues">Pergunte no github</a>.</div>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL - Rasterização vs Bibliotecas 3D';
+            var disqus_title = 'WebGL - Rasterização vs Bibliotecas 3D';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
