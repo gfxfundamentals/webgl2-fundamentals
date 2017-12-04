@@ -363,30 +363,44 @@ that can present some challenges.</p>
 <p>One workaround would be to copy WebGL1 extensions to the WebGL context at init time.
 That way the rest of your code can stay the same. Example:</p>
 <pre class="prettyprint">
-var gl = someCanvas.getContext("webgl");
-var haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object"));
+const gl = someCanvas.getContext("webgl");
+const haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object");
 
 function getAndApplyExtension(gl, name) {
-  var ext = gl.getExtension(name);
+  const ext = gl.getExtension(name);
   if (!ext) {
-    return false;
+    return null;
   }
-  var suffix = name.split("_")[0];
-  var prefix = suffix = '_';
-  var suffixRE = new RegExp(suffix + '$');
-  var prefixRE = new RegExp('^' + prefix);
-  for (var key in ext) {
-    var val = ext[key];
-    if (typeof(val) === 'function') {
-      // remove suffix (eg: bindVertexArrayOES -> bindVertexArray)
-      var unsuffixedKey = key.replace(suffixRE, '');
-      if (key.substing)
-      gl[unprefixedKey] = ext[key].bind(ext);
+  const fnSuffix = name.split("_")[0];
+  const enumSuffix = '_' + fnSuffix;
+  for (const key in ext) {
+    const value = ext[key];
+    const isFunc = typeof (value) === 'function';
+    const suffix = isFunc ? fnSuffix : enumSuffix;
+    let name = key;
+    // examples of where this is not true are WEBGL_compressed_texture_s3tc
+    // and WEBGL_compressed_texture_pvrtc
+    if (key.endsWith(suffix)) {
+      name = key.substring(0, key.length - suffix.length);
+    }
+    if (gl[name] !== undefined) {
+      if (!isFunc && gl[name] !== value) {
+        console.warn("conflict:", name, gl[name], value, key);
+      }
     } else {
-      var unprefixedKey = key.replace(prefixRE, '');
-      gl[unprefixedKey] = ext[key];
+      if (isFunc) {
+        gl[name] = function(origFn) {
+          return function() {
+            return origFn.apply(ext, arguments);
+          };
+        }(value);
+      } else {
+        gl[name] = value;
+      }
     }
   }
+  return ext;
+}
 </pre>
 <p>Now your code can mostly just work the same on both. Example:</p>
 <pre class="prettyprint">
