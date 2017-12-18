@@ -7,14 +7,10 @@ compatible with WebGL 1](webgl1-backward-compatibility.html). That said, once yo
 WebGL 2 you might as well use it as it was meant to be used. These tutorials follow
 that path.
 
-[test](#日本語のテクスト)
-
 WebGL is often thought of as a 3D API. People think "I'll use WebGL and *magic* I'll get cool 3d".
 In reality WebGL is just a rasterization engine. It draws points, lines, and triangles based
 on code you supply. Getting WebGL to do anything else is up to you to provide code to use points, lines,
 and triangles to accomplish your task.
-
-## 日本語のテクスト
 
 WebGL runs on the GPU on your computer. As such you need to provide the code that runs on that GPU.
 You provide that code in the form of pairs of functions. Those 2 functions are called a vertex shader
