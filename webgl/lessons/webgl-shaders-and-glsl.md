@@ -406,7 +406,7 @@ Reference Card](https://www.khronos.org/files/opengles3-quick-reference-card.pdf
 If you like really dry and verbose stuff you can try
 [the GLSL ES 3.00 spec](https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf).
 
-## Putting it all togehter
+## Putting it all together
 
 That's the point of this entire series of posts. WebGL is all about creating various shaders, supplying
 the data to those shaders and then calling `gl.drawArrays`, `gl.drawElements`, etc to have WebGL process
