@@ -456,9 +456,9 @@ it is drawn first and then the other triangles behind it get drawn
 after covering it up. For example the  <span style="background: rgb(80, 70, 200); color: white; padding: 0.25em">purple part</span>
 is actually the back of the 'F'. It gets drawn 2nd because it comes 2nd in our data.
 
-Triangles in WebGL have the concept of front facing and back facing.  A
-front facing triangle has its vertices go in a clockwise direction.  A
-back facing triangle has its vertices go in a counter clockwise direction
+Triangles in WebGL have the concept of front facing and back facing.  By default a
+front facing triangle has its vertices go in a counter clockwise direction.  A
+back facing triangle has its vertices go in a clockwise direction.
 
 <img src="resources/triangle-winding.svg" class="webgl_center" width="400" />
 
@@ -573,7 +573,7 @@ called `ortho` or `orthographic` that looks like this
         return [
           2 / (right - left), 0, 0, 0,
           0, 2 / (top - bottom), 0, 0,
-          0, 0, 2 / (far - near), 0,
+          0, 0, 2 / (near - far), 0,
 
           (left + right) / (left - right),
           (bottom + top) / (bottom - top),
