@@ -109,7 +109,7 @@ select the slice in your shader
 
 ## Non-Power of 2 Texture Support
 
-in WebGL1 textures that were not a power of 2 could not have mips.
+In WebGL1 textures that were not a power of 2 could not have mips.
 In WebGL2 that limit is removed. Non-power of 2 texture work exactly
 the same as power of 2 textures.
 
