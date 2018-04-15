@@ -82,7 +82,7 @@ WebGL1에서는 단지 몇 가지 텍스처 포맷만 있엇습니다. WebGL2에
 *   `DEPTH_COMPONENT24`
 *   `DEPTH_COMPONENT16`
 
-## 3D 텍스쳐
+## 3D 텍스처
 
 3D 텍스처 입니다. 3차원을 가진 텍스처입니다.
 
@@ -92,30 +92,28 @@ WebGL1에서는 단지 몇 가지 텍스처 포맷만 있엇습니다. WebGL2에
 
     vec4 color = texture(someSampler2DArray, vec3(u, v, slice));
 
-## Non-Power of 2 Texture Support
+## 2의 거듭제곱이 아닌 텍스처 지원
 
-in WebGL1 textures that were not a power of 2 could not have mips.
-In WebGL2 that limit is removed. Non-power of 2 texture work exactly
-the same as power of 2 textures.
+WebGL1에서, 2의 거듭제곱이 아닌 텍스처는 밉을 가질수 없었습니다. 
+WebGL2부터는 이런 제한이 사라졌습니다.
+2의 거듭제곱이 아닌 텍스처도 2의 거듭제곱 텍스처와 정확히 동일하게 작동합니다.
 
-## Loop restrictions in shaders removed
+## 쉐이더 루프 제한 제거
 
-In WebGL1 a loop in a shader had to use a constant integer expression.
-WebGL2 removes that limit (in GLSL 300 es)
+WebGL1에서 쉐이더의 루프는 상수인 정수형 표현식을 사용해야만 했습니다.
+WebGL2 (GLSL 300 es) 에서는 제한이 사라졌습니다.
 
-## Matrix functions in GLSL
+## GLSL의 행렬 함수
 
-In WebGL1 if needed to get the inverse of a matrix you had to
-pass it in as a uniform. In WebGL2 GLSL 300 es there's the built in
-`inverse` function as well as `transpose`.
+WebGL1에서는 행렬의 역행렬을 얻으려면 행렬을 uniform 으로 전달해야 했습니다.
+WebGL2 GLSL 300 es 에는 이전의 '전치행렬 함수'처럼 '역행렬 함수'가 내장되어 있습니다.
 
-## Common compressed textures
+## 공통 압축 텍스처
 
-In WebGL1 there are various compressed texture formats
-that are hardware dependent. S3TC was bascially desktop only.
-PVTC was iOS only. Etc..
+WebGL1에서는 하드웨어에 따라 다양한 압축 텍스 형식이 존재합니다.
+데스크톱 전용의 S3TC, IOS 전용의 PVTC 등등 ...
 
-In WebGL2 these formats are supposed to be supported everywhere
+WebGL2에서 아래와같은 형식은 모든 하드웨어 환경에서 지원됩니다.
 
 *   `COMPRESSED_R11_EAC RED`
 *   `COMPRESSED_SIGNED_R11_EAC RED`
@@ -130,57 +128,35 @@ In WebGL2 these formats are supposed to be supported everywhere
 
 ## Uniform Buffer Objects
 
-Uniform Buffer Objects let you specify a bunch of uniforms
-from a buffer. The advantages are
+Uniform Buffer Object를 사용하면 buffer에서 uniform 묶음을 특정할 수 있습니다. 다음과 같은 장점들이 있습니다.
 
-1. You can manipulate all the uniforms in the buffer
-   outside of WebGL
+1. WebGL 외부의 buffer 안에 있는 모든 uniform들을 조작할 수 있습니다.
 
-   In WebGL1 if you had 16 uniforms that would require
-   16 calls to `gl.uinformXXX`. That is relatively slow.
-   In WebGL2 if you use
-   a Uniform Buffer Object you can set the values in
-   a typed array all inside JavaScript which means it's
-   much much faster. When all the values are set
-   you upload them all with 1 call to `gl.bufferData`
-   or `gl.bufferSubData` and then tell the program
-   to use that buffer with `gl.bindBufferRange` so only
-   2 calls.
+    만약 WebGL1에서 16개의 uniform을 가지고 있다면 gl.uniformXXX에 16번의 호출이 필요한데, 이는 상대적으로 느립니다.
+    WebGL2에서는 Uniform Buffer Object를 사용한다면 JavaScript 내부의 typed array 안에서 값을 설정할 수 있으므로
+    훨씬 빠릅니다. 한번의 gl.bufferData 나 gl.bufferSubData 호출로 모든 값이 설정되고나면
+    gl.bindBufferRange 로 프로그램에게 해당 buffer를 사용하도록 지시합니다. 
+    즉 총 2번의 호출로 해결할 수 있습니다.
+    
+2. 서로 다른 uniform buffer object 의 세트를 가질 수 있습니다.
 
-2. You can have different sets of uniforms buffer objects
+   먼저 Uniform Block이란 쉐이더 정의된 uniform의 집합을 말하며,
+   Uniform Buffer Object는 Uniform Block이 사용할 값이 들어있는 버퍼를 뜻합니다.
+   원하는만큼 UniformBufferObject를 만들수 있으며 그 중 하나를 특정한 Uniform Block에 bind하여 그릴 수 있습니다. 
 
-   First some terms. A Uniform Block is a collection
-   of uniforms defined in a shader. A Uniform Buffer Object
-   is a buffer that contains the values a Uniform Block
-   will use. You can create as many Uniform Buffer Objects
-   as you want and bind one of them to a particular Uniform Block
-   when you draw.
+   예를 들면, 하나의 쉐이더에 4개의 Uniform Block들이 정의되어 있다고 합시다.
 
-   For example, you could have 4 uniform blocks defined
-   in a shader.
+   * 투영 행렬, 뷰 행렬 등 과 같은 모든 draw 호출에 대해 동일한 행렬을 포함하는 전역 행렬 Uniform Block
 
-   * A global matrix uniform block that contains
-     matrices that are the same for all draw calls like the
-     projection matrix, view matrix, etc.
+   * 모델마다 다른 행렬 ex)월드 행렬, 법선 행렬 을 포함하는 모델 별 Uniform Block
 
-   * A per model uniform block that contains matrices that are
-     different per model for example the world matrix and
-     normal matrix.
+   * 확산, 주변, 반사 등의 material 설정을 포함하는 material Uniform Block
 
-   * A material uniform block that contains the material settings
-     like diffuse, ambient, specular, etc..
+   * 밝은 색상, 밝은 위치 등과 같은 조명 데이터가 포함된 조명 Uniform Block
 
-   * A lighting uniform block that contains the lighting data
-     like light color, light position, etc..
+   그런 다음 런타임에 전역 Uniform Buffer Object, 모델 별 Uniform Buffer Object, 조명 별 Uniform Buffer Object, 재질 별 Uniform Buffer         Object를 각각 하나씩 만듭니다.
 
-   Then at runtime you could create one global uniform buffer
-   object, one model uniform buffer object per model, one
-   light uinform buffer object per light and one uniform buffer
-   object per material.
-
-   To draw any particular item assuming all the values are
-   already up to date all you have to do is bind your desired
-   4 uniform buffer objects
+   모든 값이 이미 최신의 값이라고 가정하고 어떤 특정 항목을 그리려면 필요한 4개의 Uniform Buffer Object를 바인딩만 하면 됩니다.
 
        gl.bindBufferRange(..., globalBlockIndx, globalMatrixUBO, ...);
        gl.bindBufferRange(..., modelBlockIndx, someModelMatrixUBO, ...);
@@ -189,88 +165,67 @@ from a buffer. The advantages are
 
 ##  Integer textures, attributes and math
 
-In WebGL2 you can have integer based textures where as
-in WebGL1 all textures represented floating point values
-even if they weren't represented by floating point values.
-
-You can also have integer attributes.
-
-On top of that, GLSL 300 es allows you to do bit manipulations
-of integers in the shaders.
+WebGL2에서는 WebGL1에서 처럼 부동 소수점 값으로 표현하지 않더라도 모든 텍스처가 부동 소수점 값을 나타내는 정수 기반 텍스를 가질 수 있습니다.
+정수 속성을 가질 수도 있습니다.
+또한 GLSL 300에서는 쉐이더에서 정수를 bit manipulation 할 수 있습니다.
 
 ##  Transform feedback
 
-WebGL2 allows your vertex shader to write its results back
-to a buffer.
+WebGL2는 버텍스 쉐이더가 그 결과를 다시 버퍼에 쓸 수 있게 합니다.
 
 ##  Samplers
 
-In WebGL1 all the texture parameters were per texture.
-In WebGL2 you can optionally use sampler objects. With
-samplers, all the filtering and repeat/clamping parameters
-that were part of a texture move to the sampler. This means
-a single texture can be sampled in different ways. Repeating
-or clampped. Filtered or not filtered.
+WebGL1에서 모든 텍스처 매개변수는 텍스처마다 존재했습니다. WebGL2에서는 필요에따라 샘플러 객체를 사용할 수 있습니다. 샘플러를 사용하면 텍스처 일부였던 모든 필터링,반복,클램핑 매개변수들은 샘플러로 이동하게 됩니다. 즉, 하나의 텍스처를 여러가지 다른 방식으로 샘플링 할 수 있습니다.
 
-A mini side rant: I've written 6 game engines. I've never
-personally ever had a artist need to filter textures in
-multiple ways. I'd be curious to know if any other game
-engine devs have had a different experience.
+필자의 말 : 나는 여섯개의 게임 엔진을 제작해봤지만 개인적으로 여러가지 방법으로 텍스처를 필터링 해야 하는 아티스트를 본 적이 없습니다. 혹시 다른 게임 엔진 개발자들도 다른 경험이 있는지 궁금합니다.
 
 ## Depth Textures
 
-Depth textures were optional in WebGL1 and a PITA to work around. Now they're standard.
-Commonly used for computing shadow maps
+Depth 텍스처는 WebGL1 + PITA 로 해결할 수 있는 선택 사항이었습니다. 이제는 표준이며 일반적으로 쉐도우 맵을 계산하는데 사용됩니다.
 
 ## Standard Derivatives
 
-These are now standard. Common uses include computing normals in the shaders instead of passing them in
+Derivatives는 이제 표준입니다. 일반적으로 셰이더에 법선을 전달하는대신 셰이더 내부에서 계산하는 데에 쓰입니다.
 
 ## Instanced Drawing
 
-Now Standard, common uses are drawing lots of trees, bushes or grass quickly.
+이제 표준입니다. 일반적인 용도는 많은양의 나무,관목 또는 잔디 등을 빠르게 그리는 것입니다.
 
 ## UNSIGNED_INT indices
 
-Being able to use 32bit ints for indices removes the size limit of indexed geometry
+32bit int 인덱스는 인덱싱 된 geometry의 크기 제한을 풀어줍니다.
 
 ## Setting `gl_FragDepth`
 
-Letting you write your own custom values to the depth buffer / z-buffer.
+깊이 버퍼 / z 버퍼에 사용자 정의 값을 쓸 수 있습니다.
 
 ## Blend Equation MIN / MAX
 
-Being able to take the min or max of 2 colors when blending
+블렌드 할때 두 색상의 최소 또는 최대 를 가질 수 있습니다.
 
 ## Multiple Draw Buffers
 
-Being able to draw to multiple buffers at once from a shader. This is commonly used
-for various deferred rendering techniques.
+쉐이더에서 여러 버퍼를 한 번에 그릴 수 있습니다. 일반적으로 다양한 지연 렌더링 기술에 사용됩니다.
 
 ## Texture access in vertex shaders
 
-In WebGL1 this was an optional feature. There was a count of how many textures
-you could access in a vertex shader and that count was allowed to be 0. Most
-devices supported them. In WebGL2 that count is required to be at least 16.
+WebGL1에서는 선택적 기능이었습니다. 버텍스 쉐이더 에서 접근 할 수 있는 텍스처는 0개 이어야 했습니다.
+대부분의 기기가 이것을 지원했습니다. WebGL2에서는 최소 16개 이상이어야 합니다.
 
 ## Multi-Sampled renderbuffers
 
-In WebGL1 the canvas itself could be anti-aliased with the GPU's built in
-multi-sample system but there was no support for user controlled mutli-sampling. In WebGL2
-you can now make multi-sampled renderbuffers.
+WebGL1에서 캔버스 자체는 멀티 샘플 시스템에 내장 된 GPU로 안티 앨리어싱을 적용 할 수 있었지만 사용자 정의 멀티 샘플링은 지원하지 않았습니다. WebGL2에서는 멀티 샘플 렌더 버퍼를 직접 만들 수 있습니다.
 
 ## Occlusion Queries
 
-Occlusion queries let you ask the GPU to check if it were to render something
-would any pixels actually get drawn.
+Occlusion 쿼리를 사용하면 GPU에 어떤 픽셀을 실제로 렌더링할지 여부를 확인하도록 요청할 수 있습니다.
 
 ## Floating point textures always available
 
-Floating point textures are used for many special effects
-and calculations. In WebGL1 they were optional. In WebGL2
-they just exist.
+부동 소수점 텍스처는 많은 특수 효과 및 계산에 사용됩니다. WebGL1에서는 선택 사항이었지만 WebGL2에서는 기본적으로 지원합니다. 
 
-Note: Unfortunately they are still restricted in that filtering
-and rendering to float point textures is still optional. See
+노트: 안타깝게도 부동 소수점 텍스에 대한 필터링 및 렌더링은 여전히 선택 사항이므로 제한적입니다.
+
+참고
 [`OES_texture_float_linear`](https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/)
- and [`EXT_color_buffer_float`](https://www.khronos.org/registry/webgl/extensions/EXT_color_buffer_float/).
+[`EXT_color_buffer_float`](https://www.khronos.org/registry/webgl/extensions/EXT_color_buffer_float/).
