@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/de/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/de/webgl1-to-webgl2-fundamentals.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of Gregg Tavares. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of Gregg Tavares. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,23 +36,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="Differences from WebGLFundamentals.org" />
+<meta property="og:title" content="Unterschiede zu WebGLFundamentals.org" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="The differences between WebGLFundamentals.org and WebGL2Fundamentals.org" />
+<meta property="og:description" content="Unterschiede zwischen WebGLFundamentals.org und WebGL2Fundamentals.org" />
 <meta property="og:url" content="http://webgl2fundamentals.org/webgl/lessons/de/webgl1-to-webgl2-fundamentals.html" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@greggman" />
 <meta name="twitter:creator" content="@greggman" />
 <meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="Differences from WebGLFundamentals.org" />
+<meta name="twitter:title" content="Unterschiede zu WebGLFundamentals.org" />
 <meta name="twitter:url" content="http://webgl2fundamentals.org/webgl/lessons/de/webgl1-to-webgl2-fundamentals.html" />
-<meta name="twitter:description" content="The differences between WebGLFundamentals.org and WebGL2Fundamentals.org" />
+<meta name="twitter:description" content="Unterschiede zwischen WebGLFundamentals.org und WebGL2Fundamentals.org" />
 <meta name="twitter:image:src" content="http://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>Differences from WebGLFundamentals.org</title>
+<title>Unterschiede zu WebGLFundamentals.org</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
@@ -75,12 +77,79 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>Differences from WebGLFundamentals.org</h1>
+    <h1>Unterschiede zu WebGLFundamentals.org</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>Es tut uns leid, dieser Artikel wurde noch nicht übersetzt! <a href="https://github.com/greggman/webgl2-fundamentals">Übersetzungen sind willkommen</a>! 😄</p>
-<p><a href="/webgl/lessons/webgl1-to-webgl2-fundamentals.html">Bis dahin, hier der originale Artikel auf Englisch.</a>.</p>
+      <p>Wenn du <a href="http://webglfundamentals.org">webglfundamentals.org</a> bereits
+gelesen hast, wird es dür dich einige Änderungen geben die dir bewusst sein sollten.</p>
+<h2 id="multiline-template-literals">Multiline Template Literals</h2>
+<p>Auf webglfundamentals.org werden fast alle Skripte in nicht-javascript
+<code>script</code> Tags gehalten. </p>
+<pre><code>&lt;script id=&quot;vertexshader&quot; type=&quot;not-js&quot;&gt;;
+shader
+goes
+here
+&lt;/script&gt;;
+
+...
+
+var vertexShaderSource = document.getElementById(&quot;vertexshader&quot;).text;
+</code></pre><p>Auf webgl2fundamentals.org bin ich zu multiline template literals übergegangen</p>
+<pre><code>var vertexShaderSource = `
+shader
+goes
+here
+`;
+</code></pre><p>multiline template literals werden von allen WebGL-fähigen Browsern unterstützt,
+den IE11 ausgenommen. Wenn du IE11 benutzen möchtest, solltest du einen Transpiler 
+wie <a href="http://babeljs.io">babel</a> in Erwägung ziehen.</p>
+<h2 id="alle-shader-benutzen-die-version-glsl-300-es">Alle Shader benutzen die Version GLSL 300 es</h2>
+<p>Ich habe alle Shader auf GLSL 300 es umgestellt. Ich dachte mir,
+wozu WebGL2 benutzen wenn man keine WebGL2 Shader benutzt?</p>
+<h2 id="alle-beispiele-nutzen-vertex-array-objects">Alle Beispiele nutzen Vertex Array Objects</h2>
+<p>Vertex Array Objects sind ein optionales Feature in WebGL1, in WebGL2 sind sie 
+ein standard Feature. <a href="webgl1-to-webgl2.html#Vertex-Array-Objects">Ich finde man sollte sie überall benutzen</a>.
+Eigentlich sollte ich wohl zu webglfundamentals.org zurückkehren und sie, an den wenigen Stellen and den sie nicht verfügbar sind, <a href="https://github.com/greggman/oes-vertex-array-object-polyfill">mit Hilfe von polyfill</a> einsetzen. Es gibt absolut keine Nachteile, der Code wird unkomplizierter und in fast allen Fällen effizienter.</p>
+<h2 id="andere-kleine-nderungen">Andere kleine Änderungen</h2>
+<ul>
+<li><p>Ich habe versucht die Beispiele leicht anzupassen um die gängigsten Muster zu demonstrieren</p>
+<p>Die meisten Apps setzen globale WebGL Status wie Blending, Culling oder Depth Testing in
+der Render-Schleife, weil diese Einstellungen sich oft mehrmals ändern. Auf webglfundamentals.org
+setze ich diese Werte zur Initialisierungszeit, weil sie nur einmalig gesetzt werden müssen,
+diese Methode ist jedoch nicht gängig.</p>
+</li>
+<li><p>Ich setze den Viewport in allen Beispielen</p>
+<p>Das habe ich auf webglfundamentals.org ausgelassen, weil es für die Beispiele
+nicht notwendig war. Es wird jedoch in nahezu allen echten Anwendungen nötig sein.</p>
+</li>
+<li><p>Ich habe jquery entfernt</p>
+<p>Als ich anfing war es nicht üblich <code>&lt;input type=&quot;range&quot;&gt;</code> zu unterstützen. Jetzt 
+wird es überall unterstützt.</p>
+</li>
+<li><p>Ich habe allen Hilfsfuntionen einen Prefix angefügt</p>
+<p>Code wie</p>
+<pre><code> var program = createProgramFromScripts(...)
+</code></pre><p> wurde zu</p>
+<pre><code> webglUtils.createProgramFromSources(...);
+</code></pre><p> Ich hoffe dadurch wird klarer was diese Funktionen sind und 
+ wo man sie finden kann.</p>
+</li>
+</ul>
+<h2 id="was-nun">Was nun</h2>
+<p>Ich überlege ob ich nicht manche der Beispiele auf webglfundamentals
+entsprechend anpassen sollte. Es hat einige Wochen harter Arbeit gekostet 
+um alle bestehenden Beispiele und Artikel zu überarbeiten. Ich habe das Gefühl, 
+dass WebGL1 innerhalb der nächsten zwölf Monate zum größten Teil durch WebGL2 ersetzt 
+werden wird, weil alle Browser auf Autoupdates eingestellt sind. Firefox und 
+Chrome werden dann mit WebGL2 ausgeliefert und somit einen hohen Anteil von 
+Benutzern auf Dektop und Android abdecken. Wenn Apple und Microsoft Safari macOS, 
+Safari iOS und Edge WebGL2 fähig machen, sollten die meisten Benutzer abgedeckt 
+sein und wir können alle mit WebGL2 weiter machen.</p>
+<p>Hoffentlich finde ich die Zeit mehr Artikel zu schreiben.
+Angesichts der oben beschriebenen Tatsachen, werden alle Artikel ab nun 
+nur noch WebGL2 benutzen.
+Galube ich zumindest.</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -92,7 +161,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>
+        <div id="toc">
+          <ul>
   <li>Grundlagen</li>
   <ul>
     <li><a href="/webgl/lessons/de/webgl-getting-webgl2.html">Wie benutzt man WebGL2</a></li>
@@ -186,6 +256,31 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://github.com/greggman/webgl2-fundamentals">github</a></li>
 </ul>
 
+        </div>
+    </div>
+    <div class="lesson-comments">
+        <div>Fragen? <a href="http://stackoverflow.com/questions/tagged/webgl2">Stell eine Frage auf stackoverflow</a>.</div>
+        <div>Probleme/Bug? <a href="http://github.com/greggman/webgl2-fundamentals/issues">Erstelle ein Issue auf github</a>.</div>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'Unterschiede zu WebGLFundamentals.org';
+            var disqus_title = 'Unterschiede zu WebGLFundamentals.org';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
