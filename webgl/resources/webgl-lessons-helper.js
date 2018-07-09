@@ -268,14 +268,10 @@
     topWindow.requestAnimationFrame = (function(oldRAF) {
 
       return function(callback, element) {
-        var handler = function() {
-          if (isOnScreen(element)) {
-            oldRAF(callback, element);
-          } else {
-            oldRAF(handler, element);
-          }
+        const handler = function() {
+          return oldRAF(isOnScreen(element) ? callback : handler, element);
         };
-        handler();
+        return handler();
       };
 
     }(topWindow.requestAnimationFrame));
