@@ -110,7 +110,7 @@ MatrixStack.prototype.scale = function(x, y, z) {
 Using our [`drawImage` from the previous lesson](webgl-2d-drawimage.html) we had these lines
 
 ```
-// this matirx will convert from pixels to clip space
+// this matrix will convert from pixels to clip space
 var matrix = m4.orthographic(
     0, gl.canvas.clientWidth, gl.canvas.clientHeight, 0, -1, 1);
 
@@ -131,7 +131,7 @@ var matrixStack = new MatrixStack();
 and multiply in the top matrix from our stack in
 
 ```
-// this matirx will convert from pixels to clip space
+// this matrix will convert from pixels to clip space
 var matrix = m4.orthographic(
     0, gl.canvas.clientWidth, gl.canvas.clientHeight, 0, -1, 1);
 

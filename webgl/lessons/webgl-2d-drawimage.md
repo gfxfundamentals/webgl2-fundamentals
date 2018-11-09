@@ -87,7 +87,7 @@ And now the function
       gl.activeTexture(gl.TEXTURE0 + textureUnit);
       gl.bindTexture(gl.TEXTURE_2D, tex);
 
-      // this matirx will convert from pixels to clip space
+      // this matrix will convert from pixels to clip space
       var matrix = m4.orthographic(0, gl.canvas.width, gl.canvas.height, 0, -1, 1);
 
       // translate our quad to dstX, dstY
@@ -243,7 +243,7 @@ Is really no different. We just use `dstWidth` and `dstHeight` instead of
       gl.activeTexture(gl.TEXTURE0 + textureUnit);
       gl.bindTexture(gl.TEXTURE_2D, tex);
 
-      // this matirx will convert from pixels to clip space
+      // this matrix will convert from pixels to clip space
       var matrix = m4.orthographic(0, canvas.width, canvas.height, 0, -1, 1);
 
       // translate our quad to dstX, dstY
@@ -333,7 +333,7 @@ what we've already done for the positions.
 
       gl.bindTexture(gl.TEXTURE_2D, tex);
 
-      // this matirx will convert from pixels to clip space
+      // this matrix will convert from pixels to clip space
       var matrix = m4.orthographic(
           0, gl.canvas.clientWidth, gl.canvas.clientHeight, 0, -1, 1);
 
