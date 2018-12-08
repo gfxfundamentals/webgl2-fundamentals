@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>WebGL - Skinning</title>
+<title>WebGL - Skinning with bone matrices in texture</title>
 <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
 </head>
 <body>
@@ -41,15 +41,24 @@ function main() {
 
   uniform mat4 projection;
   uniform mat4 view;
-  uniform mat4 bones[4];
+  uniform sampler2D boneMatrixTexture;
+  uniform float numBones;
+
+  mat4 getBoneMatrix(uint boneNdx) {
+    return mat4(
+      texelFetch(boneMatrixTexture, ivec2(0, boneNdx), 0),
+      texelFetch(boneMatrixTexture, ivec2(1, boneNdx), 0),
+      texelFetch(boneMatrixTexture, ivec2(2, boneNdx), 0),
+      texelFetch(boneMatrixTexture, ivec2(3, boneNdx), 0));
+  }
 
   void main() {
 
     gl_Position = projection * view *
-                  (bones[a_boneNdx[0]] * a_position * a_weight[0] +
-                   bones[a_boneNdx[1]] * a_position * a_weight[1] +
-                   bones[a_boneNdx[2]] * a_position * a_weight[2] +
-                   bones[a_boneNdx[3]] * a_position * a_weight[3]);
+                  (getBoneMatrix(a_boneNdx[0]) * a_position * a_weight[0] +
+                   getBoneMatrix(a_boneNdx[1]) * a_position * a_weight[1] +
+                   getBoneMatrix(a_boneNdx[2]) * a_position * a_weight[2] +
+                   getBoneMatrix(a_boneNdx[3]) * a_position * a_weight[3]);
 
   }
   `;
@@ -80,16 +89,16 @@ function main() {
     position: {
       numComponents: 2,
       data: [
-       0,  1,  // 0
-       0, -1,  // 1
-       2,  1,  // 2
-       2, -1,  // 3
-       4,  1,  // 4
-       4, -1,  // 5
-       6,  1,  // 6
-       6, -1,  // 7
-       8,  1,  // 8
-       8, -1,  // 9
+        0,  1,  // 0
+        0, -1,  // 1
+        2,  1,  // 2
+        2, -1,  // 3
+        4,  1,  // 4
+        4, -1,  // 5
+        6,  1,  // 6
+        6, -1,  // 7
+        8,  1,  // 8
+        8, -1,  // 9
       ],
     },
     boneNdx: {
@@ -150,10 +159,18 @@ function main() {
   const numBones = 4;
   const boneArray = new Float32Array(numBones * 16);
 
+  // prepare the texture for bone matrices
+  var boneMatrixTexture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, boneMatrixTexture);
+  // since we want to use the texture for pure data we turn
+  // off filtering
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
   const uniforms = {
     projection: m4.orthographic(-20, 20, -10, 10, -1, 1),
     view: m4.translation(-6, 0, 0),
-    bones: boneArray,
+    boneMatrixTexture,
     color: [1, 0, 0, 1],
   };
 
@@ -169,15 +186,15 @@ function main() {
     bones.push(m4.identity());     // just allocate storage
   }
 
-   // rotate each bone by a and simulate a hierarchy
-   function computeBoneMatrices(bones, angle) {
-     const m = m4.identity();
-     m4.zRotate(m, angle, bones[0]);
-     m4.translate(bones[0], 4, 0, 0, m);
-     m4.zRotate(m, angle, bones[1]);
-     m4.translate(bones[1], 4, 0, 0, m);
-     m4.zRotate(m, angle, bones[2]);
-     // bones[3] is not used
+  // rotate each bone by a and simulate a hierarchy
+  function computeBoneMatrices(bones, angle) {
+    const m = m4.identity();
+    m4.zRotate(m, angle, bones[0]);
+    m4.translate(bones[0], 4, 0, 0, m);
+    m4.zRotate(m, angle, bones[1]);
+    m4.translate(bones[1], 4, 0, 0, m);
+    m4.zRotate(m, angle, bones[2]);
+    // bones[3] is not used
   }
 
   // compute the initial positions of each matrix
@@ -197,13 +214,26 @@ function main() {
     computeBoneMatrices(bones, angle);
 
     // multiply each by its bindPoseInverse
-    bones.forEach((bone, ndx) => {
+    bones.forEach(function(bone, ndx) {
       m4.multiply(bone, bindPoseInv[ndx], boneMatrices[ndx]);
     });
 
     gl.useProgram(programInfo.program);
 
     gl.bindVertexArray(skinVAO);
+
+    // update the texture with the current matrices
+    gl.bindTexture(gl.TEXTURE_2D, boneMatrixTexture);
+    gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,           // level
+        gl.RGBA32F,  // internal format
+        4,           // width 4 pixels, each pixel has RGBA so 4 pixels is 16 values
+        numBones,    // one row per bone
+        0,           // border
+        gl.RGBA,     // format
+        gl.FLOAT,    // type
+        boneArray);
 
     // calls gl.uniformXXX, gl.activeTexture, gl.bindTexture
     twgl.setUniforms(programInfo, uniforms);
@@ -216,7 +246,6 @@ function main() {
     requestAnimationFrame(render);
   }
   requestAnimationFrame(render);
-
 
   // --- ignore below this line - it's not relevant to the exmample and it's kind of a bad example ---
 
