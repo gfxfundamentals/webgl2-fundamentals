@@ -28,6 +28,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+/* global define */
 
 /**
  * Various 2d math functions.
@@ -60,24 +61,24 @@
    * @memberOf module:webgl-2d-math
    */
   function multiply(a, b) {
-    var a00 = a[0 * 3 + 0];
-    var a01 = a[0 * 3 + 1];
-    var a02 = a[0 * 3 + 2];
-    var a10 = a[1 * 3 + 0];
-    var a11 = a[1 * 3 + 1];
-    var a12 = a[1 * 3 + 2];
-    var a20 = a[2 * 3 + 0];
-    var a21 = a[2 * 3 + 1];
-    var a22 = a[2 * 3 + 2];
-    var b00 = b[0 * 3 + 0];
-    var b01 = b[0 * 3 + 1];
-    var b02 = b[0 * 3 + 2];
-    var b10 = b[1 * 3 + 0];
-    var b11 = b[1 * 3 + 1];
-    var b12 = b[1 * 3 + 2];
-    var b20 = b[2 * 3 + 0];
-    var b21 = b[2 * 3 + 1];
-    var b22 = b[2 * 3 + 2];
+    const a00 = a[0 * 3 + 0];
+    const a01 = a[0 * 3 + 1];
+    const a02 = a[0 * 3 + 2];
+    const a10 = a[1 * 3 + 0];
+    const a11 = a[1 * 3 + 1];
+    const a12 = a[1 * 3 + 2];
+    const a20 = a[2 * 3 + 0];
+    const a21 = a[2 * 3 + 1];
+    const a22 = a[2 * 3 + 2];
+    const b00 = b[0 * 3 + 0];
+    const b01 = b[0 * 3 + 1];
+    const b02 = b[0 * 3 + 2];
+    const b10 = b[1 * 3 + 0];
+    const b11 = b[1 * 3 + 1];
+    const b12 = b[1 * 3 + 2];
+    const b20 = b[2 * 3 + 0];
+    const b21 = b[2 * 3 + 1];
+    const b22 = b[2 * 3 + 2];
 
     return [
       b00 * a00 + b01 * a10 + b02 * a20,
@@ -167,8 +168,8 @@
    * @memberOf module:webgl-2d-math
    */
   function rotation(angleInRadians) {
-    var c = Math.cos(angleInRadians);
-    var s = Math.sin(angleInRadians);
+    const c = Math.cos(angleInRadians);
+    const s = Math.sin(angleInRadians);
     return [
       c, -s, 0,
       s, c, 0,
@@ -219,13 +220,13 @@
   }
 
   function distance(x1, y1, x2, y2) {
-    var dx = x1 - x2;
-    var dy = y1 - y2;
+    const dx = x1 - x2;
+    const dy = y1 - y2;
     return Math.sqrt(dx * dx + dy * dy);
   }
 
   function normalize(x, y) {
-    var l = distance(0, 0, x, y);
+    const l = distance(0, 0, x, y);
     if (l > 0.00001) {
       return [x / l, y / l];
     } else {
@@ -237,7 +238,7 @@
   // n = normal
   function reflect(ix, iy, nx, ny) {
     // I - 2.0 * dot(N, I) * N.
-    var d = dot(nx, ny, ix, iy);
+    const d = dot(nx, ny, ix, iy);
     return [
       ix - 2 * d * nx,
       iy - 2 * d * ny,
