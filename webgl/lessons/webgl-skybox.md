@@ -20,7 +20,7 @@ The typical solution is to turn off the depth test and draw the skybox first but
 
 Instead of using a cube lets just draw quad that covers the entire canvas and use [a cubemap](webgl-cube-maps.html). Normally we use a view projection matrix to project a quad in 3D space. In this case we'll do the opposite. We'll use the inverse of the view projection matrix to work backward and get the direction the camera is looking for each pixel on the quad. This will give us directions to look into the cubemap.
 
-Starting with the [environment map example](webgl-environment-maps.html) I removed all the code related to normals as were're not using them where. Then we need a quad.
+Starting with the [environment map example](webgl-environment-maps.html) I removed all the code related to normals as were're not using them here. Then we need a quad.
 
 ```
 // Fill the buffer with the values that define a quad.
