@@ -94,8 +94,7 @@ WebGL app will have many shader programs.</p>
 <pre><code>#version 300 es
 void main() {
    gl_Position = doMathToMakeClipspaceCoordinates
-}
-</code></pre><p>Your shader is called once per vertex. Each time it&#39;s called you are required to set the
+}</code></pre><p>Your shader is called once per vertex. Each time it&#39;s called you are required to set the
 the special global variable, <code>gl_Position</code> to some clipspace coordinates.</p>
 <p>Vertex shaders need data. They can get that data in 3 ways.</p>
 <ol>
@@ -107,13 +106,10 @@ the special global variable, <code>gl_Position</code> to some clipspace coordina
 <p>The most common way for a vertex shader to get data is through buffers and <em>attributes</em>.
 <a href="webgl-how-it-works.html">How it works</a> covered buffers and
 attributes. You create buffers,</p>
-<pre><code>var buf = gl.createBuffer();
-</code></pre><p>put data in those buffers</p>
+<pre><code>var buf = gl.createBuffer();</code></pre><p>put data in those buffers</p>
 <pre><code>gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-gl.bufferData(gl.ARRAY_BUFFER, someData, gl.STATIC_DRAW);
-</code></pre><p>Then, given a shader program you made you look up the location of its attributes,</p>
-<pre><code>var positionLoc = gl.getAttribLocation(someShaderProgram, &quot;a_position&quot;);
-</code></pre><p>then tell WebGL how to pull data out of those buffers and into the attribute</p>
+gl.bufferData(gl.ARRAY_BUFFER, someData, gl.STATIC_DRAW);</code></pre><p>Then, given a shader program you made you look up the location of its attributes,</p>
+<pre><code>var positionLoc = gl.getAttribLocation(someShaderProgram, &quot;a_position&quot;);</code></pre><p>then tell WebGL how to pull data out of those buffers and into the attribute</p>
 <pre><code>// turn on getting data out of a buffer for this attribute
 gl.enableVertexAttribArray(positionLoc);
 
@@ -124,8 +120,7 @@ var offset = 0;         // start at the beginning of the buffer
 var stride = 0;         // how many bytes to move to the next vertex
                         // 0 = use the correct stride for type and numComponents
 
-gl.vertexAttribPointer(positionLoc, numComponents, type, false, stride, offset);
-</code></pre><p>In <a href="webgl-fundamentals.html">WebGL fundamentals</a> we showed that we can do no math
+gl.vertexAttribPointer(positionLoc, numComponents, type, false, stride, offset);</code></pre><p>In <a href="webgl-fundamentals.html">WebGL fundamentals</a> we showed that we can do no math
 in the shader and just pass the data directly through.</p>
 <pre><code>#version 300 es
 
@@ -133,8 +128,7 @@ in vec4 a_position;
 
 void main() {
    gl_Position = a_position;
-}
-</code></pre><p>If we put clipspace vertices into our buffers it will work.</p>
+}</code></pre><p>If we put clipspace vertices into our buffers it will work.</p>
 <p>Attributes can use <code>float</code>, <code>vec2</code>, <code>vec3</code>, <code>vec4</code>, <code>mat2</code>, <code>mat3</code>, <code>mat4</code>,
 <code>int</code>, <code>ivec2</code>, <code>ivec3</code>, <code>ivec4</code>, <code>uint</code>, <code>uvec2</code>, <code>uvec3</code>, <code>uvec4</code> as types.</p>
 <h3 id="uniforms">Uniforms</h3>
@@ -148,13 +142,10 @@ in vec4 a_position;
 
 void main() {
    gl_Position = a_position + u_offset;
-}
-</code></pre><p>And now we could offset every vertex by a certain amount. First we&#39;d look up the
+}</code></pre><p>And now we could offset every vertex by a certain amount. First we&#39;d look up the
 location of the uniform</p>
-<pre><code>var offsetLoc = gl.getUniformLocation(someProgram, &quot;u_offset&quot;);
-</code></pre><p>And then before drawing we&#39;d set the uniform</p>
-<pre><code>gl.uniform4fv(offsetLoc, [1, 0, 0, 0]);  // offset it to the right half the screen
-</code></pre><p>Uniforms can be many types. For each type you have to call the corresponding function to set it.</p>
+<pre><code>var offsetLoc = gl.getUniformLocation(someProgram, &quot;u_offset&quot;);</code></pre><p>And then before drawing we&#39;d set the uniform</p>
+<pre><code>gl.uniform4fv(offsetLoc, [1, 0, 0, 0]);  // offset it to the right half the screen</code></pre><p>Uniforms can be many types. For each type you have to call the corresponding function to set it.</p>
 <pre><code>gl.uniform1f (floatUniformLoc, v);                 // for float
 gl.uniform1fv(floatUniformLoc, [v]);               // for float or float array
 gl.uniform2f (vec2UniformLoc,  v0, v1);            // for vec2
@@ -189,8 +180,7 @@ gl.uniform4uv(ivec4UniformLoc, [v0, v1, v2, v4]);  // for uvec4 or uvec4 array
 // for sampler2D, sampler3D, samplerCube, samplerCubeShader, sampler2DShadow,
 // sampler2DArray, sampler2DArrayShadow
 gl.uniform1i (samplerUniformLoc,   v);
-gl.uniform1iv(samplerUniformLoc, [v]);
-</code></pre><p>There&#39;s also types <code>bool</code>, <code>bvec2</code>, <code>bvec3</code>, and <code>bvec4</code>. They use either the <code>gl.uniform?f?</code>, <code>gl.uniform?i?</code>,
+gl.uniform1iv(samplerUniformLoc, [v]);</code></pre><p>There&#39;s also types <code>bool</code>, <code>bvec2</code>, <code>bvec3</code>, and <code>bvec4</code>. They use either the <code>gl.uniform?f?</code>, <code>gl.uniform?i?</code>,
 or <code>gl.uniform?u?</code> functions.</p>
 <p>Note that for an array you can set all the uniforms of the array at once. For example</p>
 <pre><code>// in shader
@@ -200,8 +190,7 @@ uniform vec2 u_someVec2[3];
 var someVec2Loc = gl.getUniformLocation(someProgram, &quot;u_someVec2&quot;);
 
 // at render time
-gl.uniform2fv(someVec2Loc, [1, 2, 3, 4, 5, 6]);  // set the entire array of u_someVec3
-</code></pre><p>But if you want to set individual elements of the array you must look up the location of
+gl.uniform2fv(someVec2Loc, [1, 2, 3, 4, 5, 6]);  // set the entire array of u_someVec3</code></pre><p>But if you want to set individual elements of the array you must look up the location of
 each element individually.</p>
 <pre><code>// in JavaScript at init time
 var someVec2Element0Loc = gl.getUniformLocation(someProgram, &quot;u_someVec2[0]&quot;);
@@ -211,17 +200,14 @@ var someVec2Element2Loc = gl.getUniformLocation(someProgram, &quot;u_someVec2[2]
 // at render time
 gl.uniform2fv(someVec2Element0Loc, [1, 2]);  // set element 0
 gl.uniform2fv(someVec2Element1Loc, [3, 4]);  // set element 1
-gl.uniform2fv(someVec2Element2Loc, [5, 6]);  // set element 2
-</code></pre><p>Similarly if you create a struct</p>
+gl.uniform2fv(someVec2Element2Loc, [5, 6]);  // set element 2</code></pre><p>Similarly if you create a struct</p>
 <pre><code>struct SomeStruct {
   bool active;
   vec2 someVec2;
 };
-uniform SomeStruct u_someThing;
-</code></pre><p>you have to look up each field individually</p>
+uniform SomeStruct u_someThing;</code></pre><p>you have to look up each field individually</p>
 <pre><code>var someThingActiveLoc = gl.getUniformLocation(someProgram, &quot;u_someThing.active&quot;);
-var someThingSomeVec2Loc = gl.getUniformLocation(someProgram, &quot;u_someThing.someVec2&quot;);
-</code></pre><h3 id="textures-in-vertex-shaders">Textures in Vertex Shaders</h3>
+var someThingSomeVec2Loc = gl.getUniformLocation(someProgram, &quot;u_someThing.someVec2&quot;);</code></pre><h3 id="textures-in-vertex-shaders">Textures in Vertex Shaders</h3>
 <p>See <a href="#textures-in-fragment-shaders">Textures in Fragment Shaders</a>.</p>
 <h2 id="fragment-shader">Fragment Shader</h2>
 <p>A Fragment Shader&#39;s job is to provide a color for the current pixel being rasterized.
@@ -233,8 +219,7 @@ out vec4 outColor;  // you can pick any name
 
 void main() {
    outColor = doMathToMakeAColor;
-}
-</code></pre><p>Your fragment shader is called once per pixel. Each time it&#39;s called you are required
+}</code></pre><p>Your fragment shader is called once per pixel. Each time it&#39;s called you are required
 to set your out variable to some color.</p>
 <p>Fragment shaders need data. They can get data in 3 ways</p>
 <ol>
@@ -254,8 +239,7 @@ uniform sampler2D u_texture;
 void main() {
    vec2 texcoord = vec2(0.5, 0.5)  // get a value from the middle of the texture
    gl_FragColor = texture(u_texture, texcoord);
-}
-</code></pre><p>What data comes out of the texture is <a href="webgl-3d-textures.html">dependent on many settings</a>.
+}</code></pre><p>What data comes out of the texture is <a href="webgl-3d-textures.html">dependent on many settings</a>.
 At a minimum we need to create and put data in the texture, for example</p>
 <pre><code>var tex = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -275,16 +259,12 @@ gl.texImage2D(gl.TEXTURE_2D,
               border,
               format,
               type,
-              data);
-</code></pre><p>Then look up the uniform location in the shader program</p>
-<pre><code>var someSamplerLoc = gl.getUniformLocation(someProgram, &quot;u_texture&quot;);
-</code></pre><p>WebGL then requires you to bind it to a texture unit</p>
+              data);</code></pre><p>Then look up the uniform location in the shader program</p>
+<pre><code>var someSamplerLoc = gl.getUniformLocation(someProgram, &quot;u_texture&quot;);</code></pre><p>WebGL then requires you to bind it to a texture unit</p>
 <pre><code>var unit = 5;  // Pick some texture unit
 gl.activeTexture(gl.TEXTURE0 + unit);
-gl.bindTexture(gl.TEXTURE_2D, tex);
-</code></pre><p>And tell the shader which unit you bound the texture to</p>
-<pre><code>gl.uniform1i(someSamplerLoc, unit);
-</code></pre><h3 id="varyings">Varyings</h3>
+gl.bindTexture(gl.TEXTURE_2D, tex);</code></pre><p>And tell the shader which unit you bound the texture to</p>
+<pre><code>gl.uniform1i(someSamplerLoc, unit);</code></pre><h3 id="varyings">Varyings</h3>
 <p>A varying is a way to pass a value from a vertex shader to a fragment shader which we
 covered in <a href="webgl-how-it-works.html">how it works</a>.</p>
 <p>To use a varying we need to declare matching varyings in both a vertex and fragment shader.
@@ -303,8 +283,7 @@ uniform vec4 u_offset;
 void main() {
   gl_Position = a_position + u_offset;
 +  v_positionWithOffset = a_position + u_offset;
-}
-</code></pre><p>Fragment shader</p>
+}</code></pre><p>Fragment shader</p>
 <pre><code>#version 300 es
 precision mediump float;
 
@@ -316,8 +295,7 @@ void main() {
 +  // convert from clipsapce (-1 &lt;-&gt; +1) to color space (0 -&gt; 1).
 +  vec4 color = v_positionWithOffset * 0.5 + 0.5;
 +  outColor = color;
-}
-</code></pre><p>The example above is a mostly nonsense example. It doesn&#39;t generally make sense to
+}</code></pre><p>The example above is a mostly nonsense example. It doesn&#39;t generally make sense to
 directly copy the clipspace values to the fragment shader and use them as colors. Nevertheless
 it will work and produce colors.</p>
 <h2 id="glsl">GLSL</h2>
@@ -331,59 +309,43 @@ and <code>mat4</code> which represent 2x2, 3x3, and 4x4 matrices. You can do thi
 a <code>vec</code> by a scalar.</p>
 <pre><code>vec4 a = vec4(1, 2, 3, 4);
 vec4 b = a * 2.0;
-// b is now vec4(2, 4, 6, 8);
-</code></pre><p>Similarly it can do matrix multiplication and vector to matrix multiplication</p>
+// b is now vec4(2, 4, 6, 8);</code></pre><p>Similarly it can do matrix multiplication and vector to matrix multiplication</p>
 <pre><code>mat4 a = ???
 mat4 b = ???
 mat4 c = a * b;
 
 vec4 v = ???
-vec4 y = c * v;
-</code></pre><p>It also has various selectors for the parts of a vec. For a vec4</p>
-<pre><code>vec4 v;
-</code></pre><ul>
+vec4 y = c * v;</code></pre><p>It also has various selectors for the parts of a vec. For a vec4</p>
+<pre><code>vec4 v;</code></pre><ul>
 <li><code>v.x</code> is the same as <code>v.s</code> and <code>v.r</code> and <code>v[0]</code>.</li>
 <li><code>v.y</code> is the same as <code>v.t</code> and <code>v.g</code> and <code>v[1]</code>.</li>
 <li><code>v.z</code> is the same as <code>v.p</code> and <code>v.b</code> and <code>v[2]</code>.</li>
 <li><code>v.w</code> is the same as <code>v.q</code> and <code>v.a</code> and <code>v[3]</code>.</li>
 </ul>
 <p>It it able to <em>swizzle</em> vec components which means you can swap or repeat components.</p>
-<pre><code>v.yyyy
-</code></pre><p>is the same as</p>
-<pre><code>vec4(v.y, v.y, v.y, v.y)
-</code></pre><p>Similarly</p>
-<pre><code>v.bgra
-</code></pre><p>is the same as</p>
-<pre><code>vec4(v.b, v.g, v.r, v.a)
-</code></pre><p>When constructing a vec or a mat you can supply multiple parts at once. So for example</p>
-<pre><code>vec4(v.rgb, 1)
-</code></pre><p>Is the same as</p>
-<pre><code>vec4(v.r, v.g, v.b, 1)
-</code></pre><p>One thing you&#39;ll likely get caught up on is that GLSL is very type strict.</p>
-<pre><code>float f = 1;  // ERROR 1 is an int. You can&#39;t assign an int to a float
-</code></pre><p>The correct way is one of these</p>
+<pre><code>v.yyyy</code></pre><p>is the same as</p>
+<pre><code>vec4(v.y, v.y, v.y, v.y)</code></pre><p>Similarly</p>
+<pre><code>v.bgra</code></pre><p>is the same as</p>
+<pre><code>vec4(v.b, v.g, v.r, v.a)</code></pre><p>When constructing a vec or a mat you can supply multiple parts at once. So for example</p>
+<pre><code>vec4(v.rgb, 1)</code></pre><p>Is the same as</p>
+<pre><code>vec4(v.r, v.g, v.b, 1)</code></pre><p>One thing you&#39;ll likely get caught up on is that GLSL is very type strict.</p>
+<pre><code>float f = 1;  // ERROR 1 is an int. You can&#39;t assign an int to a float</code></pre><p>The correct way is one of these</p>
 <pre><code>float f = 1.0;      // use float
-float f = float(1)  // cast the integer to a float
-</code></pre><p>The example above of <code>vec4(v.rgb, 1)</code> doesn&#39;t complain about the <code>1</code> because <code>vec4</code> is
+float f = float(1)  // cast the integer to a float</code></pre><p>The example above of <code>vec4(v.rgb, 1)</code> doesn&#39;t complain about the <code>1</code> because <code>vec4</code> is
 casting the things inside just like <code>float(1)</code>.</p>
 <p>GLSL has a bunch of built in functions. Many of them operate on multiple components at once.
 So for example</p>
-<pre><code>T sin(T angle)
-</code></pre><p>Means T can be <code>float</code>, <code>vec2</code>, <code>vec3</code> or <code>vec4</code>. If you pass in <code>vec4</code> you get <code>vec4</code> back
+<pre><code>T sin(T angle)</code></pre><p>Means T can be <code>float</code>, <code>vec2</code>, <code>vec3</code> or <code>vec4</code>. If you pass in <code>vec4</code> you get <code>vec4</code> back
 which the sine of each of the components. In other words if <code>v</code> is a <code>vec4</code> then</p>
-<pre><code>vec4 s = sin(v);
-</code></pre><p>is the same as</p>
-<pre><code>vec4 s = vec4(sin(v.x), sin(v.y), sin(v.z), sin(v.w));
-</code></pre><p>Sometimes one argument is a float and the rest is <code>T</code>. That means that float will be applied
+<pre><code>vec4 s = sin(v);</code></pre><p>is the same as</p>
+<pre><code>vec4 s = vec4(sin(v.x), sin(v.y), sin(v.z), sin(v.w));</code></pre><p>Sometimes one argument is a float and the rest is <code>T</code>. That means that float will be applied
 to all the components. For example if <code>v1</code> and <code>v2</code> are <code>vec4</code> and <code>f</code> is a float then</p>
-<pre><code>vec4 m = mix(v1, v2, f);
-</code></pre><p>is the same as</p>
+<pre><code>vec4 m = mix(v1, v2, f);</code></pre><p>is the same as</p>
 <pre><code>vec4 m = vec4(
   mix(v1.x, v2.x, f),
   mix(v1.y, v2.y, f),
   mix(v1.z, v2.z, f),
-  mix(v1.w, v2.w, f));
-</code></pre><p>You can see a list of all the GLSL functions on the last 3 pages of <a href="https://www.khronos.org/files/opengles3-quick-reference-card.pdf">the OpenGL ES 3.0
+  mix(v1.w, v2.w, f));</code></pre><p>You can see a list of all the GLSL functions on the last 3 pages of <a href="https://www.khronos.org/files/opengles3-quick-reference-card.pdf">the OpenGL ES 3.0
 Reference Card</a>
 If you like really dry and verbose stuff you can try
 <a href="https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf">the GLSL ES 3.00 spec</a>.</p>

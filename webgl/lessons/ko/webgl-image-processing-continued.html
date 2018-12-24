@@ -83,7 +83,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <div class="lesson-main">
       <p>이 글은 <a href="webgl-image-processing.html">WebGL 이미지 처리</a>에서 이어집니다. 만약에 아직 보지 않았다면 <a href="webgl-image-processing.html">먼저 읽기</a>를 권장합니다.</p>
 <p>다음 이미지 처리를 위한 가장 분명한 질문은 여러 효과들을 어떻게 적용할 것 인가 입니다.</p>
-<p>아마도 바로 쉐이더를 생성하는 것을 시도하는것 입니다. UI를 제공하여 사용자가 사용하고자 하는 효과를 선택하고 모든 효과를 내는 쉐이더를 생성할 수 있게 하는것 입니다. 이 기술은 종종 [실시간 그래픽을위한 효과 만들기] (<a href="http://www.youtube.com/watch?v=cQUn0Zeh-0Q)에도">http://www.youtube.com/watch?v=cQUn0Zeh-0Q)에도</a> 사용되지만 항상 가능하지는 않습니다.</p>
+<p>아마도 바로 쉐이더를 생성하는 것을 시도하는것 입니다. UI를 제공하여 사용자가 사용하고자 하는 효과를 선택하고 모든 효과를 내는 쉐이더를 생성할 수 있게 하는것 입니다. 이 기술은 종종 [실시간 그래픽을위한 효과 만들기] (<a href="http://www.youtube.com/watch?v=cQUn0Zeh-0Q)%EC%97%90%EB%8F%84">http://www.youtube.com/watch?v=cQUn0Zeh-0Q)에도</a> 사용되지만 항상 가능하지는 않습니다.</p>
 <p>더 유연한 방법은 2개 이상의 <em>work</em> 텍스처를 사용하고 각 텍스처를 차례로 렌더링 하고 앞 뒤로 핑퐁(?)한다음 매번 다음 효과를 적용하는 것 입니다.</p>
 <blockquote><pre>원본 이미지 -&gt; [Blur]        -&gt; 텍스처 1
 텍스처 1      -&gt; [Sharpen]     -&gt; 텍스처 2
@@ -119,8 +119,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 internalFormat,
                 srcFormat,
                 srcType,
-                image);
-</code></pre><p>이제 함수를 사용하여 2개의 텍스처를 만들고 두개의 프레임 버퍼에 첨부해 봅시다.</p>
+                image);</code></pre><p>이제 함수를 사용하여 2개의 텍스처를 만들고 두개의 프레임 버퍼에 첨부해 봅시다.</p>
 <pre><code>  // 2개의 텍스처를 만들고 프레임버퍼에 첨부합니다.
   var textures = [];
   var framebuffers = [];
@@ -148,8 +147,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     var attachmentPoint = gl.COLOR_ATTACHMENT0;
     gl.framebufferTexture2D(
         gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, texture, mipLevel);
-  }
-</code></pre><p>이제 커널 집합을 만든 다음 이를 적용할 목록을 만들어 보겠습니다.</p>
+  }</code></pre><p>이제 커널 집합을 만든 다음 이를 적용할 목록을 만들어 보겠습니다.</p>
 <pre><code>  // 몇가지 컨밴션 커널들 정의
   var kernels = {
     normal: [
@@ -180,8 +178,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     &quot;emboss&quot;,
     &quot;gaussianBlur&quot;,
     &quot;unsharpen&quot;
-  ];
-</code></pre><p>그리고 마지막으로 하나씩 적용하고, 렌더링할 텍스처를 핑퐁(ping-ponging?)합니다.</p>
+  ];</code></pre><p>그리고 마지막으로 하나씩 적용하고, 렌더링할 텍스처를 핑퐁(ping-ponging?)합니다.</p>
 <pre><code>  function drawEffects() {
     // 사용할 프로그램(쉐이더 쌍) 전달
     gl.useProgram(program);
@@ -246,8 +243,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     var offset = 0;
     var count = 6;
     gl.drawArrays(primitiveType, offset, count);
-  }
-</code></pre><p>여기에 약간 더 유연한 UI 버전이 있습니다. 껏다 켜서 효과를 확인하거나 효과를 드래그하여 재 정렬하면 어떻게 되는지 확인하세요.</p>
+  }</code></pre><p>여기에 약간 더 유연한 UI 버전이 있습니다. 껏다 켜서 효과를 확인하거나 효과를 드래그하여 재 정렬하면 어떻게 되는지 확인하세요.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-processing.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-processing.html" target="_blank">click here to open in a separate window</a>
@@ -269,8 +265,7 @@ void main() {
   ...
 +   gl_Position = vec4(clipSpace * vec2(1, u_flipY), 0, 1);
   ...
-}
-</code></pre><p>그리고 렌더링 할 때 설정할 수 있습니다.</p>
+}</code></pre><p>그리고 렌더링 할 때 설정할 수 있습니다.</p>
 <pre><code>  ...
 +  var flipYLocation = gl.getUniformLocation(program, &quot;u_flipY&quot;);
 
@@ -282,8 +277,7 @@ void main() {
   ...
 
 +  // 뒤집는다
-+  gl.uniform1f(flipYLocation, -1);
-</code></pre><p>이 예제에서는 간단하게 단일 GLSL 프로그램을 사용해서 다양한 효과들을 적용 할 수 있도록 했습니다. 만약에 이미지 처리에 전념하고 싶다면 많은 더 GLSL프로그램이 필요할 것입니다. 색조, 채도 및 휘도 조정를 위한 프로그램이 있고, 밝기와 대비를 위한 프로그램, 반전용, 또 다른 레벨을 조정하는용 등이 있습니다. GLSL 프로그램을 전환하고 특정 프로그램에 대한 매개 변수를 업데이트하려면 코드를 변경해야합니다. 이 글에서 이 예제를 작성하는것을 고려해 보았지만 여러 GLSL프로그램은 각자 매개변수가 필요하고 아마도 거대한 스파게티 난장판이 되지 않도록 중요한 부분에 리펙토링이 필요로 할 것이기 때문에 연습으로 남겨두는게 좋은 방법이라고 생각되어 남겨 두었습니다.</p>
++  gl.uniform1f(flipYLocation, -1);</code></pre><p>이 예제에서는 간단하게 단일 GLSL 프로그램을 사용해서 다양한 효과들을 적용 할 수 있도록 했습니다. 만약에 이미지 처리에 전념하고 싶다면 많은 더 GLSL프로그램이 필요할 것입니다. 색조, 채도 및 휘도 조정를 위한 프로그램이 있고, 밝기와 대비를 위한 프로그램, 반전용, 또 다른 레벨을 조정하는용 등이 있습니다. GLSL 프로그램을 전환하고 특정 프로그램에 대한 매개 변수를 업데이트하려면 코드를 변경해야합니다. 이 글에서 이 예제를 작성하는것을 고려해 보았지만 여러 GLSL프로그램은 각자 매개변수가 필요하고 아마도 거대한 스파게티 난장판이 되지 않도록 중요한 부분에 리펙토링이 필요로 할 것이기 때문에 연습으로 남겨두는게 좋은 방법이라고 생각되어 남겨 두었습니다.</p>
 <p>위에 본 예제와 전에 본 예제를 통해 WebGL에 더 가까워지고 2D로 시작하면서 WebGL을 좀더 쉽게 사용할 수 있기를 바랍니다. 만약에 시간이 된다면 3D의 작동 방법에 대한 <a href="webgl-2d-translation.html">몇 가지 글들</a>과 <a href="webgl-how-it-works.html">WebGL이 실제로 수행하는 작업</a>에 대한 더 자세한 글을 을 작성하려고 합니다.
 다음 단계는 <a href="webgl-2-textures.html">2개 이상의 텍스처 사용법</a>를 배우는 것입니다.</p>
 

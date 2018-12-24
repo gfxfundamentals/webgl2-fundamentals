@@ -29,6 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* global define */
 (function(root, factory) {  // eslint-disable-line
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
@@ -42,7 +43,7 @@
 }(this, function() {
   "use strict";
 
-  var topWindow = this;
+  const topWindow = this;
 
   /** @module webgl-utils */
 
@@ -88,9 +89,9 @@
    * @return {WebGLShader} The created shader.
    */
   function loadShader(gl, shaderSource, shaderType, opt_errorCallback) {
-    var errFn = opt_errorCallback || error;
+    const errFn = opt_errorCallback || error;
     // Create the shader object
-    var shader = gl.createShader(shaderType);
+    const shader = gl.createShader(shaderType);
 
     // Load the shader source
     gl.shaderSource(shader, shaderSource);
@@ -99,10 +100,10 @@
     gl.compileShader(shader);
 
     // Check the compile status
-    var compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+    const compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
     if (!compiled) {
       // Something went wrong during compilation; get the error
-      var lastError = gl.getShaderInfoLog(shader);
+      const lastError = gl.getShaderInfoLog(shader);
       errFn("*** Error compiling shader '" + shader + "':" + lastError);
       gl.deleteShader(shader);
       return null;
@@ -123,8 +124,8 @@
    */
   function createProgram(
       gl, shaders, opt_attribs, opt_locations, opt_errorCallback) {
-    var errFn = opt_errorCallback || error;
-    var program = gl.createProgram();
+    const errFn = opt_errorCallback || error;
+    const program = gl.createProgram();
     shaders.forEach(function(shader) {
       gl.attachShader(program, shader);
     });
@@ -139,10 +140,10 @@
     gl.linkProgram(program);
 
     // Check the link status
-    var linked = gl.getProgramParameter(program, gl.LINK_STATUS);
+    const linked = gl.getProgramParameter(program, gl.LINK_STATUS);
     if (!linked) {
         // something went wrong with the link
-        var lastError = gl.getProgramInfoLog(program);
+        const lastError = gl.getProgramInfoLog(program);
         errFn("Error in program linking:" + lastError);
 
         gl.deleteProgram(program);
@@ -162,9 +163,9 @@
    */
   function createShaderFromScript(
       gl, scriptId, opt_shaderType, opt_errorCallback) {
-    var shaderSource = "";
-    var shaderType;
-    var shaderScript = document.getElementById(scriptId);
+    let shaderSource = "";
+    let shaderType;
+    const shaderScript = document.getElementById(scriptId);
     if (!shaderScript) {
       throw ("*** Error: unknown script element" + scriptId);
     }
@@ -185,7 +186,7 @@
         opt_errorCallback);
   }
 
-  var defaultShaderType = [
+  const defaultShaderType = [
     "VERTEX_SHADER",
     "FRAGMENT_SHADER",
   ];
@@ -207,8 +208,8 @@
    */
   function createProgramFromScripts(
       gl, shaderScriptIds, opt_attribs, opt_locations, opt_errorCallback) {
-    var shaders = [];
-    for (var ii = 0; ii < shaderScriptIds.length; ++ii) {
+    const shaders = [];
+    for (let ii = 0; ii < shaderScriptIds.length; ++ii) {
       shaders.push(createShaderFromScript(
           gl, shaderScriptIds[ii], gl[defaultShaderType[ii]], opt_errorCallback));
     }
@@ -232,8 +233,8 @@
    */
   function createProgramFromSources(
       gl, shaderSources, opt_attribs, opt_locations, opt_errorCallback) {
-    var shaders = [];
-    for (var ii = 0; ii < shaderSources.length; ++ii) {
+    const shaders = [];
+    for (let ii = 0; ii < shaderSources.length; ++ii) {
       shaders.push(loadShader(
           gl, shaderSources[ii], gl[defaultShaderType[ii]], opt_errorCallback));
     }
@@ -250,8 +251,8 @@
    */
   function resizeCanvasToDisplaySize(canvas, multiplier) {
     multiplier = multiplier || 1;
-    var width  = canvas.clientWidth  * multiplier | 0;
-    var height = canvas.clientHeight * multiplier | 0;
+    const width  = canvas.clientWidth  * multiplier | 0;
+    const height = canvas.clientHeight * multiplier | 0;
     if (canvas.width !== width ||  canvas.height !== height) {
       canvas.width  = width;
       canvas.height = height;

@@ -92,15 +92,13 @@ you can pretty much make most 2d games.</p>
 <pre><code>ctx.drawImage(image, dstX, dstY);
 ctx.drawImage(image, dstX, dstY, dstWidth, dstHeight);
 ctx.drawImage(image, srcX, srcY, srcWidth, srcHeight,
-                     dstX, dstY, dstWidth, dstHeight);
-</code></pre><p>Given everything you&#39;ve learned so far how would you implement this in WebGL? Your first
+                     dstX, dstY, dstWidth, dstHeight);</code></pre><p>Given everything you&#39;ve learned so far how would you implement this in WebGL? Your first
 solution might be to generate vertices like some of the first articles on this site did.
 Sending vertices to the GPU is generally a slow operation (although there are cases where it will be faster).</p>
 <p>This is where the whole point of WebGL comes into play. It&#39;s all about creatively writing
 a shader and then creatively using that shader to solve your problem.</p>
 <p>Let&#39;s start with the first version</p>
-<pre><code>ctx.drawImage(image, x, y);
-</code></pre><p>It draws an image at location <code>x, y</code> the same size as the image.
+<pre><code>ctx.drawImage(image, x, y);</code></pre><p>It draws an image at location <code>x, y</code> the same size as the image.
 To make a similar WebGL based funciton we could upload vertices that for <code>x, y</code>, <code>x + width, y</code>, <code>x, y + height</code>,
 and <code>x + width, y + height</code> then as we draw different images at different locations
 we&#39;d generate different sets of vertices. In fact <a href="webgl-fundamentals.html">that&#39;s exactly what we did in our first
@@ -122,8 +120,7 @@ out vec2 v_texcoord;
 void main() {
    gl_Position = u_matrix * a_position;
    v_texcoord = a_texcoord;
-}
-</code></pre><p>And a simple fragment shader</p>
+}</code></pre><p>And a simple fragment shader</p>
 <pre><code>#version 300 es
 precision mediump float;
 
@@ -135,8 +132,7 @@ out vec4 outColor;
 
 void main() {
    outColor = texture(texture, v_texcoord);
-}
-</code></pre><p>And now the function</p>
+}</code></pre><p>And now the function</p>
 <pre><code>function drawImage(tex, texWidth, texHeight, dstX, dstY) {
   gl.useProgram(program);
 
@@ -168,8 +164,7 @@ void main() {
   var offset = 0;
   var count = 6;
   gl.drawArrays(gl.TRIANGLES, offset, count);
-}
-</code></pre><p>Let&#39;s load some images into textures</p>
+}</code></pre><p>Let&#39;s load some images into textures</p>
 <pre><code>// creates a texture info { width: w, height: h, texture: tex }
 // The texture will start with 1x1 pixels and be updated
 // when the image has loaded
@@ -202,8 +197,7 @@ var textureInfos = [
   loadImageAndCreateTextureInfo(&#39;resources/star.jpg&#39;),
   loadImageAndCreateTextureInfo(&#39;resources/leaves.jpg&#39;),
   loadImageAndCreateTextureInfo(&#39;resources/keyboard.jpg&#39;),
-];
-</code></pre><p>And lets draw them at random places</p>
+];</code></pre><p>And lets draw them at random places</p>
 <pre><code>var drawInfos = [];
 var numToDraw = 9;
 var speed = 60;
@@ -268,8 +262,7 @@ function render(time) {
 
   requestAnimationFrame(render);
 }
-requestAnimationFrame(render);
-</code></pre><p>You can see that running here</p>
+requestAnimationFrame(render);</code></pre><p>You can see that running here</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-drawimage-01.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-drawimage-01.html" target="_blank">click here to open in a separate window</a>
@@ -277,8 +270,7 @@ requestAnimationFrame(render);
 
 </p>
 <p>Handling version 2 of the original canvas <code>drawImage</code> function</p>
-<pre><code>ctx.drawImage(image, dstX, dstY, dstWidth, dstHeight);
-</code></pre><p>Is really no different. We just use <code>dstWidth</code> and <code>dstHeight</code> instead of
+<pre><code>ctx.drawImage(image, dstX, dstY, dstWidth, dstHeight);</code></pre><p>Is really no different. We just use <code>dstWidth</code> and <code>dstHeight</code> instead of
 <code>texWidth</code> and <code>texHeight</code>.</p>
 <pre><code>*function drawImage(tex, texWidth, texHeight, dstX, dstY, dstWidth, dstHeight) {
 +  if (dstWidth === undefined) {
@@ -319,8 +311,7 @@ requestAnimationFrame(render);
   var offset = 0;
   var count = 6;
   gl.drawArrays(gl.TRIANGLES, offset, count);
-}
-</code></pre><p>I&#39;ve updated the code to use different sizes</p>
+}</code></pre><p>I&#39;ve updated the code to use different sizes</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-drawimage-02.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-drawimage-02.html" target="_blank">click here to open in a separate window</a>
@@ -329,8 +320,7 @@ requestAnimationFrame(render);
 </p>
 <p>So that was easy. But what about the 3rd version of canvas <code>drawImage</code>?</p>
 <pre><code>ctx.drawImage(image, srcX, srcY, srcWidth, srcHeight,
-                     dstX, dstY, dstWidth, dstHeight);
-</code></pre><p>In order to select part of the texture we need to manipulate the texure coordinates. How
+                     dstX, dstY, dstWidth, dstHeight);</code></pre><p>In order to select part of the texture we need to manipulate the texure coordinates. How
 texture coordinates work was <a href="webgl-3d-textures.html">covered in the article about textures</a>.
 In that article we manually created texture coordinates which is a very common way to do this
 but we can also create them on the fly and just like we&#39;re manipulating our positions using
@@ -350,11 +340,9 @@ out vec2 v_texcoord;
 void main() {
    gl_Position = u_matrix * a_position;
 *   v_texcoord = (u_textureMatrix * vec4(a_texcoord, 0, 1)).xy;
-}
-</code></pre><p>Now we need to look up the location of the texture matrix</p>
+}</code></pre><p>Now we need to look up the location of the texture matrix</p>
 <pre><code>var matrixLocation = gl.getUniformLocation(program, &quot;u_matrix&quot;);
-+var textureMatrixLocation = gl.getUniformLocation(program, &quot;u_textureMatrix&quot;);
-</code></pre><p>And inside <code>drawImage</code> we need to set it so it will select the part of the texture we want.
++var textureMatrixLocation = gl.getUniformLocation(program, &quot;u_textureMatrix&quot;);</code></pre><p>And inside <code>drawImage</code> we need to set it so it will select the part of the texture we want.
 We know the texture coordinates are also effectively a unit quad so it&#39;s very similar to
 what we&#39;ve already done for the positions.</p>
 <pre><code>*function drawImage(
@@ -412,8 +400,7 @@ what we&#39;ve already done for the positions.</p>
 
   // draw the quad (2 triangles, 6 vertices)
   gl.drawArrays(gl.TRIANGLES, 0, 6);
-}
-</code></pre><p>I also updated the code to pick parts of the textures. Here&#39;s the result</p>
+}</code></pre><p>I also updated the code to pick parts of the textures. Here&#39;s the result</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-drawimage-03.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-drawimage-03.html" target="_blank">click here to open in a separate window</a>
@@ -449,8 +436,7 @@ In the canvas 2D api these are errors at best or undefined behavior at worst.</p
 *  var texMatrix = m4.scale(texMatrix, srcWidth, srcHeight, 1);
 
   // Set the texture matrix.
-  gl.uniformMatrix4fv(textureMatrixLocation, false, texMatrix);
-</code></pre><p>And here&#39;s that.</p>
+  gl.uniformMatrix4fv(textureMatrixLocation, false, texMatrix);</code></pre><p>And here&#39;s that.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-drawimage-05.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-drawimage-05.html" target="_blank">click here to open in a separate window</a>
@@ -478,8 +464,7 @@ void main() {
 +     discard;
 +   }
    outColor = texture(texture, v_texcoord);
-}
-</code></pre><p>And now the corners are gone</p>
+}</code></pre><p>And now the corners are gone</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-drawimage-06.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-drawimage-06.html" target="_blank">click here to open in a separate window</a>
@@ -505,8 +490,7 @@ void main() {
 +     return;
    }
    outColor = texture(texture, v_texcoord);
-}
-</code></pre><p><div class="webgl_example_container">
+}</code></pre><p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-drawimage-07.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-drawimage-07.html" target="_blank">click here to open in a separate window</a>
 </div>
@@ -527,17 +511,15 @@ as the texture coordinates.</p>
 in vec4 a_position;
 -in vec2 a_texcoord;
 
-uniform mat4 u_matrix;
-uniform mat4 u_textureMatrix;
-
-out vec2 v_texcoord;
-
-void main() {
-   gl_Position = u_matrix * a_position;
-*   v_texcoord = (u_textureMatrix * a_position).xy;
+<p>uniform mat4 u_matrix;
+uniform mat4 u_textureMatrix;</p>
+<p>out vec2 v_texcoord;</p>
+<p>void main() {
+   gl_Position = u_matrix * a_position;</p>
+<ul>
+<li>v_texcoord = (u_textureMatrix * a_position).xy;
 }
-</pre>
-<p>We can now remove the code that setup the texture coordinates and it will
+</pre><p>We can now remove the code that setup the texture coordinates and it will
 work just the same as before.</p>
 <div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-drawimage-08.html"></iframe>
@@ -548,6 +530,8 @@ work just the same as before.</p>
 </div>
 
 
+</li>
+</ul>
 
     </div>
     <div class="lesson-sidebar">

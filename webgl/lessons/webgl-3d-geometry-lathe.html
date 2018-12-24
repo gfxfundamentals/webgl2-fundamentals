@@ -198,8 +198,7 @@ a given <code>t</code> value like this.</p>
                 v2.mult(points[offset + 1], 3 * t * invT * invT),
                 v2.mult(points[offset + 2], 3 * invT * t * t),
                 v2.mult(points[offset + 3], t * t  *t));
-}
-</code></pre><p>And we can generate a set of points for the curve like this</p>
+}</code></pre><p>And we can generate a set of points for the curve like this</p>
 <pre><code>function getPointsOnBezierCurve(points, offset, numPoints) {
   const points = [];
   for (let i = 0; i &lt; numPoints; ++i) {
@@ -207,8 +206,7 @@ a given <code>t</code> value like this.</p>
     points.push(getPointOnBezierCurve(points, offset, t));
   }
   return points;
-}
-</code></pre><p>Note: <code>v2.mult</code> and <code>v2.add</code> are small JavaScript functions I included
+}</code></pre><p>Note: <code>v2.mult</code> and <code>v2.add</code> are small JavaScript functions I included
 to help do math with points.</p>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=0&showCurve=true&showPoints=true"></iframe>
@@ -253,8 +251,7 @@ that for a given curve decides how flat it is.</p>
   }
 
   return ux + uy;
-}
-</code></pre><p>We can use that in our function that gets points for a curve.
+}</code></pre><p>We can use that in our function that gets points for a curve.
 First we&#39;ll check if the cuvry is too curvy. If so we&#39;ll subdivide,
 if not we&#39;ll add the points in.</p>
 <pre><code>function getPointsOnBezierCurveWithSplitting(points, offset, tolerance, newPoints) {
@@ -290,8 +287,7 @@ if not we&#39;ll add the points in.</p>
 
   }
   return outPoints;
-}
-</code></pre><p><div class="webgl_diagram_container">
+}</code></pre><p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=0&showCurve=true&showTolerance=true"></iframe>
 </div>
 
@@ -336,8 +332,7 @@ point and again from the furthest point to the end point.</p>
   }
 
   return outPoints;
-}
-</code></pre><p><code>v2.distanceToSegmentSq</code> is a function that computes the distance squared from a point
+}</code></pre><p><code>v2.distanceToSegmentSq</code> is a function that computes the distance squared from a point
 to a line segment. We use the distance squared because it&#39;s faster to compute than
 the actual distance. Since we only care which point is furthest the distance squared
 will work just as well as the actual distance.</p>
@@ -352,7 +347,8 @@ It would need to be able to add and remove points, lock and unlock control point
 It would need undo, etc... But there&#39;s an easier way. We can just use any of the
 major editors mentioned above. <a href="https://svg-edit.github.io/svgedit/releases/svg-edit-2.8.1/svg-editor.html">I used this online editor</a>.</p>
 <p>Here&#39;s the svg silhouette of a bowling pin I made.</p>
-<p><img class="webgl_center" src="resources/bowling-pin-silhouette.svg" width="50%" height="50%" /></p>
+<img class="webgl_center" src="resources/bowling-pin-silhouette.svg" width="50%" height="50%" />
+
 <p>It&#39;s made from 4 bezier curves. The data for that path looks like this</p>
 <pre><code>&lt;path fill=&quot;none&quot; stroke-width=&quot;5&quot; d=&quot;
    m44,434
@@ -360,8 +356,7 @@ major editors mentioned above. <a href="https://svg-edit.github.io/svgedit/relea
    c-4,-45 -37,-104 -39,-132
    c-2,-28 11,-51 16,-81
    c5,-30 3,-63 -36,-63
-&quot;/&gt;
-</code></pre><p><a href="https://developer.mozilla.org/en/docs/Web/SVG/Tutorial/Paths">Interpreting that data</a> we get these points.</p>
+&quot;/&gt;</code></pre><p><a href="https://developer.mozilla.org/en/docs/Web/SVG/Tutorial/Paths">Interpreting that data</a> we get these points.</p>
 <pre><code>        ___
 44, 371,   |
 62, 338,   | 1st curve
@@ -375,8 +370,7 @@ major editors mentioned above. <a href="https://svg-edit.github.io/svgedit/relea
 36,  47,_________|  |
 41,  17,            | 4th curve
 39, -16,            |
- 0, -16,____________|
-</code></pre><p>Now that we have the data for the curves we need to compute some points
+ 0, -16,____________|</code></pre><p>Now that we have the data for the curves we need to compute some points
 on them.</p>
 <pre><code>// gets points across all segments
 function getPointsOnBezierCurves(points, tolerance) {
@@ -387,8 +381,7 @@ function getPointsOnBezierCurves(points, tolerance) {
     getPointsOnBezierCurveWithSplitting(points, offset, tolerance, newPoints);
   }
   return newPoints;
-}
-</code></pre><p>We&#39;d call <code>simplifyPoints</code> on the result.</p>
+}</code></pre><p>We&#39;d call <code>simplifyPoints</code> on the result.</p>
 <p>Now we need to spin them around. We decide how many divisions to make, for each division
 you use the <a href="webgl-2d-matrices.html">matrix math</a> to rotate the points around the Y axis.
 Once we&#39;ve made all the points we connect them with triangles using indices.</p>
@@ -445,8 +438,7 @@ function lathePoints(points,
     texcoord: texcoords,
     indices: indices,
   };
-}
-</code></pre><p>The code above generates positions and texcoords, it then generates indices to make triangles
+}</code></pre><p>The code above generates positions and texcoords, it then generates indices to make triangles
 out of those. The <code>capStart</code> and <code>capEnd</code> specify whether or not generate cap points. Imagine
 we&#39;re making a can. These options would specify whether or not to close the ends.</p>
 <p>Using our <a href="webgl-less-code-more-fun.html">simplified code</a> we can generate WebGL buffers with
@@ -464,8 +456,7 @@ const points = simplifyPoints(tempPoints, 0, tempPoints.length, distance);
 const arrays = lathePoints(points, startAngle, endAngle, divisions, capStart, capEnd);
 const extents = getExtents(arrays.position);
 if (!bufferInfo) {
-  bufferInfo = webglUtils.createBufferInfoFromArrays(gl, arrays);
-</code></pre><p>Here&#39;s an example</p>
+  bufferInfo = webglUtils.createBufferInfoFromArrays(gl, arrays);</code></pre><p>Here&#39;s an example</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lathe-step-01.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lathe-step-01.html" target="_blank">click here to open in a separate window</a>
@@ -546,8 +537,7 @@ function lathePoints(points,
     texcoord: texcoords,
     indices: indices,
   };
-}
-</code></pre><p>And here&#39;s the result</p>
+}</code></pre><p>And here&#39;s the result</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lathe-step-02.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lathe-step-02.html" target="_blank">click here to open in a separate window</a>
@@ -563,11 +553,13 @@ and you need nice tools to enter that data.</p>
 <p>There&#39;s still one other thing we should do and that&#39;s add normals.</p>
 <p>We could compute a normal for each point on the curve. In fact if you go back to the examples
 on this page you can see the line formed by <code>R1</code> and <code>R2</code> are a line tangent to the curve.</p>
-<p><img class="webgl_center" src="resources/tangent-to-curve.png" width="50%" /></p>
+<img class="webgl_center" src="resources/tangent-to-curve.png" width="50%" />
+
 <p>A normal is perpendicular to the tangent so it would be easy to use the tangents
 to genearate normals.</p>
 <p>But, lets imagine we wanted to make a candle holder with a silhouette like this</p>
-<p><img class="webgl_center" src="resources/candle-holder.svg" width="50%" /></p>
+<img class="webgl_center" src="resources/candle-holder.svg" width="50%" />
+
 <p>There are many smooth areas but also many hard corners. How do we decide which normals
 to use? Worse, when we want a sharp edge we need extra vertices. Because vertices
 have both a position and a normal if we need a different normal for something at the
@@ -761,8 +753,7 @@ function makeIndiceIterator(arrays) {
   return arrays.indices
       ? makeIndexedIndicesFn(arrays)
       : makeUnindexedIndicesFn(arrays);
-}
-</code></pre><p>In the code above first we genearte normals for each face (each triangle) from the original points.
+}</code></pre><p>In the code above first we genearte normals for each face (each triangle) from the original points.
 We then generate a set of vertex indices to find points that are the same. That&#39;s because as we rotated
 the points the first point and the last point should match up but they have differnet UV coordinates
 so they are not the same point. To compute the vertex normals we need them to be considered the same

@@ -93,7 +93,7 @@ on each wall is a full size poster of some view, add in a poster to cover the ce
 <p>You can see above we need to make sure the furthest point of the cube is inside the frustum but because of that some edges of the cube might end up covering up objects that we don&#39;t want covered up.</p>
 <p>The typical solution is to turn off the depth test and draw the skybox first but the we don&#39;t benefit from the depth buffer test not drawing pixels that we&#39;ll later cover with stuff in our scene.</p>
 <p>Instead of using a cube lets just draw quad that covers the entire canvas and use <a href="webgl-cube-maps.html">a cubemap</a>. Normally we use a view projection matrix to project a quad in 3D space. In this case we&#39;ll do the opposite. We&#39;ll use the inverse of the view projection matrix to work backward and get the direction the camera is looking for each pixel on the quad. This will give us directions to look into the cubemap.</p>
-<p>Starting with the <a href="webgl-environment-maps.html">environment map example</a> I removed all the code related to normals as were&#39;re not using them where. Then we need a quad.</p>
+<p>Starting with the <a href="webgl-environment-maps.html">environment map example</a> I removed all the code related to normals as were&#39;re not using them here. Then we need a quad.</p>
 <pre><code>// Fill the buffer with the values that define a quad.
 function setGeometry(gl) {
   var positions = new Float32Array(
@@ -106,8 +106,7 @@ function setGeometry(gl) {
        1,  1,
     ]);
   gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
-}
-</code></pre><p>This quad will fill the canvas since it&#39;s already in clip space. Since there are only 2 values per vertex we need to change the code that sets the attribute.</p>
+}</code></pre><p>This quad will fill the canvas since it&#39;s already in clip space. Since there are only 2 values per vertex we need to change the code that sets the attribute.</p>
 <pre><code>// Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
 -var size = 3;          // 3 components per iteration
 +var size = 2;          // 2 components per iteration
@@ -116,8 +115,7 @@ var normalize = false; // don&#39;t normalize the data
 var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
 var offset = 0;        // start at the beginning of the buffer
 gl.vertexAttribPointer(
-    positionLocation, size, type, normalize, stride, offset)
-</code></pre><p>Next for the vertex shader we just set <code>gl_Position</code> to quad vertices directly. No need for any matrix math since the positions are already in clipspace, setup to cover the entire canvas. We set <code>gl_Position.z</code> to 1 to guarantee the pixels have the furthest depth. And, we pass the position on to the fragment shader.</p>
+    positionLocation, size, type, normalize, stride, offset)</code></pre><p>Next for the vertex shader we just set <code>gl_Position</code> to quad vertices directly. No need for any matrix math since the positions are already in clipspace, setup to cover the entire canvas. We set <code>gl_Position.z</code> to 1 to guarantee the pixels have the furthest depth. And, we pass the position on to the fragment shader.</p>
 <pre><code>#version 300 es
 in vec4 a_position;
 out vec4 v_position;
@@ -125,8 +123,7 @@ void main() {
   v_position = a_position;
   gl_Position = a_position;
   gl_Position.z = 1;
-}
-</code></pre><p>In the fragment shader we multiply the position by
+}</code></pre><p>In the fragment shader we multiply the position by
 the inverse view projection matrix and divide by w to go from 4D space to 3D space.</p>
 <pre><code>#version 300 es
 precision mediump float;
@@ -142,12 +139,10 @@ out vec4 outColor;
 void main() {
   vec4 t = u_viewDirectionProjectionInverse * v_position;
   outColor = texture(u_skybox, normalize(t.xyz / t.w));
-}
-</code></pre><p>Finally we need to lookup the uniform locations</p>
+}</code></pre><p>Finally we need to lookup the uniform locations</p>
 <pre><code>var skyboxLocation = gl.getUniformLocation(program, &quot;u_skybox&quot;);
 var viewDirectionProjectionInverseLocation = 
-    gl.getUniformLocation(program, &quot;u_viewDirectionProjectionInverse&quot;);
-</code></pre><p>and set them</p>
+    gl.getUniformLocation(program, &quot;u_viewDirectionProjectionInverse&quot;);</code></pre><p>and set them</p>
 <pre><code>// Compute the projection matrix
 var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
 var projectionMatrix =
@@ -179,8 +174,7 @@ gl.uniformMatrix4fv(
     viewDirectionProjectionInverseMatrix);
 
 // Tell the shader to use texture unit 0 for u_skybox
-gl.uniform1i(skyboxLocation, 0);
-</code></pre><p>Notice above we&#39;re spinning the camera around the origin where we compute <code>cameraPosition</code>. Then, after converting the <code>cameraMatrix</code> to a <code>viewMatrix</code> we zero out the translation since we only care which way the camera is facing, not where it is.</p>
+gl.uniform1i(skyboxLocation, 0);</code></pre><p>Notice above we&#39;re spinning the camera around the origin where we compute <code>cameraPosition</code>. Then, after converting the <code>cameraMatrix</code> to a <code>viewMatrix</code> we zero out the translation since we only care which way the camera is facing, not where it is.</p>
 <p>From that we multiply with the projection matrix, take the inverse, and then set the matrix.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-skybox.html"></iframe>
@@ -193,21 +187,17 @@ gl.uniform1i(skyboxLocation, 0);
 <pre><code>var envmapVertexShaderSource = `...
 var envmapFragmentShaderSource = `...
 var skyboxVertexShaderSource = `...
-var skyboxFragmentShaderSource = `...
-</code></pre><p>Then compile the shaders and look up all the attribute and uniform locations</p>
+var skyboxFragmentShaderSource = `...</code></pre><p>Then compile the shaders and look up all the attribute and uniform locations</p>
 <pre><code>  // Use twgl to compile the shaders and link into a program
   const envmapProgramInfo = twgl.createProgramInfo(
       gl, [envmapVertexShaderSource, envmapFragmentShaderSource]);
   const skyboxProgramInfo = twgl.createProgramInfo(
-      gl, [skyboxVertexShaderSource, skyboxFragmentShaderSource]);
-</code></pre><p>Set up our buffers with vertex data. twgl already has functions to supply this data so we can use those.</p>
+      gl, [skyboxVertexShaderSource, skyboxFragmentShaderSource]);</code></pre><p>Set up our buffers with vertex data. twgl already has functions to supply this data so we can use those.</p>
 <pre><code>// create buffers and fill with vertex data
 const cubeBufferInfo = twgl.primitives.createCubeBufferInfo(gl, 1);
-const quadBufferInfo = twgl.primitives.createXYQuadBufferInfo(gl);
-</code></pre><p>and create vertex array objects for each</p>
+const quadBufferInfo = twgl.primitives.createXYQuadBufferInfo(gl);</code></pre><p>and create vertex array objects for each</p>
 <pre><code>const cubeVAO = twgl.createVAOFromBufferInfo(gl, envmapProgramInfo, cubeBufferInfo);
-const quadVAO = twgl.createVAOFromBufferInfo(gl, skyboxProgramInfo, quadBufferInfo);
-</code></pre><p>At render time we compute all the matrices</p>
+const quadVAO = twgl.createVAOFromBufferInfo(gl, skyboxProgramInfo, quadBufferInfo);</code></pre><p>At render time we compute all the matrices</p>
 <pre><code>// camera going in circle 2 units from origin looking at origin
 var cameraPosition = [Math.cos(time * .1) * 2, 0, Math.sin(time * .1) * 2];
 var target = [0, 0, 0];
@@ -230,8 +220,7 @@ viewDirectionMatrix[14] = 0;
 var viewDirectionProjectionMatrix = m4.multiply(
     projectionMatrix, viewDirectionMatrix);
 var viewDirectionProjectionInverseMatrix = 
-    m4.inverse(viewDirectionProjectionMatrix);
-</code></pre><p>Then first draw the cube</p>
+    m4.inverse(viewDirectionProjectionMatrix);</code></pre><p>Then first draw the cube</p>
 <pre><code>// draw the cube
 gl.useProgram(envmapProgramInfo.program);
 gl.bindVertexArray(cubeVAO);
@@ -242,8 +231,7 @@ twgl.setUniforms(envmapProgramInfo, {
   u_texture: texture,
   u_worldCameraPosition: cameraPosition,
 });
-twgl.drawBufferInfo(gl, cubeBufferInfo);
-</code></pre><p>followed by the skybox</p>
+twgl.drawBufferInfo(gl, cubeBufferInfo);</code></pre><p>followed by the skybox</p>
 <pre><code>// draw the skybox
 gl.useProgram(skyboxProgramInfo.program);
 gl.bindVertexArray(quadVAO);
@@ -251,8 +239,7 @@ twgl.setUniforms(skyboxProgramInfo, {
   u_viewDirectionProjectionInverse: viewDirectionProjectionInverseMatrix,
   u_skybox: texture,
 });
-twgl.drawBufferInfo(gl, quadBufferInfo);
-</code></pre><p>and</p>
+twgl.drawBufferInfo(gl, quadBufferInfo);</code></pre><p>and</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-skybox-plus-environment-map.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-skybox-plus-environment-map.html" target="_blank">click here to open in a separate window</a>

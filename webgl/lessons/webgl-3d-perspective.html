@@ -91,7 +91,8 @@ generally not what people want when they say &quot;3D&quot;.</p>
 <p>Instead we need to add perspective. Just what is perspective?
 It&#39;s basically the feature that things that are further away appear
 smaller.</p>
-<p><img class="webgl_center" width="500" src="resources/perspective-example.svg" /></p>
+<img class="webgl_center" width="500" src="resources/perspective-example.svg" />
+
 <p>Looking at the example above we see that things further away
 are drawn smaller. Given our current sample one easy way to
 make it so that things that are further away appear smaller
@@ -137,8 +138,7 @@ void main() {
 
   // Divide x and y by z.
 *  gl_Position = vec4(position.xy / zToDivideBy, position.zw);
-}
-</code></pre><p>Note, because Z in clip space goes from -1 to +1 I added 1 to get
+}</code></pre><p>Note, because Z in clip space goes from -1 to +1 I added 1 to get
 <code>zToDivideBy</code> to go from 0 to +2 * fudgeFactor</p>
 <p>We also need to update the code to let us set the fudgeFactor.</p>
 <pre><code>  ...
@@ -153,8 +153,7 @@ void main() {
 +    gl.uniform1f(fudgeLocation, fudgeFactor);
 
     // Draw the geometry.
-    gl.drawArrays(gl.TRIANGLES, 0, 16 * 6);
-</code></pre><p>And here&#39;s the result.</p>
+    gl.drawArrays(gl.TRIANGLES, 0, 16 * 6);</code></pre><p>And here&#39;s the result.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-perspective.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-perspective.html" target="_blank">click here to open in a separate window</a>
@@ -163,7 +162,7 @@ void main() {
 </p>
 <p>If it&#39;s not clear drag the &quot;fudgeFactor&quot; slider from 1.0 to 0.0 to see
 what things used to look like before we added our divide by Z code.</p>
-<p><img class="webgl_center" src="resources/orthographic-vs-perspective.png" /></p>
+<img class="webgl_center" src="resources/orthographic-vs-perspective.png" />
 <div class="webgl_center">orthographic vs perspective</div>
 
 <p>It turns out WebGL takes the x,y,z,w value we assign to <code>gl_Position</code> in our vertex
@@ -182,8 +181,7 @@ void main() {
 
   // Divide x, y and z by zToDivideBy
   gl_Position = vec4(position.xyz,  zToDivideBy);
-}
-</code></pre><p>and see how it&#39;s exactly the same.</p>
+}</code></pre><p>and see how it&#39;s exactly the same.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-perspective-w.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-perspective-w.html" target="_blank">click here to open in a separate window</a>
@@ -207,22 +205,19 @@ x_out = x_in * 1 +
         z_in * 0 +
         w_in * 0 ;
 
-y_out = x_in * 0 +
+<p>y_out = x_in * 0 +
         y_in * 1 +
         z_in * 0 +
-        w_in * 0 ;
-
-z_out = x_in * 0 +
+        w_in * 0 ;</p>
+<p>z_out = x_in * 0 +
+        y_in * 0 +
+        z_in * 1 +
+        w_in * 0 ;</p>
+<p>w_out = x_in * 0 +
         y_in * 0 +
         z_in * 1 +
         w_in * 0 ;
-
-w_out = x_in * 0 +
-        y_in * 0 +
-        z_in * 1 +
-        w_in * 0 ;
-</pre></div>
-
+</pre></div></p>
 <p>which when simplified is</p>
 <div class="webgl_math_center"><pre class="webgl_math">
 x_out = x_in;
@@ -281,8 +276,7 @@ void main() {
   // Multiply the position by the matrix.
   gl_Position = u_matrix * a_position;
   ...
-}
-</code></pre><p>Next let&#39;s make a function to make our Z &rarr; W matrix.</p>
+}</code></pre><p>Next let&#39;s make a function to make our Z &rarr; W matrix.</p>
 <pre><code>function makeZToWMatrix(fudgeFactor) {
   return [
     1, 0, 0, 0,
@@ -290,8 +284,7 @@ void main() {
     0, 0, 1, fudgeFactor,
     0, 0, 0, 1,
   ];
-}
-</code></pre><p>and we&#39;ll change the code to use it.</p>
+}</code></pre><p>and we&#39;ll change the code to use it.</p>
 <pre><code>    ...
 
     // Compute the matrix
@@ -303,8 +296,7 @@ void main() {
     matrix = m4.zRotate(matrix, rotation[2]);
     matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
 
-    ...
-</code></pre><p>and note, again, it&#39;s exactly the same.</p>
+    ...</code></pre><p>and note, again, it&#39;s exactly the same.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-perspective-w-matrix.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-perspective-w-matrix.html" target="_blank">click here to open in a separate window</a>
@@ -315,7 +307,8 @@ void main() {
 and that WebGL conveniently does this divide by Z for us.</p>
 <p>But there are still some problems. For example if you set Z to around -100 you&#39;ll see something like
 the animation below</p>
-<p><img class="webgl_center" src="resources/z-clipping.gif" style="border: 1px solid black;" /></p>
+<img class="webgl_center" src="resources/z-clipping.gif" style="border: 1px solid black;" />
+
 <p>What&#39;s going on? Why is the F disappearing early? Just like WebGL clips X and Y to
 values between +1 to -1 it also clips Z. What we&#39;re seeing here is where Z &lt; -1.</p>
 <p>I could go into detail about the math to fix it but <a href="http://stackoverflow.com/a/28301213/128511">you can derive it</a> the same way
@@ -337,8 +330,7 @@ we&#39;ll decide on a <code>fieldOfView</code> and compute the right values to m
     ];
   },
 
-  ...
-</code></pre><p>This matrix will do all our conversions for us. It will adjust the units so they are
+  ...</code></pre><p>This matrix will do all our conversions for us. It will adjust the units so they are
 in clip space, it will do the math so that we can choose a field of view by angle
 and it will let us choose our Z-clipping space. It assumes there&#39;s an <em>eye</em> or <em>camera</em> at the
 origin (0, 0, 0) and given a <code>zNear</code> and a <code>fieldOfView</code> it computes what it would take so that
@@ -371,8 +363,7 @@ m4.perspective</p>
    matrix = m4.xRotate(matrix, rotation[0]);
    matrix = m4.yRotate(matrix, rotation[1]);
    matrix = m4.zRotate(matrix, rotation[2]);
-   matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
-</code></pre><p>And here it is.</p>
+   matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);</code></pre><p>And here it is.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-perspective-matrix.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-perspective-matrix.html" target="_blank">click here to open in a separate window</a>

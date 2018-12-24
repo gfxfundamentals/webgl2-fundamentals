@@ -115,8 +115,7 @@ void main() {
   v_surfaceToLight = u_lightWorldPos - (u_world * a_position).xyz;
   v_surfaceToView = (u_viewInverse[3] - (u_world * a_position)).xyz;
   gl_Position = v_position;
-}
-</code></pre><p>fragment shader:</p>
+}</code></pre><p>fragment shader:</p>
 <pre><code>#version 300 es
 precision mediump float;
 
@@ -154,8 +153,7 @@ void main() {
     u_lightColor * (diffuseColor * litR.y + diffuseColor * u_ambient +
                 u_specular * litR.z * u_specularFactor)).rgb,
     diffuseColor.a);
-}
-</code></pre><p>You&#39;d end up having to write code like this to look up and set all the various values to draw.</p>
+}</code></pre><p>You&#39;d end up having to write code like this to look up and set all the various values to draw.</p>
 <pre><code>// At initialization time
 var u_worldViewProjectionLoc   = gl.getUniformLocation(program, &quot;u_worldViewProjection&quot;);
 var u_lightWorldPosLoc         = gl.getUniformLocation(program, &quot;u_lightWorldPos&quot;);
@@ -220,8 +218,7 @@ gl.uniform4fv(u_specularLoc, specularColor);
 gl.uniform1f(u_shininessLoc, shininess);
 gl.uniform1f(u_specularFactorLoc, specularFactor);
 
-gl.drawArrays(...);
-</code></pre><p>That&#39;s a lot of typing.</p>
+gl.drawArrays(...);</code></pre><p>That&#39;s a lot of typing.</p>
 <p>There are lots of ways to simplify this. One suggestion is to ask WebGL to tell us all
 the uniforms, attributes and their locations and then setup functions to set them for us.
 We can then pass in JavaScript objects to set our settings much more easily.
@@ -263,8 +260,7 @@ gl.bindAttribArray(vao);
 // Set all the uniforms and textures used.
 twgl.setUniforms(uniformSetters, uniforms);
 
-gl.drawArrays(...);
-</code></pre><p>That seems a heck of a lot smaller, easier, and less code to me.</p>
+gl.drawArrays(...);</code></pre><p>That seems a heck of a lot smaller, easier, and less code to me.</p>
 <p>You can even use multiple JavaScript objects for the uniforms if it suits you. For example</p>
 <pre><code>// At initialiation time
 var uniformSetters = twgl.createUniformSetters(gl, program);
@@ -335,8 +331,7 @@ objects.forEach(function(object) {
   twgl.setUniforms(uniformSetters, uniformThatAreComputedForEachObject);
   twgl.setUniforms(unifromSetters, objects.materialUniforms);
   gl.drawArrays(...);
-});
-</code></pre><p>Here&#39;s an example using these helper functions</p>
+});</code></pre><p>Here&#39;s an example using these helper functions</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-less-code-more-fun.html" target="_blank">click here to open in a separate window</a>
@@ -361,8 +356,7 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texcoords), gl.STATIC_DRAW);
 
 var normalBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
-</code></pre><p>Looks like a pattern we can simplify as well.</p>
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);</code></pre><p>Looks like a pattern we can simplify as well.</p>
 <pre><code>// a single triangle
 var arrays = {
    position: { numComponents: 3, data: [0, -10, 0, 10, 10, 0, -10, 10, 0], },
@@ -371,8 +365,7 @@ var arrays = {
 };
 
 var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
-var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
-</code></pre><p>Much shorter!</p>
+var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);</code></pre><p>Much shorter!</p>
 <p>Here&#39;s that</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-triangle.html"></iframe>
@@ -393,13 +386,11 @@ var arrays = {
 };
 
 var bufferInfo = twgl.createBufferInfoFromTypedArray(gl, arrays);
-var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
-</code></pre><p>and at render time we can call <code>gl.drawElements</code> instead of <code>gl.drawArrays</code>.</p>
+var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);</code></pre><p>and at render time we can call <code>gl.drawElements</code> instead of <code>gl.drawArrays</code>.</p>
 <pre><code>...
 
 // Draw the geometry.
-gl.drawElements(gl.TRIANGLES, bufferInfo.numElements, gl.UNSIGNED_SHORT, 0);
-</code></pre><p>Here&#39;s that</p>
+gl.drawElements(gl.TRIANGLES, bufferInfo.numElements, gl.UNSIGNED_SHORT, 0);</code></pre><p>Here&#39;s that</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-quad.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-less-code-more-fun-quad.html" target="_blank">click here to open in a separate window</a>
@@ -415,8 +406,7 @@ var arrays = {
    texcoord: [0, 0, 0, 1, 1, 0, 1, 1],
    normal:   [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
    indices:  [0, 1, 2, 1, 2, 3],
-};
-</code></pre><p>And that version</p>
+};</code></pre><p>And that version</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-quad-guess.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-less-code-more-fun-quad-guess.html" target="_blank">click here to open in a separate window</a>
@@ -436,16 +426,13 @@ components they provide.</p>
 <p>Looking for more patterns there&#39;s this</p>
 <pre><code>var program = twgl.createProgramFromSources(gl, [vs, fs]);
 var uniformSetters = twgl.createUniformSetters(gl, program);
-var attribSetters  = twgl.createAttributeSetters(gl, program);
-</code></pre><p>Let&#39;s simplify that too into just</p>
-<pre><code>var programInfo = twgl.createProgramInfo(gl, [&quot;vertexshader&quot;, &quot;fragmentshader&quot;]);
-</code></pre><p>Which returns something like</p>
+var attribSetters  = twgl.createAttributeSetters(gl, program);</code></pre><p>Let&#39;s simplify that too into just</p>
+<pre><code>var programInfo = twgl.createProgramInfo(gl, [&quot;vertexshader&quot;, &quot;fragmentshader&quot;]);</code></pre><p>Which returns something like</p>
 <pre><code>programInfo = {
    program: WebGLProgram,  // program we just compiled
    uniformSetters: ...,    // setters as returned from createUniformSetters,
    attribSetters: ...,     // setters as returned from createAttribSetters,
-}
-</code></pre><p>And that&#39;s yet one more minor simplification. This will come in handy once we start using
+}</code></pre><p>And that&#39;s yet one more minor simplification. This will come in handy once we start using
 multiple programs since it automatically keeps the setters with the program they are associated with.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-quad-programinfo.html"></iframe>
@@ -458,8 +445,7 @@ multiple programs since it automatically keeps the setters with the program they
 Given the data we have we can easily check which by looking at <code>bufferInfo.indices</code>.
 If it exists we need to call <code>gl.drawElements</code>. If not we need to call <code>gl.drawArrays</code>.
 So there&#39;s a function, <code>twgl.drawBufferInfo</code> that does that. It&#39;s used like this</p>
-<pre><code>twgl.drawBufferInfo(gl, bufferInfo);
-</code></pre><p>If you don&#39;t pass a 3rd parameter for the type of primitive to draw it assumes
+<pre><code>twgl.drawBufferInfo(gl, bufferInfo);</code></pre><p>If you don&#39;t pass a 3rd parameter for the type of primitive to draw it assumes
 <code>gl.TRIANGLES</code>.</p>
 <p>Here&#39;s an example were we have a non-indexed triangle and an indexed quad. Because
 we&#39;re using <code>twgl.drawBufferInfo</code> the code doesn&#39;t have to change when we
@@ -490,9 +476,9 @@ directly like this.
 // At initialiation time
 var uniformSetters = twgl.createUniformSetters(program);
 
-// At draw time
+<p>// At draw time
 uniformSetters.u_ambient([1, 0, 0, 1]); // set the ambient color to red.
-</pre>
+</pre></p>
 <p>The reason this is not a good idea is because when you're working with GLSL you might
 modify the shaders from time to time, often to debug. Let's say we were not seeing
 anything on the screen in our program. One of the first things I do when nothing
@@ -502,29 +488,25 @@ to the simplest thing possible</p>
 #version 300 es
 precision mediump float;
 
-in vec4 v_position;
+<p>in vec4 v_position;
 in vec2 v_texCoord;
 in vec3 v_normal;
 in vec3 v_surfaceToLight;
-in vec3 v_surfaceToView;
-
-uniform vec4 u_lightColor;
+in vec3 v_surfaceToView;</p>
+<p>uniform vec4 u_lightColor;
 uniform vec4 u_ambient;
 uniform sampler2D u_diffuse;
 uniform vec4 u_specular;
 uniform float u_shininess;
-uniform float u_specularFactor;
-
-out vec4 outColor;
-
-vec4 lit(float l ,float h, float m) {
+uniform float u_specularFactor;</p>
+<p>out vec4 outColor;</p>
+<p>vec4 lit(float l ,float h, float m) {
   return vec4(1.0,
               max(l, 0.0),
-              (l > 0.0) ? pow(max(0.0, h), m) : 0.0,
+              (l &gt; 0.0) ? pow(max(0.0, h), m) : 0.0,
               1.0);
-}
-
-void main() {
+}</p>
+<p>void main() {
   vec4 diffuseColor = texture2D(u_diffuse, v_texCoord);
   vec3 a_normal = normalize(v_normal);
   vec3 surfaceToLight = normalize(v_surfaceToLight);
@@ -535,11 +517,11 @@ void main() {
   vec4 outColor = vec4((
     u_lightColor * (diffuseColor * litR.y + diffuseColor * u_ambient +
                 u_specular * litR.z * u_specularFactor)).rgb,
-      diffuseColor.a);
-*  outColor = vec4(0,1,0,1);  // &lt;!--- just green
+      diffuseColor.a);</p>
+<ul>
+<li>outColor = vec4(0,1,0,1);  // &lt;!--- just green
 }
-</pre>
-<p>Notice I just added a line that sets <code>outColor</code> to a constant color.
+</pre><p>Notice I just added a line that sets <code>outColor</code> to a constant color.
 Most drivers will see that none of the previous lines in the file actually contribute
 to the result. As such they'll optimize out all of our uniforms. The next time we run the program
 when we call <code>twgl.createUniformSetters</code> it won't create a setter for <code>u_ambient</code> so the
@@ -550,6 +532,8 @@ TypeError: undefined is not a function
 <p><code>twgl.setUniforms</code> solves that issue. It only sets those uniforms that actually exist</p>
 </div>
 
+</li>
+</ul>
 
     </div>
     <div class="lesson-sidebar">

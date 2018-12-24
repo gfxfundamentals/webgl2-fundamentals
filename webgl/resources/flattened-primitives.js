@@ -7,7 +7,7 @@
   // the result to createBufferInfoFromArrays and
   // returns a twgl.BufferInfo
   function createFlattenedVertices(gl, vertices, vertsPerColor) {
-    var last;
+    let last;
     return twgl.createBufferInfoFromArrays(
         gl,
         twgl.primitives.makeRandomVertexColors(
@@ -26,7 +26,7 @@
 
   function createFlattenedFunc(createVerticesFunc, vertsPerColor) {
     return function(gl) {
-      var arrays = createVerticesFunc.apply(null,  Array.prototype.slice.call(arguments, 1));
+      const arrays = createVerticesFunc.apply(null,  Array.prototype.slice.call(arguments, 1));
       return createFlattenedVertices(gl, arrays, vertsPerColor);
     };
   }

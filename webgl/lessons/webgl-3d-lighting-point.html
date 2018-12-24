@@ -98,20 +98,17 @@ That would give us a point light.</p>
 surface to light vector gives us a different value at each point on the surface.</p>
 <p>So, let&#39;s do that.</p>
 <p>First we need the light position</p>
-<pre><code>uniform vec3 u_lightWorldPosition;
-</code></pre><p>And we need a way to compute the world position of the surface. For that we can multiply
+<pre><code>uniform vec3 u_lightWorldPosition;</code></pre><p>And we need a way to compute the world position of the surface. For that we can multiply
 our positions by the world matrix so ...</p>
 <pre><code>uniform mat4 u_world;
 
 ...
 
 // compute the world position of the surfoace
-vec3 surfaceWorldPosition = (u_world * a_position).xyz;
-</code></pre><p>And we can compute a vector from the surface to the light which is similar to the
+vec3 surfaceWorldPosition = (u_world * a_position).xyz;</code></pre><p>And we can compute a vector from the surface to the light which is similar to the
 direction we had before expect this time we&#39;re computing it for every position on the
 surface to a point.</p>
-<pre><code>v_surfaceToLight = u_lightPosition - surfaceWorldPosition;
-</code></pre><p>Here&#39;s all that in context</p>
+<pre><code>v_surfaceToLight = u_lightPosition - surfaceWorldPosition;</code></pre><p>Here&#39;s all that in context</p>
 <pre><code>#version 300 es
 
 in vec4 a_position;
@@ -139,8 +136,7 @@ void main() {
 +  // compute the vector of the surface to the light
 +  // and pass it to the fragment shader
 +  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
-}
-</code></pre><p>Now in the fragment shader we need to normalize the surface to light vector
+}</code></pre><p>Now in the fragment shader we need to normalize the surface to light vector
 since it&#39;s a not a unit vector. Note that we could normalize in the vertex shader
 but because it&#39;s a <em>varying</em> it will be linearly interpolated between our positions
 and so would not be a complete unit vector</p>
@@ -173,15 +169,13 @@ void main() {
   // Lets multiply just the color portion (not the alpha)
   // by the light
   gl_FragColor.rgb *= light;
-}
-</code></pre><p>Then we need to lookup the locations of <code>u_world</code> and <code>u_lightWorldPosition</code></p>
+}</code></pre><p>Then we need to lookup the locations of <code>u_world</code> and <code>u_lightWorldPosition</code></p>
 <pre><code>-  var reverseLightDirectionLocation =
 -      gl.getUniformLocation(program, &quot;u_reverseLightDirection&quot;);
 +  var lightWorldPositionLocation =
 +      gl.getUniformLocation(program, &quot;u_lightWorldPosition&quot;);
 +  var worldLocation =
-+      gl.getUniformLocation(program, &quot;u_world&quot;);
-</code></pre><p>and set them</p>
++      gl.getUniformLocation(program, &quot;u_world&quot;);</code></pre><p>and set them</p>
 <pre><code>  // Set the matrices
 +  gl.uniformMatrix4fv(
 +      worldLocation, false,
@@ -195,8 +189,7 @@ void main() {
 -  // set the light direction.
 -  gl.uniform3fv(reverseLightDirectionLocation, normalize([0.5, 0.7, 1]));
 +  // set the light position
-+  gl.uniform3fv(lightWorldPositionLocation, [20, 30, 50]);
-</code></pre><p>And here it is</p>
++  gl.uniform3fv(lightWorldPositionLocation, [20, 30, 50]);</code></pre><p>And here it is</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-point.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-point.html" target="_blank">click here to open in a separate window</a>
@@ -206,7 +199,8 @@ void main() {
 <p>Now that we have a point we can add something called specualar highlighting.</p>
 <p>If you look at on object in the real world, if it&#39;s remotely shiny then if it happens
 to reflect the light directly at you it&#39;s almost like a mirror</p>
-<p><img class="webgl_center" src="resources/specular-highlights.jpg" /></p>
+<img class="webgl_center" src="resources/specular-highlights.jpg" />
+
 <p>We can simulate that effect by computing if the light reflects into our eyes. Again the <em>dot-product</em>
 comes to the rescue.</p>
 <p>What do we need to check? Well let&#39;s think about it. Light reflects at the same angle it hits a surface
@@ -264,8 +258,7 @@ void main() {
 +  // compute the vector of the surface to the view/camera
 +  // and pass it to the fragment shader
 +  v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition;
-}
-</code></pre><p>Next in the fragment shader we need to compute the <code>halfVector</code> between
+}</code></pre><p>Next in the fragment shader we need to compute the <code>halfVector</code> between
 the surface to view and surface to light vectors. Then we can take the dot
 product the <code>halfVector</code> and the normal to find out if the light is reflecting
 into the view.</p>
@@ -297,8 +290,7 @@ void main() {
 
 +  // Just add in the specular
 +  gl_FragColor.rgb += specular;
-}
-</code></pre><p>Finally we have to look up <code>u_viewWorldPosition</code> and set it</p>
+}</code></pre><p>Finally we have to look up <code>u_viewWorldPosition</code> and set it</p>
 <pre><code>var lightWorldPositionLocation =
     gl.getUniformLocation(program, &quot;u_lightWorldPosition&quot;);
 +var viewWorldPositionLocation =
@@ -315,8 +307,7 @@ var cameraMatrix = makeLookAt(camera, target, up);
 ...
 
 +// set the camera/view position
-+gl.uniform3fv(viewWorldPositionLocation, camera);
-</code></pre><p>And here&#39;s that</p>
++gl.uniform3fv(viewWorldPositionLocation, camera);</code></pre><p>And here&#39;s that</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-point-specular.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-point-specular.html" target="_blank">click here to open in a separate window</a>
@@ -344,8 +335,7 @@ right.</p>
 +  float specular = 0.0;
 +  if (light &gt; 0.0) {
 +    specular = pow(dot(normal, halfVector), u_shininess);
-+  }
-</code></pre><p>The dot product can go negative. Taking a negative number to a power is undefined in WebGL
++  }</code></pre><p>The dot product can go negative. Taking a negative number to a power is undefined in WebGL
 which would be bad. So, if the dot product would possibly be negative then we just leave specular at 0.0.</p>
 <p>Of course we need to look up the location and set it</p>
 <pre><code>+var shininessLocation = gl.getUniformLocation(program, &quot;u_shininess&quot;);
@@ -353,8 +343,7 @@ which would be bad. So, if the dot product would possibly be negative then we ju
 ...
 
 // set the shininess
-gl.uniform1f(shininessLocation, shininess);
-</code></pre><p>And here&#39;s that</p>
+gl.uniform1f(shininessLocation, shininess);</code></pre><p>And here&#39;s that</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-point-specular-power.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-point-specular-power.html" target="_blank">click here to open in a separate window</a>
@@ -377,18 +366,15 @@ uniform float u_shininess;
 
   // Just add in the specular
 *  gl_FragColor.rgb += specular * u_specularColor;
-}
-</code></pre><p>and of course</p>
+}</code></pre><p>and of course</p>
 <pre><code>+  var lightColorLocation =
 +      gl.getUniformLocation(program, &quot;u_lightColor&quot;);
 +  var specularColorLocation =
-+      gl.getUniformLocation(program, &quot;u_specularColor&quot;);
-</code></pre><p>and</p>
++      gl.getUniformLocation(program, &quot;u_specularColor&quot;);</code></pre><p>and</p>
 <pre><code>+  // set the light color
 +  gl.uniform3fv(lightColorLocation, normalize([1, 0.6, 0.6]));  // red light
 +  // set the specular color
-+  gl.uniform3fv(specularColorLocation, normalize([1, 0.6, 0.6]));  // red light
-</code></pre><p><div class="webgl_example_container">
++  gl.uniform3fv(specularColorLocation, normalize([1, 0.6, 0.6]));  // red light</code></pre><p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-point-color.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-point-color.html" target="_blank">click here to open in a separate window</a>
 </div>

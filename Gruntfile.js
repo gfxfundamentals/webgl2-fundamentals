@@ -1,9 +1,9 @@
-"use strict";
+/* global require module */
 
-const path = require('path');
 const fs = require('fs');
 
 module.exports = function(grunt) {
+  'use strict';
 
   require('load-grunt-tasks')(grunt);
 
@@ -75,8 +75,8 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('buildlessons', function() {
-    var buildStuff = require('./build/js/build');
-    var finish = this.async();
+    const buildStuff = require('./build/js/build');
+    const finish = this.async();
     buildStuff().then(function() {
         finish();
     }).done();

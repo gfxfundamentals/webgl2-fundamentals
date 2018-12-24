@@ -119,17 +119,14 @@ function loadImageAndCreateTextureInfo(url) {
   img.src = url;
 
   return textureInfo;
-}
-</code></pre><p>The problem is images might have private data in them (for example a captcha, a signature, a naked picture, ...).
+}</code></pre><p>The problem is images might have private data in them (for example a captcha, a signature, a naked picture, ...).
 A webpage often has ads and other things not in direct cotnrol of the page and so the browser needs to prevent
 those things from looking at the contents of these private images.</p>
 <p>Just using <code>&lt;img src=&quot;private.jpg&quot;&gt;</code> is not a problem because although the image will get displayed by
 the browser a script can not see the data inside the image. <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">The Canvas2D API</a>
 has a way to see inside the image. First you draw the image into the canvas</p>
-<pre><code>ctx.drawImage(someImg, 0, 0);
-</code></pre><p>Then you get the data</p>
-<pre><code>var data = ctx.getImageData(0, 0, width, heigh);
-</code></pre><p>But, if the image you drew came from a different domain the browser will mark the canvas as <em>tainted</em> and
+<pre><code>ctx.drawImage(someImg, 0, 0);</code></pre><p>Then you get the data</p>
+<pre><code>var data = ctx.getImageData(0, 0, width, heigh);</code></pre><p>But, if the image you drew came from a different domain the browser will mark the canvas as <em>tainted</em> and
 you&#39;ll get a security error when you call <code>ctx.getImageData</code></p>
 <p>WebGL has to take it even one step further. In WebGL <code>gl.readPixels</code> is the equivilent call to <code>ctx.getImageData</code>
 so you&#39;d think maybe just blocking that would be enough but it turns out even if you can&#39;t read the pixels
@@ -152,8 +149,7 @@ to use the image.</p>
 image from the server, if it&#39;s not the same domain, the browser will ask for CORS permission.</p>
 <pre><code>...
 +    img.crossOrigin = &quot;&quot;;   // ask for CORS permission
-    img.src = url;
-</code></pre><p>The string you set <code>crossOrigin</code> to is sent to the server. The server can look at that string and decide
+    img.src = url;</code></pre><p>The string you set <code>crossOrigin</code> to is sent to the server. The server can look at that string and decide
 whether or not to give you permission. Most servers that support CORS don&#39;t look at the string, they just
 give permission to everyone. This is why setting it to the empty string works. All it means in this case
 is &quot;ask permission&quot; vs say <code>img.crossOrigin = &quot;bob&quot;</code> would mean &quot;ask permission for &#39;bob&#39;.</p>
@@ -167,12 +163,10 @@ so sets the <code>crossOrigin</code> attribute.</p>
   if ((new URL(url)).origin !== window.location.origin) {
     img.crossOrigin = &quot;&quot;;
   }
-}
-</code></pre><p>And we can use it like this</p>
+}</code></pre><p>And we can use it like this</p>
 <pre><code>...
 +requestCORSIfNotSameOrigin(img, url);
-img.src = url;
-</code></pre><p><div class="webgl_example_container">
+img.src = url;</code></pre><p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-cors-permission-good.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-cors-permission-good.html" target="_blank">click here to open in a separate window</a>
 </div>

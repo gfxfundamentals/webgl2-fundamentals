@@ -88,9 +88,9 @@ parts to this GPU thing.  The first part processes vertices (or streams of
 data) into clipspace vertices.  The second part draws pixels based on the
 first part.</p>
 <p>When you call</p>
-<pre><code>gl.drawArrays(gl.TRIANGLE, 0, 9);
-</code></pre><p>The 9 there means &quot;process 9 vertices&quot; so here are 9 vertices being processed.</p>
-<p><img src="resources/vertex-shader-anim.gif" class="webgl_center" /></p>
+<pre><code>gl.drawArrays(gl.TRIANGLE, 0, 9);</code></pre><p>The 9 there means &quot;process 9 vertices&quot; so here are 9 vertices being processed.</p>
+<img src="resources/vertex-shader-anim.gif" class="webgl_center" />
+
 <p>On the left is the data you provide.  The vertex shader is a function you
 write in <a href="webgl-shaders-and-glsl.html">GLSL</a>.  It gets called once for each vertex.
 You do some math and set the special variable <code>gl_Position</code> with a clipspace value
@@ -120,15 +120,13 @@ function setGeometry(gl) {
            150,  125,
           -175,  100]),
       gl.STATIC_DRAW);
-}
-</code></pre><p>And we have to only draw 3 vertices.</p>
+}</code></pre><p>And we have to only draw 3 vertices.</p>
 <pre><code>// Draw the scene.
 function drawScene() {
   ...
   // Draw the geometry.
 *  gl.drawArrays(gl.TRIANGLES, 0, 3);
-}
-</code></pre><p>Then in our vertex shader we declare a <em>varying</em> by making an <code>out</code> to pass data to the
+}</code></pre><p>Then in our vertex shader we declare a <em>varying</em> by making an <code>out</code> to pass data to the
 fragment shader.</p>
 <pre><code>out vec4 v_color;
 ...
@@ -140,8 +138,7 @@ void main() {
   // Clipspace goes -1.0 to +1.0
   // Colorspace goes from 0.0 to 1.0
 *  v_color = gl_Position * 0.5 + 0.5;
-}
-</code></pre><p>And then we declare the same <em>varying</em> as an <code>in</code> in the fragment shader.</p>
+}</code></pre><p>And then we declare the same <em>varying</em> as an <code>in</code> in the fragment shader.</p>
 <pre><code>#version 300 es
 
 precision mediump float;
@@ -152,8 +149,7 @@ out vec4 outColor;
 
 void main() {
 *  outColor = v_color;
-}
-</code></pre><p>WebGL will connect the varying in the vertex shader to the varying of the
+}</code></pre><p>WebGL will connect the varying in the vertex shader to the varying of the
 same name and type in the fragment shader.</p>
 <p>Here&#39;s the working version.</p>
 <p><div class="webgl_example_container">
@@ -173,25 +169,27 @@ the triangle it interpolates between the values we computed for the
 vertices.  For each pixel it calls our fragment shader with the
 interpolated value for that pixel.</p>
 <p>In the example above we start out with the 3 vertices</p>
-<p><style>
+<style>
 table.vertex_table {
   border: 1px solid black;
   border-collapse: collapse;
   font-family: monospace;
   font-size: small;
-}</p>
-<p>table.vertex_table th {
+}
+
+table.vertex_table th {
   background-color: #88ccff;
   padding-right: 1em;
   padding-left: 1em;
-}</p>
-<p>table.vertex_table td {
+}
+
+table.vertex_table td {
   border: 1px solid black;
   text-align: right;
   padding-right: 1em;
   padding-left: 1em;
 }
-</style></p>
+</style>
 <div class="hcenter">
 <table class="vertex_table">
 <tr><th colspan="2">Vertices</th></tr>
@@ -248,8 +246,7 @@ void main() {
    ...
   // Copy the color from the attribute to the varying.
 *  v_color = a_color;
-}
-</code></pre><p>We now have to supply colors for WebGL to use.</p>
+}</code></pre><p>We now have to supply colors for WebGL to use.</p>
 <pre><code>  // look up where the vertex data needs to go.
   var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 +  var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
@@ -296,8 +293,7 @@ void main() {
 +          r2, b2, g2, 1,
 +          r2, b2, g2, 1]),
 +      gl.STATIC_DRAW);
-+}
-</code></pre><p>And here&#39;s the result.</p>
++}</code></pre><p>And here&#39;s the result.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-with-2-colors.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle-with-2-colors.html" target="_blank">click here to open in a separate window</a>
@@ -323,8 +319,7 @@ function setColors(gl) {
 *          Math.random(), Math.random(), Math.random(), 1,
 *          Math.random(), Math.random(), Math.random(), 1]),
       gl.STATIC_DRAW);
-}
-</code></pre><p>And now we see the interpolated <em>varying</em>.</p>
+}</code></pre><p>And now we see the interpolated <em>varying</em>.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-with-random-colors.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle-with-random-colors.html" target="_blank">click here to open in a separate window</a>
@@ -335,7 +330,7 @@ function setColors(gl) {
 attribute and passing data from a vertex shader to a fragment shader.  If
 you check out <a href="webgl-image-processing.html">the image processing examples</a>
 you&#39;ll see they also use an extra attribute to pass in texture coordinates.</p>
-<h2 id="what-do-these-buffer-and-attribute-commands-do-">What do these buffer and attribute commands do?</h2>
+<p>##What do these buffer and attribute commands do?</p>
 <p>Buffers are the way of getting vertex and other per vertex data onto the
 GPU.  <code>gl.createBuffer</code> creates a buffer.
 <code>gl.bindBuffer</code> sets that buffer as the buffer to be worked on.
@@ -346,18 +341,15 @@ of it and provide it to the vertex shader&#39;s attributes.</p>
 attributes.  For example in the code above we have</p>
 <pre><code>// look up where the vertex data needs to go.
 var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
-var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
-</code></pre><p>Once we know the location of the attribute we then issue 2 commands.</p>
-<pre><code>gl.enableVertexAttribArray(location);
-</code></pre><p>This command tells WebGL we want to supply data from a buffer.</p>
+var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);</code></pre><p>Once we know the location of the attribute we then issue 2 commands.</p>
+<pre><code>gl.enableVertexAttribArray(location);</code></pre><p>This command tells WebGL we want to supply data from a buffer.</p>
 <pre><code>gl.vertexAttribPointer(
     location,
     numComponents,
     typeOfData,
     normalizeFlag,
     strideToNextPieceOfData,
-    offsetIntoBuffer);
-</code></pre><p>And this command tells WebGL to get data from the buffer that was last
+    offsetIntoBuffer);</code></pre><p>And this command tells WebGL to get data from the buffer that was last
 bound with gl.bindBuffer, how many components per vertex (1 - 4), what the
 type of data is (<code>BYTE</code>, <code>FLOAT</code>, <code>INT</code>, <code>UNSIGNED_SHORT</code>, etc...), the stride
 which means how many bytes to skip to get from one piece of data to the
@@ -412,7 +404,7 @@ function setColors(gl) {
   var b2 = Math.random() * 256; // Uint8Array
   var g2 = Math.random() * 256;
 
-  gl.bufferData(
+<p>  gl.bufferData(
       gl.ARRAY_BUFFER,
       new Uint8Array(   // Uint8Array
         [ r1, b1, g1, 255,
@@ -423,17 +415,17 @@ function setColors(gl) {
           r2, b2, g2, 255]),
       gl.STATIC_DRAW);
 }
-</pre>
+</pre></p>
 <p>
 Here's that sample.
 </p>
 
-<div class="webgl_example_container">
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-with-2-byte-colors.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle-with-2-byte-colors.html" target="_blank">click here to open in a separate window</a>
 </div>
 
-
+</p>
 </div>
 
 

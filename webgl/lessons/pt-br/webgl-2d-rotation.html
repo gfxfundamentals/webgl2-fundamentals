@@ -124,8 +124,7 @@ void main() {
   // Add in the translation.
 * vec2 position = rotatedPosition + u_translation;
 
-...
-</code></pre><p>E também atualizamos o JavaScript para que possámos passar os dois valores.</p>
+...</code></pre><p>E também atualizamos o JavaScript para que possámos passar os dois valores.</p>
 <pre><code>  ...
 
 +  var rotationLocation = gl.getUniformLocation(program, &quot;u_rotation&quot;);
@@ -171,8 +170,7 @@ void main() {
     var offset = 0;
     var count = 18;
     gl.drawArrays(primitiveType, offset, count);
-  }
-</code></pre><p>E aqui está o resultado. Arraste a alça no círculo para rotacionar, ou,
+  }</code></pre><p>E aqui está o resultado. Arraste a alça no círculo para rotacionar, ou,
 os sliders para translacionar.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-rotation.html"></iframe>
@@ -189,7 +187,8 @@ os sliders para translacionar.</p>
 <p>Digamos que você tenha um retângulo e que você queira girá-lo.
 Antes de começar a rotacioná-lo, o canto superior direito está em 3.0, 9.0.
 Vamos escolher um ponto no círculo unitário à 30 graus no sentido horário.</p>
-<p><img src="../resources/rotate-30.png" class="webgl_center" /></p>
+<img src="../resources/rotate-30.png" class="webgl_center" />
+
 <p>A posição no círculo é 0.50 e 0.87</p>
 <pre class="webgl_center">
    3.0 * 0.87 + 9.0 * 0.50 = 7.1
@@ -197,9 +196,11 @@ Vamos escolher um ponto no círculo unitário à 30 graus no sentido horário.</
 </pre>
 
 <p>É exatamente aonde precisamos que ele esteja</p>
-<p><img src="../resources/rotation-drawing.svg" width="500" class="webgl_center"/></p>
+<img src="../resources/rotation-drawing.svg" width="500" class="webgl_center"/>
+
 <p>A mesma coisa se aplica para 60 graus no sentido horário</p>
-<p><img src="../resources/rotate-60.png" class="webgl_center" /></p>
+<img src="../resources/rotate-60.png" class="webgl_center" />
+
 <p>A posição no círculo é 0.87 e 0.50</p>
 <pre class="webgl_center">
    3.0 * 0.50 + 9.0 * 0.87 = 9.3
@@ -219,8 +220,7 @@ maneira.</p>
   var s = Math.sin(angleInRadians);
   var c = Math.cos(angleInRadians);
   console.log(&quot;s = &quot; + s + &quot; c = &quot; + c);
-}
-</code></pre><p>Se você copiar e colar o código no seu console de JavaScript e
+}</code></pre><p>Se você copiar e colar o código no seu console de JavaScript e
 escrever <code>printSineAndCosignForAngle(30)</code>, você verá que
 <code>s = 0.49 c = 0.87</code> será impresso (nota: eu arredondei os valores).</p>
 <p>Se você colocar tudo isso junto, você será capaz de rotacionar sua 
@@ -229,8 +229,7 @@ com o seno e o cosseno referentes ao ângulo que você deseja.</p>
 <pre><code>  ...
   var angleInRadians = angleInDegrees * Math.PI / 180;
   rotation[0] = Math.sin(angleInRadians);
-  rotation[1] = Math.cos(angleInRadians);
-</code></pre><p>Aqui está uma versão que tem um ajuste de ângulo. 
+  rotation[1] = Math.cos(angleInRadians);</code></pre><p>Aqui está uma versão que tem um ajuste de ângulo. 
 Arraste os sliders para translacionar ou girar.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-rotation-angle.html"></iframe>

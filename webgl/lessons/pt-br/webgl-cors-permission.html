@@ -119,17 +119,14 @@ function loadImageAndCreateTextureInfo(url) {
   img.src = url;
 
   return textureInfo;
-}
-</code></pre><p>O problema é que as imagens podem ter dados privados nelas (por exemplo, um captcha, uma assinatura, uma imagem nua, ...).
+}</code></pre><p>O problema é que as imagens podem ter dados privados nelas (por exemplo, um captcha, uma assinatura, uma imagem nua, ...).
 Uma página da web muitas vezes tem anúncios e outras coisas que não estão no controle direto da página e, portanto, o navegador precisa prevenir
 que essas coisas vejam o conteúdo dessas imagens privadas.</p>
 <p>Apenas usando <code>&lt;img src =&quot;private.jpg&quot;&gt;</code> não é um problema porque, embora a imagem seja exibida pelo
 navegador, um script não pode ver os dados dentro da imagem. <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">A API Canvas2D</a>
 possui uma maneira de ver dentro da imagem. Primeiro, você desenha a imagem na tela</p>
-<pre><code>ctx.drawImage(someImg, 0, 0);
-</code></pre><p>E então, você obtêm os dados</p>
-<pre><code>var data = ctx.getImageData(0, 0, width, heigh);
-</code></pre><p>Mas, se a imagem que você desenhou veio de um domínio diferente, o navegador marcará o canvas como <em>tainted</em> e
+<pre><code>ctx.drawImage(someImg, 0, 0);</code></pre><p>E então, você obtêm os dados</p>
+<pre><code>var data = ctx.getImageData(0, 0, width, heigh);</code></pre><p>Mas, se a imagem que você desenhou veio de um domínio diferente, o navegador marcará o canvas como <em>tainted</em> e
 você receberá um erro de segurança ao chamar <code>ctx.getImageData</code></p>
 <p>a WebGL tem que levá-la até mesmo um passo adiante. Na WebGL <code>gl.readPixels</code> é uma chamada equivocada para <code>ctx.getImageData</code>,
 então você pensaria que talvez apenas bloqueando isso seria suficiente, mas isso acontece mesmo que você não consiga ler os pixels
@@ -152,8 +149,7 @@ para usar a imagem.</p>
 imagem do servidor, se não for o mesmo domínio, o navegador pedirá permissão CORS.</p>
 <pre><code>...
 +    img.crossOrigin = &quot;&quot;;   // ask for CORS permission
-    img.src = url;
-</code></pre><p>A string em que você define <code>crossOrigin</code> é enviada para o servidor. O servidor pode ver essa string e decidir
+    img.src = url;</code></pre><p>A string em que você define <code>crossOrigin</code> é enviada para o servidor. O servidor pode ver essa string e decidir
 se irá lhe dar permissão. A maioria dos servidores que oferecem suporte a CORS não olham para a string, eles apenas
 dão permissão a todos. É por isso que definir a string como vazia funciona. Tudo que isso significa, neste caso,
 é &quot;pedir permissão&quot; vs dizer <code>img.crossOrigin = &quot;bob&quot;</code> significaria &quot;pedir permissão para &#39;bob&#39;&quot;.</p>
@@ -167,12 +163,10 @@ então, define o atributo <code>crossOrigin</code>.</p>
   if ((new URL(url)).origin !== window.location.origin) {
     img.crossOrigin = &quot;&quot;;
   }
-}
-</code></pre><p>E podemos usá-lo assim</p>
+}</code></pre><p>E podemos usá-lo assim</p>
 <pre><code>...
 +requestCORSIfNotSameOrigin(img, url);
-img.src = url;
-</code></pre><p><div class="webgl_example_container">
+img.src = url;</code></pre><p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-cors-permission-good.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-cors-permission-good.html" target="_blank">clique aqui para abrir em uma janela separada</a>
 </div>

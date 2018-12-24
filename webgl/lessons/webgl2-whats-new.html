@@ -95,16 +95,14 @@ always use them</a>.</p>
 <p>In WebGL1 if your shader needed to know the size of
 a texture you had to pass the size in uniform manually.
 In WebGL2 you can call</p>
-<pre><code>vec2 size = textureSize(sampler, lod)
-</code></pre><p>To get the size of any lod of a texture</p>
+<pre><code>vec2 size = textureSize(sampler, lod)</code></pre><p>To get the size of any lod of a texture</p>
 <h2 id="direct-texel-lookup">Direct Texel Lookup</h2>
 <p>It&#39;s often convenient to store large arrays of data in a texture.
 In WebGL 1 you could do that but you could only address textures
 with texture coordinates (0.0 to 1.0). In WebGL2 you can look
 up values from a texture by pixel/texel coordinates directly
 making array access slightly easier</p>
-<pre><code>vec4 values = texelFetch(sampler, ivec2Position, lod);
-</code></pre><h2 id="lots-of-texture-formats">Lots of texture formats</h2>
+<pre><code>vec4 values = texelFetch(sampler, ivec2Position, lod);</code></pre><h2 id="lots-of-texture-formats">Lots of texture formats</h2>
 <p>WebGL1 had just a few texture formats. WebGL2 has TONS!</p>
 <ul>
 <li><code>RGBA32I</code></li>
@@ -169,8 +167,7 @@ have to be the same size but this is a great way to give
 a shader access to hundreds of textures even though it
 only has a relatively small number of texture units. You can
 select the slice in your shader</p>
-<pre><code>vec4 color = texture(someSampler2DArray, vec3(u, v, slice));
-</code></pre><h2 id="non-power-of-2-texture-support">Non-Power of 2 Texture Support</h2>
+<pre><code>vec4 color = texture(someSampler2DArray, vec3(u, v, slice));</code></pre><h2 id="non-power-of-2-texture-support">Non-Power of 2 Texture Support</h2>
 <p>In WebGL1 textures that were not a power of 2 could not have mips.
 In WebGL2 that limit is removed. Non-power of 2 texture work exactly
 the same as power of 2 textures.</p>
@@ -250,8 +247,7 @@ already up to date all you have to do is bind your desired
 <pre><code>gl.bindBufferRange(..., globalBlockIndx, globalMatrixUBO, ...);
 gl.bindBufferRange(..., modelBlockIndx, someModelMatrixUBO, ...);
 gl.bindBufferRange(..., materialBlockIndx, someMaterialSettingsUBO, ...);
-gl.bindBufferRange(..., lightBlockIndx, someLightSettingsUBO, ...);
-</code></pre></li>
+gl.bindBufferRange(..., lightBlockIndx, someLightSettingsUBO, ...);</code></pre></li>
 </ol>
 <h2 id="integer-textures-attributes-and-math">Integer textures, attributes and math</h2>
 <p>In WebGL2 you can have integer based textures where as
@@ -283,7 +279,7 @@ Commonly used for computing shadow maps</p>
 <p>Now Standard, common uses are drawing lots of trees, bushes or grass quickly.</p>
 <h2 id="unsigned_int-indices">UNSIGNED_INT indices</h2>
 <p>Being able to use 32bit ints for indices removes the size limit of indexed geometry</p>
-<h2 id="setting-gl_fragdepth-">Setting <code>gl_FragDepth</code></h2>
+<h2 id="setting-gl_fragdepth">Setting <code>gl_FragDepth</code></h2>
 <p>Letting you write your own custom values to the depth buffer / z-buffer.</p>
 <h2 id="blend-equation-min-max">Blend Equation MIN / MAX</h2>
 <p>Being able to take the min or max of 2 colors when blending</p>
