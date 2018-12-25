@@ -114,7 +114,8 @@ bones with the highest weights and then normalizes those weights</p>
 <p>Assuming you stored the bones matrices in a uniform array, and you
 passed in the the weights and which bone each weight applies to as
 attributes you might do something like</p>
-<pre><code>in vec4 a_position;
+<pre><code>#version 300 es
+in vec4 a_position;
 in vec4 a_weights;         // 4 weights per vertex
 in uvec4 a_boneNdx;        // 4 bone indices per vertex
 uniform mat4 bones[MAX_BONES];  // 1 matrix per bone
@@ -341,7 +342,8 @@ has R, G, B, and A, that&#39;s 4 values so we only need 4 pixels per matrix,
 one pixel for each row of the matrix.
 Textures can usually be at least 2048 pixels in certain dimension so
 this will give us room for at least 2048 bone matrices which is plenty.</p>
-<pre><code>in vec4 a_position;
+<pre><code>#version 300 es
+in vec4 a_position;
 in vec4 a_weight;
 in uvec4 a_boneNdx;
 
@@ -734,7 +736,7 @@ void main () {
 }</code></pre><p>Notice we take the dot product like we covered in <a href="webgl-3d-lighting-directional.html">the article on direcitonal lights</a> but unlike that one, here the dot product is multipled by .5 and we add .5. With normal directional lighting the surface is lit 100% when directly facing the light and trails off to 0% when the surface is perpendicular to the light. That means the entire 1/2 of the model facing away from the light is black. By multiplying by .5 and adding .5 we take the dot product from -1 &lt;-&gt; 1 to 0 &lt;-&gt; 1 which means it will only be black when facing the complete opposite direciton. This gives a cheap but pleasing lighting for simple tests.</p>
 <p>So, we need to compile and link the shaders.</p>
 <pre><code>// compiles and links the shaders, looks up attribute and uniform locations
-const meshProgramInfo = twgl.createProgramInfo(gl, [&quot;meshVS&quot;, &quot;fs&quot;]);</code></pre><p>and then to render all that&#39;s different from before is this</p>
+const meshProgramInfo = twgl.createProgramInfo(gl, [meshVS, fs]);</code></pre><p>and then to render all that&#39;s different from before is this</p>
 <pre><code>const sharedUniforms = {
   u_lightDirection: m4.normalize([-1, 3, 5]),
 };
@@ -826,7 +828,7 @@ matrix of all the nodes in that graph. Then we call <code>scene.root.traverse</c
   }
 }</code></pre><p>You can see it&#39;s very similar to the <code>MeshRenderer</code>. It has a reference to a <code>Skin</code> which it uses to update all the matrices needed to render. Then it follows the standard pattern for rendering, using the program, setting up the attributes, setting all the uniforms using <code>twgl.setUniforms</code> which also binds textures, and then rendering.</p>
 <p>We also need a vertex shader that supports skinning</p>
-<pre><code>&lt;script id=&quot;skinVS&quot; type=&quot;notjs&quot;&gt;#version 300 es
+<pre><code>const skinVS = `#version 300 es
 in vec4 a_POSITION;
 in vec3 a_NORMAL;
 in vec4 a_WEIGHTS_0;
@@ -857,7 +859,7 @@ void main() {
   gl_Position = u_projection * u_view * world * a_POSITION;
   v_normal = mat3(world) * a_NORMAL;
 }
-&lt;/script&gt;</code></pre><p>This is pretty much the same as our skinning shader above. We renamed the attributes to match what&#39;s in the gltf file.
+`;</code></pre><p>This is pretty much the same as our skinning shader above. We renamed the attributes to match what&#39;s in the gltf file.
 The biggest change it making a <code>skinMatrix</code>. In our previous skinning shader we multiplied the position by each individual joint/bone matrix and multplied those by the weight of influcence for each joint. In this case we instead add up the matrices multiplied by the weights and just multiply by position once. This produces same result but we can use the <code>skinMatrix</code> to multiply the normal as well which we need to do otherwise the normals won&#39;t match the skin.</p>
 <p>Also notice we multiply in the <code>u_world</code> matrix here. We subtracted it out in <code>Skin.update</code> with these lines</p>
 <pre><code>*const globalWorldInverse = m4.inverse(node.worldMatrix);
@@ -928,13 +930,13 @@ function animSkin(skin, a) {
 <p>When I first tried to get this working, as with most programs things didn&#39;t appear on the screen.</p>
 <p>So, the first thing did was go to the end of the skinning shader and add this line</p>
 <pre><code>  gl_Position = u_projection * u_view *  a_POSITION;</code></pre><p>In the fragment shader I changed it to just draw a solid color by adding this at the end</p>
-<pre><code>gl_FragColor = vec4(1, 0, 0, 1);</code></pre><p>This removes all the skinning and just draws the mesh at the origin. I adjusted the camera position until I had a good view.</p>
+<pre><code>outColor = vec4(1, 0, 0, 1);</code></pre><p>This removes all the skinning and just draws the mesh at the origin. I adjusted the camera position until I had a good view.</p>
 <pre><code>const cameraPosition = [5, 0, 5];
 const target = [0, 0, 0];</code></pre><p>This showed a silhouette of the killer whale so I knew at least some of the data was working.</p>
 <div class="webgl_center"><img src="resources/skinning-debug-01.png"></div>
 
 <p>Next I made the fragment shader show the normals</p>
-<pre><code>gl_FragColor = vec4(normalize(v_normal) * .5 + .5, 1);</code></pre><p>Normals go from -1 to 1 so the <code>* .5 + .5</code> adjusts them to 0 to 1 for viewing as colors.</p>
+<pre><code>outColor = vec4(normalize(v_normal) * .5 + .5, 1);</code></pre><p>Normals go from -1 to 1 so the <code>* .5 + .5</code> adjusts them to 0 to 1 for viewing as colors.</p>
 <p>Back in the vertex shader I just passed the normal through</p>
 <pre><code>v_normal = a_NORMAL;</code></pre><p>Which gave me a view like this</p>
 <div class="webgl_center"><img src="resources/skinning-debug-02.png"></div>
@@ -948,7 +950,7 @@ pass the weights as normals from the vertex shader</p>
 
 <p>It&#39;s not entirely obvious it&#39;s correct but does make some sense. You&#39;d expect the vertices nearest each bone to have a strong color and you&#39;d expect to see rings of that color in the vertices around the bone since the weights in that area are likely 1.0 or at least all similar.</p>
 <p>Since the original image was so messy I also tried displaying the joint indices with</p>
-<pre><code>v_normal = a_JOINTS_0.xyz / (u_numJoints - 1.) * 2. - 1.;</code></pre><p>The indices go from 0 to numJoints - 1 so the code above would give values from -1 to 1.</p>
+<pre><code>v_normal = vec3(a_JOINTS_0.xyz) / float(textureSize(u_jointTexture, 0).y - 1) * 2. - 1.;</code></pre><p>The indices go from 0 to numJoints - 1 so the code above would give values from -1 to 1.</p>
 <p>Once things were working I got an image like this</p>
 <div class="webgl_center"><img src="resources/skinning-debug-04.png"></div>
 
