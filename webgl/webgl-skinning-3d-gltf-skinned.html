@@ -14,8 +14,19 @@ canvas {background: #400;}
 <body>
 <canvas id="canvas"></canvas>
 </body>
-<!-- vertex shader -->
-<script id="skinVS" type="notjs">#version 300 es
+<!--
+for most samples webgl-utils only provides shader compiling/linking and
+canvas resizing because why clutter the examples with code that's the same in every sample.
+See http://webgl2fundamentals.org/webgl/lessons/webgl-boilerplate.html
+and http://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+for webgl-utils, m3, m4, and webgl-lessons-ui.
+-->
+<script src="resources/twgl-full.min.js"></script>
+<script src="resources/m4.js"></script>
+<script>
+"use strict";
+
+const skinVS = `#version 300 es
 in vec4 a_POSITION;
 in vec3 a_NORMAL;
 in vec4 a_WEIGHTS_0;
@@ -49,10 +60,10 @@ void main() {
   //gl_Position = u_projection * u_view *  a_POSITION;
   //v_normal = a_NORMAL;
   //v_normal = a_WEIGHTS_0.xyz * 2. - 1.;
-  //v_normal = a_JOINTS_0.xyz / (u_numJoints - 1.) * 2. - 1.;
+  //v_normal = vec3(a_JOINTS_0.xyz) / float(textureSize(u_jointTexture, 0).y - 1) * 2. - 1.;
 }
-</script>
-<script id="fs" type="notjs">#version 300 es
+`;
+const fs = `#version 300 es
 precision mediump float;
 
 in vec3 v_normal;
@@ -71,8 +82,8 @@ void main () {
   //outColor = vec4(1, 0, 0, 1);
   //outColor = vec4(v_normal * .5 + .5, 1);
 }
-</script>
-<script id="meshVS" type="notjs">#version 300 es
+`;
+const meshVS = `#version 300 es
 in vec4 a_POSITION;
 in vec3 a_NORMAL;
 
@@ -86,18 +97,7 @@ void main() {
   gl_Position = u_projection * u_view * u_world * a_POSITION;
   v_normal = mat3(u_world) * a_NORMAL;
 }
-</script>
-<!--
-for most samples webgl-utils only provides shader compiling/linking and
-canvas resizing because why clutter the examples with code that's the same in every sample.
-See http://webgl2fundamentals.org/webgl/lessons/webgl-boilerplate.html
-and http://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
-for webgl-utils, m3, m4, and webgl-lessons-ui.
--->
-<script src="resources/twgl-full.min.js"></script>
-<script src="resources/m4.js"></script>
-<script>
-"use strict";
+`;
 
 async function main() {
   // Get A WebGL context
@@ -124,8 +124,8 @@ async function main() {
   };
 
   // compiles and links the shaders, looks up attribute and uniform locations
-  const skinProgramInfo = twgl.createProgramInfo(gl, ["skinVS", "fs"], programOptions);
-  const meshProgramInfo = twgl.createProgramInfo(gl, ["meshVS", "fs"], programOptions);
+  const skinProgramInfo = twgl.createProgramInfo(gl, [skinVS, fs], programOptions);
+  const meshProgramInfo = twgl.createProgramInfo(gl, [meshVS, fs], programOptions);
 
   class Skin {
     constructor(joints, inverseBindMatrixData) {

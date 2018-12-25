@@ -48,6 +48,7 @@ Assuming you stored the bones matrices in a uniform array, and you
 passed in the the weights and which bone each weight applies to as
 attributes you might do something like
 
+    #version 300 es
     in vec4 a_position;
     in vec4 a_weights;         // 4 weights per vertex
     in uvec4 a_boneNdx;        // 4 bone indices per vertex
@@ -331,6 +332,7 @@ Textures can usually be at least 2048 pixels in certain dimension so
 this will give us room for at least 2048 bone matrices which is plenty.
 
 ```
+#version 300 es
 in vec4 a_position;
 in vec4 a_weight;
 in uvec4 a_boneNdx;
@@ -832,7 +834,7 @@ So, we need to compile and link the shaders.
 
 ```
 // compiles and links the shaders, looks up attribute and uniform locations
-const meshProgramInfo = twgl.createProgramInfo(gl, ["meshVS", "fs"]);
+const meshProgramInfo = twgl.createProgramInfo(gl, [meshVS, fs]);
 ```
 
 and then to render all that's different from before is this
@@ -944,7 +946,7 @@ You can see it's very similar to the `MeshRenderer`. It has a reference to a `Sk
 We also need a vertex shader that supports skinning
 
 ```
-<script id="skinVS" type="notjs">#version 300 es
+const skinVS = `#version 300 es
 in vec4 a_POSITION;
 in vec3 a_NORMAL;
 in vec4 a_WEIGHTS_0;
@@ -975,7 +977,7 @@ void main() {
   gl_Position = u_projection * u_view * world * a_POSITION;
   v_normal = mat3(world) * a_NORMAL;
 }
-</script>
+`;
 ```
 
 This is pretty much the same as our skinning shader above. We renamed the attributes to match what's in the gltf file.
@@ -1089,7 +1091,7 @@ So, the first thing did was go to the end of the skinning shader and add this li
 In the fragment shader I changed it to just draw a solid color by adding this at the end
 
 ```
-gl_FragColor = vec4(1, 0, 0, 1);
+outColor = vec4(1, 0, 0, 1);
 ```
 
 This removes all the skinning and just draws the mesh at the origin. I adjusted the camera position until I had a good view.
@@ -1106,7 +1108,7 @@ This showed a silhouette of the killer whale so I knew at least some of the data
 Next I made the fragment shader show the normals
 
 ```
-gl_FragColor = vec4(normalize(v_normal) * .5 + .5, 1);
+outColor = vec4(normalize(v_normal) * .5 + .5, 1);
 ```
 
 Normals go from -1 to 1 so the `* .5 + .5` adjusts them to 0 to 1 for viewing as colors.
@@ -1141,7 +1143,7 @@ It's not entirely obvious it's correct but does make some sense. You'd expect th
 Since the original image was so messy I also tried displaying the joint indices with
 
 ```
-v_normal = a_JOINTS_0.xyz / (u_numJoints - 1.) * 2. - 1.;
+v_normal = vec3(a_JOINTS_0.xyz) / float(textureSize(u_jointTexture, 0).y - 1) * 2. - 1.;
 ```
 
 The indices go from 0 to numJoints - 1 so the code above would give values from -1 to 1.
