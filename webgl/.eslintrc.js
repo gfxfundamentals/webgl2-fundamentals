@@ -1,22 +1,16 @@
-{
+module.exports = {
   "env": {
     "browser": true,
-    "es6": true
-  },
-  "globals": {
-    "chroma": true,
-    "importScripts": true,
-    "SharedArrayBuffer": true,
-    "twgl": true
+    "es6": true,
   },
   "parserOptions": {
-    "sourceType": "script"
+    "ecmaVersion": 2017,
   },
   "plugins": [
     "eslint-plugin-html",
     "eslint-plugin-optional-comma-spacing",
     "eslint-plugin-one-variable-per-var",
-    "eslint-plugin-require-trailing-comma"
+    "eslint-plugin-require-trailing-comma",
   ],
   "extends": "eslint:recommended",
   "rules": {
@@ -32,8 +26,8 @@
     "no-iterator": 2,
     "no-label-var": 2,
     "no-labels": 2,
-    "no-lone-blocks": 2,
-    "no-loop-func": 2,
+    "no-lone-blocks": 0,
+    "no-loop-func": 0,
     "no-multi-str": 2,
     "no-native-reassign": 2,
     "no-new": 2,
@@ -50,7 +44,8 @@
     "no-spaced-func": 2,
     "no-trailing-spaces": 2,
     "no-undef-init": 2,
-    "no-underscore-dangle": 2,
+    "no-underscore-dangle": 0,
+    "no-unused-vars": 0,
     "no-unused-expressions": 2,
     "no-use-before-define": 0,
     "no-with": 2,
@@ -63,16 +58,14 @@
     "semi-spacing": [2, {"before": false, "after": true}],
     "space-infix-ops": 2,
     "space-unary-ops": [2, { "words": true, "nonwords": false }],
-    "strict": [2, "function"],
     "yoda": [2, "never"],
-    "prefer-const": 2,
-    "no-var": 2,
 
     "brace-style": [2, "1tbs", { "allowSingleLine": false }],
     "camelcase": [0],
     "comma-spacing": 0,
     "comma-dangle": 0,
     "comma-style": [2, "last"],
+    "optional-comma-spacing/optional-comma-spacing": [2, {"after": true}],
     "dot-notation": 0,
     "eol-last": [0],
     "global-strict": [0],
@@ -81,16 +74,27 @@
     "no-irregular-whitespace": 2,
     "no-multi-spaces": [0],
     "no-obj-calls": 2,
+    "no-redeclare": [0],
     "no-shadow": [0],
-    "no-undef": 2,
+    "no-undef": [0],
     "no-unreachable": 2,
     "one-variable-per-var/one-variable-per-var": [2],
-    "optional-comma-spacing/optional-comma-spacing": [2, {"after": true}],
     "quotes": [0, "single"],
     "require-trailing-comma/require-trailing-comma": [2],
     "semi": [2, "always"],
+    "strict": [2, "global"],
     "space-before-function-paren": [2, "never"],
-    "keyword-spacing": [1, {"before": true, "after": true, "overrides": {}} ]
-  }
-
-}
+    "keyword-spacing": [1, {"before": true, "after": true, "overrides": {}} ],
+  },
+  "overrides": [
+    {
+      "files": [ "resources/**/*.js" ],
+      "rules": {
+        "optional-comma-spacing/optional-comma-spacing": [2, {"after": true}],
+        "no-unused-vars": 2,
+        "require-trailing-comma/require-trailing-comma": [2],
+        "strict": ["error", "function"],
+      },
+    },
+  ],
+};
