@@ -97,16 +97,17 @@ We&#39;ll save that method for a later article.</p>
 <p>First let&#39;s change the code that loads an image into a function. It&#39;s pretty straightforward.
 It creates a new <code>Image</code> object, sets the URL to load, and sets a callback to
 be called when the image finishes loading.</p>
-<pre><code>function loadImage(url, callback) {
+<pre><code class="language-js">function loadImage (u rl, callback) {
   var image = new Image();
   image.src = url;
   image.onload = callback;
   return image;
-}</code></pre><p>Now let&#39;s make a function that loads an array of URLs and generates an array of images.
+}</code></pre>
+<p>Now let&#39;s make a function that loads an array of URLs and generates an array of images.
 First we set <code>imagesToLoad</code> to the number of images we&#39;re going to load. Then we make
 the callback we pass to <code>loadImage</code> decrement <code>imagesToLoad</code>. When <code>imagesToLoad</code> goes
 to 0 all the images have been loaded and we pass the array of images to a callback.</p>
-<pre><code>function loadImages(urls, callback) {
+<pre><code class="language-js">function loadImages(urls, callback) {
   var images = [];
   var imagesToLoad = urls.length;
 
@@ -114,7 +115,7 @@ to 0 all the images have been loaded and we pass the array of images to a callba
   var onImageLoad = function() {
     --imagesToLoad;
     // If all the images are loaded call the callback.
-    if (imagesToLoad == 0) {
+    if (imagesToLoad === 0) {
       callback(images);
     }
   };
@@ -123,13 +124,15 @@ to 0 all the images have been loaded and we pass the array of images to a callba
     var image = loadImage(urls[ii], onImageLoad);
     images.push(image);
   }
-}</code></pre><p>Now we call loadImages like this</p>
-<pre><code>function main() {
+}</code></pre>
+<p>Now we call loadImages like this</p>
+<pre><code class="language-js">function main() {
   loadImages([
     &quot;resources/leaves.jpg&quot;,
     &quot;resources/star.jpg&quot;,
   ], render);
-}</code></pre><p>Next we change the shader to use 2 textures. In this case we&#39;ll multiply 1 texture by the other.</p>
+}</code></pre>
+<p>Next we change the shader to use 2 textures. In this case we&#39;ll multiply 1 texture by the other.</p>
 <pre><code>#version 300 es
 precision mediump float;
 
@@ -148,7 +151,7 @@ void main() {
 *   vec4 color1 = texture2D(u_image1, v_texCoord);
 *   outColor = color0 * color1;
 }</code></pre><p>We need to create 2 WebGL texture objects.</p>
-<pre><code>  // create 2 textures
+<pre><code class="language-js">  // create 2 textures
   var textures = [];
   for (var ii = 0; ii &lt; 2; ++ii) {
     var texture = gl.createTexture();
@@ -164,7 +167,7 @@ void main() {
     var mipLevel = 0;               // the largest mip
     var internalFormat = gl.RGBA;   // format we want in the texture
     var srcFormat = gl.RGBA;        // format of data we are supplying
-    var srcType = gl.UNSIGNED_BYTE  // type of data we are supplying
+    var srcType = gl.UNSIGNED_BYTE; // type of data we are supplying
     gl.texImage2D(gl.TEXTURE_2D,
                   mipLevel,
                   internalFormat,
@@ -174,9 +177,10 @@ void main() {
 
     // add the texture to the array of textures.
     textures.push(texture);
-  }</code></pre><p>WebGL has something called &quot;texture units&quot;. You can think of it as an array of references
+  }</code></pre>
+<p>WebGL has something called &quot;texture units&quot;. You can think of it as an array of references
 to textures. You tell the shader which texture unit to use for each sampler.</p>
-<pre><code>  // lookup the sampler locations.
+<pre><code class="language-js">  // lookup the sampler locations.
   var u_image0Location = gl.getUniformLocation(program, &quot;u_image0&quot;);
   var u_image1Location = gl.getUniformLocation(program, &quot;u_image1&quot;);
 
@@ -184,12 +188,14 @@ to textures. You tell the shader which texture unit to use for each sampler.</p>
 
   // set which texture units to render with.
   gl.uniform1i(u_image0Location, 0);  // texture unit 0
-  gl.uniform1i(u_image1Location, 1);  // texture unit 1</code></pre><p>Then we have to bind a texture to each of those texture units.</p>
-<pre><code>  // Set each texture unit to use a particular texture.
+  gl.uniform1i(u_image1Location, 1);  // texture unit 1</code></pre>
+<p>Then we have to bind a texture to each of those texture units.</p>
+<pre><code class="language-js">  // Set each texture unit to use a particular texture.
   gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D, textures[0]);
   gl.activeTexture(gl.TEXTURE1);
-  gl.bindTexture(gl.TEXTURE_2D, textures[1]);</code></pre><p>The 2 images we&#39;re loading look like this</p>
+  gl.bindTexture(gl.TEXTURE_2D, textures[1]);</code></pre>
+<p>The 2 images we&#39;re loading look like this</p>
 <style>.glocal-center { text-align: center; } .glocal-center-content { margin-left: auto; margin-right: auto; }</style>
 <div class="glocal-center"><table class="glocal-center-content"><tr><td><img src="../resources/leaves.jpg" /> <img src="../resources/star.jpg" /></td></tr></table></div>
 
@@ -207,7 +213,7 @@ that&#39;s the index of the texture unit you want to work with. Each texture uni
 The TEXTURE_2D target, TEXTURE_3D target, TEXTURE_2D_ARRAY target, and the TEXTURE_CUBE_MAP target.
 Every texture function works with the specified target on the current active texture unit.
 If you were to implement WebGL in JavaScript it would look something like this</p>
-<pre><code>var getContext = function() {
+<pre><code class="language-js">var getContext = function() {
   var textureUnits = [
     { TEXTURE_2D: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, TEXTURE_CUBE_MAP: null, },
     { TEXTURE_2D: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, TEXTURE_CUBE_MAP: null, },
@@ -250,24 +256,29 @@ If you were to implement WebGL in JavaScript it would look something like this</
     bindTexture: bindTexture,
     texImage2D: texImage2D,
     texImage3D: texImage3D,
-  }
-};</code></pre><p>The shaders take indices into the texture units. Hopefully that makes these 2 lines clearer.</p>
-<pre><code>  gl.uniform1i(u_image0Location, 0);  // texture unit 0
-  gl.uniform1i(u_image1Location, 1);  // texture unit 1</code></pre><p>One thing to be aware of, when setting the uniforms you use indices for the texture units
+  };
+};</code></pre>
+<p>The shaders take indices into the texture units. Hopefully that makes these 2 lines clearer.</p>
+<pre><code class="language-js">  gl.uniform1i(u_image0Location, 0);  // texture unit 0
+  gl.uniform1i(u_image1Location, 1);  // texture unit 1</code></pre>
+<p>One thing to be aware of, when setting the uniforms you use indices for the texture units
 but when calling gl.activeTexture you have to pass in special constants gl.TEXTURE0, gl.TEXTURE1 etc.
 Fortunately the constants are consecutive so instead of this</p>
-<pre><code>  gl.activeTexture(gl.TEXTURE0);
+<pre><code class="language-js">  gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D, textures[0]);
   gl.activeTexture(gl.TEXTURE1);
-  gl.bindTexture(gl.TEXTURE_2D, textures[1]);</code></pre><p>We could have done this</p>
-<pre><code>  gl.activeTexture(gl.TEXTURE0 + 0);
+  gl.bindTexture(gl.TEXTURE_2D, textures[1]);</code></pre>
+<p>We could have done this</p>
+<pre><code class="language-js">  gl.activeTexture(gl.TEXTURE0 + 0);
   gl.bindTexture(gl.TEXTURE_2D, textures[0]);
   gl.activeTexture(gl.TEXTURE0 + 1);
-  gl.bindTexture(gl.TEXTURE_2D, textures[1]);</code></pre><p>or this</p>
-<pre><code>  for (var ii = 0; ii &lt; 2; ++ii) {
+  gl.bindTexture(gl.TEXTURE_2D, textures[1]);</code></pre>
+<p>or this</p>
+<pre><code class="language-js">  for (var ii = 0; ii &lt; 2; ++ii) {
     gl.activeTexture(gl.TEXTURE0 + ii);
     gl.bindTexture(gl.TEXTURE_2D, textures[ii]);
-  }</code></pre><p>Hopefully this small step helps explain how to use mutliple textures in a single draw call in WebGL.</p>
+  }</code></pre>
+<p>Hopefully this small step helps explain how to use mutliple textures in a single draw call in WebGL.</p>
 
     </div>
     <div class="lesson-sidebar">
