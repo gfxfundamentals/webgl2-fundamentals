@@ -1,9 +1,9 @@
 /* global require module */
+'use strict';
 
 const fs = require('fs');
 
 module.exports = function(grunt) {
-  'use strict';
 
   require('load-grunt-tasks')(grunt);
 
@@ -29,11 +29,13 @@ module.exports = function(grunt) {
           'webgl/resources/flattened-primitives.js',
           'webgl/resources/2d-math.js',
           'webgl/resources/3d-math.js',
+          'build/js/*.js',
         ],
       },
       examples: {
         src: [
           'webgl/*.html',
+          // 'webgl/lessons/*.md',
         ],
       },
     },

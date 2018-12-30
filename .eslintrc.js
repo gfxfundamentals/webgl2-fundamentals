@@ -11,6 +11,7 @@ module.exports = {
     "eslint-plugin-optional-comma-spacing",
     "eslint-plugin-one-variable-per-var",
     "eslint-plugin-require-trailing-comma",
+    "markdown",
   ],
   "extends": "eslint:recommended",
   "rules": {
@@ -95,6 +96,17 @@ module.exports = {
         "no-unused-vars": 2,
         "require-trailing-comma/require-trailing-comma": [2],
         "strict": ["error", "function"],
+      },
+    },
+    {
+      "files": [ "**/*.md" ],
+      "parserOptions": {
+        "ecmaFeatures": {
+            "impliedStrict": true,
+        },
+      },
+      "rules": {
+        "strict": "off",
       },
     },
   ],
