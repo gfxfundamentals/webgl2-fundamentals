@@ -24,8 +24,8 @@ First let's change the code that loads an image into a function. It's pretty str
 It creates a new `Image` object, sets the URL to load, and sets a callback to
 be called when the image finishes loading.
 
-```
-function loadImage(url, callback) {
+```js
+function loadImage (u rl, callback) {
   var image = new Image();
   image.src = url;
   image.onload = callback;
@@ -38,7 +38,7 @@ First we set `imagesToLoad` to the number of images we're going to load. Then we
 the callback we pass to `loadImage` decrement `imagesToLoad`. When `imagesToLoad` goes
 to 0 all the images have been loaded and we pass the array of images to a callback.
 
-```
+```js
 function loadImages(urls, callback) {
   var images = [];
   var imagesToLoad = urls.length;
@@ -47,7 +47,7 @@ function loadImages(urls, callback) {
   var onImageLoad = function() {
     --imagesToLoad;
     // If all the images are loaded call the callback.
-    if (imagesToLoad == 0) {
+    if (imagesToLoad === 0) {
       callback(images);
     }
   };
@@ -61,7 +61,7 @@ function loadImages(urls, callback) {
 
 Now we call loadImages like this
 
-```
+```js
 function main() {
   loadImages([
     "resources/leaves.jpg",
@@ -95,7 +95,7 @@ void main() {
 
 We need to create 2 WebGL texture objects.
 
-```
+```js
   // create 2 textures
   var textures = [];
   for (var ii = 0; ii < 2; ++ii) {
@@ -112,7 +112,7 @@ We need to create 2 WebGL texture objects.
     var mipLevel = 0;               // the largest mip
     var internalFormat = gl.RGBA;   // format we want in the texture
     var srcFormat = gl.RGBA;        // format of data we are supplying
-    var srcType = gl.UNSIGNED_BYTE  // type of data we are supplying
+    var srcType = gl.UNSIGNED_BYTE; // type of data we are supplying
     gl.texImage2D(gl.TEXTURE_2D,
                   mipLevel,
                   internalFormat,
@@ -128,7 +128,7 @@ We need to create 2 WebGL texture objects.
 WebGL has something called "texture units". You can think of it as an array of references
 to textures. You tell the shader which texture unit to use for each sampler.
 
-```
+```js
   // lookup the sampler locations.
   var u_image0Location = gl.getUniformLocation(program, "u_image0");
   var u_image1Location = gl.getUniformLocation(program, "u_image1");
@@ -142,7 +142,7 @@ to textures. You tell the shader which texture unit to use for each sampler.
 
 Then we have to bind a texture to each of those texture units.
 
-```
+```js
   // Set each texture unit to use a particular texture.
   gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D, textures[0]);
@@ -168,7 +168,7 @@ The TEXTURE_2D target, TEXTURE_3D target, TEXTURE_2D_ARRAY target, and the TEXTU
 Every texture function works with the specified target on the current active texture unit.
 If you were to implement WebGL in JavaScript it would look something like this
 
-```
+```js
 var getContext = function() {
   var textureUnits = [
     { TEXTURE_2D: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, TEXTURE_CUBE_MAP: null, },
@@ -212,13 +212,13 @@ var getContext = function() {
     bindTexture: bindTexture,
     texImage2D: texImage2D,
     texImage3D: texImage3D,
-  }
+  };
 };
 ```
 
 The shaders take indices into the texture units. Hopefully that makes these 2 lines clearer.
 
-```
+```js
   gl.uniform1i(u_image0Location, 0);  // texture unit 0
   gl.uniform1i(u_image1Location, 1);  // texture unit 1
 ```
@@ -227,7 +227,7 @@ One thing to be aware of, when setting the uniforms you use indices for the text
 but when calling gl.activeTexture you have to pass in special constants gl.TEXTURE0, gl.TEXTURE1 etc.
 Fortunately the constants are consecutive so instead of this
 
-```
+```js
   gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D, textures[0]);
   gl.activeTexture(gl.TEXTURE1);
@@ -236,7 +236,7 @@ Fortunately the constants are consecutive so instead of this
 
 We could have done this
 
-```
+```js
   gl.activeTexture(gl.TEXTURE0 + 0);
   gl.bindTexture(gl.TEXTURE_2D, textures[0]);
   gl.activeTexture(gl.TEXTURE0 + 1);
@@ -245,7 +245,7 @@ We could have done this
 
 or this
 
-```
+```js
   for (var ii = 0; ii < 2; ++ii) {
     gl.activeTexture(gl.TEXTURE0 + ii);
     gl.bindTexture(gl.TEXTURE_2D, textures[ii]);
