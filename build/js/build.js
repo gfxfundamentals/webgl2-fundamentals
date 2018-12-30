@@ -1,7 +1,7 @@
 /* global module require */
-module.exports = function() { // wrapper in case we're in module_context mode
-
 "use strict";
+
+module.exports = function() { // wrapper in case we're in module_context mode
 
 const cache      = new (require('inmemfilecache'))();
 const Feed       = require('feed').Feed;
@@ -390,14 +390,19 @@ const Builder = function(outBaseDir, options) {
           data);
     });
 
-    function utcMomentFromGitLog(result) {
+    function utcMomentFromGitLog(result, filename, timeType) {
       const dateStr = result.stdout.split("\n")[0].trim();
       const utcDateStr = dateStr
         .replace(/"/g, "")   // WTF to these quotes come from!??!
         .replace(" ", "T")
         .replace(" ", "")
         .replace(/(\d\d)$/, ':$1');
-      return moment.utc(utcDateStr);
+      const m = moment.utc(utcDateStr);
+      if (m.isValid()) {
+        return m;
+      }
+      const stat = fs.statSync(filename);
+      return moment(stat[timeType]);
     }
 
     const tasks = g_articles.map((article) => {
@@ -409,7 +414,7 @@ const Builder = function(outBaseDir, options) {
           '--diff-filter=A',
           article.src_file_name,
         ]).then((result) => {
-          article.dateAdded = utcMomentFromGitLog(result);
+          article.dateAdded = utcMomentFromGitLog(result, article.src_file_name, 'ctime');
         });
       };
     }).concat(g_articles.map((article) => {
@@ -421,7 +426,7 @@ const Builder = function(outBaseDir, options) {
            '--max-count=1',
            article.src_file_name,
          ]).then((result) => {
-           article.dateModified = utcMomentFromGitLog(result);
+           article.dateModified = utcMomentFromGitLog(result, article.src_file_name, 'mtime');
          });
        };
     }));
