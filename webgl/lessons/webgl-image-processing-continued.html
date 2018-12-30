@@ -129,7 +129,8 @@ attaching a texture to a framebuffer we can render into that texture.</p>
                 internalFormat,
                 srcFormat,
                 srcType,
-                image);</code></pre><p>And now let&#39;s use that function to make 2 more textures and attach them to 2 framebuffers.</p>
+                image);
+</code></pre><p>And now let&#39;s use that function to make 2 more textures and attach them to 2 framebuffers.</p>
 <pre><code>  // create 2 textures and attach them to framebuffers.
   var textures = [];
   var framebuffers = [];
@@ -157,7 +158,8 @@ attaching a texture to a framebuffer we can render into that texture.</p>
     var attachmentPoint = gl.COLOR_ATTACHMENT0;
     gl.framebufferTexture2D(
         gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, texture, mipLevel);
-  }</code></pre><p>Now let&#39;s make a set of kernels and then a list of them to apply.</p>
+  }
+</code></pre><p>Now let&#39;s make a set of kernels and then a list of them to apply.</p>
 <pre><code>  // Define several convolution kernels
   var kernels = {
     normal: [
@@ -188,7 +190,8 @@ attaching a texture to a framebuffer we can render into that texture.</p>
     &quot;emboss&quot;,
     &quot;gaussianBlur&quot;,
     &quot;unsharpen&quot;
-  ];</code></pre><p>And finally let&#39;s apply each one, ping ponging which texture we are rendering too</p>
+  ];
+</code></pre><p>And finally let&#39;s apply each one, ping ponging which texture we are rendering too</p>
 <pre><code>  function drawEffects() {
     // Tell it to use our program (pair of shaders)
     gl.useProgram(program);
@@ -253,7 +256,8 @@ attaching a texture to a framebuffer we can render into that texture.</p>
     var offset = 0;
     var count = 6;
     gl.drawArrays(primitiveType, offset, count);
-  }</code></pre><p>Here&#39;s a working version with a slightly more flexible UI. Check the effects
+  }
+</code></pre><p>Here&#39;s a working version with a slightly more flexible UI. Check the effects
 to turn them on. Drag the effects to reorder how they are applied.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-processing.html"></iframe>
@@ -293,7 +297,8 @@ void main() {
   ...
 +   gl_Position = vec4(clipSpace * vec2(1, u_flipY), 0, 1);
   ...
-}</code></pre><p>And then we can set it when we render with</p>
+}
+</code></pre><p>And then we can set it when we render with</p>
 <pre><code>  ...
 +  var flipYLocation = gl.getUniformLocation(program, &quot;u_flipY&quot;);
 
@@ -305,7 +310,8 @@ void main() {
   ...
 
 +  // flip
-+  gl.uniform1f(flipYLocation, -1);</code></pre><p>I kept this example simple by using a single GLSL program that can achieve
++  gl.uniform1f(flipYLocation, -1);
+</code></pre><p>I kept this example simple by using a single GLSL program that can achieve
 multiple effects. If you wanted to do full on image processing you&#39;d probably
 need many GLSL programs. A program for hue, saturation and luminance adjustment.
 Another for brightness and contrast. One for inverting, another for adjusting

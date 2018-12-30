@@ -155,14 +155,16 @@ faceInfos.forEach((faceInfo) =&gt; {
   });
 });
 gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
-gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);</code></pre><p>Note that for every face we fill it in with a 512x512 blank image by passing <code>null</code> to <code>texImage2D</code>. Cubemaps must have all 6 faces, all 6 faces must be the same size and be square. If they are not
+gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+</code></pre><p>Note that for every face we fill it in with a 512x512 blank image by passing <code>null</code> to <code>texImage2D</code>. Cubemaps must have all 6 faces, all 6 faces must be the same size and be square. If they are not
 the texture will not render. But, we&#39;re loading 6 images. We&#39;d
 like to start rendering immediately so we allocate all 6 faces then start loading the images. As each image arrives we upload it to the correct face then generate the mipmap again. This means we can start rendering immediately and as the images are download the faces of the cubemap will get filled in with the images one at a time and still be renderable even if all 6 have not arrived yet.</p>
 <p>But, just loading the images is not enough. Like <a href="webgl-3d-lighting-point.html">lighting</a> we need a little math here.</p>
 <p>In this case we want to know for each fragment to be drawn, given a vector from the eye/camera to thtat position on the surface of the object, which direction will it reflect off the that surface. We can then use that direction to get a color from the cubemap.</p>
 <p>The formula to reflect is</p>
 <pre><code>reflectionDir = eyeToSurfaceDir – 
-    2 ∗ dot(surfaceNormal, eyeToSurfaceDir) ∗ surfaceNormal</code></pre><p>Thinking about what we can see it&#39;s true. Recall from the [lighting articles] that a dot prodoct of 2 vectors returns the cosine of the angle between the 2 vectors. Adding vectors gives as a new vector so let&#39;s take the example of a eye looking directly perpendicular to a flat surface.</p>
+    2 ∗ dot(surfaceNormal, eyeToSurfaceDir) ∗ surfaceNormal
+</code></pre><p>Thinking about what we can see it&#39;s true. Recall from the [lighting articles] that a dot prodoct of 2 vectors returns the cosine of the angle between the 2 vectors. Adding vectors gives as a new vector so let&#39;s take the example of a eye looking directly perpendicular to a flat surface.</p>
 <div class="webgl_center"><img src="resources/reflect-180-01.svg" style="width: 400px"></div>
 
 <p>Let&#39;s visualize the forumla above. First off recall the dot product of 2 vectors pointing in exactly opposite dfirections is -1 so visually</p>
@@ -228,7 +230,8 @@ void main() {
 
   // orient the normals and pass to the fragment shader
   v_worldNormal = mat3(u_world) * a_normal;
-}</code></pre><p>Then in the fragment shader we normalize the worldNormal since it&#39;s being interpolated across the surface between vertices. We pass in the world position of the camera and by subtracting that from the world position of the surface we get the eyeToSurfaceDir.</p>
+}
+</code></pre><p>Then in the fragment shader we normalize the worldNormal since it&#39;s being interpolated across the surface between vertices. We pass in the world position of the camera and by subtracting that from the world position of the surface we get the eyeToSurfaceDir.</p>
 <p>And finally we use <code>reflect</code> which is a built in GLSL function that implements the formula we went over above. We use the result to get a color from the cubemap.</p>
 <pre><code>#version 300 es
 
@@ -253,7 +256,8 @@ void main() {
   vec3 direction = reflect(eyeToSurfaceDir,worldNormal);
 
   outColor = texture(u_texture, direction);
-}</code></pre><p>We also need real normals for this example. We need real normals so the faces of the cube appear flat. In the previous example just to see the cubemap work we repurposed the cube&#39;s positions but in this case we need actual normals for a cube like we covered in <a href="webgl-3d-lighting-directional.html">the article on lighting</a></p>
+}
+</code></pre><p>We also need real normals for this example. We need real normals so the faces of the cube appear flat. In the previous example just to see the cubemap work we repurposed the cube&#39;s positions but in this case we need actual normals for a cube like we covered in <a href="webgl-3d-lighting-directional.html">the article on lighting</a></p>
 <p>So at init time</p>
 <pre><code>// Create a buffer to put normals in
 var normalBuffer = gl.createBuffer();
@@ -269,12 +273,14 @@ var normalize = false; // normalize the data (convert from 0-255 to 0-1)
 var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
 var offset = 0;        // start at the beginning of the buffer
 gl.vertexAttribPointer(
-    normalLocation, size, type, normalize, stride, offset)</code></pre><p>And of course we need to look up the uniform locations at init time</p>
+    normalLocation, size, type, normalize, stride, offset)
+</code></pre><p>And of course we need to look up the uniform locations at init time</p>
 <pre><code>var projectionLocation = gl.getUniformLocation(program, &quot;u_projection&quot;);
 var viewLocation = gl.getUniformLocation(program, &quot;u_view&quot;);
 var worldLocation = gl.getUniformLocation(program, &quot;u_world&quot;);
 var textureLocation = gl.getUniformLocation(program, &quot;u_texture&quot;);
-var worldCameraPositionLocation = gl.getUniformLocation(program, &quot;u_worldCameraPosition&quot;);</code></pre><p>and set them at render time</p>
+var worldCameraPositionLocation = gl.getUniformLocation(program, &quot;u_worldCameraPosition&quot;);
+</code></pre><p>and set them at render time</p>
 <pre><code>// Compute the projection matrix
 var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
 var projectionMatrix =
@@ -300,7 +306,8 @@ gl.uniformMatrix4fv(worldLocation, false, worldMatrix);
 gl.uniform3fv(worldCameraPositionLocation, cameraPosition);
 
 // Tell the shader to use texture unit 0 for u_texture
-gl.uniform1i(textureLocation, 0);</code></pre><p>Basic reflections</p>
+gl.uniform1i(textureLocation, 0);
+</code></pre><p>Basic reflections</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-environment-map.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-environment-map.html" target="_blank">click here to open in a separate window</a>

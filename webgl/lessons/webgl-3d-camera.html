@@ -172,22 +172,27 @@ it.</p>
     var count = 16 * 6;
     gl.drawArrays(primitiveType, offset, count);
   }
-}</code></pre><p>Just after we compute our projection matrix you can see we compute a camera that
+}
+</code></pre><p>Just after we compute our projection matrix you can see we compute a camera that
 goes around the &#39;F&#39;s like in the diagram above.</p>
 <pre><code>  // Compute the camera&#39;s matrix
   var cameraMatrix = m4.yRotation(cameraAngleRadians);
-  cameraMatrix = m4.translate(cameraMatrix, 0, 0, radius * 1.5);</code></pre><p>We then compute a &quot;view matrix&quot; from the camera matrix.  A &quot;view matrix&quot;
+  cameraMatrix = m4.translate(cameraMatrix, 0, 0, radius * 1.5);
+</code></pre><p>We then compute a &quot;view matrix&quot; from the camera matrix.  A &quot;view matrix&quot;
 is the matrix that moves everything the opposite of the camera effectively
 making everything relative to the camera as though the camera was at the
 origin (0,0,0)</p>
 <pre><code>  // Make a view matrix from the camera matrix.
-  var viewMatrix = m4.inverse(cameraMatrix);</code></pre><p>We then combine (multiply) those to make a viewProjection matrix.</p>
+  var viewMatrix = m4.inverse(cameraMatrix);
+</code></pre><p>We then combine (multiply) those to make a viewProjection matrix.</p>
 <pre><code>  // create a viewProjection matrix. This will both apply perspective
   // AND move the world so that the camera is effectively the origin
-  var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);</code></pre><p>Finally we use that space as the starting space to place each `F&#39;</p>
+  var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
+</code></pre><p>Finally we use that space as the starting space to place each `F&#39;</p>
 <pre><code>    var x = Math.cos(angle) * radius;
     var z = Math.sin(angle) * radius;
-    var matrix = m4.translate(viewProjectionMatrix, x, 0, z);</code></pre><p>In other words the viewProjection is the same for each <code>F</code>. Same perspective,
+    var matrix = m4.translate(viewProjectionMatrix, x, 0, z);
+</code></pre><p>In other words the viewProjection is the same for each <code>F</code>. Same perspective,
 same camera.</p>
 <p>And voila! A camera that goes around the circle of &#39;F&#39;s. Drag the <code>cameraAngle</code> slider
 to move the camera around.</p>
@@ -286,10 +291,12 @@ matrix that will orient something that points at the <code>target</code> from th
   return [a[1] * b[2] - a[2] * b[1],
           a[2] * b[0] - a[0] * b[2],
           a[0] * b[1] - a[1] * b[0]];
-}</code></pre><p>Here&#39;s the code to subtract two vectors.</p>
+}
+</code></pre><p>Here&#39;s the code to subtract two vectors.</p>
 <pre><code>function subtractVectors(a, b) {
   return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
-}</code></pre><p>Here&#39;s the code to normalize a vector (make it into a unit vector).</p>
+}
+</code></pre><p>Here&#39;s the code to normalize a vector (make it into a unit vector).</p>
 <pre><code>function normalize(v) {
   var length = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
   // make sure we don&#39;t divide by 0.
@@ -298,7 +305,8 @@ matrix that will orient something that points at the <code>target</code> from th
   } else {
     return [0, 0, 0];
   }
-}</code></pre><p>Here&#39;s the code to compute a &quot;lookAt&quot; matrix.</p>
+}
+</code></pre><p>Here&#39;s the code to compute a &quot;lookAt&quot; matrix.</p>
 <pre><code>var m4 = {
   lookAt: function(cameraPosition, target, up) {
     var zAxis = normalize(
@@ -315,7 +323,8 @@ matrix that will orient something that points at the <code>target</code> from th
       cameraPosition[2],
       1,
     ];
-  },</code></pre><p>And here is how we might use it to make the camera point at a specific &#39;F&#39;
+  },
+</code></pre><p>And here is how we might use it to make the camera point at a specific &#39;F&#39;
 as we move it.</p>
 <pre><code>  ...
 
@@ -341,7 +350,8 @@ as we move it.</p>
   // Make a view matrix from the camera matrix.
   var viewMatrix = m4.inverse(cameraMatrix);
 
-  ...</code></pre><p>And here&#39;s the result.</p>
+  ...
+</code></pre><p>And here&#39;s the result.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-camera-look-at.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-camera-look-at.html" target="_blank">click here to open in a separate window</a>

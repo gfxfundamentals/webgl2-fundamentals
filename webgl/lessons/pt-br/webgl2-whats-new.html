@@ -95,14 +95,16 @@ sempre usá-lo] (webgl1-to-webgl2.html # Vertex-Array-Objects).</p>
 <p>Na WebGL1 se o seu shader precisasse conhecer o tamanho 
 de uma textura, que você precisava passar do tamanho
 em uniformente. Na WebGL2 você pode chamar</p>
-<pre><code>vec2 size = textureSize(sampler, lod)</code></pre><p>Para obter o tamanho de qualquer lod de uma textura</p>
+<pre><code>vec2 size = textureSize(sampler, lod)
+</code></pre><p>Para obter o tamanho de qualquer lod de uma textura</p>
 <h2 id="pesquisa-direta-texel">Pesquisa Direta Texel</h2>
 <p>Muitas vezes, é conveniente armazenar grandes matrizes de dados em uma textura.
 Na WebGL1 você poderia fazer isso, mas você só poderia abordar as texturas
 com cooridados de textura (0,0 a 1,0). Na WebGL2 você pode olhar
 valores de uma textura por pixel / texel coordenadas diretamente
 tornando o acesso à rede ligeiramente mais fácil</p>
-<pre><code>vec4 values = texelFetch(sampler, ivec2Position, lod);</code></pre><h2 id="muitos-formatos-de-textura">Muitos formatos de textura</h2>
+<pre><code>vec4 values = texelFetch(sampler, ivec2Position, lod);
+</code></pre><h2 id="muitos-formatos-de-textura">Muitos formatos de textura</h2>
 <p>A WebGL1 tinha apenas alguns formatos de textura. WebGL2 tem TONELADAS!</p>
 <ul>
 <li><code>RGBA32I</code></li>
@@ -167,7 +169,8 @@ tem que ser do mesmo tamanho, mas esta é uma ótima maneira de dar
 um acesso de shader a centenas de texturas, embora
 apenas tem um número relativamente pequeno de unidades de textura. Você pode
 selecione a fatia em seu shader</p>
-<pre><code>vec4 color = texture(someSampler2DArray, vec3(u, v, slice));</code></pre><h2 id="non-power-de-2-formatos-de-textura">Non-Power de 2 formatos de textura</h2>
+<pre><code>vec4 color = texture(someSampler2DArray, vec3(u, v, slice));
+</code></pre><h2 id="non-power-de-2-formatos-de-textura">Non-Power de 2 formatos de textura</h2>
 <p>Nas texturas WebGL1 que não eram um poder de 2 não podiam ter mips.
 Na WebGL2, esse limite é removido. A Non-power de textura 2 funciona exatamente
 o mesmo que o poder de 2 texturas.</p>
@@ -247,7 +250,8 @@ já estão atualizados, tudo o que você precisa fazer é vincular os
 <pre><code>gl.bindBufferRange(..., globalBlockIndx, globalMatrixUBO, ...);
 gl.bindBufferRange(..., modelBlockIndx, someModelMatrixUBO, ...);
 gl.bindBufferRange(..., materialBlockIndx, someMaterialSettingsUBO, ...);
-gl.bindBufferRange(..., lightBlockIndx, someLightSettingsUBO, ...);</code></pre></li>
+gl.bindBufferRange(..., lightBlockIndx, someLightSettingsUBO, ...);
+</code></pre></li>
 </ol>
 <h2 id="texturas-inteiras-atributos-e-matem-tica">Texturas inteiras, atributos e matemática</h2>
 <p>Na WebGL2 você pode ter texturas baseadas em números inteiros onde, como
@@ -279,7 +283,7 @@ Comumente usado para computação de mapas de sombra</p>
 <p>Agora Padrão, usos comuns estão desenhando muitas árvores, arbustos ou grama rapidamente.</p>
 <h2 id="unsigned_int-ndices">UNSIGNED_INT índices</h2>
 <p>Ser capaz de usar entradas de 32 bits para índices remove o limite de tamanho da geometria indexada</p>
-<h2 id="configura-o-gl_fragdepth">Configuração <code>gl_FragDepth</code></h2>
+<h2 id="configura-o-gl_fragdepth-">Configuração <code>gl_FragDepth</code></h2>
 <p>Permitindo que você escreva seus próprios valores personalizados para o buffer de profundidade / z-buffer.</p>
 <h2 id="equa-o-de-mistura-min-max">Equação de mistura MIN / MAX</h2>
 <p>Podendo levar o mínimo ou máximo de 2 cores ao misturar</p>

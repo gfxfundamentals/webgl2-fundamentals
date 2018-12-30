@@ -90,7 +90,8 @@ someone wrote where instead of passing lots of parameters to the function you in
 have a single function that draws stuff and 70+ functions that set up the state for
 that one function. So for example imagine you had a function that draws a circle. You
 could program it like this</p>
-<pre><code>function drawCircle(centerX, centerY, radius, color) { ... }</code></pre><p>Or you could code it like this</p>
+<pre><code>function drawCircle(centerX, centerY, radius, color) { ... }
+</code></pre><p>Or you could code it like this</p>
 <pre><code>var centerX;
 var centerY;
 var radius;
@@ -111,7 +112,8 @@ function setColor(c) {
 
 function drawCircle() {
    ...
-}</code></pre><p>WebGL works this second way. Functions like <code>gl.createBuffer</code>, <code>gl.bufferData</code>, <code>gl.createTexture</code>,
+}
+</code></pre><p>WebGL works this second way. Functions like <code>gl.createBuffer</code>, <code>gl.bufferData</code>, <code>gl.createTexture</code>,
 and <code>gl.texImage2D</code> let you upload data to buffers (vertex data) and data to textures (color, etc..).
 <code>gl.createProgram</code>, <code>gl.createShader</code>, <code>gl.compileProgram</code>, and <code>gl.linkProgram</code> let you create
 your GLSL shaders. Nearly all the rest of the functions of WebGL are setting up these global
@@ -167,7 +169,8 @@ out vec4 outColor;
 
 void main() {
 *   gl_FragColor = v_color * u_colorMult;
-}</code></pre><p>At init time</p>
+}
+</code></pre><p>At init time</p>
 <pre><code>// Our uniforms for each thing we want to draw
 var sphereUniforms = {
   u_colorMult: [0.5, 1, 0.5, 1],
@@ -185,7 +188,8 @@ var coneUniforms = {
 // The translation for each object.
 var sphereTranslation = [  0, 0, 0];
 var cubeTranslation   = [-40, 0, 0];
-var coneTranslation   = [ 40, 0, 0];</code></pre><p>At draw time</p>
+var coneTranslation   = [ 40, 0, 0];
+</code></pre><p>At draw time</p>
 <pre><code>var sphereXRotation =  time;
 var sphereYRotation =  time;
 var cubeXRotation   = -time;
@@ -241,7 +245,8 @@ coneUniforms.u_matrix = computeMatrix(
 // Set the uniforms we just computed
 twgl.setUniforms(programInfo, coneUniforms);
 
-twgl.drawBufferInfo(gl, coneBufferInfo);</code></pre><p>And here&#39;s that</p>
+twgl.drawBufferInfo(gl, coneBufferInfo);
+</code></pre><p>And here&#39;s that</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-objects-manual.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-objects-manual.html" target="_blank">click here to open in a separate window</a>
@@ -279,7 +284,8 @@ put the 4 things togehter</p>
     vertexArray: coneVAO,
     uniforms: coneUniforms,
   },
-];</code></pre><p>At draw time we still need to update the matrices</p>
+];
+</code></pre><p>At draw time we still need to update the matrices</p>
 <pre><code>var sphereXRotation =  time;
 var sphereYRotation =  time;
 var cubeXRotation   = -time;
@@ -307,7 +313,8 @@ coneUniforms.u_matrix = computeMatrix(
     projectionMatrix,
     coneTranslation,
     coneXRotation,
-    coneYRotation);</code></pre><p>But the drawing code is now just a simple loop</p>
+    coneYRotation);
+</code></pre><p>But the drawing code is now just a simple loop</p>
 <pre><code>// ------ Draw the objects --------
 
 objectsToDraw.forEach(function(object) {
@@ -323,7 +330,8 @@ objectsToDraw.forEach(function(object) {
 
   // Draw
   twgl.drawBufferInfo(gl, bufferInfo);
-});</code></pre><p>And this is arguably the main rendering loop of most 3D engines in existence. Somewhere
+});
+</code></pre><p>And this is arguably the main rendering loop of most 3D engines in existence. Somewhere
 some code or codes decide what goes into the list of <code>objectsToDraw</code> and the number
 of options they need might be larger but most of them separate out computing what
 goes in that list with actually calling the <code>gl.draw___</code> functions.</p>

@@ -84,15 +84,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p>이 게시글은 WebGL에 대한 글 시리즈에서 이어집니다. 첫번째로 <a href="webgl-fundamentals.html">기초로 시작</a>과 이전에는 <a href="webgl-2d-scale.html">2D 지오메트리 크기 변환에 대하여</a> 입니다.</p>
 <p>지난 3개의 글에서 우리는 <a href="webgl-2d-translation.html">이동 기하학</a>, <a href="webgl-2d-rotation.html">회전 기하학</a>, <a href="webgl-2d-scale.html">크기 기하학</a>를 알아 보았습니다. 이동, 회전, 크기 각각 &#39;변형(transformation)&#39;으로 간주됩니다. 이 변환들은 쉐이더의 변환을 필요로 하고 3가지 변환 각각은 순서에 따라 다릅니다. <a href="webgl-2d-scale.html">이전 예제</a>에서 크기를 조정한 다음 회전을 그 다음 이동을 하였습니다. 순서를 바꿔서 적용하면 다른 결과가 나타납니다.</p>
 <p>예를 들어 여기서 (2, 1) 크기, 30도 회전, (100, 0) 이동이 있습니다.</p>
-<img src="../resources/f-scale-rotation-translation.svg" class="webgl_center" width="400" />
-
+<p><img src="../resources/f-scale-rotation-translation.svg" class="webgl_center" width="400" /></p>
 <p>예를 들어 여기서 (100, 0) 이동, 30도, 회전 (2, 1) 크기가 있습니다.</p>
-<img src="../resources/f-translation-rotation-scale.svg" class="webgl_center" width="400" />
-
+<p><img src="../resources/f-translation-rotation-scale.svg" class="webgl_center" width="400" /></p>
 <p>결과는 완전히 다릅니다. 더 나쁜 것은 두 번째 예제가 필요하다면 새로 원하는 순서로 이동,
  회전, 크기를 적용하는 다른 쉐이더를 작성해야합니다.</p>
 <p>저보다 똑똑한 사람들이 행렬 수학으로 모든 것을 똑같이 할 수 있다는 것을 알아냈습니다. 2D의 경우 3x3 행렬을 사용합니다. 3x3 행렬은 9개의 상자가 있는 격자와 같습니다.</p>
-<style>.glocal-center { text-align: center; } .glocal-center-content { margin-left: auto; margin-right: auto; } .glocal-mat td, .glocal-b { border: 1px solid black; text-align: left;} .glocal-mat td { text-align: center; } .glocal-border { border: 1px solid black; } .glocal-sp { text-align: right !important;  width: 8em;} .glocal-blk { color: black; background-color: black; } .glocal-left { text-align: left; } .glocal-right { text-align: right; }</style>
+<p><style>.glocal-center { text-align: center; } .glocal-center-content { margin-left: auto; margin-right: auto; } .glocal-mat td, .glocal-b { border: 1px solid black; text-align: left;} .glocal-mat td { text-align: center; } .glocal-border { border: 1px solid black; } .glocal-sp { text-align: right !important;  width: 8em;} .glocal-blk { color: black; background-color: black; } .glocal-left { text-align: left; } .glocal-right { text-align: right; }</style></p>
 <div class="glocal-center"><table class="glocal-center-content glocal-mat"><tr><td>1.0</td><td>2.0</td><td>3.0</td></tr><tr><td>4.0</td><td>5.0</td><td>6.0</td></tr><tr><td>7.0</td><td>8.0</td><td>9.0</td></tr></table></div>
 
 <p>계산을 하기 위해 행렬의 열 아래로 위치를 곱하고 결과를 더합니다. 위치는 오직 2개의 값 x, y을 가지고 있습니다. 그러나 수학에서는 3개의 값이 필요하므로 1을 3번쨰 값으로 사용할 것입니다.</p>
@@ -210,7 +208,8 @@ newY = y * sy;
       0, 0, 1,
     ];
   },
-};</code></pre><p>이제 쉐이더를 변경해 보겠습니다. 오래된 쉐이더는 다음과 같습니다.</p>
+};
+</code></pre><p>이제 쉐이더를 변경해 보겠습니다. 오래된 쉐이더는 다음과 같습니다.</p>
 <pre><code>#version 300 es
 
 in vec2 a_position;
@@ -230,7 +229,8 @@ void main() {
      scaledPosition.y * u_rotation.y - scaledPosition.x * u_rotation.x);
 
   // 이동에 추가
-  vec2 position = rotatedPosition + u_translation;</code></pre><p>다음 새로운 쉐이더는 더 간단합니다.</p>
+  vec2 position = rotatedPosition + u_translation;
+</code></pre><p>다음 새로운 쉐이더는 더 간단합니다.</p>
 <pre><code>#version 300 es
 
 in vec2 a_position;
@@ -241,7 +241,8 @@ uniform mat3 u_matrix;
 void main() {
   // 위치에 행렬을 곱하기.
   vec2 position = (u_matrix * vec3(a_position, 1)).xy;
-  ...</code></pre><p>그다음 여기에 사용 방법이 있습니다.</p>
+  ...
+</code></pre><p>그다음 여기에 사용 방법이 있습니다.</p>
 <pre><code>  // scene 그리기.
   function drawScene() {
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
@@ -283,7 +284,8 @@ void main() {
     var offset = 0;
     var count = 18;
     gl.drawArrays(primitiveType, offset, count);
-  }</code></pre><p>다음은 새로운 코드를 사용하는 예제입니다. 슬라이더는 동일하고, 이동, 회전 및 크기 조절이 가능합니다. 그러나 셰이더에서 사용되는 방식은 훨씬 간단합니다.</p>
+  }
+</code></pre><p>다음은 새로운 코드를 사용하는 예제입니다. 슬라이더는 동일하고, 이동, 회전 및 크기 조절이 가능합니다. 그러나 셰이더에서 사용되는 방식은 훨씬 간단합니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-matrix-transform.html" target="_blank">click here to open in a separate window</a>
@@ -295,7 +297,8 @@ void main() {
     // Multiply the matrices.
     var matrix = m3.multiply(scaleMatrix, rotationMatrix);
     matrix = m3.multiply(matrix, translationMatrix);
-    ...</code></pre><p>여기에 이 버전이 있습니다.</p>
+    ...
+</code></pre><p>여기에 이 버전이 있습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform-trs.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-matrix-transform-trs.html" target="_blank">click here to open in a separate window</a>
@@ -331,7 +334,8 @@ void main() {
         var count = 18;
         gl.drawArrays(primitiveType, offset, count);
       }
-    }</code></pre><p>이를 하기 위해 단위 행렬을 만드는 함수인 <code>m3.identity</code>를 사용해 봅시다. 단위 행렬은 1.0을 나타내는 행렬이며 이를 곱한다면 아무 일도 일어나지 않습니다. 다음과 같습니다.</p>
+    }
+</code></pre><p>이를 하기 위해 단위 행렬을 만드는 함수인 <code>m3.identity</code>를 사용해 봅시다. 단위 행렬은 1.0을 나타내는 행렬이며 이를 곱한다면 아무 일도 일어나지 않습니다. 다음과 같습니다.</p>
 <div class="webgl_center">X * 1 = X</div>
 
 <p>다음도 같습니다.</p>
@@ -346,7 +350,8 @@ void main() {
       0, 0, 1,
     ];
   },
-...</code></pre><p>여기에 5개 F가 있습니다.</p>
+...
+</code></pre><p>여기에 5개 F가 있습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform-hierarchical.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-matrix-transform-hierarchical.html" target="_blank">click here to open in a separate window</a>
@@ -362,7 +367,8 @@ void main() {
     // 행렬 곱하기.
     var matrix = m3.multiply(translationMatrix, rotationMatrix);
     matrix = m3.multiply(matrix, scaleMatrix);
-+    matrix = m3.multiply(matrix, moveOriginMatrix);</code></pre><p>여기에 예제가 있습니다. F 중심으로 회전하고 크기가 조정됩니다.</p>
++    matrix = m3.multiply(matrix, moveOriginMatrix);
+</code></pre><p>여기에 예제가 있습니다. F 중심으로 회전하고 크기가 조정됩니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform-center-f.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-matrix-transform-center-f.html" target="_blank">click here to open in a separate window</a>
@@ -381,7 +387,8 @@ void main() {
   // 0-&gt;2 에서 -1-&gt;+1 변환합니다.(클립 공간)
   vec2 clipSpace = zeroToTwo - 1.0;
 
-  gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);</code></pre><p>만약 이 단계를 차례대로 살펴보면 첫 단계인 &quot;픽셀을 0.0에서 1.0으로 변환 &quot;은 실제로 크기 변환입니다. 두 번째 단계 역시 크기 변환입니다. 다음은 이동을 하고 마지막으로 Y 축 -1만큼 크기 변환을 합니다. 우리는 실제로 이 모든 것을 하는 행렬을 쉐이더 전달할 수 있습니다. 2개의 크기 변환 행렬을 만들 수 있으며 하나는 1.0/해상도이며 하나는 2.0 크기 변환을 하며 3번째는 -1.0, -1.0만큼 이동하며 4번째로 Y 축 -1만큼 크기 변환하고 이 모든 것을 곱하는 대신에 수학은 간단하기 때문에 해상도에 대한 &#39;투영&#39;(projection) 함수를 만들 것입니다.</p>
+  gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+</code></pre><p>만약 이 단계를 차례대로 살펴보면 첫 단계인 &quot;픽셀을 0.0에서 1.0으로 변환 &quot;은 실제로 크기 변환입니다. 두 번째 단계 역시 크기 변환입니다. 다음은 이동을 하고 마지막으로 Y 축 -1만큼 크기 변환을 합니다. 우리는 실제로 이 모든 것을 하는 행렬을 쉐이더 전달할 수 있습니다. 2개의 크기 변환 행렬을 만들 수 있으며 하나는 1.0/해상도이며 하나는 2.0 크기 변환을 하며 3번째는 -1.0, -1.0만큼 이동하며 4번째로 Y 축 -1만큼 크기 변환하고 이 모든 것을 곱하는 대신에 수학은 간단하기 때문에 해상도에 대한 &#39;투영&#39;(projection) 함수를 만들 것입니다.</p>
 <pre><code>var m3 = {
   projection: function (width, height) {
     // 참고: 0축이 맨위에 오도록 Y축을 뒤집습니다.
@@ -391,7 +398,8 @@ void main() {
       -1, 1, 1,
     ];
   },
-  ...</code></pre><p>이제 쉐이더를 더 단순화 할 수 있습니다. 여기에 새로운 버텍스 쉐이더가 있습니다.</p>
+  ...
+</code></pre><p>이제 쉐이더를 더 단순화 할 수 있습니다. 여기에 새로운 버텍스 쉐이더가 있습니다.</p>
 <pre><code>#version 300 es
 
 in vec2 a_position;
@@ -401,7 +409,8 @@ uniform mat3 u_matrix;
 void main() {
   // 위치에 행렬을 곱합니다.
   gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
-}</code></pre><p>그리고 JavaScript에서는 투영 행렬을 곱해야합니다.</p>
+}
+</code></pre><p>그리고 JavaScript에서는 투영 행렬을 곱해야합니다.</p>
 <pre><code>  // scene 그리기.
   function drawScene() {
     ...
@@ -422,7 +431,8 @@ void main() {
 *    matrix = m3.multiply(matrix, rotationMatrix);
     matrix = m3.multiply(matrix, scaleMatrix);
     ...
-  }</code></pre><p>해상도를 설정하는 코드를 제거 했습니다. 마지막 단계에서는 6-7단계의 다소 복잡한 쉐이더에서 1단계의 매우 간단한 쉐이더가 되었으면 이 모든것이 행렬 계산의 마술입니다.</p>
+  }
+</code></pre><p>해상도를 설정하는 코드를 제거 했습니다. 마지막 단계에서는 6-7단계의 다소 복잡한 쉐이더에서 1단계의 매우 간단한 쉐이더가 되었으면 이 모든것이 행렬 계산의 마술입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform-with-projection.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-matrix-transform-with-projection.html" target="_blank">click here to open in a separate window</a>
@@ -448,12 +458,14 @@ void main() {
 
   ...
 
-};</code></pre><p>이렇게 하면 위의 행렬 7줄을 다음과 같이 5줄로 바꿀 수 있습니다.</p>
+};
+</code></pre><p>이렇게 하면 위의 행렬 7줄을 다음과 같이 5줄로 바꿀 수 있습니다.</p>
 <pre><code>// 행렬 계산
 var matrix = m3.projection(gl.canvas.clientWidth, gl.canvas.clientHeight);
 matrix = m3.translate(matrix, translation[0], translation[1]);
 matrix = m3.rotate(matrix, rotationInRadians);
-matrix = m3.scale(matrix, scale[0], scale[1]);</code></pre><p>여기에 결과가 있습니다.</p>
+matrix = m3.scale(matrix, scale[0], scale[1]);
+</code></pre><p>여기에 결과가 있습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform-simpler-functions.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-matrix-transform-simpler-functions.html" target="_blank">click here to open in a separate window</a>
@@ -461,15 +473,22 @@ matrix = m3.scale(matrix, scale[0], scale[1]);</code></pre><p>여기에 결과�
 
 </p>
 <p>마지막으로 위에서 순서 문제를 보았습니다. 첫 번쨰 예에서는</p>
-<pre><code>translation * rotation * scale</code></pre><p>두 번쨰 에제에서는</p>
-<pre><code>scale * rotation * translation</code></pre><p>그리고 이들이 어떻게 다른지를 보았습니다.</p>
+<pre><code>translation * rotation * scale
+</code></pre><p>두 번쨰 에제에서는</p>
+<pre><code>scale * rotation * translation
+</code></pre><p>그리고 이들이 어떻게 다른지를 보았습니다.</p>
 <p>행렬을 보는 두 가지 방법이 있습니다. 표현식을 감안할 때</p>
-<pre><code>projectionMat * translationMat * rotationMat * scaleMat * position</code></pre><p>많은 사람들이 자연스럽게 발견하는 첫 번쨰 방법은 오른쪽에서 시작하여 왼쪽으로 작업하는 것 입니다.</p>
+<pre><code>projectionMat * translationMat * rotationMat * scaleMat * position
+</code></pre><p>많은 사람들이 자연스럽게 발견하는 첫 번쨰 방법은 오른쪽에서 시작하여 왼쪽으로 작업하는 것 입니다.</p>
 <p>먼저 크기 변환 행렬을 위치에 곱하여 scaledPosition를 얻습니다.</p>
-<pre><code>scaledPosition = scaleMat * position</code></pre><p>그런 다음 scaledPosition를에 회전 행렬을 곱하여 rotatedScaledPosition를 얻습니다.</p>
-<pre><code>rotatedScaledPosition = rotationMat * scaledPosition</code></pre><p>그런 다음 rotatedScaledPositon에 이동 행렬을 곱하여 translatedRotatedScaledPosition를 얻습니다.</p>
-<pre><code>translatedRotatedScaledPosition = translationMat * rotatedScaledPosition</code></pre><p>마지막으로 투영 행렬을 곱하여 클립 공간 위치를 얻습니다.</p>
-<pre><code>clipspacePosition = projectioMatrix * translatedRotatedScaledPosition</code></pre><p>2번쨰 방법은 왼쪽에서 오른쪽으로 행렬을 읽는 것 입니다. 이 경우 각 행렬은 캔버스가 나타내는 *공간&quot;을 변경합니다. 캔버스는 각 방향에서 클립 공간(-1에서 +1)을 나타내는 것으로에서 시작합니다. 왼쪽에서 오른쪽으로 적용된 각 행렬은 캔버스가 나타내는 공간을 변경합니다.</p>
+<pre><code>scaledPosition = scaleMat * position
+</code></pre><p>그런 다음 scaledPosition를에 회전 행렬을 곱하여 rotatedScaledPosition를 얻습니다.</p>
+<pre><code>rotatedScaledPosition = rotationMat * scaledPosition
+</code></pre><p>그런 다음 rotatedScaledPositon에 이동 행렬을 곱하여 translatedRotatedScaledPosition를 얻습니다.</p>
+<pre><code>translatedRotatedScaledPosition = translationMat * rotatedScaledPosition
+</code></pre><p>마지막으로 투영 행렬을 곱하여 클립 공간 위치를 얻습니다.</p>
+<pre><code>clipspacePosition = projectioMatrix * translatedRotatedScaledPosition
+</code></pre><p>2번쨰 방법은 왼쪽에서 오른쪽으로 행렬을 읽는 것 입니다. 이 경우 각 행렬은 캔버스가 나타내는 *공간&quot;을 변경합니다. 캔버스는 각 방향에서 클립 공간(-1에서 +1)을 나타내는 것으로에서 시작합니다. 왼쪽에서 오른쪽으로 적용된 각 행렬은 캔버스가 나타내는 공간을 변경합니다.</p>
 <p>1 단계:  행렬이 없을떄(또는 단위 행렬)</p>
 <blockquote>
 <p><div class="webgl_diagram_container">

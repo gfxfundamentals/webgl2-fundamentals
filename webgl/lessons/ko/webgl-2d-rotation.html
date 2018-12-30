@@ -112,7 +112,8 @@ void main() {
   // 이동 추가
 * vec2 position = rotatedPosition + u_translation;
 
-...</code></pre><p>그리고 자바스크립트를 업데이트하여 이 두 값을 전달할 수 있게 합니다.</p>
+...
+</code></pre><p>그리고 자바스크립트를 업데이트하여 이 두 값을 전달할 수 있게 합니다.</p>
 <pre><code>  ...
 
 +  var rotationLocation = gl.getUniformLocation(program, &quot;u_rotation&quot;);
@@ -157,7 +158,8 @@ void main() {
     var offset = 0;
     var count = 18;
     gl.drawArrays(primitiveType, offset, count);
-  }</code></pre><p>여기에 결과가 있습니다. 회전하기 위해 원의 핸들을 드래그하거나 이동하기 위해 슬라이더를 드래그하십시오.</p>
+  }
+</code></pre><p>여기에 결과가 있습니다. 회전하기 위해 원의 핸들을 드래그하거나 이동하기 위해 슬라이더를 드래그하십시오.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-rotation.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-rotation.html" target="_blank">click here to open in a separate window</a>
@@ -171,8 +173,7 @@ void main() {
 </pre>
 
 <p>직사각형이 있고 회전하려고 한다고 가정해 보겠습니다. 회전하기 전에 오른쪽 위 구석이 3.0, 9.0에 있습니다. 12 방향에서 시계 방향으로 30도 단위 점을 찍어 봅시다.</p>
-<img src="../resources/rotate-30.png" class="webgl_center" />
-
+<p><img src="../resources/rotate-30.png" class="webgl_center" /></p>
 <p>원에서 위치는 0.5와 0.87입니다.</p>
 <pre class="webgl_center">
    3.0 * 0.87 + 9.0 * 0.50 = 7.1
@@ -180,11 +181,9 @@ void main() {
 </pre>
 
 <p>이것이 바로 우리가 필요한 것 입니다.</p>
-<img src="../resources/rotation-drawing.svg" width="500" class="webgl_center"/>
-
+<p><img src="../resources/rotation-drawing.svg" width="500" class="webgl_center"/></p>
 <p>시계 방향으로 60도 회전도 똑같습니다.</p>
-<img src="../resources/rotate-60.png" class="webgl_center" />
-
+<p><img src="../resources/rotate-60.png" class="webgl_center" /></p>
 <p>원에서 위치는 0.87과 0.5입니다.</p>
 <pre class="webgl_center">
    3.0 * 0.50 + 9.0 * 0.87 = 9.3
@@ -198,12 +197,14 @@ void main() {
   var s = Math.sin(angleInRadians);
   var c = Math.cos(angleInRadians);
   console.log(&quot;s = &quot; + s + &quot; c = &quot; + c);
-}</code></pre><p>자바스크립트 콘솔에 코드를 복사하고 붙혀 넣고 <code>printSineAndCosignForAngle(30)</code>을 치면 <code>s = 0.49 c = 0.87</code>(주의: 숫자를 반올립 했습니다.)을 볼 수 있습니다.</p>
+}
+</code></pre><p>자바스크립트 콘솔에 코드를 복사하고 붙혀 넣고 <code>printSineAndCosignForAngle(30)</code>을 치면 <code>s = 0.49 c = 0.87</code>(주의: 숫자를 반올립 했습니다.)을 볼 수 있습니다.</p>
 <p>이 모든 것들을 함께 사용하면 원하는 각도로 지오메트리(geometry)를 회전 할 수 있습니다. 회전하려는 각도의 사인 및 코사인으로 회전을 설정하면됩니다.</p>
 <pre><code>  ...
   var angleInRadians = angleInDegrees * Math.PI / 180;
   rotation[0] = Math.sin(angleInRadians);
-  rotation[1] = Math.cos(angleInRadians);</code></pre><p>여기에 각도 설정이 있는 버전이 있습니다. 이동 또는 회전할 슬라이더를 드래그 하십시오.</p>
+  rotation[1] = Math.cos(angleInRadians);
+</code></pre><p>여기에 각도 설정이 있는 버전이 있습니다. 이동 또는 회전할 슬라이더를 드래그 하십시오.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-rotation-angle.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-rotation-angle.html" target="_blank">click here to open in a separate window</a>

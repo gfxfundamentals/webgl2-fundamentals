@@ -113,7 +113,8 @@ MatrixStack.prototype.restore = function() {
 // Pushes a copy of the current matrix on the stack
 MatrixStack.prototype.save = function() {
   this.stack.push(this.getCurrentMatrix());
-};</code></pre><p>We also need functions for getting and setting the top matrix</p>
+};
+</code></pre><p>We also need functions for getting and setting the top matrix</p>
 <pre><code>// Gets a copy of the current matrix (top of the stack)
 MatrixStack.prototype.getCurrentMatrix = function() {
   return this.stack[this.stack.length - 1].slice();  // makes a copy
@@ -141,7 +142,8 @@ MatrixStack.prototype.rotateZ = function(angleInRadians) {
 MatrixStack.prototype.scale = function(x, y, z) {
   var m = this.getCurrentMatrix();
   this.setCurrentMatrix(m4.scale(m, x, y, z));
-};</code></pre><p>Note we&#39;re using the 3d matrix math functions. We could just use <code>0</code> for <code>z</code> on translation and <code>1</code>
+};
+</code></pre><p>Note we&#39;re using the 3d matrix math functions. We could just use <code>0</code> for <code>z</code> on translation and <code>1</code>
 for <code>z</code> on scale but I find that I&#39;m so used to using the 2d functions from Canvas 2d
 that I often forget to specify <code>z</code> an then the code breaks so let&#39;s make <code>z</code> optional</p>
 <pre><code>// Translates the current matrix
@@ -162,7 +164,8 @@ MatrixStack.prototype.scale = function(x, y, z) {
 +  }
   var m = this.getCurrentMatrix();
   this.setCurrentMatrix(m4.scale(m, x, y, z));
-};</code></pre><p>Using our <a href="webgl-2d-drawimage.html"><code>drawImage</code> from the previous lesson</a> we had these lines</p>
+};
+</code></pre><p>Using our <a href="webgl-2d-drawimage.html"><code>drawImage</code> from the previous lesson</a> we had these lines</p>
 <pre><code>// this matrix will convert from pixels to clip space
 var matrix = m4.orthographic(
     0, gl.canvas.clientWidth, gl.canvas.clientHeight, 0, -1, 1);
@@ -172,8 +175,10 @@ matrix = m4.translate(matrix, dstX, dstY, 0);
 
 // scale our 1 unit quad
 // from 1 unit to dstWidth, dstHeight units
-matrix = m4.scale(matrix, dstWidth, dstHeight, 1);</code></pre><p>We just need to create a matrix stack</p>
-<pre><code>var matrixStack = new MatrixStack();</code></pre><p>and multiply in the top matrix from our stack in</p>
+matrix = m4.scale(matrix, dstWidth, dstHeight, 1);
+</code></pre><p>We just need to create a matrix stack</p>
+<pre><code>var matrixStack = new MatrixStack();
+</code></pre><p>and multiply in the top matrix from our stack in</p>
 <pre><code>// this matrix will convert from pixels to clip space
 var matrix = m4.orthographic(
     0, gl.canvas.clientWidth, gl.canvas.clientHeight, 0, -1, 1);
@@ -187,7 +192,8 @@ matrix = m4.translate(matrix, dstX, dstY, 0);
 
 // scale our 1 unit quad
 // from 1 unit to dstWidth, dstHeight units
-matrix = m4.scale(matrix, dstWidth, dstHeight, 1);</code></pre><p>And now we can use it the same way we&#39;d use it with the Canvas 2D API.</p>
+matrix = m4.scale(matrix, dstWidth, dstHeight, 1);
+</code></pre><p>And now we can use it the same way we&#39;d use it with the Canvas 2D API.</p>
 <p>If you&#39;re not aware of how to use the matrix stack you can think of it as
 moving and orientating the origin of the canvas. So for example by default in a 2D canvas the origin (0,0)
 is at the top left corner.</p>
@@ -210,7 +216,8 @@ function draw(time) {
     0, 0);
 
   matrixStack.restore();
-}</code></pre><p>And here it is.</p>
+}
+</code></pre><p>And here it is.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-matrixstack-01.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-matrixstack-01.html" target="_blank">click here to open in a separate window</a>
@@ -223,7 +230,8 @@ the image is drawn and rotates around that center.</p>
 <p>Let&#39;s move the center of rotation to center of the image</p>
 <pre><code>matrixStack.translate(gl.canvas.width / 2, gl.canvas.height / 2);
 matrixStack.rotateZ(time);
-+matrixStack.translate(textureInfo.width / -2, textureInfo.height / -2);</code></pre><p>And now it rotates around the center of the image in the center of the canvas</p>
++matrixStack.translate(textureInfo.width / -2, textureInfo.height / -2);
+</code></pre><p>And now it rotates around the center of the image in the center of the canvas</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-matrixstack-02.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-matrixstack-02.html" target="_blank">click here to open in a separate window</a>
@@ -317,7 +325,8 @@ matrixStack.rotateZ(time);
 +    0, 0);
 +
 +}
-+matrixStack.restore();</code></pre><p>And here&#39;s that</p>
++matrixStack.restore();
+</code></pre><p>And here&#39;s that</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-matrixstack-03.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-matrixstack-03.html" target="_blank">click here to open in a separate window</a>
@@ -331,16 +340,14 @@ of the image is <strong>at</strong> the previous origin?</em></p>
 <p>In other words let&#39;s say on a 400x300 canvas I call <code>matrixStack.translate(220, 150)</code>.
 At that point the origin is at 220, 150 and all drawing will be relative that point.
 If we call <code>drawImage</code> with <code>0, 0</code> this is where the image will be drawn.</p>
-<img class="webgl_center" width="400" src="resources/matrixstack-before.svg" />
-
+<p><img class="webgl_center" width="400" src="resources/matrixstack-before.svg" /></p>
 <p>Lets say we want the center of rotation to be the bottom right. In that case
 where would be have to move the origin so that when we call <code>drawImage</code>
 the point we want to be the center of rotation is at the current origin?
 For the bottom right of the texture that would be <code>-textureWidth, -textureHeight</code>
 so now when we call <code>drawImage</code> with <code>0, 0</code> the texture would be drawn here
 and it&#39;s bottom right corner as at the previous origin.</p>
-<img class="webgl_center" width="400" src="resources/matrixstack-after.svg" />
-
+<p><img class="webgl_center" width="400" src="resources/matrixstack-after.svg" /></p>
 <p>At any point whatever we did before that on the matrix stack it doesn&#39;t matter. We did a bunch
 of stuff to move or scale or rotate the origin but just before we call
 <code>drawImage</code> wherever the origin happens to be at the moment is irrelavent.

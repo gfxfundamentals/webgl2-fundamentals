@@ -99,7 +99,8 @@ overlaid inside the container.</p>
     &lt;div&gt;Time: &lt;span id=&quot;time&quot;&gt;&lt;/span&gt;&lt;/div&gt;
     &lt;div&gt;Angle: &lt;span id=&quot;angle&quot;&gt;&lt;/span&gt;&lt;/div&gt;
   &lt;/div&gt;
-&lt;/div&gt;</code></pre><p>Next setup the CSS so that the canvas and the HTML overlap</p>
+&lt;/div&gt;
+</code></pre><p>Next setup the CSS so that the canvas and the HTML overlap</p>
 <pre><code>.container {
     position: relative;
 }
@@ -107,7 +108,8 @@ overlaid inside the container.</p>
     position: absolute;
     left: 10px;
     top: 10px;
-}</code></pre><p>Now look up those elements at init time and create or lookup the areas you want to
+}
+</code></pre><p>Now look up those elements at init time and create or lookup the areas you want to
 change.</p>
 <pre><code>// look up the elements we want to affect
 var timeElement = document.getElementById(&quot;time&quot;);
@@ -120,7 +122,8 @@ var angleNode = document.createTextNode(&quot;&quot;);
 
 // Add those text nodes where they need to go
 timeElement.appendChild(timeNode);
-angleElement.appendChild(angleNode);</code></pre><p>Finally update the nodes when rendering</p>
+angleElement.appendChild(angleNode);
+</code></pre><p>Finally update the nodes when rendering</p>
 <pre><code>function drawScene(time) {
     var now = time * 0.001;  // convert to seconds
 
@@ -134,7 +137,8 @@ angleElement.appendChild(angleNode);</code></pre><p>Finally update the nodes whe
 
     // set the nodes
     angleNode.nodeValue = angle.toFixed(0);  // no decimal place
-    timeNode.nodeValue = now.toFixed(2);   // 2 decimal places</code></pre><p>And here&#39;s that example</p>
+    timeNode.nodeValue = now.toFixed(2);   // 2 decimal places
+</code></pre><p>And here&#39;s that example</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-overlay.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-overlay.html" target="_blank">click here to open in a separate window</a>
@@ -143,7 +147,8 @@ angleElement.appendChild(angleNode);</code></pre><p>Finally update the nodes whe
 </p>
 <p>Notice how I put spans inside the divs specifically for the parts I wanted to change. I&#39;m making the
 assumption here that that&#39;s faster than just using the divs with no spans and saying something like</p>
-<pre><code>timeNode.nodeValue = &quot;Time &quot; + clock.toFixed(2);</code></pre><p>Also I&#39;m using text nodes by calling <code>node = document.createTextNode()</code> and later <code>node.nodeValue = someMsg</code>.
+<pre><code>timeNode.nodeValue = &quot;Time &quot; + clock.toFixed(2);
+</code></pre><p>Also I&#39;m using text nodes by calling <code>node = document.createTextNode()</code> and later <code>node.nodeValue = someMsg</code>.
 I could also use <code>someElement.innerHTML = someHTML</code>. That would be more flexible because you could
 insert arbitrary HTML strings though it might be slightly slower since the browser has to create
 and destroy nodes each time you set it. Which is better is up to you.</p>
@@ -166,7 +171,8 @@ We can do that in HTML as well.</p>
 <pre><code>&lt;div class=&quot;container&quot;&gt;
   &lt;canvas id=&quot;canvas&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
   &lt;div id=&quot;divcontainer&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;</code></pre><p>And we&#39;ll setup the CSS</p>
+&lt;/div&gt;
+</code></pre><p>And we&#39;ll setup the CSS</p>
 <pre><code>.container {
     position: relative;
     overflow: none;
@@ -185,7 +191,8 @@ We can do that in HTML as well.</p>
 
 .floating-div {
     position: absolute;
-}</code></pre><p>The <code>position: absolute;</code> part makes the <code>#divcontainer</code> be positioned in absolute terms relative
+}
+</code></pre><p>The <code>position: absolute;</code> part makes the <code>#divcontainer</code> be positioned in absolute terms relative
 to the first parent with another <code>position: relative</code> or <code>position: absolute</code> style. In this case
 that&#39;s the container that both the canvas and the <code>#divcontainer</code> are in.</p>
 <p>The <code>left: 0px; top: 0px</code> makes the <code>#divcontainer</code> align with everything. The <code>z-index: 10</code> makes
@@ -206,10 +213,12 @@ var textNode = document.createTextNode(&quot;&quot;);
 div.appendChild(textNode);
 
 // add it to the divcontainer
-divContainerElement.appendChild(div);</code></pre><p>Now we can position the div by setting its style.</p>
+divContainerElement.appendChild(div);
+</code></pre><p>Now we can position the div by setting its style.</p>
 <pre><code>div.style.left = Math.floor(x) + &quot;px&quot;;
 div.style.top  = Math.floor(y) + &quot;px&quot;;
-textNode.nodeValue = now.toFixed(2);</code></pre><p>Here&#39;s an example where we&#39;re just bounding the div around.</p>
+textNode.nodeValue = now.toFixed(2);
+</code></pre><p>Here&#39;s an example where we&#39;re just bounding the div around.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-bouncing-div.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-bouncing-div.html" target="_blank">click here to open in a separate window</a>
@@ -249,7 +258,8 @@ var pixelY = (clipspace[1] * -0.5 + 0.5) * gl.canvas.height;
 // position the div
 div.style.left = Math.floor(pixelX) + &quot;px&quot;;
 div.style.top  = Math.floor(pixelY) + &quot;px&quot;;
-textNode.nodeValue = now.toFixed(2);</code></pre><p>And voila, the top left corner of our div is perfectly aligned
+textNode.nodeValue = now.toFixed(2);
+</code></pre><p>And voila, the top left corner of our div is perfectly aligned
 with the top right front corner of the F.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-div.html"></iframe>

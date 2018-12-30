@@ -90,7 +90,7 @@ using an image we&#39;ll create the data in JavaScript directly.</p>
 <p>Creating data for a texture in JavaScript is mostly straight forward depending
 on the texture format. WebGL2 supports a ton of texture formats though.
 WebGL2 supports all the <em>unsized</em> formats from WebGL1</p>
-<style>
+<p><style>
 .local-data {
   font-family: monospace;
   font-size: medium;
@@ -119,7 +119,7 @@ WebGL2 supports all the <em>unsized</em> formats from WebGL1</p>
 .local-highlight {
   background: pink;
 }
-</style>
+</style></p>
 <div class="webgl_center">
   <table class="local-data local-data1">
     <thead>
@@ -314,16 +314,17 @@ and type you must supply data for a given internal format</p>
       <tr><td>DEPTH24_STENCIL8                                </td><td>DEPTH_STENCIL   </td><td>UNSIGNED_INT_24_8              </td><td>4  </td></tr>
       <tr><td>DEPTH32F_STENCIL8                               </td><td>DEPTH_STENCIL   </td><td>FLOAT_32_UNSIGNED_INT_24_8_REV </td><td>8  </td></tr>
 
-<pre><code>  &lt;tr&gt;&lt;td&gt;RGBA                                            &lt;/td&gt;&lt;td&gt;RGBA            &lt;/td&gt;&lt;td&gt;UNSIGNED_BYTE                  &lt;/td&gt;&lt;td&gt;4  &lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;RGBA                                            &lt;/td&gt;&lt;td&gt;RGBA            &lt;/td&gt;&lt;td&gt;UNSIGNED_SHORT_4_4_4_4         &lt;/td&gt;&lt;td&gt;2  &lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;RGBA                                            &lt;/td&gt;&lt;td&gt;RGBA            &lt;/td&gt;&lt;td&gt;UNSIGNED_SHORT_5_5_5_1         &lt;/td&gt;&lt;td&gt;2  &lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;RGB                                             &lt;/td&gt;&lt;td&gt;RGB             &lt;/td&gt;&lt;td&gt;UNSIGNED_BYTE                  &lt;/td&gt;&lt;td&gt;3  &lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;RGB                                             &lt;/td&gt;&lt;td&gt;RGB             &lt;/td&gt;&lt;td&gt;UNSIGNED_SHORT_5_6_5           &lt;/td&gt;&lt;td&gt;2  &lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;LUMINANCE_ALPHA                                 &lt;/td&gt;&lt;td&gt;LUMINANCE_ALPHA &lt;/td&gt;&lt;td&gt;UNSIGNED_BYTE                  &lt;/td&gt;&lt;td&gt;2  &lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;LUMINANCE                                       &lt;/td&gt;&lt;td&gt;LUMINANCE       &lt;/td&gt;&lt;td&gt;UNSIGNED_BYTE                  &lt;/td&gt;&lt;td&gt;1  &lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;ALPHA                                           &lt;/td&gt;&lt;td&gt;ALPHA           &lt;/td&gt;&lt;td&gt;UNSIGNED_BYTE                  &lt;/td&gt;&lt;td&gt;1  &lt;/td&gt;&lt;/tr&gt;
+      <tr><td>RGBA                                            </td><td>RGBA            </td><td>UNSIGNED_BYTE                  </td><td>4  </td></tr>
+      <tr><td>RGBA                                            </td><td>RGBA            </td><td>UNSIGNED_SHORT_4_4_4_4         </td><td>2  </td></tr>
+      <tr><td>RGBA                                            </td><td>RGBA            </td><td>UNSIGNED_SHORT_5_5_5_1         </td><td>2  </td></tr>
+      <tr><td>RGB                                             </td><td>RGB             </td><td>UNSIGNED_BYTE                  </td><td>3  </td></tr>
+      <tr><td>RGB                                             </td><td>RGB             </td><td>UNSIGNED_SHORT_5_6_5           </td><td>2  </td></tr>
+      <tr><td>LUMINANCE_ALPHA                                 </td><td>LUMINANCE_ALPHA </td><td>UNSIGNED_BYTE                  </td><td>2  </td></tr>
+      <tr><td>LUMINANCE                                       </td><td>LUMINANCE       </td><td>UNSIGNED_BYTE                  </td><td>1  </td></tr>
+      <tr><td>ALPHA                                           </td><td>ALPHA           </td><td>UNSIGNED_BYTE                  </td><td>1  </td></tr>
 
-&lt;/tbody&gt;</code></pre>  </table>
+    </tbody>
+  </table>
 </div>
 
 
@@ -343,7 +344,8 @@ function setTexcoords(gl) {
         1, 0,
         0, 1,
         1, 1,
-        ...</code></pre><p>Then we&#39;ll change the code that creates a texture</p>
+        ...
+</code></pre><p>Then we&#39;ll change the code that creates a texture</p>
 <pre><code>// Create a texture.
 var texture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -374,7 +376,8 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
 -// Asynchronously load an image
--...</code></pre><p>And here&#39;s that</p>
+-...
+</code></pre><p>And here&#39;s that</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-data-texture-3x2-bad.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-data-texture-3x2-bad.html" target="_blank">click here to open in a separate window</a>
@@ -383,7 +386,8 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 </p>
 <p>Oops! Why is this not working?!?!?</p>
 <p>Checking the JavaScript console we see this error something like this</p>
-<pre><code>WebGL: INVALID_OPERATION: texImage2D: ArrayBufferView not big enough for request</code></pre><p>It turns out there&#39;s a kind of obscure setting in WebGL left
+<pre><code>WebGL: INVALID_OPERATION: texImage2D: ArrayBufferView not big enough for request
+</code></pre><p>It turns out there&#39;s a kind of obscure setting in WebGL left
 over from when OpenGL was first created. Comptuers sometimes
 go faster then data is a certain size. For example it can
 be faster to copy 2, 4, or 8 bytes at a time instead of 1 at a time.
@@ -394,7 +398,8 @@ is going to try to read 4 bytes for the first row and 3 bytes
 for the 2nd row for a total of 7 bytes which is why it&#39;s complaining.</p>
 <p>We can tell WebGL to deal with 1 byte at a time like this</p>
 <pre><code>const alignment = 1;
-gl.pixelStorei(gl.UNPACK_ALIGNMENT, alignment);</code></pre><p>Valid alignment values are 1, 2, 4, and 8.</p>
+gl.pixelStorei(gl.UNPACK_ALIGNMENT, alignment);
+</code></pre><p>Valid alignment values are 1, 2, 4, and 8.</p>
 <p>I suspect in WebGL you will not be able to measure a difference
 in speed between aligned data and un-aligned data. I wish the default
 was 1 instead of 4 so this issue wouldn&#39;t bite new users but, in order

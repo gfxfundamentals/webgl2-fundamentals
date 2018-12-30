@@ -86,7 +86,8 @@ If you only use WebGL1 features then then there are
 only 2 differences.</p>
 <ol>
 <li><p>You use <code>&quot;webgl2&quot;</code> instead of <code>&quot;webgl&quot;</code> when calling <code>getContext</code></p>
-<pre><code>var gl = someCanvas.getContext(&quot;webgl2&quot;);</code></pre><p>Note: there is no &quot;experimental-webgl2&quot;. The browser vendors got
+<pre><code>var gl = someCanvas.getContext(&quot;webgl2&quot;);
+</code></pre><p>Note: there is no &quot;experimental-webgl2&quot;. The browser vendors got
 together and decided no more prefixing things because websites
 get dependent on the prefix.</p>
 </li>
@@ -99,8 +100,10 @@ if (!ext) {
   // tell user they don&#39;t have the required extension or work around it
 } else {
   var someVAO = ext.createVertexArrayOES();
-}</code></pre><p>In WebGL2 you&#39;d do this</p>
-<pre><code>var someVAO = gl.createVertexArray();</code></pre><p>Because it just exists.</p>
+}
+</code></pre><p>In WebGL2 you&#39;d do this</p>
+<pre><code>var someVAO = gl.createVertexArray();
+</code></pre><p>Because it just exists.</p>
 </li>
 </ol>
 <p>Otherwise all your WebGL1 stuff should just work.</p>
@@ -109,56 +112,68 @@ some changes.</p>
 <h2 id="switch-to-glsl-300-es">Switch to GLSL 300 es</h2>
 <p>The biggest change is you should upgrade your shaders to GLSL 3.00 ES. To do
 that the first line of your shaders needs to be</p>
-<pre><code>#version 300 es</code></pre><p><strong>NOTE: THIS HAS TO BE THE FIRST LINE! No comments, no blank lines before it allowed.</strong></p>
+<pre><code>#version 300 es
+</code></pre><p><strong>NOTE: THIS HAS TO BE THE FIRST LINE! No comments, no blank lines before it allowed.</strong></p>
 <p>In other words this is bad</p>
 <pre><code>// BAD!!!!                +---There&#39;s a new line here!
 // BAD!!!!                V
 var vertexShaderSource = `
 #version 300 es
 ..
-`;</code></pre><p>This is bad too</p>
+`;
+</code></pre><p>This is bad too</p>
 <pre><code>&lt;!-- BAD!!                   V&lt;- there&#39;s a new line here
 &lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;
 #version 300 es
 ...
-&lt;/script&gt;</code></pre><p>This is good</p>
+&lt;/script&gt;
+</code></pre><p>This is good</p>
 <pre><code>var vertexShaderSource = `#version 300 es
 ...
-`;</code></pre><p>This is good too</p>
+`;
+</code></pre><p>This is good too</p>
 <pre><code>&lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;#version 300 es
 ...
-&lt;/script&gt;</code></pre><p>Or you could make your shader compiling functions strip
+&lt;/script&gt;
+</code></pre><p>Or you could make your shader compiling functions strip
 the first blank lines.</p>
 <h3 id="changes-in-glsl-300-es-from-glsl-100">Changes in GLSL 300 es from GLSL 100</h3>
 <p>There are several changes you&#39;ll need to make to your shaders
 on top of adding the version string above</p>
-<h4 id="attribute-in"><code>attribute</code> -&gt; <code>in</code></h4>
+<h4 id="-attribute-in-"><code>attribute</code> -&gt; <code>in</code></h4>
 <p>In GLSL 100 you might have</p>
 <pre><code>attribute vec4 a_position;
 attribute vec2 a_texcoord;
-attribute vec3 a_normal;</code></pre><p>In GLSL 300 es that becomes</p>
+attribute vec3 a_normal;
+</code></pre><p>In GLSL 300 es that becomes</p>
 <pre><code>in vec4 a_position;
 in vec2 a_texcoord;
-in vec3 a_normal;</code></pre><h4 id="varying-to-in-out"><code>varying</code> to <code>in</code> / <code>out</code></h4>
+in vec3 a_normal;
+</code></pre><h4 id="-varying-to-in-out-"><code>varying</code> to <code>in</code> / <code>out</code></h4>
 <p>In GLSL 100 you might declare a varying in both the vertex
 and fragment shaders like this</p>
 <pre><code>varying vec2 v_texcoord;
-varying vec3 v_normal;</code></pre><p>In GLSL 300 es in the vertex shader the varyings become</p>
+varying vec3 v_normal;
+</code></pre><p>In GLSL 300 es in the vertex shader the varyings become</p>
 <pre><code>out vec2 v_texcoord;
-out vec3 v_normal;</code></pre><p>And in the fragment shader they become</p>
+out vec3 v_normal;
+</code></pre><p>And in the fragment shader they become</p>
 <pre><code>in vec2 v_texcoord;
-in vec3 v_normal;</code></pre><h4 id="no-more-gl_fragcolor">No more <code>gl_FragColor</code></h4>
+in vec3 v_normal;
+</code></pre><h4 id="no-more-gl_fragcolor-">No more <code>gl_FragColor</code></h4>
 <p>In GLSL 100 your fragment shader would set the special
 variable <code>gl_FragColor</code> to set the output of the shader.</p>
-<pre><code>gl_FragColor = vec4(1, 0, 0, 1);  // red</code></pre><p>In GLSL 300 es you declare your own output variable and
+<pre><code>gl_FragColor = vec4(1, 0, 0, 1);  // red
+</code></pre><p>In GLSL 300 es you declare your own output variable and
 then set it.</p>
 <pre><code>out vec4 myOutputColor;
 
 void main() {
    myOutputColor = vec4(1, 0, 0, 1);  // red
-}</code></pre><p>Note: You can pick any name you want but names can <strong>not</strong> start with
+}
+</code></pre><p>Note: You can pick any name you want but names can <strong>not</strong> start with
 <code>gl_</code> so you can&#39;t just make <code>out vec4 gl_FragColor</code></p>
-<h4 id="texture2d-texture-etc-"><code>texture2D</code> -&gt; <code>texture</code> etc.</h4>
+<h4 id="-texture2d-texture-etc-"><code>texture2D</code> -&gt; <code>texture</code> etc.</h4>
 <p>In GLSL 100 you&#39;d get a color from a texture like this</p>
 <pre><code>uniform sampler2D u_some2DTexture;
 uniform samplerCube u_someCubeTexture;
@@ -166,7 +181,8 @@ uniform samplerCube u_someCubeTexture;
 ...
 
 vec4 color1 = texture2D(u_some2DTexture, ...);
-vec4 color2 = textureCube(u_someCubeTexture, ...);</code></pre><p>In GLSL 300es the texture functions automatically know
+vec4 color2 = textureCube(u_someCubeTexture, ...);
+</code></pre><p>In GLSL 300es the texture functions automatically know
 what to do based on the sampler type so now it&#39;s just
 <code>texture</code></p>
 <pre><code>uniform sampler2D u_some2DTexture;
@@ -175,7 +191,8 @@ uniform samplerCube u_someCubeTexture;
 ...
 
 vec4 color1 = texture(u_some2DTexture, ...);
-vec4 color2 = texture(u_someCubeTexture, ...);</code></pre><h2 id="features-you-can-take-for-granted">Features you can take for granted</h2>
+vec4 color2 = texture(u_someCubeTexture, ...);
+</code></pre><h2 id="features-you-can-take-for-granted">Features you can take for granted</h2>
 <p>In WebGL1 many features were optional extensions. In WebGL2
 all of the following are standard features</p>
 <ul>
@@ -238,16 +255,20 @@ was global WebGL state. You can imagine it like this</p>
       { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
       { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
     ],
-  },</code></pre><p>   }</p>
+  },
+</code></pre><p>   }</p>
 <p>Calling functions like <code>gl.vertexAttribPointer</code>, <code>gl.enableVertexAttribArray</code>, and
 <code>gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ??)</code> would effect that global state.
 Before each thing you wanted to draw you needed to setup all the attributes and if you
 were drawing indexed data you needed to set the <code>ELEMENT_ARRAY_BUFFER</code>.</p>
 <p>With Vertex Array Objects that entire <code>attributeState</code> above becomes a <em>Vertex Array</em>.</p>
 <p>In other words</p>
-<pre><code>var someVAO = gl.createVertexArray();</code></pre><p>Makes a new instance of the thing above called <code>attributeState</code>.</p>
-<pre><code>gl.bindVertexArray(someVAO);</code></pre><p>Is equivilent to</p>
-<pre><code>glState.attributeState = someVAO;</code></pre><p>What that means is you should setup all of your attributes at init time now.</p>
+<pre><code>var someVAO = gl.createVertexArray();
+</code></pre><p>Makes a new instance of the thing above called <code>attributeState</code>.</p>
+<pre><code>gl.bindVertexArray(someVAO);
+</code></pre><p>Is equivilent to</p>
+<pre><code>glState.attributeState = someVAO;
+</code></pre><p>What that means is you should setup all of your attributes at init time now.</p>
 <pre><code>// at init time
 for each model / geometry / ...
   var vao = gl.createVertexArray()
@@ -258,9 +279,11 @@ for each model / geometry / ...
     gl.vertexAttribPointer(...);
   if indexed geometry
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-  gl.bindVertexArray(null);</code></pre><p>Then at render time to use a particular geometry all you need to do
+  gl.bindVertexArray(null);
+</code></pre><p>Then at render time to use a particular geometry all you need to do
 is</p>
-<pre><code>gl.bindVertexArray(vaoForGeometry);</code></pre><p>In WebGL1 the init loop object would have appeared at render time.
+<pre><code>gl.bindVertexArray(vaoForGeometry);
+</code></pre><p>In WebGL1 the init loop object would have appeared at render time.
 This is a HUGE speed up!</p>
 <p>There are a few caveats though:</p>
 <ol>
@@ -272,14 +295,16 @@ In GLSL 300 es you can do this in the shader</p>
 <pre><code>layout(location = 0) in vec4 a_position;
 layout(location = 1) in vec2 a_texcoord;
 layout(location = 2) in vec3 a_normal;
-layout(location = 3) in vec4 a_color;</code></pre><p>Sets the locations of the 4 attributes.</p>
+layout(location = 3) in vec4 a_color;
+</code></pre><p>Sets the locations of the 4 attributes.</p>
 <p>You can also still do it the WebGL1 way by calling
 <code>gl.bindAttribLocation</code> before calling <code>gl.linkProgram</code>.</p>
 <p>For example:</p>
 <pre><code>gl.bindAttribLocation(someProgram, 0, &quot;a_position&quot;);
 gl.bindAttribLocation(someProgram, 1, &quot;a_texcoord&quot;);
 gl.bindAttribLocation(someProgram, 2, &quot;a_normal&quot;);
-gl.bindAttribLocation(someProgram, 3, &quot;a_color&quot;);</code></pre><p>This means you can force them to be comptible across multiple shader
+gl.bindAttribLocation(someProgram, 3, &quot;a_color&quot;);
+</code></pre><p>This means you can force them to be comptible across multiple shader
 programs. If one program doesn&#39;t need all attributes
 the attributes they do need will still be assigned to
 the same locations</p>
@@ -294,7 +319,8 @@ to be in all shaders so in the interest of D.R.Y. <code>gl.bindAttribLocation</c
 seems better. Maybe if I was using a shader generator then there&#39;d be no difference.</p>
 </li>
 <li><p>Always unbind the VAO when you&#39;re done</p>
-<pre><code>gl.bindVertexArray(null);</code></pre><p>This just comes from my own experience. If you look above
+<pre><code>gl.bindVertexArray(null);
+</code></pre><p>This just comes from my own experience. If you look above
 the <code>ELEMENT_ARRAY_BUFFER</code> state is part of a Vertex Array.</p>
 <p>So, I ran into this issue. I created some geometry, then
 I created a VAO for that geometry and set up the attributes
@@ -336,16 +362,16 @@ That way the rest of your code can stay the same. Example:</p>
 const gl = someCanvas.getContext("webgl");
 const haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object");
 
-<p>function getAndApplyExtension(gl, name) {
+function getAndApplyExtension(gl, name) {
   const ext = gl.getExtension(name);
   if (!ext) {
     return null;
   }
-  const fnSuffix = name.split(&quot;_&quot;)[0];
-  const enumSuffix = &#39;_&#39; + fnSuffix;
+  const fnSuffix = name.split("_")[0];
+  const enumSuffix = '_' + fnSuffix;
   for (const key in ext) {
     const value = ext[key];
-    const isFunc = typeof (value) === &#39;function&#39;;
+    const isFunc = typeof (value) === 'function';
     const suffix = isFunc ? fnSuffix : enumSuffix;
     let name = key;
     // examples of where this is not true are WEBGL_compressed_texture_s3tc
@@ -354,8 +380,8 @@ const haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object");
       name = key.substring(0, key.length - suffix.length);
     }
     if (gl[name] !== undefined) {
-      if (!isFunc &amp;&amp; gl[name] !== value) {
-        console.warn(&quot;conflict:&quot;, name, gl[name], value, key);
+      if (!isFunc && gl[name] !== value) {
+        console.warn("conflict:", name, gl[name], value, key);
       }
     } else {
       if (isFunc) {
@@ -371,7 +397,7 @@ const haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object");
   }
   return ext;
 }
-</pre></p>
+</pre>
 <p>Now your code can mostly just work the same on both. Example:</p>
 <pre class="prettyprint">
 if (haveVAOs) {

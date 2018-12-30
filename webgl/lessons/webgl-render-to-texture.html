@@ -112,7 +112,8 @@ gl.bindTexture(gl.TEXTURE_2D, targetTexture);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-}</code></pre><p>Notice how <code>data</code> is <code>null</code>. We don&#39;t need to supply any data. We just need WebGL to
+}
+</code></pre><p>Notice how <code>data</code> is <code>null</code>. We don&#39;t need to supply any data. We just need WebGL to
 allocate the texture.</p>
 <p>Next we create a framebufffer. A framebuffer is just a collection of attachments. Attachments
 are either textures or renderbuffers. We&#39;ve gone over textures before. Renderbuffers are very similar
@@ -125,7 +126,8 @@ gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
 
 // attach the texture as the first color attachment
 const attachmentPoint = gl.COLOR_ATTACHMENT0;
-gl.framebufferTexture2D(gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, tex, level);</code></pre><p>Just like textures and buffers, after we create the framebuffer we need to
+gl.framebufferTexture2D(gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, tex, level);
+</code></pre><p>Just like textures and buffers, after we create the framebuffer we need to
 bind it to the <code>FRAMEBUFFER</code> bind point. After that all functions related to
 framebuffers reference whatever framebuffer is bound there.</p>
 <p>With our framebuffer bound, anytime we call <code>gl.clear</code>, <code>gl.drawArrays</code>, or <code>gl.drawElements</code> WebGL
@@ -170,7 +172,8 @@ Once to render to the texture and again to render to the canvas.</p>
   var offset = 0;
   var count = 6 * 6;
   gl.drawArrays(primitiveType, offset, count);
-}</code></pre><p>Note that we need to pass in the <code>aspect</code> for computing our projection matrix
+}
+</code></pre><p>Note that we need to pass in the <code>aspect</code> for computing our projection matrix
 because our target texture has a different aspect than the camera.</p>
 <p>Here&#39;s how we call it</p>
 <pre><code>// Draw the scene.
@@ -215,7 +218,8 @@ function drawScene(time) {
   }
 
   requestAnimationFrame(drawScene);
-}</code></pre><p>And here&#39;s the result</p>
+}
+</code></pre><p>And here&#39;s the result</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-render-to-texture.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-render-to-texture.html" target="_blank">click here to open in a separate window</a>
@@ -236,7 +240,8 @@ something like</p>
 <pre><code>function bindFrambufferAndSetViewport(fb, width, height) {
    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
    gl.viewport(0, 0, width, height);
-}</code></pre><p>And then I only use that function to change what I&#39;m rendering to. That way I won&#39;t forget.</p>
+}
+</code></pre><p>And then I only use that function to change what I&#39;m rendering to. That way I won&#39;t forget.</p>
 <p>One thing to notice is we don&#39;t have a depth buffer on our framebuffer. We only have a texture.
 This means there is no depth testing and 3D won&#39;t work. If we draw 3 cubes we can see this.</p>
 <p><div class="webgl_example_container">
@@ -249,8 +254,7 @@ This means there is no depth testing and 3D won&#39;t work. If we draw 3 cubes w
 and another is in front but we&#39;re drawing all 3 at the same depth. Looking that the 3 horizontal cubes
 draw on the canvas you&#39;ll notice they correctly intersect each other. That&#39;s because our framebuffer
 has no depth buffer but our canvas does.</p>
-<img class="webgl_center" src="resources/cubes-without-depth-buffer.jpg" width="100%" height="100%" />
-
+<p><img class="webgl_center" src="resources/cubes-without-depth-buffer.jpg" width="100%" height="100%" /></p>
 <p>To add a depth buffer we create a depth texture and attach it to our framebuffer.</p>
 <pre><code>// create a depth texture
 const depthTexture = gl.createTexture();
@@ -277,7 +281,8 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
 
   // attach the depth texture to the framebuffer
   gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depthTexture, level);
-}</code></pre><p>And with that this is the result.</p>
+}
+</code></pre><p>And with that this is the result.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-render-to-texture-3-cubes-with-depth-buffer.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-render-to-texture-3-cubes-with-depth-buffer.html" target="_blank">click here to open in a separate window</a>
@@ -285,8 +290,7 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
 
 </p>
 <p>Now that we have a depth buffer attached to our framebuffer the inner cubes correctly intersect.</p>
-<img class="webgl_center" src="resources/cubes-with-depth-buffer.jpg" width="100%" height="100%" />
-
+<p><img class="webgl_center" src="resources/cubes-with-depth-buffer.jpg" width="100%" height="100%" /></p>
 <p>It&#39;s important to note WebGL only promises certain combinations of attachments work.
 <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/#FBO_ATTACHMENTS">According to the spec</a>
 the only guaranteed combinations of attachments are:</p>
@@ -297,7 +301,8 @@ the only guaranteed combinations of attachments are:</p>
 </ul>
 <p>For any other combinations you must check if the user&#39;s system/gpu/driver/browser supports that combination.
 To check you make your framebuffer, create and attach the attachments, then call</p>
-<pre><code>var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);</code></pre><p>If the status is <code>FRAMEBUFFER_COMPLETE</code> then that combination of attachments works for that user.
+<pre><code>var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+</code></pre><p>If the status is <code>FRAMEBUFFER_COMPLETE</code> then that combination of attachments works for that user.
 Otherwise it does not work and you&#39;ll have to do something else like tell the user they are out of luck
 or fallback to some other method.</p>
 <p>If you haven&#39;t yet check out <a href="webgl-less-code-more-fun.html">simplifying WebGL with less code more fun</a>.</p>

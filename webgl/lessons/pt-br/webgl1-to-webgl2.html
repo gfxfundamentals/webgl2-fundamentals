@@ -86,7 +86,8 @@ Se você usar apenas os recursos da WebGL1, então há
 apenas 2 diferenças.</p>
 <ol>
 <li><p>Você usa <code>&quot; webgl2 &quot;</code> em vez de <code>&quot; webgl &quot;</code> ao chamar <code>getContext</code></p>
-<pre><code>var gl = someCanvas.getContext(&quot;webgl2&quot;);</code></pre><p>Nota: não há &quot;experimental-webgl2&quot;. Os fornecedores do navegador se
+<pre><code>var gl = someCanvas.getContext(&quot;webgl2&quot;);
+</code></pre><p>Nota: não há &quot;experimental-webgl2&quot;. Os fornecedores do navegador se
 reuniram e decidiram não mais prefixar coisas porque os sites
 dependem do prefixo.</p>
 </li>
@@ -99,8 +100,10 @@ if (!ext) {
   // Diga ao usuário que ele não têm a extensão necessária ou trabalhar em torno dela
 } else {
   var someVAO = ext.createVertexArrayOES();
-}</code></pre><p>Na WebGL2 você faria isso</p>
-<pre><code>var someVAO = gl.createVertexArray();</code></pre><p>Porque ele só existe.</p>
+}
+</code></pre><p>Na WebGL2 você faria isso</p>
+<pre><code>var someVAO = gl.createVertexArray();
+</code></pre><p>Porque ele só existe.</p>
 </li>
 </ol>
 <p>Caso contrário, todas as suas coisas WebGL1 devem funcionar.</p>
@@ -109,56 +112,68 @@ algumas mudanças.</p>
 <h2 id="mude-para-glsl-300-es">Mude para GLSL 300 es</h2>
 <p>A maior mudança é que você deve atualizar seus shaders para GLSL 3,00 ES. Para
 fazer isso, a primeira linha de seus shaders precisa ser</p>
-<pre><code>#version 300 es</code></pre><p><strong>NOTA: ESTA TEM QUE SER A PRIMEIRA LINHA! Sem comentários, sem linhas em branco antes de permitir.</strong></p>
+<pre><code>#version 300 es
+</code></pre><p><strong>NOTA: ESTA TEM QUE SER A PRIMEIRA LINHA! Sem comentários, sem linhas em branco antes de permitir.</strong></p>
 <p>Em outras palavras, isso é ruim</p>
 <pre><code>// RUIM!!!!                +---Há uma nova linha aqui!
 // RUIM!!!!                V
 var vertexShaderSource = `
 #version 300 es
 ..
-`;</code></pre><p>Isso também é ruim</p>
+`;
+</code></pre><p>Isso também é ruim</p>
 <pre><code>&lt;!-- RUIM!!                   V&lt;- há uma nova linha aqui!
 &lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;
 #version 300 es
 ...
-&lt;/script&gt;</code></pre><p>Isso é bom</p>
+&lt;/script&gt;
+</code></pre><p>Isso é bom</p>
 <pre><code>var vertexShaderSource = `#version 300 es
 ...
-`;</code></pre><p>Isso também é bom</p>
+`;
+</code></pre><p>Isso também é bom</p>
 <pre><code>&lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;#version 300 es
 ...
-&lt;/script&gt;</code></pre><p>Ou você poderia fazer com que suas funções de compilação de shader tirem
+&lt;/script&gt;
+</code></pre><p>Ou você poderia fazer com que suas funções de compilação de shader tirem
 as primeiras linhas em branco.</p>
 <h3 id="mudan-as-em-glsl-300-es-de-glsl-100">Mudanças em GLSL 300 es de GLSL 100</h3>
 <p>Há várias mudanças que você precisa para fazer o seus shaders
 de cima para adicionar a cadeia de versão anterior</p>
-<h4 id="attribute-in"><code>attribute</code> -&gt; <code>in</code></h4>
+<h4 id="-attribute-in-"><code>attribute</code> -&gt; <code>in</code></h4>
 <p>No GLSL 100 você pode ter</p>
 <pre><code>attribute vec4 a_position;
 attribute vec2 a_texcoord;
-attribute vec3 a_normal;</code></pre><p>Em GLSL 300 es se torna</p>
+attribute vec3 a_normal;
+</code></pre><p>Em GLSL 300 es se torna</p>
 <pre><code>in vec4 a_position;
 in vec2 a_texcoord;
-in vec3 a_normal;</code></pre><h4 id="varying-to-in-out"><code>varying</code> to <code>in</code> / <code>out</code></h4>
+in vec3 a_normal;
+</code></pre><h4 id="-varying-to-in-out-"><code>varying</code> to <code>in</code> / <code>out</code></h4>
 <p>No GLSL 100, você pode declarar uma variação tanto no vertex
 como nos fragmentos shaders como esse</p>
 <pre><code>varying vec2 v_texcoord;
-varying vec3 v_normal;</code></pre><p>Em GLSL 300 es no vertex shader as variações se tornam</p>
+varying vec3 v_normal;
+</code></pre><p>Em GLSL 300 es no vertex shader as variações se tornam</p>
 <pre><code>out vec2 v_texcoord;
-out vec3 v_normal;</code></pre><p>E no fragmento shader eles se tornam</p>
+out vec3 v_normal;
+</code></pre><p>E no fragmento shader eles se tornam</p>
 <pre><code>in vec2 v_texcoord;
-in vec3 v_normal;</code></pre><h4 id="n-o-mais-gl_fragcolor">Não mais <code>gl_FragColor</code></h4>
+in vec3 v_normal;
+</code></pre><h4 id="n-o-mais-gl_fragcolor-">Não mais <code>gl_FragColor</code></h4>
 <p>No GLSL 100, seu fragmento shader configuraria a variável
 especial <code>gl_FragColor</code> para definir a saída do shader.</p>
-<pre><code>gl_FragColor = vec4(1, 0, 0, 1);  // red</code></pre><p>Em GLSL 300 es, você declara sua própria variável de saída e
+<pre><code>gl_FragColor = vec4(1, 0, 0, 1);  // red
+</code></pre><p>Em GLSL 300 es, você declara sua própria variável de saída e
 depois configura-a.</p>
 <pre><code>out vec4 myOutputColor;
 
 void main() {
    myOutputColor = vec4(1, 0, 0, 1);  // red
-}</code></pre><p>Nota: Você pode escolher qualquer nome que desejar, mas os nomes <strong>não</strong> podem começar
+}
+</code></pre><p>Nota: Você pode escolher qualquer nome que desejar, mas os nomes <strong>não</strong> podem começar
 com <code>gl_</code>, então você não pode simplesmente fazer <code>out vec4 gl_FragColor</code></p>
-<h4 id="texture2d-texture-etc-"><code>texture2D</code> -&gt; <code>texture</code> etc.</h4>
+<h4 id="-texture2d-texture-etc-"><code>texture2D</code> -&gt; <code>texture</code> etc.</h4>
 <p>No GLSL 100 você obtém uma cor de uma textura como essa</p>
 <pre><code>uniform sampler2D u_some2DTexture;
 uniform samplerCube u_someCubeTexture;
@@ -166,7 +181,8 @@ uniform samplerCube u_someCubeTexture;
 ...
 
 vec4 color1 = texture2D(u_some2DTexture, ...);
-vec4 color2 = textureCube(u_someCubeTexture, ...);</code></pre><p>No GLSL 300es, as funções de textura sabem automaticamente o
+vec4 color2 = textureCube(u_someCubeTexture, ...);
+</code></pre><p>No GLSL 300es, as funções de textura sabem automaticamente o
 que fazer com base no tipo de amostrador, então agora é apenas
 <code>texture</code></p>
 <pre><code>uniform sampler2D u_some2DTexture;
@@ -175,7 +191,8 @@ uniform samplerCube u_someCubeTexture;
 ...
 
 vec4 color1 = texture(u_some2DTexture, ...);
-vec4 color2 = texture(u_someCubeTexture, ...);</code></pre><h2 id="caracter-sticas-que-voc-pode-dar-como-certo">Características que você pode dar como certo</h2>
+vec4 color2 = texture(u_someCubeTexture, ...);
+</code></pre><h2 id="caracter-sticas-que-voc-pode-dar-como-certo">Características que você pode dar como certo</h2>
 <p>No WebGL1, muitos recursos eram extensões opcionais. No WebGL2,
 todos os itens seguintes são características padrão</p>
 <ul>
@@ -238,16 +255,20 @@ foram para o estado WebGL global. Você pode imaginar isso assim</p>
       { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
       { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
     ],
-  },</code></pre><p>   }</p>
+  },
+</code></pre><p>   }</p>
 <p>Chamar funções como <code>gl.vertexAttribPointer</code>,<code>gl.enableVertexAttribArray</code> e
 <code>gl.bindBuffer (gl.ELEMENT_ARRAY_BUFFER, ??)</code> afetariam esse estado global.
 Antes de cada coisa que você queria desenhar, você precisava configurar todos os atributos e, se você
 estivesse desenhando dados indexados, você precisava configurar o <code>ELEMENT_ARRAY_BUFFER</code>.</p>
 <p>Com objeto Vertex Array, todo o <code>attributeState</code> acima se torna um <em>Vertex Array</em>.</p>
 <p>Em outras palavras</p>
-<pre><code>var someVAO = gl.createVertexArray();</code></pre><p>Faz uma nova instância da coisa acima chamada <code>attributeState</code>.</p>
-<pre><code>gl.bindVertexArray(someVAO);</code></pre><p>É equivalente a</p>
-<pre><code>glState.attributeState = someVAO;</code></pre><p>O que isto significa é que você deve configurar todos os seus atributos em tempo de inicialização agora.</p>
+<pre><code>var someVAO = gl.createVertexArray();
+</code></pre><p>Faz uma nova instância da coisa acima chamada <code>attributeState</code>.</p>
+<pre><code>gl.bindVertexArray(someVAO);
+</code></pre><p>É equivalente a</p>
+<pre><code>glState.attributeState = someVAO;
+</code></pre><p>O que isto significa é que você deve configurar todos os seus atributos em tempo de inicialização agora.</p>
 <pre><code>// no tempo inicial
 for each model / geometry / ...
   var vao = gl.createVertexArray()
@@ -258,9 +279,11 @@ for each model / geometry / ...
     gl.vertexAttribPointer(...);
   if indexed geometry
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-  gl.bindVertexArray(null);</code></pre><p>Então no tempo de renderização para usar uma geometria particular, tudo o que você precisa fazer 
+  gl.bindVertexArray(null);
+</code></pre><p>Então no tempo de renderização para usar uma geometria particular, tudo o que você precisa fazer 
 é</p>
-<pre><code>gl.bindVertexArray(vaoForGeometry);</code></pre><p>No WebGL1, o objeto de loop de inicialização teria aparecido no tempo de renderização.
+<pre><code>gl.bindVertexArray(vaoForGeometry);
+</code></pre><p>No WebGL1, o objeto de loop de inicialização teria aparecido no tempo de renderização.
 Esta é uma grande velocidade!</p>
 <p>Há algumas advertências:</p>
 <ol>
@@ -272,14 +295,16 @@ No GLSL 300 es você pode fazer isso no shader</p>
 <pre><code>layout(location = 0) in vec4 a_position;
 layout(location = 1) in vec2 a_texcoord;
 layout(location = 2) in vec3 a_normal;
-layout(location = 3) in vec4 a_color;</code></pre><p>Define os locais dos 4 atributos.</p>
+layout(location = 3) in vec4 a_color;
+</code></pre><p>Define os locais dos 4 atributos.</p>
 <p>Você ainda pode fazer o modo WebGL1 chamando
 <code>gl.bindAttribLocation</code> antes de chamar <code>gl.linkProgram</code>.</p>
 <p>Por example:</p>
 <pre><code>gl.bindAttribLocation(someProgram, 0, &quot;a_position&quot;);
 gl.bindAttribLocation(someProgram, 1, &quot;a_texcoord&quot;);
 gl.bindAttribLocation(someProgram, 2, &quot;a_normal&quot;);
-gl.bindAttribLocation(someProgram, 3, &quot;a_color&quot;);</code></pre><p>Isso significa que você pode forçá-los a serem compatíveis em vários programas de
+gl.bindAttribLocation(someProgram, 3, &quot;a_color&quot;);
+</code></pre><p>Isso significa que você pode forçá-los a serem compatíveis em vários programas de
 shader. Se um programa não precisa de todos os atributos,
 os atributos que eles precisam ainda serão atribuídos
 aos mesmos locais</p>
@@ -294,7 +319,8 @@ estar em todos os shaders, então, no interesse de DRY <code>gl.bindAttribLocati
 parece melhor. Talvez, se eu estivesse usando um gerador de shader, não haveria diferença.</p>
 </li>
 <li><p>Sempre desvincular o VAO quando terminar</p>
-<pre><code>gl.bindVertexArray(null);</code></pre><p>Isso só vem da minha própria experiência. Se você olhar acima, o
+<pre><code>gl.bindVertexArray(null);
+</code></pre><p>Isso só vem da minha própria experiência. Se você olhar acima, o
 estado <code>ELEMENT_ARRAY_BUFFER</code> faz parte de uma Vertex Array.</p>
 <p>Então, encontrei esse problema. Eu criei uma geometria, então
 criei um VAO para essa geometria e configurei os atributos
@@ -336,28 +362,28 @@ Dessa forma, o resto do seu código pode permanecer o mesmo. Exemplo:</p>
 var gl = someCanvas.getContext("webgl");
 var haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object"));
 
-<p>function getAndApplyExtension(gl, name) {
+function getAndApplyExtension(gl, name) {
   var ext = gl.getExtension(name);
   if (!ext) {
     return false;
   }
-  var suffix = name.split(&quot;_&quot;)[0];
-  var prefix = suffix = &#39;_&#39;;
-  var suffixRE = new RegExp(suffix + &#39;$&#39;);
-  var prefixRE = new RegExp(&#39;^&#39; + prefix);
+  var suffix = name.split("_")[0];
+  var prefix = suffix = '_';
+  var suffixRE = new RegExp(suffix + '$');
+  var prefixRE = new RegExp('^' + prefix);
   for (var key in ext) {
     var val = ext[key];
-    if (typeof(val) === &#39;function&#39;) {
-      // remover sufixo (ex: bindVertexArrayOES -&gt; bindVertexArray)
-      var unsuffixedKey = key.replace(suffixRE, &#39;&#39;);
+    if (typeof(val) === 'function') {
+      // remover sufixo (ex: bindVertexArrayOES -> bindVertexArray)
+      var unsuffixedKey = key.replace(suffixRE, '');
       if (key.substing)
       gl[unprefixedKey] = ext[key].bind(ext);
     } else {
-      var unprefixedKey = key.replace(prefixRE, &#39;&#39;);
+      var unprefixedKey = key.replace(prefixRE, '');
       gl[unprefixedKey] = ext[key];
     }
   }
-</pre></p>
+</pre>
 <p>Agora, seu código pode funcionar da mesma forma em ambos. Exemplo:</p>
 <pre class="prettyprint">
 if (haveVAOs) {

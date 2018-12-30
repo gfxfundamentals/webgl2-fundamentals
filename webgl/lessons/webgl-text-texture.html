@@ -90,8 +90,7 @@ a limitation that the text can not be obscured by other 3d objects. To do that w
 actually need to draw the text in WebGL.</p>
 <p>The simplest way to do that is to make textures with text in them. You could for example
 go into Photoshop or some other paint program and draw an image with some text in it.</p>
-<img class="webgl_center" src="resources/my-awesme-text.png" />
-
+<p><img class="webgl_center" src="resources/my-awesme-text.png" /></p>
 <p>Then make some plane geometry and display it. This is actually how some games I&#39;ve
 worked on did all their text. For example Locoroco only had about 270 strings. It was
 localized into 17 languages. We had an Excel sheet with all the languages and a script
@@ -113,7 +112,8 @@ function makeTextCanvas(text, width, height) {
   textCtx.clearRect(0, 0, textCtx.canvas.width, textCtx.canvas.height);
   textCtx.fillText(text, width / 2, height / 2);
   return textCtx.canvas;
-}</code></pre><p>Now that we need to draw 2 different things in WebGL, the &#39;F&#39; and our text, I&#39;m going
+}
+</code></pre><p>Now that we need to draw 2 different things in WebGL, the &#39;F&#39; and our text, I&#39;m going
 to switch over to <a href="webgl-drawing-multiple-things.html">using some helper functions as described in a previous article</a>.
 If it&#39;s not clear what <code>programInfo</code>, <code>bufferInfo</code>, etc are see that article.</p>
 <p>So, let&#39;s create the &#39;F&#39; and a unit quad.</p>
@@ -125,14 +125,16 @@ var fVAO = webglUtils.createVAOFromBufferInfo(
 // Create a unit quad for the &#39;text&#39;
 var textBufferInfo = primitives.createXYQuadBufferInfo(gl, 1);
 var textVAO = webglUtils.createVAOFromBufferInfo(
-    gl, textProgramInfo, textBufferInfo);</code></pre><p>The XY quad is a quad (square) that&#39;s 1 unit big. This one is centered at the origin. Being 1 unit
+    gl, textProgramInfo, textBufferInfo);
+</code></pre><p>The XY quad is a quad (square) that&#39;s 1 unit big. This one is centered at the origin. Being 1 unit
 it&#39;s extents are -0.5, -0.5 and 0.5, 0.5</p>
 <p>Next create 2 shaders</p>
 <pre><code>// setup GLSL programs
 var fProgramInfo = webglUtils.createProgramInfo(
     gl, [fVertexShaderSource, fFragmentShaderSource]);
 var textProgramInfo = webglUtils.createProgramInfo(
-    gl, [textVertexShaderSource, textFragmentShaderSource]);</code></pre><p>And create our text texture. We generate mips since the text will get small</p>
+    gl, [textVertexShaderSource, textFragmentShaderSource]);
+</code></pre><p>And create our text texture. We generate mips since the text will get small</p>
 <pre><code>// create text texture.
 var textCanvas = makeTextCanvas(&quot;Hello!&quot;, 100, 26);
 var textWidth  = textCanvas.width;
@@ -142,7 +144,8 @@ gl.bindTexture(gl.TEXTURE_2D, textTex);
 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textCanvas);
 gl.generateMipmap(gl.TEXTURE_2D);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);</code></pre><p>Setup uniforms for both the &#39;F&#39; and text</p>
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+</code></pre><p>Setup uniforms for both the &#39;F&#39; and text</p>
 <pre><code>var fUniforms = {
   u_matrix: m4.identity(),
 };
@@ -150,7 +153,8 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);</code></pr
 var textUniforms = {
   u_matrix: m4.identity(),
   u_texture: textTex,
-};</code></pre><p>Now when we compute the matrices for the F we start with the viewMatrix instead
+};
+</code></pre><p>Now when we compute the matrices for the F we start with the viewMatrix instead
 of the viewProjectionMatrix like other samples. We multply that by the parts
 that make up our F&#39;s orientation</p>
 <pre><code>var fViewMatrix = m4.translate(viewMatrix,
@@ -159,8 +163,10 @@ fViewMatrix = m4.xRotate(fViewMatrix, rotation[0]);
 fViewMatrix = m4.yRotate(fViewMatrix, rotation[1] + yy * xx * 0.2);
 fViewMatrix = m4.zRotate(fViewMatrix, rotation[2] + now + (yy * 3 + xx) * 0.1);
 fViewMatrix = m4.scale(fViewMatrix, scale[0], scale[1], scale[2]);
-fViewMatrix = m4.translate(fViewMatrix, -50, -75, 0);</code></pre><p>Then finally we we multiply in the projectionMatrix when setting our uniform value.</p>
-<pre><code>fUniforms.u_matrix = m4.multiply(projectionMatrix, fViewMatrix);</code></pre><p>It&#39;s important to note here that <code>projectionMatrix</code> is on the left. This lets us
+fViewMatrix = m4.translate(fViewMatrix, -50, -75, 0);
+</code></pre><p>Then finally we we multiply in the projectionMatrix when setting our uniform value.</p>
+<pre><code>fUniforms.u_matrix = m4.multiply(projectionMatrix, fViewMatrix);
+</code></pre><p>It&#39;s important to note here that <code>projectionMatrix</code> is on the left. This lets us
 multiply in the projectionMatrix as though it was the first matrix. Normally
 we multiply on the right.</p>
 <p>Drawing the F looks like this</p>
@@ -174,14 +180,16 @@ fUniforms.u_matrix = m4.multiply(projectionMatrix, fViewMatrix);
 
 webglUtils.setUniforms(fProgramInfo, fUniforms);
 
-webglUtils.drawBufferInfo(gl, fBufferInfo);</code></pre><p>For the text we start with the projectionMatrix and then get only the position
+webglUtils.drawBufferInfo(gl, fBufferInfo);
+</code></pre><p>For the text we start with the projectionMatrix and then get only the position
 from the fViewMatrix we saved before. This will get us a space in front the view.
 We also need to scale our unit quad to match the dimensions of the texture.</p>
 <pre><code>// use just the view position of the &#39;F&#39; for the text
 var textMatrix = m4.translate(projectionMatrix,
     fViewMatrix[12], fViewMatrix[13], fViewMatrix[14]);
 // scale the F to the size we need it.
-textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);</code></pre><p>And then render the text</p>
+textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
+</code></pre><p>And then render the text</p>
 <pre><code>// setup to draw the text.
 gl.useProgram(textProgramInfo.program);
 
@@ -191,7 +199,8 @@ m4.copy(textMatrix, textUniforms.u_matrix);
 webglUtils.setUniforms(textProgramInfo, textUniforms);
 
 // Draw the text.
-webglUtils.drawBufferInfo(gl, textBufferInfo);</code></pre><p>So here it is</p>
+webglUtils.drawBufferInfo(gl, textBufferInfo);
+</code></pre><p>So here it is</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture.html" target="_blank">click here to open in a separate window</a>
@@ -202,10 +211,12 @@ webglUtils.drawBufferInfo(gl, textBufferInfo);</code></pre><p>So here it is</p>
 we&#39;re drawing a quad. The default color of the canvas is transparent black (0,0,0,0) and
 we&#39;re drawing that color in the quad. We could instead blend our pixels.</p>
 <pre><code>gl.enable(gl.BLEND);
-gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);</code></pre><p>This makes it take the source pixel (the color from our fragment shader) and combine it
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+</code></pre><p>This makes it take the source pixel (the color from our fragment shader) and combine it
 with the dest pixel (the color in the canvas) according to the blend function. We&#39;ve set the
 blend function to <code>SRC_ALPHA</code> for source  and <code>ONE_MINUS_SRC_ALPHA</code> for dest.</p>
-<pre><code>result = dest * (1 - src_alpha) + src * src_alpha</code></pre><p>so for example if the dest is green <code>0,1,0,1</code> and the source is red <code>1,0,0,1</code> we&#39;d have</p>
+<pre><code>result = dest * (1 - src_alpha) + src * src_alpha
+</code></pre><p>so for example if the dest is green <code>0,1,0,1</code> and the source is red <code>1,0,0,1</code> we&#39;d have</p>
 <pre><code>src = [1, 0, 0, 1]
 dst = [0, 1, 0, 1]
 src_alpha = src[3]  // this is 1
@@ -215,7 +226,8 @@ result = dst * (1 - src_alpha) + src * src_alpha
 result = dst * 0 + src * 1
 
 // which is the same as
-result = src</code></pre><p>For the parts of the texture with transparent black <code>0,0,0,0</code></p>
+result = src
+</code></pre><p>For the parts of the texture with transparent black <code>0,0,0,0</code></p>
 <pre><code>src = [0, 0, 0, 0]
 dst = [0, 1, 0, 1]
 src_alpha = src[3]  // this is 0
@@ -225,7 +237,8 @@ result = dst * (1 - src_alpha) + src * src_alpha
 result = dst * 1 + src * 0
 
 // which is the same as
-result = dst</code></pre><p>Here&#39;s the result with blending enabled.</p>
+result = dst
+</code></pre><p>Here&#39;s the result with blending enabled.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-enable-blend.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-enable-blend.html" target="_blank">click here to open in a separate window</a>
@@ -234,8 +247,7 @@ result = dst</code></pre><p>Here&#39;s the result with blending enabled.</p>
 </p>
 <p>You can see it&#39;s better but it&#39;s still not perfect. If you look
 close you&#39;ll sometimes see this issue</p>
-<img class="webgl_center" src="resources/text-zbuffer-issue.png" />
-
+<p><img class="webgl_center" src="resources/text-zbuffer-issue.png" /></p>
 <p>What&#39;s happening? We&#39;re currently drawing an F then its text, then the next F
 then its text repeated. We still have a <a href="webgl-3d-orthographic.html">depth buffer</a> so when we draw the
 text for an F, even though blending made some pixels stay the background color
@@ -248,14 +260,18 @@ rendering is to draw all the opaque stuff first, then after, draw all the transp
 stuff sorted by z distance with the depth buffer testing on but depth buffer updating off.</p>
 <p>Let&#39;s first separate drawing of the opaque stuff (the Fs) from the transparent stuff (the text).
 First we&#39;ll declare something to remember the text positions.</p>
-<pre><code>var textPositions = [];</code></pre><p>And in the loop for rendering the Fs we&#39;ll remember those positions</p>
+<pre><code>var textPositions = [];
+</code></pre><p>And in the loop for rendering the Fs we&#39;ll remember those positions</p>
 <pre><code>// remember the position for the text
-textPositions.push([fViewMatrix[12], fViewMatrix[13], fViewMatrix[14]]);</code></pre><p>Before we draw the &#39;F&#39;s we&#39;ll disable blending and turn on writing to the depth buffer</p>
+textPositions.push([fViewMatrix[12], fViewMatrix[13], fViewMatrix[14]]);
+</code></pre><p>Before we draw the &#39;F&#39;s we&#39;ll disable blending and turn on writing to the depth buffer</p>
 <pre><code>gl.disable(gl.BLEND);
-gl.depthMask(true);</code></pre><p>For drawing the text we&#39;ll turn on blending and turn off writing to the depth buffer.</p>
+gl.depthMask(true);
+</code></pre><p>For drawing the text we&#39;ll turn on blending and turn off writing to the depth buffer.</p>
 <pre><code>gl.enable(gl.BLEND);
 gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-gl.depthMask(false);</code></pre><p>And then draw text at all the positions we saved</p>
+gl.depthMask(false);
+</code></pre><p>And then draw text at all the positions we saved</p>
 <pre><code>textPositions.forEach(function(pos) {
   // use just the view position of the &#39;F&#39; for the text
   var textMatrix = m4.translate(projectionMatrix,
@@ -273,7 +289,8 @@ gl.depthMask(false);</code></pre><p>And then draw text at all the positions we s
 
   // Draw the text.
   webglUtils.drawBufferInfo(gl, textBufferInfo);
-});</code></pre><p>And now it mostly works</p>
+});
+</code></pre><p>And now it mostly works</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-separate-opaque-from-transparent.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-separate-opaque-from-transparent.html" target="_blank">click here to open in a separate window</a>
@@ -304,7 +321,8 @@ var textMatrix = m4.translate(projectionMatrix,
 // scale the F to the size we need it.
 textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
 // because pos is in view space that means it&#39;s a vector from the eye to
-// some position. So translate along that vector back toward the eye some distance</code></pre><p>Here&#39;s that.</p>
+// some position. So translate along that vector back toward the eye some distance
+</code></pre><p>Here&#39;s that.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-moved-toward-view.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-moved-toward-view.html" target="_blank">click here to open in a separate window</a>
@@ -312,18 +330,19 @@ textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
 
 </p>
 <p>You still might notice an issue with the edges of the letters.</p>
-<img class="webgl_center" src="resources/text-gray-outline.png" />
-
+<p><img class="webgl_center" src="resources/text-gray-outline.png" /></p>
 <p>The issue here is the Canvas 2D API produces only premultiplied alpha values.
 When we upload the contents of the canvas to a texture WebGL tries to unpremultiply
 the values but it can&#39;t do this perfectly because premultiplied alpha is lossy.</p>
 <p>To fix that let&#39;s tell WebGL not to unpremultiply</p>
-<pre><code>gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);</code></pre><p>This tells WebGL to supply premultiplied alpha values to <code>gl.texImage2D</code> and <code>gl.texSubImage2D</code>.
+<pre><code>gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+</code></pre><p>This tells WebGL to supply premultiplied alpha values to <code>gl.texImage2D</code> and <code>gl.texSubImage2D</code>.
 If the data passed to <code>gl.texImage2D</code> is already premultiplied as it is for Canvas 2D data then
 WebGL can just pass it through.</p>
 <p>We also need to change the blending function</p>
 <pre><code>-gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-+gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);</code></pre><p>The old one multiplied the src color by its alpha. That&#39;s what <code>SRC_ALPHA</code> means. But
++gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+</code></pre><p>The old one multiplied the src color by its alpha. That&#39;s what <code>SRC_ALPHA</code> means. But
 now our texture&#39;s data has already been multiplied by its alpha. That&#39;s what premultiplied means.
 So we don&#39;t need the GPU to do the multiplication. Setting it to <code>ONE</code> means multiply by 1.</p>
 <p><div class="webgl_example_container">
@@ -352,7 +371,8 @@ var textMatrix = m4.translate(projectionMatrix,
     viewX, viewY, viewZ);
 // scale the F to the size we need it.
 textMatrix = m4.scale(textMatrix, textWidth * scale, textHeight * scale, 1);
-...</code></pre><p><div class="webgl_example_container">
+...
+</code></pre><p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-consistent-scale.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-consistent-scale.html" target="_blank">click here to open in a separate window</a>
 </div>
@@ -395,16 +415,20 @@ var textTextures = [
     width: textWidth,
     height: textHeight,
   };
-});</code></pre><p>Then at render time select a texture</p>
+});
+</code></pre><p>Then at render time select a texture</p>
 <pre><code>*textPositions.forEach(function(pos, ndx) {
 
   +// select a texture
-  +var tex = textTextures[ndx];</code></pre><p>Use that textures size in our matrix calculations</p>
+  +var tex = textTextures[ndx];
+</code></pre><p>Use that textures size in our matrix calculations</p>
 <pre><code>  var textMatrix = m4.translate(projectionMatrix,
       viewX, viewY, viewZ);
   // scale the F to the size we need it.
-  *textMatrix = m4.scale(textMatrix, tex.width * scale, tex.height * scale, 1);</code></pre><p>and set the uniform for the texture before drawing</p>
-<pre><code>  textUniforms.u_texture = tex.texture;</code></pre><p><div class="webgl_example_container">
+  *textMatrix = m4.scale(textMatrix, tex.width * scale, tex.height * scale, 1);
+</code></pre><p>and set the uniform for the texture before drawing</p>
+<pre><code>  textUniforms.u_texture = tex.texture;
+</code></pre><p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-different-text.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-different-text.html" target="_blank">click here to open in a separate window</a>
 </div>
@@ -422,8 +446,10 @@ uniform sampler2D u_texture;
 
 void main() {
 *   gl_FragColor = texture2D(u_texture, v_texcoord) * u_color;
-}</code></pre><p>And when we draw the text into the canvas use white</p>
-<pre><code>textCtx.fillStyle = &quot;white&quot;;</code></pre><p>Then we&#39;ll make some colors</p>
+}
+</code></pre><p>And when we draw the text into the canvas use white</p>
+<pre><code>textCtx.fillStyle = &quot;white&quot;;
+</code></pre><p>Then we&#39;ll make some colors</p>
 <pre><code>// colors, 1 for each F
 var colors = [
   [0.0, 0.0, 0.0, 1], // 0
@@ -442,9 +468,11 @@ var colors = [
   [0.0, 0.0, 5.0, 1], // 13,
   [0.5, 5.0, 5.0, 1], // 14,
   [0.0, 5.0, 5.0, 1], // 15,
-];</code></pre><p>At draw time we select a color</p>
+];
+</code></pre><p>At draw time we select a color</p>
 <pre><code>// set color uniform
-textUniforms.u_color = colors[ndx];</code></pre><p>Colors</p>
+textUniforms.u_color = colors[ndx];
+</code></pre><p>Colors</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-different-colors.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-different-colors.html" target="_blank">click here to open in a separate window</a>

@@ -126,11 +126,13 @@ In other words here&#39;s a small table for limit values</p>
     45   |    .79  |     .71
     67   |   1.17  |     .39
     90   |   1.57  |    0.0
-   180   |   3.14  |   -1.0</code></pre><p>Then we can the just check</p>
+   180   |   3.14  |   -1.0
+</code></pre><p>Then we can the just check</p>
 <pre><code>dotFromDirection = dot(surfaceToLight, -lightDirection)
 if (dotFromDirection &gt;= limitInDotSpace) {
    // do the lighting
-}</code></pre><p>Let&#39;s do that</p>
+}
+</code></pre><p>Let&#39;s do that</p>
 <p>First let&#39;s modify our fragment shader from
 <a href="webgl-3d-lighting-point.html">the last article</a>.</p>
 <pre><code>#version 300 es
@@ -180,7 +182,8 @@ void main() {
 
   // Just add in the specular
   outColor.rgb += specular;
-}</code></pre><p>Of course we need to look up the locations of the uniforms we
+}
+</code></pre><p>Of course we need to look up the locations of the uniforms we
 just added.</p>
 <pre><code>  var lightDirection = [?, ?, ?];
   var limit = degToRad(20);
@@ -188,9 +191,11 @@ just added.</p>
   ...
 
   var lightDirectionLocation = gl.getUniformLocation(program, &quot;u_lightDirection&quot;);
-  var limitLocation = gl.getUniformLocation(program, &quot;u_limit&quot;);</code></pre><p>and we need to set them</p>
+  var limitLocation = gl.getUniformLocation(program, &quot;u_limit&quot;);
+</code></pre><p>and we need to set them</p>
 <pre><code>    gl.uniform3fv(lightDirectionLocation, lightDirection);
-    gl.uniform1f(limitLocation, Math.cos(limit));</code></pre><p>And here it is</p>
+    gl.uniform1f(limitLocation, Math.cos(limit));
+</code></pre><p>And here it is</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-spot.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-spot.html" target="_blank">click here to open in a separate window</a>
@@ -223,13 +228,15 @@ second value is greater than or equal the first it returns 1.0. Otherwise it ret
    } else {
        return 0;
    }
-}</code></pre><p>Let&#39;s use <code>step</code> to get rid of the conditions</p>
+}
+</code></pre><p>Let&#39;s use <code>step</code> to get rid of the conditions</p>
 <pre><code>  float dotFromDirection = dot(surfaceToLightDirection,
                                -u_lightDirection);
   // inLight will be 1 if we&#39;re inside the spotlight and 0 if not
   float inLight = step(u_limit, dotFromDirection);
   float light = inLight * dot(normal, surfaceToLightDirection);
-  float specular = inLight * pow(dot(normal, halfVector), u_shininess);</code></pre><p>Nothing changes visually but here is that</p>
+  float specular = inLight * pow(dot(normal, halfVector), u_shininess);
+</code></pre><p>Nothing changes visually but here is that</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-spot-using-step.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-spot-using-step.html" target="_blank">click here to open in a separate window</a>
@@ -274,14 +281,16 @@ need to make sure in our JavaScript that <code>u_innerLimit</code> is never equa
 called <code>smoothstep</code> and like <code>step</code> it returns a value from 0 to 1 but
 it takes both an lower and upper bound and lerps between 0 and 1 between
 those bounds.</p>
-<pre><code> smoothstep(lowerBound, upperBound, value)</code></pre><p>Let&#39;s do that</p>
+<pre><code> smoothstep(lowerBound, upperBound, value)
+</code></pre><p>Let&#39;s do that</p>
 <pre><code>  float dotFromDirection = dot(surfaceToLightDirection,
                                -u_lightDirection);
 -  float limitRange = u_innerLimit - u_outerLimit;
 -  float inLight = clamp((dotFromDirection - u_outerLimit) / limitRange, 0.0, 1.0);
   float inLight = smoothstep(u_outerLimit, u_innerLimit, dotFromDirection);
   float light = inLight * dot(normal, surfaceToLightDirection);
-  float specular = inLight * pow(dot(normal, halfVector), u_shininess);</code></pre><p>That works too</p>
+  float specular = inLight * pow(dot(normal, halfVector), u_shininess);
+</code></pre><p>That works too</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-spot-falloff-using-smoothstep.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-spot-falloff-using-smoothstep.html" target="_blank">click here to open in a separate window</a>
@@ -291,8 +300,7 @@ those bounds.</p>
 <p>The difference is <code>smoothstep</code> uses a hermite interpolation instead of a
 linear interpolation. That means between <code>lowerBound</code> and <code>upperBound</code>
 it intepolates like the image below on the right whereas a linear interpolation is like the image on the left.</p>
-<img class="webgl_center" src="resources/linear-vs-hermite.png" />
-
+<p><img class="webgl_center" src="resources/linear-vs-hermite.png" /></p>
 <p>It&#39;s up to you if you think the difference matters.</p>
 <p>One other thing to be aware is the <code>smoothstep</code> function has undefined
 results if the <code>lowerBound</code> is greater than or equal to <code>upperBound</code>. Having
@@ -318,42 +326,62 @@ Results are undefined if ∣x∣ > 1.</p>
 
 
 <pre class="prettyprint"><code>genType acos (genType x)</code></pre><p>Arc cosine. Returns an angle whose cosine is x. The
-<p>range of values returned by this function is [0, π].
-Results are undefined if ∣x∣ &gt; 1.</p></p>
+range of values returned by this function is [0, π].
+Results are undefined if ∣x∣ > 1.</p>
+
+
+
 <pre class="prettyprint"><code>genType atan (genType y, genType x)</code></pre><p>Arc tangent. Returns an angle whose tangent is y/x. The
-<p>signs of x and y are used to determine what quadrant the
+signs of x and y are used to determine what quadrant the
 angle is in. The range of values returned by this
 function is [−π,π]. Results are undefined if x and y
-are both 0.</p></p>
+are both 0.</p>
+
 <pre class="prettyprint"><code>genType acosh (genType x)</code></pre><p>Arc hyperbolic cosine; returns the non-negative inverse
-<p>of cosh. Results are undefined if x &lt; 1.</p></p>
+of cosh. Results are undefined if x < 1.</p>
+
 <pre class="prettyprint"><code>genType atanh (genType x)</code></pre><p>Arc hyperbolic tangent; returns the inverse of tanh.
-<p>Results are undefined if ∣x∣≥1.</p></p>
+Results are undefined if ∣x∣≥1.</p>
+
 <pre class="prettyprint"><code>genType pow (genType x, genType y)</code></pre><p>Returns x raised to the y power, i.e., x<sup>y</sup>.
-<p>Results are undefined if x &lt; 0.
-Results are undefined if x = 0 and y &lt;= 0.</p></p>
+Results are undefined if x < 0.
+Results are undefined if x = 0 and y <= 0.</p>
+
+
 <pre class="prettyprint"><code>genType log (genType x)</code></pre><p>Returns the natural logarithm of x, i.e., returns the value
-<p>y which satisfies the equation x = e<sup>y</sup>.
-Results are undefined if x &lt;= 0.</p></p>
+y which satisfies the equation x = e<sup>y</sup>.
+Results are undefined if x <= 0.</p>
+
+
 <pre class="prettyprint"><code>genType log2 (genType x)</code></pre><p>Returns the base 2 logarithm of x, i.e., returns the value
-<p>y which satisfies the equation x=2<sup>y</sup>.
-Results are undefined if x &lt;= 0.</p></p>
+y which satisfies the equation x=2<sup>y</sup>.
+Results are undefined if x <= 0.</p>
+
+
+
 <pre class="prettyprint"><code>genType sqrt (genType x)</code></pre><p>Returns √x .
-<p>Results are undefined if x &lt; 0.</p></p>
+Results are undefined if x < 0.</p>
+
+
 <pre class="prettyprint"><code>genType inversesqrt (genType x)</code></pre><p>
-<p>Returns 1/√x.
-Results are undefined if x &lt;= 0.</p></p>
+Returns 1/√x.
+Results are undefined if x <= 0.</p>
+
+
 <pre class="prettyprint"><code>genType clamp (genType x, genType minVal, genType maxVal)
 genType clamp (genType x, float minVal, float maxVal)</code></pre><p>
-<p>Returns min (max (x, minVal), maxVal).
-Results are undefined if minVal &gt; maxVal</p></p>
+Returns min (max (x, minVal), maxVal).
+Results are undefined if minVal > maxVal</p>
+
+
+
 <pre class="prettyprint"><code>genType smoothstep (genType edge0, genType edge1, genType x)
 genType smoothstep (float edge0, float edge1, genType x)</code></pre><p>
-<p>Returns 0.0 if x &lt;= edge0 and 1.0 if x &gt;= edge1 and
+Returns 0.0 if x <= edge0 and 1.0 if x >= edge1 and
 performs smooth Hermite interpolation between 0 and 1
-when edge0 &lt; x &lt; edge1. This is useful in cases where
+when edge0 < x < edge1. This is useful in cases where
 you would want a threshold function with a smooth
-transition. This is equivalent to:</p>
+transition. This is equivalent to:
 </p>
 <pre class="prettyprint">
  genType t;
@@ -366,10 +394,12 @@ transition. This is equivalent to:</p>
 <pre class="prettyprint"><code>mat2 inverse(mat2 m)
 mat3 inverse(mat3 m)
 mat4 inverse(mat4 m)</code></pre><p>
-<p>Returns a matrix that is the inverse of m. The input
+Returns a matrix that is the inverse of m. The input
 matrix m is not modified. The values in the returned
 matrix are undefined if m is singular or poorlyconditioned
-(nearly singular).</p></p>
+(nearly singular).</p>
+
+
 </div>
 
 

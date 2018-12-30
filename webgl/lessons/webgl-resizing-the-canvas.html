@@ -86,22 +86,27 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The second size is the size the canvas is displayed. CSS determines the size the canvas is
 displayed.</p>
 <p>You can set the size of the canvas&#39;s drawingbuffer in 2 ways. One using HTML</p>
-<pre><code>&lt;canvas id=&quot;c&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;</code></pre><p>The other using JavaScript</p>
-<pre><code>&lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;</code></pre><p>JavaScript</p>
+<pre><code>&lt;canvas id=&quot;c&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
+</code></pre><p>The other using JavaScript</p>
+<pre><code>&lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;
+</code></pre><p>JavaScript</p>
 <pre><code>var canvas = document.getElementById(&quot;c&quot;);
 canvas.width = 400;
-canvas.height = 300;</code></pre><p>As for setting a canvas&#39;s display size if you don&#39;t have any CSS that affects the canvas&#39;s display size
+canvas.height = 300;
+</code></pre><p>As for setting a canvas&#39;s display size if you don&#39;t have any CSS that affects the canvas&#39;s display size
 the display size will be the same size as its drawingbuffer. So in the 2 examples above the canvas&#39;s drawingbuffer is 400x300
 and its display size is also 400x300.</p>
 <p>Here&#39;s an example of a canvas whose drawingbuffer is 10x15 pixels that is displayed 400x300 pixels on the page</p>
-<pre><code>&lt;canvas id=&quot;c&quot; width=&quot;10&quot; height=&quot;15&quot; style=&quot;width: 400px; height: 300px;&quot;&gt;&lt;/canvas&gt;</code></pre><p>or for example like this</p>
+<pre><code>&lt;canvas id=&quot;c&quot; width=&quot;10&quot; height=&quot;15&quot; style=&quot;width: 400px; height: 300px;&quot;&gt;&lt;/canvas&gt;
+</code></pre><p>or for example like this</p>
 <pre><code>&lt;style&gt;
 #c {
   width: 400px;
   height: 300px;
 }
 &lt;/style&gt;
-&lt;canvas id=&quot;c&quot; width=&quot;10&quot; height=&quot;15&quot;&gt;&lt;/canvas&gt;</code></pre><p>If we draw a single pixel wide rotating line into that canvas we&#39;ll see something like this</p>
+&lt;canvas id=&quot;c&quot; width=&quot;10&quot; height=&quot;15&quot;&gt;&lt;/canvas&gt;
+</code></pre><p>If we draw a single pixel wide rotating line into that canvas we&#39;ll see something like this</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-10x15-canvas-400x300-css.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-10x15-canvas-400x300-css.html" target="_blank">click here to open in a separate window</a>
@@ -131,7 +136,8 @@ the browser to stretch the canvas to fill the window with CSS. Example</p>
   &lt;body&gt;
     &lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;
   &lt;/body&gt;
-&lt;/html&gt;</code></pre><p>Now we just need to make the drawingbuffer match whatever size the browser has stretched the canvas. We can
+&lt;/html&gt;
+</code></pre><p>Now we just need to make the drawingbuffer match whatever size the browser has stretched the canvas. We can
 do that using <code>clientWidth</code> and <code>clientHeight</code> which are properties every element in HTML has that let
 JavaScript check what size that element is being displayed.</p>
 <pre><code>function resize(canvas) {
@@ -147,12 +153,14 @@ JavaScript check what size that element is being displayed.</p>
     canvas.width  = displayWidth;
     canvas.height = displayHeight;
   }
-}</code></pre><p>Most WebGL apps <a href="webgl-animation.html">are animated</a> so let&#39;s call this function just before we render
+}
+</code></pre><p>Most WebGL apps <a href="webgl-animation.html">are animated</a> so let&#39;s call this function just before we render
 so it will always adjust the canvas to our desired size just before drawing.</p>
 <pre><code>function drawScene() {
    resize(gl.canvas);
 
-   ...</code></pre><p>And here&#39;s that</p>
+   ...
+</code></pre><p>And here&#39;s that</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-resize-canvas.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-resize-canvas.html" target="_blank">click here to open in a separate window</a>
@@ -172,7 +180,8 @@ I think it&#39;s best to just call before rendering.</p>
   // Tell WebGL how to convert from clip space to pixels
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-  ...</code></pre><p>Now it&#39;s working.</p>
+  ...
+</code></pre><p>Now it&#39;s working.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-resize-canvas-viewport.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-resize-canvas-viewport.html" target="_blank">click here to open in a separate window</a>
@@ -200,19 +209,22 @@ equals 1 CSS pixel. We can change our resize function to handle that like this.<
 function resize(canvas) {
   var cssToRealPixels = window.devicePixelRatio || 1;
 
-<p>  // Lookup the size the browser is displaying the canvas in CSS pixels
+  // Lookup the size the browser is displaying the canvas in CSS pixels
   // and compute a size needed to make our drawingbuffer match it in
   // device pixels.
   var displayWidth  = Math.floor(canvas.clientWidth  * cssToRealPixels);
-  var displayHeight = Math.floor(canvas.clientHeight * cssToRealPixels);</p>
-<p>  // Check if the canvas is not the same size.
+  var displayHeight = Math.floor(canvas.clientHeight * cssToRealPixels);
+
+  // Check if the canvas is not the same size.
   if (canvas.width  !== displayWidth ||
-      canvas.height !== displayHeight) {</p>
-<pre><code>// Make the canvas the same size
-canvas.width  = displayWidth;
-canvas.height = displayHeight;</code></pre><p>  }
+      canvas.height !== displayHeight) {
+
+    // Make the canvas the same size
+    canvas.width  = displayWidth;
+    canvas.height = displayHeight;
+  }
 }
-</pre></p>
+</pre>
 <p>If you have an HD-DPI display, for example if you view this page on your smartphone
 you should notice the line below is thinner than the one above which didn't adjust for
 HD-DPI displays</p>

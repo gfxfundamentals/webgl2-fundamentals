@@ -114,7 +114,8 @@ void main() {
 +   // pass the texCoord to the fragment shader
 +   // The GPU will interpolate this value between points
 +   v_texCoord = a_texCoord;
-}</code></pre><p>Then we supply a fragment shader to look up colors from the texture.</p>
+}
+</code></pre><p>Then we supply a fragment shader to look up colors from the texture.</p>
 <pre><code>#version 300 es
 precision mediump float;
 
@@ -130,7 +131,8 @@ out vec4 outColor;
 void main() {
    // Look up a color from the texture.
    outColor = texture(u_image, v_texCoord);
-}</code></pre><p>Finally we need to load an image, create a texture and copy the image
+}
+</code></pre><p>Finally we need to load an image, create a texture and copy the image
 into the texture. Because we are in a browser images load asynchronously
 so we have to re-arrange our code a little to wait for the texture to load.
 Once it loads we&#39;ll draw it.</p>
@@ -218,7 +220,8 @@ function render(image) {
 +  // Set a rectangle the same size as the image.
 +  setRectangle(gl, 0, 0, image.width, image.height);
 
-}</code></pre><p>And here&#39;s the image rendered in WebGL.</p>
+}
+</code></pre><p>And here&#39;s the image rendered in WebGL.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image.html" target="_blank">click here to open in a separate window</a>
@@ -229,7 +232,8 @@ function render(image) {
 swapping red and blue?</p>
 <pre><code>...
 outColor = texture2D(u_image, v_texCoord).bgra;
-...</code></pre><p>And now red and blue are swapped.</p>
+...
+</code></pre><p>And now red and blue are swapped.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-red2blue.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-red2blue.html" target="_blank">click here to open in a separate window</a>
@@ -265,7 +269,8 @@ void main() {
 +      texture(u_image, v_texCoord) +
 +      texture(u_image, v_texCoord + vec2( onePixel.x, 0.0)) +
 +      texture(u_image, v_texCoord + vec2(-onePixel.x, 0.0))) / 3.0;
-}</code></pre><p>Compare to the un-blurred image above.</p>
+}
+</code></pre><p>Compare to the un-blurred image above.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-blend.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-blend.html" target="_blank">click here to open in a separate window</a>
@@ -314,7 +319,8 @@ void main() {
       texture(u_image, v_texCoord + onePixel * vec2( 0,  1)) * u_kernel[7] +
       texture(u_image, v_texCoord + onePixel * vec2( 1,  1)) * u_kernel[8] ;
   outColor = vec4((colorSum / u_kernelWeight).rgb, 1);
-}</code></pre><p>In JavaScript we need to supply a convolution kernel and its weight</p>
+}
+</code></pre><p>In JavaScript we need to supply a convolution kernel and its weight</p>
 <pre><code> function computeKernelWeight(kernel) {
    var weight = kernel.reduce(function(prev, curr) {
        return prev + curr;
@@ -335,7 +341,8 @@ void main() {
 // set the kernel and it&#39;s weight
  gl.uniform1fv(kernelLocation, edgeDetectKernel);
  gl.uniform1f(kernelWeightLocation, computeKernelWeight(edgeDetectKernel));
- ...</code></pre><p>And voila... Use the drop down list to select different kernels.</p>
+ ...
+</code></pre><p>And voila... Use the drop down list to select different kernels.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-3x3-convolution.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-3x3-convolution.html" target="_blank">click here to open in a separate window</a>
@@ -352,7 +359,7 @@ required to support at least 16 texture units. Which texture unit each sampler u
 references is set by looking up the location of that sampler uniform and then setting the
 index of the texture unit you want it to reference.
 
-<p>For example:</p>
+For example:
 <pre class="prettyprint showlinemods">
 var textureUnitIndex = 6; // use texture unit 6.
 var u_imageLoc = gl.getUniformLocation(
@@ -360,14 +367,16 @@ var u_imageLoc = gl.getUniformLocation(
 gl.uniform1i(u_imageLoc, textureUnitIndex);
 </pre>
 
-<p>To set textures on different units you call gl.activeTexture and then bind the texture you want on that unit. Example</p>
+To set textures on different units you call gl.activeTexture and then bind the texture you want on that unit. Example
+
 <pre class="prettyprint showlinemods">
 // Bind someTexture to texture unit 6.
 gl.activeTexture(gl.TEXTURE6);
 gl.bindTexture(gl.TEXTURE_2D, someTexture);
 </pre>
 
-<p>This works too</p>
+This works too
+
 <pre class="prettyprint showlinemods">
 var textureUnitIndex = 6; // use texture unit 6.
 // Bind someTexture to texture unit 6.

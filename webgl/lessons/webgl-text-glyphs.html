@@ -140,7 +140,8 @@ var textTextures = [
 +  &quot;y&quot;,    // 14,
 +  &quot;z&quot;,    // 14,
 ].map(function(name) {
-*  var textCanvas = makeTextCanvas(name, 10, 26);</code></pre><p>Then instead of rendering one quad for each name we&#39;ll render one quad for each
+*  var textCanvas = makeTextCanvas(name, 10, 26);
+</code></pre><p>Then instead of rendering one quad for each name we&#39;ll render one quad for each
 letter in each name.</p>
 <pre><code>// setup to draw the text.
 +// Because every letter uses the same attributes and the same progarm
@@ -183,7 +184,8 @@ textPositions.forEach(function(pos, ndx) {
     // Draw the text.
     gl.drawElements(gl.TRIANGLES, textBufferInfo.numElements, gl.UNSIGNED_SHORT, 0);
   }
-});</code></pre><p>And you can see it works</p>
+});
+</code></pre><p>And you can see it works</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-glyphs.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-glyphs.html" target="_blank">click here to open in a separate window</a>
@@ -248,7 +250,8 @@ faces of a cube</a>.</p>
     &#39;!&#39;: { x: 48, y: 32, width: 8, },
     &#39;?&#39;: { x: 56, y: 32, width: 8, },
   },
-};</code></pre><p>And we&#39;ll <a href="webgl-3d-textures.html">load the image just like we loaded textures before</a></p>
+};
+</code></pre><p>And we&#39;ll <a href="webgl-3d-textures.html">load the image just like we loaded textures before</a></p>
 <pre><code>// Create a texture.
 var glyphTex = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, glyphTex);
@@ -267,7 +270,8 @@ image.addEventListener(&#39;load&#39;, function() {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-});</code></pre><p>Now that we have a texture with glyphs in it we need to use it. To do that we&#39;ll
+});
+</code></pre><p>Now that we have a texture with glyphs in it we need to use it. To do that we&#39;ll
 build quad vertices on the fly for each glyph. Those vertices will use texture coordinates
 to select a particlar glyph</p>
 <p>Given a string let&#39;s build the vertices</p>
@@ -338,7 +342,8 @@ to select a particlar glyph</p>
     },
     numVertices: offset / 2,
   };
-}</code></pre><p>To use it we&#39;ll manually create a bufferInfo. (<a href="webgl-drawing-multiple-things">See previous article if you don&#39;t remember what a bufferInfo is</a>).</p>
+}
+</code></pre><p>To use it we&#39;ll manually create a bufferInfo. (<a href="webgl-drawing-multiple-things">See previous article if you don&#39;t remember what a bufferInfo is</a>).</p>
 <pre><code>// Maunally create a bufferInfo
 var textBufferInfo = {
   attribs: {
@@ -346,7 +351,8 @@ var textBufferInfo = {
     a_texcoord: { buffer: gl.createBuffer(), numComponents: 2, },
   },
   numElements: 0,
-};</code></pre><p>And then to render text we&#39;ll update the buffers. We&#39;ll also make the text dynamic</p>
+};
+</code></pre><p>And then to render text we&#39;ll update the buffers. We&#39;ll also make the text dynamic</p>
 <pre><code>textPositions.forEach(function(pos, ndx) {
 
   var name = names[ndx];
@@ -385,7 +391,8 @@ var textBufferInfo = {
 
   // Draw the text.
   gl.drawArrays(gl.TRIANGLES, 0, vertices.numVertices);
-});</code></pre><p>And here&#39;s that</p>
+});
+</code></pre><p>And here&#39;s that</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-glyphs-texture-atlas.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-glyphs-texture-atlas.html" target="_blank">click here to open in a separate window</a>
