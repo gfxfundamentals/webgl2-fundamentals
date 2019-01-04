@@ -72,7 +72,13 @@ module.exports = function(grunt) {
   grunt.registerTask('buildlessons', function() {
     const buildStuff = require('./build/js/build');
     const finish = this.async();
-    buildStuff().then(function() {
+    buildStuff({
+      baseUrl: 'http://webgl2fundamentals.org',
+      rootFolder: 'webgl',
+      lessonGrep: 'webgl*.md',
+      siteName: 'WebGL2Fundamentals',
+      siteThumbnail: 'webgl2fundamentals.jpg',  // in rootFolder/lessons/resources
+    }).then(function() {
         finish();
     }).done();
   });
