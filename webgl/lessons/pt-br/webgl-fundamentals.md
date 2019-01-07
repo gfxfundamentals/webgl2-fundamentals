@@ -3,7 +3,7 @@ Description: Sua primeira lição da WebGL2: começando com os fundamentos
 
 Primeiramente, esses artigos são sobre a WebGL2. Se você está interessado na WebGL 1.0
 [por favor, vá aqui](http://webglfundamentals.org). Observe que a WebGL2 é [quase 100% compatível
-com a WebGL1](webgl1-backward-compatibility.html). Dito isto, uma vez que você habilita a
+com a WebGL1](webgl1-to-webgl2.html). Dito isto, uma vez que você habilita a
 WebGL2, você também pode usá-la como ela deveria ser usada. Esses tutoriais seguem esse raciocínio.
 
 [test](#日本語のテクスト)

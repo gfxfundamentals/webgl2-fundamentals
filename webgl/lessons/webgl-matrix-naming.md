@@ -3,7 +3,7 @@ Description: Common names for matrices
 
 This post is a continuation of a series of posts about WebGL. The first
 [started with fundamentals](webgl-fundamentals.html) and the previous
-was [about 3d cameras](webgl-3d-cameras.html).
+was [about 3d cameras](webgl-3d-camera.html).
 
 As the entire site has pointed out pretty much everything about WebGL is
 100% up to you. Except for a few pre-defined names like `gl_Position`

@@ -25,9 +25,9 @@ Em seguida, você deve instalar um pequeno servidor web. Eu sei que o "servidor 
 servers são extremamente simples](http://games.greggman.com/game/saving-and-loading-files-in-a-web-page/).
 
 Se você estiver usando o Chrome, aqui está uma solução simples.
-[Aqui está uma pequena extensão do Chrome que é um servidor web](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb?hl=en)
+[Servez](https://greggman.github.io/servez)
 
-{{{image url="resources/chrome-webserver.png" }}}
+{{{image url="" }}}
 
 Basta apontá-lo para a pasta onde você descompactou os arquivos e clicar em uma das URLs do servidor web.
 

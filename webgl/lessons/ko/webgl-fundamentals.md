@@ -1,7 +1,7 @@
 Title: WebGL2 기초들
 Description: 기본으로 시작하는 첫 번째 WebGL2 강의
 
-제일 중요한 걸 먼저 말하자면, 이 글은 WebGL2에 관한 글입니다. 만약 WebGL1.0에 관심이 있다면 [여기를 방문하십시오](http://webglfundamentals.org). 알아야 할 것은 WebGL2는 [WebGL1과 거의 100% 역호환이 됩니다](webgl1-backward-compatibility.html). 즉, 일단 WebGL2를 사용하면 원래 사용 의도처럼 사용할 수 있습니다. 이 튜토리얼은 이 방향을 따름니다.
+제일 중요한 걸 먼저 말하자면, 이 글은 WebGL2에 관한 글입니다. 만약 WebGL1.0에 관심이 있다면 [여기를 방문하십시오](http://webglfundamentals.org). 알아야 할 것은 WebGL2는 [WebGL1과 거의 100% 역호환이 됩니다](webgl1-to-webgl2.html). 즉, 일단 WebGL2를 사용하면 원래 사용 의도처럼 사용할 수 있습니다. 이 튜토리얼은 이 방향을 따름니다.
 
 WebGL은 종종 3D API로 간주됩니다. 사람들은 "WebGL과 *마법*을 사용해서 멋진 3D를 만들어야지" 라고 합니다. 실제로 WebGL은 단순히 레스트화 엔진일 뿐입니다. WebGL은 제공한 코드에 기반하여 점, 선 및 삼각형들을 그립니다. 원하는 것을 하기 위해 WebGL이 다른 일을 하도록 하는 것은 점, 선 및 삼각형들을 사용하는 코드를 제공하는 것에 달려있습니다.
 
@@ -486,4 +486,4 @@ WebGL을 완전히 새로 배우고 GLSL 또는 쉐이더나 GPU가 무엇을 �
 
 또한 대부분의 예제에서 사용된 [여기서 사용한 boilerplate 코드](webgl-boilerplate.html)를 최소한 간단하게 읽어야합니다. 거의 모든 예제들은 오직 한가지 것만 그리고 구조가 어떻게 되있는지 볼수 없기 때문에 일반적인 WebGL앱이 구조화 되어 있는지에 대한 어떻게 몇가지 아이디어를 얻기 위해 최소한 [여러가지를 그리는 법](webgl-drawing-multiple-things.html)을 봐야 합니다.
 
-아니면 여기 2가지 방향으로 갈 수 있습니다. 이미지 처리에 관심이 있다면 [몇가지 2D 이미지 처리 방법]((webgl-image-processing.html)를 보시면 됩니다. 위치, 회전, 크기에 대하여 관심이 있다면 [여기서 시작하시면 됩니다](webgl-2d-translation.html).
+아니면 여기 2가지 방향으로 갈 수 있습니다. 이미지 처리에 관심이 있다면 [몇가지 2D 이미지 처리 방법](webgl-image-processing.html)를 보시면 됩니다. 위치, 회전, 크기에 대하여 관심이 있다면 [여기서 시작하시면 됩니다](webgl-2d-translation.html).

@@ -1,7 +1,7 @@
 ﻿Title: WebGL 어떻게 작동하나요
 Description: WebGL이 무엇인지 What WebGL is really doing under the hood
 
-이글은 [WebGL 기초](webgl/lessons/ko/webgl-fundamentals.html)에서 이어지는 글입니다. 계속하기 전에 WebGL과 GPU가 기본적인 수준에서 실제로 무엇을 하는지 알아봐야 한다고 생각합니다. GPU에 기본적으로 2가지가 있습니다. 첫 번쨰 부분은 클립 공간에서 버텍스(또는 데이터 스트림) 처리하는 것입니다. 두번쨰 부분은 첫번쨰 부분을 기반으로 픽셀을 그리는 것입니다.
+이글은 [WebGL 기초](webgl-fundamentals.html)에서 이어지는 글입니다. 계속하기 전에 WebGL과 GPU가 기본적인 수준에서 실제로 무엇을 하는지 알아봐야 한다고 생각합니다. GPU에 기본적으로 2가지가 있습니다. 첫 번쨰 부분은 클립 공간에서 버텍스(또는 데이터 스트림) 처리하는 것입니다. 두번쨰 부분은 첫번쨰 부분을 기반으로 픽셀을 그리는 것입니다.
 
 다음과 같이 호출할 수 있습니다.
 
@@ -9,7 +9,7 @@ Description: WebGL이 무엇인지 What WebGL is really doing under the hood
 
 여기서 9의미는 "9개 버텍스 처리"을 의미하므로 9개의 버텍스들이 처리됩니다.
 
-<img src="/webgl/lessons/resources/vertex-shader-anim.gif" class="webgl_center" />
+<img src="resources/vertex-shader-anim.gif" class="webgl_center" />
 
 왼쪽에는 제공되는 데이터가 있습니다. 버텍스 쉐이더는 [GLSL](webgl-shaders-and-glsl.html)에서 작성한 함수 입니다. 각 버텍스마다 한번 호출됩니다. 수학적 계산을 하고 현재 버텍스에 대한 클립 공간 값을 가지는 특수 변수 `gl_Position`를 설정합니다. GPU는 이 값을 가져가고 내부적으로 저장합니다.
 
