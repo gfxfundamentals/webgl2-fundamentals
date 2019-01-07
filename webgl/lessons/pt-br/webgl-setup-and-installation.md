@@ -102,4 +102,4 @@ um arquivo separado, você sempre poderá ver o código fonte nas ferramentas do
 
 ## Iniciando
 
-Espero que isso te ajude a começar. [Agora de volta às lições](/).
+Espero que isso te ajude a começar. [Agora de volta às lições](index.html).
