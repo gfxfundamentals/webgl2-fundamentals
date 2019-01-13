@@ -206,6 +206,41 @@ That seems like a lot of work just to do the same thing we were already doing.</
 together and apply all the transformations at once. Let&#39;s assume we have
 a function, <code>m3.multiply</code>, that takes two matrices, multiplies them and
 returns the result.</p>
+<pre><code class="lang-js">var m3 = {
+  multiply: function(a, b) {
+    var a00 = a[0 * 3 + 0];
+    var a01 = a[0 * 3 + 1];
+    var a02 = a[0 * 3 + 2];
+    var a10 = a[1 * 3 + 0];
+    var a11 = a[1 * 3 + 1];
+    var a12 = a[1 * 3 + 2];
+    var a20 = a[2 * 3 + 0];
+    var a21 = a[2 * 3 + 1];
+    var a22 = a[2 * 3 + 2];
+    var b00 = b[0 * 3 + 0];
+    var b01 = b[0 * 3 + 1];
+    var b02 = b[0 * 3 + 2];
+    var b10 = b[1 * 3 + 0];
+    var b11 = b[1 * 3 + 1];
+    var b12 = b[1 * 3 + 2];
+    var b20 = b[2 * 3 + 0];
+    var b21 = b[2 * 3 + 1];
+    var b22 = b[2 * 3 + 2];
+
+    return [
+      b00 * a00 + b01 * a10 + b02 * a20,
+      b00 * a01 + b01 * a11 + b02 * a21,
+      b00 * a02 + b01 * a12 + b02 * a22,
+      b10 * a00 + b11 * a10 + b12 * a20,
+      b10 * a01 + b11 * a11 + b12 * a21,
+      b10 * a02 + b11 * a12 + b12 * a22,
+      b20 * a00 + b21 * a10 + b22 * a20,
+      b20 * a01 + b21 * a11 + b22 * a21,
+      b20 * a02 + b21 * a12 + b22 * a22,
+    ];
+  }
+}
+</code></pre>
 <p>To make things clearer let&#39;s make functions to build matrices for
 translation, rotation and scale.</p>
 <pre><code>var m3 = {
@@ -236,7 +271,7 @@ translation, rotation and scale.</p>
   },
 };
 </code></pre><p>Now let&#39;s change our shader. The old shader looked like this</p>
-<pre><code>#version 300 es
+<pre><code class="lang-glsl">#version 300 es
 
 in vec2 a_position;
 
@@ -256,8 +291,9 @@ void main() {
 
   // Add in the translation.
   vec2 position = rotatedPosition + u_translation;
-</code></pre><p>Our new shader will be much simpler.</p>
-<pre><code>#version 300 es
+</code></pre>
+<p>Our new shader will be much simpler.</p>
+<pre><code class="lang-glsl">#version 300 es
 
 in vec2 a_position;
 
@@ -268,8 +304,9 @@ void main() {
   // Multiply the position by the matrix.
   vec2 position = (u_matrix * vec3(a_position, 1)).xy;
   ...
-</code></pre><p>And here&#39;s how we use it</p>
-<pre><code>  // Draw the scene.
+</code></pre>
+<p>And here&#39;s how we use it</p>
+<pre><code class="lang-js">  // Draw the scene.
   function drawScene() {
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
@@ -311,7 +348,8 @@ void main() {
     var count = 18;
     gl.drawArrays(primitiveType, offset, count);
   }
-</code></pre><p>Here&#39;s a sample using our new code. The sliders are the same, translation,
+</code></pre>
+<p>Here&#39;s a sample using our new code. The sliders are the same, translation,
 rotation and scale. But the way they get used in the shader is much simpler.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform.html"></iframe>
@@ -339,7 +377,7 @@ hierarchical animation like arms on a body, moons on a planet around
 a sun, or branches on a tree. For a simple example of hierarchical
 animation lets draw draw our &#39;F&#39; 5 times but each time lets start with
 the matrix from the previous &#39;F&#39;.</p>
-<pre><code>    // Draw the scene.
+<pre><code class="lang-js">    // Draw the scene.
     function drawScene() {
 
       ...
@@ -368,7 +406,8 @@ the matrix from the previous &#39;F&#39;.</p>
         gl.drawArrays(primitiveType, offset, count);
       }
     }
-</code></pre><p>To do this we introduced the function, <code>m3.identity</code>, that makes an
+</code></pre>
+<p>To do this we introduced the function, <code>m3.identity</code>, that makes an
 identity matrix. An identity matrix is a matrix that effectively represents
 1.0 so that if you multiply by the identity nothing happens. Just like</p>
 <div class="webgl_center">X * 1 = X</div>
@@ -399,7 +438,7 @@ the origin and the top left corner of our &#39;F&#39; is at the origin, (0, 0).<
 <p>But now, because we can do matrix math and we can choose the order that
 transforms are applied we can effectively move the origin before the rest
 of the transforms are applied.</p>
-<pre><code>    // make a matrix that will move the origin of the &#39;F&#39; to its center.
+<pre><code class="lang-js">    // make a matrix that will move the origin of the &#39;F&#39; to its center.
     var moveOriginMatrix = m3.translation(-50, -75);
     ...
 
@@ -407,7 +446,8 @@ of the transforms are applied.</p>
     var matrix = m3.multiply(translationMatrix, rotationMatrix);
     matrix = m3.multiply(matrix, scaleMatrix);
 +    matrix = m3.multiply(matrix, moveOriginMatrix);
-</code></pre><p>Here&#39;s that sample. Notice the F rotates and scales around the center.</p>
+</code></pre>
+<p>Here&#39;s that sample. Notice the F rotates and scales around the center.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform-center-f.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-matrix-transform-center-f.html" target="_blank">click here to open in a separate window</a>
@@ -462,7 +502,7 @@ void main() {
   gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
 }
 </code></pre><p>And in JavaScript we need to multiply by the projection matrix</p>
-<pre><code>  // Draw the scene.
+<pre><code class="lang-js">  // Draw the scene.
   function drawScene() {
     ...
 -    // Pass in the canvas resolution so we can convert from
@@ -484,7 +524,8 @@ void main() {
     matrix = m3.multiply(matrix, scaleMatrix);
     ...
   }
-</code></pre><p>We also removed the code that set the resolution. With this last step we&#39;ve gone
+</code></pre>
+<p>We also removed the code that set the resolution. With this last step we&#39;ve gone
 from a rather complicated shader with 6-7 steps to a very simple shader with only
 1 step all due to the magic of matrix math.</p>
 <p><div class="webgl_example_container">
@@ -496,7 +537,7 @@ from a rather complicated shader with 6-7 steps to a very simple shader with onl
 <p>Before we move on let&#39;s simplifiy a little bit. While it&#39;s common to generate
 various matrices and separately multiply them together it&#39;s also common to just
 multiply them as we go. Effectively we could functions like this</p>
-<pre><code>var m3 = {
+<pre><code class="lang-js">var m3 = {
 
   ...
 
@@ -515,13 +556,15 @@ multiply them as we go. Effectively we could functions like this</p>
   ...
 
 };
-</code></pre><p>This would let us change 7 lines of matrix code above to just 4 lines like this</p>
-<pre><code>// Compute the matrix
+</code></pre>
+<p>This would let us change 7 lines of matrix code above to just 4 lines like this</p>
+<pre><code class="lang-js">// Compute the matrix
 var matrix = m3.projection(gl.canvas.clientWidth, gl.canvas.clientHeight);
 matrix = m3.translate(matrix, translation[0], translation[1]);
 matrix = m3.rotate(matrix, rotationInRadians);
 matrix = m3.scale(matrix, scale[0], scale[1]);
-</code></pre><p>And here&#39;s that</p>
+</code></pre>
+<p>And here&#39;s that</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform-simpler-functions.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-matrix-transform-simpler-functions.html" target="_blank">click here to open in a separate window</a>
