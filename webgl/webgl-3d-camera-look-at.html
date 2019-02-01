@@ -790,8 +790,8 @@ var m4 = {
   lookAt: function(cameraPosition, target, up) {
     var zAxis = m4.normalize(
         m4.subtractVectors(cameraPosition, target));
-    var xAxis = m4.cross(up, zAxis);
-    var yAxis = m4.cross(zAxis, xAxis);
+    var xAxis = m4.normalize(m4.cross(up, zAxis));
+    var yAxis = m4.normalize(m4.cross(zAxis, xAxis));
 
     return [
       xAxis[0], xAxis[1], xAxis[2], 0,
