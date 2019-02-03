@@ -320,7 +320,7 @@ In WebGL 1 we didn't have vertex array objects and so
 Without vertex array objects we had to make 3 WebGL per attribute per model calls everytime we switched geometry.
 In the example above that added up to 12 WebGL calls per model and so
 it made sense to try to avoid that by sorting models. In WebGL2 those 12 WebGL calls reduce to just one call
-`gl.bindVertexArray(someVertexArray)` and, at least in my testing I could not measure a difference
+<code>gl.bindVertexArray(someVertexArray)</code> and, at least in my testing I could not measure a difference
 using my recommended optimizations so I removed that section.
 </p>
 </div>
