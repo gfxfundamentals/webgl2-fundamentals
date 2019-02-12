@@ -135,7 +135,7 @@ if (dotFromDirection &gt;= limitInDotSpace) {
 </code></pre><p>Let&#39;s do that</p>
 <p>First let&#39;s modify our fragment shader from
 <a href="webgl-3d-lighting-point.html">the last article</a>.</p>
-<pre><code>#version 300 es
+<pre><code class="lang-glsl">#version 300 es
 precision mediump float;
 
 // Passed in from the vertex shader.
@@ -183,19 +183,22 @@ void main() {
   // Just add in the specular
   outColor.rgb += specular;
 }
-</code></pre><p>Of course we need to look up the locations of the uniforms we
+</code></pre>
+<p>Of course we need to look up the locations of the uniforms we
 just added.</p>
-<pre><code>  var lightDirection = [?, ?, ?];
+<pre><code class="lang-js">  var lightDirection = [?, ?, ?];
   var limit = degToRad(20);
 
   ...
 
   var lightDirectionLocation = gl.getUniformLocation(program, &quot;u_lightDirection&quot;);
   var limitLocation = gl.getUniformLocation(program, &quot;u_limit&quot;);
-</code></pre><p>and we need to set them</p>
-<pre><code>    gl.uniform3fv(lightDirectionLocation, lightDirection);
+</code></pre>
+<p>and we need to set them</p>
+<pre><code class="lang-js">    gl.uniform3fv(lightDirectionLocation, lightDirection);
     gl.uniform1f(limitLocation, Math.cos(limit));
-</code></pre><p>And here it is</p>
+</code></pre>
+<p>And here it is</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-spot.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-spot.html" target="_blank">click here to open in a separate window</a>
@@ -230,13 +233,14 @@ second value is greater than or equal the first it returns 1.0. Otherwise it ret
    }
 }
 </code></pre><p>Let&#39;s use <code>step</code> to get rid of the conditions</p>
-<pre><code>  float dotFromDirection = dot(surfaceToLightDirection,
+<pre><code class="lang-glsl">  float dotFromDirection = dot(surfaceToLightDirection,
                                -u_lightDirection);
   // inLight will be 1 if we&#39;re inside the spotlight and 0 if not
   float inLight = step(u_limit, dotFromDirection);
   float light = inLight * dot(normal, surfaceToLightDirection);
   float specular = inLight * pow(dot(normal, halfVector), u_shininess);
-</code></pre><p>Nothing changes visually but here is that</p>
+</code></pre>
+<p>Nothing changes visually but here is that</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-spot-using-step.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-spot-using-step.html" target="_blank">click here to open in a separate window</a>
@@ -251,7 +255,7 @@ If we&#39;re inside the inner limit then use 1.0. If we&#39;re outside the outer
 limit then use 0.0. If we&#39;re between the inner limit and the outer limit
 then lerp between 1.0 and 0.0.</p>
 <p>Here&#39;s one way we could do this</p>
-<pre><code>-uniform float u_limit;          // in dot space
+<pre><code class="lang-glsl">-uniform float u_limit;          // in dot space
 +uniform float u_innerLimit;     // in dot space
 +uniform float u_outerLimit;     // in dot space
 
@@ -264,7 +268,8 @@ then lerp between 1.0 and 0.0.</p>
 +  float inLight = clamp((dotFromDirection - u_outerLimit) / limitRange, 0.0, 1.0);
   float light = inLight * dot(normal, surfaceToLightDirection);
   float specular = inLight * pow(dot(normal, halfVector), u_shininess);
-</code></pre><p>And that works</p>
+</code></pre>
+<p>And that works</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-spot-falloff.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-spot-falloff.html" target="_blank">click here to open in a separate window</a>
@@ -283,14 +288,15 @@ it takes both an lower and upper bound and lerps between 0 and 1 between
 those bounds.</p>
 <pre><code> smoothstep(lowerBound, upperBound, value)
 </code></pre><p>Let&#39;s do that</p>
-<pre><code>  float dotFromDirection = dot(surfaceToLightDirection,
+<pre><code class="lang-glsl">  float dotFromDirection = dot(surfaceToLightDirection,
                                -u_lightDirection);
 -  float limitRange = u_innerLimit - u_outerLimit;
 -  float inLight = clamp((dotFromDirection - u_outerLimit) / limitRange, 0.0, 1.0);
   float inLight = smoothstep(u_outerLimit, u_innerLimit, dotFromDirection);
   float light = inLight * dot(normal, surfaceToLightDirection);
   float specular = inLight * pow(dot(normal, halfVector), u_shininess);
-</code></pre><p>That works too</p>
+</code></pre>
+<p>That works too</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-spot-falloff-using-smoothstep.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-spot-falloff-using-smoothstep.html" target="_blank">click here to open in a separate window</a>
@@ -508,6 +514,7 @@ matrix are undefined if m is singular or poorlyconditioned
     <li><a href="/webgl/lessons/webgl-and-alpha.html">WebGL2 and Alpha</a></li>
     <li><a href="/webgl/lessons/webgl-2d-vs-3d-library.html">WebGL2 - 2D vs 3D libraries</a></li>
     <li><a href="/webgl/lessons/webgl-anti-patterns.html">WebGL2 - Anti-Patterns</a></li>
+    <li><a href="/webgl/lessons/webgl-matrix-vs-math.html">WebGL Matrices vs Math Matrices</a></li>
   </ul>
 </ul>
 <ul>
