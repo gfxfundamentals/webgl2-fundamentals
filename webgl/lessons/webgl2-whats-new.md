@@ -227,11 +227,6 @@ that were part of a texture move to the sampler. This means
 a single texture can be sampled in different ways. Repeating
 or clamped. Filtered or not filtered.
 
-A mini side rant: I've written 6 game engines. I've never
-personally ever had an artist need to filter textures in
-multiple ways. I'd be curious to know if any other game
-engine devs have had a different experience.
-
 ## Depth Textures
 
 Depth textures were optional in WebGL1 and a PITA to work around. Now they're standard.
