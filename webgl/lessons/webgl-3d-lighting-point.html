@@ -168,11 +168,11 @@ void main() {
 -  float light = dot(v_normal, u_reverseLightDirection);
 +  float light = dot(v_normal, surfaceToLightDirection);
 
-  gl_FragColor = u_color;
+  outColor = u_color;
 
   // Lets multiply just the color portion (not the alpha)
   // by the light
-  gl_FragColor.rgb *= light;
+  outColor.rgb *= light;
 }
 </code></pre><p>Then we need to lookup the locations of <code>u_world</code> and <code>u_lightWorldPosition</code></p>
 <pre><code>-  var reverseLightDirectionLocation =
@@ -276,6 +276,8 @@ in vec3 v_surfaceToLight;
 
 uniform vec4 u_color;
 
+out vec4 outColor;
+
 void main() {
   // because v_normal is a varying it&#39;s interpolated
   // we it will not be a uint vector. Normalizing it
@@ -289,14 +291,14 @@ void main() {
   float light = dot(normal, surfaceToLightDirection);
 +  float specular = dot(normal, halfVector);
 
-  gl_FragColor = u_color;
+  outColor = u_color;
 
   // Lets multiply just the color portion (not the alpha)
   // by the light
-  gl_FragColor.rgb *= light;
+  outColor.rgb *= light;
 
 +  // Just add in the specular
-+  gl_FragColor.rgb += specular;
++  outColor.rgb += specular;
 }
 </code></pre><p>Finally we have to look up <code>u_viewWorldPosition</code> and set it</p>
 <pre><code>var lightWorldPositionLocation =
@@ -373,10 +375,10 @@ uniform float u_shininess;
 
   // Lets multiply just the color portion (not the alpha)
   // by the light
-*  gl_FragColor.rgb *= light * u_lightColor;
+*  outColor.rgb *= light * u_lightColor;
 
   // Just add in the specular
-*  gl_FragColor.rgb += specular * u_specularColor;
+*  outColor.rgb += specular * u_specularColor;
 }
 </code></pre><p>and of course</p>
 <pre><code>+  var lightColorLocation =
