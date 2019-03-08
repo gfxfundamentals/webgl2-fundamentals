@@ -374,7 +374,7 @@ void main() {
 +  float fogAmount = 1. - exp2(-u_fogDensity * u_fogDensity * fogDistance * fogDistance * LOG2);
   fogAmount = clamp(fogAmount, 0., 1.);
 
-  outgl_FragColor = mix(color, u_fogColor, fogAmount);  
+  outColor = mix(color, u_fogColor, fogAmount);  
 }
 ```
 

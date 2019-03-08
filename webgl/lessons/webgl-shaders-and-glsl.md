@@ -219,9 +219,11 @@ function `texture` to extract a value from it.
 
     uniform sampler2D u_texture;
 
+    out vec4 outColor;
+
     void main() {
        vec2 texcoord = vec2(0.5, 0.5)  // get a value from the middle of the texture
-       gl_FragColor = texture(u_texture, texcoord);
+       outColor = texture(u_texture, texcoord);
     }
 
 What data comes out of the texture is [dependent on many settings](webgl-3d-textures.html).

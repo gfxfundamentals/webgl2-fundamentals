@@ -48,7 +48,7 @@ We had a simple fragment shader that draws a constant color
 
       void main() {
         // Just set the output to a constant redish-purple
-        gl_FragColor = vec4(1, 0, 0.5, 1);
+        outColor = vec4(1, 0, 0.5, 1);
       }
 
 So let's make that draw 2 rectangles in clipspace. We'll pass it this

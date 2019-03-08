@@ -205,9 +205,11 @@ Uniforms은 여러 타입이 될 수 있습니다. 각 타입별로 해당 함�
 
     uniform sampler2D u_texture;
 
+    out vec4 outColor;
+
     void main() {
        vec2 texcoord = vec2(0.5, 0.5)  // 텍스처 중간에 있는 값을 얻습니다.
-       gl_FragColor = texture(u_texture, texcoord);
+       outColor = texture(u_texture, texcoord);
     }
 
 [설정에 따라서](webgl-3d-textures.html) 텍스처에서 나오는 데이터는 달라집니다. 최소한 텍스처에 데이터를 넣어야 합니다. 예를 들어

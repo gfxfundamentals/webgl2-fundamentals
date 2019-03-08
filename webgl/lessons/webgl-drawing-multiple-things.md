@@ -93,7 +93,7 @@ except we've added a `u_colorMult` to multiply the vertex colors by.
     out vec4 outColor;
 
     void main() {
-    *   gl_FragColor = v_color * u_colorMult;
+    *   outColor = v_color * u_colorMult;
     }
 
 

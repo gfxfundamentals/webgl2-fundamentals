@@ -420,8 +420,10 @@ First we'll change the text shader to multiply by a color
     uniform sampler2D u_texture;
     +uniform vec4 u_color;
 
+    out vec4 outColor;
+
     void main() {
-    *   gl_FragColor = texture2D(u_texture, v_texcoord) * u_color;
+    *   outColor = texture2D(u_texture, v_texcoord) * u_color;
     }
 
 
