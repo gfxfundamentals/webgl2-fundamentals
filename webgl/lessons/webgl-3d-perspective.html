@@ -91,7 +91,8 @@ generally not what people want when they say &quot;3D&quot;.</p>
 <p>Instead we need to add perspective. Just what is perspective?
 It&#39;s basically the feature that things that are further away appear
 smaller.</p>
-<p><img class="webgl_center" width="500" src="resources/perspective-example.svg" /></p>
+<div class="webgl_center"><img style="width: 500px;" src="resources/perspective-example.svg" /></div>
+
 <p>Looking at the example above we see that things further away
 are drawn smaller. Given our current sample one easy way to
 make it so that things that are further away appear smaller
@@ -163,7 +164,7 @@ void main() {
 </p>
 <p>If it&#39;s not clear drag the &quot;fudgeFactor&quot; slider from 1.0 to 0.0 to see
 what things used to look like before we added our divide by Z code.</p>
-<p><img class="webgl_center" src="resources/orthographic-vs-perspective.png" /></p>
+<div class="webgl_center"><img src="resources/orthographic-vs-perspective.png" /></div>
 <div class="webgl_center">orthographic vs perspective</div>
 
 <p>It turns out WebGL takes the x,y,z,w value we assign to <code>gl_Position</code> in our vertex
@@ -315,7 +316,8 @@ void main() {
 and that WebGL conveniently does this divide by Z for us.</p>
 <p>But there are still some problems. For example if you set Z to around -100 you&#39;ll see something like
 the animation below</p>
-<p><img class="webgl_center" src="resources/z-clipping.gif" style="border: 1px solid black;" /></p>
+<div class="webgl_center"><img src="resources/z-clipping.gif" style="border: 1px solid black;" /></div>
+
 <p>What&#39;s going on? Why is the F disappearing early? Just like WebGL clips X and Y to
 values between +1 to -1 it also clips Z. What we&#39;re seeing here is where Z &lt; -1.</p>
 <p>I could go into detail about the math to fix it but <a href="http://stackoverflow.com/a/28301213/128511">you can derive it</a> the same way
@@ -360,7 +362,20 @@ get clipped.</p>
 <p>There&#39;s just one problem left. This matrix assumes there&#39;s a viewer at 0,0,0 and it assumes it&#39;s looking
 in the negative Z direction and that positive Y is up. Our matrices up to this point have done things
 in a different way. To make this work we need to put our objects in front of the view.</p>
-<p>We could do that by moving our F. We were drawing at (45, 150, 0). Let&#39;s move it to (-150, 0, -360)</p>
+<p>In other words if we tried to draw now with the F at 0,0,0 and not rotated we&#39;d get this</p>
+<div class="webgl_center"><img src="resources/f-big-and-wrong-side.svg" style="width: 500px;"></div>
+
+<p>The projection only sees what&#39;s in the blue frustum. 
+The projection is at the origin. The F has it&#39;s top left front corner at the origin.
+The projection looks toward negative Z but our F is built in positive Z. The projection has positive Y up
+but our F is build with positive Z down. The projection sees 2 units at -zNear. One unit above the center
+and one unit below. At -zFar how many units fit depend on the field of view.
+It sees -aspect units to the left of center and +aspect units to the right.</p>
+<p>To make it appear we need to move it inside the frustum.
+We could do that by moving our F. We were drawing at (45, 150, 0). Let&#39;s move it to (-150, 0, -360)
+and let&#39;s set the rotation to something that makes it appear right side up.</p>
+<div class="webgl_center"><img src="resources/f-right-side.svg" style="width: 500px;"></div>
+
 <p>Now, to use it we just need to replace our old call to m4.projection with a call to
 m4.perspective</p>
 <pre><code>   var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
