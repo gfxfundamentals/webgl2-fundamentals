@@ -14,7 +14,7 @@ Instead we need to add perspective. Just what is perspective?
 It's basically the feature that things that are further away appear
 smaller.
 
-<img class="webgl_center" width="500" src="resources/perspective-example.svg" />
+<div class="webgl_center"><img style="width: 500px;" src="resources/perspective-example.svg" /></div>
 
 Looking at the example above we see that things further away
 are drawn smaller. Given our current sample one easy way to
@@ -99,7 +99,7 @@ And here's the result.
 If it's not clear drag the "fudgeFactor" slider from 1.0 to 0.0 to see
 what things used to look like before we added our divide by Z code.
 
-<img class="webgl_center" src="resources/orthographic-vs-perspective.png" />
+<div class="webgl_center"><img src="resources/orthographic-vs-perspective.png" /></div>
 <div class="webgl_center">orthographic vs perspective</div>
 
 It turns out WebGL takes the x,y,z,w value we assign to `gl_Position` in our vertex
@@ -275,7 +275,7 @@ and that WebGL conveniently does this divide by Z for us.
 But there are still some problems. For example if you set Z to around -100 you'll see something like
 the animation below
 
-<img class="webgl_center" src="resources/z-clipping.gif" style="border: 1px solid black;" />
+<div class="webgl_center"><img src="resources/z-clipping.gif" style="border: 1px solid black;" /></div>
 
 What's going on? Why is the F disappearing early? Just like WebGL clips X and Y to
 values between +1 to -1 it also clips Z. What we're seeing here is where Z < -1.
@@ -329,7 +329,22 @@ There's just one problem left. This matrix assumes there's a viewer at 0,0,0 and
 in the negative Z direction and that positive Y is up. Our matrices up to this point have done things
 in a different way. To make this work we need to put our objects in front of the view.
 
+In other words if we tried to draw now with the F at 0,0,0 and not rotated we'd get this
+
+<div class="webgl_center"><img src="resources/f-big-and-wrong-side.svg" style="width: 500px;"></div>
+
+The projection only sees what's in the blue frustum. 
+The projection is at the origin. The F has it's top left front corner at the origin.
+The projection looks toward negative Z but our F is built in positive Z. The projection has positive Y up
+but our F is build with positive Z down. The projection sees 2 units at -zNear. One unit above the center
+and one unit below. At -zFar how many units fit depend on the field of view.
+It sees -aspect units to the left of center and +aspect units to the right.
+
+To make it appear we need to move it inside the frustum.
 We could do that by moving our F. We were drawing at (45, 150, 0). Let's move it to (-150, 0, -360)
+and let's set the rotation to something that makes it appear right side up.
+
+<div class="webgl_center"><img src="resources/f-right-side.svg" style="width: 500px;"></div>
 
 Now, to use it we just need to replace our old call to m4.projection with a call to
 m4.perspective
