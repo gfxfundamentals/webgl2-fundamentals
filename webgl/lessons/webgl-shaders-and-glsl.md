@@ -21,8 +21,7 @@ A Vertex Shader's job is to generate clipspace coordinates. It always takes the 
        gl_Position = doMathToMakeClipspaceCoordinates
     }
 
-Your shader is called once per vertex. Each time it's called you are required to set the
-the special global variable, `gl_Position` to some clipspace coordinates.
+Your shader is called once per vertex. Each time it's called you are required to set the special global variable, `gl_Position` to some clipspace coordinates.
 
 Vertex shaders need data. They can get that data in 3 ways.
 
