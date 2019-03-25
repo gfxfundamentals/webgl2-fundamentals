@@ -26,7 +26,7 @@ Your shader is called once per vertex. Each time it's called you are required to
 Vertex shaders need data. They can get that data in 3 ways.
 
 1.  [Attributes](#attributes) (data pulled from buffers)
-2.  [Uniforms](#uniforms) (values that stay the same during for all vertices of a single draw call)
+2.  [Uniforms](#uniforms) (values that stay the same for all vertices of a single draw call)
 3.  [Textures](#textures-in-vertex-shaders) (data from pixels/texels)
 
 ### Attributes
