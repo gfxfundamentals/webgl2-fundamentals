@@ -418,7 +418,7 @@ Actually creating the shaders requires several lines of code. Since those lines 
 most WebGL programs and since once written you can pretty much ignore them [how to compile GLSL shaders
 and link them into a shader program is covered here](webgl-boilerplate.html).
 
-If you're just starting from here you can go in 2 directions. If you are interested in image procesing
+If you're just starting from here you can go in 2 directions. If you are interested in image processing
 I'll show you [how to do some 2D image processing](webgl-image-processing.html).
 If you are interesting in learning about translation,
 rotation and scale then [start here](webgl-2d-translation.html).
