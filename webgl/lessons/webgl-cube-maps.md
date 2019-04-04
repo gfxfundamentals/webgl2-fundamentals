@@ -131,7 +131,7 @@ we need to normalize it.
 precision mediump float;
 
 // Passed in from the vertex shader.
-varying vec3 v_normal;
+in vec3 v_normal;
 
 // The texture.
 uniform samplerCube u_texture;
