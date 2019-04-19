@@ -89,9 +89,10 @@ parts to this GPU thing.  The first part processes vertices (or streams of
 data) into clipspace vertices.  The second part draws pixels based on the
 first part.</p>
 <p>When you call</p>
-<pre><code>gl.drawArrays(gl.TRIANGLE, 0, 9);
+<pre class="prettyprint"><code>gl.drawArrays(gl.TRIANGLE, 0, 9);
 </code></pre><p>The 9 there means &quot;process 9 vertices&quot; so here are 9 vertices being processed.</p>
-<p><img src="resources/vertex-shader-anim.gif" class="webgl_center" /></p>
+<div class="webgl_center"><img src="resources/vertex-shader-anim.gif" /></div>
+
 <p>On the left is the data you provide.  The vertex shader is a function you
 write in <a href="webgl-shaders-and-glsl.html">GLSL</a>.  It gets called once for each vertex.
 You do some math and set the special variable <code>gl_Position</code> with a clipspace value
@@ -112,7 +113,7 @@ directly from the vertex shader to the fragment shader.</p>
 <p>We&#39;ll draw with a simple triangle.  Continuing from our
 <a href="webgl-2d-matrices.html">previous example</a> let&#39;s change our rectangle to a
 triangle.</p>
-<pre><code>// Fill the buffer with the values that define a triangle.
+<pre class="prettyprint"><code>// Fill the buffer with the values that define a triangle.
 function setGeometry(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
@@ -123,7 +124,7 @@ function setGeometry(gl) {
       gl.STATIC_DRAW);
 }
 </code></pre><p>And we have to only draw 3 vertices.</p>
-<pre><code>// Draw the scene.
+<pre class="prettyprint"><code>// Draw the scene.
 function drawScene() {
   ...
   // Draw the geometry.
@@ -131,7 +132,7 @@ function drawScene() {
 }
 </code></pre><p>Then in our vertex shader we declare a <em>varying</em> by making an <code>out</code> to pass data to the
 fragment shader.</p>
-<pre><code>out vec4 v_color;
+<pre class="prettyprint"><code>out vec4 v_color;
 ...
 void main() {
   // Multiply the position by the matrix.
@@ -143,7 +144,7 @@ void main() {
 *  v_color = gl_Position * 0.5 + 0.5;
 }
 </code></pre><p>And then we declare the same <em>varying</em> as an <code>in</code> in the fragment shader.</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 
 precision mediump float;
 
@@ -240,7 +241,7 @@ on to the fragment shader.  So for example let&#39;s draw a rectangle, that
 consists of 2 triangles, in 2 colors.  To do this we&#39;ll add another
 attribute to the vertex shader so we can pass it more data and we&#39;ll pass
 that data directly to the fragment shader.</p>
-<pre><code>in vec2 a_position;
+<pre class="prettyprint"><code>in vec2 a_position;
 +in vec4 a_color;
 ...
 out vec4 v_color;
@@ -251,7 +252,7 @@ void main() {
 *  v_color = a_color;
 }
 </code></pre><p>We now have to supply colors for WebGL to use.</p>
-<pre><code>  // look up where the vertex data needs to go.
+<pre class="prettyprint"><code>  // look up where the vertex data needs to go.
   var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 +  var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
   ...
@@ -310,7 +311,7 @@ in a <em>varying</em> so they are being varied or interpolated across the
 triangle.  It&#39;s just that we used the same color on each of the 3 vertices
 of each triangle.  If we make each color different we&#39;ll see the
 interpolation.</p>
-<pre><code>// Fill the buffer with colors for the 2 triangles
+<pre class="prettyprint"><code>// Fill the buffer with colors for the 2 triangles
 // that make the rectangle.
 function setColors(gl) {
   // Make every vertex a different color.
@@ -345,13 +346,13 @@ GPU.  <code>gl.createBuffer</code> creates a buffer.
 of it and provide it to the vertex shader&#39;s attributes.</p>
 <p>To do this, first we ask WebGL what locations it assigned to the
 attributes.  For example in the code above we have</p>
-<pre><code>// look up where the vertex data needs to go.
+<pre class="prettyprint"><code>// look up where the vertex data needs to go.
 var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
 </code></pre><p>Once we know the location of the attribute we then issue 2 commands.</p>
-<pre><code>gl.enableVertexAttribArray(location);
+<pre class="prettyprint"><code>gl.enableVertexAttribArray(location);
 </code></pre><p>This command tells WebGL we want to supply data from a buffer.</p>
-<pre><code>gl.vertexAttribPointer(
+<pre class="prettyprint"><code>gl.vertexAttribPointer(
     location,
     numComponents,
     typeOfData,

@@ -85,7 +85,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p>3D를 하기전에 잠시 2D를 해봅시다. 이 글은 몇몇 분들에게는 매우 당연하겠지만 몇 가지 글들을 더 접해 보면서 어느 정도 더 이해보려 합니다.</p>
 <p>이 글은 <a href="webgl-fundamentals.html">WebGL 기초</a>로 시작한 시리즈에서 이어지는 글입니다. 만약 아직 읽지 않았다면 읽고 난 후 이 글을 읽는 것을 추천합니다.</p>
 <p>이동(Translation)는 무언가를 &quot;움직인다&quot;라는 의미를 가진 멋진 수학적 이름입니다. 물론 여기서는 기하학을 말하는게 적합하지만 문장을 영어에서 일본어로 옮기는 것을 생각해 봅시다. <a href="webgl-fundamentals.html">첫번째 게시글</a>에 있는 예제 코드의 <code>setRectangle</code>에 변경된 값을 전달하여 사각형을 쉽게 이동할 수 있습니다. 여기에 <a href="webgl-fundamentals.html">이전 에제</a>를 기반으로 한 예제가 있습니다.</p>
-<pre><code>+  // 먼저 사각형의 높이, 너비, 이동(translation)을 가지고 있는 몇 가지 변수들을 만들어 봅시다.
+<pre class="prettyprint"><code>+  // 먼저 사각형의 높이, 너비, 이동(translation)을 가지고 있는 몇 가지 변수들을 만들어 봅시다.
 +  var translation = [0, 0];
 +  var width = 100;
 +  var height = 30;
@@ -138,7 +138,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>6개의 삼각형으로 구성된 &#39;F&#39;를 그려야 한다고 가정 해 봅시다.</p>
 <p><img src="../../resources/polygon-f.svg" width="200" height="270" class="webgl_center"></p>
 <p>이제 다음 코드에 따라 <code>setRectangle</code>을 이와 비슷하게 변경해야 합니다.</p>
-<pre><code>// 현재 ARRAY_BUFFER 버퍼에 문자 &#39;F&#39;를 정의하는 값들로 채웁니다.
+<pre class="prettyprint"><code>// 현재 ARRAY_BUFFER 버퍼에 문자 &#39;F&#39;를 정의하는 값들로 채웁니다.
 function setGeometry(gl, x, y) {
   var width = 100;
   var height = 150;
@@ -174,7 +174,7 @@ function setGeometry(gl, x, y) {
 </code></pre><p>확장하기에는 좋지 않다는 것을 볼 수 있을 것입니다. 수백 또는 수천 줄의 복잡한 지오메트리(geometry)를 그리려면 꽤 복잡한 코드를 작성해야 합니다. 뿐만 아니라 Javascript를 그릴 때마다 모든 포인트들을 업데이트해야 합니다</p>
 <p>이보다 더 간단한 방법이 있습니다. 지오메트리(geometry)를 업데이트하고 쉐이더(shader)에서 이동을 하면 됩니다.</p>
 <p>여기에 새로운 쉐이더가 있습니다.</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 
 // attribute는 쉐이더로 입력(in)되는 것 입니다. 버퍼로 부터 데이터를 받아 옵니다.
 in vec4 a_position;
@@ -202,7 +202,7 @@ void main() {
   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 }
 </code></pre><p>코드를 약간 재구성할 것입니다. 하나의 지오메트리를 한 번만 설정하면 됩니다.</p>
-<pre><code>// 현재 ARRAY_BUFFER 버퍼에 문자 &#39;F&#39;를 정의하는 값들로 채웁니다.
+<pre class="prettyprint"><code>// 현재 ARRAY_BUFFER 버퍼에 문자 &#39;F&#39;를 정의하는 값들로 채웁니다.
 function setGeometry(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
@@ -233,7 +233,7 @@ function setGeometry(gl) {
       gl.STATIC_DRAW);
 }
 </code></pre><p>그런 다음 원하는 이동(translation)을 그리기 전에 <code>u_translation</code> 업데이트를 해야 합니다.</p>
-<pre><code>  ...
+<pre class="prettyprint"><code>  ...
 
 +  var translationLocation = gl.getUniformLocation(
 +             program, &quot;u_translation&quot;);

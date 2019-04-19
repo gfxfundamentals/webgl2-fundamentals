@@ -85,7 +85,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p>如果你之前阅读过<a href="http://webglfundamentals.org">webglfundamentals.org</a>你应该意识到有一些差异。</p>
 <h2 id="-">多行模版字面量</h2>
 <p>webglfundamentals.org上所有的着色器代码都是用非javascript <code>&lt;script&gt;</code> 标签存储的。</p>
-<pre><code>&lt;script id=&quot;vertexshader&quot; type=&quot;not-js&quot;&gt;;
+<pre class="prettyprint"><code>&lt;script id=&quot;vertexshader&quot; type=&quot;not-js&quot;&gt;;
 shader
 在这里
 &lt;/script&gt;;
@@ -94,7 +94,7 @@ shader
 
 var vertexShaderSource = document.getElementById(&quot;vertexshader&quot;).text;
 </code></pre><p>webgl2fundamentals.org上，我已经改用多行模版字面量</p>
-<pre><code>var vertexShaderSource = `
+<pre class="prettyprint"><code>var vertexShaderSource = `
 shader
 在这里
 `;
@@ -119,9 +119,9 @@ shader
 <li><p>我让所有的帮助函数都有一个前缀代码，就像</p>
 </li>
 </ul>
-<pre><code>   var program = createProgramFromScripts(...)
+<pre class="prettyprint"><code>   var program = createProgramFromScripts(...)
 </code></pre><p>   现在是</p>
-<pre><code>   webglUtils.createProgramFromSources(...);
+<pre class="prettyprint"><code>   webglUtils.createProgramFromSources(...);
 </code></pre><p>   我希望这能更明确地说明这些函数，和在哪里能找到它们。</p>
 <h2 id="-">下一步是什么</h2>
 <p>我怀疑要不要更改所有的webglfundamentals的例子来匹配。这花费了几周时间来编辑现有的例子和文章。我感觉12个月内，WebGL1大部分会被WebGL2取代，因为所有浏览器都正在自动更新。Firefox和Chrome会很快推出支持WebGL2版本，覆盖大部分的桌面用户和Android。如果Apple和Microsoft增加WebGL2支持到Safari macOS， Safari iOS和Edge，之后绝大多数的用户都被覆盖，我们可以只使用WebGL2。</p>

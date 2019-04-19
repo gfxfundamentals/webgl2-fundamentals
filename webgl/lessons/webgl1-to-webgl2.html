@@ -87,7 +87,7 @@ If you only use WebGL1 features then then there are
 only 2 differences.</p>
 <ol>
 <li><p>You use <code>&quot;webgl2&quot;</code> instead of <code>&quot;webgl&quot;</code> when calling <code>getContext</code></p>
-<pre><code>var gl = someCanvas.getContext(&quot;webgl2&quot;);
+<pre class="prettyprint"><code>var gl = someCanvas.getContext(&quot;webgl2&quot;);
 </code></pre><p>Note: there is no &quot;experimental-webgl2&quot;. The browser vendors got
 together and decided no more prefixing things because websites
 get dependent on the prefix.</p>
@@ -96,14 +96,14 @@ get dependent on the prefix.</p>
 as extensions</p>
 <p>For example Vertex Array Objects <code>OES_vertex_array_object</code> is a
 standard feature of WebGL2. So for example in WebGL1 you&#39;d do this</p>
-<pre><code>var ext = gl.getExtension(&quot;OES_vertex_array_object&quot;);
+<pre class="prettyprint"><code>var ext = gl.getExtension(&quot;OES_vertex_array_object&quot;);
 if (!ext) {
   // tell user they don&#39;t have the required extension or work around it
 } else {
   var someVAO = ext.createVertexArrayOES();
 }
 </code></pre><p>In WebGL2 you&#39;d do this</p>
-<pre><code>var someVAO = gl.createVertexArray();
+<pre class="prettyprint"><code>var someVAO = gl.createVertexArray();
 </code></pre><p>Because it just exists.</p>
 </li>
 </ol>
@@ -113,27 +113,27 @@ some changes.</p>
 <h2 id="switch-to-glsl-300-es">Switch to GLSL 300 es</h2>
 <p>The biggest change is you should upgrade your shaders to GLSL 3.00 ES. To do
 that the first line of your shaders needs to be</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 </code></pre><p><strong>NOTE: THIS HAS TO BE THE FIRST LINE! No comments, no blank lines before it allowed.</strong></p>
 <p>In other words this is bad</p>
-<pre><code>// BAD!!!!                +---There&#39;s a new line here!
+<pre class="prettyprint"><code>// BAD!!!!                +---There&#39;s a new line here!
 // BAD!!!!                V
 var vertexShaderSource = `
 #version 300 es
 ..
 `;
 </code></pre><p>This is bad too</p>
-<pre><code>&lt;!-- BAD!!                   V&lt;- there&#39;s a new line here
+<pre class="prettyprint"><code>&lt;!-- BAD!!                   V&lt;- there&#39;s a new line here
 &lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;
 #version 300 es
 ...
 &lt;/script&gt;
 </code></pre><p>This is good</p>
-<pre><code>var vertexShaderSource = `#version 300 es
+<pre class="prettyprint"><code>var vertexShaderSource = `#version 300 es
 ...
 `;
 </code></pre><p>This is good too</p>
-<pre><code>&lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;#version 300 es
+<pre class="prettyprint"><code>&lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;#version 300 es
 ...
 &lt;/script&gt;
 </code></pre><p>Or you could make your shader compiling functions strip
@@ -143,31 +143,31 @@ the first blank lines.</p>
 on top of adding the version string above</p>
 <h4 id="-attribute-in-"><code>attribute</code> -&gt; <code>in</code></h4>
 <p>In GLSL 100 you might have</p>
-<pre><code>attribute vec4 a_position;
+<pre class="prettyprint"><code>attribute vec4 a_position;
 attribute vec2 a_texcoord;
 attribute vec3 a_normal;
 </code></pre><p>In GLSL 300 es that becomes</p>
-<pre><code>in vec4 a_position;
+<pre class="prettyprint"><code>in vec4 a_position;
 in vec2 a_texcoord;
 in vec3 a_normal;
 </code></pre><h4 id="-varying-to-in-out-"><code>varying</code> to <code>in</code> / <code>out</code></h4>
 <p>In GLSL 100 you might declare a varying in both the vertex
 and fragment shaders like this</p>
-<pre><code>varying vec2 v_texcoord;
+<pre class="prettyprint"><code>varying vec2 v_texcoord;
 varying vec3 v_normal;
 </code></pre><p>In GLSL 300 es in the vertex shader the varyings become</p>
-<pre><code>out vec2 v_texcoord;
+<pre class="prettyprint"><code>out vec2 v_texcoord;
 out vec3 v_normal;
 </code></pre><p>And in the fragment shader they become</p>
-<pre><code>in vec2 v_texcoord;
+<pre class="prettyprint"><code>in vec2 v_texcoord;
 in vec3 v_normal;
 </code></pre><h4 id="no-more-gl_fragcolor-">No more <code>gl_FragColor</code></h4>
 <p>In GLSL 100 your fragment shader would set the special
 variable <code>gl_FragColor</code> to set the output of the shader.</p>
-<pre><code>gl_FragColor = vec4(1, 0, 0, 1);  // red
+<pre class="prettyprint"><code>gl_FragColor = vec4(1, 0, 0, 1);  // red
 </code></pre><p>In GLSL 300 es you declare your own output variable and
 then set it.</p>
-<pre><code>out vec4 myOutputColor;
+<pre class="prettyprint"><code>out vec4 myOutputColor;
 
 void main() {
    myOutputColor = vec4(1, 0, 0, 1);  // red
@@ -176,7 +176,7 @@ void main() {
 <code>gl_</code> so you can&#39;t just make <code>out vec4 gl_FragColor</code></p>
 <h4 id="-texture2d-texture-etc-"><code>texture2D</code> -&gt; <code>texture</code> etc.</h4>
 <p>In GLSL 100 you&#39;d get a color from a texture like this</p>
-<pre><code>uniform sampler2D u_some2DTexture;
+<pre class="prettyprint"><code>uniform sampler2D u_some2DTexture;
 uniform samplerCube u_someCubeTexture;
 
 ...
@@ -186,7 +186,7 @@ vec4 color2 = textureCube(u_someCubeTexture, ...);
 </code></pre><p>In GLSL 300es the texture functions automatically know
 what to do based on the sampler type so now it&#39;s just
 <code>texture</code></p>
-<pre><code>uniform sampler2D u_some2DTexture;
+<pre class="prettyprint"><code>uniform sampler2D u_some2DTexture;
 uniform samplerCube u_someCubeTexture;
 
 ...
@@ -243,7 +243,7 @@ depends on what you&#39;re trying to do but vertex array objects in particular
 seem like a basic feature that should always be used.</p>
 <p>In WebGL1 without vertex array objects all the data about attributes
 was global WebGL state. You can imagine it like this</p>
-<pre><code>var glState = {
+<pre class="prettyprint"><code>var glState = {
   attributeState: {
     ELEMENT_ARRAY_BUFFER: null,
     attributes: [
@@ -264,13 +264,13 @@ Before each thing you wanted to draw you needed to setup all the attributes and 
 were drawing indexed data you needed to set the <code>ELEMENT_ARRAY_BUFFER</code>.</p>
 <p>With Vertex Array Objects that entire <code>attributeState</code> above becomes a <em>Vertex Array</em>.</p>
 <p>In other words</p>
-<pre><code>var someVAO = gl.createVertexArray();
+<pre class="prettyprint"><code>var someVAO = gl.createVertexArray();
 </code></pre><p>Makes a new instance of the thing above called <code>attributeState</code>.</p>
-<pre><code>gl.bindVertexArray(someVAO);
+<pre class="prettyprint"><code>gl.bindVertexArray(someVAO);
 </code></pre><p>Is equivilent to</p>
-<pre><code>glState.attributeState = someVAO;
+<pre class="prettyprint"><code>glState.attributeState = someVAO;
 </code></pre><p>What that means is you should setup all of your attributes at init time now.</p>
-<pre><code>// at init time
+<pre class="prettyprint"><code>// at init time
 for each model / geometry / ...
   var vao = gl.createVertexArray()
   gl.bindVertexArray(vao);
@@ -283,7 +283,7 @@ for each model / geometry / ...
   gl.bindVertexArray(null);
 </code></pre><p>Then at render time to use a particular geometry all you need to do
 is</p>
-<pre><code>gl.bindVertexArray(vaoForGeometry);
+<pre class="prettyprint"><code>gl.bindVertexArray(vaoForGeometry);
 </code></pre><p>In WebGL1 the init loop object would have appeared at render time.
 This is a HUGE speed up!</p>
 <p>There are a few caveats though:</p>
@@ -293,7 +293,7 @@ This is a HUGE speed up!</p>
 programs consider manually assinging attribute locations.
 In GLSL 300 es you can do this in the shader</p>
 <p>For example:</p>
-<pre><code>layout(location = 0) in vec4 a_position;
+<pre class="prettyprint"><code>layout(location = 0) in vec4 a_position;
 layout(location = 1) in vec2 a_texcoord;
 layout(location = 2) in vec3 a_normal;
 layout(location = 3) in vec4 a_color;
@@ -301,7 +301,7 @@ layout(location = 3) in vec4 a_color;
 <p>You can also still do it the WebGL1 way by calling
 <code>gl.bindAttribLocation</code> before calling <code>gl.linkProgram</code>.</p>
 <p>For example:</p>
-<pre><code>gl.bindAttribLocation(someProgram, 0, &quot;a_position&quot;);
+<pre class="prettyprint"><code>gl.bindAttribLocation(someProgram, 0, &quot;a_position&quot;);
 gl.bindAttribLocation(someProgram, 1, &quot;a_texcoord&quot;);
 gl.bindAttribLocation(someProgram, 2, &quot;a_normal&quot;);
 gl.bindAttribLocation(someProgram, 3, &quot;a_color&quot;);
@@ -320,7 +320,7 @@ to be in all shaders so in the interest of D.R.Y. <code>gl.bindAttribLocation</c
 seems better. Maybe if I was using a shader generator then there&#39;d be no difference.</p>
 </li>
 <li><p>Always unbind the VAO when you&#39;re done</p>
-<pre><code>gl.bindVertexArray(null);
+<pre class="prettyprint"><code>gl.bindVertexArray(null);
 </code></pre><p>This just comes from my own experience. If you look above
 the <code>ELEMENT_ARRAY_BUFFER</code> state is part of a Vertex Array.</p>
 <p>So, I ran into this issue. I created some geometry, then

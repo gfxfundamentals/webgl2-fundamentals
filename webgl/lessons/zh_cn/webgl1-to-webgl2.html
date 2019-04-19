@@ -86,19 +86,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 如果你只使用WebGL1的特性，只有两点不同。</p>
 <ol>
 <li><p>调用<code>getContext</code>时，你使用<code>&quot;webgl2&quot;</code>代替<code>&quot;webgl&quot;</code> </p>
-<pre><code>var gl = someCanvas.getContext(&quot;webgl2&quot;);
+<pre class="prettyprint"><code>var gl = someCanvas.getContext(&quot;webgl2&quot;);
 </code></pre><p>注意：没有&quot;experimental-webgl2&quot;。浏览器厂商达成共识，不再有前缀。</p>
 </li>
 <li><p>许多扩展成为WebGL2的标准部分，所以不再用扩展的方式获得 </p>
 <p>例如，顶点数组对象<code>OES_vertex_array_object</code>是WebGL2标准特性。例如使用WebGL1你是这样做的 </p>
-<pre><code>var ext = gl.getExtension(&quot;OES_vertex_array_object&quot;);
+<pre class="prettyprint"><code>var ext = gl.getExtension(&quot;OES_vertex_array_object&quot;);
 if (!ext) {
   // 告诉用户没有此扩展或者使用其他方式
 } else {
   var someVAO = ext.createVertexArrayOES();
 }
 </code></pre><p>使用WebGL2你应该这样写</p>
-<pre><code>var someVAO = gl.createVertexArray();
+<pre class="prettyprint"><code>var someVAO = gl.createVertexArray();
 </code></pre><p>因为它已经存在。</p>
 </li>
 </ol>
@@ -106,27 +106,27 @@ if (!ext) {
 <p>要利用一些WebGL2特性的优势，你还是需要做一些改变。</p>
 <h2 id="-glsl-300-es">切换到GLSL 300 es</h2>
 <p>最大的变化是你应该将着色器升级到GLSL 3.00 ES。着色器第一行需要是</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 </code></pre><p><strong>注意：必须严格在第一行。不能有注释，不能有空行。</strong></p>
 <p>这是错误的</p>
-<pre><code>// 错误!!!!                +---这有空行
+<pre class="prettyprint"><code>// 错误!!!!                +---这有空行
 // 错误!!!!                V
 var vertexShaderSource = `
 #version 300 es
 ..
 `;
 </code></pre><p>这也是错误的</p>
-<pre><code>&lt;!-- 错误!!                   V&lt;- 这有空行--&gt;
+<pre class="prettyprint"><code>&lt;!-- 错误!!                   V&lt;- 这有空行--&gt;
 &lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;
 #version 300 es
 ...
 &lt;/script&gt;
 </code></pre><p>这是正确的</p>
-<pre><code>var vertexShaderSource = `#version 300 es
+<pre class="prettyprint"><code>var vertexShaderSource = `#version 300 es
 ...
 `;
 </code></pre><p>这也是正确的</p>
-<pre><code>&lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;#version 300 es
+<pre class="prettyprint"><code>&lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;#version 300 es
 ...
 &lt;/script&gt;
 </code></pre><p>或者你可以让你的着色器编译函数去掉开始的空行。</p>
@@ -134,28 +134,28 @@ var vertexShaderSource = `
 <p>有一些在着色器中要改动的差异，上面已经提到需要在最前面添加版本字符串。</p>
 <h4 id="-attribute-in-"><code>attribute</code> -&gt; <code>in</code></h4>
 <p>GLSL 100中这样定义</p>
-<pre><code>attribute vec4 a_position;
+<pre class="prettyprint"><code>attribute vec4 a_position;
 attribute vec2 a_texcoord;
 attribute vec3 a_normal;
 </code></pre><p>在GLSL 300 es中变成了</p>
-<pre><code>in vec4 a_position;
+<pre class="prettyprint"><code>in vec4 a_position;
 in vec2 a_texcoord;
 in vec3 a_normal;
 </code></pre><h4 id="-varying-in-out-"><code>varying</code>变为<code>in</code> / <code>out</code></h4>
 <p>在GLSL 100中，你在顶点着色器和片断着色器中都用varying声明 </p>
-<pre><code>varying vec2 v_texcoord;
+<pre class="prettyprint"><code>varying vec2 v_texcoord;
 varying vec3 v_normal;
 </code></pre><p>在GLSL 300 es中，顶点着色器的varying变为</p>
-<pre><code>out vec2 v_texcoord;
+<pre class="prettyprint"><code>out vec2 v_texcoord;
 out vec3 v_normal;
 </code></pre><p>在片断着色器中变为</p>
-<pre><code>in vec2 v_texcoord;
+<pre class="prettyprint"><code>in vec2 v_texcoord;
 in vec3 v_normal;
 </code></pre><h4 id="-gl_fragcolor-">不再有<code>gl_FragColor</code></h4>
 <p>在GLSL 100中，通过赋值给内置变量<code>gl_FragColor</code>来设置片断着色器的输出。</p>
-<pre><code>gl_FragColor = vec4(1, 0, 0, 1);  // 红色
+<pre class="prettyprint"><code>gl_FragColor = vec4(1, 0, 0, 1);  // 红色
 </code></pre><p>在GLSL 300 es中你声明自己的输出变量并给它赋值。</p>
-<pre><code>out vec4 myOutputColor;
+<pre class="prettyprint"><code>out vec4 myOutputColor;
 
 void main() {
    myOutputColor = vec4(1, 0, 0, 1);  // red
@@ -163,7 +163,7 @@ void main() {
 </code></pre><p>注意：你可以随便定义变量名但是<strong>不能</strong>用<code>gl_</code>开头，所以你不能这样定义<code>out vec4 gl_FragColor</code></p>
 <h4 id="-texture2d-texture-etc-"><code>texture2D</code> -&gt; <code>texture</code> etc.</h4>
 <p>在GLSL 100中，你像这样从纹理中获取颜色</p>
-<pre><code>uniform sampler2D u_some2DTexture;
+<pre class="prettyprint"><code>uniform sampler2D u_some2DTexture;
 uniform samplerCube u_someCubeTexture;
 
 ...
@@ -171,7 +171,7 @@ uniform samplerCube u_someCubeTexture;
 vec4 color1 = texture2D(u_some2DTexture, ...);
 vec4 color2 = textureCube(u_someCubeTexture, ...);
 </code></pre><p>在GLSL 300es中， 纹理函数会自动根据类型判断，所以只使用<code>texture</code>即可</p>
-<pre><code>uniform sampler2D u_some2DTexture;
+<pre class="prettyprint"><code>uniform sampler2D u_some2DTexture;
 uniform samplerCube u_someCubeTexture;
 
 ...
@@ -214,7 +214,7 @@ vec4 color2 = texture(u_someCubeTexture, ...);
 <h2 id="-">顶点数组对象</h2>
 <p>上面的所有特性，我个人认为顶点数组对象是你经常应该使用的。其他任何特性取决于你想做什么，只有顶点数组对象是一个你应该经常使用的特性。</p>
 <p>在WebGL1中，没有顶点数组对象，所有和attribute相关的数据都是全局WebGL状态。你可以想象它为 </p>
-<pre><code>var glState = {
+<pre class="prettyprint"><code>var glState = {
   attributeState: {
     ELEMENT_ARRAY_BUFFER: null,
     attributes: [
@@ -233,13 +233,13 @@ vec4 color2 = texture(u_someCubeTexture, ...);
 <code>gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ??)</code>会影响全局状态。在绘制你想要绘制的事情之前，你需要设置所有属性，如果你绘制索引数据，你需要设置<code>ELEMENT_ARRAY_BUFFER</code>。</p>
 <p>使用顶点数组对对象，上边的整个<code>attributeState</code>会变为一个<em>顶点数组</em>.</p>
 <p>换句话说</p>
-<pre><code>var someVAO = gl.createVertexArray();
+<pre class="prettyprint"><code>var someVAO = gl.createVertexArray();
 </code></pre><p>创建上面<code>attributeState</code>的一个新的实例。</p>
-<pre><code>gl.bindVertexArray(someVAO);
+<pre class="prettyprint"><code>gl.bindVertexArray(someVAO);
 </code></pre><p>等同于</p>
-<pre><code>glState.attributeState = someVAO;
+<pre class="prettyprint"><code>glState.attributeState = someVAO;
 </code></pre><p>这意味着你应该在初始时设置所有attribute。</p>
-<pre><code>// 初始阶段
+<pre class="prettyprint"><code>// 初始阶段
 // 对于每个模型/ 几何体 / ...
   var vao = gl.createVertexArray()
   gl.bindVertexArray(vao);
@@ -251,7 +251,7 @@ vec4 color2 = texture(u_someCubeTexture, ...);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
   gl.bindVertexArray(null);
 </code></pre><p>然后在渲染阶段，使用几何体你需要</p>
-<pre><code>gl.bindVertexArray(vaoForGeometry);
+<pre class="prettyprint"><code>gl.bindVertexArray(vaoForGeometry);
 </code></pre><p>WebGL1中在初始化阶段的循环对象会发生在渲染阶段。
 这是巨大的速度提升！</p>
 <p>但有几点需要注意：</p>
@@ -260,14 +260,14 @@ vec4 color2 = texture(u_someCubeTexture, ...);
 <p>如果你在多个程序里要使用相同的几何体考虑手动分配attribute位置。
 GLSL 300 es你可以在着色器中这样写</p>
 <p>例如：</p>
-<pre><code>layout(location = 0) in vec4 a_position;
+<pre class="prettyprint"><code>layout(location = 0) in vec4 a_position;
 layout(location = 1) in vec2 a_texcoord;
 layout(location = 2) in vec3 a_normal;
 layout(location = 3) in vec4 a_color;
 </code></pre><p>设置4个attributes的位置。</p>
 <p>你仍然可以使用WebGL1的方式，通过在调用<code>gl.linkProgram</code>之前调用<code>gl.bindAttribLocation</code>。</p>
 <p>例如：</p>
-<pre><code>gl.bindAttribLocation(someProgram, 0, &quot;a_position&quot;);
+<pre class="prettyprint"><code>gl.bindAttribLocation(someProgram, 0, &quot;a_position&quot;);
 gl.bindAttribLocation(someProgram, 1, &quot;a_texcoord&quot;);
 gl.bindAttribLocation(someProgram, 2, &quot;a_normal&quot;);
 gl.bindAttribLocation(someProgram, 3, &quot;a_color&quot;);
@@ -276,7 +276,7 @@ gl.bindAttribLocation(someProgram, 3, &quot;a_color&quot;);
 <p>注意：上面的2种方法我倾向于使用<code>gl.bindAttribLocation</code>因为在我的代码中将它放在一个位置更简单。<code>layout(location = ?)</code>需要存在于所有着色器中，所以不重复做同样的事情，<code>gl.bindAttribLocation</code>似乎更好。或许如果我使用着色器生成器就没有区别了。</p>
 </li>
 <li><p>完成后，始终解除对VAO的绑定</p>
-<pre><code>gl.bindVertexArray(null);
+<pre class="prettyprint"><code>gl.bindVertexArray(null);
 </code></pre><p>这只是来自我自己的经验，如果上面的<code>ELEMENT_ARRAY_BUFFER</code>状态是顶点数组的一部分。</p>
 <p>所以，我遇见了这个问题。我创建了一些几何体，然后我创建了一个VAO来存几何体，并设置attribute和<code>ELEMENT_ARRAY_BUFFER</code>。然后我创建了另一些几何体。当几何体设置索引时，因为我仍然有之前的 VAO绑定，设置索引影响了前一个绑定<code>ELEMENT_ARRAY_BUFFER</code>的前一个VAO。这让我花了几个小时来调试。</p>
 <p>所以，我的建议是，如果你完成了，永远不要留下一个绑定的VAO。要么立即绑定下一个你要使用的VAO或者完成绑定到<code>null</code></p>

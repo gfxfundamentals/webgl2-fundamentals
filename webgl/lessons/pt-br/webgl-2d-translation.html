@@ -95,7 +95,7 @@ o código de exemplo que fizemos <a href="webgl-fundamentals.html">no primeiro p
 você poderia facilmente transladar nosso retângulo apenas mudando os valores
 passados para <code>setRectangle</code> certo? Aqui está uma amostra baseada em nossa
 <a href="webgl-fundamentals.html">amostra anterior</a>.</p>
-<pre><code>+  // Primeiro vamos fazer algumas variáveis
+<pre class="prettyprint"><code>+  // Primeiro vamos fazer algumas variáveis
 +  // para manter a translação, largura e altura do retângulo
 +  var translation = [0, 0];
 +  var width = 100;
@@ -155,7 +155,7 @@ forma mais complicada.</p>
 <p><img src="../../resources/polygon-f.svg" width="200" height="270" class="webgl_center"></p>
 <p>Bem, seguindo nosso código atual, teríamos que mudar o <code>setRectangle</code>
 para algo mais parecido com isso.</p>
-<pre><code>// Preencha o atual buffer ARRAY_BUFFER com os valores que definem uma letra &#39;F&#39;.
+<pre class="prettyprint"><code>// Preencha o atual buffer ARRAY_BUFFER com os valores que definem uma letra &#39;F&#39;.
 function setGeometry(gl, x, y) {
   var width = 100;
   var height = 150;
@@ -195,7 +195,7 @@ desenhamos, o JavaScript tem que atualizar todos os pontos.</p>
 <p>Há uma maneira mais simples. Basta carregar a geometria e fazer a translação
 no shader.</p>
 <p>Aqui está o novo shader</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 
 // um atributo é um input (in) para um vertex shader.
 // Ele receberá dados de um buffer
@@ -225,7 +225,7 @@ void main() {
 }
 </code></pre><p>e vamos reestruturar o código um pouco. Por um lado, só precisa definir
 a geometria uma vez.</p>
-<pre><code>// Preencha o atual buffer ARRAY_BUFFER
+<pre class="prettyprint"><code>// Preencha o atual buffer ARRAY_BUFFER
 // com os valores que definem uma letra &#39;F&#39;.
 function setGeometry(gl) {
   gl.bufferData(
@@ -258,7 +258,7 @@ function setGeometry(gl) {
 }
 </code></pre><p>Então precisamos atualizar <code>u_translation</code> antes de desenhar com a
 translação que desejamos.</p>
-<pre><code>  ...
+<pre class="prettyprint"><code>  ...
 
 +  var translationLocation = gl.getUniformLocation(
 +             program, &quot;u_translation&quot;);

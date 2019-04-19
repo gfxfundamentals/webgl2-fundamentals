@@ -96,7 +96,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>초등학교 3학년 수학에서 무언가에 1을 곱하면 같은 값을 유지한다는 것을 기억할 것입니다. 그러므로 123 * 1 = 123. 아주 기본이죠? 단위원에서 반지름이 1.0인 것도 1입니다. 회전할떄도 1입니다. 그러므로 이 단위원으로 무언가를 곱할수 있고 마술이 일어나서 회전하는것 뺴고는 1을 곱하는것과 같습니다.</p>
 <p>단위 원에 임의의 점 X와 Y를 정할것이고 <a href="webgl-2d-translation.html">전에 했던 예제</a>에 지오메트리(geometry)에 곱할것입니다.</p>
 <p>여기에 업데이트된 쉐이더가 있습니다.</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 
 in vec2 a_position;
 
@@ -115,7 +115,7 @@ void main() {
 
 ...
 </code></pre><p>그리고 자바스크립트를 업데이트하여 이 두 값을 전달할 수 있게 합니다.</p>
-<pre><code>  ...
+<pre class="prettyprint"><code>  ...
 
 +  var rotationLocation = gl.getUniformLocation(program, &quot;u_rotation&quot;);
 
@@ -193,7 +193,7 @@ void main() {
 
 <p>점을 시계 방향으로 오른쪽으로 돌릴 때 X 값이 커지고 Y 값이 작아지는 것을 볼 수 있습니다. 90도를 지나 가면 X는 다시 작아지고 Y는 점점 커질 것입니다. 이 패턴이 회전으로 제공됩니다.</p>
 <p>단위원의 점에 대한 또 다른 이름이 있습니다. 사인과 코사인이라고 불리는 것입니다. 주어진 각도에 대하여 다음과 같이 사인과 코사인을 찾을 수 있습니다.</p>
-<pre><code>function printSineAndCosineForAnAngle(angleInDegrees) {
+<pre class="prettyprint"><code>function printSineAndCosineForAnAngle(angleInDegrees) {
   var angleInRadians = angleInDegrees * Math.PI / 180;
   var s = Math.sin(angleInRadians);
   var c = Math.cos(angleInRadians);
@@ -201,7 +201,7 @@ void main() {
 }
 </code></pre><p>자바스크립트 콘솔에 코드를 복사하고 붙혀 넣고 <code>printSineAndCosignForAngle(30)</code>을 치면 <code>s = 0.49 c = 0.87</code>(주의: 숫자를 반올립 했습니다.)을 볼 수 있습니다.</p>
 <p>이 모든 것들을 함께 사용하면 원하는 각도로 지오메트리(geometry)를 회전 할 수 있습니다. 회전하려는 각도의 사인 및 코사인으로 회전을 설정하면됩니다.</p>
-<pre><code>  ...
+<pre class="prettyprint"><code>  ...
   var angleInRadians = angleInDegrees * Math.PI / 180;
   rotation[0] = Math.sin(angleInRadians);
   rotation[1] = Math.cos(angleInRadians);

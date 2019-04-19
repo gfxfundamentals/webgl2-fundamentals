@@ -108,7 +108,7 @@ de certa forma, é como multiplicar por 1, exceto que a magia acontece e as cois
 <p>Nós vamos pegar os valores de X e Y, de qualquer ponto no círculo unitário e,
 vamos multiplicar nossa geometria de acordo com <a href="webgl-2d-translation.html">nosso exemplo anterior</a>.</p>
 <p>Aqui vão alguns updates para o nosso shader.</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 
 in vec2 a_position;
 
@@ -127,7 +127,7 @@ void main() {
 
 ...
 </code></pre><p>E também atualizamos o JavaScript para que possámos passar os dois valores.</p>
-<pre><code>  ...
+<pre class="prettyprint"><code>  ...
 
 +  var rotationLocation = gl.getUniformLocation(program, &quot;u_rotation&quot;);
 
@@ -215,7 +215,7 @@ Esse padrão nos dá a rotação.</p>
 unitário. Eles são chamados de seno e cosseno. Então, para qualquer ângulo
 que seja fornecido, nós podemos simplesmente ver o seno e cosseno da seguinte
 maneira.</p>
-<pre><code>function printSineAndCosineForAnAngle(angleInDegrees) {
+<pre class="prettyprint"><code>function printSineAndCosineForAnAngle(angleInDegrees) {
   var angleInRadians = angleInDegrees * Math.PI / 180;
   var s = Math.sin(angleInRadians);
   var c = Math.cos(angleInRadians);
@@ -227,7 +227,7 @@ escrever <code>printSineAndCosignForAngle(30)</code>, você verá que
 <p>Se você colocar tudo isso junto, você será capaz de rotacionar sua 
 geometria em qualquer ângulo que vocẽ desejar. Apenas defina a rotação
 com o seno e o cosseno referentes ao ângulo que você deseja.</p>
-<pre><code>  ...
+<pre class="prettyprint"><code>  ...
   var angleInRadians = angleInDegrees * Math.PI / 180;
   rotation[0] = Math.sin(angleInRadians);
   rotation[1] = Math.cos(angleInRadians);

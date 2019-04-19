@@ -108,7 +108,7 @@ of like multiplying by 1 except magic happens and things rotate.</p>
 <p>We&#39;re going to take that X and Y value from any point on the unit circle
 and we&#39;ll multiply our geometry by them from <a href="webgl-2d-translation.html">our previous sample</a>.</p>
 <p>Here are the updates to our shader.</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 
 in vec2 a_position;
 
@@ -127,7 +127,7 @@ void main() {
 
 ...
 </code></pre><p>And we update the JavaScript so that we can pass those 2 values in.</p>
-<pre><code>  ...
+<pre class="prettyprint"><code>  ...
 
 +  var rotationLocation = gl.getUniformLocation(program, &quot;u_rotation&quot;);
 
@@ -214,7 +214,7 @@ That pattern gives us rotation.</p>
 <p>There&#39;s another name for the points on a unit circle. They&#39;re called
 the sine and cosine. So for any given angle we can just look up the
 sine and cosine like this.</p>
-<pre><code>function printSineAndCosineForAnAngle(angleInDegrees) {
+<pre class="prettyprint"><code>function printSineAndCosineForAnAngle(angleInDegrees) {
   var angleInRadians = angleInDegrees * Math.PI / 180;
   var s = Math.sin(angleInRadians);
   var c = Math.cos(angleInRadians);
@@ -226,7 +226,7 @@ type <code>printSineAndCosignForAngle(30)</code> you see it prints
 <p>If you put it all together you can rotate your geometry to any angle
 you desire. Just set the rotation to the sine and cosine of the angle
 you want to rotate to.</p>
-<pre><code>  ...
+<pre class="prettyprint"><code>  ...
   var angleInRadians = angleInDegrees * Math.PI / 180;
   rotation[0] = Math.sin(angleInRadians);
   rotation[1] = Math.cos(angleInRadians);

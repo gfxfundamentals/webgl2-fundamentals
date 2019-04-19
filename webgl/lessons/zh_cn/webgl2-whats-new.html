@@ -88,11 +88,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>我认为这是相当重要的，在WebGL1中是选择可用，现在在WebGL2中始终可用，<a href="webgl1-to-webgl2.html#Vertex-Array-Objects">我认为你应该始终使用它们</a>.</p>
 <h2 id="-">着色器中可以获取纹理大小</h2>
 <p>在WebGL1中，如果你的着色器需要知道纹理的大小，你需要手动用uniform传递纹理大小。在WebGL2中你可以调用 </p>
-<pre><code>vec2 size = textureSize(sampler, lod)
+<pre class="prettyprint"><code>vec2 size = textureSize(sampler, lod)
 </code></pre><p>来获取任何lod层的纹理 </p>
 <h2 id="-">直接选取纹素</h2>
 <p>在纹理中很方便存储大量数组数据。WebGL 1中你可以这么做，但是你得用纹理坐标(0.0 到 1.0)来寻址。在WebGL2中，你可以在纹理中直接用像素／纹素坐标来选取值，使得数据获取简单一些。 </p>
-<pre><code>vec4 values = texelFetch(sampler, ivec2Position, lod);
+<pre class="prettyprint"><code>vec4 values = texelFetch(sampler, ivec2Position, lod);
 </code></pre><h2 id="-">更多纹理格式</h2>
 <p>WebGL1只有一部分纹理格式。 WebGL2有许多!</p>
 <ul>
@@ -153,7 +153,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>3D 纹理就是纹理有3个纬度。</p>
 <h2 id="-">纹理数组</h2>
 <p>纹理数组和3D 纹理很相似，除了每个切片都是单独的纹理。所有切片都必须是相同的大小，但这给了着色器很好的方法来访问数百个纹理，即使它只有相对较少的纹理单元。你可以这样在着色器中选择切片。</p>
-<pre><code>vec4 color = texture(someSampler2DArray, vec3(u, v, slice));
+<pre class="prettyprint"><code>vec4 color = texture(someSampler2DArray, vec3(u, v, slice));
 </code></pre><h2 id="-2-">非2的幂纹理支持</h2>
 <p>WebGL1中不是2的幂的纹理不能有mip。WebGL2移除了限制，非2的幂大小的纹理和2的幂大小的纹理一样工作。 </p>
 <h2 id="-">移除着色器循环限制</h2>
@@ -198,7 +198,7 @@ WebGL2中如果你使用Uniform缓冲对象，你可以在JavaScript中设置一
 </ul>
 <p>然后在运行时，你可以创建一个全局uniform缓冲对象，每个模型一个模型uniform缓冲对象，每个光源一个光照uniform缓冲对象和每个材质的uniform缓冲对象。</p>
 <p>绘制任何物体假设所有数据已经更新，所有你要做的就是绑定你需要的4个uniform缓冲对象</p>
-<pre><code>gl.bindBufferRange(..., globalBlockIndx, globalMatrixUBO, ...);
+<pre class="prettyprint"><code>gl.bindBufferRange(..., globalBlockIndx, globalMatrixUBO, ...);
 gl.bindBufferRange(..., modelBlockIndx, someModelMatrixUBO, ...);
 gl.bindBufferRange(..., materialBlockIndx, someMaterialSettingsUBO, ...);
 gl.bindBufferRange(..., lightBlockIndx, someLightSettingsUBO, ...);

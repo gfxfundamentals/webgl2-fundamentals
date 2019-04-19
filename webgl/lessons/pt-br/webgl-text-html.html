@@ -94,7 +94,7 @@ na mesma posição.</p>
 <p>A maneira simples é fazer um elemento HTML ou elementos e usar o CSS para que eles se sobreponham.</p>
 <p>Por exemplo: primeiro, crie um container e coloque uma tela e algum HTML para ser
 sobreposto dentro do container.</p>
-<pre><code>&lt;div class=&quot;container&quot;&gt;
+<pre class="prettyprint"><code>&lt;div class=&quot;container&quot;&gt;
   &lt;canvas id=&quot;canvas&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
   &lt;div id=&quot;overlay&quot;&gt;
     &lt;div&gt;Time: &lt;span id=&quot;time&quot;&gt;&lt;/span&gt;&lt;/div&gt;
@@ -102,7 +102,7 @@ sobreposto dentro do container.</p>
   &lt;/div&gt;
 &lt;/div&gt;
 </code></pre><p>Em seguida, configure o CSS para que a tela e o HTML se sobrepõem</p>
-<pre><code>.container {
+<pre class="prettyprint"><code>.container {
     position: relative;
 }
 #overlay {
@@ -112,7 +112,7 @@ sobreposto dentro do container.</p>
 }
 </code></pre><p>Agora, procure esses elementos no tempo de inicialização e crie ou procure as áreas que deseja
 realizar a mudança.</p>
-<pre><code>// look up the elements we want to affect
+<pre class="prettyprint"><code>// look up the elements we want to affect
 var timeElement = document.getElementById(&quot;time&quot;);
 var angleElement = document.getElementById(&quot;angle&quot;);
 
@@ -125,7 +125,7 @@ var angleNode = document.createTextNode(&quot;&quot;);
 timeElement.appendChild(timeNode);
 angleElement.appendChild(angleNode);
 </code></pre><p>Finalmente atualize os nós ao renderizar</p>
-<pre><code>function drawScene(time) {
+<pre class="prettyprint"><code>function drawScene(time) {
     var now = time * 0.001;  // convert to seconds
 
     ...
@@ -148,7 +148,7 @@ angleElement.appendChild(angleNode);
 </p>
 <p>Observe como eu coloco espaços dentro dos divs especificamente para as partes que eu queria mudar. Estou fazendo o
 pressuposto aqui que é mais rápido do que apenas usar os divs sem extensões e fazer algo como</p>
-<pre><code>timeNode.nodeValue = &quot;Time &quot; + clock.toFixed(2);
+<pre class="prettyprint"><code>timeNode.nodeValue = &quot;Time &quot; + clock.toFixed(2);
 </code></pre><p>Também estou usando text nodes chamando <code>node = document.createTextNode()</code> e depois <code>node.nodeValue = someMsg</code>.
 Eu também poderia usar <code>someElement.innerHTML = someHTML</code>. Isso seria mais flexível porque você poderia
 inserir string HTML arbitrárias, embora possa ser um pouco mais lento, já que o navegador precisa criar
@@ -169,12 +169,12 @@ um brilho ao redor delas. Há uma borda vermelha. Você obtém tudo isso, essenc
 <p>A próxima coisa mais comum a querer fazer é posicionar algum texto em relação a algo que você está renderizando.
 Nós também podemos fazer isso em HTML.</p>
 <p>Neste caso, voltaremos a criar um container com o canvas e outro container para o nosso HTML em movimento</p>
-<pre><code>&lt;div class=&quot;container&quot;&gt;
+<pre class="prettyprint"><code>&lt;div class=&quot;container&quot;&gt;
   &lt;canvas id=&quot;canvas&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
   &lt;div id=&quot;divcontainer&quot;&gt;&lt;/div&gt;
 &lt;/div&gt;
 </code></pre><p>E vamos configurar o CSS</p>
-<pre><code>.container {
+<pre class="prettyprint"><code>.container {
     position: relative;
     overflow: none;
 }
@@ -200,7 +200,7 @@ esse é o recipiente que tanto o canvas como o <code>#divcontainer</code> estão
 flutuae sobre o canvas. E o <code>overflow: hidden</code> faz com que seus filhos sejam cortados.</p>
 <p>Finalmente, <code>.floating-div</code> será usado para a div posicionável que criamos.</p>
 <p>Então, agora precisamos procurar o divcontainer, criar um div e anexá-lo.</p>
-<pre><code>// look up the divcontainer
+<pre class="prettyprint"><code>// look up the divcontainer
 var divContainerElement = document.getElementById(&quot;divcontainer&quot;);
 
 // make the div
@@ -216,7 +216,7 @@ div.appendChild(textNode);
 // add it to the divcontainer
 divContainerElement.appendChild(div);
 </code></pre><p>Agora podemos posicionar a div através da configuração do seu estilo.</p>
-<pre><code>div.style.left = Math.floor(x) + &quot;px&quot;;
+<pre class="prettyprint"><code>div.style.left = Math.floor(x) + &quot;px&quot;;
 div.style.top  = Math.floor(y) + &quot;px&quot;;
 textNode.nodeValue = now.toFixed(2);
 </code></pre><p>Aqui está um exemplo em que nos limitamos ao div.</p>
@@ -235,7 +235,7 @@ para o nosso shader e ele multiplica vértices no espaço local e os converte
 para clipspace. Nós também podemos fazer todas os cálculos em JavaScript.
 Então, podemos multiplicar o clipspace (-1 a +1) em pixels e então, usar
 para posicionar a div.</p>
-<pre><code>gl.drawArrays(...);
+<pre class="prettyprint"><code>gl.drawArrays(...);
 
 // We just got through computing a matrix to draw our
 // F in 3D.

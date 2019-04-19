@@ -91,7 +91,7 @@ uniforms and attributes and the code required to look up their locations can be 
 <p>Assume we&#39;ve got the <a href="webgl-boilerplate.html">typical boilerplate WebGL code for
 compiling and linking shader programs</a>. Given a set of shaders like this.</p>
 <p>vertex shader:</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 
 uniform mat4 u_worldViewProjection;
 uniform vec3 u_lightWorldPos;
@@ -118,7 +118,7 @@ void main() {
   gl_Position = v_position;
 }
 </code></pre><p>fragment shader:</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 precision mediump float;
 
 in vec4 v_position;
@@ -157,7 +157,7 @@ void main() {
     diffuseColor.a);
 }
 </code></pre><p>You&#39;d end up having to write code like this to look up and set all the various values to draw.</p>
-<pre><code>// At initialization time
+<pre class="prettyprint"><code>// At initialization time
 var u_worldViewProjectionLoc   = gl.getUniformLocation(program, &quot;u_worldViewProjection&quot;);
 var u_lightWorldPosLoc         = gl.getUniformLocation(program, &quot;u_lightWorldPos&quot;);
 var u_worldLoc                 = gl.getUniformLocation(program, &quot;u_world&quot;);
@@ -227,7 +227,7 @@ gl.drawArrays(...);
 the uniforms, attributes and their locations and then setup functions to set them for us.
 We can then pass in JavaScript objects to set our settings much more easily.
 If that&#39;s clear as mud well, our code would look something like this</p>
-<pre><code>// At initialiation time
+<pre class="prettyprint"><code>// At initialiation time
 var uniformSetters = twgl.createUniformSetters(gl, program);
 var attribSetters  = twgl.createAttributeSetters(gl, program);
 
@@ -267,7 +267,7 @@ twgl.setUniforms(uniformSetters, uniforms);
 gl.drawArrays(...);
 </code></pre><p>That seems a heck of a lot smaller, easier, and less code to me.</p>
 <p>You can even use multiple JavaScript objects for the uniforms if it suits you. For example</p>
-<pre><code>// At initialiation time
+<pre class="prettyprint"><code>// At initialiation time
 var uniformSetters = twgl.createUniformSetters(gl, program);
 var attribSetters  = twgl.createAttributeSetters(gl, program);
 
@@ -347,7 +347,7 @@ objects.forEach(function(object) {
 <p>Let&#39;s take it a tiny step further. In the code above we setup a variable <code>attribs</code> with the buffers we created.
 Not shown is the code to setup those buffers. For example if you want to make positions, normals and texture
 coordinates you might need code like this</p>
-<pre><code>// a single triangle
+<pre class="prettyprint"><code>// a single triangle
 var positions = [0, -10, 0, 10, 10, 0, -10, 10, 0];
 var texcoords = [0.5, 0, 1, 1, 0, 1];
 var normals   = [0, 0, 1, 0, 0, 1, 0, 0, 1];
@@ -364,7 +364,7 @@ var normalBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
 </code></pre><p>Looks like a pattern we can simplify as well.</p>
-<pre><code>// a single triangle
+<pre class="prettyprint"><code>// a single triangle
 var arrays = {
    position: { numComponents: 3, data: [0, -10, 0, 10, 10, 0, -10, 10, 0], },
    texcoord: { numComponents: 2, data: [0.5, 0, 1, 1, 0, 1],               },
@@ -385,7 +385,7 @@ var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
 will set all the attributes and setup the <code>ELEMENT_ARRAY_BUFFER</code>
 with your <code>indices</code> so when you bind that VAO you can call
 <code>gl.drawElements</code>.</p>
-<pre><code>// an indexed quad
+<pre class="prettyprint"><code>// an indexed quad
 var arrays = {
    position: { numComponents: 3, data: [0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 10, 0], },
    texcoord: { numComponents: 2, data: [0, 0, 0, 1, 1, 0, 1, 1],                 },
@@ -396,7 +396,7 @@ var arrays = {
 var bufferInfo = twgl.createBufferInfoFromTypedArray(gl, arrays);
 var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
 </code></pre><p>and at render time we can call <code>gl.drawElements</code> instead of <code>gl.drawArrays</code>.</p>
-<pre><code>...
+<pre class="prettyprint"><code>...
 
 // Draw the geometry.
 gl.drawElements(gl.TRIANGLES, bufferInfo.numElements, gl.UNSIGNED_SHORT, 0);
@@ -410,7 +410,7 @@ gl.drawElements(gl.TRIANGLES, bufferInfo.numElements, gl.UNSIGNED_SHORT, 0);
 <p>Finally we can go what I consider possibly too far. Given <code>position</code> almost always has 3 components (x, y, z)
 and <code>texcoords</code> almost always 2, indices 3, and normals 3, we can just let the system guess the number
 of components.</p>
-<pre><code>// an indexed quad
+<pre class="prettyprint"><code>// an indexed quad
 var arrays = {
    position: [0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 10, 0],
    texcoord: [0, 0, 0, 1, 1, 0, 1, 1],
@@ -435,13 +435,13 @@ the shader. For attributes WebGL will set <code>w = 1</code> automatically. But 
 know the user&#39;s intent since what they declared in their shader might not match the number of
 components they provide.</p>
 <p>Looking for more patterns there&#39;s this</p>
-<pre><code>var program = twgl.createProgramFromSources(gl, [vs, fs]);
+<pre class="prettyprint"><code>var program = twgl.createProgramFromSources(gl, [vs, fs]);
 var uniformSetters = twgl.createUniformSetters(gl, program);
 var attribSetters  = twgl.createAttributeSetters(gl, program);
 </code></pre><p>Let&#39;s simplify that too into just</p>
-<pre><code>var programInfo = twgl.createProgramInfo(gl, [&quot;vertexshader&quot;, &quot;fragmentshader&quot;]);
+<pre class="prettyprint"><code>var programInfo = twgl.createProgramInfo(gl, [&quot;vertexshader&quot;, &quot;fragmentshader&quot;]);
 </code></pre><p>Which returns something like</p>
-<pre><code>programInfo = {
+<pre class="prettyprint"><code>programInfo = {
    program: WebGLProgram,  // program we just compiled
    uniformSetters: ...,    // setters as returned from createUniformSetters,
    attribSetters: ...,     // setters as returned from createAttribSetters,
@@ -459,7 +459,7 @@ multiple programs since it automatically keeps the setters with the program they
 Given the data we have we can easily check which by looking at <code>bufferInfo.indices</code>.
 If it exists we need to call <code>gl.drawElements</code>. If not we need to call <code>gl.drawArrays</code>.
 So there&#39;s a function, <code>twgl.drawBufferInfo</code> that does that. It&#39;s used like this</p>
-<pre><code>twgl.drawBufferInfo(gl, bufferInfo);
+<pre class="prettyprint"><code>twgl.drawBufferInfo(gl, bufferInfo);
 </code></pre><p>If you don&#39;t pass a 3rd parameter for the type of primitive to draw it assumes
 <code>gl.TRIANGLES</code>.</p>
 <p>Here&#39;s an example were we have a non-indexed triangle and an indexed quad. Because

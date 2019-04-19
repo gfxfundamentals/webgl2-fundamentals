@@ -111,7 +111,7 @@ WebGL을 사용하는 프로그래머로서 할일는 이 2가지를 WebGL에 �
 이를 하기위해 2개의 &quot;쉐이더&quot;를 제공합니다. 버텍스 쉐이더(Vertex shader)는 클립 공간 좌표를 프래그먼트 쉐이더는(Fragment shader)는 색상을 제공합니다.</p>
 <p>클립 공간 좌표는 캔버스 크기에 상관없이 항상 -1에서 +1까지를 사용합니다. 여기에 간단한 WebGL을 보여주는 간단한 WebGL 예제가 있습니다.</p>
 <p>버텍스 쉐이더(vertex shader)부터 시작해 보겠습니다.</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 
 // attribute는 버텍스 쉐이더에 대한 입력(in)입니다.
 // 버퍼로 부터 받은 데이터입니다.
@@ -124,7 +124,7 @@ void main() {
   gl_Position = a_position;
 }
 </code></pre><p>실행 될떄 모든 코드를 GLSL대신 JavaScript로 작성을 한다면 다음과 같이 쓰일 것이라고 생각할수 있습니다.</p>
-<pre><code>// *** 수도 코드!! ***
+<pre class="prettyprint"><code>// *** 수도 코드!! ***
 
 var positionBuffer = [
   0, 0, 0, 0,
@@ -146,7 +146,7 @@ drawArrays(..., offset, count) {
 }
 </code></pre><p>실제로는 <code>positionBuffer</code>가 바이너리 데이터로 변환(아래 참조)되고 때문에 위 예제처럼 간단하지 않습니다. 이렇게 실제 버퍼에서 데이터를 가져오는 계산은 조금 다르겠지만 위 코드에서 버텍스 쉐이더가 대략 어떤식으로 실행되는지에 대해서 알수 있습니다.</p>
 <p>다음으로 프래그먼트 쉐이더(fragment shader)가 필요합니다.</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 
 // 프래그먼트 쉐이더는 기본 정밀도를 가지고 있지 않으므로 선언을 해야합니다.
 // mediump은 기본값으로 적당합니다. &quot;중간 정도 정밀도&quot;를 의미합니다.
@@ -162,17 +162,17 @@ void main() {
 </code></pre><p>위에서 fragment shader의 출력으로 <code>outColor</code>를 선언했습니다. <code>outColor</code>를 <code>1, 0, 0.5, 1</code>으로 설정했고 1은 빨간색, 0은 초록색, 0.5는 파랑색 마지막 1은 알파입니다. WebGL에서 색상은 0에서 1를 사용합니다.</p>
 <p>이제 2개의 쉐이더 함수를 작성 해서 WebGL을 시작할 수 있습니다.</p>
 <p>첫번째로 HTML canvas 요소가 필요합니다.</p>
-<pre><code> &lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;
+<pre class="prettyprint"><code> &lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;
 </code></pre><p>그다음 자바스크립트에서 찾아볼수 있습니다.</p>
-<pre><code> var canvas = document.getElementById(&quot;c&quot;);
+<pre class="prettyprint"><code> var canvas = document.getElementById(&quot;c&quot;);
 </code></pre><p>이제 WebGL2RenderingContext 생성할수 있습니다.</p>
-<pre><code> var gl = canvas.getContext(&quot;webgl2&quot;);
+<pre class="prettyprint"><code> var gl = canvas.getContext(&quot;webgl2&quot;);
  if (!gl) {
     // webgl2를 사용할수 없습니다!
     ...
 </code></pre><p>이제 쉐이더 프로그램을 컴파일하여 GPU에 넣어야 하기 떄문에 먼저 쉐이더를 문자열로 가져와야 합니다.
 JavaScript로 문자열을 만드는 일반적인 방법으로 GLSL 문자열을 만들 수 있습니다. 예를 들어, AJAX를 사용하여 연결하거나, 자바 스크립트가 아닌 스크립트 태그에 삽입하거나, 아래 처럼 여러 줄 템플릿 문자열에 삽입하여 연결할 수 있습니다.</p>
-<pre><code>var vertexShaderSource = `#version 300 es
+<pre class="prettyprint"><code>var vertexShaderSource = `#version 300 es
 
 // attribute는 버텍스 쉐이더에 대한 입력(in)입니다.
 // 버퍼로 부터 받은 데이터입니다.
@@ -210,7 +210,7 @@ void main() {
 </blockquote>
 <p>다음으로 쉐이더를 만들고, GLSL 소스를 전달하고, 쉐이더를 컴파일하는 함수가 필요합니다.
 참고로 함수의 이름에서 무엇이 일어나는지 분명하기 떄문에 아무런 주석도 작성하지 않았습니다.</p>
-<pre><code>function createShader(gl, type, source) {
+<pre class="prettyprint"><code>function createShader(gl, type, source) {
   var shader = gl.createShader(type);
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
@@ -223,10 +223,10 @@ void main() {
   gl.deleteShader(shader);
 }
 </code></pre><p>이제 이 함수를 호출하여 2개의 쉐이더를 생성할수 있습니다.</p>
-<pre><code>var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+<pre class="prettyprint"><code>var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
 var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 </code></pre><p>그런 다음 이 두개의 쉐이더를 <em>프로그램</em>으로 <em>링크</em> 해야합니다.</p>
-<pre><code>function createProgram(gl, vertexShader, fragmentShader) {
+<pre class="prettyprint"><code>function createProgram(gl, vertexShader, fragmentShader) {
   var program = gl.createProgram();
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
@@ -240,21 +240,21 @@ var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
   gl.deleteProgram(program);
 }
 </code></pre><p>그런 다음 호출합니다.</p>
-<pre><code>var program = createProgram(gl, vertexShader, fragmentShader);
+<pre class="prettyprint"><code>var program = createProgram(gl, vertexShader, fragmentShader);
 </code></pre><p>이제 GPU에 GLSL 프로그램을 만들었고 이제 데이터를 제공해야합니다.
 대부분의 WebGL API는 GLSL 프로그램에 데이터를 제공하도록 상태를 설정하는 것입니다.
 여기 GLSL 프로그램에서는 오직 attribute <code>a_position</code>만 입력하면 됩니다.
 가장 먼저 해야 할일은 방금 작성한 프로그램을 위해서 attribute의 위치를 찾는것 입니다.</p>
-<pre><code>var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
+<pre class="prettyprint"><code>var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 </code></pre><p>attribute의 위치(또는 uniform 위치)를 찾는 것은 초기화 과정에서 해야하는 하는 일이며 랜더 루프(render loop)에서는 하지 말아야 합니다.</p>
 <p>Attributes는 버퍼에서 데이터를 가져오기 때문에 버퍼를 생성해야 합니다.</p>
-<pre><code>var positionBuffer = gl.createBuffer();
+<pre class="prettyprint"><code>var positionBuffer = gl.createBuffer();
 </code></pre><p>WebGL은 많은 WebGL 리소스들을 전역 바인드 포인트(bind points)로 처리합니다.
 바인드 포인트(bind point)를 WebGL의 내부 전역 변수로 생각할수 있습니다.
 먼저 리소스를 바인드 포인트(bind pont)에 바인드합니다. 그런 다음 다른 모든 함수들이 바인드 포인트를 통해 리소르를 참조합니다. 그러므로 포인트 버퍼를 바인드 해봅시다.</p>
-<pre><code>gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+<pre class="prettyprint"><code>gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 </code></pre><p>이제 바인트 포인트를 통해 버퍼를 참조함으로써 버퍼에 데이터를 넣을 수 있습니다.</p>
-<pre><code>// three 2d points
+<pre class="prettyprint"><code>// three 2d points
 var positions = [
   0, 0,
   0, 0.5,
@@ -264,13 +264,13 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 </code></pre><p>여기에 많은 것들이 있습니다. 먼저 자바스크립트 배열인 <code>positions</code>이 있습니다. 반면 WebGL은 강력한 형식의 데이터를 필요하므로 <code>new Float32Array(positions)</code> 부분은 <code>positions</code>으로 부터 값을 복사해 새로운 32비트 부동소수점형 배열을 생성합니다. <code>gl.bufferData</code>는 데이터를 GPU에 있는 <code>positionBuffer</code>에 복사합니다. 위에서 <code>ARRAY_BUFFER</code> 바인드 포인트로 바인드 했기 떄문에 position buffer를 사용합니다.</p>
 <p>마지막 매개변수 <code>gl.STATIC_DRAW</code>는 WebGL에 데이터를 어떻게 사용할 것인지에 대한 힌트입니다. WebGL은 확실한 것(certain things?)들을 최적화하기 위해 이 힌트를 사용 할 수 있습니다. <code>gl.STATIC_DRAW</code>는 이 데이터를 많이 변경하지는 않을 것이라고 알려줍니다.</p>
 <p>이제 데이터를 버퍼에 넣었고 attribute에게 데이터를 가져오는 방법을 알려줘야 합니다. 먼저 Vertex Array Object라고 불리는 attribute 상태 콜렉션을 생성해야합니다.</p>
-<pre><code>var vao = gl.createVertexArray();
+<pre class="prettyprint"><code>var vao = gl.createVertexArray();
 </code></pre><p>모든 attribute 설정이 attribute 상태 모음(콜렉션?)에 적용하기 위해서 현재의 버텍스 배열을 만들어야합니다.</p>
-<pre><code>gl.bindVertexArray(vao);
+<pre class="prettyprint"><code>gl.bindVertexArray(vao);
 </code></pre><p>이제 마침내 버텍스 배열에 attributes를 설정했습니다. 먼저 attribute를 작동 시켜야합니다. 이는 WebGL에 버퍼에서 데이터를 가져오고 싶다고 알려주는 것입니다. attributes을 작동 시키지 않으면 attributes는 상수 값을 가지고 올 것입니다.</p>
-<pre><code>gl.enableVertexAttribArray(positionAttributeLocation);
+<pre class="prettyprint"><code>gl.enableVertexAttribArray(positionAttributeLocation);
 </code></pre><p>그런 다음 데이터를 가져오는 방법을 지정해야 합니다.</p>
-<pre><code>var size = 2;          // 한번 실행할 때마다 2개 구성 요소 사용
+<pre class="prettyprint"><code>var size = 2;          // 한번 실행할 때마다 2개 구성 요소 사용
 var type = gl.FLOAT;   // 데이터는 32비트 소수점
 var normalize = false; // 정규화 되지 않은 데이터
 var stride = 0;        // 0 은 실행할 떄마다 `size * sizeof(type)`만큼 다음 위치로 이동합니다.
@@ -280,40 +280,40 @@ gl.vertexAttribPointer(
 </code></pre><p><code>gl.vertexAttribPointer</code>의 숨겨진 부분은 현재 <code>ARRAY_BUFFER</code>를 attribute에 바인하는것 입니다. 다시 말해서 이 attribute는 <code>positionBuffer</code>에 바인드 됬습니다. 이는 자유롭게 다른 <code>ARRAY_BUFFER</code> 바인트 포인트(bind point)를 바인드 할 수 있음을 의미합니다.
 attribute은 <code>positionBuffer</code>를 계속 사용합니다.</p>
 <p>GLSL 버텍스 쉐이더의 관점에서 <code>a_position</code> attribute는 <code>vec4</code>입니다.</p>
-<pre><code>in vec4 a_position;
+<pre class="prettyprint"><code>in vec4 a_position;
 </code></pre><p><code>vec4</code>는 4 개의 소수점 값입니다. 자바스크립트 에서는 <code>a_position = {x: 0, y: 0, z: 0, w: 0}</code>와 같은 것이라고 생각할 수 있습니다. 위에서 <code>size = 2</code>라고 설정했습니다. Attributes에서 기본값은 이므로 버퍼에서 처음 2개 값(x와 y)을 가져옵니다. z와 w는 각각 기본값 0과 1이 될 것입니다.</p>
 <p>그리기 전에 캔버스 크기를 디스플레이 크기와 일치하도록 조정 해야합니다. 캔버스에는 이미지와 마찬가지로 2 가지 크기가 있습니다.
 실제로 안에있는 픽셀의 수와 표시되는 크기가 따로 있습니다. CSS는 캔버스가 표시되는 크기를 결정합니다. 다른 방법보다 훨씬 유연하기 때문에 원하는 <strong>항상 캔버스 크기를 CSS로 설정해야 합니다</strong>.</p>
 <p>검사버튼 삭제버튼 캔버스에서 보이는 크기와 픽셀 수를 일치 시키기 위해서 <a href="webgl-resizing-the-canvas.html">여기에서 볼 수 있는 헬퍼 함수를 사용하고 있습니다.</a></p>
 <p>거의 모든 예제에서 캔버스 크기는 예제가 자체 창에서 실행되는 경우 400x300픽셀 이지만 이 페이지 처럼 iframe를 사용한다면 공간을 채우기 위해 늘어날수 있습니다. CSS가 크기를 결정하도록 하고 이에 맞춰서 일치하게 조정하면 두 가지 경우를 모두 쉽게 처리 할 수 있습니다.</p>
-<pre><code>webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+<pre class="prettyprint"><code>webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 </code></pre><p>WebGL에게 어떻게 클립 공간 값을 화면 공간이라고 불리는 픽셀로 변환을 할것인지 알려줘야합니다.
 이를 위해서 <code>gl.viewport</code>를 호출하고 현재의 캔버스 크기를 넘겨줍니다.</p>
-<pre><code>gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+<pre class="prettyprint"><code>gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 </code></pre><p>이렇게 하면 WebGL에 -1 ~ +1 클립 공간이 0 &lt;-&gt; <code>gl.canvas.width</code>는 x에 0 &lt;-&gt; <code>gl.canvas.height</code>는 y로 맵핑됩니다.</p>
 <p>캔버스를 지웁니다. <code>0, 0, 0, 0</code>는 r, g, b, alpha 이므로 여기에서는 캔버스를 투명하게 만듭니다.</p>
-<pre><code>// 캔버스 지우기
+<pre class="prettyprint"><code>// 캔버스 지우기
 gl.clearColor(0, 0, 0, 0);
 gl.clear(gl.COLOR_BUFFER_BIT);
 </code></pre><p>다음으로 WebGL에 실행할 쉐이더 프로그램을 알려야 합니다.</p>
-<pre><code>// 사용할 프로그램을 알립니다.(쉐이더 쌍)
+<pre class="prettyprint"><code>// 사용할 프로그램을 알립니다.(쉐이더 쌍)
 gl.useProgram(program);
 </code></pre><p>사용하는 버퍼 집합과 attributes에 제공하기 위해 이 버퍼들 중에서 어떻게 데이터를 가져 올 것인지 알려 주워야 합니다.</p>
-<pre><code>// 원하는 attribute/buffer를 바인드 해야합니다.
+<pre class="prettyprint"><code>// 원하는 attribute/buffer를 바인드 해야합니다.
 gl.bindVertexArray(vao);
 </code></pre><p>이제 WebGL에 GLSL 프로그램을 실행하라고 요청할 수 있습니다.</p>
-<pre><code>var primitiveType = gl.TRIANGLES;
+<pre class="prettyprint"><code>var primitiveType = gl.TRIANGLES;
 var offset = 0;
 var count = 3;
 gl.drawArrays(primitiveType, offset, count);
 </code></pre><p>count가 3개이기 때문에 버텍스 쉐이더는 3번 실행됩니다. 처음에는 버텍스 쉐이더 attribute에서 <code>a_position.x</code>와 <code>a_position.y</code>가 positionBuffer의 처음 2개의 값으로 설정됩니다. 2번쨰에는 <code>a_position.xy</code> 2번쨰 2개의 값으로 설정 됩니다. 마지막으로 마지막 2개의 값으로 설정됩니다.</p>
 <p><code>primitiveType</code>이 <code>gl.TRIANGLES</code>으로 설정 되었기 떄문에, 버텍스 쉐이더가 3번 실행 될때 마다 WebGL은 <code>gl_Position</code>을 설정한 3개의 값에 따라 삼각형을 그립니다. 캔버스 크기에 상관없이 이값들은 클립 공간 좌표에 있으며 각 방향에서 -1 에서 1로 바뀝니다.</p>
 <p>버텍스 쉐이더는 단순히 positionBuffer 값을 <code>gl_Position</code>로 복사하기 떄문에 삼각형은 클립 공간 좌표에 그려집니다.</p>
-<pre><code>  0, 0,
+<pre class="prettyprint"><code>  0, 0,
   0, 0.5,
   0.7, 0,
 </code></pre><p>클립 공간에서 변환된 스크린 공간에 WebgGL은 삼각형을 그릴 것입니다. 만약 캔버스 크기가 400x300 인 경우 다음과 같이 표시됩니다.</p>
-<pre><code>  클립 공간          화면 공간
+<pre class="prettyprint"><code>  클립 공간          화면 공간
    0, 0       -&gt;   200, 150
    0, 0.5     -&gt;   200, 225
  0.7, 0       -&gt;   340, 150
@@ -330,7 +330,7 @@ gl.drawArrays(primitiveType, offset, count);
 <code>x</code>의 클립 공간은 -1에서 +1 사이입니다. 이는 0이 가운데 있고 양수 값이 오른쪽에 있다는 것을 의미합니다.</p>
 <p>상단에 있는 이유는 클립 공간에서 -1는 하단에 +1은 상단에 있기 떄문입니다. 즉 0은 가운데 이고 양수값은 가운데보다 위에 있기 떄문입니다.</p>
 <p>2D의 경우 클립 공간보다 픽셀 단위로 더 작업을 해야 하므로 픽셀 단위로 위치를 제공하고 클립 공간으로 변환할 수 있게 쉐이더를 변경해야 합니다. 여기에 새로운 버텍스 쉐이더가 있습니다.</p>
-<pre><code>-  in vec4 a_position;
+<pre class="prettyprint"><code>-  in vec4 a_position;
 +  in vec2 a_position;
 
 +  uniform vec2 u_resolution;
@@ -349,10 +349,10 @@ gl.drawArrays(primitiveType, offset, count);
   }
 </code></pre><p>변경 사항에 대해 알아야 할 것들이 있습니다.  <code>x</code>와 <code>y</code>만 사용하기 떄문에 <code>a_position</code>를 <code>vec2</code>로 변경했습니다. <code>vec2</code>는 <code>vec4</code>와 비슷하지만 오직 <code>x</code>와 <code>y</code>만 가지고 있습니다.</p>
 <p>다음으로 <code>u_resolution</code>이라 불리는 <code>uniform</code>를 추가했습니다. 설정 하기 위해서 위치를 찾아야합니다.</p>
-<pre><code>var resolutionUniformLocation = gl.getUniformLocation(program, &quot;u_resolution&quot;);
+<pre class="prettyprint"><code>var resolutionUniformLocation = gl.getUniformLocation(program, &quot;u_resolution&quot;);
 </code></pre><p>나머지는 주석에서 명확해야 합니다. <code>u_resolution</code>을 캔버스의 해상도로 설정함으로써 이제 쉐이더는 픽셀 좌표로 제공되는<code>positionBuffer</code>에 넣은 위치를 클립 공간으로 변환 합니다.</p>
 <p>이제 위치 값을 클립 공간에서 픽셀로 변경할 수 있습니다. 이번에는 각각 3개의 포인트를 가진 2개의 삼각형으로 만든 직사각형을 그립니다.</p>
-<pre><code>var positions = [
+<pre class="prettyprint"><code>var positions = [
 *  10, 20,
 *  80, 20,
 *  10, 30,
@@ -362,12 +362,12 @@ gl.drawArrays(primitiveType, offset, count);
 ];
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 </code></pre><p>사용할 프로그램을 설정한 후에 생성한 uniform 값을 설정할 수 있습니다. 프로그램을 사용한다는 것은 현재 프로그램을 설정한다는 점에서 위의<code>gl.bindBuffer</code>와 같습니다. 이후 모든 <code>gl.uniformXXX</code>함수는 현재 프로그램에서 uniforms을 설정합니다.</p>
-<pre><code>gl.useProgram(program);
+<pre class="prettyprint"><code>gl.useProgram(program);
 
 // 쉐이더 픽섹에서 클립 공간으로 변환 할 수 있도록 캔버스 해상도를 전달합니다.
 gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 </code></pre><p>그리고 물론 2개의 삼각형을 그리기 위해서 버텍스 쉐이더를 6번 호출해야 하므로 <code>count</code>를 <code>6</code>으로 변경 해야합니다.</p>
-<pre><code>// 그리기
+<pre class="prettyprint"><code>// 그리기
 var primitiveType = gl.TRIANGLES;
 var offset = 0;
 *var count = 6;
@@ -381,7 +381,7 @@ gl.drawArrays(primitiveType, offset, count);
 
 </p>
 <p>다시 말하자면 사각형이 해당 영역의 거의 아래쪽에 있음을 알 수 있습니다. WebGL은 왼쪽 하단 구석을 0,0으로 간주합니다. 전통적인 왼쪽 상단 모서리를 2D 그래픽 API에서 사용하려면 클립 공간 y좌표를 뒤집어서 사용 할 수 있습니다.</p>
-<pre><code>*   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+<pre class="prettyprint"><code>*   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 </code></pre><p>이제 직사각형이 예상한곳에 있습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-top-left.html"></iframe>
@@ -391,7 +391,7 @@ gl.drawArrays(primitiveType, offset, count);
 </p>
 <p>다른 크기의 직사각형들을 호출 할수 있도록 함수에서 직사각형을 정의하는 코드를 작성 합시다. 이를 하기전에(While we&#39;re at it?) 색상을 설정 가능하게 만들것입니다.</p>
 <p>먼저 프레그먼트 쉐이더(fragment shader)가 색상 uniform을 입력할 수 있게 해야 합니다.</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 
 precision mediump float;
 
@@ -404,7 +404,7 @@ void main() {
 *  outColor = u_color;
 }
 </code></pre><p>여기에 랜덤 위치와 랜덤 색상으로 50개의 직사각형을 그리는 새로운 코드가 있습니다.</p>
-<pre><code>  var colorLocation = gl.getUniformLocation(program, &quot;u_color&quot;);
+<pre class="prettyprint"><code>  var colorLocation = gl.getUniformLocation(program, &quot;u_color&quot;);
   ...
 
   // 랜덤 색상으로 50개의 랜덤 직사각형을 그립니다.

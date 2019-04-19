@@ -134,7 +134,7 @@ it so the camera is at (0, 0, 0) and we&#39;ve moved everything in front of
 it.</p>
 <p>Let&#39;s make a 3D scene with a circle of &#39;F&#39;s like the diagrams above.</p>
 <p>Here&#39;s the code.</p>
-<pre><code>function drawScene() {
+<pre class="prettyprint"><code>function drawScene() {
   var numFs = 5;
   var radius = 200;
 
@@ -177,21 +177,21 @@ it.</p>
 }
 </code></pre><p>Just after we compute our projection matrix you can see we compute a camera that
 goes around the &#39;F&#39;s like in the diagram above.</p>
-<pre><code>  // Compute the camera&#39;s matrix
+<pre class="prettyprint"><code>  // Compute the camera&#39;s matrix
   var cameraMatrix = m4.yRotation(cameraAngleRadians);
   cameraMatrix = m4.translate(cameraMatrix, 0, 0, radius * 1.5);
 </code></pre><p>We then compute a &quot;view matrix&quot; from the camera matrix.  A &quot;view matrix&quot;
 is the matrix that moves everything the opposite of the camera effectively
 making everything relative to the camera as though the camera was at the
 origin (0,0,0)</p>
-<pre><code>  // Make a view matrix from the camera matrix.
+<pre class="prettyprint"><code>  // Make a view matrix from the camera matrix.
   var viewMatrix = m4.inverse(cameraMatrix);
 </code></pre><p>We then combine (multiply) those to make a viewProjection matrix.</p>
-<pre><code>  // create a viewProjection matrix. This will both apply perspective
+<pre class="prettyprint"><code>  // create a viewProjection matrix. This will both apply perspective
   // AND move the world so that the camera is effectively the origin
   var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
 </code></pre><p>Finally we use that space as the starting space to place each `F&#39;</p>
-<pre><code>    var x = Math.cos(angle) * radius;
+<pre class="prettyprint"><code>    var x = Math.cos(angle) * radius;
     var z = Math.sin(angle) * radius;
     var matrix = m4.translate(viewProjectionMatrix, x, 0, z);
 </code></pre><p>In other words the viewProjection is the same for each <code>F</code>. Same perspective,
@@ -289,17 +289,17 @@ matrix that will orient something that points at the <code>target</code> from th
 </pre></div>
 
 <p>Here&#39;s the code to compute the cross product of 2 vectors.</p>
-<pre><code>function cross(a, b) {
+<pre class="prettyprint"><code>function cross(a, b) {
   return [a[1] * b[2] - a[2] * b[1],
           a[2] * b[0] - a[0] * b[2],
           a[0] * b[1] - a[1] * b[0]];
 }
 </code></pre><p>Here&#39;s the code to subtract two vectors.</p>
-<pre><code>function subtractVectors(a, b) {
+<pre class="prettyprint"><code>function subtractVectors(a, b) {
   return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
 }
 </code></pre><p>Here&#39;s the code to normalize a vector (make it into a unit vector).</p>
-<pre><code>function normalize(v) {
+<pre class="prettyprint"><code>function normalize(v) {
   var length = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
   // make sure we don&#39;t divide by 0.
   if (length &gt; 0.00001) {
@@ -309,7 +309,7 @@ matrix that will orient something that points at the <code>target</code> from th
   }
 }
 </code></pre><p>Here&#39;s the code to compute a &quot;lookAt&quot; matrix.</p>
-<pre><code>var m4 = {
+<pre class="prettyprint"><code>var m4 = {
   lookAt: function(cameraPosition, target, up) {
     var zAxis = normalize(
         subtractVectors(cameraPosition, target));
@@ -328,7 +328,7 @@ matrix that will orient something that points at the <code>target</code> from th
   },
 </code></pre><p>And here is how we might use it to make the camera point at a specific &#39;F&#39;
 as we move it.</p>
-<pre><code>  ...
+<pre class="prettyprint"><code>  ...
 
   // Compute the position of the first F
   var fPosition = [radius, 0, 0];

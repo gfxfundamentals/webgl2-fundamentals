@@ -102,7 +102,7 @@ vertex shader pois desenha cada pixel usando o fragmento shader.</p>
 <p>Usando <a href="webgl-fundamentals.html">o vertex shader do final da publicação anterior</a>
 precisamos adicionar um atributo para passar em coordenadas de textura e depois
 passar para o fragmento shader.</p>
-<pre><code>...
+<pre class="prettyprint"><code>...
 
 +in vec2 a_texCoord;
 
@@ -117,7 +117,7 @@ void main() {
 +   v_texCoord = a_texCoord;
 }
 </code></pre><p>Então, fornecemos um fragmento shader para procurar cores da textura.</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 precision mediump float;
 
 // nossa textura
@@ -137,7 +137,7 @@ void main() {
 para a textura. Como estamos em imagens de um navegador, carregamos de forma assíncrona,
 então devemos reorganizar nosso código um pouco para aguardar o carregamento da textura.
 Uma vez que carregada, vamos desenhá-la.</p>
-<pre><code>+function main() {
+<pre class="prettyprint"><code>+function main() {
 +  var image = new Image();
 +  image.src = &quot;http://someimage/on/our/server&quot;;  // DEVE SER MESMO DOMÍNIO!!!
 +  image.onload = function() {
@@ -231,7 +231,7 @@ function render(image) {
 </p>
 <p>Não muito emocionante, então vamos manipular essa imagem. Que tal simplesmente 
 trocar vermelho e azul?</p>
-<pre><code>...
+<pre class="prettyprint"><code>...
 outColor = texture2D(u_image, v_texCoord).bgra;
 ...
 </code></pre><p>E agora vermelho e azul foram trocados.</p>
@@ -247,7 +247,7 @@ variam de 0,0 a 1,0, podemos calcular o quanto move 1 pixel
  com o simples math <code>onePixel = 1.0 / textureSize</code>.</p>
 <p>Aqui está um fragmento que mede os pixels esquerdos e direitos de
 cada pixel na textura.</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 
 // fragmentos shaders não têm uma precisão padrão, então precisamos
 // para escolher um. O médio é um bom padrão. Significa &quot;precisão média&quot;
@@ -287,7 +287,7 @@ ou 1,0, o que for maior. <a href="http://docs.gimp.org/en/plug-in-convmatrix.htm
 E <a href="http://www.codeproject.com/KB/graphics/ImageConvolution.aspx">aqui está outro artigo que mostra algum código real se
 você escrevesse isso manualmente em C ++</a>.</p>
 <p>No nosso caso, vamos fazer isso funcionar no shader, então aqui está o novo fragment shader.</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 
 // fragmentos shaders não têm uma precisão padrão, então precisamos
 // para escolher um. O médio é um bom padrão. Significa &quot;precisão média&quot;
@@ -322,7 +322,7 @@ void main() {
   outColor = vec4((colorSum / u_kernelWeight).rgb, 1);
 }
 </code></pre><p>Em JavaScript, precisamos fornecer um convolution kernel e seu peso</p>
-<pre><code> function computeKernelWeight(kernel) {
+<pre class="prettyprint"><code> function computeKernelWeight(kernel) {
    var weight = kernel.reduce(function(prev, curr) {
        return prev + curr;
    });

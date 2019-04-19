@@ -143,7 +143,7 @@ coordenadas do Clispace e um fragment shader que fornece a cor.</p>
 <p>As coordenadas do Clispace sempre vão de -1 a +1, independentemente do tamanho do seu canvas.
 Aqui está um simples exemplo da WebGL que a mostra em sua forma mais simples.</p>
 <p>Vamos começar com um vertex shader</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 
 // um atributo é um input (in) para um vertex shader.
 // ele receberá dados de um buffer
@@ -158,7 +158,7 @@ void main() {
 }
 </code></pre><p>Quando executada, se toda a coisa fosse escrita em JavaScript em vez de GLSL
 você poderia imaginar que isso seria utilizado como o exemplo abaixo</p>
-<pre><code>// *** PSUEDO CÓDIGO!! ***
+<pre class="prettyprint"><code>// *** PSUEDO CÓDIGO!! ***
 
 var positionBuffer = [
   0, 0, 0, 0,
@@ -183,7 +183,7 @@ binários (veja abaixo) e, portanto, o cálculo real para obter os dados do buff
 seria um pouco diferente, mas espero que isso lhe dê uma ideia de como um vertex shader
 será executado.</p>
 <p>Em seguida, nós precisamos de um fragment shader</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 
 // fragment shaders não tem uma precisão padrão, então nós precisamos
 // escolher uma. mediump é um bom valor padrão. Do Inglês &quot;medium precision&quot;, significa &quot;precisão média&quot;
@@ -200,11 +200,11 @@ void main() {
 sendo 1 para vermelho, 0 para verde, 0.5 para azul, 1 para alpha. As cores na WebGL vão de 0 a 1.</p>
 <p>Agora que nós escrevemos as duas funções shaders, vamos iniciar com a WebGL</p>
 <p>Primeiro precisaremos de um elemento canvas do HTML</p>
-<pre><code> &lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;
+<pre class="prettyprint"><code> &lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;
 </code></pre><p>Então, em JavaScript, podemos obtê-lo da seguinte forma</p>
-<pre><code> var canvas = document.getElementById(&quot;c&quot;);
+<pre class="prettyprint"><code> var canvas = document.getElementById(&quot;c&quot;);
 </code></pre><p>Agora podemos criar um WebGL2RenderingContext</p>
-<pre><code> var gl = canvas.getContext(&quot;webgl2&quot;);
+<pre class="prettyprint"><code> var gl = canvas.getContext(&quot;webgl2&quot;);
  if (!gl) {
     // sem webgl2 pra você!
     ...
@@ -212,7 +212,7 @@ sendo 1 para vermelho, 0 para verde, 0.5 para azul, 1 para alpha. As cores na We
 Você criar suas strings GLSL da maneira que você normalmente cria strings em JavaScript. Por exemplo, concatenando,
 usando AJAX para obtê-las, colocando-as em tags de script non-javascript, ou neste caso,
 em literais de templates multilinha.</p>
-<pre><code>var vertexShaderSource = `#version 300 es
+<pre class="prettyprint"><code>var vertexShaderSource = `#version 300 es
 
 // um atributo é um input (in) para um vertex shader.
 // ele receberá dados de um buffer
@@ -253,7 +253,7 @@ do shader será definida para a da WebGL 1.0, a GLSL ES 1.00 que possui muitas d
 <p>Em seguida, precisamos de uma função que irá criar uma shader, faça o upload da fonte GLSL e compile o shader.
 Note que eu não escrevi nenhum comentários visto que através do nome das funções é fácil
 compreender o que está acontecendo.</p>
-<pre><code>function createShader(gl, type, source) {
+<pre class="prettyprint"><code>function createShader(gl, type, source) {
   var shader = gl.createShader(type);
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
@@ -266,10 +266,10 @@ compreender o que está acontecendo.</p>
   gl.deleteShader(shader);
 }
 </code></pre><p>Agora podemos chamar essa função para criar os 2 shaders</p>
-<pre><code>var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+<pre class="prettyprint"><code>var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
 var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 </code></pre><p>Nós, então, precisamos <em>linkar</em> aqueles 2 shaders em um <em>program</em></p>
-<pre><code>function createProgram(gl, vertexShader, fragmentShader) {
+<pre class="prettyprint"><code>function createProgram(gl, vertexShader, fragmentShader) {
   var program = gl.createProgram();
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
@@ -283,24 +283,24 @@ var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
   gl.deleteProgram(program);
 }
 </code></pre><p>E chame isso</p>
-<pre><code>var program = createProgram(gl, vertexShader, fragmentShader);
+<pre class="prettyprint"><code>var program = createProgram(gl, vertexShader, fragmentShader);
 </code></pre><p>Agora que criamos um programa GLSL na GPU, precisamos fornecer dados para ele.
 A maioria da API da WebGL se trata de configurar o estado para fornecer dados aos nossos programas GLSL.
 Nesse caso, nossa única entrada para o nosso programa GLSL é <code>a_position</code>, que por sua vez, é um atributo.
 A primeira coisa que devemos fazer é procurar a localização do atributo para o programa
 que nós acabamos de criar</p>
-<pre><code>var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
+<pre class="prettyprint"><code>var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 </code></pre><p>Procurar posições de atributos (e locais uniformes) é algo que você deve
 fazer durante a inicialização, e não no seu loop de renderização.</p>
 <p>Atributos obtêm seus dados através de buffers, então, nós precisamos criar um buffer</p>
-<pre><code>var positionBuffer = gl.createBuffer();
+<pre class="prettyprint"><code>var positionBuffer = gl.createBuffer();
 </code></pre><p>A WebGL nos permite manipular muitos recursos da WebGL em pontos de consolidação global.
 Você pode pensar em pontos de ligação como variáveis internas globais dentro da WebGL.
 Primeiro, você vincula um recurso a um ponto de ligação. E então, todas as outras funções
 ao recurso através do ponto de ligação. Então, vamos vincular o buffer de posição.</p>
-<pre><code>gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+<pre class="prettyprint"><code>gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 </code></pre><p>Agora podemos colocar dados nesse buffer, referenciando-o através do ponto de ligação</p>
-<pre><code>// três pontos 2d
+<pre class="prettyprint"><code>// três pontos 2d
 var positions = [
   0, 0,
   0, 0.5,
@@ -317,16 +317,16 @@ A WebGL pode tentar usar essa sugestão para otimizar certas coisas. <code>gl.ST
 que não é provável que mudemos muito esses dados.</p>
 <p>Agora que colocamos dados em um buffer, precisamos mostrar ao atributo como obter os dados dele.
 Primeiro, precisamos criar uma coleção do estado do atributo denominada Vertex Array Object.</p>
-<pre><code>var vao = gl.createVertexArray();
+<pre class="prettyprint"><code>var vao = gl.createVertexArray();
 </code></pre><p>E precisamos fazer com que ele seja o vertex array atual para que todas as nossas
 configurações de atributos se apliquem a esse conjunto de estado de atributos</p>
-<pre><code>gl.bindVertexArray(vao);
+<pre class="prettyprint"><code>gl.bindVertexArray(vao);
 </code></pre><p>Finalmente, nós configuramos os atributos no vertex array. Em primeiro lugar, precisamos ativar o atributo.
 Isso fala para a WebGL que queremos tirar dados de um buffer. Se não ativarmos o atributo, então, o atributo
 terá um valor constante.</p>
-<pre><code>gl.enableVertexAttribArray(positionAttributeLocation);
+<pre class="prettyprint"><code>gl.enableVertexAttribArray(positionAttributeLocation);
 </code></pre><p>Então, nós precisamos especificar como obter os dados</p>
-<pre><code>var size = 2;          // 2 componentes por iteração
+<pre class="prettyprint"><code>var size = 2;          // 2 componentes por iteração
 var type = gl.FLOAT;   // os dados são floats de 32bits
 var normalize = false; // não normalize os dados
 var stride = 0;        // 0 = mover para frente size * sizeof(type) cada iteração para obter a próxima posição
@@ -338,7 +338,7 @@ ao atributo. Em outras palavras, agora esse atributo é obrigado a vincular o <c
 Isso significa que estamos livres para ligar outra coisa ao ponto de ligação <code>ARRAY_BUFFER</code>;
 O atributo continuará usando o <code>positionBuffer</code>.</p>
 <p>Observe que, do ponto de vista do nosso GLSL vertex shader, o atributo <code>a_position</code> é um <code>vec4</code></p>
-<pre><code>in vec4 a_position;
+<pre class="prettyprint"><code>in vec4 a_position;
 </code></pre><p><code>vec4</code> é um 4 float value. Em JavaScript, você poderia pensar em algo como
 <code>a_position = {x: 0, y: 0, z: 0, w: 0}</code>. Acima, nós definimos <code>size = 2</code>. Atributos
 padrão para <code>0, 0, 0, 1</code> então esse atributo receberá seus primeiros 2 valores (x e y)
@@ -354,26 +354,26 @@ em sua própria janela, mas ela se estende para preencher o espaço disponível 
 como ele está nesta página.
 Ao permitir que o CSS determine o tamanho e, em seguida, ajuste seus tamanho para  corresponder ao da tela,
 nós facilmente manipulamos ambos os casos.</p>
-<pre><code>webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+<pre class="prettyprint"><code>webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 </code></pre><p>Precisamos dizer ao WebGL como converter valores do clip space,
 nós vamos configurar o <code>gl_Position</code> de volta para pixels, muitas vezes chamado de screen space.
 Para isso, chamamos <code>gl.viewport</code> e passamos o tamanho atual da tela (canvas).</p>
-<pre><code>gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+<pre class="prettyprint"><code>gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 </code></pre><p>Isso diz para a WebGL que o clip space -1 +1 mapeia para o 0 &lt;-&gt; <code>gl.canvas.width</code> para x e 0 &lt;-&gt; <code>gl.canvas.height</code>
 para y.</p>
 <p>Agora, nós limpamos nosso canvas. <code>0, 0, 0, 0</code> são vermelho, verde, azul, alpha, respectivamente, então, nesse caso, estamos definindo o canvas como transparente.</p>
-<pre><code>// Limpar o canvas
+<pre class="prettyprint"><code>// Limpar o canvas
 gl.clearColor(0, 0, 0, 0);
 gl.clear(gl.COLOR_BUFFER_BIT);
 </code></pre><p>Em seguida, precisamos dizer ao WebGL qual shader é executado.</p>
-<pre><code>// Fala para usar nosso program (par de shaders)
+<pre class="prettyprint"><code>// Fala para usar nosso program (par de shaders)
 gl.useProgram(program);
 </code></pre><p>Então precisamos informar qual é o conjunto de buffers usar e como obter os dados desses buffers
 e então fornecer os dados aos atributos</p>
-<pre><code>// Vincule o atributo/buffer que desejamos.
+<pre class="prettyprint"><code>// Vincule o atributo/buffer que desejamos.
 gl.bindVertexArray(vao);
 </code></pre><p>Depois de tudo o que fizeemos, finalmente, podemos pedir a WebGL que execute o nosso programa GLSL.</p>
-<pre><code>var primitiveType = gl.TRIANGLES;
+<pre class="prettyprint"><code>var primitiveType = gl.TRIANGLES;
 var offset = 0;
 var count = 3;
 gl.drawArrays(primitiveType, offset, count);
@@ -386,12 +386,12 @@ a WebGL desenhará um triângulo com base nos 3 valores que definimos em <code>g
 nossa tela, esses valores estão nas coordenadas do nosso clip space que vão de -1 a 1 em cada direção.</p>
 <p>Como o nosso vertex shader está simplesmente copiando os valores do nosso positionbuffer para a <code>gl_Position</code>, o
 o triângulo será desenhado nas coordenadas do clip space</p>
-<pre><code>  0, 0,
+<pre class="prettyprint"><code>  0, 0,
   0, 0.5,
   0.7, 0,
 </code></pre><p>Convertendo do clip space para o espaço da tela se o tamanho da tela
 passasse ser 400x300, nós teríamos algo assim</p>
-<pre><code> clip space      screen space
+<pre class="prettyprint"><code> clip space      screen space
    0, 0       -&gt;   200, 150
    0, 0.5     -&gt;   200, 225
  0.7, 0       -&gt;   340, 150
@@ -418,7 +418,7 @@ Isso significa que, o 0 está no centro e os números positivos estarão acima d
 <p>Para coisas 2D, você provavelmente iria preferir trabalhar em pixels do que com o clipspace
 então vamos mudar o shader para que possamos fornecer a posição em pixels e
 convertê-lo em um clipspace para nós. Aqui está o novo vertex shader</p>
-<pre><code>-  in vec4 a_position;
+<pre class="prettyprint"><code>-  in vec4 a_position;
 +  in vec2 a_position;
 
 +  uniform vec2 u_resolution;
@@ -438,13 +438,13 @@ convertê-lo em um clipspace para nós. Aqui está o novo vertex shader</p>
 </code></pre><p>Algumas coisas que devemos notar sobre as mudanças. Nós mudamos a <code>a_position</code> para um <code>vec2</code> já que nós
 estamos apenas usando <code>x</code> e <code>y</code>. Um <code>vec2</code> é semelhante a um <code>vec4</code>, porém, possui apenas <code>x</code> e <code>y</code>.</p>
 <p>Em seguida, adicionamos um <code>uniform</code> chamado <code>u_resolution</code>. Para definir que precisamos procurar por sua localização.</p>
-<pre><code>var resolutionUniformLocation = gl.getUniformLocation(program, &quot;u_resolution&quot;);
+<pre class="prettyprint"><code>var resolutionUniformLocation = gl.getUniformLocation(program, &quot;u_resolution&quot;);
 </code></pre><p>O reste deve estar claro a partir dos comentários. Ao configurar <code>u_resolution</code> para a resolução
 do nosso canvas, o shader vai agora tomar as posições que colocamos no <code>positionBuffer</code> fornecido
 nas coordenadas dos pixels e convertê-los em clip space.</p>
 <p>Agora podemos alterar os valores da nossa posição do clip space para pixels. Desta vez,
 vamos desenhar um retângulo feito de 2 triângulos, 3 pontos, cada.</p>
-<pre><code>var positions = [
+<pre class="prettyprint"><code>var positions = [
 *  10, 20,
 *  80, 20,
 *  10, 30,
@@ -456,14 +456,14 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 </code></pre><p>E depois de definirmos qual programa usar, podemos definir o valor do uniform que criamos.
 <code>gl.useProgram</code> é como <code>gl.bindBuffer</code> acima, em que ele define o programa atual.
 Depois de tudo, as funções <code>gl.uniformXXX</code> definem os uniforms no programa atual.</p>
-<pre><code>gl.useProgram(program);
+<pre class="prettyprint"><code>gl.useProgram(program);
 
 // Passa a resolução do canvas, assim nós podemos converter
 // de pixels para clipspace no shader
 gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 </code></pre><p>E, claro, para desenhar dois triângulos, precisamos que a WebGL chame nosso vertex shader 6 vezes,
 para isso, precisamos mudar o <code>count</code> para <code>6</code>.</p>
-<pre><code>// desenha
+<pre class="prettyprint"><code>// desenha
 var primitiveType = gl.TRIANGLES;
 var offset = 0;
 *var count = 6;
@@ -481,7 +481,7 @@ exemplos com o <a href="webgl-boilerplate.html">boilerplate</a>.</p>
 <p>Novamente, você pode notar que o retângulo está perto do fundo dessa área. A WebGL considera que o canto 
 inferior esquerdo é 0,0. Para que ele seja o tradicional canto superior esquerdo, usado nas APIS de gráficos
 2D, nós podemos simplesmente virar a coordenada y do clipspace.</p>
-<pre><code>*   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+<pre class="prettyprint"><code>*   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 </code></pre><p>E agora o nosso retângulo está aonde esperavamos.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-top-left.html"></iframe>
@@ -493,7 +493,7 @@ inferior esquerdo é 0,0. Para que ele seja o tradicional canto superior esquerd
 podermos chamá-lo para retângulos de diferentes tamanhos. Enquanto estamos nisso,
 nós tornaremos a cor ajustável.</p>
 <p>Primeiro fazemos o fragment shader pegar uma color uniform input.</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 
 precision mediump float;
 
@@ -506,7 +506,7 @@ void main() {
 *  outColor = u_color;
 }
 </code></pre><p>E aqui está o novo código que desenha 50 retângulos com cores e locais aleatórios.</p>
-<pre><code>  var colorLocation = gl.getUniformLocation(program, &quot;u_color&quot;);
+<pre class="prettyprint"><code>  var colorLocation = gl.getUniformLocation(program, &quot;u_color&quot;);
   ...
 
   // desenha 50 retângulos com cores e locais aleatórios

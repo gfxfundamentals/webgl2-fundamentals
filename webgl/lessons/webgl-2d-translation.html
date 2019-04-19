@@ -95,7 +95,7 @@ the sample code we ended up with in <a href="webgl-fundamentals.html">the first 
 you could easily translate our rectangle just by changing the values
 passed to <code>setRectangle</code> right? Here&#39;s a sample based on our
 <a href="webgl-fundamentals.html">previous sample</a>.</p>
-<pre><code>+  // First let&#39;s make some variables
+<pre class="prettyprint"><code>+  // First let&#39;s make some variables
 +  // to hold the translation, width and height of the rectangle
 +  var translation = [0, 0];
 +  var width = 100;
@@ -155,7 +155,7 @@ more complicated shape.</p>
 <p><img src="../resources/polygon-f.svg" width="200" height="270" class="webgl_center"></p>
 <p>Well, following our current code we&#39;d have to change <code>setRectangle</code>
 to something more like this.</p>
-<pre><code>// Fill the current ARRAY_BUFFER buffer with the values that define a letter &#39;F&#39;.
+<pre class="prettyprint"><code>// Fill the current ARRAY_BUFFER buffer with the values that define a letter &#39;F&#39;.
 function setGeometry(gl, x, y) {
   var width = 100;
   var height = 150;
@@ -195,7 +195,7 @@ draw JavaScript has to update all the points.</p>
 <p>There&#39;s a simpler way. Just upload the geometry and do the translation
 in the shader.</p>
 <p>Here&#39;s the new shader</p>
-<pre><code>#version 300 es
+<pre class="prettyprint"><code>#version 300 es
 
 // an attribute is an input (in) to a vertex shader.
 // It will receive data from a buffer
@@ -225,7 +225,7 @@ void main() {
 }
 </code></pre><p>and we&#39;ll restructure the code a little. For one we only need to set
 the geometry once.</p>
-<pre><code>// Fill the current ARRAY_BUFFER buffer
+<pre class="prettyprint"><code>// Fill the current ARRAY_BUFFER buffer
 // with the values that define a letter &#39;F&#39;.
 function setGeometry(gl) {
   gl.bufferData(
@@ -258,7 +258,7 @@ function setGeometry(gl) {
 }
 </code></pre><p>Then we just need to update <code>u_translation</code> before we draw with the
 translation that we desire.</p>
-<pre><code>  ...
+<pre class="prettyprint"><code>  ...
 
 +  var translationLocation = gl.getUniformLocation(
 +             program, &quot;u_translation&quot;);

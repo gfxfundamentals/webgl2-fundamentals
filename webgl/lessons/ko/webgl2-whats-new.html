@@ -89,12 +89,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>이제는 WebGL2에서 항상 사용할 수 있고 WebGL1에서는 선택적으로 사용할 수 있었음에도 이것이 매우 중요하다고 생각합니다. <a href="webgl1-to-webgl2.html#Vertex-Array-Objects">아마도 항상 이것을 사용해야 될 것입니다</a>.</p>
 <h2 id="-">텍스처의 크기를 쉐이더에서 사용할 수 있습니다.</h2>
 <p>WebGl1에서 쉐이더에서 텍스처의 크기를 알아야 된다면 직접 uniform을 사용하여 크기를 전달해야 했습니다. WebGl2에서는 다음과 같이 호출하여</p>
-<pre><code>vec2 size = textureSize(sampler, lod)
+<pre class="prettyprint"><code>vec2 size = textureSize(sampler, lod)
 </code></pre><p>텍스처의 크기를 얻을 수 있습니다.</p>
 <h2 id="-">직접 텍셀 조회</h2>
 <p>종종 많은 양의 배열 데이터를 텍스처에 저장하는 것이 편리합니다.
 WebGL1에서 이를 할 수 있었지만 오직 텍스처 좌표(0.0에서 1.0)만 텍스처를 처리 할 수 있었습니다. WebGL2에서는 픽셀/텍셀 좌표로 텍스처의 값을 찾아 볼 수 있으므로 배열 접근이 더 쉬워집니다.</p>
-<pre><code>vec4 values = texelFetch(sampler, ivec2Position, lod);
+<pre class="prettyprint"><code>vec4 values = texelFetch(sampler, ivec2Position, lod);
 </code></pre><h2 id="-">다양한 텍스처 포맷</h2>
 <p>WebGL1에서는 단지 몇 가지 텍스처 포맷만 있엇습니다. WebGL2에는 아주 많아 졌습니다!</p>
 <ul>
@@ -155,7 +155,7 @@ WebGL1에서 이를 할 수 있었지만 오직 텍스처 좌표(0.0에서 1.0)�
 <p>3D 텍스처 입니다. 3차원을 가진 텍스처입니다.</p>
 <h2 id="-">텍스처 배열</h2>
 <p>텍스처 배열은 각 부분이 별도의 텍스처로 간주된다는 점을 제외하면 3D 텍스처와 매우 비슷합니다. 모든 부분들이 같은 크기여야 하지만 쉐이더에 비교적 적은 수의 텍스처 단위를 가지고있는 수많은 텍스처에 접근하는 좋은 방법입니다. 쉐이더에서 부분(slice)를 선택할 수 있습니다.</p>
-<pre><code>vec4 color = texture(someSampler2DArray, vec3(u, v, slice));
+<pre class="prettyprint"><code>vec4 color = texture(someSampler2DArray, vec3(u, v, slice));
 </code></pre><h2 id="2-">2의 거듭제곱이 아닌 텍스처 지원</h2>
 <p>WebGL1에서, 2의 거듭제곱이 아닌 텍스처는 밉을 가질수 없었습니다. 
 WebGL2부터는 이런 제한이 사라졌습니다.
@@ -209,7 +209,7 @@ Uniform Buffer Object는 Uniform Block이 사용할 값이 들어있는 버퍼�
 </ul>
 <p>그런 다음 런타임에 전역 Uniform Buffer Object, 모델 별 Uniform Buffer Object, 조명 별 Uniform Buffer Object, 재질 별 Uniform Buffer         Object를 각각 하나씩 만듭니다.</p>
 <p>모든 값이 이미 최신의 값이라고 가정하고 어떤 특정 항목을 그리려면 필요한 4개의 Uniform Buffer Object를 바인딩만 하면 됩니다.</p>
-<pre><code>gl.bindBufferRange(..., globalBlockIndx, globalMatrixUBO, ...);
+<pre class="prettyprint"><code>gl.bindBufferRange(..., globalBlockIndx, globalMatrixUBO, ...);
 gl.bindBufferRange(..., modelBlockIndx, someModelMatrixUBO, ...);
 gl.bindBufferRange(..., materialBlockIndx, someMaterialSettingsUBO, ...);
 gl.bindBufferRange(..., lightBlockIndx, someLightSettingsUBO, ...);
