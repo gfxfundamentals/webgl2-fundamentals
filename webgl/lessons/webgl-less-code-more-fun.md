@@ -276,7 +276,7 @@ twgl.setUniforms(uniformSetters, uniformThatAreTheSameForAllObjects);
 objects.forEach(function(object) {
   computeMatricesForObject(object, uniformsThatAreComputedForEachObject);
   twgl.setUniforms(uniformSetters, uniformThatAreComputedForEachObject);
-  twgl.setUniforms(unifromSetters, objects.materialUniforms);
+  twgl.setUniforms(uniformSetters, objects.materialUniforms);
   gl.drawArrays(...);
 });
 ```
