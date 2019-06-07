@@ -41,6 +41,18 @@ body, document {
 }
 #container {
   position: relative;
+  /*
+  not sure why but on mobile webkit the gridContainer
+  is initially set to a large size after which
+  it never shrinks because it's holding the page to at
+  least that size. 
+
+  This was one fix though not really understanding the original
+  issue
+  */
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 </style>
 </head>
@@ -264,6 +276,8 @@ function main() {
   document.querySelector("#wrap_t2").addEventListener('click', function() { wrapT = gl.MIRRORED_REPEAT; drawScene(); });  // eslint-disable-line
 
   drawScene();
+
+  window.addEventListener('resize', drawScene);
 
   // Draw the scene.
   function drawScene() {
