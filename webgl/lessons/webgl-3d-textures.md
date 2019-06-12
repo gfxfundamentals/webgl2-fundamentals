@@ -412,7 +412,8 @@ It's best because there's just 1 texture to load, the shader stays simple as it 
 requires 1 draw call to draw the shape instead of 1 draw call per texture as it might if we split it into
 planes.
 
-A few other very importanting things you might want to know about textures.
+A few other very important things you might want to know about textures.
+One is [how texture unit state works](webgl-texture-units.html).
 One is [how to use 2 or more textures at once](webgl-2-textures.html). The other
 is [how to use images from other domains](webgl-cors-permission.html).
 
