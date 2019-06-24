@@ -16,7 +16,7 @@ o que significa que você não pode acessar facilmente imagens da Web para o seu
 Além disso, é rápido trabalhar com tudo localmente.
 
 Vamos supor que você deseja executar e editar as amostras neste site. A primeira coisa que você deve
- fazer é o download do site. [Você pode baixar aqui](https://github.com/greggman/webgl2-fundamentals/tree/gh-pages).
+ fazer é o download do site. [Você pode baixar aqui](https://github.com/gfxfundamentals/webgl2-fundamentals/tree/gh-pages).
 
 {{{image url="resources/download-webglfundamentals.gif" }}}
 

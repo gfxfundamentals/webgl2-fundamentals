@@ -23,6 +23,6 @@ in JavaScript as well.
 
 These docs are generated with [JSDoc3](http://usejsdoc.org/). I find them very confusing to look at
 and in some places frustratingly verbose. If you have any experience with JSDoc3 and know how to
-make the docs more approachable and useful please [submit a pull request](https://github.com/greggman/webgl2-fundamentals)
-or [file an issue with details](https://github.com/greggman/webgl2-fundamentals/issues).
+make the docs more approachable and useful please [submit a pull request](https://github.com/gfxfundamentals/webgl2-fundamentals)
+or [file an issue with details](https://github.com/gfxfundamentals/webgl2-fundamentals/issues).
 
