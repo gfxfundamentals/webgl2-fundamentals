@@ -169,7 +169,7 @@ The site is built into the `out` folder
 
 Steps
 
-    git clone https://github.com/greggman/webgl2-fundamentals.git
+    git clone https://github.com/gfxfundamentals/webgl2-fundamentals.git
     npm install
     npm run build
     npm start
