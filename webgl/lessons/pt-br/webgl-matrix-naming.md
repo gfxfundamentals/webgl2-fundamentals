@@ -1,5 +1,8 @@
 Title: Nomenclaturas das Matrizes WebGL
 Description: Nomenclaturas comuns das matrizes
+Category: 3d
+TOC: WebGL2 3D - Nomenclatura das Matrizes
+
 
 Esta publicação é a continuação de uma série de postagens sobre a WebGL. O primeiro artigo
 [apresentou os fundamentos da WebGL](webgl-fundamentals.html) e o anterior

@@ -1,5 +1,8 @@
 Title: WebGL2 이미지 처리
 Description: WebGL에서 이미지는 처리 방법
+Category: image-processing
+TOC: WebGL2 이미지 처리
+
 
 WebGL에서 이미지 처리는 쉽습니다. 얼마나 쉽냐고요? 아래를 읽어 보면 됩니다.
 

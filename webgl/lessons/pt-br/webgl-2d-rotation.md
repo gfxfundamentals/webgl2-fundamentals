@@ -1,5 +1,8 @@
-﻿Title: Rotação 2D - WebGL
+Title: Rotação 2D - WebGL
 Description: Como rotacionar em 2D
+Category: matrices
+TOC: Rotação 2D WebGL2
+
 
 Esse tópico é uma continuação de uma série de posts sobre a WebGL. O primeiro
 [iniciou com os fundamentos](webgl-fundamentals.html) e o anterior foi

@@ -1,5 +1,8 @@
 Title: Texto - Canvas 2D WebGL
 Description: Como exibir um texto usando uma tela 2D que está em sincronia com a WebGL
+Category: text
+TOC: WebGL2 Texto - Canvas 2D
+
 
 Este artigo é uma continuação dos [artigos anteriores da WebGL sobre desenho de texto](webgl-text-html.html).
 Se você não os leu, sugiro que você comece lá e depois volte para cá.

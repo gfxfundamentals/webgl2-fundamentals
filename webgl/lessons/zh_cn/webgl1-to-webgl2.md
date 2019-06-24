@@ -1,5 +1,8 @@
 Title: 迁移WebGL1到WebGL2
 Description: 怎样迁移WebGL1到WebGL2
+Category: webgl2
+TOC: 迁移WebGL1到WebGL2
+
 
 WebGL2几乎100%向后兼容WebGL1.
 如果你只使用WebGL1的特性，只有两点不同。

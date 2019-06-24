@@ -1,5 +1,8 @@
-﻿Title: WebGL 쉐이더와 GLSL
+Title: WebGL 쉐이더와 GLSL
 Description: 쉐이더란 무엇이며 GLSL는 무엇입니까>
+Category: fundamentals
+TOC: WebGL2 쉐이더와 GLSL
+
 
 이 글은 [WebGL 기초](webgl-fundamentals.html)에서 이어지는 글입니다. 만약 WebGL의 작동 방식에 대하여 읽지 않았다면 [먼저 읽어 보십시오](webgl-how-it-works.html).
 

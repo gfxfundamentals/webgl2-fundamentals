@@ -1,5 +1,8 @@
 Title: WebGL2 새로운 기능
 Description: WebGL2의 새로운 기능
+Category: webgl2
+TOC: WebGL2 새로운 기능
+
 
 WebGL2는 WebGL1에서 꽤 중요한 업그레이드입니다.
 만약 이미 WebGL1을 사용하고 있고 WebGL2를 활용할 수 있도록 코드를 적용하는 법을 알고 싶다면 [여기를 방문하십시오](webgl1-to-webgl2.html).

@@ -1,5 +1,8 @@
 Title: Fundamentos da WebGL2
 Description: Sua primeira lição da WebGL2: começando com os fundamentos
+Category: fundamentals
+TOC: Fundamentos da WebGL2
+
 
 Primeiramente, esses artigos são sobre a WebGL2. Se você está interessado na WebGL 1.0
 [por favor, vá aqui](http://webglfundamentals.org). Observe que a WebGL2 é [quase 100% compatível

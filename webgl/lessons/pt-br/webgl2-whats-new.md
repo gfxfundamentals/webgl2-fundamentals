@@ -1,5 +1,8 @@
 Title: WebGL2 O que há de novo
 Description: O que há de novo no WebGL2
+Category: webgl2
+TOC: O que há de novo na WebGL2
+
 
 WebGL2 é uma atualização bastante significativa da WebGL1.
 Se você está vindo da WebGL1 e quer saber

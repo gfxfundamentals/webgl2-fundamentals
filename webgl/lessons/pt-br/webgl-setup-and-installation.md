@@ -1,5 +1,8 @@
 Title: Configuração e Instalação da WebGL
 Description: Como desenvolver para a WebGL
+Category: misc
+TOC: WebGL2 Configuração e Instalação
+
 
 Tecnicamente, você não precisa de nada além um navegador para trabalhar com a WebGL.
 Vá para [jsfiddle.net](https://jsfiddle.net/greggman/8djzyjL3/) ou [jsbin.com](http://jsbin.com)

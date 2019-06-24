@@ -1,5 +1,8 @@
 Title: WebGL Texto - HTML
 Description: Como usar o HTML para exibir o texto que está posicionado para corresponder a WebGL
+Category: text
+TOC: WebGL2 Texto - HTML
+
 
 Este artigo é uma continuação de artigos anteriores da WebGL.
 Se você não os leu, sugiro [que comece por lá](webgl-3d-perspective.html)

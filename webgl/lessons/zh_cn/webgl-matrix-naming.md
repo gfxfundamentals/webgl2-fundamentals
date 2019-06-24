@@ -1,5 +1,8 @@
 Title: WebGL 矩阵命名
 Description: 矩阵的通用命名
+Category: 3d
+TOC: WebGL2三维矩阵命名
+
 
 这篇文章是WebGL系列文章的延续。从[基础概念](webgl-fundamentals.html)开始，上篇是关于[三维相机](webgl-3d-camera.html)的文章。
 

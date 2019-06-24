@@ -1,5 +1,8 @@
 Title: WebGL2 What's New
 Description: What's new in WebGL2
+Category: webgl2
+TOC: What's new in WebGL2
+
 
 WebGL2 is a pretty significant upgrade from WebGL1.
 If you're coming from WebGL1 and you want to know

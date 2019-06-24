@@ -1,5 +1,8 @@
 Title: Differences from WebGLFundamentals.org
 Description: The differences between WebGLFundamentals.org and WebGL2Fundamentals.org
+Category: webgl2
+TOC: Differences from WebGLFundamentals.org to WebGL2Fundamentals.org
+
 
 If you previously read [webglfundamentals.org](http://webglfundamentals.org)
 there are some differences that you should be aware of.

@@ -1,5 +1,8 @@
 Title: WebGL - Cross Origin Images
 Description: Usando imagens em vários domínios
+Category: textures
+TOC: WebGL2 - Cross Origin Images
+
 
 Este artigo é um de uma série de artigos sobre a WebGL. Se você não leu
 eles te sugiro [iniciar com uma lição anterior](webgl-fundamentals.html).

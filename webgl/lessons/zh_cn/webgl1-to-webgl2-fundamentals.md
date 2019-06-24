@@ -1,5 +1,8 @@
 Title: 相较于WebGLFundamentals.org的不同之处
 Description: WebGLFundamentals.org和WebGL2Fundamentals.org的区别
+Category: webgl2
+TOC: WebGLFundamentals.org和WebGL2Fundamentals.org的区别
+
 
 如果你之前阅读过[webglfundamentals.org](http://webglfundamentals.org)你应该意识到有一些差异。
 

@@ -1,5 +1,8 @@
 Title: WebGL2有什么新内容
 Description: WebGL2有什么新内容
+Category: webgl2
+TOC: WebGL2有什么新内容
+
 
 WebGL2是WebGL1的一次非常重要的升级。如果你已经很熟悉WebGL1，并希望了解如何调整你的代码，以便利用 WebGL2的优势，看[迁移WebGL1到WebGL2](webgl1-to-webgl2.html)这篇文章。
 

@@ -1,5 +1,8 @@
 Title: Processamento de Imagem Continuada WebGL2
 Description: Como aplicar várias técnicas de processamento de imagens em imagens na WebGL
+Category: image-processing
+TOC: Processamento de Imagem Continuada WebGL2
+
 
 Este artigo é uma continuação do [Processamento de imagem WebGL2](webgl-image-processing.html).
 Se você não leu, eu sugiro [que você comece por lá](webgl-image-processing.html).

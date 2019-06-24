@@ -1,5 +1,8 @@
 Title: WebGL Environment Maps (reflections)
 Description: How to implement environment maps.
+Category: 3d
+TOC: WebGL2 - Environment maps
+
 
 This aritcle is part of a series of articles about WebGL2.
 [The first article starts with the fundamentals](webgl-fundamentals.html).

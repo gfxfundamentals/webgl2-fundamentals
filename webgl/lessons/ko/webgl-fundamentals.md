@@ -1,5 +1,8 @@
 Title: WebGL2 기초들
 Description: 기본으로 시작하는 첫 번째 WebGL2 강의
+Category: fundamentals
+TOC: WebGL2 기초
+
 
 제일 중요한 걸 먼저 말하자면, 이 글은 WebGL2에 관한 글입니다. 만약 WebGL1.0에 관심이 있다면 [여기를 방문하십시오](http://webglfundamentals.org). 알아야 할 것은 WebGL2는 [WebGL1과 거의 100% 역호환이 됩니다](webgl1-to-webgl2.html). 즉, 일단 WebGL2를 사용하면 원래 사용 의도처럼 사용할 수 있습니다. 이 튜토리얼은 이 방향을 따름니다.
 

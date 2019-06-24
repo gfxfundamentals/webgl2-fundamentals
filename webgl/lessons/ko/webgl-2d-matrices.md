@@ -1,5 +1,8 @@
 Title: WebGL 2D 행렬
 Description: 행렬의 수학적 작동 원리는 간단하고 쉽게 다음 지도서에 설명되어 있습니다.
+Category: matrices
+TOC: WebGL2 2D 행렬
+
 
 이 게시글은 WebGL에 대한 글 시리즈에서 이어집니다. 첫번째로 [기초로 시작](webgl-fundamentals.html)과 이전에는 [2D 지오메트리 크기 변환에 대하여](webgl-2d-scale.html) 입니다.
 
