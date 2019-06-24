@@ -92,7 +92,7 @@ Current fields are
 
 #### `index.md`
 
-This is the template for the main page for each language
+This is the template for the main page for each language.
 
 #### `toc.html`
 
