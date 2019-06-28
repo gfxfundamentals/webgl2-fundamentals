@@ -9,7 +9,7 @@ canvas { border: 1px solid black; }
 </head>
 <body>
 <h1 class="description">3D in canvas</h1>
-<p><canvas id="c" width="400" height="300"></canvas></p>
+<p><canvas id="c"></canvas></p>
 <p class="description"><a href="3d-in-webgl.html">compare to 3D in WebGL</a></p>
 </body>
 <!-- this is included only for iframe and requestAnimationFrame support -->
@@ -21,12 +21,10 @@ and http://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
 for webgl-utils, m3, m4, and webgl-lessons-ui.
 -->
 <script src="../../resources/webgl-utils.js"></script>
-<script src="../../resources/lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
+<script src="../../resources/lessons-helper.js"></script> <!-- you can and should delete this script. it is only used on the site to help with errors -->
 <script src="../../resources/m4.js"></script>
 <script>
 "use strict";
-
-window.onload = main;
 
 function main() {
   var cubeVertices = [
@@ -64,8 +62,7 @@ function main() {
     var scale = 2;
 
     webglUtils.resizeCanvasToDisplaySize(ctx.canvas, window.devicePixelRatio);
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.save();
     ctx.translate(canvas.width / 2, canvas.height / 2);
     ctx.scale(canvas.width / scale, canvas.height / scale);
@@ -77,12 +74,13 @@ function main() {
     var projection = m4.perspective(fieldOfView, aspect, 1, 500);
     var radius = 5;
     var eye = [
-        Math.sin(-clock) * radius,
-        1.5,
-        Math.cos(-clock) * radius];
+        Math.sin(clock) * radius,
+        -2,
+        Math.cos(clock) * radius];
     var target = [0, 0, 0];
-    var up = [0, -1, 0];
-    var view = m4.inverse(m4.lookAt(eye, target, up));
+    var up = [0, 1, 0];
+    var camera = m4.lookAt(eye, target, up);
+    var view = m4.inverse(camera);
 
     var worldViewProjection = m4.multiply(projection, view);
 
@@ -110,5 +108,7 @@ function main() {
     ctx.stroke();
   }
 }
+
+main();
 </script>
 </html>
