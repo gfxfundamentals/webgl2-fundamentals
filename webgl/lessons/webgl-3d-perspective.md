@@ -17,7 +17,7 @@ Instead we need to add perspective. Just what is perspective?
 It's basically the feature that things that are further away appear
 smaller.
 
-<div class="webgl_center"><img style="width: 500px;" src="resources/perspective-example.svg" /></div>
+<div class="webgl_center noinvertdark"><img style="width: 500px;" src="resources/perspective-example.svg" /></div>
 
 Looking at the example above we see that things further away
 are drawn smaller. Given our current sample one easy way to

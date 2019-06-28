@@ -3,8 +3,16 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>WebGL2 - Power graph</title>
 <link type="text/css" href="../../resources/webgl-tutorials.css" rel="stylesheet" />
+<style>
+@media (prefers-color-scheme: dark) {
+  canvas {
+    background: #444;
+  }
+}
+</style>
 </head>
 <body>
 <div class="description">
@@ -28,7 +36,7 @@ for webgl-utils, m3, m4, and webgl-lessons-ui.
 -->
 <script src="../../resources/webgl-lessons-ui.js"></script>
 <script src="../../resources/webgl-utils.js"></script>
-<script src="../../resources/lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
+<script src="../../resources/lessons-helper.js"></script> <!-- you can and should delete this script. it is only used on the site to help with errors -->
 <script src="../../resources/m3.js"></script>
 <script src="diagram.js"></script>
 <script>
@@ -45,8 +53,24 @@ function main() {
     render();
   }
 
+  const darkColors = {
+    base: '#DDD',
+    graphFill: '#844',
+    axis: '#888',
+  };
+  const lightColors = {
+    base: '#000',
+    graphFill: '#fCC',
+    axis: '#000',
+  };
+
+  const darkMatcher = window.matchMedia("(prefers-color-scheme: dark)");
+  darkMatcher.addEventListener('change', render);
+
   function render() {
-    webglUtils.resizeCanvasToDisplaySize(ctx.canvas);//, window.devicePixelRatio);
+    const isDarkMode = darkMatcher.matches;
+    const colors = isDarkMode ? darkColors : lightColors;
+    webglUtils.resizeCanvasToDisplaySize(ctx.canvas, window.devicePixelRatio);
     var width  = 300;
     var height = 300;
 
@@ -76,9 +100,10 @@ function main() {
     ctx.lineTo(200, 0);
     ctx.lineTo(0, 0);
     ctx.closePath();
-    ctx.fillStyle = "#fCC";
+    ctx.fillStyle = colors.graphFill;
     ctx.fill();
 
+    ctx.strokeStyle = colors.axis;
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(-1000, 0);
@@ -95,12 +120,13 @@ function main() {
     ctx.lineTo(200,  1000);
     ctx.stroke();
 
-    ctx.fillStyle = "#000";
+    ctx.fillStyle = colors.base;
     ctx.fillText("0,0", -15, 10);
     ctx.fillText("1,1", 215, -190);
 
     ctx.font = "18px sans-serif";
     ctx.fillText("y = pow(x, " + power.toFixed(2) + ")", 100, 20);
+
 
     addPowerTop();
     ctx.lineWidth = 2;

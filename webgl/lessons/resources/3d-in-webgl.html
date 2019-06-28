@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta charset="utf8">
-<title addtitletodoc="false">3D in WebGL</title>
+<title>3D in WebGL</title>
 <link type="text/css" href="../../resources/webgl-tutorials.css" rel="stylesheet" />
 <style>
 canvas { border: 1px solid black; }
@@ -12,6 +12,21 @@ canvas { border: 1px solid black; }
 <p><canvas id="c"></canvas></p>
 <p class="description"><a href="3d-in-canvas.html">compare to 3D in Canvas</a></p>
 </body>
+<!-- vertex shader -->
+<script id="2d-vertex-shader" type="x-shader/x-vertex">
+attribute vec4 a_position;
+uniform mat4 u_worldViewProjection;
+
+void main() {
+   gl_Position = u_worldViewProjection * a_position;
+}
+</script>
+<!-- fragment shader -->
+<script id="2d-fragment-shader" type="x-shader/x-fragment">
+void main() {
+   gl_FragColor = vec4(0,0,0,1);
+}
+</script>
 <!--
 for most samples webgl-utils only provides shader compiling/linking and
 canvas resizing because why clutter the examples with code that's the same in every sample.
@@ -20,12 +35,10 @@ and http://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
 for webgl-utils, m3, m4, and webgl-lessons-ui.
 -->
 <script src="../../resources/webgl-utils.js"></script>
-<script src="../../resources/lessons-helper.js"></script> <!-- you can delete this script. it is only used on the site to help with errors -->
+<script src="../../resources/lessons-helper.js"></script> <!-- you can and should delete this script. it is only used on the site to help with errors -->
 <script src="../../resources/m4.js"></script>
 <script>
 "use strict";
-
-window.onload = main;
 
 function main() {
   var cubeVertices = [
@@ -100,11 +113,12 @@ function main() {
     var radius = 5;
     var eye = [
         Math.sin(clock) * radius,
-        1.5,
+        2,
         Math.cos(clock) * radius];
     var target = [0, 0, 0];
     var up = [0, 1, 0];
-    var view = m4.inverse(m4.lookAt(eye, target, up));
+    var camera = m4.lookAt(eye, target, up);
+    var view = m4.inverse(camera);
 
     var worldViewProjection = m4.multiply(projection, view);
     gl.uniformMatrix4fv(
@@ -115,20 +129,7 @@ function main() {
   }
   requestAnimationFrame(render);
 }
-</script>
-<!-- vertex shader -->
-<script id="2d-vertex-shader" type="x-shader/x-vertex">
-attribute vec4 a_position;
-uniform mat4 u_worldViewProjection;
 
-void main() {
-   gl_Position = u_worldViewProjection * a_position;
-}
-</script>
-<!-- fragment shader -->
-<script id="2d-fragment-shader" type="x-shader/x-fragment">
-void main() {
-   gl_FragColor = vec4(0,0,0,1);
-}
+main();
 </script>
 </html>

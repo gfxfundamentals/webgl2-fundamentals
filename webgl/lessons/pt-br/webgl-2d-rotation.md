@@ -18,7 +18,7 @@ sua extremidade. Um círculo unitário é, na verdade, um círculo com o raio de
 
 Aqui está um exemplo de um círculo unitário.
 
-{{{diagram url="../unit-circle.html" width="300" height="300" }}}
+{{{diagram url="../unit-circle.html" width="300" height="300" className="invertdark"}}}
 
 Observe que, de acordo com o que você arrasta a alça azul em torno do círculo,
 as posições X e Y mudam. Eles representam a posição desse ponto no círculo. 
@@ -121,7 +121,7 @@ Digamos que você tenha um retângulo e que você queira girá-lo.
 Antes de começar a rotacioná-lo, o canto superior direito está em 3.0, 9.0.
 Vamos escolher um ponto no círculo unitário à 30 graus no sentido horário.
 
-<img src="../resources/rotate-30.png" class="webgl_center" />
+<img src="../resources/rotate-30.png" class="webgl_center invertdark" />
 
 A posição no círculo é 0.50 e 0.87
 
@@ -136,7 +136,7 @@ A posição no círculo é 0.50 e 0.87
 
 A mesma coisa se aplica para 60 graus no sentido horário
 
-<img src="../resources/rotate-60.png" class="webgl_center" />
+<img src="../resources/rotate-60.png" class="webgl_center invertdark" />
 
 A posição no círculo é 0.87 e 0.50
 
