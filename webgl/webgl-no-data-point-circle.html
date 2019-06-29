@@ -1,0 +1,82 @@
+<!-- Licensed under a BSD license. See license.html for license -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>WebGL2 - No Data - Point Circle</title>
+    <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
+  </head>
+  <style>
+    canvas { border: 1px solid black; }
+  </style>
+  <body>
+    <canvas id="c"></canvas>
+  </body>
+</html>
+<!--
+for most samples webgl-utils only provides shader compiling/linking and
+canvas resizing because why clutter the examples with code that's the same in every sample.
+See http://webgl2fundamentals.org/webgl/lessons/webgl-boilerplate.html
+and http://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+for webgl-utils, m3, m4, and webgl-lessons-ui.
+-->
+<script src="resources/webgl-utils.js"></script>
+<script>
+'use strict';
+const gl = document.querySelector('#c').getContext('webgl2');
+
+const vs = `#version 300 es
+uniform int numVerts;
+uniform vec2 resolution;
+
+#define PI radians(180.0)
+
+void main() {
+  float u = float(gl_VertexID) / float(numVerts);  // goes from 0 to 1
+  float angle = u * PI * 2.0;                      // goes from 0 to 2PI
+  float radius = 0.8;
+
+  vec2 pos = vec2(cos(angle), sin(angle)) * radius;
+  
+  float aspect = resolution.y / resolution.x;
+  vec2 scale = vec2(aspect, 1);
+  
+  gl_Position = vec4(pos * scale, 0, 1);
+  gl_PointSize = 5.0;
+}
+`;
+
+const fs = `#version 300 es
+precision mediump float;
+
+out vec4 outColor;
+
+void main() {
+  outColor = vec4(1, 0, 0, 1);
+}
+`;
+
+// setup GLSL program
+const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
+const vertexIdLoc = gl.getAttribLocation(program, 'vertexId');
+const numVertsLoc = gl.getUniformLocation(program, 'numVerts');
+const resolutionLoc = gl.getUniformLocation(program, 'resolution');
+
+const numVerts = 20;
+
+// draw
+webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+gl.useProgram(program);
+
+// tell the shader the number of verts
+gl.uniform1i(numVertsLoc, numVerts);
+// tell the shader the resolution
+gl.uniform2f(resolutionLoc, gl.canvas.width, gl.canvas.height);
+
+const offset = 0;
+gl.drawArrays(gl.POINTS, offset, numVerts);
+</script>
+

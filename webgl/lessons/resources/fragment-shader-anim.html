@@ -4,8 +4,22 @@
 <title>Fragment Shader Anim</title>
 <meta charset="utf-8">
 <link type="text/css" href="webgl-lessons.css" rel="stylesheet" />
-<script src="../../resources/webgl-utils.js"></script>
+<style>
+@media (prefers-color-scheme: dark) {
+  canvas {
+    background: #444;
+  }
+}
+</style>
 <script src="lesson-utils.js"></script>
+<!--
+for most samples webgl-utils only provides shader compiling/linking and
+canvas resizing because why clutter the examples with code that's the same in every sample.
+See http://webglfundamentals.org/webgl/lessons/webgl-boilerplate.html
+and http://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+for webgl-utils, m3, m4, and webgl-lessons-ui.
+-->
+<script src="../../resources/webgl-utils.js"></script>
 <script>
 "use strict";
 
@@ -20,6 +34,26 @@ function makeColorString(color) {
          color[1].toFixed(2) + "," +
          color[2].toFixed(2);
 }
+
+const darkColors = {
+  base: '#DDD',
+  background: '#444',
+  cone: '#663',
+  angleLines: '',
+  angleNumbersInLight: '#AAA',
+  angleNumbers: '#222',
+  surfaceNormalOutline: '#444',
+};
+const lightColors = {
+  base: '#000',
+  background: '#FFF',
+  cone: '#FFC',
+  angleNumbersInLight: '#888',
+  angleNumbers: '#EEE',
+  surfaceNormalOutline: '#FFF',
+};
+const darkMatcher = window.matchMedia("(prefers-color-scheme: dark)");
+
 
 function main() {
   var canvas = document.getElementById("canvas");
@@ -37,14 +71,17 @@ function main() {
   var numPixelsToDraw = 0;
   var triangleInfo = {
     numPixels: 0
-  }
+  };
   var frameRate = 1 / 60;
   var then = getTime();
   var delay = 0;
   var dirty = false;
   var resetTimer = 0;
+  let isDarkMode;
 
   function render() {
+    isDarkMode = darkMatcher.matches;
+    const colors = isDarkMode ? darkColors : lightColors;
     var now = getTime();
     var elapsedTime = now - then;
     then = now;
@@ -68,7 +105,7 @@ function main() {
       triangleInfo = drawTriangle(triangle, numPixelsToDraw);
       ++numPixelsToDraw;
 
-      ctx.fillStyle = "black";
+      ctx.fillStyle = colors.base;
       for (var ii = 0; ii < triangle.length; ++ii) {
         var tri = triangle[ii];
         ctx.fillText(
@@ -78,7 +115,7 @@ function main() {
 
       }
 
-      if (numPixelsToDraw == triangleInfo.numPixels) {
+      if (numPixelsToDraw === triangleInfo.numPixels) {
         delay = 3.0;
         numPixelsToDraw = 0;
       } else {
@@ -87,7 +124,7 @@ function main() {
 
       ctx.restore();
 
-      ctx.fillStyle = "black";
+      ctx.fillStyle = colors.base;
       ctx.fillText("v_color = " + makeColorString(triangleInfo.color),
                    10, lineHeight * 1);
       ctx.fillText("outColor = v_color",
@@ -232,11 +269,11 @@ function main() {
 
     function drawPixel(x, y, color) {
       if (numPixelsDrawn > numPixelsToDraw) {
-        color = [1, 1, 1];
+        color = isDarkMode ? [0.3, 0.3, 0.3] : [1, 1, 1];
       }
       x *= pixelSize;
       y *= pixelSize;
-      if (numPixelsDrawn == numPixelsToDraw) {
+      if (numPixelsDrawn === numPixelsToDraw) {
         results.x = x;
         results.y = y;
         results.color = color.slice(0);
