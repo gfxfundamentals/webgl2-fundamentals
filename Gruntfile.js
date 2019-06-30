@@ -2,6 +2,9 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
+const liveEditor = require('@gfxfundamentals/live-editor');
+const liveEditorPath = path.dirname(require.resolve('@gfxfundamentals/live-editor'));
 
 module.exports = function(grunt) {
 
@@ -63,8 +66,9 @@ module.exports = function(grunt) {
       main: {
         files: [
           { expand: false, src: '*', dest: 'out/', filter: noMdsNoFolders, },
+          { expand: true, cwd: `${liveEditor.monacoEditor}/`, src: 'min/**', dest: 'out/monaco-editor/', nonull: true, },
+          { expand: true, cwd: `${liveEditorPath}/src/`, src: '**', dest: 'out/webgl/resources/', nonull: true, },
           { expand: true, src: 'webgl/**', dest: 'out/', filter: noMds, },
-          { expand: true, src: 'monaco-editor/**', dest: 'out/', },
           { expand: true, src: '3rdparty/**', dest: 'out/', },
         ],
       },
@@ -130,7 +134,6 @@ module.exports = function(grunt) {
     templatePath: 'build/templates',
   };
 
-
   // just the hackiest way to get this working.
   grunt.registerMultiTask('buildlesson', 'build a lesson', function() {
     const filenames = new Set();
@@ -144,7 +147,7 @@ module.exports = function(grunt) {
       filenames,
     });
     const finish = this.async();
-    buildStuff(settings).finally(finish);;
+    buildStuff(settings).finally(finish);
   });
 
   grunt.registerTask('buildlessons', function() {
