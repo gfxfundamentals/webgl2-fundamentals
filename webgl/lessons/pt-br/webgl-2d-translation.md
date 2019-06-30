@@ -1,6 +1,5 @@
 Title: Translação 2D WebGL2
 Description: Como transladar em 2d
-Category: matrices
 TOC: Translação 2D WebGL2
 
 

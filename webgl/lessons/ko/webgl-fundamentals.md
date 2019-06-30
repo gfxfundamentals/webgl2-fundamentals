@@ -1,6 +1,5 @@
 Title: WebGL2 기초들
 Description: 기본으로 시작하는 첫 번째 WebGL2 강의
-Category: fundamentals
 TOC: WebGL2 기초
 
 

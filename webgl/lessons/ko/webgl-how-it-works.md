@@ -1,6 +1,5 @@
 Title: WebGL 어떻게 작동하나요
 Description: WebGL이 무엇인지 What WebGL is really doing under the hood
-Category: fundamentals
 TOC: WebGL2 작동 원리
 
 

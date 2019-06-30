@@ -1,6 +1,5 @@
 Title: WebGL - 3D 직교 투영
 Description: 직교 투영을 하는 WebGL에서 3D를 그리는 방법.
-Category: 3d
 TOC: WebGL2 - Orthographic 3D
 
 

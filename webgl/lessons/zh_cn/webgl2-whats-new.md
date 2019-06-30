@@ -1,6 +1,5 @@
 Title: WebGL2有什么新内容
 Description: WebGL2有什么新内容
-Category: webgl2
 TOC: WebGL2有什么新内容
 
 

@@ -1,6 +1,5 @@
 Title: WebGL2 새로운 기능
 Description: WebGL2의 새로운 기능
-Category: webgl2
 TOC: WebGL2 새로운 기능
 
 

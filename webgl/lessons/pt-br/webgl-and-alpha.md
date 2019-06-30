@@ -1,6 +1,5 @@
 Title: Alfa e a WebGL
 Description: Como o alfa no WebGL é diferente do alfa no OpenGL
-Category: misc
 TOC: WebGL2 e o Alpha
 
 

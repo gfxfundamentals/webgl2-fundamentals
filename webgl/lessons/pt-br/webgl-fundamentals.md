@@ -1,6 +1,5 @@
 Title: Fundamentos da WebGL2
 Description: Sua primeira lição da WebGL2: começando com os fundamentos
-Category: fundamentals
 TOC: Fundamentos da WebGL2
 
 

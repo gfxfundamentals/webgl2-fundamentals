@@ -1,6 +1,5 @@
 Title: WebGL2 3D - Data Textures
 Description: Supplying data to a texture.
-Category: textures
 TOC: WebGL2 - Data Textures
 
 

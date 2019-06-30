@@ -1,6 +1,5 @@
 Title: WebGL 蒙皮
 Description: 在WebGL中如何蒙皮网格
-Category: 3d
 TOC: WebGL2 蒙皮
 
 

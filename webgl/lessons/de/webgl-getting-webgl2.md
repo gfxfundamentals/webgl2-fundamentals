@@ -1,6 +1,5 @@
 Title: Wie benutzt man WebGL2
 Description: Beschaffung eines WebGL2 fähigen Browsers
-Category: fundamentals
 TOC: Wie benutzt man WebGL2
 
 

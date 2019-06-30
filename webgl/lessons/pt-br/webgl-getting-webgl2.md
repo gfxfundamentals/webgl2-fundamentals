@@ -1,6 +1,5 @@
 Title: Como usar a WebGL2
 Description: Obtendo um navegador compatível com a WebGL2
-Category: fundamentals
 TOC: Como utilizar a WebGL2
 
 

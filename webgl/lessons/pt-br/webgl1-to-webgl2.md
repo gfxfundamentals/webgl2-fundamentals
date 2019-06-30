@@ -1,6 +1,5 @@
 Title: WebGL2 para a WebGL1
 Description: Como passar da WebGL1 para a WebGL2
-Category: webgl2
 TOC: Migrando do WebGL1 para a WebGL2
 
 

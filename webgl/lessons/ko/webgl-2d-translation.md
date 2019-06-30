@@ -1,6 +1,5 @@
 Title: WebGL 2D 이동
 Description: 2D 에서 이동하는 방법
-Category: matrices
 TOC: WebGL2 2D 이동
 
 

@@ -1,6 +1,5 @@
 Title: WebGL2 사용하기
 Description: WebGL2 사용가능한 브라우저 알아보기
-Category: fundamentals
 TOC: WebGL2 사용하기
 
 

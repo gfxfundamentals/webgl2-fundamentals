@@ -1,6 +1,5 @@
 Title: WebGL Text - Textures
 Description: Display Text in WebGL using Textures
-Category: text
 TOC: WebGL2 Text - Using a Texture
 
 

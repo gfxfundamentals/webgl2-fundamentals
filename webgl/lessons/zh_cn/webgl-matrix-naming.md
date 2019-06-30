@@ -1,6 +1,5 @@
 Title: WebGL 矩阵命名
 Description: 矩阵的通用命名
-Category: 3d
 TOC: WebGL2三维矩阵命名
 
 

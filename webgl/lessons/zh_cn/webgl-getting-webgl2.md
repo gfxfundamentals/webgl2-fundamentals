@@ -1,6 +1,5 @@
 Title: 怎样使用WebGL2
 Description: 获得支持WebGL2的浏览器
-Category: fundamentals
 TOC: 怎样使用WebGL2
 
 

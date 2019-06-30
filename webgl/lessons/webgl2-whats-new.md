@@ -1,6 +1,5 @@
 Title: WebGL2 What's New
 Description: What's new in WebGL2
-Category: webgl2
 TOC: What's new in WebGL2
 
 

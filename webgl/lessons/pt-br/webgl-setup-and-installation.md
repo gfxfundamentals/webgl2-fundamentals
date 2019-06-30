@@ -1,6 +1,5 @@
 Title: Configuração e Instalação da WebGL
 Description: Como desenvolver para a WebGL
-Category: misc
 TOC: WebGL2 Configuração e Instalação
 
 

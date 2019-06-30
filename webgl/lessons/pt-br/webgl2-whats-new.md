@@ -1,6 +1,5 @@
 Title: WebGL2 O que há de novo
 Description: O que há de novo no WebGL2
-Category: webgl2
 TOC: O que há de novo na WebGL2
 
 

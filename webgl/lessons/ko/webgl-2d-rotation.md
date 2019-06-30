@@ -1,6 +1,5 @@
 Title: WebGL 2D 회전
 Description: 2D에서 회전 하는 방법
-Category: matrices
 TOC: WebGL2 2D 회전
 
 

@@ -1,6 +1,5 @@
 Title: WebGL - Cross Origin Images
 Description: Usando imagens em vários domínios
-Category: textures
 TOC: WebGL2 - Cross Origin Images
 
 

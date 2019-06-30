@@ -1,6 +1,5 @@
 Title: WebGL2 이미지 처리
 Description: WebGL에서 이미지는 처리 방법
-Category: image-processing
 TOC: WebGL2 이미지 처리
 
 

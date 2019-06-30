@@ -1,6 +1,5 @@
 Title: WebGL2 Fundamentals
 Description: Your first WebGL2 lesson starting with the fundamentals
-Category: fundamentals
 TOC: WebGL2 Fundamentals
 
 

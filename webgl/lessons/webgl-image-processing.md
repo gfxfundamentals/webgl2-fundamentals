@@ -1,6 +1,5 @@
 Title: WebGL2 Image Processing
 Description: How to image process in WebGL
-Category: image-processing
 TOC: WebGL2 Image Processing
 
 

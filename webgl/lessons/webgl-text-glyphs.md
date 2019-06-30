@@ -1,6 +1,5 @@
 Title: WebGL Text - Using a Glyph Texture
 Description: How to display text using a texture full of glyphs
-Category: text
 TOC: WebGL2 Text - Using a Glyph Texture
 
 
