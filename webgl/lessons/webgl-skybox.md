@@ -1,6 +1,6 @@
 Title: WebGL SkyBox
 Description: Show the sky with a skybox!
-TOC: WebGL2 - Skyboxes
+TOC: Skyboxes
 
 
 This aritcle is part of a series of articles about WebGL.

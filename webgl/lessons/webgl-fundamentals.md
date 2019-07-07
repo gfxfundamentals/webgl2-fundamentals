@@ -1,6 +1,6 @@
 Title: WebGL2 Fundamentals
 Description: Your first WebGL2 lesson starting with the fundamentals
-TOC: WebGL2 Fundamentals
+TOC: Fundamentals
 
 
 First things first, these articles are about WebGL2. If you're interested in WebGL 1.0

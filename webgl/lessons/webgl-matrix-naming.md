@@ -1,6 +1,6 @@
 Title: WebGL Matrix Naming
 Description: Common names for matrices
-TOC: WebGL2 3D - Matrix Naming
+TOC: 3D - Matrix Naming
 
 
 This post is a continuation of a series of posts about WebGL. The first

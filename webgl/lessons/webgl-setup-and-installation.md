@@ -1,6 +1,6 @@
 Title: WebGL Setup and Installation
 Description: How to do WebGL development
-TOC: WebGL2 Setup And Installation
+TOC: Setup And Installation
 
 
 Techincally you don't need anything other than a web browser to do WebGL

@@ -1,6 +1,6 @@
 Title: WebGL Boilerplate
 Description: Some of the code you need for all WebGL programs
-TOC: WebGL2 Boilerplate
+TOC: Boilerplate
 
 
 This is a continuation from [WebGL Fundamentals](webgl-fundamentals.html).

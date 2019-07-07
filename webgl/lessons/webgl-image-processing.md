@@ -1,6 +1,6 @@
 Title: WebGL2 Image Processing
 Description: How to image process in WebGL
-TOC: WebGL2 Image Processing
+TOC: Image Processing
 
 
 Image processing is easy in WebGL. How easy? Read below.
