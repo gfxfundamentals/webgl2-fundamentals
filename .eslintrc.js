@@ -79,6 +79,7 @@ module.exports = {
     "optional-comma-spacing/optional-comma-spacing": [2, {"after": true}],
     // want to turn this on (T_T) "prefer-const": "error",
     "quotes": [0, "single"],
+    "require-atomic-updates": 0,
     "require-trailing-comma/require-trailing-comma": [2],
     "semi": [2, "always"],
     "semi-spacing": [2, {"before": false, "after": true}],
