@@ -77,7 +77,7 @@ WebGL을 사용하는 프로그래머로서 할일는 이 2가지를 WebGL에 �
       var size = 4;
       for (var i = 0; i < count; ++i) {
          // positionBuffer부터 다음 4개 값들을 a_position attribute에 복사합니다.
-         attributes.a_position = positionBuffer.slice((offset + i) * stride, size);
+         attributes.a_position = positionBuffer.slice(offset + i * stride, size);
          runVertexShader();
          ...
          doSomethingWith_gl_Position();
