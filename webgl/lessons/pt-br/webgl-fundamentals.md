@@ -113,7 +113,8 @@ você poderia imaginar que isso seria utilizado como o exemplo abaixo
       var size = 4;
       for (var i = 0; i < count; ++i) {
          // copia os 4 próximos valores do positionBuffer para o atributo a_position
-         attributes.a_position = positionBuffer.slice(offset + i * stride, size);
+         const start = offset + i * stride;
+         attributes.a_position = positionBuffer.slice(start, start + size);
          runVertexShader();
          ...
          doSomethingWith_gl_Position();
