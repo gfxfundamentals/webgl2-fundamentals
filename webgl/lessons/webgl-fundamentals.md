@@ -10,7 +10,7 @@ WebGL2 you might as well use it as it was meant to be used. These tutorials foll
 that path.
 
 WebGL is often thought of as a 3D API. People think "I'll use WebGL and *magic* I'll get cool 3d".
-In reality WebGL is just a rasterization engine. It draws points, lines, and triangles based
+In reality WebGL is just a rasterization engine. It draws [points, lines, and triangles](webgl-points-lines-triangles.html) based
 on code you supply. Getting WebGL to do anything else is up to you to provide code to use points, lines,
 and triangles to accomplish your task.
 
@@ -20,7 +20,7 @@ and a fragment shader and they are each written in a very strictly typed C/C++ l
 [GLSL](webgl-shaders-and-glsl.html). (GL Shader Language). Paired together they are called a *program*.
 
 A vertex shader's job is to compute vertex positions. Based on the positions the function outputs
-WebGL can then rasterize various kinds of primitives including points, lines, or triangles.
+WebGL can then rasterize various kinds of primitives including [points, lines, or triangles](webgl-points-lines-triangles.html).
 When rasterizing these primitives it calls a second user supplied function called a fragment shader.
 A fragment shader's job is to compute a color for each pixel of the primitive currently being drawn.
 
