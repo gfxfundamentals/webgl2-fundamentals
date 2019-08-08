@@ -1,0 +1,155 @@
+<!-- Licensed under a BSD license. See license.html for license -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>WebGL2 - Multiple Views - One View</title>
+<link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
+</head>
+<body>
+<div class="description">
+Multiple Views - One View
+</div>
+  <canvas id="canvas"></canvas>
+  <div id="uiContainer">
+    <div id="ui">
+    </div>
+  </div>
+</body>
+<!--
+This sample uses TWGL (Tiny WebGL) to hide the clutter.
+Otherwise the sample would be full of code not related to the point of the sample.
+For more info see http://webgl2fundamentals.org/webgl/lessons/webgl-less-code-more-fun.html
+-->
+<script src="resources/webgl-lessons-ui.js"></script>
+<script src="resources/twgl-full.min.js"></script>
+<script src="resources/m4.js"></script>
+<script>
+"use strict";
+
+const vs = `#version 300 es
+in vec4 a_position;
+in vec4 a_color;
+
+uniform mat4 u_matrix;
+
+out vec4 v_color;
+
+void main() {
+  // Multiply the position by the matrix.
+  gl_Position = u_matrix * a_position;
+
+  // Pass the vertex color to the fragment shader.
+  v_color = a_color;
+}
+`;
+
+const fs = `#version 300 es
+precision mediump float;
+
+// Passed in from the vertex shader.
+in vec4 v_color;
+
+out vec4 outColor;
+
+void main() {
+  outColor = v_color;
+}
+`;
+
+function main() {
+  // Get A WebGL context
+  /** @type {HTMLCanvasElement} */
+  const canvas = document.getElementById("canvas");
+  const gl = canvas.getContext("webgl2");
+  if (!gl) {
+    return;
+  }
+
+  // setup GLSL programs
+  // compiles shaders, links program, looks up locations
+  const programInfo = twgl.createProgramInfo(gl, [vs, fs]);
+
+  // Tell twgl to match position with a_position,
+  // normal with a_normal etc..
+  twgl.setAttributePrefix("a_");
+
+  // create buffers and fill with data for a 3D 'F'
+  const bufferInfo = twgl.primitives.create3DFBufferInfo(gl);
+  const vao = twgl.createVAOFromBufferInfo(gl, programInfo, bufferInfo);
+
+  function degToRad(d) {
+    return d * Math.PI / 180;
+  }
+
+  const settings = {
+    rotation: 150,  // in degrees
+  };
+  webglLessonsUI.setupUI(document.querySelector("#ui"), settings, [
+    { type: "slider",   key: "rotation",   min: 0, max: 360, change: render, precision: 2, step: 0.001, },
+  ]);
+
+  const fieldOfViewRadians = degToRad(120);
+
+  function drawScene(projectionMatrix, cameraMatrix, worldMatrix) {
+    // Make a view matrix from the camera matrix.
+    const viewMatrix = m4.inverse(cameraMatrix);
+
+    let mat = m4.multiply(projectionMatrix, viewMatrix);
+    mat = m4.multiply(mat, worldMatrix);
+
+    gl.useProgram(programInfo.program);
+
+    // ------ Draw the F --------
+
+    // Setup all the needed attributes.
+    gl.bindVertexArray(vao);
+
+    // Set the uniforms
+    twgl.setUniforms(programInfo, {
+      u_matrix: mat,
+    });
+
+    // calls gl.drawArrays or gl.drawElements
+    twgl.drawBufferInfo(gl, bufferInfo);
+  }
+
+  function render() {
+    twgl.resizeCanvasToDisplaySize(gl.canvas);
+
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+    gl.enable(gl.CULL_FACE);
+    gl.enable(gl.DEPTH_TEST);
+
+    const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+    const near = 1;
+    const far = 2000;
+
+    // Compute a perspective projection matrix
+    const perspectiveProjectionMatrix =
+        m4.perspective(fieldOfViewRadians, aspect, near, far);
+
+    // Compute the camera's matrix using look at.
+    const cameraPosition = [0, 0, -75];
+    const target = [0, 0, 0];
+    const up = [0, 1, 0];
+    const cameraMatrix = m4.lookAt(cameraPosition, target, up);
+
+    let worldMatrix = m4.yRotation(degToRad(settings.rotation));
+    worldMatrix = m4.xRotate(worldMatrix, degToRad(settings.rotation));
+    // center the 'F' around its origin
+    worldMatrix = m4.translate(worldMatrix, -35, -75, -5);
+
+    drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+  }
+  render();
+}
+
+main();
+</script>
+</html>
+
+
+
