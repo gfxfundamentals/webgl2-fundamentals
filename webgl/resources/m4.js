@@ -412,7 +412,7 @@
     dst[ 7] = 0;
     dst[ 8] = 0;
     dst[ 9] = 0;
-    dst[10] = 2 / (far - near);
+    dst[10] = 2 / (near - far);
     dst[11] = 0;
     dst[12] = (left + right) / (left - right);
     dst[13] = (bottom + top) / (bottom - top);
@@ -441,7 +441,9 @@
    * @return {Matrix4} dst or a new matrix if none provided
    * @memberOf module:webgl-3d-math
    */
-  function frustum(left, right, bottom, top, near, far) {
+  function frustum(left, right, bottom, top, near, far, dst) {
+    dst = dst || new Float32Array(16);
+
     var dx = right - left;
     var dy = top - bottom;
     var dz = far - near;
