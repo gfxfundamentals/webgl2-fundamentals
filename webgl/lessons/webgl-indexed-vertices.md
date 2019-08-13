@@ -1,4 +1,4 @@
-Title: WebGL Indexed Vertices
+Title: WebGL2 Indexed Vertices
 Description: How to use gl.drawElements
 TOC: Indexed Vertices (gl.drawElements)
 

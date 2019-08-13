@@ -434,19 +434,19 @@ Now let's make a few things to draw.
 ```js
 // create buffers and fill with data for various things.
 const bufferInfosAndVAOs = [
-  primitives.createCubeBufferInfo(
+  twgl.primitives.createCubeBufferInfo(
       gl,
       1,  // width
       1,  // height
       1,  // depth
   ),
-  primitives.createSphereBufferInfo(
+  twgl.primitives.createSphereBufferInfo(
       gl,
       0.5,  // radius
       8,    // subdivisions around
       6,    // subdivisions down
   ),
-  primitives.createTruncatedConeBufferInfo(
+  twgl.primitives.createTruncatedConeBufferInfo(
       gl,
       0.5,  // bottom radius
       0,    // top radius
