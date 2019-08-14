@@ -9,8 +9,7 @@ This article also assumes you've read the article on
 [less code more fun](webgl-less-code-more-fun.html)
 as it uses the library mentioned there so as to
 unclutter the example. If you don't understand
-when a function named `twgl.setBuffersAndAttributes`
-what it means to set the buffers and attributes, or when
+what buffers, vertex arrays, and attributes are or when
 a function named `twgl.setUniforms` what it means
 to set uniforms, etc... then you should probably to go further back and
 [read the fundamentals](webgl-fundamentals.html).
