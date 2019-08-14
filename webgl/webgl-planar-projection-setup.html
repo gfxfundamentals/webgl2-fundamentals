@@ -35,21 +35,15 @@ in vec2 a_texcoord;
 uniform mat4 u_projection;
 uniform mat4 u_view;
 uniform mat4 u_world;
-uniform mat4 u_textureMatrix;
 
 out vec2 v_texcoord;
-out vec4 v_projectedTexcoord;
 
 void main() {
   // Multiply the position by the matrix.
-  vec4 worldPosition = u_world * a_position;
-
-  gl_Position = u_projection * u_view * worldPosition;
+  gl_Position = u_projection * u_view * u_world * a_position;
 
   // Pass the texture coord to the fragment shader.
   v_texcoord = a_texcoord;
-
-  v_projectedTexcoord = u_textureMatrix * worldPosition;
 }
 `;
 
@@ -58,28 +52,14 @@ precision mediump float;
 
 // Passed in from the vertex shader.
 in vec2 v_texcoord;
-in vec4 v_projectedTexcoord;
 
 uniform vec4 u_colorMult;
 uniform sampler2D u_texture;
-uniform sampler2D u_projectedTexture;
 
 out vec4 outColor;
 
 void main() {
-  vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
-
-  bool inRange = 
-      projectedTexcoord.x >= 0.0 &&
-      projectedTexcoord.x <= 1.0 &&
-      projectedTexcoord.y >= 0.0 &&
-      projectedTexcoord.y <= 1.0;
-
-  vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
-  vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
-
-  float projectedAmount = inRange ? 1.0 : 0.0;
-  outColor = mix(texColor, projectedTexColor, projectedAmount);
+  outColor = texture(u_texture, v_texcoord) * u_colorMult;
 }
 `;
 
@@ -94,7 +74,6 @@ function main() {
 
   // setup GLSL programs
   const textureProgramInfo = twgl.createProgramInfo(gl, [vs, fs]);
-  const colorProgramInfo = twgl.createProgramInfo(gl, [colorVS, colorFS]);
 
   // Tell the twgl to match position with a_position,
   // normal with a_normal etc..
