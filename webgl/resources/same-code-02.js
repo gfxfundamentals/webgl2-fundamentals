@@ -26,7 +26,11 @@ void main() {
 `;
 
 var fragmentShaderSource = `#version 300 es
-precision mediump float;
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+  precision highp float;
+#else
+  precision mediump float;
+#endif
 
 in vec4 v_position;
 in vec3 v_normal;
@@ -44,7 +48,7 @@ uniform float u_specularFactor;
 
 vec4 lit(float l ,float h, float m) {
   return vec4(1.0,
-              pow(abs(l), 2.5),
+              pow(max(0.0, l), 2.5),
               (l > 0.0) ? pow(max(0.0, h), m) : 0.0,
               1.0);
 }
