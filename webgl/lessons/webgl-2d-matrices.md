@@ -646,7 +646,7 @@ In 3D the matrix math follows the same principles and usage.
 I started with 2D to hopefully keep it simple to understand.
 
 Also, if you really want to become an expert
-in matrix math [check out this amazing videos](https://www.youtube.com/watch?v=kjBOesZCoqc&list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab).
+in matrix math [check out these amazing videos](https://www.youtube.com/watch?v=kjBOesZCoqc&list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab).
 
 <div class="webgl_bottombar">
 <h3>What are <code>clientWidth</code> and <code>clientHeight</code>?</h3>
