@@ -256,8 +256,8 @@ and we'll change the code to use it.
     ...
 
     // Compute the matrix
-    +var matrix = makeZToWMatrix(fudgeFactor);
-    *matrix = m4.multiply(matrix, m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 400));
++    var matrix = makeZToWMatrix(fudgeFactor);
+*    matrix = m4.multiply(matrix, m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 400));
     matrix = m4.translate(matrix, translation[0], translation[1], translation[2]);
     matrix = m4.xRotate(matrix, rotation[0]);
     matrix = m4.yRotate(matrix, rotation[1]);
