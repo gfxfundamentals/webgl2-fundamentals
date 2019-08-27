@@ -152,7 +152,7 @@ Note that for an array you can set all the uniforms of the array at once. For ex
     var someVec2Loc = gl.getUniformLocation(someProgram, "u_someVec2");
 
     // at render time
-    gl.uniform2fv(someVec2Loc, [1, 2, 3, 4, 5, 6]);  // set the entire array of u_someVec3
+    gl.uniform2fv(someVec2Loc, [1, 2, 3, 4, 5, 6]);  // set the entire array of u_someVec2
 
 But if you want to set individual elements of the array you must look up the location of
 each element individually.
