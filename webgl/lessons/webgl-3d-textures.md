@@ -313,7 +313,7 @@ Something to be aware of, WebGL2 requires textures to be "texture complete" othe
 "texture complete" means that either
 
 1. You've set the filtering so it only uses the first mip level which means
-   settting the `TEXTURE_MIN_FILTER` to either `LINEAR` or `NEAREST`.
+   setting the `TEXTURE_MIN_FILTER` to either `LINEAR` or `NEAREST`.
 
 2. If you are using mips then they need to be the correct sizes and you have to provide ALL OF THEM
    down to the 1x1 size.
