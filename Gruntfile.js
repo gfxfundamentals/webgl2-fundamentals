@@ -126,7 +126,7 @@ module.exports = function(grunt) {
 
   const buildSettings = {
     outDir: 'out',
-    baseUrl: 'http://webgl2fundamentals.org',
+    baseUrl: 'https://webgl2fundamentals.org',
     rootFolder: 'webgl',
     lessonGrep: 'webgl*.md',
     siteName: 'WebGL2Fundamentals',
