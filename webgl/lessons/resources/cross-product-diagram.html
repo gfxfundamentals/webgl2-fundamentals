@@ -3,8 +3,16 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>WebGL2 - Cross Product Diagram</title>
 <link type="text/css" href="../../resources/webgl-tutorials.css" rel="stylesheet" />
+<style>
+@media (prefers-color-scheme: dark) {
+  canvas {
+    background: #444;
+  }
+}
+</style>
 </head>
 <body>
 <div class="description">
@@ -107,16 +115,39 @@ var gl;                   // the gl context.
 var canvas;               // the canvas
 var devicePixelRatio = window.devicePixelRatio || 1;
 
+const darkColors = {
+  base: '#DDD',
+  background: '#444',
+  cone: '#663',
+  angleLines: '',
+  angleNumbersInLight: '#AAA',
+  angleNumbers: '#222',
+  surfaceNormalOutline: '#444',
+  gridLight: [0.4, 0.4, 0.4, 1],
+  gridHard: [1, 1, 1, 1],
+};
+const lightColors = {
+  base: '#000',
+  background: '#FFF',
+  cone: '#FFC',
+  angleNumbersInLight: '#888',
+  angleNumbers: '#EEE',
+  surfaceNormalOutline: '#FFF',
+  gridLight: [0.75, 0.75, 0.75, 1],
+  gridHard: [0, 0, 0, 1],
+};
+const darkMatcher = window.matchMedia("(prefers-color-scheme: dark)");
+const isDarkMode = darkMatcher.matches;
+const colors = isDarkMode ? darkColors : lightColors;
+
 var createGrid = function(size, subdivisions) {
   var numLines = subdivisions;
   var numVertices = numLines * 4;
   var positions = twgl.primitives.createAugmentedTypedArray(3, numVertices);
-  var colors = twgl.primitives.createAugmentedTypedArray(4, numVertices);
+  var colorValues = twgl.primitives.createAugmentedTypedArray(4, numVertices);
 
   //  ..|..|..|..
   //  <-  size ->
-  var black = [0, 0, 0, 1];
-  var gray = [0.75, 0.75, 0.75, 1];
 
   var gridSize = size / (subdivisions + 2);
   for (var ii = 0; ii < numLines; ++ii) {
@@ -126,16 +157,16 @@ var createGrid = function(size, subdivisions) {
     positions.push([p, 0,  size / 2]);
     positions.push([-size / 2, 0, p]);
     positions.push([ size / 2, 0, p]);
-    var color = jj ? gray : black;
-    colors.push(color);
-    colors.push(color);
-    colors.push(color);
-    colors.push(color);
+    var color = jj ? colors.gridLight : colors.gridHard;
+    colorValues.push(color);
+    colorValues.push(color);
+    colorValues.push(color);
+    colorValues.push(color);
   }
 
   return {
     position: positions,
-    color: colors,
+    color: colorValues,
   };
 };
 
@@ -252,7 +283,9 @@ function CreateApp(gl) {
   var coneArrays = twgl.primitives.createTruncatedConeVertices(30, 10, 30, 24, 2, false, false);
   twgl.primitives.reorientVertices(
     coneArrays,
-    m4.multiply(m4.translation([0, 0, -15]), m4.rotationX(Math.PI/2)));
+    m4.multiply(
+        m4.translation([0, 0, -15]),
+        m4.rotationX(Math.PI/2)));
   var cameraArrays = twgl.primitives.concatVertices([cubeArrays, coneArrays]);
   addVColors(cameraArrays);
   var cameraBufferInfo = twgl.createBufferInfoFromArrays(gl, cameraArrays);
@@ -269,7 +302,8 @@ function CreateApp(gl) {
   var fArrays = twgl.primitives.create3DFVertices();
   twgl.primitives.reorientVertices(
     fArrays,
-    m4.multiply(m4.rotationX(Math.PI), m4.translation([-50, -75, -15])));
+    m4.multiply(m4.rotationX(Math.PI),
+                m4.translation([-50, -75, -15])));
   var fBufferInfo = twgl.createBufferInfoFromArrays(gl, fArrays);
 
 
@@ -464,7 +498,7 @@ function main() {
 
   var gl = twgl.getWebGLContext(canvas, {alpha: true, preMultipliedAlpha: false});
   if (!gl) {
-    return;
+    return false;
   }
 
   app = CreateApp(gl);
