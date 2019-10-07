@@ -82,8 +82,8 @@ Of course how you decide to handle errors might be different.  Throwing
 exceptions might not be the best way to handle things.  Still, those few
 lines of code are pretty much the same in nearly every WebGL program.
 
-Now that multline template literals are supported in all modern browsers
-it's my prefered way of storing shaders. I can just do something like
+Now that multiline template literals are supported in all modern browsers
+it's my preferred way of storing shaders. I can just do something like
 
     var vertexShaderSource = `#version 300 es
 
@@ -91,7 +91,7 @@ it's my prefered way of storing shaders. I can just do something like
     uniform mat4 u_matrix;
 
     void main() {
-       gl_Positon = u_matrix * a_position;
+       gl_Position = u_matrix * a_position;
     }
     `;
 
@@ -187,7 +187,7 @@ The actual boilerplate API used in most of these samples is
      *
      * @param {WebGLRenderingContext} gl The WebGLRenderingContext
      *        to use.
-     * @param {string[]} shaderSourcess Array of sources for the
+     * @param {string[]} shaderSources Array of sources for the
      *        shaders. The first is assumed to be the vertex shader,
      *        the second the fragment shader.
      * @param {string[]} [opt_attribs] An array of attribs names.
@@ -204,7 +204,7 @@ The actual boilerplate API used in most of these samples is
     function createProgramFromSources(gl,
                                       shaderSources,
                                       opt_attribs,
-                                      opt_locaitons,
+                                      opt_locations,
                                       opt_errorCallback)
 
 where `shaderSources` is an array of strings containing the GLSL source code.
@@ -229,7 +229,7 @@ Note while we're add it there are several more scripts for similar reasons
 
 *   [`lessons-helper.js`](../resources/lessons-helper.js)
 
-    This script is not needed except on webgl2fundmentals.org. It helps print error messages to
+    This script is not needed except on webgl2fundamentals.org. It helps print error messages to
     the screen when used inside the live editor among other things.
 
 *   [`m3.js`](../resources/m3.js)

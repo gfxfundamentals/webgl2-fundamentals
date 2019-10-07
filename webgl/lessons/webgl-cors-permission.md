@@ -47,7 +47,7 @@ Typically we download an image something like this
     }
 
 The problem is images might have private data in them (for example a captcha, a signature, a naked picture, ...).
-A webpage often has ads and other things not in direct cotnrol of the page and so the browser needs to prevent
+A webpage often has ads and other things not in direct control of the page and so the browser needs to prevent
 those things from looking at the contents of these private images.
 
 Just using `<img src="private.jpg">` is not a problem because although the image will get displayed by
@@ -63,7 +63,7 @@ Then you get the data
 But, if the image you drew came from a different domain the browser will mark the canvas as *tainted* and
 you'll get a security error when you call `ctx.getImageData`
 
-WebGL has to take it even one step further. In WebGL `gl.readPixels` is the equivilent call to `ctx.getImageData`
+WebGL has to take it even one step further. In WebGL `gl.readPixels` is the equivalent call to `ctx.getImageData`
 so you'd think maybe just blocking that would be enough but it turns out even if you can't read the pixels
 directly you can make shaders that take longer to run based on the colors in the image. Using that information
 you can use timing to effectively look inside the image indirectly and find out its contents.
@@ -119,7 +119,7 @@ And we can use it like this
 
 It's important to note asking for permission does NOT mean you'll be granted permission.
 That is up to the server. Github pages give permission, flickr.com gives permission,
-imgur.com gives permssion, but most websites do not.
+imgur.com gives permission, but most websites do not.
 
 <div class="webgl_bottombar">
 <h3>Making Apache grant CORS permission</h3>

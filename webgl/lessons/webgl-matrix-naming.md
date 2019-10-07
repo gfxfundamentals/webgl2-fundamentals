@@ -44,7 +44,7 @@ Here's the list from my head
 *   local matrix
 
     when using [a scene graph](webgl-scene-graph.html) the local matrix is the
-    matrix at any particular node on the graph before mutlipying with any other
+    matrix at any particular node on the graph before multiplying with any other
     nodes.
 
 
@@ -59,7 +59,7 @@ The other two common things to do with a matrix are to take the inverse
 
 And to transpose
 
-    worldInverseTranpose = transpose(inverse(world))
+    worldInverseTranspose = transpose(inverse(world))
 
 Hopefully knowing these terms you can look at someone else's shader
 and if you're lucky they used names that are close to or similar to

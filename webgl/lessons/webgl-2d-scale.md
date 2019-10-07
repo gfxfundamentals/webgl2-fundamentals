@@ -23,7 +23,7 @@ uniform vec2 u_rotation;
 +uniform vec2 u_scale;
 
 void main() {
-+  // Scale the positon
++  // Scale the position
 +  vec2 scaledPosition = a_position * u_scale;
 
   // Rotate the position
@@ -65,7 +65,7 @@ and we add the JavaScript needed to set the scale when we draw.
      gl.bindVertexArray(vao);
 
      // Pass in the canvas resolution so we can convert from
-     // pixels to clipspace in the shader
+     // pixels to clip space in the shader
      gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
      // Set the color.

@@ -121,7 +121,7 @@ const maxVertexShaderTextureUnits = gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_
 const maxFragmentShaderTextureUnits = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
 ```
 
-Each are required to support at least 16 texture unts.
+Each are required to support at least 16 texture units.
 
 Let's say 
 

@@ -69,12 +69,12 @@ a shader can receive data.
 
 ## WebGL Hello World
 
-WebGL only cares about 2 things. Clipspace coordinates and colors.
+WebGL only cares about 2 things. Clip space coordinates and colors.
 Your job as a programmer using WebGL is to provide WebGL with those 2 things.
 You provide your 2 "shaders" to do this. A Vertex shader which provides the
-clipspace coordinates and a fragment shader that provides the color.
+clip space coordinates and a fragment shader that provides the color.
 
-Clipspace coordinates always go from -1 to +1 no matter what size your
+Clip space coordinates always go from -1 to +1 no matter what size your
 canvas is. Here is a simple WebGL example that shows WebGL in its simplest form.
 
 Let's start with a vertex shader
@@ -96,7 +96,7 @@ Let's start with a vertex shader
 When executed, if the entire thing was written in JavaScript instead of GLSL
 you could imagine it would be used like this
 
-    // *** PSUEDO CODE!! ***
+    // *** PSEUDO CODE!! ***
 
     var positionBuffer = [
       0, 0, 0, 0,
@@ -135,7 +135,7 @@ Next we need a fragment shader
     out vec4 outColor;
 
     void main() {
-      // Just set the output to a constant redish-purple
+      // Just set the output to a constant reddish-purple
       outColor = vec4(1, 0, 0.5, 1);
     }
 
@@ -189,7 +189,7 @@ multiline template strings.
     out vec4 outColor;
 
     void main() {
-      // Just set the output to a constant redish-purple
+      // Just set the output to a constant reddish-purple
       outColor = vec4(1, 0, 0.5, 1);
     }
     `;
@@ -391,7 +391,7 @@ triangle will be drawn at clip space coordinates
       0.7, 0,
 
 Converting from clip space to screen space if the canvas size
-happned to be 400x300 we'd get something like this
+happened to be 400x300 we'd get something like this
 
      clip space      screen space
        0, 0       ->   200, 150
@@ -408,8 +408,8 @@ Here's a live version
 
 In the case above you can see our vertex shader is doing nothing
 but passing on our position data directly. Since the position data is
-already in clipspace there is no work to do. *If you want 3D it's up to you
-to supply shaders that convert from 3D to clipspace because WebGL is only
+already in clip space there is no work to do. *If you want 3D it's up to you
+to supply shaders that convert from 3D to clip space because WebGL is only
 a rasterization API*.
 
 You might be wondering why does the triangle start in the middle and go to toward the top right.
@@ -419,9 +419,9 @@ be to the right of that.
 As for why it's on the top, in clip space -1 is at the bottom and +1 is at the top. That means
 0 is in the center and so positive numbers will be above the center.
 
-For 2D stuff you would probably rather work in pixels than clipspace so
+For 2D stuff you would probably rather work in pixels than clip space so
 let's change the shader so we can supply the position in pixels and have
-it convert to clipspace for us. Here's the new vertex shader
+it convert to clip space for us. Here's the new vertex shader
 
     -  in vec4 a_position;
     +  in vec2 a_position;
@@ -435,7 +435,7 @@ it convert to clipspace for us. Here's the new vertex shader
     +    // convert from 0->1 to 0->2
     +    vec2 zeroToTwo = zeroToOne * 2.0;
     +
-    +    // convert from 0->2 to -1->+1 (clipspace)
+    +    // convert from 0->2 to -1->+1 (clip space)
     +    vec2 clipSpace = zeroToTwo - 1.0;
     +
     *    gl_Position = vec4(clipSpace, 0, 1);
@@ -472,7 +472,7 @@ that all the `gl.uniformXXX` functions set uniforms on the current program.
     gl.useProgram(program);
 
     // Pass in the canvas resolution so we can convert from
-    // pixels to clipspace in the shader
+    // pixels to clip space in the shader
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
 And of course to draw 2 triangles we need to have WebGL call our vertex shader 6 times
@@ -600,11 +600,11 @@ then checkout [the basics of how WebGL really works](webgl-how-it-works.html).
 
 You should also, at least briefly read about [the boilerplate code used here](webgl-boilerplate.html)
 that is used in most of the examples. You should also at least skim
-[how to draw mulitple things](webgl-drawing-multiple-things.html) to give you some idea
+[how to draw multiple things](webgl-drawing-multiple-things.html) to give you some idea
 of how more typical WebGL apps are structured because unfortunately nearly all the examples
 only draw one thing and so do not show that structure.
 
-Otherwise from here you can go in 2 directions. If you are interested in image procesing
+Otherwise from here you can go in 2 directions. If you are interested in image processing
 I'll show you [how to do some 2D image processing](webgl-image-processing.html).
 If you are interesting in learning about translation,
 rotation and scale then [start here](webgl-2d-translation.html).

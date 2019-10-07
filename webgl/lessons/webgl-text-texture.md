@@ -97,7 +97,7 @@ Setup uniforms for both the 'F' and text
     };
 
 Now when we compute the matrices for the F we start with the viewMatrix instead
-of the viewProjectionMatrix like other samples. We multply that by the parts
+of the viewProjectionMatrix like other samples. We multiply that by the parts
 that make up our F's orientation
 
     var fViewMatrix = m4.translate(viewMatrix,
@@ -265,7 +265,7 @@ And now it mostly works
 {{{example url="../webgl-text-texture-separate-opaque-from-transparent.html" }}}
 
 Notice we didn't sort like I mentioned above. In this case since we're drawing mostly opaque text
-there's probably going to be no noticable difference if we sort so I'll save that for some
+there's probably going to be no noticeable difference if we sort so I'll save that for some
 other article.
 
 Another issue is the text is intersecting its own 'F'. There really
@@ -273,7 +273,7 @@ isn't a specific solution for that. If you were making an MMO and wanted the tex
 player to always appear you might try to make the text appear above the head. Just translate
 it +Y some number of units, enough to make sure it was always above the player.
 
-You can also move it forward toward the cameara. Let's do that here just for the hell of it.
+You can also move it forward toward the camera. Let's do that here just for the hell of it.
 Because 'pos' is in view space that means it's relative to the eye (which is at 0,0,0 in view space).
 So if we normalize it we get a unit vector pointing from the eye to that point which we can then
 multiply by some amount to move the text a specific number of units toward or away from the eye.
@@ -302,10 +302,10 @@ You still might notice an issue with the edges of the letters.
 <img class="webgl_center" src="resources/text-gray-outline.png" />
 
 The issue here is the Canvas 2D API produces only premultiplied alpha values.
-When we upload the contents of the canvas to a texture WebGL tries to unpremultiply
+When we upload the contents of the canvas to a texture WebGL tries to un-premultiply
 the values but it can't do this perfectly because premultiplied alpha is lossy.
 
-To fix that let's tell WebGL not to unpremultiply
+To fix that let's tell WebGL not to un-premultiply
 
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
@@ -468,10 +468,10 @@ This technique is actually the technique most browsers use when they are GPU acc
 They generate textures with your HTML content and all the various styles you've applied
 and as long as that content doesn't change they can just render the texture
 again when you scroll etc.. Of course if you're updating things all the time then
-this techinque might get a little bit slow because re-generating the textures and re-uploading
+this technique might get a little bit slow because re-generating the textures and re-uploading
 them to the GPU is a relatively slow operation.
 
-In [the next article we'll go over a techinque that is probably better for cases where
+In [the next article we'll go over a technique that is probably better for cases where
 things update often](webgl-text-glyphs.html).
 
 <div class="webgl_bottombar">

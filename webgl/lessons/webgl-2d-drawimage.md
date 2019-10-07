@@ -31,7 +31,7 @@ Let's start with the first version
     ctx.drawImage(image, x, y);
 
 It draws an image at location `x, y` the same size as the image.
-To make a similar WebGL based funciton we could upload vertices that for `x, y`, `x + width, y`, `x, y + height`,
+To make a similar WebGL based function we could upload vertices that for `x, y`, `x + width, y`, `x, y + height`,
 and `x + width, y + height` then as we draw different images at different locations
 we'd generate different sets of vertices. In fact [that's exactly what we did in our first
 article](webgl-fundamentals.html).
@@ -271,13 +271,12 @@ I've updated the code to use different sizes
 So that was easy. But what about the 3rd version of canvas `drawImage`?
 
     ctx.drawImage(image, srcX, srcY, srcWidth, srcHeight,
-                         dstX, dstY, dstWidth, dstHeight);
-
-In order to select part of the texture we need to manipulate the texure coordinates. How
+                         dstX, dstY, dstWidth, dstHeight);t
+In order to select part of the texture we need to manipulate the texture coordinates. How
 texture coordinates work was [covered in the article about textures](webgl-3d-textures.html).
 In that article we manually created texture coordinates which is a very common way to do this
 but we can also create them on the fly and just like we're manipulating our positions using
-a matrix we can similarly manipluate texture coordinates using another matrix.
+a matrix we can similarly manipulate texture coordinates using another matrix.
 
 Let's add a texture matrix to the vertex shader and multiply the texture coordinates
 by this texture matrix.

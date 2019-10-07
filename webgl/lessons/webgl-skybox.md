@@ -3,7 +3,7 @@ Description: Show the sky with a skybox!
 TOC: Skyboxes
 
 
-This aritcle is part of a series of articles about WebGL.
+This article is part of a series of articles about WebGL.
 [The first article starts with the fundamentals](webgl-fundamentals.html).
 This article continues from [the article on environment maps](webgl-environment-maps.html).
 

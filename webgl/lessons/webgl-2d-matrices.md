@@ -252,7 +252,7 @@ uniform vec2 u_rotation;
 uniform vec2 u_scale;
 
 void main() {
-  // Scale the positon
+  // Scale the position
   vec2 scaledPosition = a_position * u_scale;
 
   // Rotate the position
@@ -301,7 +301,7 @@ And here's how we use it
     gl.bindVertexArray(vao);
 
     // Pass in the canvas resolution so we can convert from
-    // pixels to clipspace in the shader
+    // pixels to clip space in the shader
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
 *    // Compute the matrices
@@ -438,7 +438,7 @@ how Photoshop or Flash let you move the rotation point of some image.
 
 Let's go even more crazy. If you go back to the first article on
 [WebGL fundamentals](webgl-fundamentals.html) you might remember we have code
-in the shader to convert from pixels to clipspace that looks like this.
+in the shader to convert from pixels to clip space that looks like this.
 
       ...
       // convert the rectangle from pixels to 0.0 to 1.0
@@ -447,7 +447,7 @@ in the shader to convert from pixels to clipspace that looks like this.
       // convert from 0->1 to 0->2
       vec2 zeroToTwo = zeroToOne * 2.0;
 
-      // convert from 0->2 to -1->+1 (clipspace)
+      // convert from 0->2 to -1->+1 (clip space)
       vec2 clipSpace = zeroToTwo - 1.0;
 
       gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
@@ -494,7 +494,7 @@ And in JavaScript we need to multiply by the projection matrix
   function drawScene() {
     ...
 -    // Pass in the canvas resolution so we can convert from
--    // pixels to clipspace in the shader
+-    // pixels to clip space in the shader
 -    gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
     ...
@@ -520,7 +520,7 @@ from a rather complicated shader with 6-7 steps to a very simple shader with onl
 
 {{{example url="../webgl-2d-geometry-matrix-transform-with-projection.html" }}}
 
-Before we move on let's simplifiy a little bit. While it's common to generate
+Before we move on let's simplify a little bit. While it's common to generate
 various matrices and separately multiply them together it's also common to just
 multiply them as we go. Effectively we could functions like this
 
@@ -577,29 +577,29 @@ The are 2 ways to look at matrices. Given the expression
 The first way which many people find natural is to start on the right and work
 to the left
 
-First we mutiply the positon by the scale matrix to get a scaled postion
+First we multiply the position by the scale matrix to get a scaled position
 
     scaledPosition = scaleMat * position
 
-Then we multiply the scaledPostion by the rotation matrix to get a rotatedScaledPosition
+Then we multiply the scaledPosition by the rotation matrix to get a rotatedScaledPosition
 
     rotatedScaledPosition = rotationMat * scaledPosition
 
-Then we multiply the rotatedScaledPositon by the translation matrix to get a
+Then we multiply the rotatedScaledPosition by the translation matrix to get a
 translatedRotatedScaledPosition
 
     translatedRotatedScaledPosition = translationMat * rotatedScaledPosition
 
-And finally we multiple that by the projection matrix to get clipspace positions
+And finally we multiple that by the projection matrix to get clip space positions
 
-    clipspacePosition = projectioMatrix * translatedRotatedScaledPosition
+    clipspacePosition = projectionMatrix * translatedRotatedScaledPosition
 
 The 2nd way to look at matrices is reading from left to right. In that case
-each matrix changes the *space" respesented by the canvas. The canvas starts
-with representing clipspace (-1 to +1) in each direction. Each matrix applied
+each matrix changes the *space" represented by the canvas. The canvas starts
+with representing clip space (-1 to +1) in each direction. Each matrix applied
 from left to right changes the space represented by the canvas.
 
-Step 1:  no matrix (or the identiy matrix)
+Step 1:  no matrix (or the identity matrix)
 
 > {{{diagram url="resources/matrix-space-change.html?stage=0" caption="clip space" }}}
 >
@@ -655,7 +655,7 @@ I used <code>canvas.width</code> and <code>canvas.height</code>
 but above when I called <code>m3.projection</code> I instead used
 <code>canvas.clientWidth</code> and <code>canvas.clientHeight</code>.
 Why?</p>
-<p>Projection matrixes are concerned with how to take clipspace
+<p>Projection matrixes are concerned with how to take clip space
 (-1 to +1 in each dimension) and convert it back
 to pixels. But, in the browser, there are 2 types of pixels we are
 dealing with. One is the number of pixels in

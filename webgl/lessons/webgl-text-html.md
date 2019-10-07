@@ -172,10 +172,10 @@ How do we do that? We do it exactly how we asked the GPU to do it when we
 [covered perspective projection](webgl-3d-perspective.html).
 
 Up through that example we learned how to use matrices, how to multiply them,
-and how to apply a projection matrix to convert them to clipspace. We pass all
+and how to apply a projection matrix to convert them to clip space. We pass all
 of that to our shader and it multiplies vertices in local space and converts
-them to clipspace. We can do all the math ourselves in JavaScript as well.
-Then we can multiply clipspace (-1 to +1) into pixels and use
+them to clip space. We can do all the math ourselves in JavaScript as well.
+Then we can multiply clip space (-1 to +1) into pixels and use
 that to position the div.
 
     gl.drawArrays(...);
@@ -187,7 +187,7 @@ that to position the div.
     //             X  Y  Z  W
     var point = [100, 0, 0, 1];  // this is the front top right corner
 
-    // compute a clipspace position
+    // compute a clip space position
     // using the matrix we computed for the F
     var clipspace = m4.transformVector(matrix, point);
 

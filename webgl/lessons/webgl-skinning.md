@@ -688,7 +688,7 @@ There are a couple of notable changes from the code in [the scene graph article]
 
 * The `TRS` class is using a quaternion for rotation
 
-  We have not convered quaternions and to be honest I don't think I understand
+  We have not covered quaternions and to be honest I don't think I understand
   them well enough to explain them. Fortunately we don't need to know how they
   work to use them. We just take the data out of the gltf file and call
   a function that builds a matrix from that data and use the matrix.

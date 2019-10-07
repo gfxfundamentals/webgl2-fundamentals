@@ -155,7 +155,7 @@ is it used to be that shaders didn't actually have conditionals. If you added
 a conditional the shader compiler would expand the code with lots
 of multiply by 0 and 1 here and there to make it so there were not
 any actual conditionals in the code. That meant adding conditionals
-could make your code explode into combinitorial expansions. I'm not
+could make your code explode into combinatorial expansions. I'm not
 sure that's true anymore but let's get rid of the conditionals anyway
 just to show some techniques. You can decide yourself whether or not
 to use them.
@@ -251,7 +251,7 @@ That works too
 
 The difference is `smoothstep` uses a hermite interpolation instead of a
 linear interpolation. That means between `lowerBound` and `upperBound`
-it intepolates like the image below on the right whereas a linear interpolation is like the image on the left.
+it interpolates like the image below on the right whereas a linear interpolation is like the image on the left.
 
 <img class="webgl_center invertdark" src="resources/linear-vs-hermite.png" />
 
@@ -352,7 +352,7 @@ mat3 inverse(mat3 m)
 mat4 inverse(mat4 m)</code></pre><p>
 Returns a matrix that is the inverse of m. The input
 matrix m is not modified. The values in the returned
-matrix are undefined if m is singular or poorlyconditioned
+matrix are undefined if m is singular or poorly conditioned
 (nearly singular).</p>
 
 

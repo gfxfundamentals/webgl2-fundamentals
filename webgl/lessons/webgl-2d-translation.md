@@ -49,7 +49,7 @@ passed to `setRectangle` right? Here's a sample based on our
     gl.bindVertexArray(vao);
 
     // Pass in the canvas resolution so we can convert from
-    // pixels to clipspace in the shader
+    // pixels to clip space in the shader
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
     // Update the position buffer with rectangle positions
@@ -153,7 +153,7 @@ void main() {
   // convert from 0->1 to 0->2
   vec2 zeroToTwo = zeroToOne * 2.0;
 
-  // convert from 0->2 to -1->+1 (clipspace)
+  // convert from 0->2 to -1->+1 (clip space)
   vec2 clipSpace = zeroToTwo - 1.0;
 
   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
@@ -227,7 +227,7 @@ translation that we desire.
     gl.bindVertexArray(vao);
 
     // Pass in the canvas resolution so we can convert from
-    // pixels to clipspace in the shader
+    // pixels to clip space in the shader
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
     // Set the color.

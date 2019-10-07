@@ -177,7 +177,7 @@ and computing the correct aspect. It's so easy to forget that I now try to never
 `gl.bindFramebuffer` in my own code directly. Instead I make a function that does both
 something like
 
-    function bindFrambufferAndSetViewport(fb, width, height) {
+    function bindFramebufferAndSetViewport(fb, width, height) {
        gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
        gl.viewport(0, 0, width, height);
     }

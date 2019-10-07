@@ -1,9 +1,9 @@
 Title: WebGL Fog
-Description: How to implementent fog
+Description: How to implement fog
 TOC: Fog
 
 
-This aritcle is part of a series of articles about WebGL.
+This article is part of a series of articles about WebGL.
 [The first article starts with the fundamentals](webgl-fundamentals.html).
 
 Fog in WebGL is interesting to me because of how *fake* it seems when I think about how it works. Basically what you do is use some kind of depth or distance from the camera calculation in your shaders to make the color more or less the fog color.
@@ -66,7 +66,7 @@ function drawScene(time) {
   ...
 
   // Clear the canvas AND the depth buffer.
-  // Clear to the fog colort
+  // Clear to the fog color
   gl.clearColor(...fogColor);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -86,7 +86,7 @@ And here you'll see if you drag the slider you can change between the texture an
 
 So now all we really need to do is instead of passing in the fog amount we compute it based on the something like the depth from the camera.
 
-Recall from the article on [cameras](webgl-3d-camera.html) that after we apply the view matrix all positions are relative to the camera. The camera looks down the -z axis so if we just look at the z position after multiplying by the world and view matrices we'll have a value that repesents how far away something is from the z plane of the camera.
+Recall from the article on [cameras](webgl-3d-camera.html) that after we apply the view matrix all positions are relative to the camera. The camera looks down the -z axis so if we just look at the z position after multiplying by the world and view matrices we'll have a value that represents how far away something is from the z plane of the camera.
 
 Let's change the vertex shader to pass that data to the fragment shader so we can use it compute a fog amount. To do that let's split `u_matrix` into 2 parts. A projection matrix and a worldView matrix.
 
@@ -338,7 +338,7 @@ And now the cubes no longer come out of the fog as the camera turns
 
 {{{example url="../webgl-3d-fog-distance-based.html" }}}
 
-So far all of our fog has used a linear calculation. In other words the fog color gets applied linearly between near and far. Like many things in the real world fog apparently works expotentially. It gets thicker with the square of the distance from the viewer. A common equation for expotential fog is
+So far all of our fog has used a linear calculation. In other words the fog color gets applied linearly between near and far. Like many things in the real world fog apparently works exponentially. It gets thicker with the square of the distance from the viewer. A common equation for exponential fog is
 
 ```glsl
 #define LOG2 1.442695

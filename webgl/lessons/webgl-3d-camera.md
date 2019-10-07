@@ -288,7 +288,7 @@ as we move it.
   var cameraMatrix = m4.yRotation(cameraAngleRadians);
   cameraMatrix = m4.translate(cameraMatrix, 0, 50, radius * 1.5);
 
-  // Get the camera's postion from the matrix we computed
+  // Get the camera's position from the matrix we computed
   var cameraPosition = [
     cameraMatrix[12],
     cameraMatrix[13],

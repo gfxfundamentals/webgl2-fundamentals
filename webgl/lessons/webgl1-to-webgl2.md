@@ -201,7 +201,7 @@ Note that this is also true for `HALF_FLOAT` framebuffer attachments as well.
 > way to use it for rendering was to create a texture, attach it a framebuffer,
 > and check its status. Later someone pointed out according the spec that was
 > not enough because the spec says colors written in a fragment shader are
-> always clamped to 0 to 1. `EXT_color_buffer_float` removes that clampping
+> always clamped to 0 to 1. `EXT_color_buffer_float` removes that clamping
 > restriction but since WebGL had already been shipping for a year or so
 > it would have broken many web sites to enforce the restriction. For WebGL2
 > they were able to fix it and so now you must enable `EXT_color_buffer_float`
@@ -251,7 +251,7 @@ Makes a new instance of the thing above called `attributeState`.
 
     gl.bindVertexArray(someVAO);
 
-Is equivilent to
+Is equivalent to
 
     glState.attributeState = someVAO;
 
@@ -282,7 +282,7 @@ There are a few caveats though:
 1.  attribute locations are program dependent.
 
     If you're going to use the same geometry with multiple
-    programs consider manually assinging attribute locations.
+    programs consider manually assigning attribute locations.
     In GLSL 300 es you can do this in the shader
 
     For example:
@@ -304,7 +304,7 @@ There are a few caveats though:
         gl.bindAttribLocation(someProgram, 2, "a_normal");
         gl.bindAttribLocation(someProgram, 3, "a_color");
 
-    This means you can force them to be comptible across multiple shader
+    This means you can force them to be compatible across multiple shader
     programs. If one program doesn't need all attributes
     the attributes they do need will still be assigned to
     the same locations

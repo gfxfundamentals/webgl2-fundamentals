@@ -6,7 +6,7 @@ TOC: 2D - Matrix Stack
 This article is a continuation of [WebGL 2D DrawImage](webgl-2d-drawimage.html).
 If you haven't read that I suggest [you start there](webgl-2d-drawimage.html).
 
-In that last article we implemented the WebGL equivilent of Canvas 2D's `drawImage` function
+In that last article we implemented the WebGL equivalent of Canvas 2D's `drawImage` function
 including its ability to specify both the source rectangle and the destination rectangle.
 
 What we haven't done yet is let us rotate and/or scale it from any arbitrary point. We could do that
@@ -16,7 +16,7 @@ The matrix stack functions of the Canvas 2D API are `save`, `restore`, `translat
 
 A matrix stack is pretty simple to implement. We make a stack of matrices. We make functions to
 multiply the top matrix of the stack using by either a translation, rotation, or scale matrix
-[using the functions we created eariler](webgl-2d-matrices.html).
+[using the functions we created earlier](webgl-2d-matrices.html).
 
 Here's the implementation
 
@@ -318,13 +318,13 @@ and it's bottom right corner as at the previous origin.
 
 At any point whatever we did before that on the matrix stack it doesn't matter. We did a bunch
 of stuff to move or scale or rotate the origin but just before we call
-`drawImage` wherever the origin happens to be at the moment is irrelavent.
+`drawImage` wherever the origin happens to be at the moment is irrelevant.
 It's the new origin so we just have to decide where to move that origin
 relative where the texture would be drawn if we had nothing before it on the stack.
 
 You might notice a matrix stack is very similar to a [scene graph that we
 covered before](webgl-scene-graph.html). A scene graph had a tree of nodes
 and as we walked the tree we multiplied each node by its parent's node.
-A matrix stack is effectively antoher version that same process.
+A matrix stack is effectively another version that same process.
 
 

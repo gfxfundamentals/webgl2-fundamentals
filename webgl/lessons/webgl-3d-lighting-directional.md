@@ -284,7 +284,7 @@ out vec4 outColor;
 void main() {
 -  outColor = v_color;
 +  // because v_normal is a varying it's interpolated
-+  // so it will not be a uint vector. Normalizing it
++  // so it will not be a unit vector. Normalizing it
 +  // will make it a unit vector again
 +  vec3 normal = normalize(v_normal);
 +
@@ -379,7 +379,7 @@ Now we have to look those uniforms up
 ```
   // lookup uniforms
 -  var matrixLocation = gl.getUniformLocation(program, "u_matrix");
-*  var worldViewProjetionLocation =
+*  var worldViewProjectionLocation =
 *      gl.getUniformLocation(program, "u_worldViewProjection");
 +  var worldLocation = gl.getUniformLocation(program, "u_world");
 ```

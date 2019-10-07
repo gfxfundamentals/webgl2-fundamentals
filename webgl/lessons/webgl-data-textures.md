@@ -13,7 +13,7 @@ using an image we'll create the data in JavaScript directly.
 
 Creating data for a texture in JavaScript is mostly straight forward depending
 on the texture format. WebGL2 supports a ton of texture formats though.
-WebGL2 supports all the *unsized* formats from WebGL1
+WebGL2 supports all the *un-sized* formats from WebGL1
 
 <style>
 .local-data {
@@ -63,8 +63,8 @@ WebGL2 supports all the *unsized* formats from WebGL1
   </table>
 </div>
 
-They're called *unsized* because how they are actually represented internally is undefined in WebGL1.
-It is defined in WebGL2. In addition to those unsized formats there are a slew of sized formats including
+They're called *un-sized* because how they are actually represented internally is undefined in WebGL1.
+It is defined in WebGL2. In addition to those un-sized formats there are a slew of sized formats including
 
 <div class="webgl_center">
   <table class="local-data local-data2">
@@ -162,16 +162,16 @@ And these depth and stencil formats as well
 Legend:
 
 * a single number like `8` means 8bits that will be normalized from 0 to 1
-* a number preceeded by an `s` like `s8` means a signed 8bit number that will be normalized from -1 to 1
-* a number preceeded by an `f` like `f16` means a floating point number.
-* a number preceeded by in `i` like `i8` means an integer number.
-* a number preceeded by in `ui` like `ui8` means an unsigned integer number.
+* a number preceded by an `s` like `s8` means a signed 8bit number that will be normalized from -1 to 1
+* a number preceded by an `f` like `f16` means a floating point number.
+* a number preceded by in `i` like `i8` means an integer number.
+* a number preceded by in `ui` like `ui8` means an unsigned integer number.
 
 We won't use this info here but I highlighted in <span style="background: pink;">pink</span>
 the half and float texture formats to show unlike WebGL1 they are always available in WebGL2
 but they are not marked as either color renderable and/or texture filterable by default.
 Not being color renderable means they can not be rendered to. [Rendering to a texture is
-convered in another lesson](webgl-render-to-texture.html). Not texture filterable means they
+covered in another lesson](webgl-render-to-texture.html). Not texture filterable means they
 must be used with `gl.NEAREST` only. Both of those features are available as optional
 extensions in WebGL2.
 
@@ -328,7 +328,7 @@ WebGL: INVALID_OPERATION: texImage2D: ArrayBufferView not big enough for request
 ```
 
 It turns out there's a kind of obscure setting in WebGL left
-over from when OpenGL was first created. Comptuers sometimes
+over from when OpenGL was first created. Computers sometimes
 go faster then data is a certain size. For example it can
 be faster to copy 2, 4, or 8 bytes at a time instead of 1 at a time.
 WebGL defaults to using 4 bytes at a time so it expects each
@@ -365,7 +365,7 @@ And with that covered lets move on to [rendering to a texture](webgl-render-to-t
 Texel is short for Texture Element.
 </p>
 <p>I'm sure I'll get an earful from some graphics guru but as far as I can tell "texel" is an example of jargon.
-Personally I generally use "pixel" when refering to the elements of a texture without thinking about it. &#x1f607;
+Personally I generally use "pixel" when referring to the elements of a texture without thinking about it. &#x1f607;
 </p>
 </div>
 

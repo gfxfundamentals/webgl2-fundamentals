@@ -9,7 +9,7 @@ This is a continuation from [WebGL2 Fundamentals](webgl-fundamentals.html).
 If you haven't read that I'd suggest [going there first](webgl-fundamentals.html).
 
 To draw images in WebGL we need to use textures. Similarly to the way
-WebGL expects clipspace coordinates when rendering instead of pixels,
+WebGL expects clip space coordinates when rendering instead of pixels,
 WebGL generally expects texture coordinates when reading a texture.
 Texture coordinates go from 0.0 to 1.0 no matter the dimensions of the texture.
 
@@ -139,7 +139,7 @@ Once it loads we'll draw it.
       gl.useProgram(program);
 
       // Pass in the canvas resolution so we can convert from
-      // pixels to clipspace in the shader
+      // pixels to clip space in the shader
       gl.uniform2f(resolutionLocation, gl.canvas.width, gl.canvas.height);
 
     +  // Tell the shader to get the texture from texture unit 0
@@ -229,7 +229,7 @@ precision mediump float;
 // our texture
 uniform sampler2D u_image;
 
-// the convolution kernal data
+// the convolution kernel data
 uniform float u_kernel[9];
 uniform float u_kernelWeight;
 

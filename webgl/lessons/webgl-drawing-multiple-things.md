@@ -7,7 +7,7 @@ This article is a continuation of [previous WebGL articles](webgl-fundamentals.h
 If you haven't read them I suggest you start there.
 
 One of the most common questions after first getting something up in WebGL is how
-do I draw mulitple things.
+do I draw multiple things.
 
 The first thing to realize is that with few exceptions, WebGL is like having a function
 someone wrote where instead of passing lots of parameters to the function you instead
@@ -85,7 +85,7 @@ So here's the code. Our shader is the same simple shader from our [perspective e
 except we've added a `u_colorMult` to multiply the vertex colors by.
 
     #version 300 es
-    precsion mediump float;
+    precision mediump float;
 
     // Passed in from the vertex shader.
     in vec4 v_color;
@@ -195,7 +195,7 @@ This is another place where it's a good idea to simplify. There are effectively 
 4.  The count to pass to gl.drawXXX and whether or not to call gl.drawArrays or gl.drawElements
 
 So, a simple simplification would be to make an array of things to draw and in that array
-put the 4 things togehter
+put the 4 things together
 
     var objectsToDraw = [
       {
@@ -279,7 +279,7 @@ goes in that list with actually calling the `gl.draw___` functions.
 ## Drawing Transparent Things and Multiple Lists
 
 In the example above there is just one list to draw. This works because all the objects
-are opaque. If we want to draw transpaent objects though they must be drawn back to front
+are opaque. If we want to draw transparent objects though they must be drawn back to front
 with the furthest objects getting drawn first. On the other hand, for speed, for opaque
 objects we want to draw front to back, that's because the DEPTH_TEST means that the GPU
 will not execute our fragment shader for any pixels that would be behind other things.
@@ -319,7 +319,7 @@ Now that we have a framework for drawing multiple objects [lets draw some text](
 <p>
 In WebGL 1 we didn't have vertex array objects and so
 <a href="http://webglfundametnals.org/webgl/lessons/webgl-drawing-multiple-things.html">I recommended an optimization</a>.
-Without vertex array objects we had to make 3 WebGL per attribute per model calls everytime we switched geometry.
+Without vertex array objects we had to make 3 WebGL per attribute per model calls every time we switched geometry.
 In the example above that added up to 12 WebGL calls per model and so
 it made sense to try to avoid that by sorting models. In WebGL2 those 12 WebGL calls reduce to just one call
 <code>gl.bindVertexArray(someVertexArray)</code> and, at least in my testing I could not measure a difference

@@ -220,7 +220,7 @@ In that case you're supposed to bind the framebuffer and then call
 If it does you're good to go. If not you'll need to tell the user to fallback
 to something else. Fortunately WebGL2 supports many formats and combinations.
 
-WebGL has to convert from [clipspace](webgl-fundamentals.html) back into pixels.
+WebGL has to convert from [clip space](webgl-fundamentals.html) back into pixels.
 It does this based on the settings of `gl.viewport`. Since the framebuffers
 we are rendering into are a different size than the canvas we need to set the
 viewport appropriately depending if we are rendering to a texture or the canvas.

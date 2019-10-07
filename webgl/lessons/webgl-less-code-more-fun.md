@@ -166,7 +166,7 @@ We can then pass in JavaScript objects to set our settings much more easily.
 If that's clear as mud well, our code would look something like this
 
 ```
-// At initialiation time
+// At initialization time
 var uniformSetters = twgl.createUniformSetters(gl, program);
 var attribSetters  = twgl.createAttributeSetters(gl, program);
 
@@ -211,7 +211,7 @@ That seems a heck of a lot smaller, easier, and less code to me.
 You can even use multiple JavaScript objects for the uniforms if it suits you. For example
 
 ```
-// At initialiation time
+// At initialization time
 var uniformSetters = twgl.createUniformSetters(gl, program);
 var attribSetters  = twgl.createAttributeSetters(gl, program);
 
@@ -441,7 +441,7 @@ For those of you familar with JavaScript you might be wondering if you can use t
 directly like this.
 </p>
 <pre class="prettyprint">
-// At initialiation time
+// At initialization time
 var uniformSetters = twgl.createUniformSetters(program);
 
 // At draw time

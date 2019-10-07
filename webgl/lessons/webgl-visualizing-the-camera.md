@@ -250,7 +250,7 @@ function render() {
 
   // Compute a perspective projection matrix
   const perspectiveProjectionMatrix =
--      m4.perspective(fielOfViewRadians), aspect, near, far);
+-      m4.perspective(fieldOfViewRadians), aspect, near, far);
 +      m4.perspective(degToRad(settings.cam1FieldOfView), aspect, near, far);
 
   // Compute the camera's matrix using look at.

@@ -102,7 +102,7 @@ function rand(min, max) {
 
 {{{example url="../webgl-simple-scissor.html"}}}
 
-Not saying that particlar one is all that useful but still
+Not saying that particular one is all that useful but still
 it's good to know.
 
 ## Using one large `gl.POINTS`
