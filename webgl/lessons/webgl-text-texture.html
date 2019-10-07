@@ -156,7 +156,7 @@ var textUniforms = {
   u_texture: textTex,
 };
 </code></pre><p>Now when we compute the matrices for the F we start with the viewMatrix instead
-of the viewProjectionMatrix like other samples. We multply that by the parts
+of the viewProjectionMatrix like other samples. We multiply that by the parts
 that make up our F&#39;s orientation</p>
 <pre class="prettyprint"><code>var fViewMatrix = m4.translate(viewMatrix,
     translation[0] + xx * spread, translation[1] + yy * spread, translation[2]);
@@ -299,13 +299,13 @@ gl.depthMask(false);
 
 </p>
 <p>Notice we didn&#39;t sort like I mentioned above. In this case since we&#39;re drawing mostly opaque text
-there&#39;s probably going to be no noticable difference if we sort so I&#39;ll save that for some
+there&#39;s probably going to be no noticeable difference if we sort so I&#39;ll save that for some
 other article.</p>
 <p>Another issue is the text is intersecting its own &#39;F&#39;. There really
 isn&#39;t a specific solution for that. If you were making an MMO and wanted the text of each
 player to always appear you might try to make the text appear above the head. Just translate
 it +Y some number of units, enough to make sure it was always above the player.</p>
-<p>You can also move it forward toward the cameara. Let&#39;s do that here just for the hell of it.
+<p>You can also move it forward toward the camera. Let&#39;s do that here just for the hell of it.
 Because &#39;pos&#39; is in view space that means it&#39;s relative to the eye (which is at 0,0,0 in view space).
 So if we normalize it we get a unit vector pointing from the eye to that point which we can then
 multiply by some amount to move the text a specific number of units toward or away from the eye.</p>
@@ -333,9 +333,9 @@ textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
 <p>You still might notice an issue with the edges of the letters.</p>
 <p><img class="webgl_center" src="resources/text-gray-outline.png" /></p>
 <p>The issue here is the Canvas 2D API produces only premultiplied alpha values.
-When we upload the contents of the canvas to a texture WebGL tries to unpremultiply
+When we upload the contents of the canvas to a texture WebGL tries to un-premultiply
 the values but it can&#39;t do this perfectly because premultiplied alpha is lossy.</p>
-<p>To fix that let&#39;s tell WebGL not to unpremultiply</p>
+<p>To fix that let&#39;s tell WebGL not to un-premultiply</p>
 <pre class="prettyprint"><code>gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 </code></pre><p>This tells WebGL to supply premultiplied alpha values to <code>gl.texImage2D</code> and <code>gl.texSubImage2D</code>.
 If the data passed to <code>gl.texImage2D</code> is already premultiplied as it is for Canvas 2D data then
@@ -486,9 +486,9 @@ textUniforms.u_color = colors[ndx];
 They generate textures with your HTML content and all the various styles you&#39;ve applied
 and as long as that content doesn&#39;t change they can just render the texture
 again when you scroll etc.. Of course if you&#39;re updating things all the time then
-this techinque might get a little bit slow because re-generating the textures and re-uploading
+this technique might get a little bit slow because re-generating the textures and re-uploading
 them to the GPU is a relatively slow operation.</p>
-<p>In <a href="webgl-text-glyphs.html">the next article we&#39;ll go over a techinque that is probably better for cases where
+<p>In <a href="webgl-text-glyphs.html">the next article we&#39;ll go over a technique that is probably better for cases where
 things update often</a>.</p>
 <div class="webgl_bottombar">
 <h3>Scaling Text without pixelation</h3>

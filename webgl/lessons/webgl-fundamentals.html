@@ -136,11 +136,11 @@ by a vertex shader will be interpolated while executing the fragment shader.</p>
 </li>
 </ol>
 <h2 id="webgl-hello-world">WebGL Hello World</h2>
-<p>WebGL only cares about 2 things. Clipspace coordinates and colors.
+<p>WebGL only cares about 2 things. Clip space coordinates and colors.
 Your job as a programmer using WebGL is to provide WebGL with those 2 things.
 You provide your 2 &quot;shaders&quot; to do this. A Vertex shader which provides the
-clipspace coordinates and a fragment shader that provides the color.</p>
-<p>Clipspace coordinates always go from -1 to +1 no matter what size your
+clip space coordinates and a fragment shader that provides the color.</p>
+<p>Clip space coordinates always go from -1 to +1 no matter what size your
 canvas is. Here is a simple WebGL example that shows WebGL in its simplest form.</p>
 <p>Let&#39;s start with a vertex shader</p>
 <pre class="prettyprint"><code>#version 300 es
@@ -158,7 +158,7 @@ void main() {
 }
 </code></pre><p>When executed, if the entire thing was written in JavaScript instead of GLSL
 you could imagine it would be used like this</p>
-<pre class="prettyprint"><code>// *** PSUEDO CODE!! ***
+<pre class="prettyprint"><code>// *** PSEUDO CODE!! ***
 
 var positionBuffer = [
   0, 0, 0, 0,
@@ -194,7 +194,7 @@ precision mediump float;
 out vec4 outColor;
 
 void main() {
-  // Just set the output to a constant redish-purple
+  // Just set the output to a constant reddish-purple
   outColor = vec4(1, 0, 0.5, 1);
 }
 </code></pre><p>Above we declared <code>outColor</code> as our fragment shader&#39;s output. We&#39;re setting <code>outColor</code> to <code>1, 0, 0.5, 1</code>
@@ -238,7 +238,7 @@ precision mediump float;
 out vec4 outColor;
 
 void main() {
-  // Just set the output to a constant redish-purple
+  // Just set the output to a constant reddish-purple
   outColor = vec4(1, 0, 0.5, 1);
 }
 `;
@@ -389,7 +389,7 @@ triangle will be drawn at clip space coordinates</p>
   0, 0.5,
   0.7, 0,
 </code></pre><p>Converting from clip space to screen space if the canvas size
-happned to be 400x300 we&#39;d get something like this</p>
+happened to be 400x300 we&#39;d get something like this</p>
 <pre class="prettyprint"><code> clip space      screen space
    0, 0       -&gt;   200, 150
    0, 0.5     -&gt;   200, 225
@@ -406,17 +406,17 @@ per channel canvas that means WebGL is going to write the values <code>[255, 0, 
 </p>
 <p>In the case above you can see our vertex shader is doing nothing
 but passing on our position data directly. Since the position data is
-already in clipspace there is no work to do. <em>If you want 3D it&#39;s up to you
-to supply shaders that convert from 3D to clipspace because WebGL is only
+already in clip space there is no work to do. <em>If you want 3D it&#39;s up to you
+to supply shaders that convert from 3D to clip space because WebGL is only
 a rasterization API</em>.</p>
 <p>You might be wondering why does the triangle start in the middle and go to toward the top right.
 Clip space in <code>x</code> goes from -1 to +1. That means 0 is in the center and positive values will
 be to the right of that.</p>
 <p>As for why it&#39;s on the top, in clip space -1 is at the bottom and +1 is at the top. That means
 0 is in the center and so positive numbers will be above the center.</p>
-<p>For 2D stuff you would probably rather work in pixels than clipspace so
+<p>For 2D stuff you would probably rather work in pixels than clip space so
 let&#39;s change the shader so we can supply the position in pixels and have
-it convert to clipspace for us. Here&#39;s the new vertex shader</p>
+it convert to clip space for us. Here&#39;s the new vertex shader</p>
 <pre class="prettyprint"><code>-  in vec4 a_position;
 +  in vec2 a_position;
 
@@ -429,7 +429,7 @@ it convert to clipspace for us. Here&#39;s the new vertex shader</p>
 +    // convert from 0-&gt;1 to 0-&gt;2
 +    vec2 zeroToTwo = zeroToOne * 2.0;
 +
-+    // convert from 0-&gt;2 to -1-&gt;+1 (clipspace)
++    // convert from 0-&gt;2 to -1-&gt;+1 (clip space)
 +    vec2 clipSpace = zeroToTwo - 1.0;
 +
 *    gl_Position = vec4(clipSpace, 0, 1);
@@ -458,7 +458,7 @@ that all the <code>gl.uniformXXX</code> functions set uniforms on the current pr
 <pre class="prettyprint"><code>gl.useProgram(program);
 
 // Pass in the canvas resolution so we can convert from
-// pixels to clipspace in the shader
+// pixels to clip space in the shader
 gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 </code></pre><p>And of course to draw 2 triangles we need to have WebGL call our vertex shader 6 times
 so we need to change the <code>count</code> to <code>6</code>.</p>
@@ -580,10 +580,10 @@ the more common way to position, orient and scale things in WebGL</a>.</p>
 then checkout <a href="webgl-how-it-works.html">the basics of how WebGL really works</a>.</p>
 <p>You should also, at least briefly read about <a href="webgl-boilerplate.html">the boilerplate code used here</a>
 that is used in most of the examples. You should also at least skim
-<a href="webgl-drawing-multiple-things.html">how to draw mulitple things</a> to give you some idea
+<a href="webgl-drawing-multiple-things.html">how to draw multiple things</a> to give you some idea
 of how more typical WebGL apps are structured because unfortunately nearly all the examples
 only draw one thing and so do not show that structure.</p>
-<p>Otherwise from here you can go in 2 directions. If you are interested in image procesing
+<p>Otherwise from here you can go in 2 directions. If you are interested in image processing
 I&#39;ll show you <a href="webgl-image-processing.html">how to do some 2D image processing</a>.
 If you are interesting in learning about translation,
 rotation and scale then <a href="webgl-2d-translation.html">start here</a>.</p>

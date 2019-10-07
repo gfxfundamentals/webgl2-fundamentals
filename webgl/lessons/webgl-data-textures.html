@@ -90,7 +90,7 @@ We created them from images we downloaded. In this article instead of
 using an image we&#39;ll create the data in JavaScript directly.</p>
 <p>Creating data for a texture in JavaScript is mostly straight forward depending
 on the texture format. WebGL2 supports a ton of texture formats though.
-WebGL2 supports all the <em>unsized</em> formats from WebGL1</p>
+WebGL2 supports all the <em>un-sized</em> formats from WebGL1</p>
 <p><style>
 .local-data {
   font-family: monospace;
@@ -139,8 +139,8 @@ WebGL2 supports all the <em>unsized</em> formats from WebGL1</p>
   </table>
 </div>
 
-<p>They&#39;re called <em>unsized</em> because how they are actually represented internally is undefined in WebGL1.
-It is defined in WebGL2. In addition to those unsized formats there are a slew of sized formats including</p>
+<p>They&#39;re called <em>un-sized</em> because how they are actually represented internally is undefined in WebGL1.
+It is defined in WebGL2. In addition to those un-sized formats there are a slew of sized formats including</p>
 <div class="webgl_center">
   <table class="local-data local-data2">
     <thead>
@@ -236,16 +236,16 @@ It is defined in WebGL2. In addition to those unsized formats there are a slew o
 <p>Legend:</p>
 <ul>
 <li>a single number like <code>8</code> means 8bits that will be normalized from 0 to 1</li>
-<li>a number preceeded by an <code>s</code> like <code>s8</code> means a signed 8bit number that will be normalized from -1 to 1</li>
-<li>a number preceeded by an <code>f</code> like <code>f16</code> means a floating point number.</li>
-<li>a number preceeded by in <code>i</code> like <code>i8</code> means an integer number.</li>
-<li>a number preceeded by in <code>ui</code> like <code>ui8</code> means an unsigned integer number.</li>
+<li>a number preceded by an <code>s</code> like <code>s8</code> means a signed 8bit number that will be normalized from -1 to 1</li>
+<li>a number preceded by an <code>f</code> like <code>f16</code> means a floating point number.</li>
+<li>a number preceded by in <code>i</code> like <code>i8</code> means an integer number.</li>
+<li>a number preceded by in <code>ui</code> like <code>ui8</code> means an unsigned integer number.</li>
 </ul>
 <p>We won&#39;t use this info here but I highlighted in <span style="background: pink;">pink</span>
 the half and float texture formats to show unlike WebGL1 they are always available in WebGL2
 but they are not marked as either color renderable and/or texture filterable by default.
 Not being color renderable means they can not be rendered to. <a href="webgl-render-to-texture.html">Rendering to a texture is
-convered in another lesson</a>. Not texture filterable means they
+covered in another lesson</a>. Not texture filterable means they
 must be used with <code>gl.NEAREST</code> only. Both of those features are available as optional
 extensions in WebGL2.</p>
 <p>For each of the formats you specify both the <em>internal format</em> (the format the GPU will use internally)
@@ -389,7 +389,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 <p>Checking the JavaScript console we see this error something like this</p>
 <pre class="prettyprint"><code>WebGL: INVALID_OPERATION: texImage2D: ArrayBufferView not big enough for request
 </code></pre><p>It turns out there&#39;s a kind of obscure setting in WebGL left
-over from when OpenGL was first created. Comptuers sometimes
+over from when OpenGL was first created. Computers sometimes
 go faster then data is a certain size. For example it can
 be faster to copy 2, 4, or 8 bytes at a time instead of 1 at a time.
 WebGL defaults to using 4 bytes at a time so it expects each
@@ -422,7 +422,7 @@ then be done with it.</p>
 Texel is short for Texture Element.
 </p>
 <p>I'm sure I'll get an earful from some graphics guru but as far as I can tell "texel" is an example of jargon.
-Personally I generally use "pixel" when refering to the elements of a texture without thinking about it. &#x1f607;
+Personally I generally use "pixel" when referring to the elements of a texture without thinking about it. &#x1f607;
 </p>
 </div>
 

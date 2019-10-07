@@ -154,15 +154,15 @@ function createProgram(gl, vertexShader, fragmentShader) {
 </code></pre><p>Of course how you decide to handle errors might be different.  Throwing
 exceptions might not be the best way to handle things.  Still, those few
 lines of code are pretty much the same in nearly every WebGL program.</p>
-<p>Now that multline template literals are supported in all modern browsers
-it&#39;s my prefered way of storing shaders. I can just do something like</p>
+<p>Now that multiline template literals are supported in all modern browsers
+it&#39;s my preferred way of storing shaders. I can just do something like</p>
 <pre class="prettyprint"><code>var vertexShaderSource = `#version 300 es
 
 in vec4 a_position;
 uniform mat4 u_matrix;
 
 void main() {
-   gl_Positon = u_matrix * a_position;
+   gl_Position = u_matrix * a_position;
 }
 `;
 </code></pre><p>And have an easy to edit shader. Some older browsers like IE won&#39;t like
@@ -243,7 +243,7 @@ as they just get in the way of what that specific example is about.</p>
  *
  * @param {WebGLRenderingContext} gl The WebGLRenderingContext
  *        to use.
- * @param {string[]} shaderSourcess Array of sources for the
+ * @param {string[]} shaderSources Array of sources for the
  *        shaders. The first is assumed to be the vertex shader,
  *        the second the fragment shader.
  * @param {string[]} [opt_attribs] An array of attribs names.
@@ -260,7 +260,7 @@ as they just get in the way of what that specific example is about.</p>
 function createProgramFromSources(gl,
                                   shaderSources,
                                   opt_attribs,
-                                  opt_locaitons,
+                                  opt_locations,
                                   opt_errorCallback)
 </code></pre><p>where <code>shaderSources</code> is an array of strings containing the GLSL source code.
 The first string in the array is the vertex shader source. The second is
@@ -278,7 +278,7 @@ to your shaders.  See <a href="webgl-how-it-works.html">how it works</a>.</p>
 Again I didn&#39;t want to clutter all the files with this code so it&#39;s in one place.</p>
 </li>
 <li><p><a href="../resources/lessons-helper.js"><code>lessons-helper.js</code></a></p>
-<p>This script is not needed except on webgl2fundmentals.org. It helps print error messages to
+<p>This script is not needed except on webgl2fundamentals.org. It helps print error messages to
 the screen when used inside the live editor among other things.</p>
 </li>
 <li><p><a href="../resources/m3.js"><code>m3.js</code></a></p>

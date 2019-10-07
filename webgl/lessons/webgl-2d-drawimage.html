@@ -102,7 +102,7 @@ a shader and then creatively using that shader to solve your problem.</p>
 <p>Let&#39;s start with the first version</p>
 <pre class="prettyprint"><code>ctx.drawImage(image, x, y);
 </code></pre><p>It draws an image at location <code>x, y</code> the same size as the image.
-To make a similar WebGL based funciton we could upload vertices that for <code>x, y</code>, <code>x + width, y</code>, <code>x, y + height</code>,
+To make a similar WebGL based function we could upload vertices that for <code>x, y</code>, <code>x + width, y</code>, <code>x, y + height</code>,
 and <code>x + width, y + height</code> then as we draw different images at different locations
 we&#39;d generate different sets of vertices. In fact <a href="webgl-fundamentals.html">that&#39;s exactly what we did in our first
 article</a>.</p>
@@ -330,12 +330,12 @@ requestAnimationFrame(render);
 </p>
 <p>So that was easy. But what about the 3rd version of canvas <code>drawImage</code>?</p>
 <pre class="prettyprint"><code>ctx.drawImage(image, srcX, srcY, srcWidth, srcHeight,
-                     dstX, dstY, dstWidth, dstHeight);
-</code></pre><p>In order to select part of the texture we need to manipulate the texure coordinates. How
+                     dstX, dstY, dstWidth, dstHeight);t
+</code></pre><p>In order to select part of the texture we need to manipulate the texture coordinates. How
 texture coordinates work was <a href="webgl-3d-textures.html">covered in the article about textures</a>.
 In that article we manually created texture coordinates which is a very common way to do this
 but we can also create them on the fly and just like we&#39;re manipulating our positions using
-a matrix we can similarly manipluate texture coordinates using another matrix.</p>
+a matrix we can similarly manipulate texture coordinates using another matrix.</p>
 <p>Let&#39;s add a texture matrix to the vertex shader and multiply the texture coordinates
 by this texture matrix.</p>
 <pre class="prettyprint"><code>#version 300 es

@@ -228,7 +228,7 @@ shipped and <code>OES_texture_float</code> was added and it was just assumed the
 way to use it for rendering was to create a texture, attach it a framebuffer,
 and check its status. Later someone pointed out according the spec that was
 not enough because the spec says colors written in a fragment shader are
-always clamped to 0 to 1. <code>EXT_color_buffer_float</code> removes that clampping
+always clamped to 0 to 1. <code>EXT_color_buffer_float</code> removes that clamping
 restriction but since WebGL had already been shipping for a year or so
 it would have broken many web sites to enforce the restriction. For WebGL2
 they were able to fix it and so now you must enable <code>EXT_color_buffer_float</code>
@@ -267,7 +267,7 @@ were drawing indexed data you needed to set the <code>ELEMENT_ARRAY_BUFFER</code
 <pre class="prettyprint"><code>var someVAO = gl.createVertexArray();
 </code></pre><p>Makes a new instance of the thing above called <code>attributeState</code>.</p>
 <pre class="prettyprint"><code>gl.bindVertexArray(someVAO);
-</code></pre><p>Is equivilent to</p>
+</code></pre><p>Is equivalent to</p>
 <pre class="prettyprint"><code>glState.attributeState = someVAO;
 </code></pre><p>What that means is you should setup all of your attributes at init time now.</p>
 <pre class="prettyprint"><code>// at init time
@@ -290,7 +290,7 @@ This is a HUGE speed up!</p>
 <ol>
 <li><p>attribute locations are program dependent.</p>
 <p>If you&#39;re going to use the same geometry with multiple
-programs consider manually assinging attribute locations.
+programs consider manually assigning attribute locations.
 In GLSL 300 es you can do this in the shader</p>
 <p>For example:</p>
 <pre class="prettyprint"><code>layout(location = 0) in vec4 a_position;
@@ -305,7 +305,7 @@ layout(location = 3) in vec4 a_color;
 gl.bindAttribLocation(someProgram, 1, &quot;a_texcoord&quot;);
 gl.bindAttribLocation(someProgram, 2, &quot;a_normal&quot;);
 gl.bindAttribLocation(someProgram, 3, &quot;a_color&quot;);
-</code></pre><p>This means you can force them to be comptible across multiple shader
+</code></pre><p>This means you can force them to be compatible across multiple shader
 programs. If one program doesn&#39;t need all attributes
 the attributes they do need will still be assigned to
 the same locations</p>
