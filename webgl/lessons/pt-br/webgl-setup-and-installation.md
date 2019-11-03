@@ -37,21 +37,21 @@ Se você não estiver usando o Chrome ou se não quiser usar a extensão, outra 
 Faça o download, instale-o e abra uma janela do prompt de comando / console / terminal. Se você estiver no Windows, o instalador
 irá adicionar o "Node Command Prompt", use-o.
 
-Em seguida, instale o [`http-server`](https://github.com/indexzero/http-server) com o seguinte comando
+Em seguida, instale o [`servez`](https://github.com/greggman/servez-cli) com o seguinte comando
 
-    npm -g install http-server
+    npm -g install servez
 
 Se estiver usando o OSX, use
 
-    sudo npm -g install http-server
+    sudo npm -g install servez
 
 Depois de ter feito isso, digite
 
-    http-server path/to/folder/where/you/unzipped/files
+    servez path/to/folder/where/you/unzipped/files
 
 Deve imprimir algo como
 
-{{{image url="resources/http-server-response.png" }}}
+{{{image url="resources/servez-response.png" }}}
 
 Então, no seu navegador, vá para [`http://localhost:8080`](http://localhost:8080).
 
