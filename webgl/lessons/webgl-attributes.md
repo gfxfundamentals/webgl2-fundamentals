@@ -172,6 +172,7 @@ You can set each attribute's value with the various `gl.vertexAttribXXX`
 functions. The value is used when `enable` is false. When enable is true data for
 the attribute is pulled from the assigned buffer.
 
+<a id="vaos"></a>
 ## Vertex Array Objects (VAO)s
 
 ```js
