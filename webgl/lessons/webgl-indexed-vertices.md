@@ -127,17 +127,3 @@ where you can only have indices from 0 to 255, in which case you'd use `new Uint
 and `gl.UNSIGNED_INT` which has a maximum index of 4294967296 and where you'd use
 `new Uint32Array(indices)`.
 
-<div class="webgl_bottombar">
-<p>
-Note: Above we bind the `indexBuffer` to the `ELEMENT_ARRAY_BUFFER` binding point when
-putting the indices in the buffer then we bind it again later. Why bind it twice?
-</p>
-<p>
-This is only to show a pattern.
-Typically you'd be drawing more than a single thing so you'd have multiple
-index buffers, one for each thing you want to draw. At init time you'd create
-these buffers and put data in them. At render time, before you draw each individual
-thing you'd need to bind the correct buffer. So, the code here follows that pattern
-even though it's only drawing one thing.
-</p>
-</div>
