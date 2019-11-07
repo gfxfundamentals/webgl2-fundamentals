@@ -175,38 +175,8 @@ using an image we&#39;ll create the data in JavaScript directly.</p>
 <p>Creating data for a texture in JavaScript is mostly straight forward depending
 on the texture format. WebGL2 supports a ton of texture formats though.
 WebGL2 supports all the <em>un-sized</em> formats from WebGL1</p>
-<p><style>
-.local-data {
-  font-family: monospace;
-  font-size: medium;
-  text-align: left;
-  display: inline-block;
-  line-height: 1.2;
-}
-.local-data thead {
-  background: lightblue;
-}
-.local-data td {
-  border: 1px solid black;
-  padding: 0.2em;
-}
-.local-data1 td:nth-child(3),
-.local-data1 td:nth-child(4) {
-  text-align: center;
-}
-.local-data2 tbody td:nth-child(8),
-.local-data2 tbody td:nth-child(9) {
-  text-align: center;
-}
-.local-data4 tbody td:nth-child(4) {
-  text-align: center;
-}
-.local-highlight {
-  background: pink;
-}
-</style></p>
 <div class="webgl_center">
-  <table class="local-data local-data1">
+  <table class="tabular-data tabular-data1">
     <thead>
       <tr><td>Format</td><td>Type</td><td>Channels</td><td>Bytes per pixel</td></tr>
     </thead>
@@ -226,7 +196,7 @@ WebGL2 supports all the <em>un-sized</em> formats from WebGL1</p>
 <p>They&#39;re called <em>un-sized</em> because how they are actually represented internally is undefined in WebGL1.
 It is defined in WebGL2. In addition to those un-sized formats there are a slew of sized formats including</p>
 <div class="webgl_center">
-  <table class="local-data local-data2">
+  <table class="tabular-data tabular-data2">
     <thead>
       <tr>
         <td>Sized<br/>Format</td>
@@ -257,14 +227,14 @@ It is defined in WebGL2. In addition to those un-sized formats there are a slew 
       <tr><td>RGB10_A2UI     </td><td>RGBA </td><td>ui10 </td><td>ui10 </td><td>ui10</td><td>ui2 </td><td>     </td><td>&#x25cf; </td><td>        </td></tr>
       <tr><td>SRGB8          </td><td>RGB  </td><td>8    </td><td>8    </td><td>8   </td><td>    </td><td>     </td><td>         </td><td>&#x25cf;</td></tr>
       <tr><td>SRGB8_ALPHA8   </td><td>RGBA </td><td>8    </td><td>8    </td><td>8   </td><td>8   </td><td>     </td><td>&#x25cf; </td><td>&#x25cf;</td></tr>
-      <tr><td>R16F           </td><td>RED  </td><td>f16  </td><td>     </td><td>    </td><td>    </td><td>     </td><td class="local-highlight">         </td><td>&#x25cf;</td></tr>
-      <tr><td>RG16F          </td><td>RG   </td><td>f16  </td><td>f16  </td><td>    </td><td>    </td><td>     </td><td class="local-highlight">         </td><td>&#x25cf;</td></tr>
-      <tr><td>RGB16F         </td><td>RGB  </td><td>f16  </td><td>f16  </td><td>f16 </td><td>    </td><td>     </td><td class="local-highlight">         </td><td>&#x25cf;</td></tr>
-      <tr><td>RGBA16F        </td><td>RGBA </td><td>f16  </td><td>f16  </td><td>f16 </td><td>f16 </td><td>     </td><td class="local-highlight">         </td><td>&#x25cf;</td></tr>
-      <tr><td>R32F           </td><td>RED  </td><td>f32  </td><td>     </td><td>    </td><td>    </td><td>     </td><td class="local-highlight">         </td><td class="local-highlight">        </td></tr>
-      <tr><td>RG32F          </td><td>RG   </td><td>f32  </td><td>f32  </td><td>    </td><td>    </td><td>     </td><td class="local-highlight">         </td><td class="local-highlight">        </td></tr>
-      <tr><td>RGB32F         </td><td>RGB  </td><td>f32  </td><td>f32  </td><td>f32 </td><td>    </td><td>     </td><td class="local-highlight">         </td><td class="local-highlight">        </td></tr>
-      <tr><td>RGBA32F        </td><td>RGBA </td><td>f32  </td><td>f32  </td><td>f32 </td><td>f32 </td><td>     </td><td class="local-highlight">         </td><td class="local-highlight">        </td></tr>
+      <tr><td>R16F           </td><td>RED  </td><td>f16  </td><td>     </td><td>    </td><td>    </td><td>     </td><td class="tabular-highlight">         </td><td>&#x25cf;</td></tr>
+      <tr><td>RG16F          </td><td>RG   </td><td>f16  </td><td>f16  </td><td>    </td><td>    </td><td>     </td><td class="tabular-highlight">         </td><td>&#x25cf;</td></tr>
+      <tr><td>RGB16F         </td><td>RGB  </td><td>f16  </td><td>f16  </td><td>f16 </td><td>    </td><td>     </td><td class="tabular-highlight">         </td><td>&#x25cf;</td></tr>
+      <tr><td>RGBA16F        </td><td>RGBA </td><td>f16  </td><td>f16  </td><td>f16 </td><td>f16 </td><td>     </td><td class="tabular-highlight">         </td><td>&#x25cf;</td></tr>
+      <tr><td>R32F           </td><td>RED  </td><td>f32  </td><td>     </td><td>    </td><td>    </td><td>     </td><td class="tabular-highlight">         </td><td class="tabular-highlight">        </td></tr>
+      <tr><td>RG32F          </td><td>RG   </td><td>f32  </td><td>f32  </td><td>    </td><td>    </td><td>     </td><td class="tabular-highlight">         </td><td class="tabular-highlight">        </td></tr>
+      <tr><td>RGB32F         </td><td>RGB  </td><td>f32  </td><td>f32  </td><td>f32 </td><td>    </td><td>     </td><td class="tabular-highlight">         </td><td class="tabular-highlight">        </td></tr>
+      <tr><td>RGBA32F        </td><td>RGBA </td><td>f32  </td><td>f32  </td><td>f32 </td><td>f32 </td><td>     </td><td class="tabular-highlight">         </td><td class="tabular-highlight">        </td></tr>
       <tr><td>R11F_G11F_B10F </td><td>RGB  </td><td>f11  </td><td>f11  </td><td>f10 </td><td>    </td><td>     </td><td>         </td><td>&#x25cf;</td></tr>
       <tr><td>RGB9_E5        </td><td>RGB  </td><td>9    </td><td>9    </td><td>9   </td><td>    </td><td>5    </td><td>         </td><td>&#x25cf;</td></tr>
       <tr><td>R8I            </td><td>RED  </td><td>i8   </td><td>     </td><td>    </td><td>    </td><td>     </td><td>&#x25cf; </td><td>        </td></tr>
@@ -297,7 +267,7 @@ It is defined in WebGL2. In addition to those un-sized formats there are a slew 
 
 <p>And these depth and stencil formats as well</p>
 <div class="webgl_center">
-  <table class="local-data local-data3">
+  <table class="tabular-data tabular-data3">
     <thead>
       <tr>
         <td>Sized<br/>Format</td>
@@ -325,7 +295,7 @@ It is defined in WebGL2. In addition to those un-sized formats there are a slew 
 <li>a number preceded by in <code>i</code> like <code>i8</code> means an integer number.</li>
 <li>a number preceded by in <code>ui</code> like <code>ui8</code> means an unsigned integer number.</li>
 </ul>
-<p>We won&#39;t use this info here but I highlighted in <span style="background: pink;">pink</span>
+<p>We won&#39;t use this info here but I <span class="tabular-highlight">highlighted</span>
 the half and float texture formats to show unlike WebGL1 they are always available in WebGL2
 but they are not marked as either color renderable and/or texture filterable by default.
 Not being color renderable means they can not be rendered to. <a href="webgl-render-to-texture.html">Rendering to a texture is
@@ -336,7 +306,7 @@ extensions in WebGL2.</p>
 and the <em>format</em> and <em>type</em> of the data you&#39;re supplying to WebGL. Here is a table showing which format
 and type you must supply data for a given internal format</p>
 <div class="webgl_center">
-  <table class="local-data local-data4">
+  <table class="tabular-data tabular-data4">
     <thead>
       <tr>
         <td>Internal<br/>Format</td>
