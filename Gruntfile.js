@@ -132,6 +132,20 @@ module.exports = function(grunt) {
     siteName: 'WebGL2Fundamentals',
     siteThumbnail: 'webgl2fundamentals.jpg',  // in rootFolder/lessons/resources
     templatePath: 'build/templates',
+    thumbnailOptions: {
+      thumbnailBackground: 'webgl2fundamentals.jpg',
+      text: [
+        {
+          font: 'bold 100px sans-serif',
+          verticalSpacing: 100,
+          offset: [100, 120],
+          textAlign: 'left',
+          shadowOffset: [15, 15],
+          strokeWidth: 15,
+          textWrapWidth: 1000,
+        },
+      ],
+    },
   };
 
   // just the hackiest way to get this working.
