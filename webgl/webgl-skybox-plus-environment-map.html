@@ -79,7 +79,7 @@ in vec4 a_position;
 out vec4 v_position;
 void main() {
   v_position = a_position;
-  gl_Position = a_position;
+  gl_Position = vec4(a_position.xy, 1, 1);
 }
 `;
 
@@ -127,61 +127,18 @@ function main() {
   const quadVAO = twgl.createVAOFromBufferInfo(gl, skyboxProgramInfo, quadBufferInfo);
 
   // Create a texture.
-  const texture = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
-
-  const faceInfos = [
-    {
-      target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
-      url: 'resources/images/computer-history-museum/pos-x.jpg',
-    },
-    {
-      target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
-      url: 'resources/images/computer-history-museum/neg-x.jpg',
-    },
-    {
-      target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
-      url: 'resources/images/computer-history-museum/pos-y.jpg',
-    },
-    {
-      target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-      url: 'resources/images/computer-history-museum/neg-y.jpg',
-    },
-    {
-      target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
-      url: 'resources/images/computer-history-museum/pos-z.jpg',
-    },
-    {
-      target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
-      url: 'resources/images/computer-history-museum/neg-z.jpg',
-    },
-  ];
-  faceInfos.forEach((faceInfo) => {
-    const {target, url} = faceInfo;
-
-    // Upload the canvas to the cubemap face.
-    const level = 0;
-    const internalFormat = gl.RGBA;
-    const width = 512;
-    const height = 512;
-    const format = gl.RGBA;
-    const type = gl.UNSIGNED_BYTE;
-
-    // setup each face so it's immediately renderable
-    gl.texImage2D(target, level, internalFormat, width, height, 0, format, type, null);
-
-    // Asynchronously load an image
-    const image = new Image();
-    image.src = url;
-    image.addEventListener('load', function() {
-      // Now that the image has loaded make copy it to the texture.
-      gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
-      gl.texImage2D(target, level, internalFormat, format, type, image);
-      gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
-    });
+  const texture = twgl.createTexture(gl, {
+    target: gl.TEXTURE_CUBE_MAP,
+    src: [
+      'resources/images/computer-history-museum/pos-x.jpg',
+      'resources/images/computer-history-museum/neg-x.jpg',
+      'resources/images/computer-history-museum/pos-y.jpg',
+      'resources/images/computer-history-museum/neg-y.jpg',
+      'resources/images/computer-history-museum/pos-z.jpg',
+      'resources/images/computer-history-museum/neg-z.jpg',
+    ],
+    min: gl.LINEAR_MIPMAP_LINEAR,
   });
-  gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
-  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 
   function degToRad(d) {
     return d * Math.PI / 180;
@@ -225,7 +182,7 @@ function main() {
     // Rotate the cube around the x axis
     var worldMatrix = m4.xRotation(time * 0.11);
 
-    // We only care about direciton so remove the translation
+    // We only care about direction so remove the translation
     var viewDirectionMatrix = m4.copy(viewMatrix);
     viewDirectionMatrix[12] = 0;
     viewDirectionMatrix[13] = 0;
@@ -237,6 +194,7 @@ function main() {
         m4.inverse(viewDirectionProjectionMatrix);
 
     // draw the cube
+    gl.depthFunc(gl.LESS);  // use the default depth test
     gl.useProgram(envmapProgramInfo.program);
     gl.bindVertexArray(cubeVAO);
     twgl.setUniforms(envmapProgramInfo, {
@@ -249,6 +207,10 @@ function main() {
     twgl.drawBufferInfo(gl, cubeBufferInfo);
 
     // draw the skybox
+
+    // let our quad pass the depth test at 1.0
+    gl.depthFunc(gl.LEQUAL);
+
     gl.useProgram(skyboxProgramInfo.program);
     gl.bindVertexArray(quadVAO);
     twgl.setUniforms(skyboxProgramInfo, {
