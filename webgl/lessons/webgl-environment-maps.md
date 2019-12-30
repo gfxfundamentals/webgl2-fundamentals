@@ -2,14 +2,18 @@ Title: WebGL Environment Maps (reflections)
 Description: How to implement environment maps.
 TOC: Environment maps
 
-
 This article is part of a series of articles about WebGL2.
 [The first article starts with the fundamentals](webgl-fundamentals.html).
 This article continues from [the article on cube maps](webgl-cube-maps.html).
 This article also uses concepts covered in [the article on lighting](webgl-3d-lighting-directional.html).
 If you have not read those articles already you might want to read them first.
 
-An *environment map* represents the environment of the objects you're drawing. If the you're drawing an outdoor scene it would represent the outdoors. If you're drawing people on a stage it would represent the venue. If you're drawing an outer space scene it would be the stars. We can implement an environment map with a cube map if we have 6 images that show the environment from a point in space in the 6 directions of the cubemap.
+An *environment map* represents the environment of the objects you're drawing.
+If the you're drawing an outdoor scene it would represent the outdoors. If
+you're drawing people on a stage it would represent the venue. If you're drawing
+an outer space scene it would be the stars. We can implement an environment map
+with a cube map if we have 6 images that show the environment from a point in
+space in the 6 directions of the cubemap.
 
 Here's an environment map from the lobby of the Computer History Museum in Mountain View, California.
 
@@ -26,34 +30,34 @@ Here's an environment map from the lobby of the Computer History Museum in Mount
 
 Based on [the code in the previous article](webgl-cube-maps.html) let's load those 6 images instead of the images we generated
 
-```
+```js
 // Create a texture.
 var texture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
 
 const faceInfos = [
   {
-    target: gl.TEXTURE_CUBE_MAP_POSITIVE_X, 
+    target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
     url: 'resources/images/computer-history-museum/pos-x.jpg',
   },
   {
-    target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X, 
+    target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
     url: 'resources/images/computer-history-museum/neg-x.jpg',
   },
   {
-    target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y, 
+    target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
     url: 'resources/images/computer-history-museum/pos-y.jpg',
   },
   {
-    target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, 
+    target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
     url: 'resources/images/computer-history-museum/neg-y.jpg',
   },
   {
-    target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z, 
+    target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
     url: 'resources/images/computer-history-museum/pos-z.jpg',
   },
   {
-    target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, 
+    target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
     url: 'resources/images/computer-history-museum/neg-z.jpg',
   },
 ];
@@ -67,7 +71,7 @@ faceInfos.forEach((faceInfo) => {
   const height = 512;
   const format = gl.RGBA;
   const type = gl.UNSIGNED_BYTE;
-  
+
   // setup each face so it's immediately renderable
   gl.texImage2D(target, level, internalFormat, width, height, 0, format, type, null);
 
@@ -75,7 +79,7 @@ faceInfos.forEach((faceInfo) => {
   const image = new Image();
   image.src = url;
   image.addEventListener('load', function() {
-    // Now that the image has loaded make copy it to the texture.
+    // Now that the image has loaded upload it to the texture.
     gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
     gl.texImage2D(target, level, internalFormat, format, type, image);
     gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
@@ -85,7 +89,7 @@ gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
 gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 ```
 
-Note that for every face we fill it in with a 512x512 blank image by passing
+Note that for every face we initialize it with a 512x512 blank image by passing
 `null` to `texImage2D`. Cubemaps must have all 6 faces, all 6 faces must be the
 same size and be square. If they are not the texture will not render. But, we're
 loading 6 images. We'd like to start rendering immediately so we allocate all 6
@@ -95,7 +99,8 @@ immediately and as the images are download the faces of the cubemap will get
 filled in with the images one at a time and still be renderable even if all 6
 have not arrived yet.
 
-But, just loading the images is not enough. Like [lighting](webgl-3d-lighting-point.html) we need a little math here.
+But, just loading the images is not enough. Like
+[lighting](webgl-3d-lighting-point.html) we need a little math here.
 
 In this case we want to know for each fragment to be drawn, given a vector from
 the eye/camera to that position on the surface of the object, which direction
@@ -104,12 +109,12 @@ color from the cubemap.
 
 The formula to reflect is
 
-    reflectionDir = eyeToSurfaceDir – 
+    reflectionDir = eyeToSurfaceDir –
         2 ∗ dot(surfaceNormal, eyeToSurfaceDir) ∗ surfaceNormal
 
-Thinking about what we can see it's true. Recall from the [lighting articles]
+Thinking about what we can see it's true. Recall from the [lighting articles](webgl-3d-lighting-directional.html)
 that a dot product of 2 vectors returns the cosine of the angle between the 2
-vectors. Adding vectors gives as a new vector so let's take the example of a eye
+vectors. Adding vectors gives us a new vector so let's take the example of an eye
 looking directly perpendicular to a flat surface.
 
 <div class="webgl_center"><img src="resources/reflect-180-01.svg" style="width: 400px"></div>
@@ -119,7 +124,8 @@ pointing in exactly opposite directions is -1 so visually
 
 <div class="webgl_center"><img src="resources/reflect-180-02.svg" style="width: 400px"></div>
 
-Plugging that dot product and the <span style="color:black; font-weight:bold;">eyeToSurfaceDir</span> and <span style="color:green;">normal</span> in the reflection formula gives us this
+Plugging in that dot product with the <span style="color:black; font-weight:bold;">eyeToSurfaceDir</span>
+and <span style="color:green;">normal</span> in the reflection formula gives us this
 
 <div class="webgl_center"><img src="resources/reflect-180-03.svg" style="width: 400px"></div>
 
@@ -127,7 +133,7 @@ Which multiplying -2 by -1 makes it positive 2.
 
 <div class="webgl_center"><img src="resources/reflect-180-04.svg" style="width: 400px"></div>
 
-So adding the vectors by connecting them up gives us the <span style="color: red">refected vector</span>
+So adding the vectors by connecting them up gives us the <span style="color: red">reflected vector</span>
 
 <div class="webgl_center"><img src="resources/reflect-180-05.svg" style="width: 400px"></div>
 
@@ -163,15 +169,20 @@ Which if we put back in the original diagram seems correct.
 
 We use that  <span style="color: red">reflected direction</span> to look at the cubemap to color the surface of the object.
 
-Here's a diagram where you can set the rotation of the surface and see the various parts of the equation. You can also see the reflection vectors point to the different faces of the cubemap and effect the color of the surface.
+Here's a diagram where you can set the rotation of the surface and see the
+various parts of the equation. You can also see the reflection vectors point to
+the different faces of the cubemap and effect the color of the surface.
 
 {{{diagram url="resources/environment-mapping.html" width="400" height="400" }}}
-    
-Now that we know how reflection works and that we can use it to look up values from the cubemap let's change the shaders to do that.
 
-First in the vertex shader we'll compute the world position and world oriented normal of the vertices and pass those to the fragment shader as varyings. This is similar to what we did in [the article on spotlights](webgl-3d-lighting-spot.html).
+Now that we know how reflection works and that we can use it to look up values
+from the cubemap let's change the shaders to do that.
 
-```
+First in the vertex shader we'll compute the world position and world oriented
+normal of the vertices and pass those to the fragment shader as varyings. This
+is similar to what we did in [the article on spotlights](webgl-3d-lighting-spot.html).
+
+```glsl
 #version 300 es
 
 in vec4 a_position;
@@ -196,16 +207,16 @@ void main() {
 }
 ```
 
-Then in the fragment shader we normalize the worldNormal since it's being
+Then in the fragment shader we normalize the `worldNormal` since it's being
 interpolated across the surface between vertices. We pass in the world position
 of the camera and by subtracting that from the world position of the surface we
-get the eyeToSurfaceDir.
+get the `eyeToSurfaceDir`.
 
 And finally we use `reflect` which is a built in GLSL function that implements
 the formula we went over above. We use the result to get a color from the
 cubemap.
 
-```
+```glsl
 #version 300 es
 
 precision highp float;
@@ -232,11 +243,14 @@ void main() {
 }
 ```
 
-We also need real normals for this example. We need real normals so the faces of the cube appear flat. In the previous example just to see the cubemap work we repurposed the cube's positions but in this case we need actual normals for a cube like we covered in [the article on lighting](webgl-3d-lighting-directional.html)
+We also need real normals for this example. We need real normals so the faces of
+the cube appear flat. In the previous example just to see the cubemap work we
+repurposed the cube's positions but in this case we need actual normals for a
+cube like we covered in [the article on lighting](webgl-3d-lighting-directional.html)
 
-So at init time
+At init time
 
-```
+```js
 // Create a buffer to put normals in
 var normalBuffer = gl.createBuffer();
 // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = normalBuffer)
@@ -256,7 +270,7 @@ gl.vertexAttribPointer(
 
 And of course we need to look up the uniform locations at init time
 
-```
+```js
 var projectionLocation = gl.getUniformLocation(program, "u_projection");
 var viewLocation = gl.getUniformLocation(program, "u_view");
 var worldLocation = gl.getUniformLocation(program, "u_world");
@@ -266,7 +280,7 @@ var worldCameraPositionLocation = gl.getUniformLocation(program, "u_worldCameraP
 
 and set them at render time
 
-```
+```js
 // Compute the projection matrix
 var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
 var projectionMatrix =

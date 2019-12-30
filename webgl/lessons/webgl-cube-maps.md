@@ -13,28 +13,30 @@ In a [previous article](webgl-3d-textures.html) we covered how to use textures,
 how they are referenced by texture coordinates that go from 0 to 1 across and up
 the texture, and how they are filtered optionally using mips.
 
-Another kind of texture is a *cubemap*. It consists of 6 textures representing
+Another kind of texture is a *cubemap*. It consists of 6 faces representing
 the 6 faces of a cube. Instead of the traditional texture coordinates that
 have 2 dimensions, a cubemap uses a normal, in other words a 3D direction.
 Depending on the direction the normal points one of the 6 faces of the cube
 is selected and then within that face the pixels are sampled to produce a color.
 
-The 6 faces are called referenced by their direction from the center of the cube.
+The 6 faces are referenced by their direction from the center of the cube.
 They are
 
-    gl.TEXTURE_CUBE_MAP_POSITIVE_X
-    gl.TEXTURE_CUBE_MAP_NEGATIVE_X
-    gl.TEXTURE_CUBE_MAP_POSITIVE_Y
-    gl.TEXTURE_CUBE_MAP_NEGATIVE_Y
-    gl.TEXTURE_CUBE_MAP_POSITIVE_Z
-    gl.TEXTURE_CUBE_MAP_NEGATIVE_Z
+```js
+gl.TEXTURE_CUBE_MAP_POSITIVE_X
+gl.TEXTURE_CUBE_MAP_NEGATIVE_X
+gl.TEXTURE_CUBE_MAP_POSITIVE_Y
+gl.TEXTURE_CUBE_MAP_NEGATIVE_Y
+gl.TEXTURE_CUBE_MAP_POSITIVE_Z
+gl.TEXTURE_CUBE_MAP_NEGATIVE_Z
+```
 
 Let's make a simple example, we'll use a 2D canvas to make the images used in
 each of the 6 faces.
 
-Here's some code to fill a canvas with a color and a centered msg
+Here's some code to fill a canvas with a color and a centered message
 
-```
+```js
 function generateFace(ctx, faceColor, textColor, text) {
   const {width, height} = ctx.canvas;
   ctx.fillStyle = faceColor;
@@ -49,7 +51,7 @@ function generateFace(ctx, faceColor, textColor, text) {
 
 And here's some code to call it to generate 6 images
 
-```
+```js
 // Get A 2D context
 /** @type {Canvas2DRenderingContext} */
 const ctx = document.createElement("canvas").getContext("2d");
@@ -85,7 +87,7 @@ from the texture atlas example [in the previous article](webgl-3d-textures.html)
 
 First off let's change the shaders to use a cube map
 
-```
+```glsl
 #version 300 es
 
 in vec4 a_position;
@@ -98,8 +100,8 @@ void main() {
   // Multiply the position by the matrix.
   gl_Position = u_matrix * a_position;
 
-  // Pass a normal. Since the positions
-  // centered around the origin we can just 
+  // Pass a normal. Since the positions are
+  // centered around the origin we can just
   // pass the position
   v_normal = normalize(a_position.xyz);
 }
@@ -122,7 +124,7 @@ vertex for each face.
 Since we're not using texture coordinates we can remove all code related to
 setting up the texture coordinates.
 
-In the fragment shader we need to use a `samplerCube` instead of a `sampler2D`  
+In the fragment shader we need to use a `samplerCube` instead of a `sampler2D`
 and `texture` when used with a `samplerCube` takes a vec3 direction
 so we pass the normalized normal. Since the normal is a varying and will be interpolated
 we need to normalize it.
@@ -148,7 +150,7 @@ void main() {
 
 Then, in the JavaScript we need to setup the texture
 
-```
+```js
 // Create a texture.
 var texture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
@@ -171,7 +173,7 @@ const faceInfos = [
 faceInfos.forEach((faceInfo) => {
   const {target, faceColor, textColor, text} = faceInfo;
   generateFace(ctx, faceColor, textColor, text);
-  
+
   // Upload the canvas to the cubemap face.
   const level = 0;
   const internalFormat = gl.RGBA;
@@ -212,7 +214,7 @@ Using a cubemap to texture a cube is **not** what cubemaps are normally
 used for. The *correct* or rather standard way to texture a cube is
 to use a texture atlas like we [mentioned before](webgl-3d-textures.html).
 
-Now that we've learned what a cubemap is and how it's what is a cubemap used for?
-
-Probably the single most common thing a cubemap is used for is as an [*environment map*](webgl-environment-maps.html). 
+Now that we've learned what a cubemap is and how to set one up what is a cubemap
+used for? Probably the single most common thing a cubemap is used for is as an
+[*environment map*](webgl-environment-maps.html).
 
