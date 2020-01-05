@@ -162,7 +162,7 @@ Not too exciting so let's manipulate that image. How about just
 swapping red and blue?
 
     ...
-    outColor = texture2D(u_image, v_texCoord).bgra;
+    outColor = texture(u_image, v_texCoord).bgra;
     ...
 
 And now red and blue are swapped.
