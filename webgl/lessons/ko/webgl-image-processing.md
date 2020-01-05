@@ -146,7 +146,7 @@ WebGL2는 텍스처 좌표를 사용하여 텍스처를 읽을수 있는 기능�
 너무 과하지 않게 이미지를 조작해봅시다. 빨간색이랑 파란색을 바꾸는 건 어떨까요?
 
     ...
-    outColor = texture2D(u_image, v_texCoord).bgra;
+    outColor = texture(u_image, v_texCoord).bgra;
     ...
 
 이제 빨간색과 파란색을 바꿨습니다.

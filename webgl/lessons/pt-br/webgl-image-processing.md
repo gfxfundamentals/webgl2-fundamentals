@@ -162,7 +162,7 @@ Não muito emocionante, então vamos manipular essa imagem. Que tal simplesmente
 trocar vermelho e azul?
 
     ...
-    outColor = texture2D(u_image, v_texCoord).bgra;
+    outColor = texture(u_image, v_texCoord).bgra;
     ...
 
 E agora vermelho e azul foram trocados.
