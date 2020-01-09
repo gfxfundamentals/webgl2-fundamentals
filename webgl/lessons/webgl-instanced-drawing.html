@@ -36,7 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL Optimization - Instanced Drawing" />
+<meta property="og:title" content="WebGL2 Optimization - Instanced Drawing" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-instanced-drawing_en.jpg" />
 <meta property="og:description" content="Drawing Multiple Instances of the same Object" />
@@ -46,13 +46,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <meta name="twitter:site" content="@greggman" />
 <meta name="twitter:creator" content="@greggman" />
 <meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL Optimization - Instanced Drawing" />
+<meta name="twitter:title" content="WebGL2 Optimization - Instanced Drawing" />
 <meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/webgl-instanced-drawing.html" />
 <meta name="twitter:description" content="Drawing Multiple Instances of the same Object" />
 <meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-instanced-drawing_en.jpg" />
 
 
-<title>WebGL Optimization - Instanced Drawing</title>
+<title>WebGL2 Optimization - Instanced Drawing</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
@@ -162,14 +162,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL Optimization - Instanced Drawing</h1>
+    <h1>WebGL2 Optimization - Instanced Drawing</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
       <p>WebGL has a feature called <em>instanced drawing</em>.
 It is basically a way to draw more than one of the
 same thing faster than drawing each thing individually.</p>
-<p>First let&#39;s make an example that runs multiple instances of the
+<p>First let&#39;s make an example that draws multiple instances of the
 same thing.</p>
 <p>Starting with code <em>similar</em> to what we ended up with at
 the end of <a href="webgl-3d-orthographic.html">the article on orthographic projection</a>
@@ -199,11 +199,11 @@ void main() {
 `;
 </code></pre>
 <p>The vertex shader multiplies each vertex by a single matrix which we
-covered in <a href="webgl-3d-orthographic.html">that article</a> is
+covered in <a href="webgl-3d-orthographic.html">that article</a> as it is
 a fairly flexible arrangement. The fragment shader just uses
 a color we pass in via a uniform.</p>
-<p>To draw them we need compile the shaders, link them together
-and look up the locations of the attributes and uniforms</p>
+<p>To draw we need to compile the shaders, link them together
+and look up the locations of the attributes and uniforms.</p>
 <pre class="prettyprint"><code class="lang-js">const program = webglUtils.createProgramFromSources(gl,
     [vertexShaderSource, fragmentShaderSource]);
 
@@ -218,7 +218,7 @@ const vao = gl.createVertexArray();
 // and make it the one we&#39;re currently working with
 gl.bindVertexArray(vao);
 </code></pre>
-<p>Then we need to supply data for the positions via a buffer</p>
+<p>Then we need to supply data for the positions via a buffer.</p>
 <pre class="prettyprint"><code class="lang-js">const positionBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
@@ -249,7 +249,7 @@ gl.vertexAttribPointer(
 );
 </code></pre>
 <p>Let&#39;s draw 5 instances. We&#39;ll make 5 matrixes and 5 colors for
-each instance</p>
+each instance.</p>
 <pre class="prettyprint"><code class="lang-js">const numInstances = 5;
 const matrices = [
   m4.identity(),
@@ -267,8 +267,8 @@ const colors = [
   [ 0, 1, 1, 1, ],  // cyan
 ];
 </code></pre>
-<p>To draw use the shader program, setup the attribute,
-then loop over the 5 instances, computing a new matrix
+<p>To draw first we use the shader program, then setup the attribute,
+and then loop over the 5 instances, computing a new matrix
 for each one, setting the matrix uniform and color
 and then drawing.</p>
 <pre class="prettyprint"><code class="lang-js">function render(time) {
@@ -305,7 +305,7 @@ and then drawing.</p>
 requestAnimationFrame(render);
 </code></pre>
 <p>Note that the matrix math library takes an optional destination
-matrix at the end of each matrix math function. In the past we
+matrix at the end of each matrix math function. In most articles we
 haven&#39;t used this feature and just let the library allocate a new
 matrix for us but this time we want the result to be stored
 in the matrices we already created.</p>
@@ -331,7 +331,7 @@ from its assigned buffer every time the vertex shader is
 called (the default), or only every N instances where N is usually
 1.</p>
 <p>So for example instead of supplying <code>matrix</code> and <code>color</code>
-from a uniform, we would instead supply them via an <code>attribute</code>.
+from a uniform, we would instead supply them via <code>attribute</code>s.
 We&#39;d put the matrix and color for each instance in a buffer,
 set up the attributes to pull data from those buffers, and
 tell WebGL, only advance to the next value once per instance.</p>
@@ -369,10 +369,10 @@ void main() {
 }
 `;
 </code></pre>
-<p>attributes only work in the vertex shader do we need to
+<p>attributes only work in the vertex shader so we need to
 get the color from an attribute in the vertex shader
-and pass it to the fragment shader.</p>
-<p>Next we need to look up the locations of these attributes</p>
+and pass it to the fragment shader via a varying.</p>
+<p>Next we need to look up the locations of these attributes.</p>
 <pre class="prettyprint"><code class="lang-js">const program = webglUtils.createProgramFromSources(gl,
     [vertexShaderSource, fragmentShaderSource]);
 
@@ -522,7 +522,7 @@ gl.bufferSubData(gl.ARRAY_BUFFER, 0, matrixData);
 
 </p>
 <p>In the example above we had 3 WebGL calls per shape * 5 shapes
-are 15 calls total. We now have just 2 calls for all 5 shapes,
+which were 15 calls total. We now have just 2 calls for all 5 shapes,
 one to upload the matrices, another to draw.</p>
 <p>I feel like this should go without saying but I then again maybe
 it&#39;s only obvious to me because I&#39;ve done this too much. The code
@@ -530,7 +530,8 @@ above does not take into account the aspect of the canvas.
 It does not use a <a href="webgl-3d-orthographic.html">projection matrix</a>
 or a <a href="webgl-3d-camera.html">view matrix</a>. It was meant only
 to demonstrate instanced drawing. If you wanted a projection and/or
-a view matrix the most obvious way to add them would be to add
+a view matrix we could add the calculation to JavaScript. That would
+mean more work for JavaScript. The more obvious way would be to add
 one or two more uniforms to the vertex shader.</p>
 <pre class="prettyprint"><code class="lang-js">const vertexShaderSource = `#version 300 es
 in vec4 a_position;
@@ -726,8 +727,8 @@ const matrixLoc = gl.getAttribLocation(program, &#39;matrix&#39;);
         <script type="text/javascript">
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
-            var disqus_identifier = 'WebGL Optimization - Instanced Drawing';
-            var disqus_title = 'WebGL Optimization - Instanced Drawing';
+            var disqus_identifier = 'WebGL2 Optimization - Instanced Drawing';
+            var disqus_title = 'WebGL2 Optimization - Instanced Drawing';
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
             (function() {
