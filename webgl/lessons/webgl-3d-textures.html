@@ -340,7 +340,7 @@ texcoordY = pixelCoordY / (height - 1)
 <p>Not a very exciting display but hopefully it demonstrates how to use texture coordinates. If you&#39;re making
 geometry in code (cubes, spheres, etc) it&#39;s usually pretty easy to compute whatever texture coordinates you
 want. On the other hand if you&#39;re getting 3d models from 3d modeling software like Blender, Maya, 3D Studio Max, then
-your artists (or you) will <a href="https://www.blender.org/manual/editors/uv_image/uv_editing/unwrapping.html">adjust texture coordinates in those packages using a UV editor</a>.</p>
+your artists (or you) will <a href="https://docs.blender.org/manual/en/latest/modeling/meshes/editing/uv/unwrapping/index.html">adjust texture coordinates in those packages using a UV editor</a>.</p>
 <p>So what happens if we use texture coordinates outside the 0.0 to 1.0 range. By default WebGL repeats
 the texture. 0.0 to 1.0 is one &#39;copy&#39; of the texture. 1.0 to 2.0 is another copy. even -4.0 to -3.0 is yet
 another copy. Let&#39;s display a plane using these texture coordinates.</p>
@@ -726,7 +726,7 @@ YAY!
   
 
         <div id="disqus_thread"></div>
-        <script type="text/javascript">
+        <script>
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
             var disqus_identifier = 'WebGL Textures';
@@ -751,8 +751,22 @@ YAY!
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
 <script src="/webgl/lessons/resources/lesson.js"></script>
-<script src="//cdn.webglstats.com/stat.js" defer="defer" async="async"></script>
 <script>
+(function() {
+  if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+      return;
+  }
+
+  function addScript(src) {
+    const script = document.createElement('script');
+    const firstScript = document.getElementsByTag('script')[0];
+    script.async = true;
+    script.src = src;
+    firstScript.parentNode.insertBefore(script, firstScript);
+  }
+
+  addScript('//cdn.webglstats.com/stat.js');
+
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -760,7 +774,7 @@ YAY!
 
   ga('create', 'UA-90754717-1', 'auto');
   ga('send', 'pageview');
-
+}());
 </script>
 
 
