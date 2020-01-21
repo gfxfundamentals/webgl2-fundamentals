@@ -215,6 +215,6 @@ WebGL1中这是可选特性。在顶点着色器中有一个你可以访问的�
 
 浮点纹理用于许多特殊效果和计算。在WebGL1中他们是可选的。在WebGL2中，它存在。
 
-注意：不幸的是，仍然对筛选方式有限制，渲染到浮点纹理依旧可选。参阅[`OES_texture_float_linear`](https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/和[`EXT_color_buffer_float`](https://www.khronos.org/registry/webgl/extensions/EXT_color_buffer_float/).
+注意：不幸的是，仍然对筛选方式有限制，渲染到浮点纹理依旧可选。参阅[`OES_texture_float_linear`](https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/)和[`EXT_color_buffer_float`](https://www.khronos.org/registry/webgl/extensions/EXT_color_buffer_float/).
 
 

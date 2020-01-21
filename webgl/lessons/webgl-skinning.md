@@ -437,7 +437,7 @@ First [I downloaded the .blend file](https://www.blendswap.com/blends/view/65255
 
 > A quick note: 3D software like Blender, Maya, 3DSMax is extremely complex software with 1000s of options. When I first learned 3DSMax in 1996 I spent 2-3 hrs a day reading through the 1000+ page manual and working though the tutorials for about 3 weeks. I did something similar when I learned Maya a few years later. Blender is just as complicated and further it has a very different interface from pretty much all other software. This is just a short way of saying that you should expect to spend some significant time learning whatever 3D package you decide to use.
 
-After exporting it I loaded the .gltf file into my text editor and took a look around. I used [this cheat sheet](https://raw.githubusercontent.com/KhronosGroup/glTF/master/specification/2.0/figures/gltfOverview-2.0.0a.png) to figure out the format.
+After exporting it I loaded the .gltf file into my text editor and took a look around. I used [this cheat sheet](https://www.khronos.org/files/gltf20-reference-guide.pdf) to figure out the format.
 
 I want to make it clear the code below is not a perfect glTF loader. It's just enough code to get the whale to display. I suspect that if we tried different files we'd run into areas that need to be changed.
 

@@ -213,7 +213,7 @@ para fazer varios processamentos de imagem comum. Neste caso, usaremos um kernel
 Um convolution kernel é apenas uma matriz de 3x3, onde cada entrada na matriz representa
 o quanto para multiplicar os 8 pixels ao redor do pixel que estamos renderizando. Em seguida,
 dividimos o resultado pelo peso do kernel (a soma de todos os valores no kernel)
-ou 1,0, o que for maior. [Aqui está um artigo muito bom sobre isso](http://docs.gimp.org/en/plug-in-convmatrix.html).
+ou 1,0, o que for maior. [Aqui está um artigo muito bom sobre isso](https://docs.gimp.org/2.6/en/plug-in-convmatrix.html).
 E [aqui está outro artigo que mostra algum código real se
 você escrevesse isso manualmente em C ++](http://www.codeproject.com/KB/graphics/ImageConvolution.aspx).
 
