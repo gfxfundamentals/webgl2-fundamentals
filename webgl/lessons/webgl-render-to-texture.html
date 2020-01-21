@@ -36,6 +36,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="How to render to a texture." />
+<meta name="keywords" content="webgl webgl2 graphics" />
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-render-to-texture_en.jpg" />
+
 <meta property="og:title" content="WebGL2 Rendering to a Texture" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-render-to-texture_en.jpg" />
@@ -50,6 +55,41 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/webgl-render-to-texture.html" />
 <meta name="twitter:description" content="How to render to a texture." />
 <meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-render-to-texture_en.jpg" />
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/webgl-render-to-texture.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-render-to-texture_en.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/webgl-render-to-texture.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/webgl-render-to-texture.html",
+      "inLanguage":"en",
+      "name":"WebGL2 Rendering to a Texture",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/webgl-render-to-texture.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
 <title>WebGL2 Rendering to a Texture</title>
@@ -582,10 +622,14 @@ They then use that texture to render your canvas into the web page.
       return;
   }
 
-  function addScript(src) {
+  function addScript(src, fn) {
     const script = document.createElement('script');
     const firstScript = document.getElementsByTag('script')[0];
     script.async = true;
+    script.defer = true;
+    if (fn) {
+      script.addEventListener('load', fn);
+    }
     script.src = src;
     firstScript.parentNode.insertBefore(script, firstScript);
   }

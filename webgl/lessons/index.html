@@ -654,10 +654,14 @@ If you are already familar with WebGL1 you might want to look at these articles<
       return;
   }
 
-  function addScript(src) {
+  function addScript(src, fn) {
     const script = document.createElement('script');
     const firstScript = document.getElementsByTag('script')[0];
     script.async = true;
+    script.defer = true;
+    if (fn) {
+      script.addEventListener('load', fn);
+    }
     script.src = src;
     firstScript.parentNode.insertBefore(script, firstScript);
   }

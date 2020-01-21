@@ -36,6 +36,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="2D 에서 이동하는 방법" />
+<meta name="keywords" content="webgl webgl2 graphics" />
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-2d-translation_ko.jpg" />
+
 <meta property="og:title" content="WebGL 2D 이동" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-2d-translation_ko.jpg" />
@@ -50,6 +55,41 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ko/webgl-2d-translation.html" />
 <meta name="twitter:description" content="2D 에서 이동하는 방법" />
 <meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-2d-translation_ko.jpg" />
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-2d-translation.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-2d-translation_ko.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-2d-translation.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-2d-translation.html",
+      "inLanguage":"ko",
+      "name":"WebGL 2D 이동",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-2d-translation.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
 <title>WebGL 2D 이동</title>
@@ -543,10 +583,14 @@ function setGeometry(gl) {
       return;
   }
 
-  function addScript(src) {
+  function addScript(src, fn) {
     const script = document.createElement('script');
     const firstScript = document.getElementsByTag('script')[0];
     script.async = true;
+    script.defer = true;
+    if (fn) {
+      script.addEventListener('load', fn);
+    }
     script.src = src;
     firstScript.parentNode.insertBefore(script, firstScript);
   }

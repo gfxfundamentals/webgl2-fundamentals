@@ -36,6 +36,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Why WebGL is not a 3D library and why it matters." />
+<meta name="keywords" content="webgl webgl2 graphics" />
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-2d-vs-3d-library_en.jpg" />
+
 <meta property="og:title" content="WebGL - Rasterization vs 3D libraries" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-2d-vs-3d-library_en.jpg" />
@@ -50,6 +55,41 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/webgl-2d-vs-3d-library.html" />
 <meta name="twitter:description" content="Why WebGL is not a 3D library and why it matters." />
 <meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-2d-vs-3d-library_en.jpg" />
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/webgl-2d-vs-3d-library.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-2d-vs-3d-library_en.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/webgl-2d-vs-3d-library.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/webgl-2d-vs-3d-library.html",
+      "inLanguage":"en",
+      "name":"WebGL - Rasterization vs 3D libraries",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/webgl-2d-vs-3d-library.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
 <title>WebGL - Rasterization vs 3D libraries</title>
@@ -533,10 +573,14 @@ for them. It also removes much of the mystery of how it works.</p>
       return;
   }
 
-  function addScript(src) {
+  function addScript(src, fn) {
     const script = document.createElement('script');
     const firstScript = document.getElementsByTag('script')[0];
     script.async = true;
+    script.defer = true;
+    if (fn) {
+      script.addEventListener('load', fn);
+    }
     script.src = src;
     firstScript.parentNode.insertBefore(script, firstScript);
   }

@@ -36,6 +36,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Projecting a texture as a plane" />
+<meta name="keywords" content="webgl webgl2 graphics" />
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-planar-projection-mapping_en.jpg" />
+
 <meta property="og:title" content="WebGL2 Planar and Perspective Projection Mapping" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-planar-projection-mapping_en.jpg" />
@@ -50,6 +55,41 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/webgl-planar-projection-mapping.html" />
 <meta name="twitter:description" content="Projecting a texture as a plane" />
 <meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-planar-projection-mapping_en.jpg" />
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/webgl-planar-projection-mapping.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-planar-projection-mapping_en.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/webgl-planar-projection-mapping.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/webgl-planar-projection-mapping.html",
+      "inLanguage":"en",
+      "name":"WebGL2 Planar and Perspective Projection Mapping",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/webgl-planar-projection-mapping.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
 <title>WebGL2 Planar and Perspective Projection Mapping</title>
@@ -1118,10 +1158,14 @@ is more flexible so I usually write that.</p>
       return;
   }
 
-  function addScript(src) {
+  function addScript(src, fn) {
     const script = document.createElement('script');
     const firstScript = document.getElementsByTag('script')[0];
     script.async = true;
+    script.defer = true;
+    if (fn) {
+      script.addEventListener('load', fn);
+    }
     script.src = src;
     firstScript.parentNode.insertBefore(script, firstScript);
   }
