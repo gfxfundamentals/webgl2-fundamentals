@@ -597,6 +597,9 @@ the more common way to position, orient and scale things in WebGL](webgl-2d-tran
 
 If you're 100% new to WebGL and have no idea what GLSL is or shaders or what the GPU does
 then checkout [the basics of how WebGL really works](webgl-how-it-works.html).
+You might also want to take a look at this
+[interactive state diagram](/webgl/lessons/resources/webgl-state-diagram.html)
+for another way of understanding how WebGL works.
 
 You should also, at least briefly read about [the boilerplate code used here](webgl-boilerplate.html)
 that is used in most of the examples. You should also at least skim
