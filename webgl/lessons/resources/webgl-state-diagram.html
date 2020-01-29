@@ -445,6 +445,15 @@ const projection = m4.perspective(
 );
 gl.uniformMatrix4fv(projectionLoc, false, projection);
 
+// draw center cube
+
+let modelView = m4.identity();
+modelView = m4.translate(modelView, 0, 0, -4);
+modelView = m4.xRotate(modelView, 0.5);
+modelView = m4.yRotate(modelView, 0.5);
+
+gl.uniformMatrix4fv(modelViewLoc, false, modelView);
+
 gl.uniform4fv(diffuseMultLoc, [0.7, 1, 0.7, 1]);
 
 gl.drawElements(
