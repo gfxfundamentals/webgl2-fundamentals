@@ -235,6 +235,19 @@ at a time and watch what WebGL state is affected.
 const canvas = document.querySelector('canvas');
 const gl = canvas.getContext('webgl2');
 
+// make a canvas with text in the center
+const makeTextCanvas = (text, width, height, color) => {
+  const ctx = document.createElement('canvas').getContext('2d')
+  ctx.canvas.width = width
+  ctx.canvas.height = height
+  ctx.font = `bold ${height * 5 / 6 | 0}px sans-serif`
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillStyle = color
+  ctx.fillText(text, width / 2, height / 2)
+  return ctx.canvas
+};
+
 const vsGLSL = `#version 300 es
 in vec4 position;
 in vec3 normal;
@@ -260,6 +273,7 @@ in vec3 v_normal;
 in vec2 v_texcoord;
 
 uniform sampler2D diffuse;
+uniform sampler2D decal;
 uniform vec4 diffuseMult;
 uniform vec3 lightDir;
 
@@ -267,10 +281,24 @@ out vec4 outColor;
 
 void main() {
     vec3 normal = normalize(v_normal);
+
+    // fake lighting
     float light = dot(normal, lightDir) * 0.5 + 0.5;
-    vec4 color = texture(diffuse, v_texcoord);
-    outColor = vec4(color.rgb * light, color.a)
-        * diffuseMult;
+
+    // get the diffuse color
+    vec4 color = texture(diffuse, v_texcoord) * diffuseMult;
+
+    // get the decal
+    vec4 decalColor = texture(decal, v_texcoord);
+
+    // premultiply the decal
+    decalColor.rgb *= decalColor.a;
+
+    // blend the decal over the diffuse color
+    color = color * (1.0 - decalColor.a) + decalColor; 
+
+    // apply lighting
+    outColor = vec4(color.rgb * light, color.a);
 }
 `;
 
@@ -312,6 +340,7 @@ const texcoordLoc = gl.getAttribLocation(prg, 'texcoord');
 const projectionLoc = gl.getUniformLocation(prg, 'projection');
 const modelViewLoc = gl.getUniformLocation(prg, 'modelView');
 const diffuseLoc = gl.getUniformLocation(prg, 'diffuse');
+const decalLoc = gl.getUniformLocation(prg, 'decal');
 const diffuseMultLoc = gl.getUniformLocation(prg, 'diffuseMult');
 const lightDirLoc = gl.getUniformLocation(prg, 'lightDir');
 
@@ -409,6 +438,17 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
+const decalTexture = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, decalTexture);
+gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,                // mip level
+    gl.RGBA,          // internal format
+    gl.RGBA,          // format
+    gl.UNSIGNED_BYTE, // type
+    makeTextCanvas('F', 32, 32, 'red'));
+gl.generateMipmap(gl.TEXTURE_2D);
+
 // above this line is initialization code
 // --------------------------------------
 // below is rendering code.
@@ -430,10 +470,15 @@ gl.bindVertexArray(cubeVertexArray);
 
 // Picking unit 6 just to be different. The default of 0
 // would render but would show less state changing.
-const texUnit = 6;
+let texUnit = 6;
 gl.activeTexture(gl.TEXTURE0 + texUnit);
 gl.bindTexture(gl.TEXTURE_2D, checkerTexture);
 gl.uniform1i(diffuseLoc, texUnit);
+
+texUnit = 3;
+gl.activeTexture(gl.TEXTURE0 + texUnit);
+gl.bindTexture(gl.TEXTURE_2D, decalTexture);
+gl.uniform1i(decalLoc, texUnit);
 
 gl.uniform3fv(lightDirLoc, m4.normalize([1, 5, 3]));
 
@@ -520,7 +565,8 @@ webglStateDiagram({
     { note: 'n-buffer',     base: 'positionBuffer', x: 'left:left-0',    y: 'top:bottom+10', },
     { note: 't-buffer',     base: 'normalBuffer',   x: 'left:left-0',    y: 'top:bottom+10', },
     { note: 'i-buffer',     base: 'texcoordBuffer', x: 'left:left-0',    y: 'top:bottom+10', },
-    { note: 'texture ',     base: 'indexBuffer',    x: 'left:left-0',    y: 'top:bottom+10', },
+    { note: 'ch-texture ',  base: 'indexBuffer',    x: 'left:left-0',    y: 'top:bottom+10', },
+    { note: 'dc-texture ',  base: 'checkerTexture', x: 'left:left-20',   y: 'top:top+20', },
   ],
 });
 </script>
