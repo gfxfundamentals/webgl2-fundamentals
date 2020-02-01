@@ -157,9 +157,6 @@ export default function main({webglVersion, examples}) {
   wrapCreationFn('createTexture', (name, webglObject) => {
     return createTextureDisplay(diagramElem, name, webglObject);
   });
-  wrapCreationFn('createSampler', (name, webglObject) => {
-    return createSamplerDisplay(diagramElem, name, webglObject);
-  });
   wrapCreationFn('createBuffer', (name, webglObject) => {
     return createBufferDisplay(diagramElem, name, webglObject);
   });
@@ -179,7 +176,6 @@ export default function main({webglVersion, examples}) {
     return createRenderbufferDisplay(diagramElem, name, webglObject);
   });
   wrapDeleteFn('deleteTexture');
-  wrapDeleteFn('deleteSampler');
   wrapDeleteFn('deleteBuffer');
   wrapDeleteFn('deleteShader');
   wrapDeleteFn('deleteProgram');
@@ -241,15 +237,23 @@ export default function main({webglVersion, examples}) {
     const {ui} = getWebGLObjectInfo(texture);
     ui.generateMips(target);
   });
-  wrapFn('bindSampler', function(origFn, unit, sampler) {
-    origFn.call(this, unit, sampler);
-    globals.globalUI.textureUnits.updateTextureUnitSampler(unit);
-  });
-  wrapFn('samplerParameteri', function(origFn, sampler, ...args) {
-    origFn.call(this, sampler, ...args);
-    const {ui} = getWebGLObjectInfo(sampler);
-    ui.updateState();
-  });
+
+  if (globals.isWebGL2) {
+    wrapCreationFn('createSampler', (name, webglObject) => {
+      return createSamplerDisplay(diagramElem, name, webglObject);
+    });
+    wrapDeleteFn('deleteSampler');
+    wrapFn('bindSampler', function(origFn, unit, sampler) {
+      origFn.call(this, unit, sampler);
+      globals.globalUI.textureUnits.updateTextureUnitSampler(unit);
+    });
+    wrapFn('samplerParameteri', function(origFn, sampler, ...args) {
+      origFn.call(this, sampler, ...args);
+      const {ui} = getWebGLObjectInfo(sampler);
+      ui.updateState();
+    });
+  }
+
   wrapFn('shaderSource', function(origFn, shader, source) {
     origFn.call(this, shader, source);
     const {ui} = getWebGLObjectInfo(shader);
