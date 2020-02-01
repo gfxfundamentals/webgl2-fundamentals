@@ -1,5 +1,3 @@
-/* eslint strict: "off" */
-/* eslint no-undef: "error" */
 
 /* global gl */
 
@@ -16,11 +14,12 @@ import {
   formatBoolean,
   formatUniformValue,
   helpToMarkdown,
-} from './webgl-state-diagram-utils.js';
+} from './utils.js';
 import {
   formatWebGLObject,
+  formatWebGLObjectOrCanvas,
   formatWebGLObjectOrDefaultVAO,
-} from './webgl-state-diagram-context-wrapper.js';
+} from './context-wrapper.js';
 
 const glEnumToString = twgl.glEnumToString;
 const formatEnum = v => glEnumToString(gl, v);
@@ -691,6 +690,73 @@ export function getStateTables(isWebGL2) {
         `,
       },
       {
+        pname: 'RENDERBUFFER_BINDING',
+        setter: ['bindRenderbuffer'],
+        formatter: formatWebGLObject,
+        help: `
+        The current renderbuffer. 
+
+        Set with
+
+        ---js
+        gl.bindRenderbuffer(gl.RENDERBUFFER, someRenderbuffer);
+        ---
+        `,
+      },
+      ...insertIf(!isWebGL2, {
+          pname: 'FRAMEBUFFER_BINDING',
+          setter: ['bindFramebuffer'],
+          formatter: formatWebGLObjectOrCanvas,
+          help: `
+          The current framebuffer (--null-- = the canvas). 
+
+          Set with
+
+          ---js
+          gl.bindFramebuffer(gl.FRAMEBUFFER, someFramebuffer);
+          ---
+          `,
+        },
+      ),
+      ...insertIf(isWebGL2, {
+          pname: 'DRAW_FRAMEBUFFER_BINDING',
+          setter: ['bindFramebuffer'],
+          formatter: formatWebGLObjectOrCanvas,
+          help: `
+          The current **draw** framebuffer (--null-- = the canvas).
+          This is framebuffer pixels are written to when calling
+          --gl.clear--, --gl.drawXXX---, --gl.blitFramebuffer--.
+
+          Set with
+
+          ---js
+          gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, someFramebuffer);
+          ---
+
+          or with
+
+          ---js
+          gl.bindFramebuffer(gl.FRAMEBUFFER, someFramebuffer);
+          ---
+          `,
+      }, {
+          pname: 'READ_FRAMEBUFFER_BINDING',
+          setter: ['bindFramebuffer'],
+          formatter: formatWebGLObjectOrCanvas,
+          help: `
+          The current **read** framebuffer (--null-- = the canvas). 
+          This is the framebuffer pixels are read from when calling
+          --gl.readPixels--, --gl.copyTexImageXX--, --gl.copyTexSubImageXX--,
+          --gl.blitFramebuffer--, ...
+
+          Set with
+
+          ---js
+          gl.bindFramebuffer(gl.READ_FRAMEBUFFER, someFramebuffer);
+          ---
+          `,
+      }),
+      {
         pname: 'ACTIVE_TEXTURE',
         setter: 'activeTexture',
         formatter: formatEnum,
@@ -973,10 +1039,65 @@ export function getStateTables(isWebGL2) {
     ],
   };
 
+  const drawBuffersState = {
+    help: `
+    **NOTE: draw buffer state is *per* framebuffer state
+    with the canvas having its own draw buffer state.**
+
+    draw buffer state is set for whatever is bound as the 
+    current --DRAW_FRAMEBUFFER-- by calling --gl.drawBuffers--.
+
+    Examples
+
+    ---js
+    // bind the canvas as both the DRAW and READ framebuffers
+    gl.framebuffer(gl.FRAMEBUFFER, null); 
+    gl.drawBuffers([gl.BACK]);  // draw to the canvas (the default)
+    ---
+
+    ---js
+    // bind some 4 attachment framebuffer as the DRAW framebuffer
+    gl.framebuffer(gl.DRAW_FRAMEBUFFER, fourAttachmentFramebuffer); 
+    gl.drawBuffers([
+        gl.COLOR_ATTACHMENT0,  // write to 0
+        gl.COLOR_ATTACHMENT1,  // write to 1
+        gl.NONE,               // do not write to 2
+        gl.COLOR_ATTACHMENT3,  // write to 3
+    ]);
+    ---
+    `,
+    states: [],
+  };
+
+  const maxDrawBuffers = gl.getParameter(gl.MAX_DRAW_BUFFERS);
+  for (let i = 0; i < maxDrawBuffers; ++i) {
+    drawBuffersState.states.push({
+      pname: `DRAW_BUFFER${i}`,
+      formatter: formatEnumNone,
+      help: `
+      Used for framebuffers with multiple color attachments. Sets whether
+      writing to an attachment draws or not. Note that the i'th
+      setting can only be --NONE-- or --COLOR_ATTACHMENT(i)-- where i
+      matches the index of the attachment.
+
+      ---js
+      gl.framebuffer(gl.DRAW_FRAMEBUFFER, fourAttachmentFramebuffer); 
+      gl.drawBuffers([
+          gl.COLOR_ATTACHMENT0,  // write to 0
+          gl.COLOR_ATTACHMENT1,  // write to 1
+          gl.NONE,               // do not write to 2
+          gl.COLOR_ATTACHMENT3,  // write to 3
+      ]);
+      ---
+      `,
+    });
+  }
+
   return {
     shaderState,
     programState,
     textureState,
+    drawBuffersState,
     vertexArrayState,
     activeTexNote,
     globalState: {
