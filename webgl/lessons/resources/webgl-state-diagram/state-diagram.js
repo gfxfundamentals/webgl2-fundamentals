@@ -39,6 +39,7 @@ import {
   createProgramDisplay,
 } from './program-ui.js';
 import {
+  createSamplerDisplay,
   createTextureDisplay,
 } from './texture-ui.js';
 import {
@@ -92,7 +93,10 @@ export default function main({webglVersion, examples}) {
   }
   examplesElem.addEventListener('change', (e) => {
     search.set('exampleId', e.target.value);
-    location.search = search.toString();
+    const url = new URL(location.href);
+    url.hash = '#no-help';
+    url.search = search.toString();
+    location.href = url.href;
   });
 
   globals.stateTables = getStateTables(isWebGL2);
@@ -153,6 +157,9 @@ export default function main({webglVersion, examples}) {
   wrapCreationFn('createTexture', (name, webglObject) => {
     return createTextureDisplay(diagramElem, name, webglObject);
   });
+  wrapCreationFn('createSampler', (name, webglObject) => {
+    return createSamplerDisplay(diagramElem, name, webglObject);
+  });
   wrapCreationFn('createBuffer', (name, webglObject) => {
     return createBufferDisplay(diagramElem, name, webglObject);
   });
@@ -172,6 +179,7 @@ export default function main({webglVersion, examples}) {
     return createRenderbufferDisplay(diagramElem, name, webglObject);
   });
   wrapDeleteFn('deleteTexture');
+  wrapDeleteFn('deleteSampler');
   wrapDeleteFn('deleteBuffer');
   wrapDeleteFn('deleteShader');
   wrapDeleteFn('deleteProgram');
@@ -232,6 +240,15 @@ export default function main({webglVersion, examples}) {
     const texture = getCurrentTextureForTarget(target);
     const {ui} = getWebGLObjectInfo(texture);
     ui.generateMips(target);
+  });
+  wrapFn('bindSampler', function(origFn, unit, sampler) {
+    origFn.call(this, unit, sampler);
+    globals.globalUI.textureUnits.updateTextureUnitSampler(unit);
+  });
+  wrapFn('samplerParameteri', function(origFn, sampler, ...args) {
+    origFn.call(this, sampler, ...args);
+    const {ui} = getWebGLObjectInfo(sampler);
+    ui.updateState();
   });
   wrapFn('shaderSource', function(origFn, shader, source) {
     origFn.call(this, shader, source);
