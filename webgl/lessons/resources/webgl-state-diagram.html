@@ -27,7 +27,8 @@
   <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
 
 
-  <link href="/3rdparty/monokai-sublime.css" rel="stylesheet">
+  <!-- <link href="/3rdparty/monokai-sublime.css" rel="stylesheet"> -->
+  <link href="/3rdparty/prism-material-dark.css" rel="stylesheet">
   <!-- <link href="/3rdparty/tomorrow-night-bright.css" rel="stylesheet"> -->
   <!-- <link href="/3rdparty/atom-one-dark-reasonable.css" rel="stylesheet">  --> 
   <link href="webgl-state-diagram/state-diagram.css" rel="stylesheet">
@@ -224,6 +225,75 @@ Passing `null` to `gl.bindVertexArray` binds the default vertex array.
     </div>
   </div>
 </template>
+
+<template id="transform-feedback-template">
+  <div class="webgl-object window-content transform-feedback" data-help="
+Transform Feedback objects contain the state needed to let a vertex shader
+write its output to one or more buffers.
+
+Imagine you have a vertex shader that declares 3 outputs
+
+```glsl
+out vec3 position;
+out vec3 normal;
+out vec4 color;
+...
+```
+
+You have 2 options.
+
+1. In `INTERLEAVED_ATTRIBS` mode you bind a single buffer to the first
+attribute below (index 0). Each output is written consecutively to the
+buffer. In other words if you output position(P), normal(N), color(C)
+then PNCPNCPNCPNC... will be output to the single buffer
+
+2. In `SEPARATE_ATTRIBS` mode you bind the buffers to the attributes
+below. The first value output will be written to the first buffer,
+the second to the second, etc.. so in the same example as above 
+buffer0 would get PPPP..., buffer1 would get NNNN..., and buffer2
+would get CCCC...
+
+You bind buffers below with 
+
+```js
+gl.bindBufferBase(
+    gl.TRANSFORM_FEEDBACK_BUFFER,
+    indexOfAttribute,
+    bufferToWriteTo);
+```
+
+or 
+
+```js
+const offset = 0;  // offset in bytes in buffer to start writing. Must be mult of 4
+const size = 1000; // size of area of buffer to write to
+gl.bindBufferRange(
+    gl.TRANSFORM_FEEDBACK_BUFFER,
+    indexOfAttribute,
+    bufferToWriteTo,
+    offset, 
+    size);
+```
+
+You call `gl.transformFeedbackVaryings` **BEFORE LINKING A PROGRAM** to setup
+which outputs are written to which attribute indices and which of the 2 modes to use.
+
+Following the same example above of position, normal, color
+
+```js
+const mode = gl.SEPARATE_ATTRIBS; // or gl.INTERLEAVED_ATTRIBS
+gl.transformFeedbackVaryings(someProgram, [
+  'position',  // position is the first thing written
+  'normal',    // normal is the second thing written
+  'color',     // color is the third thing written
+], mode);
+```
+">
+    <div class="name">transform feedback</div>
+    <div class="state-table"></div>
+  </div>
+</template>
+
 
 <template id="vertex-shader-template">
   <div class="webgl-object window-content shader vertex-shader" data-help="
@@ -1438,9 +1508,189 @@ gl.drawElements(
     0,                 // offset on bytes to indices
 );
 </script>
+<script id="transform-feedback" type="not-js">
+'use strict';
+
+const canvas = document.querySelector('canvas');
+const gl = canvas.getContext('webgl2');
+
+const genPointsVSGLSL = `#version 300 es
+uniform int numPoints;
+out vec2 position;
+out vec4 color;
+
+#define PI radians(180.0)
+
+void main() {
+    float u = float(gl_VertexID) / float(numPoints);
+    float a = u * PI * 2.0;
+    position = vec2(cos(a), sin(a)) * 0.8;
+    color = vec4(u, 0, 1.0 - u, 1);
+}
+`;
+
+const genPointsFSGLSL = `#version 300 es
+void main() {
+  discard;
+}
+`;
+
+const drawVSGLSL = `#version 300 es
+in vec4 position;
+in vec4 color;
+
+out vec4 v_color;
+
+void main() {
+  gl_PointSize = 20.0;
+  gl_Position = position;
+  v_color = color;
+}
+`;
+
+const drawFSGLSL = `#version 300 es
+precision highp float;
+
+in vec4 v_color;
+
+out vec4 outColor;
+
+void main() {
+    outColor = v_color;
+}
+`;
+
+const createShader = function(gl, type, glsl) {
+  const shader = gl.createShader(type)
+  gl.shaderSource(shader, glsl)
+  gl.compileShader(shader)
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    throw new Error(gl.getShaderInfoLog(shader))
+  }
+  return shader
+};
+
+const createProgram = function(gl, vsGLSL, fsGLSL, outVaryings) {
+  const vs = createShader(gl, gl.VERTEX_SHADER, vsGLSL)
+  const fs = createShader(gl, gl.FRAGMENT_SHADER, fsGLSL)
+  const prg = gl.createProgram()
+  gl.attachShader(prg, vs)
+  gl.attachShader(prg, fs)
+  if (outVaryings) {
+    gl.transformFeedbackVaryings(prg, outVaryings, gl.SEPARATE_ATTRIBS)
+  }
+  gl.linkProgram(prg)
+  if (!gl.getProgramParameter(prg, gl.LINK_STATUS)) {
+    throw new Error(gl.getProgramParameter(prg))
+  }
+
+  // NOTE! These are only here to unclutter the diagram.
+  // It is safe to detach and delete shaders once
+  // a program is linked though it is arguably not common.
+  // and I usually don't do it.
+  gl.detachShader(prg, vs)
+  gl.deleteShader(vs)
+  gl.detachShader(prg, fs)
+  gl.deleteShader(fs)
+
+  return prg
+};
+
+const genProg = createProgram(gl, genPointsVSGLSL, genPointsFSGLSL, ['position', 'color']);
+const drawProg = createProgram(gl, drawVSGLSL, drawFSGLSL);
+
+const numPointsLoc = gl.getUniformLocation(genProg, 'numPoints');
+
+const posLoc = gl.getAttribLocation(drawProg, 'position');
+const colorLoc = gl.getAttribLocation(drawProg, 'color');
+
+const numPoints = 24;
+
+// make a vertex array and attach 2 buffers
+// one for 2D positions, 1 for colors.
+const dotVertexArray = gl.createVertexArray();
+gl.bindVertexArray(dotVertexArray);
+
+const positionBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+gl.bufferData(gl.ARRAY_BUFFER, numPoints * 2 * 4, gl.DYNAMIC_DRAW);
+gl.enableVertexAttribArray(posLoc);
+gl.vertexAttribPointer(
+    posLoc,       // location
+    2,            // size (components per iteration)
+    gl.FLOAT,     // type of to get from buffer
+    false,        // normalize
+    0,            // stride (bytes to advance each iteration)
+    0,            // offset (bytes from start of buffer)
+);
+
+const colorBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+gl.bufferData(gl.ARRAY_BUFFER, numPoints * 4 * 4, gl.DYNAMIC_DRAW);
+gl.enableVertexAttribArray(colorLoc);
+gl.vertexAttribPointer(
+    colorLoc,   // location
+    4,          // size (components per iteration)
+    gl.FLOAT,   // type of to get from buffer
+    false,      // normalize
+    0,          // stride (bytes to advance each iteration)
+    0,          // offset (bytes from start of buffer)
+);
+
+// This is not really needed but if we end up binding anything
+// to ELEMENT_ARRAY_BUFFER, say we are generating indexed geometry
+// we'll change cubeVertexArray's ELEMENT_ARRAY_BUFFER. By binding
+// null here that won't happen.
+gl.bindVertexArray(null);
+
+// setup a transform feedback object to write to
+// the position and color buffers
+const tf = gl.createTransformFeedback();
+gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, tf);
+gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, positionBuffer);
+gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 1, colorBuffer);
+gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, null);
+
+// above this line is initialization code
+// --------------------------------------
+// below is rendering code.
+
+// --------------------------------------
+// First compute points into buffers
+
+// no need to call the fragment shader
+gl.enable(gl.RASTERIZER_DISCARD);
+
+// unbind the buffers so we don't get errors.
+gl.bindBuffer(gl.TRANSFORM_FEEDBACK_BUFFER, null);
+gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+gl.useProgram(genProg);
+
+// generate numPoints of positions and colors
+// into the buffers
+gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, tf);
+gl.beginTransformFeedback(gl.POINTS);
+gl.uniform1i(numPointsLoc, numPoints);
+gl.drawArrays(gl.POINTS, 0, numPoints);
+gl.endTransformFeedback();
+gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, null);
+
+// turn on using fragment shaders again
+gl.disable(gl.RASTERIZER_DISCARD);
+
+// --------------------------------------
+// Now draw using the buffers we just computed
+
+gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+gl.bindVertexArray(dotVertexArray);
+gl.useProgram(drawProg);
+gl.drawArrays(gl.POINTS, 0, numPoints);
+</script>
 <script src="/webgl/resources/chroma.min.js"></script>
 <script src="/3rdparty/showdown.min.js"></script>
-<script src="/3rdparty/highlight.pack.js"></script>
+<script src="/3rdparty/prism.js" data-manual></script>
 <script src="../../resources/m4.js"></script>
 <script src="webgl-state-diagram/eval-helper.js"></script>
 <script type="module">
@@ -1550,7 +1800,30 @@ webglStateDiagram({
         { note: 'lin-sampler',  base: 'checkerTexture', x: 'left:left-120',  y: 'top:top-50', },
         { note: 'near-sampler', base: 'linearSampler',  x: 'left:left+20',   y: 'top:top+50', },
       ],
-    },  },
+    },
+    'transform-feedback': {
+      name: 'Transform Feedback',
+      adjust: [
+        {cmd: 'expand',   id: 'globalUI.transformFeedbackState'},
+        {cmd: 'collapse', id: 'globalUI.depthState'},
+      ],
+      windowPositions: [
+        { note: 'vertex-array', base: '#diagram',       x: 'left:left+50',   y: 'bottom:bottom-50', },
+        { note: 'global-state', base: '#diagram',       x: 'left:left+10',   y: 'top:top+10', },
+        { note: 'canvas',       base: '#diagram',       x: 'right:right-10', y: 'top:top+10', },
+          { note: 'vs1',          base: '#diagram',       x: 'left:left+0',    y: 'top:top+0', },
+          { note: 'fs1',          base: '#diagram',       x: 'left:left+0',    y: 'top:top+0', },
+        { note: 'gen-program',  base: 'global state',   x: 'left:right+110', y: 'top:top+0', },
+          { note: 'vs2',          base: '#diagram',       x: 'left:left+0',    y: 'top:top+0', },
+          { note: 'fs2',          base: '#diagram',       x: 'left:left+0',    y: 'top:top+0', },
+        { note: 'draw-program', base: 'genProg',        x: 'left:left+0',    y: 'top:bottom+10', },
+        { note: 'c-vert-array', base: 'vertex array',   x: 'left:left-30',   y: 'top:top+30', },
+        { note: 'p-buffer',     base: 'canvas',         x: 'left:left+70',   y: 'top:bottom+10', },
+        { note: 'c-buffer',     base: 'positionBuffer', x: 'left:left-0',    y: 'top:bottom+10', },
+        { note: 'tr-feedback',  base: 'colorBuffer',    x: 'left:left-50',   y: 'top:bottom+10', },
+      ],
+    },
+  },
 });
 </script>
 </html>
