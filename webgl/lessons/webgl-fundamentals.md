@@ -24,7 +24,7 @@ WebGL can then rasterize various kinds of primitives including [points, lines, o
 When rasterizing these primitives it calls a second user supplied function called a fragment shader.
 A fragment shader's job is to compute a color for each pixel of the primitive currently being drawn.
 
-Nearly all of the entire WebGL API is about setting up state for these pairs of functions to run.
+Nearly all of the entire WebGL API is about [setting up state](resources/webgl-state-diagram.html) for these pairs of functions to run.
 For each thing you want to draw you setup a bunch of state then execute a pair of functions by calling
 `gl.drawArrays` or `gl.drawElements` which executes your shaders on the GPU.
 
@@ -46,7 +46,7 @@ a shader can receive data.
 
    Buffers are not random access. Instead a vertex shaders is executed a specified number
    of times. Each time it's executed the next value from each specified buffer is pulled
-   out assigned to an attribute.
+   out and assigned to an attribute.
 
    The state of attributes, which buffers to use for each one and how to pull out data
    from those buffers, is collected into a vertex array object (VAO).
@@ -72,7 +72,7 @@ a shader can receive data.
 WebGL only cares about 2 things. Clip space coordinates and colors.
 Your job as a programmer using WebGL is to provide WebGL with those 2 things.
 You provide your 2 "shaders" to do this. A Vertex shader which provides the
-clip space coordinates and a fragment shader that provides the color.
+clip space coordinates, and a fragment shader that provides the color.
 
 Clip space coordinates always go from -1 to +1 no matter what size your
 canvas is. Here is a simple WebGL example that shows WebGL in its simplest form.
