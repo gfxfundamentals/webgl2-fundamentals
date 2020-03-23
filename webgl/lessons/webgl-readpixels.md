@@ -29,6 +29,9 @@ are also somewhat implementation defined.
 WebGL2 lists [many formats](webgl-data-textures.html) but some are optional (`LUMINANCE` for example) and some
 are not renderable by default but can maybe be made renderable by extension. (`RGBA32F` for example).
 
+**The table below is live**. You may notice that it gives different results depending on the machine, OS, GPU, or even
+browser. I know on my machine Chrome and Firefox give different results for some of the implementation defined values.
+
 <div class="webgl_center" data-diagram="formats"></div>
 
 <script src="../resources/twgl-full.min.js"></script>
