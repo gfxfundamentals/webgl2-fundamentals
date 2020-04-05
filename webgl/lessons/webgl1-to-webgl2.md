@@ -3,9 +3,9 @@ Description: How to move from WebGL1 to WebGL2
 TOC: Moving from WebGL1 to WebGL2
 
 
-WebGL2 is nearly 100% backward compatible with WebGL1.
+WebGL2 is **nearly** 100% backward compatible with WebGL1.
 If you only use WebGL1 features then then there are
-only 2 differences.
+only 2 **major** differences.
 
 1.  You use `"webgl2"` instead of `"webgl"` when calling `getContext`
 
@@ -33,8 +33,6 @@ only 2 differences.
         var someVAO = gl.createVertexArray();
 
     Because it just exists.
-
-Otherwise all your WebGL1 stuff should just work.
 
 That being said to take advantage of most WebGL2 features you'll need to make
 some changes.
@@ -274,7 +272,7 @@ is
 
     gl.bindVertexArray(vaoForGeometry);
 
-In WebGL1 the init loop object would have appeared at render time.
+In WebGL1 the init loop above would have appeared at render time.
 This is a HUGE speed up!
 
 There are a few caveats though:
@@ -338,6 +336,31 @@ There are a few caveats though:
     So, my suggestion is never leave a VAO bound if you're done
     with it. Either immediately bind the next VAO you're going
     to use or if you're done bind `null`
+
+As mentioned at the top many extensions from WebGL1 are standard features
+of WebGL2 so if you were using extensions in WebGL1 you'll need to
+change your code to use them not as extensions in WebGL2. See below.
+
+Two that need special care though
+
+1. `OES_texture_float` and floating point textures.
+
+    Floating point textures are a standard feature of WebGL2 but
+
+    * Being able to filter floating point textures is still an extension, `OES_texture_float_linear`
+
+    * Being able to render to a floating point texture is an extension, `EXT_color_buffer_float`
+
+    * Creating a floating point texture is different. You must use one of the new WebGL2 internal
+      formats like `RGBA32F`, `R32F` etc. This is different than the WebGL1 `OES_texture_float`
+      extension in which the internal format was inferred from the `type` passed to `texImage2D`
+
+2. `WEBGL_depth_texture` and depth textures
+
+    Similar to the previous difference, to create a depth texture in WebGL2 you must use one of
+    WebGL2's internal formats`DEPTH_COMPONENT16`, `DEPTH_COMPONENT24`,
+    `DEPTH_COMPONENT32F`, `DEPTH24_STENCIL8`, or `DEPTH32F_STENCIL8` where as in the WebGL1
+    `WEBGL_depth_texture` extension used `DEPTH_COMPONENT` and `DEPTH_STENCIL_COMPONENT`
 
 That's my personal short list of things to be aware of when switching
 from WebGL1 to WebGL2. [There's even more stuff you can do in WebGL2 though](webgl2-whats-new.html).
