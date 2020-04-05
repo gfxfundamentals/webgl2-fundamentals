@@ -206,9 +206,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>WebGL2 is nearly 100% backward compatible with WebGL1.
+      <p>WebGL2 is <strong>nearly</strong> 100% backward compatible with WebGL1.
 If you only use WebGL1 features then then there are
-only 2 differences.</p>
+only 2 <strong>major</strong> differences.</p>
 <ol>
 <li><p>You use <code>&quot;webgl2&quot;</code> instead of <code>&quot;webgl&quot;</code> when calling <code>getContext</code></p>
 <pre class="prettyprint"><code>var gl = someCanvas.getContext(&quot;webgl2&quot;);
@@ -231,7 +231,6 @@ if (!ext) {
 </code></pre><p>Because it just exists.</p>
 </li>
 </ol>
-<p>Otherwise all your WebGL1 stuff should just work.</p>
 <p>That being said to take advantage of most WebGL2 features you&#39;ll need to make
 some changes.</p>
 <h2 id="switch-to-glsl-300-es">Switch to GLSL 300 es</h2>
@@ -408,7 +407,7 @@ for each model / geometry / ...
 </code></pre><p>Then at render time to use a particular geometry all you need to do
 is</p>
 <pre class="prettyprint"><code>gl.bindVertexArray(vaoForGeometry);
-</code></pre><p>In WebGL1 the init loop object would have appeared at render time.
+</code></pre><p>In WebGL1 the init loop above would have appeared at render time.
 This is a HUGE speed up!</p>
 <p>There are a few caveats though:</p>
 <ol>
@@ -457,6 +456,31 @@ VAO. It took me several hours to debug.</p>
 <p>So, my suggestion is never leave a VAO bound if you&#39;re done
 with it. Either immediately bind the next VAO you&#39;re going
 to use or if you&#39;re done bind <code>null</code></p>
+</li>
+</ol>
+<p>As mentioned at the top many extensions from WebGL1 are standard features
+of WebGL2 so if you were using extensions in WebGL1 you&#39;ll need to
+change your code to use them not as extensions in WebGL2. See below.</p>
+<p>Two that need special care though</p>
+<ol>
+<li><p><code>OES_texture_float</code> and floating point textures.</p>
+<p> Floating point textures are a standard feature of WebGL2 but</p>
+<ul>
+<li><p>Being able to filter floating point textures is still an extension, <code>OES_texture_float_linear</code></p>
+</li>
+<li><p>Being able to render to a floating point texture is an extension, <code>EXT_color_buffer_float</code></p>
+</li>
+<li><p>Creating a floating point texture is different. You must use one of the new WebGL2 internal
+formats like <code>RGBA32F</code>, <code>R32F</code> etc. This is different than the WebGL1 <code>OES_texture_float</code>
+extension in which the internal format was inferred from the <code>type</code> passed to <code>texImage2D</code></p>
+</li>
+</ul>
+</li>
+<li><p><code>WEBGL_depth_texture</code> and depth textures</p>
+<p> Similar to the previous difference, to create a depth texture in WebGL2 you must use one of
+ WebGL2&#39;s internal formats<code>DEPTH_COMPONENT16</code>, <code>DEPTH_COMPONENT24</code>,
+ <code>DEPTH_COMPONENT32F</code>, <code>DEPTH24_STENCIL8</code>, or <code>DEPTH32F_STENCIL8</code> where as in the WebGL1
+ <code>WEBGL_depth_texture</code> extension used <code>DEPTH_COMPONENT</code> and <code>DEPTH_STENCIL_COMPONENT</code></p>
 </li>
 </ol>
 <p>That&#39;s my personal short list of things to be aware of when switching
