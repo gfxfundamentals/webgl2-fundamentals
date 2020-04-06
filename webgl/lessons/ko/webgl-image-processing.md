@@ -56,7 +56,7 @@ WebGL2는 텍스처 좌표를 사용하여 텍스처를 읽을수 있는 기능�
 
     +function main() {
     +  var image = new Image();
-    +  image.src = "http://someimage/on/our/server";  // 반드시 같은 도메인 이여야 합니다!!!
+    +  image.src = "https://someimage/on/our/server";  // 반드시 같은 도메인 이여야 합니다!!!
     +  image.onload = function() {
     +    render(image);
     +  }
@@ -189,7 +189,7 @@ void main() {
 
 {{{example url="../webgl-2d-image-blend.html" }}}
 
-이제 다른 픽셀을 참조하는 방법을 알았으니 컨벤션 커널(convolution kernel)을 사용하여 일반적인 이미지 처리를 해보겠습니다. 여기에서는 3x3 커널을 사용할 것입니다. 컨번션 커널은 단순히 3x3 행렬이며 여기서 행렬의 각 항목은 렌더랑 픽셀 주위에 있는 8개의 픽셀에 얼만큼 곱할 것인지를 나타냅니다. 그 다음 결과를 커널 가중치(커널의 모든 값들의 합)나 1.0 중 큰 값으로 나눕니다. [여기서 꽤 좋은 읽을거리가 있습니다](https://docs.gimp.org/2.6/en/plug-in-convmatrix.html). 그리고 [C++으로 직접 작성하면 어떤지 실제 코드를 보여주는 다른 읽을거리가 있습니다](http://www.codeproject.com/KB/graphics/ImageConvolution.aspx).
+이제 다른 픽셀을 참조하는 방법을 알았으니 컨벤션 커널(convolution kernel)을 사용하여 일반적인 이미지 처리를 해보겠습니다. 여기에서는 3x3 커널을 사용할 것입니다. 컨번션 커널은 단순히 3x3 행렬이며 여기서 행렬의 각 항목은 렌더랑 픽셀 주위에 있는 8개의 픽셀에 얼만큼 곱할 것인지를 나타냅니다. 그 다음 결과를 커널 가중치(커널의 모든 값들의 합)나 1.0 중 큰 값으로 나눕니다. [여기서 꽤 좋은 읽을거리가 있습니다](https://docs.gimp.org/2.6/en/plug-in-convmatrix.html). 그리고 [C++으로 직접 작성하면 어떤지 실제 코드를 보여주는 다른 읽을거리가 있습니다](https://www.codeproject.com/KB/graphics/ImageConvolution.aspx).
 
 우리의 경우 쉐이더에서 이 작업을 수행할 것이므로 여기에 새로운 프래그먼트 쉐이더가 있습니다.
 

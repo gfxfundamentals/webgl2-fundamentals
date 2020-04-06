@@ -4,7 +4,7 @@ TOC: Fundamentals
 
 
 First things first, these articles are about WebGL2. If you're interested in WebGL 1.0
-[please go here](http://webglfundamentals.org). Note that WebGL2 is [nearly 100% backward
+[please go here](https://webglfundamentals.org). Note that WebGL2 is [nearly 100% backward
 compatible with WebGL 1](webgl1-to-webgl2.html). That said, once you enable
 WebGL2 you might as well use it as it was meant to be used. These tutorials follow
 that path.

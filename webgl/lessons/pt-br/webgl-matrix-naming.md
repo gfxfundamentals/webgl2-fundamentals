@@ -13,7 +13,7 @@ quase tudo na WebGL poderá ser definido por você, programador.
 
 Dito isto, existem algumas convenções de nomenclatura comuns ou semi-comuns. Especialmente
 quando se trata de matrizes. Eu não sei quem apresentou primeiro essas nomenclaturas. Eu
-acho que as aprendi dos [Padrões de Anotações e Semânticas da NVIDIA](http://www.nvidia.com/object/using_sas.html).
+acho que as aprendi dos [Padrões de Anotações e Semânticas da NVIDIA](https://www.nvidia.com/object/using_sas.html).
 Isso é um pouco mais formal, pois era uma maneira de tentar fazer shaders funcionarem
 em mais situações ao decidir nomes específicos. Está meio que, desatualizado,
 mas os fundamentos básicos ainda duram até hoje.

@@ -4,8 +4,8 @@ TOC: WebGL2 Configuração e Instalação
 
 
 Tecnicamente, você não precisa de nada além um navegador para trabalhar com a WebGL.
-Vá para [jsfiddle.net](https://jsfiddle.net/greggman/8djzyjL3/) ou [jsbin.com](http://jsbin.com)
-ou [codepen.io](http://codepen.io/greggman/pen/YGQjVV) e simplesmente comece a aplicar as lições que você vê aqui.
+Vá para [jsfiddle.net](https://jsfiddle.net/greggman/8djzyjL3/) ou [jsbin.com](https://jsbin.com)
+ou [codepen.io](https://codepen.io/greggman/pen/YGQjVV) e simplesmente comece a aplicar as lições que você vê aqui.
 
 Em todos eles você pode referenciar scripts externos adicionando as tags `<script src="..."></script>`
 se você quiser usar scripts externos.
@@ -24,7 +24,7 @@ Descompacte os arquivos em alguma pasta.
 ## Usando um pequeno e simples servidor Web simples
 
 Em seguida, você deve instalar um pequeno servidor web. Eu sei que o "servidor web" parece assustador, mas a verdade é que [web
-servers são extremamente simples](http://games.greggman.com/game/saving-and-loading-files-in-a-web-page/).
+servers são extremamente simples](https://games.greggman.com/game/saving-and-loading-files-in-a-web-page/).
 
 Se você estiver usando o Chrome, aqui está uma solução simples.
 [Servez](https://greggman.github.io/servez)

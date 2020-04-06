@@ -296,7 +296,7 @@ It's important to notice that you can't draw just any geometry with just any sha
 For example a shader that requires normals will not function with geometry that has no
 normals. Similarly a shader that requires textures will not work without textures.
 
-This is one of the many reasons it's great to choose a 3D Library like [Three.js](http://threejs.org)
+This is one of the many reasons it's great to choose a 3D Library like [Three.js](https://threejs.org)
 because it handles all of this for you. You create some geometry, you tell three.js how you want it
 rendered and it generates shaders at runtime to handle the things you need. Pretty much all 3D engines
 do this from Unity3D to Unreal to Source to Crytek. Some generate them offline but the important
@@ -318,7 +318,7 @@ Now that we have a framework for drawing multiple objects [lets draw some text](
 <h3>WebGL1 Optimization Removed</h3>
 <p>
 In WebGL 1 we didn't have vertex array objects and so
-<a href="http://webglfundametnals.org/webgl/lessons/webgl-drawing-multiple-things.html">I recommended an optimization</a>.
+<a href="https://webglfundamentals.org/webgl/lessons/webgl-drawing-multiple-things.html">I recommended an optimization</a>.
 Without vertex array objects we had to make 3 WebGL per attribute per model calls every time we switched geometry.
 In the example above that added up to 12 WebGL calls per model and so
 it made sense to try to avoid that by sorting models. In WebGL2 those 12 WebGL calls reduce to just one call

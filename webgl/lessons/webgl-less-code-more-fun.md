@@ -429,7 +429,7 @@ be using this style.
 
 Feel free to use this style in your own code. The functions `twgl.createProgramInfo`,
 `twgl.createVAOAndSetAttributes`, `twgl.createBufferInfoFromArrays`, and `twgl.setUniforms`
-etc... are part of a library I wrote based off these ideas. [It's called `TWGL`](http://twgljs.org).
+etc... are part of a library I wrote based off these ideas. [It's called `TWGL`](https://twgljs.org).
 It rhymes with wiggle and it stands for `Tiny WebGL`.
 
 Next up, [drawing multiple things](webgl-drawing-multiple-things.html).

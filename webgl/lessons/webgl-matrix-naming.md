@@ -13,7 +13,7 @@ almost everything about WebGL is defined by you, the programmer.
 
 That said there are some common or semi-common naming conventions. Especially
 when related to matrices. I don't know who first game up with these names. I
-think I learned them [from NVidia's Standard Annotations and Semantics](http://www.nvidia.com/object/using_sas.html).
+think I learned them [from NVidia's Standard Annotations and Semantics](https://www.nvidia.com/object/using_sas.html).
 That's a little more formal as it was a way to try to make shaders work
 in more situations by deciding on specific names. It's kind of out of date
 but the basics are still around.

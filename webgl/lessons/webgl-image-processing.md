@@ -70,7 +70,7 @@ Once it loads we'll draw it.
 
     +function main() {
     +  var image = new Image();
-    +  image.src = "http://someimage/on/our/server";  // MUST BE SAME DOMAIN!!!
+    +  image.src = "https://someimage/on/our/server";  // MUST BE SAME DOMAIN!!!
     +  image.onload = function() {
     +    render(image);
     +  }
@@ -215,7 +215,7 @@ how much to multiply the 8 pixels around the pixel we are rendering. We then
 divide the result by the weight of the kernel (the sum of all values in the kernel)
 or 1.0, whichever is greater. [Here's a pretty good article on it](https://docs.gimp.org/2.6/en/plug-in-convmatrix.html).
 And [here's another article showing some actual code if
-you were to write this by hand in C++](http://www.codeproject.com/KB/graphics/ImageConvolution.aspx).
+you were to write this by hand in C++](https://www.codeproject.com/KB/graphics/ImageConvolution.aspx).
 
 In our case we're going to do that work in the shader so here's the new fragment shader.
 

@@ -3,7 +3,7 @@ Description: The differences between WebGLFundamentals.org and WebGL2Fundamental
 TOC: Differences from WebGLFundamentals.org to WebGL2Fundamentals.org
 
 
-If you previously read [webglfundamentals.org](http://webglfundamentals.org)
+If you previously read [webglfundamentals.org](https://webglfundamentals.org)
 there are some differences that you should be aware of.
 
 ## Multiline Template Literals
@@ -32,7 +32,7 @@ multiline template literals
 
 multiline template literals are supported on all WebGL capable
 browsers except IE11. If you need to target IE11 consider using a
-transpiler like [babel](http://babeljs.io).
+transpiler like [babel](https://babeljs.io).
 
 ## All Shaders use version GLSL 300 es
 

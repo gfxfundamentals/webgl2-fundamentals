@@ -7,7 +7,7 @@ Title: WebGL2 理论基础
 它们去旧迎新，丢弃一些过时的思想，让你彻底了解WebGL的工作原理。
 
 这些文章是专门关于的WebGL2的。
-如果你对WebGL 1.0感兴趣，请去[这里](http://webglfundamentals.org)
+如果你对WebGL 1.0感兴趣，请去[这里](https://webglfundamentals.org)
 如果你已经很熟悉WebGL1，你或许想看看这些文章
 
 <ul>

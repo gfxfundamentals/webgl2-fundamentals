@@ -11,7 +11,7 @@ A próxima pergunta mais óbvia para o processamento de imagens é, como aplicar
 Bem, você poderia tentar gerar shaders em tempo real. Fornecer uma interface que permite
 ao usuário selecionar os efeitos que ele quer usar, em seguida, gerar um shader que faz
 todos os efeitos. Isso nem sempre é possível, embora essa técnica seja
-usada frequentemente para [criar efeitos para gráficos em tempo real](http://www.youtube.com/watch?v=cQUn0Zeh-0Q).
+usada frequentemente para [criar efeitos para gráficos em tempo real](https://www.youtube.com/watch?v=cQUn0Zeh-0Q).
 
 Uma maneira mais flexível é usar mais 2 texturas *work* e renderizar
 a cada textura por sua vez, fazendo um ping-pong para frente e para trás

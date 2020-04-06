@@ -3,7 +3,7 @@ Description: As diferenças entre a WebGLFundamentals.org e a WebGL2Fundamentals
 TOC: Diferenças entre a WebGLFundamentals.org e a WebGL2Fundamentals.org
 
 
-Se você leu anteriormente [webglfundamentals.org](http://webglfundamentals.org)
+Se você leu anteriormente [webglfundamentals.org](https://webglfundamentals.org)
 há algumas diferenças que você deve estar ciente.
 
 ## Literais de Templates Multilinhas
@@ -32,7 +32,7 @@ literais de templates multilinhas
 
 literais de templates multilinhas são suportados em todos os navegadores
 compatíveis com a WebGL, exceto o IE11. Se você precisa de suporte para o IE11, considere utilizar
-um transpilador como o [babel](http://babeljs.io).
+um transpilador como o [babel](https://babeljs.io).
 
 ## Todos os Shaders usam a versão GLSL 300 es
 

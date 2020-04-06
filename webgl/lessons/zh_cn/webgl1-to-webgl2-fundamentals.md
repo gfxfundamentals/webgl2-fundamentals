@@ -3,7 +3,7 @@ Description: WebGLFundamentals.org和WebGL2Fundamentals.org的区别
 TOC: WebGLFundamentals.org和WebGL2Fundamentals.org的区别
 
 
-如果你之前阅读过[webglfundamentals.org](http://webglfundamentals.org)你应该意识到有一些差异。
+如果你之前阅读过[webglfundamentals.org](https://webglfundamentals.org)你应该意识到有一些差异。
 
 ## 多行模版字面量
 
@@ -25,7 +25,7 @@ webgl2fundamentals.org上，我已经改用多行模版字面量
     在这里
     `;
 
-所有支持WebGL的浏览器除了IE11都支持多行模版字面量。如果你需要针对IE11，考虑使用[babel](http://babeljs.io)转移。
+所有支持WebGL的浏览器除了IE11都支持多行模版字面量。如果你需要针对IE11，考虑使用[babel](https://babeljs.io)转移。
 
 ## 所有着色器使用GLSL 300 es版本
 

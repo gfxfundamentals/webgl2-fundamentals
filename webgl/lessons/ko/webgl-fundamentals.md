@@ -3,7 +3,7 @@ Description: 기본으로 시작하는 첫 번째 WebGL2 강의
 TOC: WebGL2 기초
 
 
-제일 중요한 걸 먼저 말하자면, 이 글은 WebGL2에 관한 글입니다. 만약 WebGL1.0에 관심이 있다면 [여기를 방문하십시오](http://webglfundamentals.org). 알아야 할 것은 WebGL2는 [WebGL1과 거의 100% 역호환이 됩니다](webgl1-to-webgl2.html). 즉, 일단 WebGL2를 사용하면 원래 사용 의도처럼 사용할 수 있습니다. 이 튜토리얼은 이 방향을 따름니다.
+제일 중요한 걸 먼저 말하자면, 이 글은 WebGL2에 관한 글입니다. 만약 WebGL1.0에 관심이 있다면 [여기를 방문하십시오](https://webglfundamentals.org). 알아야 할 것은 WebGL2는 [WebGL1과 거의 100% 역호환이 됩니다](webgl1-to-webgl2.html). 즉, 일단 WebGL2를 사용하면 원래 사용 의도처럼 사용할 수 있습니다. 이 튜토리얼은 이 방향을 따름니다.
 
 WebGL은 종종 3D API로 간주됩니다. 사람들은 "WebGL과 *마법*을 사용해서 멋진 3D를 만들어야지" 라고 합니다. 실제로 WebGL은 단순히 레스트화 엔진일 뿐입니다. WebGL은 제공한 코드에 기반하여 점, 선 및 삼각형들을 그립니다. 원하는 것을 하기 위해 WebGL이 다른 일을 하도록 하는 것은 점, 선 및 삼각형들을 사용하는 코드를 제공하는 것에 달려있습니다.
 
