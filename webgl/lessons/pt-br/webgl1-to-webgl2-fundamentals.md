@@ -19,7 +19,7 @@ em tags non-javascript `<script>`.
 
     ...
 
-    var vertexShaderSource = document.getElementById("vertexshader").text;
+    var vertexShaderSource = document.querySelector("#vertexshader").text;
 
 Na WebGL2fundamentals.org, eu mudei completamente para permitir o uso de
 literais de templates multilinhas

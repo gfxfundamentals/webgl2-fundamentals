@@ -20,7 +20,7 @@ Auf webglfundamentals.org werden fast alle Skripte in nicht-javascript
 
     ...
 
-    var vertexShaderSource = document.getElementById("vertexshader").text;
+    var vertexShaderSource = document.querySelector("#vertexshader").text;
 
 Auf webgl2fundamentals.org bin ich zu multiline template literals übergegangen
 

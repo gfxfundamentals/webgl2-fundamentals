@@ -16,7 +16,7 @@ webglfundamentals.org上所有的着色器代码都是用非javascript `<script>
 
     ...
 
-    var vertexShaderSource = document.getElementById("vertexshader").text;
+    var vertexShaderSource = document.querySelector("#vertexshader").text;
 
 webgl2fundamentals.org上，我已经改用多行模版字面量
 

@@ -112,7 +112,7 @@ WebGL을 사용하는 프로그래머로서 할일는 이 2가지를 WebGL에 �
 
 그다음 자바스크립트에서 찾아볼수 있습니다.
 
-     var canvas = document.getElementById("c");
+     var canvas = document.querySelector("#c");
 
 이제 WebGL2RenderingContext 생성할수 있습니다.
 

@@ -87,15 +87,15 @@ void main() {
 function main() {
   // Get A WebGL context
   /** @type {HTMLCanvasElement} */
-  var canvas = document.getElementById("canvas");
+  var canvas = document.querySelector("#canvas");
   var gl = canvas.getContext("webgl2");
   if (!gl) {
     return;
   }
 
   // look up the elements we want to affect
-  var timeElement = document.getElementById("time");
-  var angleElement = document.getElementById("angle");
+  var timeElement = document.querySelector("#time");
+  var angleElement = document.querySelector("#angle");
 
   // Use our boilerplate utils to compile the shaders and link into a program
   var program = webglUtils.createProgramFromSources(gl,

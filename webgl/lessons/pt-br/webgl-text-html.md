@@ -43,8 +43,8 @@ Agora, procure esses elementos no tempo de inicialização e crie ou procure as 
 realizar a mudança.
 
     // look up the elements we want to affect
-    var timeElement = document.getElementById("time");
-    var angleElement = document.getElementById("angle");
+    var timeElement = document.querySelector("#time");
+    var angleElement = document.querySelector("#angle");
 
     // Create text nodes to save some time for the browser
     // and avoid allocations.
@@ -141,7 +141,7 @@ Finalmente, `.floating-div` será usado para a div posicionável que criamos.
 Então, agora precisamos procurar o divcontainer, criar um div e anexá-lo.
 
     // look up the divcontainer
-    var divContainerElement = document.getElementById("divcontainer");
+    var divContainerElement = document.querySelector("#divcontainer");
 
     // make the div
     var div = document.createElement("div");

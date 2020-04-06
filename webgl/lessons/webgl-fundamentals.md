@@ -150,7 +150,7 @@ First we need an HTML canvas element
 
 Then in JavaScript we can look that up
 
-     var canvas = document.getElementById("c");
+     var canvas = document.querySelector("#c");
 
 Now we can create a WebGL2RenderingContext
 

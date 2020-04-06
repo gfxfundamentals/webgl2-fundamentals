@@ -19,7 +19,7 @@ in non-javascript `<script>` tags.
 
     ...
 
-    var vertexShaderSource = document.getElementById("vertexshader").text;
+    var vertexShaderSource = document.querySelector("#vertexshader").text;
 
 On webgl2fundamentals.org I've switched to using
 multiline template literals

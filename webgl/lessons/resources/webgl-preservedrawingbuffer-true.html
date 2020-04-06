@@ -11,7 +11,7 @@ canvas { border: 1px solid black; }
 <p><canvas id="c" width="400" height="300"></canvas></p>
 </body>
 <!-- vertex shader -->
-<script id="2d-vertex-shader" type="x-shader/x-vertex">
+<script id="vertex-shader-2d" type="x-shader/x-vertex">
 attribute vec4 a_position;
 attribute vec4 a_color;
 uniform mat4 u_worldViewProjection;
@@ -22,7 +22,7 @@ void main() {
 }
 </script>
 <!-- fragment shader -->
-<script id="2d-fragment-shader" type="x-shader/x-fragment">
+<script id="fragment-shader-2d" type="x-shader/x-fragment">
 precision mediump float;
 varying vec4 v_color;
 uniform vec4 u_colorMult;
@@ -114,12 +114,12 @@ function main() {
     3, 7,
   ];
 
-  var canvas = document.getElementById("c");
+  var canvas = document.querySelector("#c");
   var gl = canvas.getContext("webgl", {preserveDrawingBuffer: true});
   var clock = 0;
 
   var program = webglUtils.createProgramFromScripts(
-      gl, ["2d-vertex-shader", "2d-fragment-shader"]);
+      gl, ["vertex-shader-2d", "fragment-shader-2d"]);
   gl.useProgram(program);
 
   var positionLoc = gl.getAttribLocation(program, "a_position");

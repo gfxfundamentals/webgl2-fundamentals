@@ -35,7 +35,7 @@ Em seguida, configure o CSS para que o canvas e o HTML para que eles possam se s
 Agora procure o canvas de texto no tempo de inicialização e crie um contexto 2D.
 
     // procura o canvas de texto.
-    var textCanvas = document.getElementById("text");
+    var textCanvas = document.querySelector("#text");
 
     // cria um contexto 2D
     var ctx = textCanvas.getContext("2d");
