@@ -78,7 +78,7 @@ function main() {
   // we have a canvas on the page. Or else we have container and we
   // insert a canvas inside that container.
   // If we don't find a container we use the body of the document.
-  var container = document.getElementById("canvas") || document.body;
+  var container = document.querySelector("#canvas") || document.body;
   var isCanvas = (container instanceof HTMLCanvasElement);
   var canvas = isCanvas ? container : document.createElement("canvas");
   if (!isCanvas) {
