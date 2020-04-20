@@ -11,7 +11,6 @@ module.exports = {
     "eslint-plugin-optional-comma-spacing",
     "eslint-plugin-one-variable-per-var",
     "eslint-plugin-require-trailing-comma",
-    "markdown",
   ],
   "extends": "eslint:recommended",
   "rules": {
