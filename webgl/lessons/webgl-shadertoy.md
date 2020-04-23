@@ -398,42 +398,42 @@ impose a little more structure as well as do some extra work before or after cal
 `mainImage`. For us to use it we just need to call it like this
 
 ```glsl
-  #version 300 es
-  precision highp float;
+#version 300 es
+precision highp float;
 
-  uniform vec2 u_resolution;
-  uniform vec2 u_mouse;
-  uniform float u_time;
+uniform vec2 u_resolution;
+uniform vec2 u_mouse;
+uniform float u_time;
 
-  out vec4 outColor;
+out vec4 outColor;
 
-  //---insert shadertoy code here--
+//---insert shadertoy code here--
 
-  void main() {
-    mainImage(outColor, gl_FragCoord.xy);
-  }
-`;
+void main() {
+  mainImage(outColor, gl_FragCoord.xy);
+}
 ```
 
 Except that Shadertoy uses the uniform names `iResolution`, `iMouse` and `iTime` so let's rename them.
 
 ```glsl
-  #version 300 es
-  precision highp float;
+#version 300 es
+precision highp float;
 
--  uniform vec2 u_resolution;
--  uniform vec2 u_mouse;
--  uniform float u_time;
-+  uniform vec2 iResolution;
-+  uniform vec2 iMouse;
-+  uniform float iTime;
+-uniform vec2 u_resolution;
+-uniform vec2 u_mouse;
+-uniform float u_time;
++uniform vec2 iResolution;
++uniform vec2 iMouse;
++uniform float iTime;
 
-  //---insert shadertoy code here--
+//---insert shadertoy code here--
 
-  void main() {
-    mainImage(gl_FragColor, gl_FragCoord.xy);
-  }
-`;
+out vec4 outColor;
+
+void main() {
+  mainImage(outColor, gl_FragCoord.xy);
+}
 ```
 
 and look them up by the new names
@@ -452,6 +452,8 @@ Taking [this shadertoy shader](https://www.shadertoy.com/view/3l23Rh) and pastin
 in our shader above where it says `//---insert shadertoy code here--` gives us...
 
 {{{example url="../webgl-shadertoy.html"}}}
+
+That's an extraordinarily beautiful image for having no data!
 
 I made the sample above only render when the mouse is over the canvas or when touched.
 This is because the math required
