@@ -42,8 +42,8 @@ We had a simple fragment shader that draws a constant color
       #version 300 es
 
       // fragment shaders don't have a default precision so we need
-      // to pick one. mediump is a good default
-      precision mediump float;
+      // to pick one. highp is a good default
+      precision highp float;
 
       // we need to declare an output for the fragment shader
       out vec4 outColor;
@@ -97,7 +97,7 @@ In the fragment shader we'll use that varying to set the color
 
       #version 300 es
 
-      precision mediump float;
+      precision highp float;
 
     +  // passed in from the vertex shader and interpolated
     +  in float v_brightness;

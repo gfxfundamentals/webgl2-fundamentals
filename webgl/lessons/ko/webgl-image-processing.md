@@ -35,7 +35,7 @@ WebGL2는 텍스처 좌표를 사용하여 텍스처를 읽을수 있는 기능�
 그런 다음 텍스처에서 색상을 찾기 위해 프래그먼트 쉐이더를 제공합니다.
 
     #version 300 es
-    precision mediump float;
+    precision highp float;
 
     // 사용할 텍스처
     uniform sampler2D u_image;
@@ -162,8 +162,8 @@ WebGL2는 텍스처 좌표를 사용하여 텍스처를 읽을수 있는 기능�
 #version 300 es
 
 // 프래그먼트 쉐이더는 기본 정밀도 가지고 있지 않으므로 선택해야 합니다.
-// mediump는 기본으로 괜찮습니다. "중간 정밀도"를 의미합니다.
-precision mediump float;
+// highp는 기본으로 괜찮습니다. "중간 정밀도"를 의미합니다.
+precision highp float;
 
 // 텍스처
 uniform sampler2D u_image;
@@ -197,8 +197,8 @@ void main() {
 #version 300 es
 
 // 프래그먼트 쉐이더는 기본 정밀도 가지고 있지 않으므로 선택해야 합니다.
-// mediump는 기본으로 괜찮습니다. "중간 정밀도"를 의미합니다.
-precision mediump float;
+// highp는 기본으로 괜찮습니다. "중간 정밀도"를 의미합니다.
+precision highp float;
 
 // 텍스처
 uniform sampler2D u_image;

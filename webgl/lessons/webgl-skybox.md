@@ -99,7 +99,7 @@ matrix and divide by w to go from 4D space to 3D space.
 
 ```glsl
 #version 300 es
-precision mediump float;
+precision highp float;
 
 uniform samplerCube u_skybox;
 uniform mat4 u_viewDirectionProjectionInverse;

@@ -88,7 +88,7 @@ void main() {
 ```glsl
 #version 300 es
 // fragment shader
-precision mediump float;
+precision highp float;
 
 // Passed in from the vertex shader.
 in vec4 v_color;

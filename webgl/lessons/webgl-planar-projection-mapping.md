@@ -67,7 +67,7 @@ by. By making a monochrome texture we can change its color this way.
 
 ```js
 const fs = `#version 300 es
-precision mediump float;
+precision highp float;
 
 // Passed in from the vertex shader.
 in vec2 v_texcoord;
@@ -277,7 +277,7 @@ Outside that range we'll use the checkerboard texture
 
 ```js
 const fs = `#version 300 es
-precision mediump float;
+precision highp float;
 
 // Passed in from the vertex shader.
 in vec2 v_texcoord;
@@ -465,7 +465,7 @@ void main() {
 
 ```js
 const colorFS = `#version 300 es
-precision mediump float;
+precision highp float;
 
 uniform vec4 u_color;
 

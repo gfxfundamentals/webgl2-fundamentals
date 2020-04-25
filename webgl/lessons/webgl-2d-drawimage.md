@@ -61,7 +61,7 @@ First we need a simple vertex shader
 And a simple fragment shader
 
     #version 300 es
-    precision mediump float;
+    precision highp float;
 
     in vec2 v_texcoord;
 
@@ -409,7 +409,7 @@ We could fix that by discarding any pixels outside of the 0 to 1 range inside th
 `discard` exits the shader immediately without writing a pixel.
 
     #version 300 es
-    precision mediump float;
+    precision highp float;
 
     in vec2 v_texcoord;
 
@@ -434,7 +434,7 @@ And now the corners are gone
 or maybe you'd like to use a solid color when the texture coordinates are outside the texture
 
     #version 300 es
-    precision mediump float;
+    precision highp float;
 
     in vec2 v_texcoord;
 

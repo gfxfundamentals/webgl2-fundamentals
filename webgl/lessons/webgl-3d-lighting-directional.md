@@ -267,7 +267,7 @@ of the direction of the light and the normal
 ```
 #version 300 es
 
-precision mediump float;
+precision highp float;
 
 -// the varied color passed from the vertex shader
 -in vec4 v_color;

@@ -25,7 +25,7 @@ outColor = originalColor + (fogColor - originalColor) * fogAmount;
 
 ```glsl
 #version 300 es
-precision mediump float;
+precision highp float;
 
 // 由顶点着色器传入。
 in vec2 v_texcoord;
@@ -125,7 +125,7 @@ void main() {
 
 ```glsl
 #version 300 es
-precision mediump float;
+precision highp float;
 
 // 从顶点着色器传入的。
 in vec2 v_texcoord;
@@ -307,7 +307,7 @@ void main() {
 
 ```
 #version 300 es
-precision mediump float;
+precision highp float;
 
 // 从顶点着色器传入
 in vec2 v_texcoord;
@@ -350,7 +350,7 @@ fogAmount = clamp(fogAmount, 0., 1.);
 
 ```glsl
 #version 300 es
-precision mediump float;
+precision highp float;
 
 // 从顶点着色器传入。
 in vec2 v_texcoord;

@@ -61,7 +61,7 @@ TOC: WebGL2 작동 원리
 
     #version 300 es
 
-    precision mediump float;
+    precision highp float;
 
     in vec4 v_color;
 

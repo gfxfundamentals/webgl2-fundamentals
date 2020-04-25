@@ -130,7 +130,7 @@ void main() {
 ```glsl
 #version 300 es
 // fragment shader
-precision mediump float;
+precision highp float;
 
 out vec4 outColor;
 
@@ -182,7 +182,7 @@ First let's change the fragment shader.
 ```glsl
 #version 300 es
 // fragment shader
-precision mediump float;
+precision highp float;
 
 +uniform sampler tex;
 
@@ -294,7 +294,7 @@ And lets make it so we can set the color of the point.
 (note: I switched back to the code without a texture).
 
 ```glsl
-precision mediump float;
+precision highp float;
 
 +uniform vec4 color;
 

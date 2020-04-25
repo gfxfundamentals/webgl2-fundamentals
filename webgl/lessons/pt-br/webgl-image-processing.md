@@ -47,7 +47,7 @@ passar para o fragmento shader.
 Então, fornecemos um fragmento shader para procurar cores da textura.
 
     #version 300 es
-    precision mediump float;
+    precision highp float;
 
     // nossa textura
     uniform sampler2D u_image;
@@ -182,7 +182,7 @@ cada pixel na textura.
 
 // fragmentos shaders não têm uma precisão padrão, então precisamos
 // para escolher um. O médio é um bom padrão. Significa "precisão média"
-precision mediump float;
+precision highp float;
 
 // nossa textura
 uniform sampler2D u_image;
@@ -224,7 +224,7 @@ No nosso caso, vamos fazer isso funcionar no shader, então aqui está o novo fr
 
 // fragmentos shaders não têm uma precisão padrão, então precisamos
 // para escolher um. O médio é um bom padrão. Significa "precisão média"
-precision mediump float;
+precision highp float;
 
 // nossa textura
 uniform sampler2D u_image;

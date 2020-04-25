@@ -47,7 +47,7 @@ pass those on to the fragment shader.
 Then we supply a fragment shader to look up colors from the texture.
 
     #version 300 es
-    precision mediump float;
+    precision highp float;
 
     // our texture
     uniform sampler2D u_image;
@@ -181,8 +181,8 @@ each pixel in the texture.
 #version 300 es
 
 // fragment shaders don't have a default precision so we need
-// to pick one. mediump is a good default. It means "medium precision"
-precision mediump float;
+// to pick one. highp is a good default. It means "high precision"
+precision highp float;
 
 // our texture
 uniform sampler2D u_image;
@@ -223,8 +223,8 @@ In our case we're going to do that work in the shader so here's the new fragment
 #version 300 es
 
 // fragment shaders don't have a default precision so we need
-// to pick one. mediump is a good default. It means "medium precision"
-precision mediump float;
+// to pick one. highp is a good default. It means "high precision"
+precision highp float;
 
 // our texture
 uniform sampler2D u_image;

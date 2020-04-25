@@ -82,7 +82,7 @@ And then we declare the same *varying* as an `in` in the fragment shader.
 
     #version 300 es
 
-    precision mediump float;
+    precision highp float;
 
     in vec4 v_color;
 

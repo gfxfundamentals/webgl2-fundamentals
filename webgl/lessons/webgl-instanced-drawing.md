@@ -27,7 +27,7 @@ void main() {
 `;
 
 const fragmentShaderSource = `#version 300 es
-precision mediump float;
+precision highp float;
 
 uniform vec4 color;
 
@@ -221,7 +221,7 @@ and
 
 ```js
 const fragmentShaderSource = `#version 300 es
-precision mediump float;
+precision highp float;
 
 -uniform vec4 color;
 +// Passed in from the vertex shader.

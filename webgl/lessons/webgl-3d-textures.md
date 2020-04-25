@@ -36,7 +36,7 @@ a texture. We use the texture coordinates passed from the vertex shader
 and we call `texture` to look up a color from that texture.
 
     #version 300 es
-    precision mediump float;
+    precision highp float;
 
     // Passed in from the vertex shader.
     *in vec2 v_texcoord;

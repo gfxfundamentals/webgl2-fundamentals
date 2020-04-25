@@ -49,7 +49,7 @@ fragment shader:
 
 ```
 #version 300 es
-precision mediump float;
+precision highp float;
 
 in vec4 v_position;
 in vec2 v_texCoord;
@@ -454,7 +454,7 @@ is appearing is to simplify my shaders. For example I might change the fragment 
 to the simplest thing possible</p>
 <pre class="prettyprint showlinemods">
 #version 300 es
-precision mediump float;
+precision highp float;
 
 in vec4 v_position;
 in vec2 v_texCoord;

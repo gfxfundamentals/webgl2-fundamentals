@@ -67,7 +67,7 @@ First let's modify our fragment shader from
 
 ```glsl
 #version 300 es
-precision mediump float;
+precision highp float;
 
 // Passed in from the vertex shader.
 in vec3 v_normal;

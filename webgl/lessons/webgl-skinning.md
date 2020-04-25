@@ -829,7 +829,7 @@ and for the fragment shader let's use a simple directional light
 
 ```
 #version 300 es
-precision mediump float;
+precision highp float;
 
 int vec3 v_normal;
 

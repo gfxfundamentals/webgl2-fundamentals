@@ -85,7 +85,7 @@ So here's the code. Our shader is the same simple shader from our [perspective e
 except we've added a `u_colorMult` to multiply the vertex colors by.
 
     #version 300 es
-    precision mediump float;
+    precision highp float;
 
     // Passed in from the vertex shader.
     in vec4 v_color;

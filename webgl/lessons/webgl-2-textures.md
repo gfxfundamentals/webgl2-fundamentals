@@ -76,7 +76,7 @@ Next we change the shader to use 2 textures. In this case we'll multiply 1 textu
 
 ```
 #version 300 es
-precision mediump float;
+precision highp float;
 
 // our textures
 *uniform sampler2D u_image0;

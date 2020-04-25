@@ -110,7 +110,7 @@ void main() {
 ```
 #version 300 es
 
-precision mediump float;
+precision highp float;
 
 // 从顶点着色器传入。
 in vec3 v_normal;

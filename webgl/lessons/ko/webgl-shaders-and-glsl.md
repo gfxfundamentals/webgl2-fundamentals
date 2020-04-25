@@ -179,7 +179,7 @@ Uniforms은 여러 타입이 될 수 있습니다. 각 타입별로 해당 함�
 항상 다음과 같은 형식을 가집니다.
 
     #version 300 es
-    precision mediump float;
+    precision highp float;
 
     out vec4 outColor;  // 아무 이름을 사용 할수 있습니다.
 
@@ -203,7 +203,7 @@ Uniforms은 여러 타입이 될 수 있습니다. 각 타입별로 해당 함�
 
 쉐이더에서 텍스처에서 값들을 얻으려면 `sampler2D` 유니폼을 생성하고 GLSL함수 `texture`를 사용하여 값을 추출합니다.
 
-    precision mediump float;
+    precision highp float;
 
     uniform sampler2D u_texture;
 
@@ -275,7 +275,7 @@ varying를 사용하기 위해서는 varying들을 버텍스와 프래그먼트 
 프래그 먼트 쉐이더
 
     #version 300 es
-    precision mediump float;
+    precision highp float;
 
     +in vec4 v_positionWithOffset;
 

@@ -130,8 +130,8 @@ Em seguida, nós precisamos de um fragment shader
     #version 300 es
 
     // fragment shaders não tem uma precisão padrão, então nós precisamos
-    // escolher uma. mediump é um bom valor padrão. Do Inglês "medium precision", significa "precisão média"
-    precision mediump float;
+    // escolher uma. highp é um bom valor padrão. Do Inglês "high precision", significa "precisão média"
+    precision highp float;
 
     // precisamos declarar um output para o fragment shader
     out vec4 outColor;
@@ -184,8 +184,8 @@ em literais de templates multilinha.
     var fragmentShaderSource = `#version 300 es
 
     // fragment shaders não tem uma precisão padrão, então nós precisamos
-    // escolher uma. mediump é um bom valor padrão. Do Inglês "medium precision", significa "precisão média"
-    precision mediump float;
+    // escolher uma. highp é um bom valor padrão. Do Inglês "high precision", significa "precisão média"
+    precision highp float;
 
     // precisamos declarar um output para o fragment shader
     out vec4 outColor;
@@ -515,7 +515,7 @@ Primeiro fazemos o fragment shader pegar uma color uniform input.
 
     #version 300 es
 
-    precision mediump float;
+    precision highp float;
 
     +  uniform vec4 u_color;
 

@@ -91,8 +91,8 @@ WebGL을 사용하는 프로그래머로서 할일는 이 2가지를 WebGL에 �
     #version 300 es
 
     // 프래그먼트 쉐이더는 기본 정밀도를 가지고 있지 않으므로 선언을 해야합니다.
-    // mediump은 기본값으로 적당합니다. "중간 정도 정밀도"를 의미합니다.
-    precision mediump float;
+    // highp은 기본값으로 적당합니다. "중간 정도 정밀도"를 의미합니다.
+    precision highp float;
 
     // 프래그먼트 쉐이더(fragment shader)에서 출력을 선언 해야합니다.
     out vec4 outColor;
@@ -141,8 +141,8 @@ JavaScript로 문자열을 만드는 일반적인 방법으로 GLSL 문자열을
     var fragmentShaderSource = `#version 300 es
 
     // 프래그먼트 쉐이더는 기본 정밀도를 가지고 있지 않으므로 선언을 해야합니다.
-    // mediump은 기본값으로 적당합니다. "중간 정도 정밀도"를 의미합니다.
-    precision mediump float;
+    // highp은 기본값으로 적당합니다. "중간 정도 정밀도"를 의미합니다.
+    precision highp float;
 
     // 프래그먼트 쉐이더(fragment shader)에서 출력을 선언 해야합니다.
     out vec4 outColor;
@@ -411,7 +411,7 @@ WebGL은 이제 삼각형을 렌더링할 것입니다. WebGL이 그릴 모든 �
 
     #version 300 es
 
-    precision mediump float;
+    precision highp float;
 
     +  uniform vec4 u_color;
 

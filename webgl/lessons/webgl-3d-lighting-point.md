@@ -78,7 +78,7 @@ but because it's a *varying* it will be linearly interpolated between our positi
 and so would not be a complete unit vector
 
     #version 300 es
-    precision mediump float;
+    precision highp float;
 
     // Passed in from the vertex shader.
     in vec3 v_normal;

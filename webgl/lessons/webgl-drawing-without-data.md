@@ -80,7 +80,7 @@ And our fragment shader can just draw a solid color
 
 ```glsl
 #version 300 es
-precision mediump float;
+precision highp float;
 
 out vec4 outColor;
 
@@ -157,7 +157,7 @@ point.
 Let's change the color to blue in the fragment shader.
 
 ```glsl
-precision mediump float;
+precision highp float;
 
 out vec4 outColor;
 

@@ -431,7 +431,7 @@ And we need to use that color in the fragment shader
 ```glsl
 #version 300 es
 
-precision mediump float;
+precision highp float;
 
 +// the varied color passed from the vertex shader
 +in vec4 v_color;

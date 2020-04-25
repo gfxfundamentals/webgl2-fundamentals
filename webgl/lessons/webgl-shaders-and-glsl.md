@@ -190,7 +190,7 @@ A Fragment Shader's job is to provide a color for the current pixel being raster
 It always takes the form
 
     #version 300 es
-    precision mediump float;
+    precision highp float;
 
     out vec4 outColor;  // you can pick any name
 
@@ -216,7 +216,7 @@ See [Uniforms in Vertex Shaders](#uniforms).
 Getting a value from a texture in a shader we create a `sampler2D` uniform and use the GLSL
 function `texture` to extract a value from it.
 
-    precision mediump float;
+    precision highp float;
 
     uniform sampler2D u_texture;
 
@@ -292,7 +292,7 @@ Vertex shader
 Fragment shader
 
     #version 300 es
-    precision mediump float;
+    precision highp float;
 
     +in vec4 v_positionWithOffset;
 

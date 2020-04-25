@@ -26,7 +26,7 @@ Let's add the mixing to the fragment shader
 
 ```glsl
 #version 300 es
-precision mediump float;
+precision highp float;
 
 // Passed in from the vertex shader.
 in vec2 v_texcoord;
@@ -126,7 +126,7 @@ So, it should be pretty easy to use that in our fragment shader to compute a fog
 
 ```glsl
 #version 300 es
-precision mediump float;
+precision highp float;
 
 // Passed in from the vertex shader.
 in vec2 v_texcoord;
@@ -308,7 +308,7 @@ and then in the fragment shader we can use the position to compute the distance
 
 ```
 #version 300 es
-precision mediump float;
+precision highp float;
 
 // Passed in from the vertex shader.
 in vec2 v_texcoord;
@@ -351,7 +351,7 @@ To use this we'd change the fragment shader to something like
 
 ```glsl
 #version 300 es
-precision mediump float;
+precision highp float;
 
 // Passed in from the vertex shader.
 in vec2 v_texcoord;
