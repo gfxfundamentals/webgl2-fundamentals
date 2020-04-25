@@ -321,7 +321,10 @@ goes from -1 to +1 in x and y to cover the canvas, set set the attributes.</p>
 </div>
 
 </p>
-<p>So how do we get something more than a solid color with out any more data? 
+<p>In <a href="webgl-how-it-works.html">the article on how WebGL works</a> we added more
+color by providing a color for each vertex. In <a href="webgl-3d-textures.html">the article on textures</a>
+we added more color by supplying textures and texture coordinates.
+So how do we get something more than a solid color with out any more data? 
 WebGL provides a variable called <code>gl_FragCoord</code> that is equal to the <strong>pixel</strong>
 coordinate of the pixel currently being drawn.</p>
 <p>So let&#39;s change our fragment shader to use that to compute a color</p>
@@ -551,39 +554,39 @@ canvas.addEventListener(&#39;mousemove&#39;, (e) =&gt; {
 <code>fragCoord</code> is the same as <code>gl_FragCoord</code>. Adding this extra function lets Shadertoy
 impose a little more structure as well as do some extra work before or after calling
 <code>mainImage</code>. For us to use it we just need to call it like this</p>
-<pre class="prettyprint"><code class="lang-glsl">  #version 300 es
-  precision highp float;
+<pre class="prettyprint"><code class="lang-glsl">#version 300 es
+precision highp float;
 
-  uniform vec2 u_resolution;
-  uniform vec2 u_mouse;
-  uniform float u_time;
+uniform vec2 u_resolution;
+uniform vec2 u_mouse;
+uniform float u_time;
 
-  out vec4 outColor;
+out vec4 outColor;
 
-  //---insert shadertoy code here--
+//---insert shadertoy code here--
 
-  void main() {
-    mainImage(outColor, gl_FragCoord.xy);
-  }
-`;
+void main() {
+  mainImage(outColor, gl_FragCoord.xy);
+}
 </code></pre>
 <p>Except that Shadertoy uses the uniform names <code>iResolution</code>, <code>iMouse</code> and <code>iTime</code> so let&#39;s rename them.</p>
-<pre class="prettyprint"><code class="lang-glsl">  #version 300 es
-  precision highp float;
+<pre class="prettyprint"><code class="lang-glsl">#version 300 es
+precision highp float;
 
--  uniform vec2 u_resolution;
--  uniform vec2 u_mouse;
--  uniform float u_time;
-+  uniform vec2 iResolution;
-+  uniform vec2 iMouse;
-+  uniform float iTime;
+-uniform vec2 u_resolution;
+-uniform vec2 u_mouse;
+-uniform float u_time;
++uniform vec2 iResolution;
++uniform vec2 iMouse;
++uniform float iTime;
 
-  //---insert shadertoy code here--
+//---insert shadertoy code here--
 
-  void main() {
-    mainImage(gl_FragColor, gl_FragCoord.xy);
-  }
-`;
+out vec4 outColor;
+
+void main() {
+  mainImage(outColor, gl_FragCoord.xy);
+}
 </code></pre>
 <p>and look them up by the new names</p>
 <pre class="prettyprint"><code class="lang-js">// look up uniform locations
@@ -602,6 +605,7 @@ in our shader above where it says <code>//---insert shadertoy code here--</code>
 </div>
 
 </p>
+<p>That&#39;s an extraordinarily beautiful image for having no data!</p>
 <p>I made the sample above only render when the mouse is over the canvas or when touched.
 This is because the math required
 to draw the image above is complex and slow and letting it run continuously would
@@ -617,7 +621,7 @@ image&quot;</em>. It&#39;s not the way to make performant WebGL.</p>
 <div class="webgl_center"><img src="resources/shadertoy-dolphin.png" style="width: 639px;"></div>
 
 <p>It&#39;s beautiful but it runs at about 19 frames a second in a tiny
-640x360 window on my medium powered laptop. Expand the window to fullscreen and it runs around
+640x360 window on my high powered laptop. Expand the window to fullscreen and it runs around
 2 or 3 frames per second. Testing on my higher spec desktop it still only hits 45 frames per
 second at 640x360 and maybe 10 fullscreen.</p>
 <p>Compare it to this game that&#39;s also fairly beautiful and yet runs at 30 to 60 frames per second
@@ -771,6 +775,7 @@ would be 2.5, 1.5
 <li><a href="/webgl/lessons/webgl-skybox.html">Skyboxes</a></li>
 <li><a href="/webgl/lessons/webgl-skinning.html">Skinning</a></li>
 <li><a href="/webgl/lessons/webgl-fog.html">Fog</a></li>
+<li><a href="/webgl/lessons/webgl-picking.html">Picking (clicking on stuff)</a></li>
         </ul>
   <li>Text</li>
         <ul>
@@ -784,6 +789,7 @@ would be 2.5, 1.5
         <ul>
           <li><a href="/webgl/lessons/webgl-smallest-programs.html">Smallest Programs</a></li>
 <li><a href="/webgl/lessons/webgl-drawing-without-data.html">Drawing Without Data</a></li>
+<li><a href="/webgl/lessons/webgl-shadertoy.html">Shadertoy</a></li>
 <li><a href="/webgl/lessons/webgl-pulling-vertices.html">Pulling Vertices</a></li>
         </ul>
   <li>Misc</li>
@@ -801,7 +807,7 @@ would be 2.5, 1.5
 <li><a href="/webgl/lessons/webgl-2d-vs-3d-library.html">2D vs 3D libraries</a></li>
 <li><a href="/webgl/lessons/webgl-anti-patterns.html">Anti-Patterns</a></li>
 <li><a href="/webgl/lessons/webgl-matrix-vs-math.html">WebGL Matrices vs Math Matrices</a></li>
-<li><a href="/webgl/lessons/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/webgl-precision-issues.html">Precision Issues</a></li>
 <li><a href="/webgl/lessons/webgl-tips.html#screenshot">Taking a screenshot</a></li>
 <li><a href="/webgl/lessons/webgl-tips.html#preservedrawingbuffer">Prevent the Canvas Being Cleared</a></li>
 <li><a href="/webgl/lessons/webgl-tips.html#tabindex">Get Keyboard Input From a Canvas</a></li>

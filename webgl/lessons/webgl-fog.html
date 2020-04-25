@@ -218,7 +218,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>Let&#39;s make a shader that does this. We&#39;ll use a textured cube from <a href="webgl-3d-textures.html">the article on textures</a>.</p>
 <p>Let&#39;s add the mixing to the fragment shader</p>
 <pre class="prettyprint"><code class="lang-glsl">#version 300 es
-precision mediump float;
+precision highp float;
 
 // Passed in from the vertex shader.
 in vec2 v_texcoord;
@@ -305,7 +305,7 @@ void main() {
 <p>We could write code to do that but GLSL has a function, <code>smoothstep</code> that does just that. You give it the min value, the max value, and the value to test. If the test value is less than or equal to the min value it returns 0. If the test value is greater than or equal to the max value it returns 1. If test is between those 2 values it returns something between 0 and 1 in proportion to where the test value is between min and max.</p>
 <p>So, it should be pretty easy to use that in our fragment shader to compute a fog amount</p>
 <pre class="prettyprint"><code class="lang-glsl">#version 300 es
-precision mediump float;
+precision highp float;
 
 // Passed in from the vertex shader.
 in vec2 v_texcoord;
@@ -469,7 +469,7 @@ void main() {
 </code></pre>
 <p>and then in the fragment shader we can use the position to compute the distance</p>
 <pre class="prettyprint"><code>#version 300 es
-precision mediump float;
+precision highp float;
 
 // Passed in from the vertex shader.
 in vec2 v_texcoord;
@@ -508,7 +508,7 @@ fogAmount = clamp(fogAmount, 0., 1.);
 </code></pre>
 <p>To use this we&#39;d change the fragment shader to something like</p>
 <pre class="prettyprint"><code class="lang-glsl">#version 300 es
-precision mediump float;
+precision highp float;
 
 // Passed in from the vertex shader.
 in vec2 v_texcoord;
@@ -644,6 +644,7 @@ void main() {
 <li><a href="/webgl/lessons/webgl-skybox.html">Skyboxes</a></li>
 <li><a href="/webgl/lessons/webgl-skinning.html">Skinning</a></li>
 <li><a href="/webgl/lessons/webgl-fog.html">Fog</a></li>
+<li><a href="/webgl/lessons/webgl-picking.html">Picking (clicking on stuff)</a></li>
         </ul>
   <li>Text</li>
         <ul>
@@ -657,6 +658,7 @@ void main() {
         <ul>
           <li><a href="/webgl/lessons/webgl-smallest-programs.html">Smallest Programs</a></li>
 <li><a href="/webgl/lessons/webgl-drawing-without-data.html">Drawing Without Data</a></li>
+<li><a href="/webgl/lessons/webgl-shadertoy.html">Shadertoy</a></li>
 <li><a href="/webgl/lessons/webgl-pulling-vertices.html">Pulling Vertices</a></li>
         </ul>
   <li>Misc</li>
@@ -674,7 +676,7 @@ void main() {
 <li><a href="/webgl/lessons/webgl-2d-vs-3d-library.html">2D vs 3D libraries</a></li>
 <li><a href="/webgl/lessons/webgl-anti-patterns.html">Anti-Patterns</a></li>
 <li><a href="/webgl/lessons/webgl-matrix-vs-math.html">WebGL Matrices vs Math Matrices</a></li>
-<li><a href="/webgl/lessons/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/webgl-precision-issues.html">Precision Issues</a></li>
 <li><a href="/webgl/lessons/webgl-tips.html#screenshot">Taking a screenshot</a></li>
 <li><a href="/webgl/lessons/webgl-tips.html#preservedrawingbuffer">Prevent the Canvas Being Cleared</a></li>
 <li><a href="/webgl/lessons/webgl-tips.html#tabindex">Get Keyboard Input From a Canvas</a></li>
