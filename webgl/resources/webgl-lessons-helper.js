@@ -176,10 +176,7 @@
     const options = opt_options || {};
 
     if (canvas) {
-      canvas.addEventListener('webglcontextlost', function(e) {
-          // the default is to do nothing. Preventing the default
-          // means allowing context to be restored
-          e.preventDefault();
+      canvas.addEventListener('webglcontextlost', function() {
           const div = document.createElement("div");
           div.className = "contextlost";
           div.innerHTML = '<div>Context Lost: Click To Reload</div>';
@@ -188,10 +185,12 @@
           });
           document.body.appendChild(div);
       });
+      /* we can't do this because of bug in Firefox
       canvas.addEventListener('webglcontextrestored', function() {
           // just reload the page. Easiest.
           window.location.reload();
       });
+      */
     }
 
     if (isInIFrame()) {
@@ -241,7 +240,7 @@
 
       const bounds = iframe.getBoundingClientRect();
       const isVisible = bounds.top < window.parent.innerHeight && bounds.bottom >= 0 &&
-                      bounds.left < window.parent.innerWidth && bounds.right >= 0;
+                        bounds.left < window.parent.innerWidth && bounds.right >= 0;
 
       return isVisible && isFrameVisible(window.parent);
     } catch (e) {

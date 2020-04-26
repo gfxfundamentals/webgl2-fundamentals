@@ -388,16 +388,17 @@
     const options = opt_options || {};
 
     if (canvas) {
-      canvas.addEventListener('webglcontextlost', function(e) {
+      canvas.addEventListener('webglcontextlost', function() {
           // the default is to do nothing. Preventing the default
           // means allowing context to be restored
-          e.preventDefault();
           addContextLostHTML();
       });
+      /* because of bug in firefox we can't auto restore
       canvas.addEventListener('webglcontextrestored', function() {
           // just reload the page. Easiest.
           window.location.reload();
       });
+      */
     }
 
     if (isInIFrame()) {
