@@ -109,5 +109,12 @@ module.exports = {
         "strict": "off",
       },
     },
+    {
+      "files": [ "webgl/webgl-load-obj-w-loader.html" ],
+      "parserOptions": {
+        "ecmaVersion": 9,
+        "sourceType": "module",
+      },
+    },
   ],
 };
