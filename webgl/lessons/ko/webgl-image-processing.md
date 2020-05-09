@@ -93,6 +93,9 @@ WebGL2는 텍스처 좌표를 사용하여 텍스처를 읽을수 있는 기능�
     +  gl.vertexAttribPointer(
     +      texCoordAttributeLocation, size, type, normalize, stride, offset)
     +
+    +  // Create a texture.
+    +  var texture = gl.createTexture();
+    +
     +  // 활성화된 텍스처 단위를 단위 0으로 만듭니다.
     +  // 즉 다른 모든 텍스처 명령에 영향을 미침니다.
     +  gl.activeTexture(gl.TEXTURE0 + 0);

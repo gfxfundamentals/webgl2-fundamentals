@@ -107,6 +107,9 @@ Once it loads we'll draw it.
     +  gl.vertexAttribPointer(
     +      texCoordAttributeLocation, size, type, normalize, stride, offset)
     +
+    +  // Create a texture.
+    +  var texture = gl.createTexture();
+    +
     +  // make unit 0 the active texture uint
     +  // (ie, the unit all other texture commands will affect
     +  gl.activeTexture(gl.TEXTURE0 + 0);
