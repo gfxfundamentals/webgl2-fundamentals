@@ -134,7 +134,7 @@ function main() {
       texcoordAttributeLocation, size, type, normalize, stride, offset);
 
   function requestCORSIfNotSameOrigin(img, url) {
-    if ((new URL(url)).origin !== window.location.origin) {
+    if ((new URL(url, window.location.href)).origin !== window.location.origin) {
       img.crossOrigin = "";
     }
   }

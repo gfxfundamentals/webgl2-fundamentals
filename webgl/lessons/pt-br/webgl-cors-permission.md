@@ -103,7 +103,7 @@ Podemos fazer uma função que verifique se a imagem que estamos tentando carreg
 então, define o atributo `crossOrigin`.
 
     function requestCORSIfNotSameOrigin(img, url) {
-      if ((new URL(url)).origin !== window.location.origin) {
+      if ((new URL(url, window.location.href)).origin !== window.location.origin) {
         img.crossOrigin = "";
       }
     }
