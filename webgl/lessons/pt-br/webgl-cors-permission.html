@@ -289,7 +289,7 @@ vai tornar as coisas muito mais lentas.</p>
 <p>Podemos fazer uma função que verifique se a imagem que estamos tentando carregar está na mesma origem e se não estiver,
 então, define o atributo <code>crossOrigin</code>.</p>
 <pre class="prettyprint"><code>function requestCORSIfNotSameOrigin(img, url) {
-  if ((new URL(url)).origin !== window.location.origin) {
+  if ((new URL(url, window.location.href)).origin !== window.location.origin) {
     img.crossOrigin = &quot;&quot;;
   }
 }
