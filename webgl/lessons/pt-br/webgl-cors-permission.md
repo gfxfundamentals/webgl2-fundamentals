@@ -96,7 +96,7 @@ dão permissão a todos. É por isso que definir a string como vazia funciona. T
 
 Por que não vemos sempre essa permissão? Porque pedir permissão realizaria 2 requisições HTTP, então é
 mais lento do que não perguntar. Se sabemos que estamos no mesmo domínio ou sabemos que não usaremos a imagem para nada,
-exceto img tags e/ou canvas2d, então não há motivos para configurar o `crossDomain` porque ele
+exceto img tags e/ou canvas2d, então não há motivos para configurar o `crossOrigin` porque ele
 vai tornar as coisas muito mais lentas.
 
 Podemos fazer uma função que verifique se a imagem que estamos tentando carregar está na mesma origem e se não estiver,
