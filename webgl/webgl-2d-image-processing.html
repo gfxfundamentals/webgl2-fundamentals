@@ -190,7 +190,11 @@ function render(image) {
       1.0,  0.0,
       1.0,  1.0,
   ]), gl.STATIC_DRAW);
+
+  // Turn on the attribute
   gl.enableVertexAttribArray(texCoordAttributeLocation);
+
+  // Tell the attribute how to get data out of texCoordBuffer (ARRAY_BUFFER)
   var size = 2;          // 2 components per iteration
   var type = gl.FLOAT;   // the data is 32bit floats
   var normalize = false; // don't normalize the data

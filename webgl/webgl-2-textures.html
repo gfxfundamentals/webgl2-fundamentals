@@ -143,11 +143,11 @@ function render(images) {
   // it (2 triangles)
   var positionBuffer = gl.createBuffer();
 
-  // Turn on the attribute
-  gl.enableVertexAttribArray(positionAttributeLocation);
-
   // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+  // Turn on the attribute
+  gl.enableVertexAttribArray(positionAttributeLocation);
 
   // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
   var size = 2;          // 2 components per iteration
@@ -169,7 +169,11 @@ function render(images) {
       1.0,  0.0,
       1.0,  1.0,
   ]), gl.STATIC_DRAW);
+
+  // Turn on the attribute
   gl.enableVertexAttribArray(texCoordAttributeLocation);
+
+  // Tell the attribute how to get data out of texcoordBuffer (ARRAY_BUFFER)
   var size = 2;          // 2 components per iteration
   var type = gl.FLOAT;   // the data is 32bit floats
   var normalize = false; // don't normalize the data
