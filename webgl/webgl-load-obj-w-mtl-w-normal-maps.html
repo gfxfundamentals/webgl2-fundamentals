@@ -380,7 +380,7 @@ async function main() {
         ambient * u_ambientLight +
         effectiveDiffuse * fakeLight +
         effectiveSpecular * pow(specularLight, shininess),
-        effectiveOpacity);// * 0.0 + vec4(normal * 0.5 + 0.5 + effectiveSpecular * pow(specularLight, shininess), 1);
+        effectiveOpacity);
   }
   `;
 
@@ -529,7 +529,7 @@ async function main() {
   const cameraTarget = [0, 0, 0];
   // figure out how far away to move the camera so we can likely
   // see the object.
-  const radius = m4.length(range) * 1.2;// * 0.3;
+  const radius = m4.length(range) * 1.2;
   const cameraPosition = m4.addVectors(cameraTarget, [
     0,
     0,

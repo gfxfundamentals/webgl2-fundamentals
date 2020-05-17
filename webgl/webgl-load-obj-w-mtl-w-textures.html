@@ -231,19 +231,6 @@ function parseMTL(text) {
   return materials;
 }
 
-function makeIndexedIndicesFn(arrays) {
-  const indices = arrays.indices;
-  let ndx = 0;
-  const fn = function() {
-    return indices[ndx++];
-  };
-  fn.reset = function() {
-    ndx = 0;
-  };
-  fn.numElements = indices.length;
-  return fn;
-}
-
 async function main() {
   // Get A WebGL context
   /** @type {HTMLCanvasElement} */
