@@ -4,18 +4,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>WebGL2 - load obj - loader</title>
+<title>WebGL2 - load obj - w mtl, no textures</title>
 <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
-<style>
-  body {
-    margin: 0;
-  }
-  canvas {
-    display: block;
-    width: 100vw;
-    height: 100vh;
-  }
-</style>
 </head>
 <body>
 <canvas id="canvas"></canvas>
@@ -27,8 +17,8 @@ For more info see https://webgl2fundamentals.org/webgl/lessons/webgl-less-code-m
 -->
 <script src="resources/twgl-full.min.js"></script>
 <script src="resources/m4.js"></script>
-<script type="module">
-import * as dragAndDrop from './resources/drag-and-drop.js';
+<script>
+"use strict";
 
 // This is not a full .obj parser.
 // see http://paulbourke.net/dataformats/obj/
@@ -38,12 +28,14 @@ function parseOBJ(text) {
   const objPositions = [[0, 0, 0]];
   const objTexcoords = [[0, 0]];
   const objNormals = [[0, 0, 0]];
+  const objColors = [[0, 0, 0]];
 
   // same order as `f` indices
   const objVertexData = [
     objPositions,
     objTexcoords,
     objNormals,
+    objColors,
   ];
 
   // same order as `f` indices
@@ -51,6 +43,7 @@ function parseOBJ(text) {
     [],   // positions
     [],   // texcoords
     [],   // normals
+    [],   // colors
   ];
 
   const materialLibs = [];
@@ -75,10 +68,12 @@ function parseOBJ(text) {
       const position = [];
       const texcoord = [];
       const normal = [];
+      const color = [];
       webglVertexData = [
         position,
         texcoord,
         normal,
+        color,
       ];
       geometry = {
         object,
@@ -88,6 +83,7 @@ function parseOBJ(text) {
           position,
           texcoord,
           normal,
+          color,
         },
       };
       geometries.push(geometry);
@@ -103,12 +99,23 @@ function parseOBJ(text) {
       const objIndex = parseInt(objIndexStr);
       const index = objIndex + (objIndex >= 0 ? 0 : objVertexData[i].length);
       webglVertexData[i].push(...objVertexData[i][index]);
+      // if this is the position index (index 0) and we parsed
+      // vertex colors then copy the vertex colors to the webgl vertex color data
+      if (i === 0 && objColors.length > 1) {
+        geometry.data.color.push(...objColors[index]);
+      }
     });
   }
 
   const keywords = {
     v(parts) {
-      objPositions.push(parts.map(parseFloat));
+      // if there are more than 3 values here they are vertex colors
+      if (parts.length > 3) {
+        objPositions.push(parts.slice(0, 3).map(parseFloat));
+        objColors.push(parts.slice(3).map(parseFloat));
+      } else {
+        objPositions.push(parts.map(parseFloat));
+      }
     },
     vn(parts) {
       objNormals.push(parts.map(parseFloat));
@@ -172,30 +179,43 @@ function parseOBJ(text) {
   };
 }
 
-function getExtents(positions) {
-  const min = positions.slice(0, 3);
-  const max = positions.slice(0, 3);
-  for (let i = 3; i < positions.length; i += 3) {
-    for (let j = 0; j < 3; ++j) {
-      const v = positions[i + j];
-      min[j] = Math.min(v, min[j]);
-      max[j] = Math.max(v, max[j]);
-    }
-  }
-  return {min, max};
-}
+function parseMTL(text) {
+  const materials = {};
+  let material;
 
-function getGeometriesExtents(geometries) {
-  return geometries.reduce(({min, max}, {data}) => {
-    const minMax = getExtents(data.position);
-    return {
-      min: min.map((min, ndx) => Math.min(minMax.min[ndx], min)),
-      max: max.map((max, ndx) => Math.max(minMax.max[ndx], max)),
-    };
-  }, {
-    min: Array(3).fill(Number.POSITIVE_INFINITY),
-    max: Array(3).fill(Number.NEGATIVE_INFINITY),
-  });
+  const keywords = {
+    newmtl(parts) {
+      material = {};
+      materials[parts[0]] = material;
+    },
+    /* eslint brace-style:0 */
+    Ns(parts)     { material.shininess      = parseFloat(parts[0]); },
+    Ka(parts)     { material.ambient        = parts.map(parseFloat); },
+    Kd(parts)     { material.diffuse        = parts.map(parseFloat); },
+    Ks(parts)     { material.specular       = parts.map(parseFloat); },
+    Ke(parts)     { material.emissive       = parts.map(parseFloat); },
+    Ni(parts)     { material.opticalDensity = parseFloat(parts[0]); },
+    d(parts)      { material.opacity        = parseFloat(parts[0]); },
+    illum(parts)  { material.illum          = parseInt(parts[0]); },
+  };
+
+  const lines = text.split('\n');
+  for (let lineNo = 0; lineNo < lines.length; ++lineNo) {
+    const line = lines[lineNo].trim();
+    if (line === '' || line.startsWith('#')) {
+      continue;
+    }
+    const parts = line.split(/\s+/);
+    const keyword = parts.shift();
+    const handler = keywords[keyword];
+    if (!handler) {
+      console.warn('unhandled keyword:', keyword);  // eslint-disable-line no-console
+      continue;
+    }
+    handler(parts);
+  }
+
+  return materials;
 }
 
 async function main() {
@@ -213,16 +233,23 @@ async function main() {
   const vs = `#version 300 es
   in vec4 a_position;
   in vec3 a_normal;
+  in vec4 a_color;
 
   uniform mat4 u_projection;
   uniform mat4 u_view;
   uniform mat4 u_world;
+  uniform vec3 u_viewWorldPosition;
 
   out vec3 v_normal;
+  out vec3 v_surfaceToView;
+  out vec4 v_color;
 
   void main() {
-    gl_Position = u_projection * u_view * u_world * a_position;
+    vec4 worldPosition = u_world * a_position;
+    gl_Position = u_projection * u_view * worldPosition;
+    v_surfaceToView = u_viewWorldPosition - worldPosition.xyz;
     v_normal = mat3(u_world) * a_normal;
+    v_color = a_color;
   }
   `;
 
@@ -230,16 +257,38 @@ async function main() {
   precision highp float;
 
   in vec3 v_normal;
+  in vec3 v_surfaceToView;
+  in vec4 v_color;
 
-  uniform vec4 u_diffuse;
+  uniform vec3 diffuse;
+  uniform vec3 ambient;
+  uniform vec3 emissive;
+  uniform vec3 specular;
+  uniform float shininess;
+  uniform float opacity;
   uniform vec3 u_lightDirection;
+  uniform vec3 u_ambientLight;
 
   out vec4 outColor;
 
   void main () {
     vec3 normal = normalize(v_normal);
+
+    vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+    vec3 halfVector = normalize(u_lightDirection + surfaceToViewDirection);
+
     float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
-    outColor = vec4(u_diffuse.rgb * fakeLight, u_diffuse.a);
+    float specularLight = clamp(dot(normal, halfVector), 0.0, 1.0);
+
+    vec3 effectiveDiffuse = diffuse.rgb * v_color.rgb;
+    float effectiveOpacity = v_color.a * opacity;
+
+    outColor = vec4(
+        emissive +
+        ambient * u_ambientLight +
+        effectiveDiffuse * fakeLight +
+        specular * pow(specularLight, shininess),
+        effectiveOpacity);
   }
   `;
 
@@ -247,85 +296,100 @@ async function main() {
   // compiles and links the shaders, looks up attribute and uniform locations
   const meshProgramInfo = twgl.createProgramInfo(gl, [vs, fs]);
 
-  let parts = [];
-  let objOffset = [0, 0, 0];
-  let cameraTarget = [0, 0, 0];
-  let cameraPosition = [0, 0, 0];
-  let zNear = 1;
-  let zFar = 10;
+  const objHref = 'resources/models/chair/chair.obj';  /* webglfundamentals: url */
+  const response = await fetch(objHref);
+  const text = await response.text();
+  const obj = parseOBJ(text);
+  const baseHref = new URL(objHref, window.location.href);
+  const matTexts = await Promise.all(obj.materialLibs.map(async filename => {
+    const matHref = new URL(filename, baseHref).href;
+    const response = await fetch(matHref);
+    return await response.text();
+  }));
+  const materials = parseMTL(matTexts.join('\n'));
 
-  function setupObj(obj) {
-    // delete the old parts.
-    for (const {bufferInfo, vao} of parts) {
-      gl.deleteVertexArray(vao);
-      for (const {buffer} of Object.values(bufferInfo.attribs)) {
-        gl.deleteBuffer(buffer);
+  const parts = obj.geometries.map(({material, data}) => {
+    // Because data is just named arrays like this
+    //
+    // {
+    //   position: [...],
+    //   texcoord: [...],
+    //   normal: [...],
+    // }
+    //
+    // and because those names match the attributes in our vertex
+    // shader we can pass it directly into `createBufferInfoFromArrays`
+    // from the article "less code more fun".
+
+    if (data.color) {
+      if (data.position.length === data.color.length) {
+        // it's 3. The our helper library assumes 4 so we need
+        // to tell it there are only 3.
+        data.color = { numComponents: 3, data: data.color };
       }
+    } else {
+      // there are no vertex colors so just use constant white
+      data.color = { value: [1, 1, 1, 1] };
     }
 
-    parts = obj.geometries.map(({data}) => {
-      // Because data is just named arrays like this
-      //
-      // {
-      //   position: [...],
-      //   texcoord: [...],
-      //   normal: [...],
-      // }
-      //
-      // and because those names match the attributes in our vertex
-      // shader we can pass it directly into `createBufferInfoFromArrays`
-      // from the article "less code more fun".
-
-      // create a buffer for each array by calling
-      // gl.createBuffer, gl.bindBuffer, gl.bufferData
-      const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
-      const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
-      return {
-        material: {
-          u_diffuse: [Math.random(), Math.random(), Math.random(), 1],
-        },
-        bufferInfo,
-        vao,
-      };
-    });
-
-    const extents = getGeometriesExtents(obj.geometries);
-    const range = m4.subtractVectors(extents.max, extents.min);
-    // amount to move the object so its center is at the origin
-    objOffset = m4.scaleVector(
-        m4.addVectors(
-          extents.min,
-          m4.scaleVector(range, 0.5)),
-        -1);
-    cameraTarget = [0, 0, 0];
-    // figure out how far away to move the camera so we can likely
-    // see the object.
-    const radius = m4.length(range) * 1.2;
-    cameraPosition = m4.addVectors(cameraTarget, [
-      0,
-      0,
-      radius,
-    ]);
-    // Set zNear and zFar to something hopefully appropriate
-    // for the size of this object.
-    zNear = radius / 100;
-    zFar = radius * 3;
-  }
-
-  dragAndDrop.setup({msg: 'Drop .OBJ file here'});
-  dragAndDrop.onDropFile(readOBJFile);
-
-  function readOBJFile(file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const obj = parseOBJ(e.target.result);
-      setupObj(obj);
+    // create a buffer for each array by calling
+    // gl.createBuffer, gl.bindBuffer, gl.bufferData
+    const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
+    const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
+    return {
+      material: materials[material],
+      bufferInfo,
+      vao,
     };
-    reader.readAsText(file);
+  });
+
+  function getExtents(positions) {
+    const min = positions.slice(0, 3);
+    const max = positions.slice(0, 3);
+    for (let i = 3; i < positions.length; i += 3) {
+      for (let j = 0; j < 3; ++j) {
+        const v = positions[i + j];
+        min[j] = Math.min(v, min[j]);
+        max[j] = Math.max(v, max[j]);
+      }
+    }
+    return {min, max};
   }
 
+  function getGeometriesExtents(geometries) {
+    return geometries.reduce(({min, max}, {data}) => {
+      const minMax = getExtents(data.position);
+      return {
+        min: min.map((min, ndx) => Math.min(minMax.min[ndx], min)),
+        max: max.map((max, ndx) => Math.max(minMax.max[ndx], max)),
+      };
+    }, {
+      min: Array(3).fill(Number.POSITIVE_INFINITY),
+      max: Array(3).fill(Number.NEGATIVE_INFINITY),
+    });
+  }
 
-
+  const extents = getGeometriesExtents(obj.geometries);
+  const range = m4.subtractVectors(extents.max, extents.min);
+  // amount to move the object so its center is at the origin
+  const objOffset = m4.scaleVector(
+      m4.addVectors(
+        extents.min,
+        m4.scaleVector(range, 0.5)),
+      -1);
+  const cameraTarget = [0, 0, 0];
+  // figure out how far away to move the camera so we can likely
+  // see the object.
+  const radius = m4.length(range) * 1.2;
+  const cameraPosition = m4.addVectors(cameraTarget, [
+    0,
+    0,
+    radius,
+  ]);
+  // Set zNear and zFar to something hopefully appropriate
+  // for the size of this object.
+  const zNear = radius / 100;
+  const zFar = radius * 3;
 
   function degToRad(deg) {
     return deg * Math.PI / 180;
@@ -353,6 +417,7 @@ async function main() {
       u_lightDirection: m4.normalize([-1, 3, 5]),
       u_view: view,
       u_projection: projection,
+      u_viewWorldPosition: cameraPosition,
     };
 
     gl.useProgram(meshProgramInfo.program);
@@ -371,8 +436,7 @@ async function main() {
       // calls gl.uniform
       twgl.setUniforms(meshProgramInfo, {
         u_world,
-        u_diffuse: material.u_diffuse,
-      });
+      }, material);
       // calls gl.drawArrays or gl.drawElements
       twgl.drawBufferInfo(gl, bufferInfo);
     }

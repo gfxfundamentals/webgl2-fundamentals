@@ -4,8 +4,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>WebGL2 - load obj</title>
+<title>WebGL2 - load obj - w/mtl, textures</title>
 <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
+<style>
+  body {
+    margin: 0;
+  }
+  canvas {
+    width: 100vw;
+    height: 100vh;
+    display: block;
+  }
+</style>
 </head>
 <body>
 <canvas id="canvas"></canvas>
@@ -28,12 +38,14 @@ function parseOBJ(text) {
   const objPositions = [[0, 0, 0]];
   const objTexcoords = [[0, 0]];
   const objNormals = [[0, 0, 0]];
+  const objColors = [[0, 0, 0]];
 
   // same order as `f` indices
   const objVertexData = [
     objPositions,
     objTexcoords,
     objNormals,
+    objColors,
   ];
 
   // same order as `f` indices
@@ -41,6 +53,7 @@ function parseOBJ(text) {
     [],   // positions
     [],   // texcoords
     [],   // normals
+    [],   // colors
   ];
 
   const materialLibs = [];
@@ -65,10 +78,12 @@ function parseOBJ(text) {
       const position = [];
       const texcoord = [];
       const normal = [];
+      const color = [];
       webglVertexData = [
         position,
         texcoord,
         normal,
+        color,
       ];
       geometry = {
         object,
@@ -78,6 +93,7 @@ function parseOBJ(text) {
           position,
           texcoord,
           normal,
+          color,
         },
       };
       geometries.push(geometry);
@@ -93,12 +109,23 @@ function parseOBJ(text) {
       const objIndex = parseInt(objIndexStr);
       const index = objIndex + (objIndex >= 0 ? 0 : objVertexData[i].length);
       webglVertexData[i].push(...objVertexData[i][index]);
+      // if this is the position index (index 0) and we parsed
+      // vertex colors then copy the vertex colors to the webgl vertex color data
+      if (i === 0 && objColors.length > 1) {
+        geometry.data.color.push(...objColors[index]);
+      }
     });
   }
 
   const keywords = {
     v(parts) {
-      objPositions.push(parts.map(parseFloat));
+      // if there are more than 3 values here they are vertex colors
+      if (parts.length > 3) {
+        objPositions.push(parts.slice(0, 3).map(parseFloat));
+        objColors.push(parts.slice(3).map(parseFloat));
+      } else {
+        objPositions.push(parts.map(parseFloat));
+      }
     },
     vn(parts) {
       objNormals.push(parts.map(parseFloat));
@@ -162,6 +189,61 @@ function parseOBJ(text) {
   };
 }
 
+function parseMTL(text) {
+  const materials = {};
+  let material;
+
+  const keywords = {
+    newmtl(parts) {
+      material = {};
+      materials[parts[0]] = material;
+    },
+    /* eslint brace-style:0 */
+    Ns(parts)       { material.shininess      = parseFloat(parts[0]); },
+    Ka(parts)       { material.ambient        = parts.map(parseFloat); },
+    Kd(parts)       { material.diffuse        = parts.map(parseFloat); },
+    Ks(parts)       { material.specular       = parts.map(parseFloat); },
+    Ke(parts)       { material.emissive       = parts.map(parseFloat); },
+    map_Kd(parts)   { material.diffuseMap     = parts[0]; },
+    map_Ns(parts)   { material.specularMap    = parts[0]; },
+    map_Bump(parts) { material.normalMap      = parts[0]; },
+    Ni(parts)       { material.opticalDensity = parseFloat(parts[0]); },
+    d(parts)        { material.opacity        = parseFloat(parts[0]); },
+    illum(parts)    { material.illum          = parseInt(parts[0]); },
+  };
+
+  const lines = text.split('\n');
+  for (let lineNo = 0; lineNo < lines.length; ++lineNo) {
+    const line = lines[lineNo].trim();
+    if (line === '' || line.startsWith('#')) {
+      continue;
+    }
+    const parts = line.split(/\s+/);
+    const keyword = parts.shift();
+    const handler = keywords[keyword];
+    if (!handler) {
+      console.warn('unhandled keyword:', keyword);  // eslint-disable-line no-console
+      continue;
+    }
+    handler(parts);
+  }
+
+  return materials;
+}
+
+function makeIndexedIndicesFn(arrays) {
+  const indices = arrays.indices;
+  let ndx = 0;
+  const fn = function() {
+    return indices[ndx++];
+  };
+  fn.reset = function() {
+    ndx = 0;
+  };
+  fn.numElements = indices.length;
+  return fn;
+}
+
 async function main() {
   // Get A WebGL context
   /** @type {HTMLCanvasElement} */
@@ -177,16 +259,26 @@ async function main() {
   const vs = `#version 300 es
   in vec4 a_position;
   in vec3 a_normal;
+  in vec2 a_texcoord;
+  in vec4 a_color;
 
   uniform mat4 u_projection;
   uniform mat4 u_view;
   uniform mat4 u_world;
+  uniform vec3 u_viewWorldPosition;
 
   out vec3 v_normal;
+  out vec3 v_surfaceToView;
+  out vec2 v_texcoord;
+  out vec4 v_color;
 
   void main() {
-    gl_Position = u_projection * u_view * u_world * a_position;
+    vec4 worldPosition = u_world * a_position;
+    gl_Position = u_projection * u_view * worldPosition;
+    v_surfaceToView = u_viewWorldPosition - worldPosition.xyz;
     v_normal = mat3(u_world) * a_normal;
+    v_texcoord = a_texcoord;
+    v_color = a_color;
   }
   `;
 
@@ -194,16 +286,41 @@ async function main() {
   precision highp float;
 
   in vec3 v_normal;
+  in vec3 v_surfaceToView;
+  in vec2 v_texcoord;
+  in vec4 v_color;
 
-  uniform vec4 u_diffuse;
+  uniform vec3 diffuse;
+  uniform sampler2D diffuseMap;
+  uniform vec3 ambient;
+  uniform vec3 emissive;
+  uniform vec3 specular;
+  uniform float shininess;
+  uniform float opacity;
   uniform vec3 u_lightDirection;
+  uniform vec3 u_ambientLight;
 
   out vec4 outColor;
 
   void main () {
     vec3 normal = normalize(v_normal);
+
+    vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+    vec3 halfVector = normalize(u_lightDirection + surfaceToViewDirection);
+
     float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
-    outColor = vec4(u_diffuse.rgb * fakeLight, u_diffuse.a);
+    float specularLight = clamp(dot(normal, halfVector), 0.0, 1.0);
+
+    vec4 diffuseMapColor = texture(diffuseMap, v_texcoord);
+    vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb * v_color.rgb;
+    float effectiveOpacity = opacity * diffuseMapColor.a * v_color.a;
+
+    outColor = vec4(
+        emissive +
+        ambient * u_ambientLight +
+        effectiveDiffuse * fakeLight +
+        specular * pow(specularLight, shininess),
+        effectiveOpacity);
   }
   `;
 
@@ -211,11 +328,50 @@ async function main() {
   // compiles and links the shaders, looks up attribute and uniform locations
   const meshProgramInfo = twgl.createProgramInfo(gl, [vs, fs]);
 
-  const response = await fetch('resources/models/chair/chair.obj');  /* webglfundamentals: url */
+//  const objHref = 'resources/models/chair/chair.obj';  /* webglfundamentals: url */
+//  const objHref = 'resources/models/FlorenceBridge-not-open-source/PonteVecchio.obj';
+//  const objHref = 'resources/models/hanse388_006.obj';
+  const objHref = 'resources/models/windmill/windmill.obj';  /* webglfundamentals: url */
+  const response = await fetch(objHref);
   const text = await response.text();
   const obj = parseOBJ(text);
+  const baseHref = new URL(objHref, window.location.href);
+  const matTexts = await Promise.all(obj.materialLibs.map(async filename => {
+    const matHref = new URL(filename, baseHref).href;
+    const response = await fetch(matHref);
+    return await response.text();
+  }));
+  const materials = parseMTL(matTexts.join('\n'));
 
-  const parts = obj.geometries.map(({data}) => {
+  const textures = {
+    defaultWhite: twgl.createTexture(gl, {src: [255, 255, 255, 255]}),
+  };
+
+  // load texture for materials
+  for (const material of Object.values(materials)) {
+    Object.entries(material)
+      .filter(([key]) => key.endsWith('Map'))
+      .forEach(([key, filename]) => {
+        let texture = textures[filename];
+        if (!texture) {
+          const textureHref = new URL(filename, baseHref).href;
+          texture = twgl.createTexture(gl, {src: textureHref, flipY: true});
+          textures[filename] = texture;
+        }
+        material[key] = texture;
+      });
+  }
+
+  const defaultMaterial = {
+    diffuse: [1, 1, 1],
+    diffuseMap: textures.defaultWhite,
+    ambient: [0, 0, 0],
+    specular: [1, 1, 1],
+    shininess: 400,
+    opacity: 1,
+  };
+
+  const parts = obj.geometries.map(({material, data}) => {
     // Because data is just named arrays like this
     //
     // {
@@ -228,13 +384,25 @@ async function main() {
     // shader we can pass it directly into `createBufferInfoFromArrays`
     // from the article "less code more fun".
 
+    if (data.color) {
+      if (data.position.length === data.color.length) {
+        // it's 3. The our helper library assumes 4 so we need
+        // to tell it there are only 3.
+        data.color = { numComponents: 3, data: data.color };
+      }
+    } else {
+      // there are no vertex colors so just use constant white
+      data.color = { value: [1, 1, 1, 1] };
+    }
+
     // create a buffer for each array by calling
     // gl.createBuffer, gl.bindBuffer, gl.bufferData
     const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
     const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
     return {
       material: {
-        u_diffuse: [Math.random(), Math.random(), Math.random(), 1],
+        ...defaultMaterial,
+        ...materials[material],
       },
       bufferInfo,
       vao,
@@ -315,6 +483,7 @@ async function main() {
       u_lightDirection: m4.normalize([-1, 3, 5]),
       u_view: view,
       u_projection: projection,
+      u_viewWorldPosition: cameraPosition,
     };
 
     gl.useProgram(meshProgramInfo.program);
@@ -333,8 +502,7 @@ async function main() {
       // calls gl.uniform
       twgl.setUniforms(meshProgramInfo, {
         u_world,
-        u_diffuse: material.u_diffuse,
-      });
+      }, material);
       // calls gl.drawArrays or gl.drawElements
       twgl.drawBufferInfo(gl, bufferInfo);
     }
