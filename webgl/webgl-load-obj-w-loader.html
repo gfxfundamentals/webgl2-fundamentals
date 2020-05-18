@@ -27,8 +27,10 @@ For more info see https://webgl2fundamentals.org/webgl/lessons/webgl-less-code-m
 -->
 <script src="resources/twgl-full.min.js"></script>
 <script src="resources/m4.js"></script>
+<script src="resources/m3.js"></script>
 <script type="module">
 import * as dragAndDrop from './resources/drag-and-drop.js';
+import {unzip} from '../3rdparty/unzipit.module.js';
 
 // This is not a full .obj parser.
 // see http://paulbourke.net/dataformats/obj/
@@ -38,12 +40,14 @@ function parseOBJ(text) {
   const objPositions = [[0, 0, 0]];
   const objTexcoords = [[0, 0]];
   const objNormals = [[0, 0, 0]];
+  const objColors = [[0, 0, 0]];
 
   // same order as `f` indices
   const objVertexData = [
     objPositions,
     objTexcoords,
     objNormals,
+    objColors,
   ];
 
   // same order as `f` indices
@@ -51,6 +55,7 @@ function parseOBJ(text) {
     [],   // positions
     [],   // texcoords
     [],   // normals
+    [],   // colors
   ];
 
   const materialLibs = [];
@@ -75,10 +80,12 @@ function parseOBJ(text) {
       const position = [];
       const texcoord = [];
       const normal = [];
+      const color = [];
       webglVertexData = [
         position,
         texcoord,
         normal,
+        color,
       ];
       geometry = {
         object,
@@ -88,6 +95,7 @@ function parseOBJ(text) {
           position,
           texcoord,
           normal,
+          color,
         },
       };
       geometries.push(geometry);
@@ -103,12 +111,23 @@ function parseOBJ(text) {
       const objIndex = parseInt(objIndexStr);
       const index = objIndex + (objIndex >= 0 ? 0 : objVertexData[i].length);
       webglVertexData[i].push(...objVertexData[i][index]);
+      // if this is the position index (index 0) and we parsed
+      // vertex colors then copy the vertex colors to the webgl vertex color data
+      if (i === 0 && objColors.length > 1) {
+        geometry.data.color.push(...objColors[index]);
+      }
     });
   }
 
   const keywords = {
     v(parts) {
-      objPositions.push(parts.map(parseFloat));
+      // if there are more than 3 values here they are vertex colors
+      if (parts.length > 3) {
+        objPositions.push(parts.slice(0, 3).map(parseFloat));
+        objColors.push(parts.slice(3).map(parseFloat));
+      } else {
+        objPositions.push(parts.map(parseFloat));
+      }
     },
     vn(parts) {
       objNormals.push(parts.map(parseFloat));
@@ -127,37 +146,44 @@ function parseOBJ(text) {
       }
     },
     s: noop,    // smoothing group
-    mtllib(parts) {
-      materialLibs.push(...parts);
+    mtllib(parts, unparsedArgs) {
+      // the spec says there can be multiple files here
+      // but I found one with a space in the filename
+      materialLibs.push(unparsedArgs);
     },
-    usemtl(parts) {
-      material = parts[0];
+    usemtl(parts, unparsedArgs) {
+      material = unparsedArgs;
       newGeometry();
     },
     g(parts) {
       groups = parts;
       newGeometry();
     },
-    o(parts) {
-      object = parts[0];
+    o(parts, unparsedArgs) {
+      object = unparsedArgs;
       newGeometry();
     },
   };
 
+  const keywordRE = /(\w*)(?: )*(.*)/;
   const lines = text.split('\n');
   for (let lineNo = 0; lineNo < lines.length; ++lineNo) {
     const line = lines[lineNo].trim();
     if (line === '' || line.startsWith('#')) {
       continue;
     }
-    const parts = line.split(/\s+/);
-    const keyword = parts.shift();
+    const m = keywordRE.exec(line);
+    if (!m) {
+      continue;
+    }
+    const [, keyword, unparsedArgs] =  m;
+    const parts = line.split(/\s+/).slice(1);
     const handler = keywords[keyword];
     if (!handler) {
       console.warn('unhandled keyword:', keyword);  // eslint-disable-line no-console
       continue;
     }
-    handler(parts);
+    handler(parts, unparsedArgs);
   }
 
   // remove any arrays that have no entries.
@@ -170,6 +196,116 @@ function parseOBJ(text) {
     geometries,
     materialLibs,
   };
+}
+
+function parseMapArgs(unparsedArgs) {
+  // TODO: handle options
+  return unparsedArgs;
+}
+
+function parseMTL(text) {
+  const materials = {};
+  let material;
+
+  const keywords = {
+    newmtl(parts) {
+      material = {};
+      materials[parts[0]] = material;
+    },
+    /* eslint brace-style:0 */
+    Ns(parts)       { material.shininess      = parseFloat(parts[0]); },
+    Ka(parts)       { material.ambient        = parts.map(parseFloat); },
+    Kd(parts)       { material.diffuse        = parts.map(parseFloat); },
+    Ks(parts)       { material.specular       = parts.map(parseFloat); },
+    Ke(parts)       { material.emissive       = parts.map(parseFloat); },
+    map_Kd(parts, unparsedArgs)   { material.diffuseMap = parseMapArgs(unparsedArgs); },
+    map_Ns(parts, unparsedArgs)   { material.specularMap = parseMapArgs(unparsedArgs); },
+    map_Bump(parts, unparsedArgs) { material.normalMap = parseMapArgs(unparsedArgs); },
+    Ni(parts)       { material.opticalDensity = parseFloat(parts[0]); },
+    d(parts)        { material.opacity        = parseFloat(parts[0]); },
+    illum(parts)    { material.illum          = parseInt(parts[0]); },
+  };
+
+  const keywordRE = /(\w*)(?: )*(.*)/;
+  const lines = text.split('\n');
+  for (let lineNo = 0; lineNo < lines.length; ++lineNo) {
+    const line = lines[lineNo].trim();
+    if (line === '' || line.startsWith('#')) {
+      continue;
+    }
+    const m = keywordRE.exec(line);
+    if (!m) {
+      continue;
+    }
+    const [, keyword, unparsedArgs] = m;
+    const parts = line.split(/\s+/).slice(1);
+    const handler = keywords[keyword];
+    if (!handler) {
+      console.warn('unhandled keyword:', keyword);  // eslint-disable-line no-console
+      continue;
+    }
+    handler(parts, unparsedArgs);
+  }
+
+  return materials;
+}
+
+function makeIndexIterator(indices) {
+  let ndx = 0;
+  const fn = () => indices[ndx++];
+  fn.reset = () => { ndx = 0; };
+  fn.numElements = indices.length;
+  return fn;
+}
+
+function makeUnindexedIterator(positions) {
+  let ndx = 0;
+  const fn = () => ndx++;
+  fn.reset = () => { ndx = 0; };
+  fn.numElements = positions.length / 3;
+  return fn;
+}
+
+const subtractVector2 = (a, b) => a.map((v, ndx) => v - b[ndx]);
+
+function generateTangents(position, texcoord, indices) {
+  const getNextIndex = indices ? makeIndexIterator(indices) : makeUnindexedIterator(position);
+  const numFaceVerts = getNextIndex.numElements;
+  const numFaces = numFaceVerts / 3;
+
+  const tangents = [];
+  for (let i = 0; i < numFaces; ++i) {
+    const n1 = getNextIndex();
+    const n2 = getNextIndex();
+    const n3 = getNextIndex();
+
+    const p1 = position.slice(n1 * 3, n1 * 3 + 3);
+    const p2 = position.slice(n2 * 3, n2 * 3 + 3);
+    const p3 = position.slice(n3 * 3, n3 * 3 + 3);
+
+    const uv1 = texcoord.slice(n1 * 2, n1 * 2 + 2);
+    const uv2 = texcoord.slice(n2 * 2, n2 * 2 + 2);
+    const uv3 = texcoord.slice(n3 * 2, n3 * 2 + 2);
+
+    const dp12 = m4.subtractVectors(p2, p1);
+    const dp13 = m4.subtractVectors(p3, p1);
+
+    const duv12 = subtractVector2(uv2, uv1);
+    const duv13 = subtractVector2(uv3, uv1);
+
+
+    const f = 1.0 / (duv12[0] * duv13[1] - duv13[0] * duv12[1]);
+    const tangent = Number.isFinite(f)
+      ? m4.normalize(m4.scaleVector(m4.subtractVectors(
+          m4.scaleVector(dp12, duv13[1]),
+          m4.scaleVector(dp13, duv12[1]),
+        ), f))
+      : [1, 0, 0];
+
+    tangents.push(...tangent, ...tangent, ...tangent);
+  }
+
+  return tangents;
 }
 
 function getExtents(positions) {
@@ -198,6 +334,46 @@ function getGeometriesExtents(geometries) {
   });
 }
 
+function create1PixelTexture(gl, pixel) {
+  const texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+                new Uint8Array(pixel));
+  return texture;
+}
+
+async function loadTextureFromZip(gl, texture, zipEntry) {
+  const blob = await zipEntry.blob(`image/${getExtension(zipEntry.name).substr(1).toLowerCase()}`);
+  const url = URL.createObjectURL(url);
+  // Asynchronously load an image
+  const image = new Image();
+  image.src = url;
+  image.addEventListener('load', function() {
+    // Now that the image has loaded make copy it to the texture.
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+
+    // Check if the image is a power of 2 in both dimensions.
+    if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+       // Yes, it's a power of 2. Generate mips.
+       gl.generateMipmap(gl.TEXTURE_2D);
+    } else {
+       // No, it's not a power of 2. Turn of mips and set wrapping to clamp to edge
+       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    }
+    URL.revokeObjectURL(url);
+  });
+}
+
+function loadTexture(gl, zipEntry) {
+  const texture = create1PixelTexture(gl, [128, 192, 255, 255]);
+  loadTextureFromZip(gl, texture, zipEntry);
+  return texture;
+}
+
 async function main() {
   // Get A WebGL context
   /** @type {HTMLCanvasElement} */
@@ -213,16 +389,32 @@ async function main() {
   const vs = `#version 300 es
   in vec4 a_position;
   in vec3 a_normal;
+  in vec3 a_tangent;
+  in vec2 a_texcoord;
+  in vec4 a_color;
 
   uniform mat4 u_projection;
   uniform mat4 u_view;
   uniform mat4 u_world;
+  uniform vec3 u_viewWorldPosition;
 
   out vec3 v_normal;
+  out vec3 v_tangent;
+  out vec3 v_surfaceToView;
+  out vec2 v_texcoord;
+  out vec4 v_color;
 
   void main() {
-    gl_Position = u_projection * u_view * u_world * a_position;
-    v_normal = mat3(u_world) * a_normal;
+    vec4 worldPosition = u_world * a_position;
+    gl_Position = u_projection * u_view * worldPosition;
+    v_surfaceToView = u_viewWorldPosition - worldPosition.xyz;
+
+    mat3 normalMat = mat3(u_world);
+    v_normal = normalize(normalMat * a_normal);
+    v_tangent = normalize(normalMat * a_tangent);
+
+    v_texcoord = a_texcoord;
+    v_color = a_color;
   }
   `;
 
@@ -230,22 +422,62 @@ async function main() {
   precision highp float;
 
   in vec3 v_normal;
+  in vec3 v_tangent;
+  in vec3 v_surfaceToView;
+  in vec2 v_texcoord;
+  in vec4 v_color;
 
-  uniform vec4 u_diffuse;
+  uniform vec3 diffuse;
+  uniform sampler2D diffuseMap;
+  uniform vec3 ambient;
+  uniform vec3 emissive;
+  uniform vec3 specular;
+  uniform sampler2D specularMap;
+  uniform float shininess;
+  uniform sampler2D normalMap;
+  uniform float opacity;
   uniform vec3 u_lightDirection;
+  uniform vec3 u_ambientLight;
 
   out vec4 outColor;
 
   void main () {
-    vec3 normal = normalize(v_normal);
+    vec3 normal = normalize(v_normal) * ( float( gl_FrontFacing ) * 2.0 - 1.0 );
+    vec3 tangent = normalize(v_tangent) * ( float( gl_FrontFacing ) * 2.0 - 1.0 );
+    vec3 bitangent = normalize(cross(normal, tangent));
+
+    mat3 tbn = mat3(tangent, bitangent, normal);
+    normal = texture(normalMap, v_texcoord).rgb * 2. - 1.;
+    normal = normalize(tbn * normal);
+
+    vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+    vec3 halfVector = normalize(u_lightDirection + surfaceToViewDirection);
+
     float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
-    outColor = vec4(u_diffuse.rgb * fakeLight, u_diffuse.a);
+    float specularLight = clamp(dot(normal, halfVector), 0.0, 1.0);
+    vec4 specularMapColor = texture(specularMap, v_texcoord);
+    vec3 effectiveSpecular = specular * specularMapColor.rgb;
+
+    vec4 diffuseMapColor = texture(diffuseMap, v_texcoord);
+    vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb * v_color.rgb;
+    float effectiveOpacity = opacity * diffuseMapColor.a * v_color.a;
+
+    outColor = vec4(
+        emissive +
+        ambient * u_ambientLight +
+        effectiveDiffuse * fakeLight +
+        effectiveSpecular * pow(specularLight, shininess),
+        effectiveOpacity);
   }
   `;
 
 
   // compiles and links the shaders, looks up attribute and uniform locations
   const meshProgramInfo = twgl.createProgramInfo(gl, [vs, fs]);
+
+  const defaultWhite = twgl.createTexture(gl, {src: [255, 255, 255, 255]});
+  const defaultNormal = twgl.createTexture(gl, {src: [127, 127, 255, 0]});
+  const textures = {};
 
   let parts = [];
   let objOffset = [0, 0, 0];
@@ -254,7 +486,7 @@ async function main() {
   let zNear = 1;
   let zFar = 10;
 
-  function setupObj(obj) {
+  function setupObj(obj, materials = [], zipEntries = {}) {
     // delete the old parts.
     for (const {bufferInfo, vao} of parts) {
       gl.deleteVertexArray(vao);
@@ -263,7 +495,40 @@ async function main() {
       }
     }
 
-    parts = obj.geometries.map(({data}) => {
+    // delete the old textures
+    for (const [key, value] of Object.entries(textures)) {
+      delete textures[key];
+      gl.deleteTexture(value);
+    }
+
+    // load texture for materials
+    for (const material of Object.values(materials)) {
+      Object.entries(material)
+        .filter(([key]) => key.endsWith('Map'))
+        .forEach(([key, filename]) => {
+          filename = filename.replace(/\\/g, '/');
+          let texture = textures[filename];
+          if (!texture) {
+            const entry = zipEntries[filename];
+            const texture = entry ? loadTexture(gl, entry) : defaultWhite;
+            textures[filename] = texture;
+          }
+          material[key] = texture;
+        });
+    }
+
+    const defaultMaterial = {
+      diffuse: [1, 1, 1],
+      diffuseMap: defaultWhite,
+      normalMap: defaultNormal,
+      ambient: [0, 0, 0],
+      specular: [1, 1, 1],
+      specularMap: defaultWhite,
+      shininess: 400,
+      opacity: 1,
+    };
+
+    parts = obj.geometries.map(({material, data}) => {
       // Because data is just named arrays like this
       //
       // {
@@ -276,13 +541,42 @@ async function main() {
       // shader we can pass it directly into `createBufferInfoFromArrays`
       // from the article "less code more fun".
 
+      if (data.color) {
+        if (data.position.length === data.color.length) {
+          // it's 3. The our helper library assumes 4 so we need
+          // to tell it there are only 3.
+          data.color = { numComponents: 3, data: data.color };
+        }
+      } else {
+        // there are no vertex colors so just use constant white
+        data.color = { value: [1, 1, 1, 1] };
+      }
+
+      // generate tangents if we have the data to do so.
+      if (data.texcoord && data.normal) {
+        data.tangent = generateTangents(data.position, data.texcoord);
+      } else {
+        // There are no tangents
+        data.tangent = { value: [1, 0, 0] };
+      }
+
+      if (!data.texcoord) {
+        data.texcoord = { value: [0, 0] };
+      }
+
+      if (!data.normal) {
+        // we probably want to generate normals if there are none
+        data.normal = { value: [0, 0, 1] };
+      }
+
       // create a buffer for each array by calling
       // gl.createBuffer, gl.bindBuffer, gl.bufferData
       const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
       const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
       return {
         material: {
-          u_diffuse: [Math.random(), Math.random(), Math.random(), 1],
+          ...defaultMaterial,
+          ...materials[material],
         },
         bufferInfo,
         vao,
@@ -315,17 +609,56 @@ async function main() {
   dragAndDrop.setup({msg: 'Drop .OBJ file here'});
   dragAndDrop.onDropFile(readOBJFile);
 
-  function readOBJFile(file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const obj = parseOBJ(e.target.result);
-      setupObj(obj);
-    };
-    reader.readAsText(file);
+  function readFile(file) {
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.readAsText(file);
+    });
   }
 
+  function getExtension(name) {
+    const m = /(\.[^.]+)$/.exec(name);
+    return m ? m[1] : '';
+  }
 
+  async function readOBJ(file) {
+    const text = await readFile(file);
+    const obj = parseOBJ(text);
+    setupObj(obj);
+  }
 
+  async function readZIP(file) {
+    const {entries} = await unzip(file);
+    // find the first .obj
+    const objName = Object.keys(entries).find(n => getExtension(n).toLowerCase() === '.obj');
+    if (objName) {
+      const text = await entries[objName].text();
+      const obj = parseOBJ(text);
+      // maybe we should just look for any file named .MTL?
+      const matTexts = await Promise.all(obj.materialLibs.map(async filename => {
+        const entry = entries[filename];
+        if (entry) {
+          return await entry.text();
+        }
+        return '';
+      }));
+      const materials = parseMTL(matTexts.join('\n'));
+      setupObj(obj, materials, entries);
+    }
+  }
+
+  const extensions = {
+    '.obj': readOBJ,
+    '.zip': readZIP,
+  };
+
+  async function readOBJFile(file) {
+    const fn = extensions[getExtension(file.name).toLowerCase()];
+    if (fn) {
+      fn(file);
+    }
+  }
 
   function degToRad(deg) {
     return deg * Math.PI / 180;
@@ -353,6 +686,7 @@ async function main() {
       u_lightDirection: m4.normalize([-1, 3, 5]),
       u_view: view,
       u_projection: projection,
+      u_viewWorldPosition: cameraPosition,
     };
 
     gl.useProgram(meshProgramInfo.program);
@@ -371,8 +705,7 @@ async function main() {
       // calls gl.uniform
       twgl.setUniforms(meshProgramInfo, {
         u_world,
-        u_diffuse: material.u_diffuse,
-      });
+      }, material);
       // calls gl.drawArrays or gl.drawElements
       twgl.drawBufferInfo(gl, bufferInfo);
     }
