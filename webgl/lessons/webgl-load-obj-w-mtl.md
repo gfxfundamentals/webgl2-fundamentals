@@ -66,9 +66,9 @@ function parseMTL(text) {
   let material;
 
   const keywords = {
-    newmtl(parts) {
+    newmtl(parts, unparsedArgs) {
       material = {};
-      materials[parts[0]] = material;
+      materials[unparsedArgs] = material;
     },
   };
 
@@ -118,9 +118,9 @@ function parseMTL(text) {
   let material;
 
   const keywords = {
-    newmtl(parts) {
+    newmtl(parts, unparsedArgs) {
       material = {};
-      materials[parts[0]] = material;
+      materials[unparsedArgs] = material;
     },
 +    Ns(parts)     { material.shininess      = parseFloat(parts[0]); },
 +    Ka(parts)     { material.ambient        = parts.map(parseFloat); },
@@ -375,9 +375,9 @@ function parseMTL(text) {
   let material;
 
   const keywords = {
-    newmtl(parts) {
+    newmtl(parts, unparsedArgs) {
       material = {};
-      materials[parts[0]] = material;
+      materials[unparsedArgs] = material;
     },
     Ns(parts)       { material.shininess      = parseFloat(parts[0]); },
     Ka(parts)       { material.ambient        = parts.map(parseFloat); },
