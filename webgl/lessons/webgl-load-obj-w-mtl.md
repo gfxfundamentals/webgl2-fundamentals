@@ -65,20 +65,25 @@ function parseMTL(text) {
     },
   };
 
+  const keywordRE = /(\w*)(?: )*(.*)/;
   const lines = text.split('\n');
   for (let lineNo = 0; lineNo < lines.length; ++lineNo) {
     const line = lines[lineNo].trim();
     if (line === '' || line.startsWith('#')) {
       continue;
     }
-    const parts = line.split(/\s+/);
-    const keyword = parts.shift();
+    const m = keywordRE.exec(line);
+    if (!m) {
+      continue;
+    }
+    const [, keyword, unparsedArgs] = m;
+    const parts = line.split(/\s+/).slice(1);
     const handler = keywords[keyword];
     if (!handler) {
       console.warn('unhandled keyword:', keyword);
       continue;
     }
-    handler(parts);
+    handler(parts, unparsedArgs);
   }
 
   return materials;
@@ -353,6 +358,11 @@ We can see `map_Kd`, `map_Bump`, and `map_Ns` all specify image files.
 Let's add them to our .MTL parser
 
 ```js
++function parseMapArgs(unparsedArgs) {
++  // TODO: handle options
++  return unparsedArgs;
++}
+
 function parseMTL(text) {
   const materials = {};
   let material;
@@ -367,9 +377,9 @@ function parseMTL(text) {
     Kd(parts)       { material.diffuse        = parts.map(parseFloat); },
     Ks(parts)       { material.specular       = parts.map(parseFloat); },
     Ke(parts)       { material.emissive       = parts.map(parseFloat); },
-+    map_Kd(parts)   { material.diffuseMap     = parts[0]; },
-+    map_Ns(parts)   { material.specularMap    = parts[0]; },
-+    map_Bump(parts) { material.normalMap      = parts[0]; },
++    map_Kd(parts, unparsedArgs)   { material.diffuseMap = parseMapArgs(unparsedArgs); },
++    map_Ns(parts, unparsedArgs)   { material.specularMap = parseMapArgs(unparsedArgs); },
++    map_Bump(parts, unparsedArgs) { material.normalMap = parseMapArgs(unparsedArgs); },
     Ni(parts)       { material.opticalDensity = parseFloat(parts[0]); },
     d(parts)        { material.opacity        = parseFloat(parts[0]); },
     illum(parts)    { material.illum          = parseInt(parts[0]); },
@@ -377,6 +387,8 @@ function parseMTL(text) {
 
   ...
 ```
+
+Note: I made `parseMapArgs` because according to [the spec](http://paulbourke.net/dataformats/mtl/) there are a bunch of extra options we don't see in this file. We'd need some major refactoring to use them but for now I to hopefully handle filenames with space and no options.
 
 To load all these textures we could use the code from [the article on textures](webgl-3d-textures.html) but let's use our helpers again to unclutter the code.
 
@@ -790,9 +802,10 @@ void main () {
 `;
 ```
 
-And we that we get normal maps
+And we that we get normal maps. Note: I moved the camera closer so they are easier to see.
 
 {{{example url="../webgl-load-obj-w-mtl-w-normal-maps.html"}}}
+
 
 I'm sure there are way more features of the .MTL file we could try to support.
 For example the `refl` keyword specifies reflection maps which is another word
