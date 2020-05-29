@@ -203,7 +203,7 @@ TOC: 2D - DrawImage
       var deltaTime = Math.min(0.1, now - then);
       then = now;
 
-      update(time);
+      update(deltaTime);
       draw();
 
       requestAnimationFrame(render);
