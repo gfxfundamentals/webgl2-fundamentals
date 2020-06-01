@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/zh_cn/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/zh_cn/webgl-fundamentals.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of Gregg Tavares. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of Gregg Tavares. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,23 +36,63 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL2 Fundamentals" />
+
+<meta name="description" content="你的WebGL2第一课:基本原理" />
+<meta name="keywords" content="webgl webgl2 graphics" />
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-fundamentals_zh-cn.jpg" />
+
+<meta property="og:title" content="WebGL2的基本原理" />
 <meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="Your first WebGL2 lesson starting with the fundamentals" />
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-fundamentals_zh-cn.jpg" />
+<meta property="og:description" content="你的WebGL2第一课:基本原理" />
 <meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-fundamentals.html" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@greggman" />
 <meta name="twitter:creator" content="@greggman" />
 <meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL2 Fundamentals" />
+<meta name="twitter:title" content="WebGL2的基本原理" />
 <meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-fundamentals.html" />
-<meta name="twitter:description" content="Your first WebGL2 lesson starting with the fundamentals" />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="twitter:description" content="你的WebGL2第一课:基本原理" />
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-fundamentals_zh-cn.jpg" />
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-fundamentals.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-fundamentals_zh-cn.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-fundamentals.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-fundamentals.html",
+      "inLanguage":"zh-cn",
+      "name":"WebGL2的基本原理",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-fundamentals.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL2 Fundamentals</title>
+<title>WebGL2的基本原理</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
@@ -160,12 +202,377 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 Fundamentals</h1>
+    <h1>WebGL2的基本原理</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>还没有简体中文版翻译哦  (~￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">欢迎翻译</a>! </p>
-<p><a href="/webgl/lessons/webgl-fundamentals.html">英文原版地址</a>.</p>
+      <p>首先，这些文章是关于WebGL2的。 如果你对WebGL1.0感兴趣，请<a href="https://webglfundamentals.org/">转到这里</a>。 注意WebGL2几乎100%向后兼容<a href="webgl1-to-webgl2.html">WebGL1</a>。 就是说，一旦启用WebGL2，原来WebGL1写的代码还是会如预期的那样执行。
+这个教程遵循如下的路径：</p>
+<p>WebGL通常被认为是一种3D API。 人们认为“我会使用了WebGL魔法，我就会拥有酷酷的3D技能”。 实际上WebGL仅仅是栅格化(rasterization)引擎。它会基于你的代码来画点，线条和三角形。 而你需要使用点、线、三角形组合来完成复杂的3D任务。</p>
+<p>WebGL是在GPU上运行的。在GPU上运行的WebGL代码是以一对函数的形式，分别叫做点着色器(Vetex Shader)和片段着色器(Fragment Shader). 他们是用一种类似C++的强类型语言<a href="webgl-shaders-and-glsl.html">GLSL</a>编写的。这一对函数组合被叫做程序(Program)。</p>
+<p>点着色器的任务是计算点的的位置。基于函数输出的位置，WebGL能够栅格化(rasterize)不同种类的基本元素，如<a href="webgl-points-lines-triangles.html">点、线和三角形</a>。当栅格化这些基本元素的同时，也会调用第二种函数：片段着色器。它的任务就是计算当前正在绘制图形的每个像素的颜色。</p>
+<p>几乎所有的WebGL API是为这些函数对的运行来<a href="../resources/webgl-state-diagram.html">设置状态</a>。你需要做的是：设置一堆状态，然后调用<code>gl.drawArrays</code>和<code>gl.drawElements</code>在GPU上运行你的着色器。</p>
+<p>这些函数需要用到的任意数据都必须提供给GPU。 着色器有如下四种方法能够接收数据。</p>
+<ol>
+<li><p>属性(Attributes)，缓冲区(Buffers)和顶点数组(Vetex Arrays)</p>
+<p>缓存区以二进制数据形式的数组传给GPU。缓存区可以放任意数据，通常有位置，归一化参数，纹理坐标，顶点颜色等等</p>
+<p>属性用来指定数据如何从缓冲区获取并提供给顶点着色器。比如你可能将位置信息以3个32位的浮点数据存在缓存区中， 一个特定的属性包含的信息有：它来自哪个缓存区，它的数据类型(3个32位浮点数据)，在缓存区的起始偏移量，从一个位置到下一个位置有多少个字节等等。</p>
+<p>缓冲区并非随机访问的，而是将顶点着色器执行指定次数。每次执行时，都会从每个指定的缓冲区中提取下一个值并分配给一个属性。</p>
+<p>属性的状态收集到一个顶点数组对象（VAO）中，该状态作用在每个缓冲区，以及如何从这些缓冲区中提取数据。</p>
+</li>
+<li><p>Uniforms</p>
+<p>Uniforms是在执行着色器程序前设置的全局变量</p>
+</li>
+<li><p>纹理(Textures)</p>
+<p>纹理是能够在着色器程序中随机访问的数组数据。大多数情况下纹理存储图片数据，但它也用于包含颜色以为的数据。</p>
+</li>
+<li><p>Varyings</p>
+<p>Varyings是一种从点着色器到片段着色器传递数据的方法。根据显示的内容如点，线或三角形， 顶点着色器在Varyings中设置的值，在运行片段着色器的时候会被解析。</p>
+</li>
+</ol>
+<h2 id="webgl-hello-world">WebGL Hello World</h2>
+<p>WebGL只关注两件事：剪辑空间坐标(Clip space coordinates)和颜色。 所以作为程序员，你的任务是向WebGL提供这两件事--编写两种着色器的代码: 点着色器提供剪辑空间坐标；片段着色器提供颜色。</p>
+<p>不管你的画布大小，剪辑空间坐标的取值范围是-1到1. 下面是一个很简单的WebGL程序例子。</p>
+<p>首先从顶点着色器开始。</p>
+<pre class="prettyprint"><code>#version 300 es
+
+// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec4 a_position;
+
+// all shaders have a main function
+void main() {
+
+  // gl_Position is a special variable a vertex shader
+  // is responsible for setting
+  gl_Position = a_position;
+}
+</code></pre><p>运行的时候，如果所有的代码是用Javascript(而非GLSL)写的，你可以想象它是如下形式：</p>
+<pre class="prettyprint"><code>// *** PSEUDO CODE!! ***
+
+var positionBuffer = [
+  0, 0, 0, 0,
+  0, 0.5, 0, 0,
+  0.7, 0, 0, 0,
+];
+var attributes = {};
+var gl_Position;
+
+drawArrays(..., offset, count) {
+  var stride = 4;
+  var size = 4;
+  for (var i = 0; i &lt; count; ++i) {
+     // copy the next 4 values from positionBuffer to the a_position attribute
+     const start = offset + i * stride;
+     attributes.a_position = positionBuffer.slice(start, start + size);
+     runVertexShader();
+     ...
+     doSomethingWith_gl_Position();
+}
+</code></pre><p>这个例子只是给你演示顶点着色器是怎么运行的。实际没有这么简单，因为<code>positionBuffer</code>需要被转换成二进制数据，从而取出数据会有些不同。</p>
+<p>接下来我们需要片单着色器</p>
+<pre class="prettyprint"><code>#version 300 es
+
+// fragment shaders don&#39;t have a default precision so we need
+// to pick one. highp is a good default. It means &quot;high precision&quot;
+precision highp float;
+
+// we need to declare an output for the fragment shader
+out vec4 outColor;
+
+void main() {
+  // Just set the output to a constant reddish-purple
+  outColor = vec4(1, 0, 0.5, 1);
+}
+</code></pre><p>上面，我们声明了<code>outColor</code>作为片段着色器的输出，并设置值为<code>1, 0, 0.5, 1</code>。颜色值范围是0~1, 上面颜色值的红色为1，绿色为0，蓝色为0.5，透明性为1.</p>
+<p>我们已经写了两个着色器函数，接下来我们开始使用WebGL。</p>
+<p>首先我们需要一个HTML canvas元素</p>
+<pre class="prettyprint"><code> &lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;
+</code></pre><p>然后再Javascript中查找到该元素</p>
+<pre class="prettyprint"><code> var canvas = document.querySelector(&quot;#c&quot;);
+</code></pre><p>现在我们创建一个WebGL2RenderingContext</p>
+<pre class="prettyprint"><code> var gl = canvas.getContext(&quot;webgl2&quot;);
+ if (!gl) {
+    // no webgl2 for you!
+    ...
+</code></pre><p>为了让着色器代码能够在GPU上运行，你需要编译这些着色器代码。编译前，通过字符串连接的方式把这些GLSL的代码片段作为Javascript的string，当然也可以使用AJAX下载方式，或把他们放到non-javascript标签中，或者像下例一样以多行字符串模板的形式。</p>
+<pre class="prettyprint"><code>var vertexShaderSource = `#version 300 es
+
+// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec4 a_position;
+
+// all shaders have a main function
+void main() {
+
+  // gl_Position is a special variable a vertex shader
+  // is responsible for setting
+  gl_Position = a_position;
+}
+`;
+
+var fragmentShaderSource = `#version 300 es
+
+// fragment shaders don&#39;t have a default precision so we need
+// to pick one. highp is a good default. It means &quot;high precision&quot;
+precision highp float;
+
+// we need to declare an output for the fragment shader
+out vec4 outColor;
+
+void main() {
+  // Just set the output to a constant reddish-purple
+  outColor = vec4(1, 0, 0.5, 1);
+}
+`;
+</code></pre><p>实际上，大多数3D引擎在运行过程中用不同形式的字符串模板、连接等等产生GLSL着色器。然而，本章实例中没有那么复杂，不需要再运行中实时生成GLSL。</p>
+<blockquote>
+<p>注意： <code>#version 300 es</code> <strong>必须位于着色器代码的第一行</strong>。 它前面不允许有任何的注释或空行！ <code>#version 300 es</code> 的意思是你想要使用WebGL2的着色器语法:GLSL ES 3.00。
+如果你没有把它放到第一行，将默认设置为GLSL ES 1.00,即WebGL1.0的语法。相比WebGL2的语法，会少很多特性。</p>
+</blockquote>
+<p>接下来，我们需要一个函数创建着色器实例、上传GLSL源码和编译着色器。下面代码很容易从名称中猜测它的意思，所以我没有添加任何注释。</p>
+<pre class="prettyprint"><code>function createShader(gl, type, source) {
+  var shader = gl.createShader(type);
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+  if (success) {
+    return shader;
+  }
+
+  console.log(gl.getShaderInfoLog(shader));
+  gl.deleteShader(shader);
+}
+</code></pre><p>我调用上面方法创建两个着色器</p>
+<pre class="prettyprint"><code>var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+</code></pre><p>然后我们<em>链接</em>这两个着色器成一个<em>程序(program)</em></p>
+<p>   function createProgram(gl, vertexShader, fragmentShader) {
+      var program = gl.createProgram();
+      gl.attachShader(program, vertexShader);
+      gl.attachShader(program, fragmentShader);
+      gl.linkProgram(program);
+      var success = gl.getProgramParameter(program, gl.LINK_STATUS);
+      if (success) {
+        return program;
+      }</p>
+<pre class="prettyprint"><code>  console.log(gl.getProgramInfoLog(program));
+  gl.deleteProgram(program);
+}
+</code></pre><p>并调用它</p>
+<pre class="prettyprint"><code>var program = createProgram(gl, vertexShader, fragmentShader);
+</code></pre><p>在GPU上已经创建了一个GLSL程序后，我们还需要提供数据给它。大多数WebGL API是有关设置状态来供给GLSL程序数据的。
+在我们的例子中，GLSL程序唯一的输入属性是<code>a_position</code>。我们做的第一件事就是查找这个属性的位置。记住在查找属性是在程序初始化的时候，而不是render循环的时候。</p>
+<pre class="prettyprint"><code>var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
+</code></pre><p>属性从缓存区中取数据，所以我们需要创建缓冲区。</p>
+<pre class="prettyprint"><code>var positionBuffer = gl.createBuffer();
+</code></pre><p>WebGL通过绑定点来处理许多WebGL资源。你可以认为绑定点是WebGL内部的全局变量。首先你绑定一个资源到某个绑定点，然后所有方法通过这个绑定点来对这个资源的访问。下面我们来绑定缓冲区。</p>
+<pre class="prettyprint"><code>gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+</code></pre><p>现在我们通过绑定点把数据存放到缓冲区。</p>
+<pre class="prettyprint"><code>// three 2d points
+var positions = [
+  0, 0,
+  0, 0.5,
+  0.7, 0,
+];
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+</code></pre><p>Javascript弱类型语言，而WebGL需要强类型数据，需要用<code>new Float32Array(positions)</code>创建32位的浮点数数组，然后用<code>gl.bufferData</code>函数将数组数据拷贝到GPU上的<code>positionBuffer</code>里面。因为前面把<code>positionBuffer</code>绑定到了<code>ARRAY_BUFFER</code>，所以我们直接使用绑定点。</p>
+<p>最后一个参数<code>gl.STATIC_DRAW</code>提示WebGL如何使用数据，WebGL据此做相应的优化。<code>gl.STATIC_DRAW</code> 告诉WebGL我们不太可能去改变数据的值。</p>
+<p>数据存放到缓存区后，接下来需要告诉属性如何从缓冲区取出数据。首先，我需要创建属性状态集合：顶点数组对象(Vertex Array Object)。</p>
+<pre class="prettyprint"><code>var vao = gl.createVertexArray();
+</code></pre><p>为了使所有属性的设置能够应用到WebGL属性状态集，我们需要绑定这个顶点数组到WebGL。</p>
+<pre class="prettyprint"><code>gl.bindVertexArray(vao);
+</code></pre><p>然后，我们还需要启用属性。如果没有开启这个属性，这个属性值会是一个常量。</p>
+<pre class="prettyprint"><code>gl.enableVertexAttribArray(positionAttributeLocation);
+</code></pre><p>接下来，我们需要设置属性值如何从缓存区取出数据。</p>
+<pre class="prettyprint"><code>var size = 2;          // 2 components per iteration
+var type = gl.FLOAT;   // the data is 32bit floats
+var normalize = false; // don&#39;t normalize the data
+var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+var offset = 0;        // start at the beginning of the buffer
+gl.vertexAttribPointer(
+    positionAttributeLocation, size, type, normalize, stride, offset)
+</code></pre><p><code>gl.vertexAttribPointer</code> 的隐含部分是它绑定当前的<code>ARRAY_BUFFER</code>到这个属性。换句话说，这个属性被绑定到<code>positionBuffer</code>。 从GLSL顶点着色器的角度看，属性<code>a_position</code>是<code>vec4</code></p>
+<pre class="prettyprint"><code>in vec4 a_position;
+</code></pre><p><code>vec4</code>是一个浮点型的数。以javascript来看，你可以认为它是这样的<code>a_position = {x: 0, y: 0, z: 0, w: 0}</code>。我们设置<code>size = 2</code>, 属性值被设置为<code>0, 0, 0, 1</code>。 属性获取前两个坐标值(x和y) ,z和w分别被默认设置为0和1。</p>
+<p>在绘制之前，画布大小要设置成显示区域的大小。画布就像一个2维的图片，长和宽的单位为像素个数， <strong>CSS</strong>确定显示画布的大小。 <strong>你应该通过CSS设置画布的大小</strong>，因为它比其他方法灵活得多。</p>
+<p>为了让画布大小匹配显示区域的大小，我通常使用这个<a href="webgl-resizing-the-canvas.html">帮助函数</a>)。</p>
+<p>在我们的例子中，如果程序运行在自己独立的窗口中，画布大小被固定设置为400x300；如果作为iframe嵌在页面在，画布会尽量扩展到可用的空间。</p>
+<pre class="prettyprint"><code>webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+</code></pre><p>通过设置<code>gl_Position</code>, 我们需要告诉WebGL如何从剪辑空间转换值转换到屏幕空间。 为此，我们调用<code>gl.viewport</code>并将其传递给画布的当前大小。</p>
+<pre class="prettyprint"><code>gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+</code></pre><p>这行代码告诉WebGL将裁剪空间的-1~+1映射到x轴0~<code>gl.canvas.width</code>和y轴0~<code>gl.canvas.height</code>。</p>
+<p>我们设置画布的清空颜色为<code>0,0,0,0</code>(分别表示为红色，绿色，蓝色，透明度)。所以这个画布是透明的。</p>
+<p>接下来我们需要告诉WebGL运行着色器程序。</p>
+<pre class="prettyprint"><code>// Tell it to use our program (pair of shaders)
+gl.useProgram(program);
+</code></pre><p>然后我们需要告诉它用哪个缓冲区和如何从缓冲区取出数据给到属性。</p>
+<pre class="prettyprint"><code>// Bind the attribute/buffer set we want.
+gl.bindVertexArray(vao);
+</code></pre><p>最后，我们告诉WebGL运行我们的GLSL程序。</p>
+<pre class="prettyprint"><code>var primitiveType = gl.TRIANGLES;
+var offset = 0;
+var count = 3;
+gl.drawArrays(primitiveType, offset, count);
+</code></pre><p>由于counter被设置为3, 顶点着色器就会运行3次；第一次运行顶点着色器中的属性<code>a_position.x</code> 和 <code>a_position.y</code>的值是positionBuffer的头两个值；第二次是紧接着的两个值。</p>
+<p>由于我们设置<code>primitiveType</code>的值为<code>gl.TRIANGLES</code>, 顶点着色器将会基于<code>a_position</code>设置的3对值画三角形。不管画布多大，这些值在裁剪空间坐标的范围是-1到1。</p>
+<p>由于顶点着色器只是简单地从positionBuffer中拷贝值到<code>gl_position</code>, 最终画出的三角形也会在裁剪空间区域。</p>
+<pre class="prettyprint"><code>  0, 0,
+  0, 0.5,
+  0.7, 0,
+</code></pre><p>如果画布大小恰好是400X300, 裁剪空间坐标转换成屏幕坐标如下所示：</p>
+<pre class="prettyprint"><code> clip space      screen space
+   0, 0       -&gt;   200, 150
+   0, 0.5     -&gt;   200, 225
+ 0.7, 0       -&gt;   340, 150
+</code></pre><p>WebGL会用这三个顶点画出三角形。对于每个像素，WebGL调用片段着色器。片段着色器设置<code>outColor</code>为<code>1, 0, 0.5, 1</code>，加上画布上每个channel为8bit，WebGL把颜色值<code>[255, 0, 127, 255]</code>的像素写到画布。</p>
+<p>请看下面的例子：</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-fundamentals.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-fundamentals.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>从上面例子看出，顶点着色器只是简单地传数据。因为位置数据都在裁剪空间中，所以没有多余个事情做。<em>如果您想显示3D图形，则由您决定提供从3D转换为裁剪空间的着色器，因为WebGL只是一个光栅化API</em></p>
+<p>你可能想知道为什么三角形从中间开始，向右上方移动。因为裁剪空间的x轴从-1到+1. 则意味着0在中间，整数则是右边。</p>
+<p>至于为什么在上面，因为-1时最下面，+1在顶部，也就是说0在中间，正数在中间上面。</p>
+<p>对于2D，你可能更喜欢使用像素而不是裁剪空间坐标。下面我们提供给顶点着色器以像素形式的位置，着色器负责转换成裁剪空间坐标。</p>
+<pre class="prettyprint"><code>-  in vec4 a_position;
++  in vec2 a_position;
+
++  uniform vec2 u_resolution;
+
+  void main() {
++    // convert the position from pixels to 0.0 to 1.0
++    vec2 zeroToOne = a_position / u_resolution;
++
++    // convert from 0-&gt;1 to 0-&gt;2
++    vec2 zeroToTwo = zeroToOne * 2.0;
++
++    // convert from 0-&gt;2 to -1-&gt;+1 (clip space)
++    vec2 clipSpace = zeroToTwo - 1.0;
++
+*    gl_Position = vec4(clipSpace, 0, 1);
+  }
+</code></pre><p>注意上面 <code>a_position</code>的数据类型是<code>vec2</code>，因为我们仅仅使用<code>x</code>和<code>y</code>两个坐标。接下来我们添加了一个叫<code>u_resolution</code>的<code>uniform</code>。相应地我们需要查找它的位置：</p>
+<pre class="prettyprint"><code>var resolutionUniformLocation = gl.getUniformLocation(program, &quot;u_resolution&quot;);
+</code></pre><p>剩下的部分从注释中很容易看出来。通过设置<code>u_resolution</code>为画布的显示精度，着色器会把<code>positionBuffer</code>上的位置数据以像素坐标对待，并转换到裁剪坐标空间。</p>
+<p>现在位置坐标的值从裁剪坐标变成像素坐标。这次我们来画一个两个三角形组成的长方形，每个三角形有3个点。</p>
+<pre class="prettyprint"><code>var positions = [
+*  10, 20,
+*  80, 20,
+*  10, 30,
+*  10, 30,
+*  80, 20,
+*  80, 30,
+];
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+</code></pre><p>接下来，我们通过函数<code>gl.useProgram</code>设置使用的程序，以及通过<code>gl.uniformXXX</code>设置uniform的值。 </p>
+<pre class="prettyprint"><code>gl.useProgram(program);
+
+// Pass in the canvas resolution so we can convert from
+// pixels to clip space in the shader
+gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+</code></pre><p>我们画两个三角形，所有需要调用顶点着色器6次，即设置<code>count</code>为<code>6</code>。</p>
+<pre class="prettyprint"><code>// draw
+var primitiveType = gl.TRIANGLES;
+var offset = 0;
+*var count = 6;
+gl.drawArrays(primitiveType, offset, count);
+</code></pre><p>显示结果如下。</p>
+<p>注意: 本页面中所有的例子都用到了 <a href="/webgl/resources/webgl-utils.js"><code>webgl-utils.js</code></a>， 它包含编译和链接着色器的函数。 No reason to clutter the examples with that <a href="webgl-boilerplate.html">boilerplate</a> code.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>你可能注意到这个长方形靠近区域的下面部分。因为WebG把+Y轴当作向上，-Y当作向下。在裁剪空间中，左下角为-1, -1。我们没有改变任何符号，所以当前坐标原点就在左下角。为像原点在左上角的传统坐标空间一样，我们可以反转y坐标轴，如下：</p>
+<pre class="prettyprint"><code>*   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+</code></pre><p>现在长方形的显示位置就跟我们期望的一样了。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-top-left.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle-top-left.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>为了能够生成不同大小的正方形，我们把上面的画正方形的代码封装成了一个函数。</p>
+<p>为了使得颜色值可以动态设置，，我们在片段着色器中声明了一个表示颜色的uniform输入变量。</p>
+<pre class="prettyprint"><code>#version 300 es
+
+precision highp float;
+
++  uniform vec4 u_color;
+
+out vec4 outColor;
+
+void main() {
+-  outColor = vec4(1, 0, 0.5, 1);
+*  outColor = u_color;
+}
+</code></pre><p>下面代码在随机选择位置和颜色花了50个正方形。</p>
+<pre class="prettyprint"><code>  var colorLocation = gl.getUniformLocation(program, &quot;u_color&quot;);
+  ...
+
+  // draw 50 random rectangles in random colors
+  for (var ii = 0; ii &lt; 50; ++ii) {
+    // Setup a random rectangle
+    setRectangle(
+        gl, randomInt(300), randomInt(300), randomInt(300), randomInt(300));
+
+    // Set a random color.
+    gl.uniform4f(colorLocation, Math.random(), Math.random(), Math.random(), 1);
+
+    // Draw the rectangle.
+    var primitiveType = gl.TRIANGLES;
+    var offset = 0;
+    var count = 6;
+    gl.drawArrays(primitiveType, offset, count);
+  }
+}
+
+// Returns a random integer from 0 to range - 1.
+function randomInt(range) {
+  return Math.floor(Math.random() * range);
+}
+
+// Fills the buffer with the values that define a rectangle.
+
+function setRectangle(gl, x, y, width, height) {
+  var x1 = x;
+  var x2 = x + width;
+  var y1 = y;
+  var y2 = y + height;
+
+  // NOTE: gl.bufferData(gl.ARRAY_BUFFER, ...) will affect
+  // whatever buffer is bound to the `ARRAY_BUFFER` bind point
+  // but so far we only have one buffer. If we had more than one
+  // buffer we&#39;d want to bind that buffer to `ARRAY_BUFFER` first.
+
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+     x1, y1,
+     x2, y1,
+     x1, y2,
+     x1, y2,
+     x2, y1,
+     x2, y2]), gl.STATIC_DRAW);
+}
+</code></pre><p>显示如下：</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangles.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangles.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>我希望你能看到WebGL实际上是很简单的API.简单的意思是，它仅仅运行两个函数(顶点着色器和片段着色器)来画三角形，线段和点。
+然而3D绘制可以变得非常地复杂，这复杂性是由程序员来设计复杂着色器来实现的。 WebGL API仅仅是一个简单的栅格化工具(rasterizer)。</p>
+<p>上面例子中，我们讲到了如何使用一个属性和两个uniforms来提供数据给GPU。 通常情况下会由更多的属性和uniforms。 关于文章开头提到的<em>varyings</em>和<em>纹理</em>（textures）。后面的课程将会陆续讲到。</p>
+<p>在你继续阅读之前，通过更新缓冲区来更新数据的方式如<code>setRectangle</code>，在大多数应用中并不是很常见。我用这种方式是因为它很方便演示像素值作为输入，同时在GLSL中仅需要少量的数学计算。<a href="webgl-2d-translation.html">后面课程中你会找到更加通用的方法来定位，定向和按比例缩放</a>。</p>
+<p>如果对WebGL一无所知，对GLSL, 着色器，GPU在头脑中没有任何概念，你先阅读<a href="webgl-how-it-works.html">WebGL运行的基本原理</a>。 
+你也可能你想了解下<a href="/webgl/lessons/resources/webgl-state-diagram.html">交互式的状态转换图</a>， 它从另外一种视角来理解WebGL的工作原理。</p>
+<p>你应该简要地阅读下例子中用到的的<a href="webgl-boilerplate.html">模板代码</a>。
+同时，你还应该快速阅读下<a href="webgl-drawing-multiple-things.html">如何绘制多个物体</a>， 它会告诉你一个经典WebGL apps的项目结构是怎么的。因为在我们例子中只画一个物体，所有没有展示出这个结构。</p>
+<p>此外有两个方法: 对图像处理感兴趣的话，请看 <a href="webgl-image-processing.html">如何做2D图片处理</a>； 对图形变换，翻转，和缩放感兴趣，请从<a href="webgl-2d-translation.html">这里开始</a>.</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -178,10 +585,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>基础概念</li>
+        <div id="toc">
+          <ul>  <li>基础概念</li>
         <ul>
           <li><a href="/webgl/lessons/zh_cn/webgl-getting-webgl2.html">怎样使用WebGL2</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-fundamentals.html">Fundamentals</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-fundamentals.html">基本原理</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-how-it-works.html">How It Works</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-shaders-and-glsl.html">Shaders and GLSL</a></li>
 <li><a href="/webgl/lessons/resources/webgl-state-diagram.html?lang=zh_cn">WebGL2 State Diagram</a></li>
@@ -310,6 +718,31 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://twgljs.org">TWGL，一个轻量级WebGL辅助库</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        <div>有关于WebGL2的疑问? <a href="https://stackoverflow.com/questions/tagged/webgl2">在Stackoverflow提问</a>.</div>
+        <div>有意见或建议? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">在GitHub上提issue</a>.</div>
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2的基本原理';
+            var disqus_title = 'WebGL2的基本原理';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
