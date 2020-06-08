@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/zh_cn/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/zh_cn/webgl-shaders-and-glsl.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of Gregg Tavares. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of Gregg Tavares. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,23 +36,63 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL Shaders and GLSL" />
+
+<meta name="description" content="什么是着色器和 GLSL 语言" />
+<meta name="keywords" content="webgl webgl2 graphics" />
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-shaders-and-glsl_zh-cn.jpg" />
+
+<meta property="og:title" content="WebGL 着色器和 GLSL 语言" />
 <meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="What&#x27;s a shader and what&#x27;s GLSL" />
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-shaders-and-glsl_zh-cn.jpg" />
+<meta property="og:description" content="什么是着色器和 GLSL 语言" />
 <meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-shaders-and-glsl.html" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@greggman" />
 <meta name="twitter:creator" content="@greggman" />
 <meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL Shaders and GLSL" />
+<meta name="twitter:title" content="WebGL 着色器和 GLSL 语言" />
 <meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-shaders-and-glsl.html" />
-<meta name="twitter:description" content="What&#x27;s a shader and what&#x27;s GLSL" />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="twitter:description" content="什么是着色器和 GLSL 语言" />
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-shaders-and-glsl_zh-cn.jpg" />
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-shaders-and-glsl.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-shaders-and-glsl_zh-cn.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-shaders-and-glsl.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-shaders-and-glsl.html",
+      "inLanguage":"zh-cn",
+      "name":"WebGL 着色器和 GLSL 语言",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-shaders-and-glsl.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL Shaders and GLSL</title>
+<title>WebGL 着色器和 GLSL 语言</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
@@ -160,12 +202,299 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL Shaders and GLSL</h1>
+    <h1>WebGL 着色器和 GLSL 语言</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>还没有简体中文版翻译哦  (~￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">欢迎翻译</a>! </p>
-<p><a href="/webgl/lessons/webgl-shaders-and-glsl.html">英文原版地址</a>.</p>
+      <p>这篇文章延续 <a href="webgl-fundamentals.html">WebGL 基本原理</a>.
+如果你还不了解 WebGL 如何工作的，请先读<a href="webgl-how-it-works.html">这篇文章</a>.</p>
+<p>我们已经讨论了着色器和 GLSL，但还没有涉及它们任何特定的细节。我希望通过本文的示例帮助你弄清楚相关的概念。</p>
+<p>如<a href="webgl-how-it-works.html">工作原理</a>中所述，每次画图你都需要 2 个着色器：
+<em>点着色器</em>和<em>片段着色器</em>。 每个着色器都是一个<em>函数</em>。 点着色器和片段着色器链接在一起，
+成为一个着色器程序（或仅仅是程序）。典型的 WebGL 应用程序将具有许多着色器程序。</p>
+<h2 id="-">点着色器</h2>
+<p>点着色器的工作是生成裁剪空间坐标。 它总是采用如下形式：</p>
+<pre class="prettyprint"><code>#version 300 es
+void main() {
+   gl_Position = doMathToMakeClipspaceCoordinates
+}
+</code></pre><p>绘制的每个点都需要调用这个着色器函数一次。每次调用，都需要通过设置一个全局变量<code>gl_Position</code>来设置该点在裁剪空间的坐标。</p>
+<p>裁剪器需要获得的数据来源有下面三种方式：</p>
+<ol>
+<li><a href="#属性">属性</a> (从缓冲区取数据)</li>
+<li><a href="#uniforms">Uniforms</a> (在单次绘制过程中，它的值对所有顶点都是一样的)</li>
+<li><a href="#点着色器中的纹理">纹理</a> (来自 pixels/texels 的数据)</li>
+</ol>
+<h3 id="-">属性</h3>
+<p>点着色器获取数据的最常见方法是通过缓冲区和<em>属性</em>。<a href="webgl-how-it-works.html">WebGL 工作原理</a>介绍了缓冲区和
+属性。 首先创建缓冲区</p>
+<pre class="prettyprint"><code>var buf = gl.createBuffer();
+</code></pre><p>把数据放入到缓冲区</p>
+<pre class="prettyprint"><code>gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+gl.bufferData(gl.ARRAY_BUFFER, someData, gl.STATIC_DRAW);
+</code></pre><p>在着色器程序中查找属性的位置，</p>
+<pre class="prettyprint"><code>var positionLoc = gl.getAttribLocation(someShaderProgram, &quot;a_position&quot;);
+</code></pre><p>然后，告诉 WebGL 如何将数据从这些缓冲区中取出并放入属性中</p>
+<pre class="prettyprint"><code>// turn on getting data out of a buffer for this attribute
+gl.enableVertexAttribArray(positionLoc);
+
+var numComponents = 3;  // (x, y, z)
+var type = gl.FLOAT;
+var normalize = false;  // leave the values as they are
+var offset = 0;         // start at the beginning of the buffer
+var stride = 0;         // how many bytes to move to the next vertex
+                        // 0 = use the correct stride for type and numComponents
+
+gl.vertexAttribPointer(positionLoc, numComponents, type, false, stride, offset);
+</code></pre><p>在<a href="webgl-fundamentals.html">WebGL 基本原理</a>中， 我们只是简单地传数据，并没有做任何数学换算。</p>
+<pre class="prettyprint"><code>#version 300 es
+
+in vec4 a_position;
+
+void main() {
+   gl_Position = a_position;
+}
+</code></pre><p>我们直接把裁剪空间的点放入到缓冲中，它就能正常工作。</p>
+<p>属性类型可以是 <code>float</code>, <code>vec2</code>, <code>vec3</code>, <code>vec4</code>, <code>mat2</code>, <code>mat3</code>, <code>mat4</code>,
+<code>int</code>, <code>ivec2</code>, <code>ivec3</code>, <code>ivec4</code>, <code>uint</code>, <code>uvec2</code>, <code>uvec3</code>, <code>uvec4</code>.</p>
+<h3 id="uniforms">Uniforms</h3>
+<p>对于任何顶点来说，在调用点着色器的时候，uniforms 的值都是一样的。下面例子中我们通过 uniform 为点着色器添加偏移量。</p>
+<pre class="prettyprint"><code>#version 300 es
+
+in vec4 a_position;
++uniform vec4 u_offset;
+
+void main() {
+   gl_Position = a_position + u_offset;
+}
+</code></pre><p>现在，我们给每个点都添加同样的偏移量。首先，我们查找 uniform 的位置。</p>
+<pre class="prettyprint"><code>var offsetLoc = gl.getUniformLocation(someProgram, &quot;u_offset&quot;);
+</code></pre><p>绘制之前，我们要给 uniform 赋值。</p>
+<pre class="prettyprint"><code>gl.uniform4fv(offsetLoc, [1, 0, 0, 0]);  // offset it to the right half the screen
+</code></pre><p>Uniforms 可以是各种不同的数据类型。每种类型对应不同名称的赋值方法调用。</p>
+<pre class="prettyprint"><code>gl.uniform1f (floatUniformLoc, v);                 // for float
+gl.uniform1fv(floatUniformLoc, [v]);               // for float or float array
+gl.uniform2f (vec2UniformLoc,  v0, v1);            // for vec2
+gl.uniform2fv(vec2UniformLoc,  [v0, v1]);          // for vec2 or vec2 array
+gl.uniform3f (vec3UniformLoc,  v0, v1, v2);        // for vec3
+gl.uniform3fv(vec3UniformLoc,  [v0, v1, v2]);      // for vec3 or vec3 array
+gl.uniform4f (vec4UniformLoc,  v0, v1, v2, v4);    // for vec4
+gl.uniform4fv(vec4UniformLoc,  [v0, v1, v2, v4]);  // for vec4 or vec4 array
+
+gl.uniformMatrix2fv(mat2UniformLoc, false, [  4x element array ])  // for mat2 or mat2 array
+gl.uniformMatrix3fv(mat3UniformLoc, false, [  9x element array ])  // for mat3 or mat3 array
+gl.uniformMatrix4fv(mat4UniformLoc, false, [ 16x element array ])  // for mat4 or mat4 array
+
+gl.uniform1i (intUniformLoc,   v);                 // for int
+gl.uniform1iv(intUniformLoc, [v]);                 // for int or int array
+gl.uniform2i (ivec2UniformLoc, v0, v1);            // for ivec2
+gl.uniform2iv(ivec2UniformLoc, [v0, v1]);          // for ivec2 or ivec2 array
+gl.uniform3i (ivec3UniformLoc, v0, v1, v2);        // for ivec3
+gl.uniform3iv(ivec3UniformLoc, [v0, v1, v2]);      // for ivec3 or ivec3 array
+gl.uniform4i (ivec4UniformLoc, v0, v1, v2, v4);    // for ivec4
+gl.uniform4iv(ivec4UniformLoc, [v0, v1, v2, v4]);  // for ivec4 or ivec4 array
+
+gl.uniform1u (intUniformLoc,   v);                 // for uint
+gl.uniform1uv(intUniformLoc, [v]);                 // for uint or uint array
+gl.uniform2u (ivec2UniformLoc, v0, v1);            // for uvec2
+gl.uniform2uv(ivec2UniformLoc, [v0, v1]);          // for uvec2 or uvec2 array
+gl.uniform3u (ivec3UniformLoc, v0, v1, v2);        // for uvec3
+gl.uniform3uv(ivec3UniformLoc, [v0, v1, v2]);      // for uvec3 or uvec3 array
+gl.uniform4u (ivec4UniformLoc, v0, v1, v2, v4);    // for uvec4
+gl.uniform4uv(ivec4UniformLoc, [v0, v1, v2, v4]);  // for uvec4 or uvec4 array
+
+// for sampler2D, sampler3D, samplerCube, samplerCubeShader, sampler2DShadow,
+// sampler2DArray, sampler2DArrayShadow
+gl.uniform1i (samplerUniformLoc,   v);
+gl.uniform1iv(samplerUniformLoc, [v]);
+</code></pre><p>是否有<code>bool</code>, <code>bvec2</code>, <code>bvec3</code>, 和<code>bvec4</code>的类型呢？ 是的，可以使用类似 <code>gl.uniform?f?</code>, <code>gl.uniform?i?</code>,
+or <code>gl.uniform?u?</code>的方法名。</p>
+<p>注意，对于一个数组，你可以一次性设置这个数组每个元素的值。比如：</p>
+<pre class="prettyprint"><code>// in shader
+uniform vec2 u_someVec2[3];
+
+// in JavaScript at init time
+var someVec2Loc = gl.getUniformLocation(someProgram, &quot;u_someVec2&quot;);
+
+// at render time
+gl.uniform2fv(someVec2Loc, [1, 2, 3, 4, 5, 6]);  // set the entire array of u_someVec2
+</code></pre><p>如果你想分别设置数组元素的值，你必须分别查找数组的各个元素。</p>
+<pre class="prettyprint"><code>// in JavaScript at init time
+var someVec2Element0Loc = gl.getUniformLocation(someProgram, &quot;u_someVec2[0]&quot;);
+var someVec2Element1Loc = gl.getUniformLocation(someProgram, &quot;u_someVec2[1]&quot;);
+var someVec2Element2Loc = gl.getUniformLocation(someProgram, &quot;u_someVec2[2]&quot;);
+
+// at render time
+gl.uniform2fv(someVec2Element0Loc, [1, 2]);  // set element 0
+gl.uniform2fv(someVec2Element1Loc, [3, 4]);  // set element 1
+gl.uniform2fv(someVec2Element2Loc, [5, 6]);  // set element 2
+</code></pre><p>类似做法，还可以创建结构体</p>
+<pre class="prettyprint"><code>struct SomeStruct {
+  bool active;
+  vec2 someVec2;
+};
+uniform SomeStruct u_someThing;
+</code></pre><p>这样，你不得不分别查找这个结构体的各个域：</p>
+<pre class="prettyprint"><code>var someThingActiveLoc = gl.getUniformLocation(someProgram, &quot;u_someThing.active&quot;);
+var someThingSomeVec2Loc = gl.getUniformLocation(someProgram, &quot;u_someThing.someVec2&quot;);
+</code></pre><h3 id="-">点着色器中的纹理</h3>
+<p>请看 <a href="#片段着色器中的纹理">片段着色器中的纹理</a>.</p>
+<h2 id="-">片段着色器</h2>
+<p>片段着色器的任务是给栅格化的像素提供颜色。通常采用下面的形式：</p>
+<h1 id="version-300-es">version 300 es</h1>
+<p>precision highp float;</p>
+<pre class="prettyprint"><code>out vec4 outColor;  // you can pick any name
+
+void main() {
+   outColor = doMathToMakeAColor;
+}
+</code></pre><p>对每个像素都会调用一次片段着色器。每次调用，它要求你赋值颜色值给这个输出变量。</p>
+<p>片段着色器获取数据的方式有一下三种：</p>
+<ol>
+<li><a href="#uniforms">Uniforms</a> (每个像素的每次调用，其值都是相同)</li>
+<li><a href="#textures-in-fragment-shaders">纹理</a> (来自于像素或纹素(texel)的数据)</li>
+<li><a href="#varyings">Varyings</a> (来自于点着色器的数据或插值的数据)</li>
+</ol>
+<h3 id="-uniforms">片段着色器中的 Uniforms</h3>
+<p>请阅读 <a href="#uniforms">点着色器中的 Uniforms</a>.</p>
+<h3 id="-">片段着色器中的纹理</h3>
+<p>为从着色器中的纹理获取值，我们创建一个<code>sampler2D</code>的 Uniform 并使用 GLSL 函数<code>texture</code>从中提取一个值。</p>
+<pre class="prettyprint"><code>precision highp float;
+
+uniform sampler2D u_texture;
+
+out vec4 outColor;
+
+void main() {
+   vec2 texcoord = vec2(0.5, 0.5)  // get a value from the middle of the texture
+   outColor = texture(u_texture, texcoord);
+}
+</code></pre><p>从纹理中输出什么数据<a href="webgl-3d-textures.html">取决于很多设置</a>。至少我们需要创建数据并放入到纹理去中。</p>
+<pre class="prettyprint"><code>var tex = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, tex);
+var level = 0;
+var internalFormat = gl.RGBA,
+var width = 2;
+var height = 1;
+var border = 0; // MUST ALWAYS BE ZERO
+var format = gl.RGBA;
+var type = gl.UNSIGNED_BYTE;
+var data = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255]);
+gl.texImage2D(gl.TEXTURE_2D,
+              level,
+              internalFormat,
+              width,
+              height,
+              border,
+              format,
+              type,
+              data);
+</code></pre><p>然后再着色器程序中查找 uniform 的位置。</p>
+<pre class="prettyprint"><code>var someSamplerLoc = gl.getUniformLocation(someProgram, &quot;u_texture&quot;);
+</code></pre><p>WebGL 要求你必须绑定它到纹理单元去。</p>
+<pre class="prettyprint"><code>var unit = 5;  // Pick some texture unit
+gl.activeTexture(gl.TEXTURE0 + unit);
+gl.bindTexture(gl.TEXTURE_2D, tex);
+</code></pre><p>最后告诉着色器要绑定哪个单元(unit)到纹理中去。</p>
+<pre class="prettyprint"><code>gl.uniform1i(someSamplerLoc, unit);
+</code></pre><h3 id="varyings">Varyings</h3>
+<p>Varying 是一种从点着色器到片段着色器传值的方式，我们在文章<a href="webgl-how-it-works.html">WebGL 如何工作</a>中已经讲述。</p>
+<p>使用 varying 时，我们首先要在点着色器和片段着色器中声明匹配的 varyings。输出 varying 的值在点着色器中设置。
+当 WebGL 画像素的时候，它将可选地在这些值之间插值，并将它们传递给对应输入片段着色器。</p>
+<p>点着色器</p>
+<pre class="prettyprint"><code>#version 300 es
+
+in vec4 a_position;
+
+uniform vec4 u_offset;
+
++out vec4 v_positionWithOffset;
+
+void main() {
+  gl_Position = a_position + u_offset;
++  v_positionWithOffset = a_position + u_offset;
+}
+</code></pre><p>片段着色器</p>
+<pre class="prettyprint"><code>#version 300 es
+precision highp float;
+
++in vec4 v_positionWithOffset;
+
+out vec4 outColor;
+
+void main() {
++  // convert from clipsapce (-1 &lt;-&gt; +1) to color space (0 -&gt; 1).
++  vec4 color = v_positionWithOffset * 0.5 + 0.5;
++  outColor = color;
+}
+</code></pre><p>上面的例子实际意义不大。直接从裁剪空间到片段着色器复制颜色值，通常意义不是很大。</p>
+<h2 id="glsl">GLSL</h2>
+<p>GLSL 全称是<a href="https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf">图形库着色器语言</a>.
+它是一种编写着色器的语言。它有一些在 Javascript 中不常见的特性。它主要被设计用来执行数学计算，以对图形进行光栅化。
+因此，它内置了 vec2, vec3 和 vec4 之类的类型，分别表示 2 维，3 维和 4 维向量。类似也有<code>mat2</code>, <code>mat3</code>和<code>mat4</code>，
+分别表示 2X2, 3X3 和 4X4的矩阵。你可以执行一些操作，如将vec乘以标量。</p>
+<pre class="prettyprint"><code>vec4 a = vec4(1, 2, 3, 4);
+vec4 b = a * 2.0;
+// b is now vec4(2, 4, 6, 8);
+</code></pre><p>类似地，它可以执行矩阵乘法运行和向量与矩阵的乘法运行</p>
+<pre class="prettyprint"><code>mat4 a = ???
+mat4 b = ???
+mat4 c = a * b;
+
+vec4 v = ???
+vec4 y = c * v;
+</code></pre><p>同时，它有选择向量不同部分的选择器。对于vec4,</p>
+<pre class="prettyprint"><code>vec4 v;
+</code></pre><ul>
+<li><code>v.x</code>与 <code>v.s</code>、<code>v.r</code>和<code>v[0]</code>的意思一样.</li>
+<li><code>v.y</code>与 <code>v.t</code>、<code>v.g</code> 和 <code>v[1]</code>的意思一样.</li>
+<li><code>v.z</code> 与 <code>v.p</code>、 <code>v.b</code> 和 <code>v[2]</code>的意思一样.</li>
+<li><code>v.w</code> 与 <code>v.q</code> 、 <code>v.a</code> 和 <code>v[3]</code>的意思一样.</li>
+</ul>
+<p>你还可以交换或重复向量的部分，实例如下：</p>
+<pre class="prettyprint"><code>v.yyyy
+</code></pre><p>的意思是：</p>
+<pre class="prettyprint"><code>vec4(v.y, v.y, v.y, v.y)
+</code></pre><p>类似的</p>
+<pre class="prettyprint"><code>v.bgra
+</code></pre><p>的意思是</p>
+<pre class="prettyprint"><code>vec4(v.b, v.g, v.r, v.a)
+</code></pre><p>当构建一个向量或矩阵的时候，你能够一次性提供多部分的数据。请看示例：</p>
+<pre class="prettyprint"><code>vec4(v.rgb, 1)
+</code></pre><p>的意思是</p>
+<pre class="prettyprint"><code>vec4(v.r, v.g, v.b, 1)
+</code></pre><p>一点需要注意的是，GLSL的类型检查非常严格。</p>
+<pre class="prettyprint"><code>float f = 1;  // ERROR 1 is an int. You can&#39;t assign an int to a float
+</code></pre><p>正确的方式应该是</p>
+<pre class="prettyprint"><code>float f = 1.0;      // use float
+float f = float(1)  // cast the integer to a float
+</code></pre><p>前面的例子<code>vec4(v.rgb, 1)</code>并没有对<code>1</code>的类型报错，是因为<code>vec4</code>内部做了强制转化<code>float(1)</code></p>
+<p>GLSL有大量的内置函数。许多操作能够一次性处理向量的多个部分。例如</p>
+<pre class="prettyprint"><code>T sin(T angle)
+</code></pre><p>这里的T能够是<code>float</code>, <code>vec2</code>, <code>vec3</code> or <code>vec4</code>。如果你传参<code>vec4</code>,返回也是<code>vec4</code>类型。
+如下，<code>v</code>是<code>vec4</code></p>
+<pre class="prettyprint"><code>vec4 s = sin(v);
+</code></pre><p>的意思是</p>
+<pre class="prettyprint"><code>vec4 s = vec4(sin(v.x), sin(v.y), sin(v.z), sin(v.w));
+</code></pre><p>有时一个参数是浮点数，剩下的是<code>T</code>，意味着这个浮点数会作用到向量的所有部分。
+例如下面例子里，<code>v1</code>和<code>v2</code>是<code>vec4</code>，<code>f</code>是浮点数，</p>
+<pre class="prettyprint"><code>vec4 m = mix(v1, v2, f);
+</code></pre><p>它的意思是</p>
+<pre class="prettyprint"><code>vec4 m = vec4(
+  mix(v1.x, v2.x, f),
+  mix(v1.y, v2.y, f),
+  mix(v1.z, v2.z, f),
+  mix(v1.w, v2.w, f));
+</code></pre><p>你可以从<a href="https://www.khronos.org/files/opengles3-quick-reference-card.pdf">OpenGL ES 3.0引用卡片</a>的最后三页看到所有的GLSL函数列表
+如果你喜欢枯燥冗长的文档，你可以阅读<a href="https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf">GLSL ES 3.00规范</a>。</p>
+<h2 id="-">总结</h2>
+<p>这就是整个系列文章的重点了。 WebGL就是创建各种着色器，提供数据到那些着色器，
+然后调用<code>gl.drawArrays</code>，<code>gl.drawElements</code>等进行处理---为每个顶点调用当
+前的顶点着色器来绘制顶点，然后为每个像素通调用当前片段着色器。</p>
+<p>实际上创建着色器仅需几行代码。 由于这些代码在大多数WebGL程序是一样的。一旦编写完后，您几乎可以忽略它们[如何编译GLSL着色器
+并将它们链接到着色器程序中，请参见此处]（webgl-boilerplate.html）。</p>
+<p>到这里为止，你有两个学习方向选择：如果对图像处理感兴趣，可以转到<a href="webgl-image-processing.html">如何处理二维图片</a>；
+如果想学习转换，翻转和缩放，可以从<a href="webgl-2d-translation.html">这里开始</a>。</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -178,12 +507,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>基础概念</li>
+        <div id="toc">
+          <ul>  <li>基础概念</li>
         <ul>
           <li><a href="/webgl/lessons/zh_cn/webgl-getting-webgl2.html">怎样使用WebGL2</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-fundamentals.html">基本原理</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-how-it-works.html">如何工作的</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-shaders-and-glsl.html">Shaders and GLSL</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-shaders-and-glsl.html">着色器和 GLSL 语言</a></li>
 <li><a href="/webgl/lessons/resources/webgl-state-diagram.html?lang=zh_cn">WebGL2 State Diagram</a></li>
         </ul>
   <li>WebGL2 vs WebGL1</li>
@@ -310,6 +640,31 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://twgljs.org">TWGL，一个轻量级WebGL辅助库</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        <div>有关于WebGL2的疑问? <a href="https://stackoverflow.com/questions/tagged/webgl2">在Stackoverflow提问</a>.</div>
+        <div>有意见或建议? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">在GitHub上提issue</a>.</div>
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL 着色器和 GLSL 语言';
+            var disqus_title = 'WebGL 着色器和 GLSL 语言';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
