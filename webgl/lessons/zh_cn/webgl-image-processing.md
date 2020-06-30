@@ -271,7 +271,7 @@ void main() {
 {{{example url="../webgl-2d-image-3x3-convolution.html" }}}
 
 我希望这篇文章传达给你的信息是：在WebGL中做图片处理相当简单。
-接下的文章，我将介绍[如何对对象应用多个特效]()(webgl-image-processing-continued.html)。
+接下的文章，我将介绍[如何对对象应用多个特效](webgl-image-processing-continued.html)。
 
 <div class="webgl_bottombar">
 <h3>纹理单元式什么？</h3>
