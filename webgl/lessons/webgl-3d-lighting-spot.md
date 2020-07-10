@@ -27,7 +27,7 @@ directions from that point.
 To make a spot light all we need to do is choose a direction from
 that point, this is the direction of our spotlight. Then, for every
 direction the light is going we could take the dot product of
-that direction with our chosen spotlight direction. We'd pick some arbitary
+that direction with our chosen spotlight direction. We'd pick some arbitrary
 limit and decide if we're within that limit we light. If we're not within
 that limit we don't light.
 

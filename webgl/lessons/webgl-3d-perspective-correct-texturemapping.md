@@ -313,7 +313,7 @@ if `t` was `.7` we'd get `(1 - .7) + .7` which is `.3 + .7` which is `1`. In oth
 Which the same as the linear interpolation equation above.
 
 Hopefully it's now clear why WebGL uses a 4x4 matrix and 
-4 value vectors with `X`, `Y`, `Z`, and `W`. `X` and `Y` divided by `W` get a clip sapce coordinate. `Z` divided by `W` also get a clipspace coordinate in Z and `W` is still used during interpolation of varyings and
+4 value vectors with `X`, `Y`, `Z`, and `W`. `X` and `Y` divided by `W` get a clip space coordinate. `Z` divided by `W` also get a clipspace coordinate in Z and `W` is still used during interpolation of varyings and
 provides the ability to do perspective correct texture mapping.
 
 <div class="webgl_bottombar">

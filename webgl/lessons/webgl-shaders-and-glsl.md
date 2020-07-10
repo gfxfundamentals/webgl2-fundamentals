@@ -305,7 +305,7 @@ Fragment shader
     }
 
 The example above is a mostly nonsense example. It doesn't generally make sense to
-directly copy the clipspace values to the fragment shader and use them as colors. Nevertheless
+directly copy the clip space values to the fragment shader and use them as colors. Nevertheless
 it will work and produce colors.
 
 ## GLSL

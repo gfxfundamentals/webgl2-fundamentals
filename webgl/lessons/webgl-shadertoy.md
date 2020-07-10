@@ -473,9 +473,9 @@ Take for example [this amazing shadertoy shader](https://www.shadertoy.com/view/
 <div class="webgl_center"><img src="resources/shadertoy-dolphin.png" style="width: 639px;"></div>
 
 It's beautiful but it runs at about 19 frames a second in a tiny
-640x360 window on my high powered laptop. Expand the window to fullscreen and it runs around
+640x360 window on my high powered laptop. Expand the window to full screen and it runs around
 2 or 3 frames per second. Testing on my higher spec desktop it still only hits 45 frames per
-second at 640x360 and maybe 10 fullscreen.
+second at 640x360 and maybe 10 full screen.
 
 Compare it to this game that's also fairly beautiful and yet runs at 30 to 60 frames per second
 even on lower-powered GPUs

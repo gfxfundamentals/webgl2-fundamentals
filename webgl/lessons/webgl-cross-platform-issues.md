@@ -308,7 +308,7 @@ have zero interest in fixing any of them.
 
 Here's a short list of some bugs unfixed for years
 
-* toDataURL (and just guessing toBlob) returns upside down result if premultipledAlpha = false (4yrs old)
+* toDataURL (and just guessing toBlob) returns upside down result if premultipliedAlpha = false (4yrs old)
 [bug](https://bugs.webkit.org/show_bug.cgi?id=156129)
 
 * preserveDrawingBuffer=true wrongly double-buffers on current iOS (4yrs old)

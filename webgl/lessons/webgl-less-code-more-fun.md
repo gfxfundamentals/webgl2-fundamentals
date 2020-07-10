@@ -437,7 +437,7 @@ Next up, [drawing multiple things](webgl-drawing-multiple-things.html).
 <div class="webgl_bottombar">
 <h3>Can we use the setters directly?</h3>
 <p>
-For those of you familar with JavaScript you might be wondering if you can use the setters
+For those of you familiar with JavaScript you might be wondering if you can use the setters
 directly like this.
 </p>
 <pre class="prettyprint">
