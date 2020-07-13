@@ -19,16 +19,18 @@
     "grunt-contrib-watch": "^1.1.0",
     "grunt-eslint": "^22.0.0",
     "grunt-jsdoc": "^2.4.0",
+    "ld-check-dependencies": "^1.1.1",
     "load-grunt-tasks": "^5.0.0",
     "minami": "^1.2.3",
     "servez": "^1.5.0"
   },
   "scripts": {
-    "build": "grunt",
-    "watch": "grunt buildwatch",
-    "pre-push": "grunt pre-push",
+    "build": "ld-check-dependencies && grunt",
+    "build-ci": "grunt",
+    "watch": "ld-check-dependencies && grunt buildwatch",
+    "pre-push": "ld-check-dependencies && grunt pre-push",
     "start": "servez out",
-    "eslint": "grunt eslint",
+    "eslint": "ld-check-dependencies && grunt eslint",
     "test": "check-all-the-errors out \"*.html\""
   },
   "repository": {
