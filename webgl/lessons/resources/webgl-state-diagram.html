@@ -472,7 +472,7 @@ gl.attachShader(prg, vertexShader);
 gl.attachShader(prg, fragmentShader);
 gl.linkProgram(prg);
 if (!gl.getProgramParameter(prg, gl.LINK_STATUS)) {
-  throw new Error(gl.getProgramInfoLog(prg))
+  throw new Error(gl.getProgramParameter(prg))
 };
 
 // NOTE! These are only here to unclutter the diagram.
@@ -755,7 +755,7 @@ gl.attachShader(prg, vertexShader);
 gl.attachShader(prg, fragmentShader);
 gl.linkProgram(prg);
 if (!gl.getProgramParameter(prg, gl.LINK_STATUS)) {
-  throw new Error(gl.getProgramInfoLog(prg))
+  throw new Error(gl.getProgramParameter(prg))
 };
 
 // NOTE! These are only here to unclutter the diagram.
@@ -999,7 +999,7 @@ gl.attachShader(prg, vertexShader);
 gl.attachShader(prg, fragmentShader);
 gl.linkProgram(prg);
 if (!gl.getProgramParameter(prg, gl.LINK_STATUS)) {
-  throw new Error(gl.getProgramInfoLog(prg))
+  throw new Error(gl.getProgramParameter(prg))
 };
 
 gl.useProgram(prg);
@@ -1049,7 +1049,7 @@ gl.attachShader(prg, vertexShader);
 gl.attachShader(prg, fragmentShader);
 gl.linkProgram(prg);
 if (!gl.getProgramParameter(prg, gl.LINK_STATUS)) {
-  throw new Error(gl.getProgramInfoLog(prg))
+  throw new Error(gl.getProgramParameter(prg))
 };
 
 
@@ -1142,7 +1142,7 @@ gl.attachShader(prg, vertexShader);
 gl.attachShader(prg, fragmentShader);
 gl.linkProgram(prg);
 if (!gl.getProgramParameter(prg, gl.LINK_STATUS)) {
-  throw new Error(gl.getProgramInfoLog(prg))
+  throw new Error(gl.getProgramParameter(prg))
 };
 
 
@@ -1271,7 +1271,7 @@ gl.attachShader(prg, vertexShader);
 gl.attachShader(prg, fragmentShader);
 gl.linkProgram(prg);
 if (!gl.getProgramParameter(prg, gl.LINK_STATUS)) {
-  throw new Error(gl.getProgramInfoLog(prg))
+  throw new Error(gl.getProgramParameter(prg))
 };
 
 // NOTE! These are only here to unclutter the diagram.
@@ -1582,7 +1582,7 @@ const createProgram = function(gl, vsGLSL, fsGLSL, outVaryings) {
   }
   gl.linkProgram(prg)
   if (!gl.getProgramParameter(prg, gl.LINK_STATUS)) {
-    throw new Error(gl.getProgramInfoLog(prg))
+    throw new Error(gl.getProgramParameter(prg))
   }
 
   // NOTE! These are only here to unclutter the diagram.
@@ -1606,231 +1606,6 @@ const posLoc = gl.getAttribLocation(drawProg, 'position');
 const colorLoc = gl.getAttribLocation(drawProg, 'color');
 
 const numPoints = 24;
-
-// make a vertex array and attach 2 buffers
-// one for 2D positions, 1 for colors.
-const dotVertexArray = gl.createVertexArray();
-gl.bindVertexArray(dotVertexArray);
-
-const positionBuffer = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-gl.bufferData(gl.ARRAY_BUFFER, numPoints * 2 * 4, gl.DYNAMIC_DRAW);
-gl.enableVertexAttribArray(posLoc);
-gl.vertexAttribPointer(
-    posLoc,       // location
-    2,            // size (components per iteration)
-    gl.FLOAT,     // type of to get from buffer
-    false,        // normalize
-    0,            // stride (bytes to advance each iteration)
-    0,            // offset (bytes from start of buffer)
-);
-
-const colorBuffer = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-gl.bufferData(gl.ARRAY_BUFFER, numPoints * 4 * 4, gl.DYNAMIC_DRAW);
-gl.enableVertexAttribArray(colorLoc);
-gl.vertexAttribPointer(
-    colorLoc,   // location
-    4,          // size (components per iteration)
-    gl.FLOAT,   // type of to get from buffer
-    false,      // normalize
-    0,          // stride (bytes to advance each iteration)
-    0,          // offset (bytes from start of buffer)
-);
-
-// This is not really needed but if we end up binding anything
-// to ELEMENT_ARRAY_BUFFER, say we are generating indexed geometry
-// we'll change cubeVertexArray's ELEMENT_ARRAY_BUFFER. By binding
-// null here that won't happen.
-gl.bindVertexArray(null);
-
-// setup a transform feedback object to write to
-// the position and color buffers
-const tf = gl.createTransformFeedback();
-gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, tf);
-gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, positionBuffer);
-gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 1, colorBuffer);
-gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, null);
-
-// above this line is initialization code
-// --------------------------------------
-// below is rendering code.
-
-// --------------------------------------
-// First compute points into buffers
-
-// no need to call the fragment shader
-gl.enable(gl.RASTERIZER_DISCARD);
-
-// unbind the buffers so we don't get errors.
-gl.bindBuffer(gl.TRANSFORM_FEEDBACK_BUFFER, null);
-gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
-gl.useProgram(genProg);
-
-// generate numPoints of positions and colors
-// into the buffers
-gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, tf);
-gl.beginTransformFeedback(gl.POINTS);
-gl.uniform1i(numPointsLoc, numPoints);
-gl.drawArrays(gl.POINTS, 0, numPoints);
-gl.endTransformFeedback();
-gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, null);
-
-// turn on using fragment shaders again
-gl.disable(gl.RASTERIZER_DISCARD);
-
-// --------------------------------------
-// Now draw using the buffers we just computed
-
-gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
-gl.bindVertexArray(dotVertexArray);
-gl.useProgram(drawProg);
-gl.drawArrays(gl.POINTS, 0, numPoints);
-</script>
-<script id="uniform-buffers" type="not-js">
-'use strict';
-
-const canvas = document.querySelector('canvas');
-const gl = canvas.getContext('webgl2');
-
-const vsGLSL = `#version 300 es
-uniform View {
-  mat4 u_viewInverse;
-  mat4 u_viewProjection;
-};
-
-struct Light {
-  highp vec3 u_lightWorldPos;
-  mediump vec4 u_lightColor;
-};
-
-#define NUM_LIGHTS 2
-uniform Lights {
-  Light light[NUM_LIGHTS];
-} lights;
-
-uniform Model {
-  mat4 u_world;
-  mat4 u_worldInverseTranspose;
-} model;
-
-in vec4 a_position;
-in vec3 a_normal;
-in vec2 a_texcoord;
-
-out vec4 v_position;
-out vec2 v_texCoord;
-out vec3 v_normal;
-out vec3 v_surfaceToLight[NUM_LIGHTS];
-out vec3 v_surfaceToView;
-
-void main() {
-  v_texCoord = a_texcoord;
-  v_position = (u_viewProjection * model.u_world * a_position);
-  v_normal = (model.u_worldInverseTranspose * vec4(a_normal, 0)).xyz;
-  for (int i = 0; i < NUM_LIGHTS; ++i) {
-    v_surfaceToLight[i] = lights.light[i].u_lightWorldPos - (model.u_world * a_position).xyz;
-  }
-  //v_surfaceToLight[0] = lights[0].u_lightWorldPos - (model.u_world * a_position).xyz;
-  //v_surfaceToLight[1] = lights[1].u_lightWorldPos - (model.u_world * a_position).xyz;
-  v_surfaceToView = (u_viewInverse[3] - (model.u_world * a_position)).xyz;
-  gl_Position = v_position;
-}
-`;
-
-const fsGLSL = `#version 300 es
-precision highp float;
-
-#define NUM_LIGHTS 2
-
-in vec4 v_position;
-in vec2 v_texCoord;
-in vec3 v_normal;
-in vec3 v_surfaceToLight[NUM_LIGHTS];
-in vec3 v_surfaceToView;
-
-struct Light {
-  highp vec3 u_lightWorldPos;
-  mediump vec4 u_lightColor;
-};
-
-uniform Lights {
-  Light light[NUM_LIGHTS];
-} lights;
-
-uniform sampler2D u_diffuse;
-
-uniform Material {
-  vec4 u_ambient;
-  vec4 u_specular;
-  float u_shininess;
-  float u_specularFactor;
-};
-
-out vec4 theColor;
-
-void main() {
-  vec4 diffuseColor = texture(u_diffuse, v_texCoord);
-  vec3 a_normal = normalize(v_normal);
-  vec3 surfaceToView = normalize(v_surfaceToView);
-  float light = 0.0;
-  float specularLight = 0.0;
-  for (int i = 0; i < NUM_LIGHTS; ++i) {
-    vec3 surfaceToLight = normalize(v_surfaceToLight[i]);
-    vec3 halfVector = normalize(surfaceToLight + surfaceToView);
-    light += dot(a_normal, surfaceToLight) * 0.5 + 0.5;
-light += lights.light[i].u_lightColor.r;
-    specularLight += pow(max(0.0, dot(a_normal, halfVector)), u_shininess);
-  }
-  vec4 outColor = vec4((
-      diffuseColor * light +
-      diffuseColor * u_ambient +
-      u_specular * specularLight * u_specularFactor).rgb,
-      diffuseColor.a);
-  theColor = outColor;
-}
-`;
-
-const createShader = function(gl, type, glsl) {
-  const shader = gl.createShader(type)
-  gl.shaderSource(shader, glsl)
-  gl.compileShader(shader)
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    throw new Error(gl.getShaderInfoLog(shader))
-  }
-  return shader
-};
-
-const createProgram = function(gl, vsGLSL, fsGLSL) {
-  const vs = createShader(gl, gl.VERTEX_SHADER, vsGLSL)
-  const fs = createShader(gl, gl.FRAGMENT_SHADER, fsGLSL)
-  const prg = gl.createProgram()
-  gl.attachShader(prg, vs)
-  gl.attachShader(prg, fs)
-  gl.linkProgram(prg)
-  if (!gl.getProgramParameter(prg, gl.LINK_STATUS)) {
-    throw new Error(gl.getProgramInfoLog(prg))
-  }
-
-  // NOTE! These are only here to unclutter the diagram.
-  // It is safe to detach and delete shaders once
-  // a program is linked though it is arguably not common.
-  // and I usually don't do it.
-  gl.detachShader(prg, vs)
-  gl.deleteShader(vs)
-  gl.detachShader(prg, fs)
-  gl.deleteShader(fs)
-
-  return prg
-};
-
-const prog = createProgram(gl, vsGLSL, fsGLSL);
-
-// 
-const posLoc = gl.getAttribLocation(drawProg, 'position');
-const colorLoc = gl.getAttribLocation(drawProg, 'color');
 
 // make a vertex array and attach 2 buffers
 // one for 2D positions, 1 for colors.
@@ -1975,7 +1750,7 @@ const compileShadersAndLinkProgram = function(gl, prg, vsGLSL, fsGLSL) {
   gl.attachShader(prg, fragmentShader)
   gl.linkProgram(prg)
   if (!gl.getProgramParameter(prg, gl.LINK_STATUS)) {
-    throw new Error(gl.getProgramInfoLog(prg))
+    throw new Error(gl.getProgramParameter(prg))
   }
   // NOTE! These are only here to unclutter the diagram.
   // It is safe to detach and delete shaders once
@@ -2268,28 +2043,6 @@ webglStateDiagram({
       name: 'Transform Feedback',
       adjust: [
         {cmd: 'expand',   id: 'globalUI.transformFeedbackState'},
-        {cmd: 'collapse', id: 'globalUI.depthState'},
-      ],
-      windowPositions: [
-        { note: 'transform-feedback', base: '#diagram',       x: 'left:left+30',   y: 'bottom:bottom-30', },
-        { note: 'vertex-array', base: '#diagram',       x: 'left:left+50',   y: 'bottom:bottom-50', },
-        { note: 'global-state', base: '#diagram',       x: 'left:left+10',   y: 'top:top+10', },
-        { note: 'canvas',       base: '#diagram',       x: 'right:right-10', y: 'top:top+10', },
-          { note: 'vs1',          base: '#diagram',       x: 'left:left+0',    y: 'top:top+0', },
-          { note: 'fs1',          base: '#diagram',       x: 'left:left+0',    y: 'top:top+0', },
-        { note: 'gen-program',  base: 'global state',   x: 'left:right+110', y: 'top:top+0', },
-          { note: 'vs2',          base: '#diagram',       x: 'left:left+0',    y: 'top:top+0', },
-          { note: 'fs2',          base: '#diagram',       x: 'left:left+0',    y: 'top:top+0', },
-        { note: 'draw-program', base: 'genProg',        x: 'left:left+0',    y: 'top:bottom+10', },
-        { note: 'c-vert-array', base: 'vertex array',   x: 'left:left-30',   y: 'top:top+30', },
-        { note: 'p-buffer',     base: 'canvas',         x: 'left:left+70',   y: 'top:bottom+10', },
-        { note: 'c-buffer',     base: 'positionBuffer', x: 'left:left-0',    y: 'top:bottom+10', },
-        { note: 'tr-feedback',  base: 'colorBuffer',    x: 'left:left-50',   y: 'top:bottom+10', },
-      ],
-    },
-    'uniform-buffers': {
-      name: 'Uniform Buffers',
-      adjust: [
         {cmd: 'collapse', id: 'globalUI.depthState'},
       ],
       windowPositions: [
