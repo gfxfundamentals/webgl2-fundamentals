@@ -99,7 +99,7 @@ Here's the working version.
 
 {{{example url="../webgl-2d-triangle-with-position-for-color.html" }}}
 
-Move, scale and rotate the rectangle.  Notice that since the colors are
+Move, scale and rotate the triangle.  Notice that since the colors are
 computed from clip space they don't move with the rectangle.  They are
 relative to the background.
 
