@@ -40,11 +40,11 @@ Some other links you might find useful
 
 ## Specs
 
-* [WebGL](https://www.khronos.org/registry/webgl/specs/latest/1.0/): The WebGL spec
+* [WebGL2](https://www.khronos.org/registry/webgl/specs/latest/2.0/): The WebGL2 spec
 
-* [OpenGL ES 2.0](https://www.khronos.org/registry/OpenGL/specs/es/2.0/es_full_spec_2.0.pdf): The spec WebGL is based on.
+* [OpenGL ES 3.0](https://www.khronos.org/registry/OpenGL/specs/es/3.0/es_spec_3.0.pdf): The spec WebGL2 is based on.
 
-* [GLSL ES 1.0](https://www.khronos.org/files/opengles_shading_language.pdf): The shader language spec for WebGL
+* [GLSL ES 3.0](https://www.khronos.org/registry/OpenGL/specs/es/3.0/GLSL_ES_Specification_3.00.pdf): The shader language spec for WebGL2
 
 ## Fun
 
