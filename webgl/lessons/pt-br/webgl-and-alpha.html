@@ -216,11 +216,11 @@ ou então, não está composto com nada pelo gerenciador de janelas do
 sistema operacional, sendo assim, não importa qual o valor do seu alfa.</p>
 <p>A WebGL é composta pelo navegador com a página Web e o
 padrão é usar o alfa pré-multiplicado igualmente como as tags
-de imagens com arquivos .png <code>&lt;img&gt;</code> que possuem transparência e tags
+de imagens com arquivos .png <code class="notranslate" translate="no">&lt;img&gt;</code> que possuem transparência e tags
 de canvas em 2D.</p>
 <p>A WebGL tem várias maneiras de tornar isso mais parecido com a OpenGL.</p>
 <h3 id="-1-diga-a-webgl-que-voc-deseja-que-ela-seja-composta-com-alfa-n-o-pr-multiplicado">#1) Diga a WebGL que você deseja que ela seja composta com alfa não pré-multiplicado</h3>
-<pre class="prettyprint"><code>gl = canvas.getContext(&quot;webgl2&quot;, {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl = canvas.getContext(&quot;webgl2&quot;, {
   premultipliedAlpha: false  // Ask for non-premultiplied alpha
 });
 </code></pre><p>O padrão é true.</p>
@@ -232,10 +232,10 @@ em outras palavras, a cor no CSS irá definir essa área da página.</p>
 <p>Uma boa maneira de encontrar se você tem algum problema com o alfa é configurar o
 fundo da tela para uma cor brilhante como o vermelho. Você verá imediatamente
 o que está acontecendo.</p>
-<pre class="prettyprint"><code>&lt;canvas style=&quot;background: red;&quot;&gt;&lt;canvas&gt;
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;canvas style=&quot;background: red;&quot;&gt;&lt;canvas&gt;
 </code></pre><p>Você também pode configurá-lo como preto, o que irá ocultar quaisquer problemas com o alfa que você tenha.</p>
 <h3 id="-2-diga-a-webgl-que-voc-n-o-deseja-o-alpha-no-backbuffer">#2) Diga a WebGL que você não deseja o alpha no backbuffer</h3>
-<pre class="prettyprint"><code>gl = canvas.getContext(&quot;webgl&quot;, { alpha: false }};
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl = canvas.getContext(&quot;webgl&quot;, { alpha: false }};
 </code></pre><p>Isso fará com que ele atue mais como a OpenGL, já que o backbuffer só terá
 RGB. Esta é provavelmente a melhor opção porque um bom navegador pode ver que
 você não tem um valor alfa e então, otimiza a forma como a WebGL é composto. Claro,
@@ -244,7 +244,7 @@ usando alpha no backbuffer para algum propósito isso pode não funcionar para v
 Poucos aplicativos que eu conheço usam alpha no backbuffer. Eu acho que isso
 deveria ter sido definido como o padrão.</p>
 <h3 id="-3-limpar-o-alfa-no-final-da-sua-renderiza-o">#3) Limpar o alfa no final da sua renderização</h3>
-<pre class="prettyprint"><code>..
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">..
 renderScene();
 ..
 // Set the backbuffer&#39;s alpha to 1.0 by
@@ -264,7 +264,7 @@ a maioria das bibliotecas WebGL deve usar esse método como padrão. Esses pouco
 que realmente estão usando alfa para efeitos de composição podem pedir isso. o
 O resto apenas obterá o melhor desempenho e menos surpresas.</p>
 <h3 id="-4-limpe-o-alfa-uma-vez-ent-o-n-o-o-renderize-mais">#4) Limpe o alfa uma vez, então, não o renderize mais</h3>
-<pre class="prettyprint"><code>// At init time. Clear the back buffer.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// At init time. Clear the back buffer.
 gl.clearColor(1,1,1,1);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -278,25 +278,25 @@ renderização do canvas.</p>
 forneces os valores como estão no arquivo, com os valores das cores não
 pré-multiplicados. Isso geralmente é o que eu costumava usar para programas OpenGL
 porque é 100% sem perdas, enquanto pré-multiplicado tem perdas.</p>
-<pre class="prettyprint"><code>1, 0.5, 0.5, 0  // RGBA
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">1, 0.5, 0.5, 0  // RGBA
 </code></pre><p>É um possível valor não pré-multiplicado, enquanto um valor pré-multiplicado é um
-valor impossível porque <code>a = 0</code> que significa <code>r</code>, <code>g</code> e <code>b</code> têm
+valor impossível porque <code class="notranslate" translate="no">a = 0</code> que significa <code class="notranslate" translate="no">r</code>, <code class="notranslate" translate="no">g</code> e <code class="notranslate" translate="no">b</code> têm
 de ser zero.</p>
 <p>Ao carregar uma imagem, você pode fazer com que a WebGL pré-multiplique o alfa, se desejar.
-Você pode fazer isso configurando <code>UNPACK_PREMULTIPLY_ALPHA_WEBGL</code> para true, por exemplo</p>
-<pre class="prettyprint"><code>gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+Você pode fazer isso configurando <code class="notranslate" translate="no">UNPACK_PREMULTIPLY_ALPHA_WEBGL</code> para true, por exemplo</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 </code></pre><p>O padrão é false.</p>
 <p>Esteja ciente de que a maioria, senão todas as implementações de Canvas 2D, funcionam com
 o alfa pré-multiplicado. Isso significa que quando você os transfere para a WebGL e
-<code>UNPACK_PREMULTIPLY_ALPHA_WEBGL</code> é falso, a WebGL os converterá
+<code class="notranslate" translate="no">UNPACK_PREMULTIPLY_ALPHA_WEBGL</code> é falso, a WebGL os converterá
 de volta a um valor não pré-multiplicado.</p>
 <h3 id="-6-usando-uma-equa-o-blending-que-funciona-com-alfa-pr-multiplicado-">#6) Usando uma equação blending que funciona com alfa pré-multiplicado.</h3>
 <p>Quase todas as aplicações OpenGL que escrevi ou trabalharei, usam</p>
-<pre class="prettyprint"><code>gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 </code></pre><p>Isso funciona para texturas alfa não pré-multiplicadas.</p>
 <p>Se você realmente quiser trabalhar com texturas alfa pré-multiplicadas, então o que você
 provavelmente quer é</p>
-<pre class="prettyprint"><code>gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 </code></pre><p>Esses são os métodos que conheço. Se você souber de mais, por favor, publique-os abaixo.</p>
 
     </div>

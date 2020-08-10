@@ -218,7 +218,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <p>이렇게 하려면 프레임 버퍼(Framebuffer)를 만들어야합니다. 사실 WebGL이나 OpenGL에서 프레임 버퍼는 좋은 이름이 아닙니다. WebGL/OpenGL 프레임 버퍼는 실제로 첨부 목록일뿐 실제로 다른 종류 버퍼가 아닙니다. 그러나 텍스처를 프레임 버퍼에 첨부하여 해당 텍스처로 랜더링할 수 있습니다.</p>
 <p>우선 <a href="webgl-image-processing.html">오래된 텍스처 생성 코드</a>를 함수로 바꿔봅시다.</p>
-<pre class="prettyprint"><code>  function createAndSetupTexture(gl) {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  function createAndSetupTexture(gl) {
     var texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -246,7 +246,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 srcType,
                 image);
 </code></pre><p>이제 함수를 사용하여 2개의 텍스처를 만들고 두개의 프레임 버퍼에 첨부해 봅시다.</p>
-<pre class="prettyprint"><code>  // 2개의 텍스처를 만들고 프레임버퍼에 첨부합니다.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 2개의 텍스처를 만들고 프레임버퍼에 첨부합니다.
   var textures = [];
   var framebuffers = [];
   for (var ii = 0; ii &lt; 2; ++ii) {
@@ -275,7 +275,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, texture, mipLevel);
   }
 </code></pre><p>이제 커널 집합을 만든 다음 이를 적용할 목록을 만들어 보겠습니다.</p>
-<pre class="prettyprint"><code>  // 몇가지 컨밴션 커널들 정의
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 몇가지 컨밴션 커널들 정의
   var kernels = {
     normal: [
       0, 0, 0,
@@ -307,7 +307,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     &quot;unsharpen&quot;
   ];
 </code></pre><p>그리고 마지막으로 하나씩 적용하고, 렌더링할 텍스처를 핑퐁(ping-ponging?)합니다.</p>
-<pre class="prettyprint"><code>  function drawEffects() {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  function drawEffects() {
     // 사용할 프로그램(쉐이더 쌍) 전달
     gl.useProgram(program);
 
@@ -380,13 +380,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 </p>
 <p>여기에 몇 가지 봐야할게 있습니다.</p>
-<p><code>gl.bindFramebuffer</code>를 <code>null</code>로 호출하는 것은 WebGL에 프레임 버퍼중 하나에 프레임 버퍼 중 하나 대신에 캔버스에 렌더링 되길 원하는것을 의미합니다.</p>
-<p>또한 프레임버퍼는 무엇을 첨부 하냐에 따라서 작동하지 않을 수 있습니다. 항상 작동 해야하는 첨부물의 타입과 조합 목록이 있습니다. 여기서 사용된 <code>RGBA</code>/<code>UNSIGNED_BYTE</code> 텍스처는 <code>COLOR_ATTACHMENT0</code> 첨부 포인터에 할당되어 항상 작동한다고 가정합니다.
-더 실험적인 텍스처 포맷 및 첨부물 조합들은 작동하지 않을 수 있습니다. 이러한 경우 프레임 버퍼를 바인드 한 다음<code>gl.checkFramebufferStatus</code>를 호출하고<code>gl.FRAMEBUFFER_COMPLETE</code>를 리턴하는지 확인해야합니다. 작동이 한다면 그대로 사용하면 되고 만약 작동하지 않는다면 사용자에게 이를 알릴 필요가 있습니다. 다행히도 WebGL2는 다양한 포맷과 조합을 지원합니다.</p>
-<p>WebGL은 (클립 공간)[webgl-fundamentals.html]에서 픽셀로 변환을 합니다. 이 작업은<code>gl.viewport</code> 설정을 기반으로합니다. 프레임 버퍼는 캔버스와 크기가 다르기 때문에 텍스처 또는 캔버스에 랜더링할 것인지에 따라
+<p><code class="notranslate" translate="no">gl.bindFramebuffer</code>를 <code class="notranslate" translate="no">null</code>로 호출하는 것은 WebGL에 프레임 버퍼중 하나에 프레임 버퍼 중 하나 대신에 캔버스에 렌더링 되길 원하는것을 의미합니다.</p>
+<p>또한 프레임버퍼는 무엇을 첨부 하냐에 따라서 작동하지 않을 수 있습니다. 항상 작동 해야하는 첨부물의 타입과 조합 목록이 있습니다. 여기서 사용된 <code class="notranslate" translate="no">RGBA</code>/<code class="notranslate" translate="no">UNSIGNED_BYTE</code> 텍스처는 <code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> 첨부 포인터에 할당되어 항상 작동한다고 가정합니다.
+더 실험적인 텍스처 포맷 및 첨부물 조합들은 작동하지 않을 수 있습니다. 이러한 경우 프레임 버퍼를 바인드 한 다음<code class="notranslate" translate="no">gl.checkFramebufferStatus</code>를 호출하고<code class="notranslate" translate="no">gl.FRAMEBUFFER_COMPLETE</code>를 리턴하는지 확인해야합니다. 작동이 한다면 그대로 사용하면 되고 만약 작동하지 않는다면 사용자에게 이를 알릴 필요가 있습니다. 다행히도 WebGL2는 다양한 포맷과 조합을 지원합니다.</p>
+<p>WebGL은 (클립 공간)[webgl-fundamentals.html]에서 픽셀로 변환을 합니다. 이 작업은<code class="notranslate" translate="no">gl.viewport</code> 설정을 기반으로합니다. 프레임 버퍼는 캔버스와 크기가 다르기 때문에 텍스처 또는 캔버스에 랜더링할 것인지에 따라
  뷰표트를 적절히 설정이 필요합니다.</p>
-<p>마지막으로 <a href="webgl-fundamentals.html">원래 예제</a>에서 WebGL은 전통적인 2D에서 왼쪽 상단과 달리 왼쪽 아래를 0.0으로 캔버스를 보여주기 떄문에 렌더링 할떄 Y좌표를 뒤집었습니다. 이는 프레임 버퍼를 할때에는 필요가 없습니다. 프레임 버퍼는 보여지지 않기 떄문에 어느부분이 위인지 아래인지는 상관이 없습니다. 중요한 것은 픽셀 0이고 0은 프레임버퍼의 0에 해당한다는 것입니다. 이 문제를 해결하기 위해 쉐이더 <code>u_flipY</code>이라 불리는 하나 이상의 유니폼 입력을 추가하여 뒤집을지 아닌지 설정 할 수 있게 만들었습니다.</p>
-<pre class="prettyprint"><code>...
+<p>마지막으로 <a href="webgl-fundamentals.html">원래 예제</a>에서 WebGL은 전통적인 2D에서 왼쪽 상단과 달리 왼쪽 아래를 0.0으로 캔버스를 보여주기 떄문에 렌더링 할떄 Y좌표를 뒤집었습니다. 이는 프레임 버퍼를 할때에는 필요가 없습니다. 프레임 버퍼는 보여지지 않기 떄문에 어느부분이 위인지 아래인지는 상관이 없습니다. 중요한 것은 픽셀 0이고 0은 프레임버퍼의 0에 해당한다는 것입니다. 이 문제를 해결하기 위해 쉐이더 <code class="notranslate" translate="no">u_flipY</code>이라 불리는 하나 이상의 유니폼 입력을 추가하여 뒤집을지 아닌지 설정 할 수 있게 만들었습니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 +uniform float u_flipY;
 ...
 
@@ -396,7 +396,7 @@ void main() {
   ...
 }
 </code></pre><p>그리고 렌더링 할 때 설정할 수 있습니다.</p>
-<pre class="prettyprint"><code>  ...
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
 +  var flipYLocation = gl.getUniformLocation(program, &quot;u_flipY&quot;);
 
   ...

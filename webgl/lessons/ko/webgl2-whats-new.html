@@ -213,73 +213,73 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>이제는 WebGL2에서 항상 사용할 수 있고 WebGL1에서는 선택적으로 사용할 수 있었음에도 이것이 매우 중요하다고 생각합니다. <a href="webgl1-to-webgl2.html#Vertex-Array-Objects">아마도 항상 이것을 사용해야 될 것입니다</a>.</p>
 <h2 id="-">텍스처의 크기를 쉐이더에서 사용할 수 있습니다.</h2>
 <p>WebGl1에서 쉐이더에서 텍스처의 크기를 알아야 된다면 직접 uniform을 사용하여 크기를 전달해야 했습니다. WebGl2에서는 다음과 같이 호출하여</p>
-<pre class="prettyprint"><code>vec2 size = textureSize(sampler, lod)
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec2 size = textureSize(sampler, lod)
 </code></pre><p>텍스처의 크기를 얻을 수 있습니다.</p>
 <h2 id="-">직접 텍셀 조회</h2>
 <p>종종 많은 양의 배열 데이터를 텍스처에 저장하는 것이 편리합니다.
 WebGL1에서 이를 할 수 있었지만 오직 텍스처 좌표(0.0에서 1.0)만 텍스처를 처리 할 수 있었습니다. WebGL2에서는 픽셀/텍셀 좌표로 텍스처의 값을 찾아 볼 수 있으므로 배열 접근이 더 쉬워집니다.</p>
-<pre class="prettyprint"><code>vec4 values = texelFetch(sampler, ivec2Position, lod);
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 values = texelFetch(sampler, ivec2Position, lod);
 </code></pre><h2 id="-">다양한 텍스처 포맷</h2>
 <p>WebGL1에서는 단지 몇 가지 텍스처 포맷만 있엇습니다. WebGL2에는 아주 많아 졌습니다!</p>
 <ul>
-<li><code>RGBA32I</code></li>
-<li><code>RGBA32UI</code></li>
-<li><code>RGBA16I</code></li>
-<li><code>RGBA16UI</code></li>
-<li><code>RGBA8</code></li>
-<li><code>RGBA8I</code></li>
-<li><code>RGBA8UI</code></li>
-<li><code>SRGB8_ALPHA8</code></li>
-<li><code>RGB10_A2</code></li>
-<li><code>RGB10_A2UI</code></li>
-<li><code>RGBA4</code></li>
-<li><code>RGB5_A1</code></li>
-<li><code>RGB8</code></li>
-<li><code>RGB565</code></li>
-<li><code>RG32I</code></li>
-<li><code>RG32UI</code></li>
-<li><code>RG16I</code></li>
-<li><code>RG16UI</code></li>
-<li><code>RG8</code></li>
-<li><code>RG8I</code></li>
-<li><code>RG8UI</code></li>
-<li><code>R32I</code></li>
-<li><code>R32UI</code></li>
-<li><code>R16I</code></li>
-<li><code>R16UI</code></li>
-<li><code>R8</code></li>
-<li><code>R8I</code></li>
-<li><code>R8UI</code></li>
-<li><code>RGBA32F</code></li>
-<li><code>RGBA16F</code></li>
-<li><code>RGBA8_SNORM</code></li>
-<li><code>RGB32F</code></li>
-<li><code>RGB32I</code></li>
-<li><code>RGB32UI</code></li>
-<li><code>RGB16F</code></li>
-<li><code>RGB16I</code></li>
-<li><code>RGB16UI</code></li>
-<li><code>RGB8_SNORM</code></li>
-<li><code>RGB8I</code></li>
-<li><code>RGB8UI</code></li>
-<li><code>SRGB8</code></li>
-<li><code>R11F_G11F_B10F</code></li>
-<li><code>RGB9_E5</code></li>
-<li><code>RG32F</code></li>
-<li><code>RG16F</code></li>
-<li><code>RG8_SNORM</code></li>
-<li><code>R32F</code></li>
-<li><code>R16F</code></li>
-<li><code>R8_SNORM</code></li>
-<li><code>DEPTH_COMPONENT32F</code></li>
-<li><code>DEPTH_COMPONENT24</code></li>
-<li><code>DEPTH_COMPONENT16</code></li>
+<li><code class="notranslate" translate="no">RGBA32I</code></li>
+<li><code class="notranslate" translate="no">RGBA32UI</code></li>
+<li><code class="notranslate" translate="no">RGBA16I</code></li>
+<li><code class="notranslate" translate="no">RGBA16UI</code></li>
+<li><code class="notranslate" translate="no">RGBA8</code></li>
+<li><code class="notranslate" translate="no">RGBA8I</code></li>
+<li><code class="notranslate" translate="no">RGBA8UI</code></li>
+<li><code class="notranslate" translate="no">SRGB8_ALPHA8</code></li>
+<li><code class="notranslate" translate="no">RGB10_A2</code></li>
+<li><code class="notranslate" translate="no">RGB10_A2UI</code></li>
+<li><code class="notranslate" translate="no">RGBA4</code></li>
+<li><code class="notranslate" translate="no">RGB5_A1</code></li>
+<li><code class="notranslate" translate="no">RGB8</code></li>
+<li><code class="notranslate" translate="no">RGB565</code></li>
+<li><code class="notranslate" translate="no">RG32I</code></li>
+<li><code class="notranslate" translate="no">RG32UI</code></li>
+<li><code class="notranslate" translate="no">RG16I</code></li>
+<li><code class="notranslate" translate="no">RG16UI</code></li>
+<li><code class="notranslate" translate="no">RG8</code></li>
+<li><code class="notranslate" translate="no">RG8I</code></li>
+<li><code class="notranslate" translate="no">RG8UI</code></li>
+<li><code class="notranslate" translate="no">R32I</code></li>
+<li><code class="notranslate" translate="no">R32UI</code></li>
+<li><code class="notranslate" translate="no">R16I</code></li>
+<li><code class="notranslate" translate="no">R16UI</code></li>
+<li><code class="notranslate" translate="no">R8</code></li>
+<li><code class="notranslate" translate="no">R8I</code></li>
+<li><code class="notranslate" translate="no">R8UI</code></li>
+<li><code class="notranslate" translate="no">RGBA32F</code></li>
+<li><code class="notranslate" translate="no">RGBA16F</code></li>
+<li><code class="notranslate" translate="no">RGBA8_SNORM</code></li>
+<li><code class="notranslate" translate="no">RGB32F</code></li>
+<li><code class="notranslate" translate="no">RGB32I</code></li>
+<li><code class="notranslate" translate="no">RGB32UI</code></li>
+<li><code class="notranslate" translate="no">RGB16F</code></li>
+<li><code class="notranslate" translate="no">RGB16I</code></li>
+<li><code class="notranslate" translate="no">RGB16UI</code></li>
+<li><code class="notranslate" translate="no">RGB8_SNORM</code></li>
+<li><code class="notranslate" translate="no">RGB8I</code></li>
+<li><code class="notranslate" translate="no">RGB8UI</code></li>
+<li><code class="notranslate" translate="no">SRGB8</code></li>
+<li><code class="notranslate" translate="no">R11F_G11F_B10F</code></li>
+<li><code class="notranslate" translate="no">RGB9_E5</code></li>
+<li><code class="notranslate" translate="no">RG32F</code></li>
+<li><code class="notranslate" translate="no">RG16F</code></li>
+<li><code class="notranslate" translate="no">RG8_SNORM</code></li>
+<li><code class="notranslate" translate="no">R32F</code></li>
+<li><code class="notranslate" translate="no">R16F</code></li>
+<li><code class="notranslate" translate="no">R8_SNORM</code></li>
+<li><code class="notranslate" translate="no">DEPTH_COMPONENT32F</code></li>
+<li><code class="notranslate" translate="no">DEPTH_COMPONENT24</code></li>
+<li><code class="notranslate" translate="no">DEPTH_COMPONENT16</code></li>
 </ul>
 <h2 id="3d-">3D 텍스처</h2>
 <p>3D 텍스처 입니다. 3차원을 가진 텍스처입니다.</p>
 <h2 id="-">텍스처 배열</h2>
 <p>텍스처 배열은 각 부분이 별도의 텍스처로 간주된다는 점을 제외하면 3D 텍스처와 매우 비슷합니다. 모든 부분들이 같은 크기여야 하지만 쉐이더에 비교적 적은 수의 텍스처 단위를 가지고있는 수많은 텍스처에 접근하는 좋은 방법입니다. 쉐이더에서 부분(slice)를 선택할 수 있습니다.</p>
-<pre class="prettyprint"><code>vec4 color = texture(someSampler2DArray, vec3(u, v, slice));
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 color = texture(someSampler2DArray, vec3(u, v, slice));
 </code></pre><h2 id="2-">2의 거듭제곱이 아닌 텍스처 지원</h2>
 <p>WebGL1에서, 2의 거듭제곱이 아닌 텍스처는 밉을 가질수 없었습니다. 
 WebGL2부터는 이런 제한이 사라졌습니다.
@@ -295,16 +295,16 @@ WebGL2 GLSL 300 es 에는 이전의 &#39;전치행렬 함수&#39;처럼 &#39;역
 데스크톱 전용의 S3TC, IOS 전용의 PVTC 등등 ...</p>
 <p>WebGL2에서 아래와같은 형식은 모든 하드웨어 환경에서 지원됩니다.</p>
 <ul>
-<li><code>COMPRESSED_R11_EAC RED</code></li>
-<li><code>COMPRESSED_SIGNED_R11_EAC RED</code></li>
-<li><code>COMPRESSED_RG11_EAC RG</code></li>
-<li><code>COMPRESSED_SIGNED_RG11_EAC RG</code></li>
-<li><code>COMPRESSED_RGB8_ETC2 RGB</code></li>
-<li><code>COMPRESSED_SRGB8_ETC2 RGB</code></li>
-<li><code>COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2 RGBA</code></li>
-<li><code>COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2 RGBA</code></li>
-<li><code>COMPRESSED_RGBA8_ETC2_EAC RGBA</code></li>
-<li><code>COMPRESSED_SRGB8_ALPHA8_ETC2_EAC</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_R11_EAC RED</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_SIGNED_R11_EAC RED</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_RG11_EAC RG</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_SIGNED_RG11_EAC RG</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_RGB8_ETC2 RGB</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_SRGB8_ETC2 RGB</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2 RGBA</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2 RGBA</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_RGBA8_ETC2_EAC RGBA</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_SRGB8_ALPHA8_ETC2_EAC</code></li>
 </ul>
 <h2 id="uniform-buffer-objects">Uniform Buffer Objects</h2>
 <p>Uniform Buffer Object를 사용하면 buffer에서 uniform 묶음을 특정할 수 있습니다. 다음과 같은 장점들이 있습니다.</p>
@@ -333,7 +333,7 @@ Uniform Buffer Object는 Uniform Block이 사용할 값이 들어있는 버퍼�
 </ul>
 <p>그런 다음 런타임에 전역 Uniform Buffer Object, 모델 별 Uniform Buffer Object, 조명 별 Uniform Buffer Object, 재질 별 Uniform Buffer         Object를 각각 하나씩 만듭니다.</p>
 <p>모든 값이 이미 최신의 값이라고 가정하고 어떤 특정 항목을 그리려면 필요한 4개의 Uniform Buffer Object를 바인딩만 하면 됩니다.</p>
-<pre class="prettyprint"><code>gl.bindBufferRange(..., globalBlockIndx, globalMatrixUBO, ...);
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindBufferRange(..., globalBlockIndx, globalMatrixUBO, ...);
 gl.bindBufferRange(..., modelBlockIndx, someModelMatrixUBO, ...);
 gl.bindBufferRange(..., materialBlockIndx, someMaterialSettingsUBO, ...);
 gl.bindBufferRange(..., lightBlockIndx, someLightSettingsUBO, ...);
@@ -356,7 +356,7 @@ gl.bindBufferRange(..., lightBlockIndx, someLightSettingsUBO, ...);
 <p>이제 표준입니다. 일반적인 용도는 많은양의 나무,관목 또는 잔디 등을 빠르게 그리는 것입니다.</p>
 <h2 id="unsigned_int-indices">UNSIGNED_INT indices</h2>
 <p>32bit int 인덱스는 인덱싱 된 geometry의 크기 제한을 풀어줍니다.</p>
-<h2 id="setting-gl_fragdepth-">Setting <code>gl_FragDepth</code></h2>
+<h2 id="setting-gl_fragdepth-">Setting <code class="notranslate" translate="no">gl_FragDepth</code></h2>
 <p>깊이 버퍼 / z 버퍼에 사용자 정의 값을 쓸 수 있습니다.</p>
 <h2 id="blend-equation-min-max">Blend Equation MIN / MAX</h2>
 <p>블렌드 할때 두 색상의 최소 또는 최대 를 가질 수 있습니다.</p>
@@ -373,8 +373,8 @@ gl.bindBufferRange(..., lightBlockIndx, someLightSettingsUBO, ...);
 <p>부동 소수점 텍스처는 많은 특수 효과 및 계산에 사용됩니다. WebGL1에서는 선택 사항이었지만 WebGL2에서는 기본적으로 지원합니다. </p>
 <p>노트: 안타깝게도 부동 소수점 텍스에 대한 필터링 및 렌더링은 여전히 선택 사항이므로 제한적입니다.</p>
 <p>참고
-<a href="https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/"><code>OES_texture_float_linear</code></a>
-<a href="https://www.khronos.org/registry/webgl/extensions/EXT_color_buffer_float/"><code>EXT_color_buffer_float</code></a>.</p>
+<a href="https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/"><code class="notranslate" translate="no">OES_texture_float_linear</code></a>
+<a href="https://www.khronos.org/registry/webgl/extensions/EXT_color_buffer_float/"><code class="notranslate" translate="no">EXT_color_buffer_float</code></a>.</p>
 
     </div>
     <div class="lesson-sidebar">

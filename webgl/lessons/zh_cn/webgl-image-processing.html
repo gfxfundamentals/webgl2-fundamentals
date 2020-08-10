@@ -218,7 +218,7 @@ WebGL 在读取纹理时通常需要纹理坐标。无论纹理的尺寸如何�
 它会对我们在点着色器中提供的值进行<a href="webgl-how-it-works.html">插值</a>。</p>
 <p>借用<a href="webgl-fundamentals.html">上一篇文章</a>结尾用到的点着色器，
 我们需要添加一个属性以传递纹理坐标，然后将其传递给片段着色器。</p>
-<pre class="prettyprint"><code>...
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 
 +in vec2 a_texCoord;
 
@@ -233,7 +233,7 @@ void main() {
 +   v_texCoord = a_texCoord;
 }
 </code></pre><p>然后，我们从纹理中查找颜色来供给片段着色器使用。</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
 // our texture
@@ -252,7 +252,7 @@ void main() {
 </code></pre><p>最后，我们需要加载图像，创建纹理并将图像复制到纹理中。 因为在
 浏览器中图像是异步加载的，因此我们必须重新编排代码以等待纹理图片加载结束。 
 一旦加载完后，我们将绘制它。</p>
-<pre class="prettyprint"><code>+function main() {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+function main() {
 +  var image = new Image();
 +  image.src = &quot;https://someimage/on/our/server&quot;;  // MUST BE SAME DOMAIN!!!
 +  image.onload = function() {
@@ -348,7 +348,7 @@ function render(image) {
 
 </p>
 <p>这并不让人感到新奇，因此我们图片做一些处理。交换颜色红色和蓝色部分，看看什么效果？</p>
-<pre class="prettyprint"><code>...
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 outColor = texture(u_image, v_texCoord).bgra;
 ...
 </code></pre><p>现在，红色和蓝色部分交换了。</p>
@@ -361,7 +361,7 @@ outColor = texture(u_image, v_texCoord).bgra;
 <p>如果我们处理图像时要用到周围的其他像素，该怎么办呢？WebGL是在0.0到1.0的纹理坐标中引用纹理，
 首先我们需要计算1个像素的宽度：onePixel = 1.0 / textureSize.</p>
 <p>下面的片段着色器平均左右两边纹理中的像素值。</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 // fragment shaders don&#39;t have a default precision so we need
 // to pick one. highp is a good default. It means &quot;high precision&quot;
@@ -397,7 +397,7 @@ void main() {
 将结果除以核权重（核中所有值的总和）或1.0，以较大者为准。 关于卷积核，请看<a href="https://docs.gimp.org/2.6/en/plug-in-convmatrix.html">这篇文章</a>。
 <a href="https://www.codeproject.com/KB/graphics/ImageConvolution.aspx">另一篇文章</a>用C++代码演示了卷积核的应用。</p>
 <p>在我们例子里，我们将要在着色器中做卷积操作。下面是片段着色器。</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 // fragment shaders don&#39;t have a default precision so we need
 // to pick one. highp is a good default. It means &quot;high precision&quot;
@@ -432,7 +432,7 @@ void main() {
   outColor = vec4((colorSum / u_kernelWeight).rgb, 1);
 }
 </code></pre><p>在JavaScript中，我们需要提供卷积核和权重。</p>
-<pre class="prettyprint"><code> function computeKernelWeight(kernel) {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> function computeKernelWeight(kernel) {
    var weight = kernel.reduce(function(prev, curr) {
        return prev + curr;
    });
@@ -464,7 +464,7 @@ void main() {
 接下的文章，我将介绍<a href="webgl-image-processing-continued.html">如何对对象应用多个特效</a>。</p>
 <div class="webgl_bottombar">
 <h3>纹理单元式什么？</h3>
-当你调用方法 <code>gl.draw???</code>， 你的着色器就引用了纹理。纹理被绑定到纹理单元。
+当你调用方法 <code class="notranslate" translate="no">gl.draw???</code>， 你的着色器就引用了纹理。纹理被绑定到纹理单元。
 所有的WebGL2实现必须支持至少16个纹理单元(一般用户机器会支持更多)。
 每个uniform采样器引用的纹理单元是是通过查找采样器的位置，然后设置你要引用的纹理单元索引。
 例如：

@@ -215,7 +215,7 @@ Se você ainda não leu eles, veja-os primeiro.</p>
 para animar algo em JavaScript, você precisa mudar algo
 ao longo do tempo e desenhar novamente.</p>
 <p>Podemos tirar um dos nossos exemplos anteriores e animá-la da seguinte forma.</p>
-<pre class="prettyprint"><code>*var fieldOfViewRadians = degToRad(60);
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*var fieldOfViewRadians = degToRad(60);
 *var rotationSpeed = 1.2;
 
 *requestAnimationFrame(drawScene);
@@ -237,7 +237,7 @@ function drawScene() {
 
 </p>
 <p>Porém, há um problema sutil. O código acima tem um
-<code>rotationSpeed / 60.0</code>. Nós dividimos por 60.0 porque assumimos que o navegador
+<code class="notranslate" translate="no">rotationSpeed / 60.0</code>. Nós dividimos por 60.0 porque assumimos que o navegador
 responderá a requestAnimationFrame 60 vezes por segundo, o que é bem comum.</p>
 <p>No entanto, essa não é uma suposição válida. Talvez o usuário esteja com um dispositivo com
 baixa potência, como um smartphone antigo. Ou talvez o usuário esteja executando algum programa pesado em
@@ -262,13 +262,13 @@ executado a 1/8 da taxa de quadros, ele faz com que o do meio seja executado em
 velocidade máxima.</p>
 <p>A maneira de tornar a taxa de quadros de animação independente é calcular o tempo que demorou
 entre quadros e usar isso para calcular o quanto esse quadro deve ser animado.</p>
-<p>Em primeiro lugar, precisamos ter o tempo. Felizmente, <code>requestAnimationFrame</code> passa à
+<p>Em primeiro lugar, precisamos ter o tempo. Felizmente, <code class="notranslate" translate="no">requestAnimationFrame</code> passa à
 nós a hora desde que a página foi carregada.</p>
-<p>Acho mais fácil se nós obtermos o tempo em segundos, mas já que o <code>requestAnimationFrame</code>
+<p>Acho mais fácil se nós obtermos o tempo em segundos, mas já que o <code class="notranslate" translate="no">requestAnimationFrame</code>
 nos passa o tempo em milissegundos, precisamos multiplicar por 0.001
 para obter os segundos.</p>
 <p>Então, podemos então calcular o tempo do delta da seguinte maneira</p>
-<pre class="prettyprint"><code>*var then = 0;
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*var then = 0;
 
 requestAnimationFrame(drawScene);
 
@@ -282,12 +282,12 @@ requestAnimationFrame(drawScene);
 *  then = now;
 
    ...
-</code></pre><p>Uma vez que obtermos o <code>deltaTime</code> em segundos, todos os nossos cálculos podem ser em como
+</code></pre><p>Uma vez que obtermos o <code class="notranslate" translate="no">deltaTime</code> em segundos, todos os nossos cálculos podem ser em como
 em muitas unidades por segundo quando queremos que algo aconteça. Nesse caso
-<code>rotationSpeed</code> é 1.2, o que significa que queremos girar 1,2 graus radianos por segundo.
+<code class="notranslate" translate="no">rotationSpeed</code> é 1.2, o que significa que queremos girar 1,2 graus radianos por segundo.
 Isso é cerca de 1/5 de volta ou, em outras palavras, levará cerca de 5 segundos para
 virar completamente, independentemente da taxa de quadros.</p>
-<pre class="prettyprint"><code>*    rotation[1] += rotationSpeed * deltaTime;
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*    rotation[1] += rotationSpeed * deltaTime;
 </code></pre><p>Aqui está aquele funcionando.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-animation.html"></iframe>
@@ -303,27 +303,27 @@ que estejam tendo uma experiência muito diferente daquela que você planejou.</
 <div class="webgl_bottombar">
 <h3>Não use setInterval ou setTimeout!</h3>
 <p>Se você já programou animação em JavaScript anteriormente,
-você pode ter usado <code>setInterval</code> ou <code>setTimeout</code> para chamar a sua
+você pode ter usado <code class="notranslate" translate="no">setInterval</code> ou <code class="notranslate" translate="no">setTimeout</code> para chamar a sua
 função que irá realizar o desenho.
 </p><p>
-Os problemas com o uso de <code>setInterval</code> ou <code>setTimeout</code> para fazer animação
-são duas. Primeiro, os dois <code>setInterval</code> e <code>setTimeout</code> não têm nenhuma relação
+Os problemas com o uso de <code class="notranslate" translate="no">setInterval</code> ou <code class="notranslate" translate="no">setTimeout</code> para fazer animação
+são duas. Primeiro, os dois <code class="notranslate" translate="no">setInterval</code> e <code class="notranslate" translate="no">setTimeout</code> não têm nenhuma relação
 com o navegador para exibir qualquer coisa. Eles não são sincronizados quando o navegador
 vai desenhar um novo frame e, portanto, pode estar sem sincronia com a máquina do usuário.
-Se você usar <code>setInterval</code> ou <code>setTimeout</code> e assumir 60 quadros
+Se você usar <code class="notranslate" translate="no">setInterval</code> ou <code class="notranslate" translate="no">setTimeout</code> e assumir 60 quadros
 por segundo e a máquina do usuário está realmente executando alguma outra taxa de quadros, você irá
 estar fora de sincronia com a máquina deles.
 </p><p>
-O outro problema é que o navegador não tem ideia de por que você está usando <code>setInterval</code> ou
-<code>setTimeout</code>. Por exemplo, mesmo quando sua página não está visível,
+O outro problema é que o navegador não tem ideia de por que você está usando <code class="notranslate" translate="no">setInterval</code> ou
+<code class="notranslate" translate="no">setTimeout</code>. Por exemplo, mesmo quando sua página não está visível,
 como quando a aba não está ativa, o navegador ainda precisa executar seu código.
-Talvez você esteja usando <code>setTimeout</code> ou <code>setInterval</code> para verificar
+Talvez você esteja usando <code class="notranslate" translate="no">setTimeout</code> ou <code class="notranslate" translate="no">setInterval</code> para verificar
 se há novas mensagens ou tweets. Não há nenhuma maneira do navegador saber. Tudo bem se
 você está apenas verificando a cada poucos segundos por novas mensagens, mas não é nada bom se
 você está tentando desenhar 1000 objetos na WebGL. Você estará, efetivamente, DOSando a
 máquina do usuário com desenhos invisíveis na ava que eles nem sequer conseguem ver.
 </p><p>
-<code>requestAnimationFrame</code> resolve esses dois problemas. Ela o chama
+<code class="notranslate" translate="no">requestAnimationFrame</code> resolve esses dois problemas. Ela o chama
 no momento certo para sincronizar a sua animação com a tela e também só chama se a
 sua aba estiver visível.
 </p>

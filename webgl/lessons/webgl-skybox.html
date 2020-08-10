@@ -242,7 +242,7 @@ look into the cubemap.</p>
 <p>Starting with the <a href="webgl-environment-maps.html">environment map example</a> I
 removed all the code related to normals as we&#39;re not using them here. Then we
 need a quad.</p>
-<pre class="prettyprint"><code class="lang-js">// Fill the buffer with the values that define a quad.
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Fill the buffer with the values that define a quad.
 function setGeometry(gl) {
   var positions = new Float32Array(
     [
@@ -258,7 +258,7 @@ function setGeometry(gl) {
 </code></pre>
 <p>This quad will fill the canvas since it&#39;s already in clip space. Since there are
 only 2 values per vertex we need to change the code that sets the attribute.</p>
-<pre class="prettyprint"><code class="lang-js">// Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
 -var size = 3;          // 3 components per iteration
 +var size = 2;          // 2 components per iteration
 var type = gl.FLOAT;   // the data is 32bit floats
@@ -268,11 +268,11 @@ var offset = 0;        // start at the beginning of the buffer
 gl.vertexAttribPointer(
     positionLocation, size, type, normalize, stride, offset)
 </code></pre>
-<p>Next for the vertex shader we just set <code>gl_Position</code> to quad vertices directly.
+<p>Next for the vertex shader we just set <code class="notranslate" translate="no">gl_Position</code> to quad vertices directly.
 No need for any matrix math since the positions are already in clip space, setup
-to cover the entire canvas. We set <code>gl_Position.z</code> to 1 to guarantee the pixels
+to cover the entire canvas. We set <code class="notranslate" translate="no">gl_Position.z</code> to 1 to guarantee the pixels
 have the furthest depth. And, we pass the position on to the fragment shader.</p>
-<pre class="prettyprint"><code class="lang-glsl">#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
 in vec4 a_position;
 out vec4 v_position;
 void main() {
@@ -283,7 +283,7 @@ void main() {
 </code></pre>
 <p>In the fragment shader we multiply the position by the inverse view projection
 matrix and divide by w to go from 4D space to 3D space.</p>
-<pre class="prettyprint"><code class="lang-glsl">#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
 precision highp float;
 
 uniform samplerCube u_skybox;
@@ -300,12 +300,12 @@ void main() {
 }
 </code></pre>
 <p>Finally we need to lookup the uniform locations</p>
-<pre class="prettyprint"><code class="lang-js">var skyboxLocation = gl.getUniformLocation(program, &quot;u_skybox&quot;);
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">var skyboxLocation = gl.getUniformLocation(program, &quot;u_skybox&quot;);
 var viewDirectionProjectionInverseLocation =
     gl.getUniformLocation(program, &quot;u_viewDirectionProjectionInverse&quot;);
 </code></pre>
 <p>and set them</p>
-<pre class="prettyprint"><code class="lang-js">// Compute the projection matrix
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Compute the projection matrix
 var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
 var projectionMatrix =
     m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
@@ -339,7 +339,7 @@ gl.uniformMatrix4fv(
 gl.uniform1i(skyboxLocation, 0);
 </code></pre>
 <p>Notice above we&#39;re spinning the camera around the origin where we compute
-<code>cameraPosition</code>. Then, after converting the <code>cameraMatrix</code> to a <code>viewMatrix</code> we
+<code class="notranslate" translate="no">cameraPosition</code>. Then, after converting the <code class="notranslate" translate="no">cameraMatrix</code> to a <code class="notranslate" translate="no">viewMatrix</code> we
 zero out the translation since we only care which way the camera is facing, not
 where it is.</p>
 <p>From that we multiply with the projection matrix, take the inverse, and then set
@@ -353,29 +353,29 @@ the matrix.</p>
 <p>Let&#39;s combine the environment mapped cube back into this sample. We&#39;ll use the
 utils mentioned in <a href="webgl-less-code-more-fun.html">less code more fun</a>.</p>
 <p>We need to put both sets of shaders in</p>
-<pre class="prettyprint"><code class="lang-js">var envmapVertexShaderSource = `...
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">var envmapVertexShaderSource = `...
 var envmapFragmentShaderSource = `...
 var skyboxVertexShaderSource = `...
 var skyboxFragmentShaderSource = `...
 </code></pre>
 <p>Then compile the shaders and look up all the attribute and uniform locations</p>
-<pre class="prettyprint"><code class="lang-js">  // Use twgl to compile the shaders and link into a program
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  // Use twgl to compile the shaders and link into a program
   const envmapProgramInfo = twgl.createProgramInfo(
       gl, [envmapVertexShaderSource, envmapFragmentShaderSource]);
   const skyboxProgramInfo = twgl.createProgramInfo(
       gl, [skyboxVertexShaderSource, skyboxFragmentShaderSource]);
 </code></pre>
 <p>Set up our buffers with vertex data. twgl already has functions to supply this data so we can use those.</p>
-<pre class="prettyprint"><code class="lang-js">// create buffers and fill with vertex data
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// create buffers and fill with vertex data
 const cubeBufferInfo = twgl.primitives.createCubeBufferInfo(gl, 1);
 const quadBufferInfo = twgl.primitives.createXYQuadBufferInfo(gl);
 </code></pre>
 <p>and create vertex array objects for each</p>
-<pre class="prettyprint"><code class="lang-js">const cubeVAO = twgl.createVAOFromBufferInfo(gl, envmapProgramInfo, cubeBufferInfo);
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const cubeVAO = twgl.createVAOFromBufferInfo(gl, envmapProgramInfo, cubeBufferInfo);
 const quadVAO = twgl.createVAOFromBufferInfo(gl, skyboxProgramInfo, quadBufferInfo);
 </code></pre>
 <p>At render time we compute all the matrices</p>
-<pre class="prettyprint"><code class="lang-js">// camera going in circle 2 units from origin looking at origin
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// camera going in circle 2 units from origin looking at origin
 var cameraPosition = [Math.cos(time * .1) * 2, 0, Math.sin(time * .1) * 2];
 var target = [0, 0, 0];
 var up = [0, 1, 0];
@@ -400,7 +400,7 @@ var viewDirectionProjectionInverseMatrix =
     m4.inverse(viewDirectionProjectionMatrix);
 </code></pre>
 <p>Then first draw the cube</p>
-<pre class="prettyprint"><code class="lang-js">// draw the cube
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// draw the cube
 gl.depthFunc(gl.LESS);  // use the default depth test
 gl.useProgram(envmapProgramInfo.program);
 gl.bindVertexArray(cubeVAO);
@@ -414,7 +414,7 @@ twgl.setUniforms(envmapProgramInfo, {
 twgl.drawBufferInfo(gl, cubeBufferInfo);
 </code></pre>
 <p>followed by the skybox</p>
-<pre class="prettyprint"><code class="lang-js">// draw the skybox
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// draw the skybox
 
 // let our quad pass the depth test at 1.0
 gl.depthFunc(gl.LEQUAL);
@@ -429,7 +429,7 @@ twgl.drawBufferInfo(gl, quadBufferInfo);
 </code></pre>
 <p>Note that our texture loading code can also be replaced by using our helper
 functions</p>
-<pre class="prettyprint"><code class="lang-js">// Create a texture.
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Create a texture.
 -const texture = gl.createTexture();
 -gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
 -

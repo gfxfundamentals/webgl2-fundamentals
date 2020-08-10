@@ -212,9 +212,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>여러분들이 알아야 할 것은, 몇 가지 예외를 제외하면 WebGL은 함수에 수많은 인자를 넘기는 대신, 물체를 그리는 함수 하나와 상태를
 설정하는 70개 이상의 다른 함수로 이루어진 코드라는 점입니다. 예를 들어, 원을 그리는 함수가 하나 있다고 가정해봅시다.
 그러면 아래와 같이 프로그램을 작성할 수 있을겁니다.</p>
-<pre class="prettyprint"><code>function drawCircle(centerX, centerY, radius, color) { ... }
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawCircle(centerX, centerY, radius, color) { ... }
 </code></pre><p>아니면 아래와 같이 작성할 수도 있습니다.</p>
-<pre class="prettyprint"><code>var centerX;
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var centerX;
 var centerY;
 var radius;
 var color;
@@ -235,18 +235,18 @@ function setColor(c) {
 function drawCircle() {
    ...
 }
-</code></pre><p>WebGL은 두 번째 방식으로 작동합니다. <code>gl.createBuffer</code>, <code>gl.bufferData</code>, <code>gl.createTexture</code>,
-<code>gl.texImage2D</code>와 같은 함수들은 여러분의 데이터를 버퍼에(정점 데이터의 경우), 그리고 텍스처에(색상 등등) 업로드하게 해줍니다.
-<code>gl.createProgram</code>, <code>gl.createShader</code>, <code>gl.compileShader</code>, <code>gl.linkProgram</code>은 GLSL 쉐이더를 생성하게 해줍니다.
-WebGL의 나머지 거의 모든 함수들은 마지막에 호출되는 <code>gl.drawArrays</code> 또는 <code>gl.drawElements</code>에 사용되는 전역 변수 또는 <em>상태</em>를 설정하는 데 사용됩니다.</p>
+</code></pre><p>WebGL은 두 번째 방식으로 작동합니다. <code class="notranslate" translate="no">gl.createBuffer</code>, <code class="notranslate" translate="no">gl.bufferData</code>, <code class="notranslate" translate="no">gl.createTexture</code>,
+<code class="notranslate" translate="no">gl.texImage2D</code>와 같은 함수들은 여러분의 데이터를 버퍼에(정점 데이터의 경우), 그리고 텍스처에(색상 등등) 업로드하게 해줍니다.
+<code class="notranslate" translate="no">gl.createProgram</code>, <code class="notranslate" translate="no">gl.createShader</code>, <code class="notranslate" translate="no">gl.compileShader</code>, <code class="notranslate" translate="no">gl.linkProgram</code>은 GLSL 쉐이더를 생성하게 해줍니다.
+WebGL의 나머지 거의 모든 함수들은 마지막에 호출되는 <code class="notranslate" translate="no">gl.drawArrays</code> 또는 <code class="notranslate" translate="no">gl.drawElements</code>에 사용되는 전역 변수 또는 <em>상태</em>를 설정하는 데 사용됩니다.</p>
 <p>따라서 전형적인 WebGL 프로그램은 보통 아래와 같은 구조를 따릅니다.</p>
 <p>초기화 시점에,</p>
 <ul>
 <li>모든 쉐이더 프로그램과 위치(쉐이더 내 데이터 전달 위치) 생성</li>
 <li>버퍼를 생성하고 정점 데이터 업로드</li>
 <li>그리고자 하는 각 물체마다 정점 배열(vertex array)을 생성<ul>
-<li>각 attribute마다 <code>gl.bindBuffer</code>, <code>gl.vertexAttribPointer</code>, <code>gl.enableVertexAttribArray</code> 호출되는</li>
-<li>인덱스 관련 데이터는 <code>gl.ELEMENT_ARRAY_BUFFER</code>에 바인딩</li>
+<li>각 attribute마다 <code class="notranslate" translate="no">gl.bindBuffer</code>, <code class="notranslate" translate="no">gl.vertexAttribPointer</code>, <code class="notranslate" translate="no">gl.enableVertexAttribArray</code> 호출되는</li>
+<li>인덱스 관련 데이터는 <code class="notranslate" translate="no">gl.ELEMENT_ARRAY_BUFFER</code>에 바인딩</li>
 </ul>
 </li>
 <li>텍스처를 생성하고 텍스처 데이터 업로드</li>
@@ -255,17 +255,17 @@ WebGL의 나머지 거의 모든 함수들은 마지막에 호출되는 <code>gl
 <ul>
 <li>뷰 포트(viewport)를 clear 및 설정, 나머지 전역 상태 설정(깊이 테스트 여부, 컬링(culling) 수행 여부 등등) </li>
 <li>그리고자 하는 물체마다,<ul>
-<li>물체를 그리기 위해 사용 프로그램을 <code>gl.useProgram</code>을 사용해 호출</li>
+<li>물체를 그리기 위해 사용 프로그램을 <code class="notranslate" translate="no">gl.useProgram</code>을 사용해 호출</li>
 <li>해당 물체의 정점 배열을 바인딩<ul>
-<li><code>gl.bindVertexArray</code> 호출</li>
+<li><code class="notranslate" translate="no">gl.bindVertexArray</code> 호출</li>
 </ul>
 </li>
 <li>그리고자 하는 물체의 uniform 설정<ul>
-<li>각 uniform마다 <code>gl.uniformXXX</code> 호출</li>
-<li>텍스처를 텍스처 유닛(texture unit)에 할당하기 위해 <code>gl.activeTexture</code>와 <code>gl.bindTexture</code> 호출</li>
+<li>각 uniform마다 <code class="notranslate" translate="no">gl.uniformXXX</code> 호출</li>
+<li>텍스처를 텍스처 유닛(texture unit)에 할당하기 위해 <code class="notranslate" translate="no">gl.activeTexture</code>와 <code class="notranslate" translate="no">gl.bindTexture</code> 호출</li>
 </ul>
 </li>
-<li><code>gl.drawArrays</code> 또는 <code>gl.drawElements</code> 호출</li>
+<li><code class="notranslate" translate="no">gl.drawArrays</code> 또는 <code class="notranslate" translate="no">gl.drawElements</code> 호출</li>
 </ul>
 </li>
 </ul>
@@ -274,8 +274,8 @@ WebGL의 나머지 거의 모든 함수들은 마지막에 호출되는 <code>gl
 <p>세 가지 물체를 그리는 간단한 어플리케이션을 만들어 봅시다. 육면체와 구와 원뿔을 그릴 것입니다.</p>
 <p>육면체와 구, 원뿔 데이터를 계산하기 위한 세부 사항은 자세히 설명하지 않을 것입니다.
 그냥 그러한 물체를 그리는 함수가 있다고 가정하고 그 함수가 <a href="webgl-less-code-more-fun.html">이전 글에서 설명한 bufferInfo 객체를 반환한하고 합시다.</a></p>
-<p>코드는 아래와 같습니다. 쉐이더는 <a href="webgl-3d-perspective.html">투영 예제</a>에서 사용한 간단한 쉐이더와 같지만, 정점 색상에 곱할 <code>u_colorMult</code>를 추가한 점만 다릅니다.</p>
-<pre class="prettyprint"><code>#version 300 es
+<p>코드는 아래와 같습니다. 쉐이더는 <a href="webgl-3d-perspective.html">투영 예제</a>에서 사용한 간단한 쉐이더와 같지만, 정점 색상에 곱할 <code class="notranslate" translate="no">u_colorMult</code>를 추가한 점만 다릅니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
 // 버텍스 쉐이더로 전달되는 데이터
@@ -289,7 +289,7 @@ void main() {
 *   outColor = v_color * u_colorMult;
 }
 </code></pre><p>초기화 시점에,</p>
-<pre class="prettyprint"><code>// 그리고자 하는 각 물체에 사용할 uniform
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 그리고자 하는 각 물체에 사용할 uniform
 var sphereUniforms = {
   u_colorMult: [0.5, 1, 0.5, 1],
   u_matrix: m4.identity(),
@@ -308,7 +308,7 @@ var sphereTranslation = [  0, 0, 0];
 var cubeTranslation   = [-40, 0, 0];
 var coneTranslation   = [ 40, 0, 0];
 </code></pre><p>그리는 시점에,</p>
-<pre class="prettyprint"><code>var sphereXRotation =  time;
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var sphereXRotation =  time;
 var sphereYRotation =  time;
 var cubeXRotation   = -time;
 var cubeYRotation   =  time;
@@ -371,7 +371,7 @@ twgl.drawBufferInfo(gl, coneBufferInfo);
 </div>
 
 </p>
-<p>하나 알아두어야 할 점은 우리가 사용하는 쉐이더 프로그램이 하나이기 때문에 <code>gl.useProgram</code>을 한 번만 호출했다는 것입니다. 만일 다른 쉐이더 프로그램이 더 있었다면 <code>gl.useProgram</code>을... 각 프로그램을 사용하기 전에 호출해야 합니다.</p>
+<p>하나 알아두어야 할 점은 우리가 사용하는 쉐이더 프로그램이 하나이기 때문에 <code class="notranslate" translate="no">gl.useProgram</code>을 한 번만 호출했다는 것입니다. 만일 다른 쉐이더 프로그램이 더 있었다면 <code class="notranslate" translate="no">gl.useProgram</code>을... 각 프로그램을 사용하기 전에 호출해야 합니다.</p>
 <p>이것 또한 간략화 하기 위한 좋은 지점 중 하나입니다. 효율적으로 병합할 수 있는 4개의 주요 요소가 있습니다.</p>
 <ol>
 <li>쉐이더 프로그램 (과 그것들의 uniform, attribute 정보)</li>
@@ -380,7 +380,7 @@ twgl.drawBufferInfo(gl, coneBufferInfo);
 <li>gl.drawXXX에 전달할 갯수들과 gl.drawArrays 또는 gl.drawElements를 호출할지 말지의 여부</li>
 </ol>
 <p>따라서, 손쉽게 간략화 하는 방법은 그려야 하는 물체들의 배열을 만들고 그 배열에 4가지 요소들을 함께 집어넣어 놓는 것입니다.</p>
-<pre class="prettyprint"><code>var objectsToDraw = [
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var objectsToDraw = [
   {
     programInfo: programInfo,
     bufferInfo: sphereBufferInfo,
@@ -401,7 +401,7 @@ twgl.drawBufferInfo(gl, coneBufferInfo);
   },
 ];
 </code></pre><p>그리는 시점에서 행렬들은 여전히 갱신되어야 합니다.</p>
-<pre class="prettyprint"><code>var sphereXRotation =  time;
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var sphereXRotation =  time;
 var sphereYRotation =  time;
 var cubeXRotation   = -time;
 var cubeYRotation   =  time;
@@ -430,7 +430,7 @@ coneUniforms.u_matrix = computeMatrix(
     coneXRotation,
     coneYRotation);
 </code></pre><p>하지만 그리는 코드는 이제 간단한 반복문이 됩니다.</p>
-<pre class="prettyprint"><code>// ------ 물체들을 그리기 --------
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// ------ 물체들을 그리기 --------
 
 objectsToDraw.forEach(function(object) {
   var programInfo = object.programInfo;
@@ -446,7 +446,7 @@ objectsToDraw.forEach(function(object) {
   // 그리기
   twgl.drawBufferInfo(gl, bufferInfo);
 });
-</code></pre><p>이것이 현존하는 대부분 3D 엔진의 메인 렌더링 루프입니다. <code>objectsToDraw</code> 리스트 어디에 어떤 코드가 위치하는지와 사용할 수 있는 옵션들이 더 많을 수는 있지만 리스트에서 무엇을 계산할지와 실제 <code>gl.draw___</code>를 호출하는 것과는 분리되어 있을겁니다.</p>
+</code></pre><p>이것이 현존하는 대부분 3D 엔진의 메인 렌더링 루프입니다. <code class="notranslate" translate="no">objectsToDraw</code> 리스트 어디에 어떤 코드가 위치하는지와 사용할 수 있는 옵션들이 더 많을 수는 있지만 리스트에서 무엇을 계산할지와 실제 <code class="notranslate" translate="no">gl.draw___</code>를 호출하는 것과는 분리되어 있을겁니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-objects-list.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-objects-list.html" target="_blank">click here to open in a separate window</a>
@@ -461,7 +461,7 @@ objectsToDraw.forEach(function(object) {
 예를 들어, 법선(normal) 정보를 필요로 하는 쉐이더는 법선 정보가 없는 geometry에는 사용할 수 없습니다. 유사한 예로, 텍스처를 필요로 하는 쉐이더는 텍스처 없이는 제대로 동작하지 않을 것입니다.</p>
 <p>이것이 <a href="https://threejs.org">Three.js</a>같은 3D 라이브러리를 사용하는 것이 좋은 이유 중 하나입니다. 왜냐하면 라이브러리는 위와 같은 문제들을 처리해 주기 때문입니다. geometry를 만들고, three.js에게 어떻게 렌더링 되길 원하는지를 입력하면 런타임에 쉐이더를 생성해 줍니다. Unity3D, Unreal, Source, Crytek과 같은 거의 대부분의 3D 엔진이 이러한 일들을 해 줍니다. 어떤 경우에는 오프라인으로 생성하는 경우도 있지만 어쨌든 중요한 것은 쉐이더를 <em>생성해</em> 준다는 사실힙니다.</p>
 <p>당연히 여러분들은 로우 레벨까지 알고 싶으시기 때문에 이 글을 읽고 계실겁니다. 그건 아주 좋은 생각이고, 모든 것을 스스로 작성해 보는 것은 아주 재미있는 일입니다. 하지만 <a href="webgl-2d-vs-3d-library.html">WebGL이 아주 로우 레벨이기 때문에</a>, 스스로 작성해야 하는 것들이 너무나 많고, 이는 쉐이더의 생성이 필요한 경우 그 기능도 여러분이 스스로 작성해야 한다는 것을 의미합니다.</p>
-<p>제가 <code>computeMatrix</code>를 반복문 안에 넣지 않은 것을 알아 채셨나요. 왜냐하면 렌더링과 행렬 계산은 당연히 분리되어야 하기 때문입니다. 행렬 계산은 주로 <a href="webgl-scene-graph.html">장면 그래프(scene graph)를 통해 이루어지며, 다른 글에서 이에 대해 다룰 것입니다.</a></p>
+<p>제가 <code class="notranslate" translate="no">computeMatrix</code>를 반복문 안에 넣지 않은 것을 알아 채셨나요. 왜냐하면 렌더링과 행렬 계산은 당연히 분리되어야 하기 때문입니다. 행렬 계산은 주로 <a href="webgl-scene-graph.html">장면 그래프(scene graph)를 통해 이루어지며, 다른 글에서 이에 대해 다룰 것입니다.</a></p>
 <p>이제 여러 물체를 그리는 프레임워크를 만들어보았으니 <a href="webgl-text-html.html">텍스트를 그려 봅시다.</a>.</p>
 <div class="webgl_bottombar">
 <h3>WebGL1 최적화 삭제</h3>
@@ -470,7 +470,7 @@ WebGL 1 에서는 vertex array object가 없기 때문에
 <a href="https://webglfundamentals.org/webgl/lessons/webgl-drawing-multiple-things.html">최적화를 추천드렸었습니다</a>.
 vertex array object가 없어서, geometry를 바꿀 때마다 모델의 attribute마다 3번의 WebGL 호출이 필요했었습니다.
 이전 예제에서 모델마다 도합 12번의 WebGL 호출이 있었고, 모델을 정렬해서 이러한 호출을 회피하는 것이 당연합니다. WebGL2에서는 이러한 12번의 호출이 한 번의 
-<code>gl.bindVertexArray(someVertexArray)</code> 호출로 대체되었고, 최소한 제가 테스트 해 본 바, 제가 제안한 최적화 방법이 유의미한 차이를 가져오지 않았기 때문에 이 섹션을 제거하였습니다.
+<code class="notranslate" translate="no">gl.bindVertexArray(someVertexArray)</code> 호출로 대체되었고, 최소한 제가 테스트 해 본 바, 제가 제안한 최적화 방법이 유의미한 차이를 가져오지 않았기 때문에 이 섹션을 제거하였습니다.
 </p>
 </div>
 

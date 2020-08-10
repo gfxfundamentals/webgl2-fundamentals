@@ -227,7 +227,7 @@ Textura 2      -&gt; [Normal]      -&gt; Tela</pre></blockquote>
 uma lista de anexos e não realmente um buffer de qualquer tipo. Mas, ao
 anexar uma textura a um framebuffer, podemos renderizar essa textura.</p>
 <p>Primeiro, vamos transformar <a href="webgl-image-processing.html">o antigo código de criação de textura</a> em uma função</p>
-<pre class="prettyprint"><code>  function createAndSetupTexture(gl) {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  function createAndSetupTexture(gl) {
     var texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -256,7 +256,7 @@ anexar uma textura a um framebuffer, podemos renderizar essa textura.</p>
                 srcType,
                 image);
 </code></pre><p>E agora vamos usar essa função para criar mais 2 texturas e anexá-las a 2 framebuffers.</p>
-<pre class="prettyprint"><code>  // crie 2 texturas e anexe-as a framesbuffers.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // crie 2 texturas e anexe-as a framesbuffers.
   var textures = [];
   var framebuffers = [];
   for (var ii = 0; ii &lt; 2; ++ii) {
@@ -285,7 +285,7 @@ anexar uma textura a um framebuffer, podemos renderizar essa textura.</p>
         gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, texture, mipLevel);
   }
 </code></pre><p>Agora vamos fazer um conjunto de kernels e, em seguida, uma lista deles para se inscrever.</p>
-<pre class="prettyprint"><code>  // Definir vários kernels convolution
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // Definir vários kernels convolution
   var kernels = {
     normal: [
       0, 0, 0,
@@ -317,7 +317,7 @@ anexar uma textura a um framebuffer, podemos renderizar essa textura.</p>
     &quot;unsharpen&quot;
   ];
 </code></pre><p>E, finalmente, vamos aplicar a cada um, o ping ponging de qual texturas estamos renderizando também </p>
-<pre class="prettyprint"><code>  function drawEffects() {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  function drawEffects() {
     // Diga para usar nosso programa (par de shaders)
     gl.useProgram(program);
 
@@ -391,19 +391,19 @@ para ativá-los. Arraste os efeitos para reordenar como eles são aplicados.</p>
 
 </p>
 <p>Algumas coisas que devo passar.</p>
-<p>Chamar <code>gl.bindFramebuffer</code> com <code>null</code> diz para a WebGL que você deseja renderizar
+<p>Chamar <code class="notranslate" translate="no">gl.bindFramebuffer</code> com <code class="notranslate" translate="no">null</code> diz para a WebGL que você deseja renderizar
 na tela em vez de em um de seus framebuffers.</p>
 <p>Os framebuffers podem ou não funcionar, dependendo de quais anexos você
 colocou sobre eles. Há uma lista de quais tipos e combinações de anexos
-devem funcionar sempre. O utilizado aqui, um <code>RGBA</code>/<code>UNSIGNED_BYTE</code> textura
-atribuída ao <code>COLOR_ATTACHMENT0</code> como ponto de ligação, é sempre suposto irá funcionar.
+devem funcionar sempre. O utilizado aqui, um <code class="notranslate" translate="no">RGBA</code>/<code class="notranslate" translate="no">UNSIGNED_BYTE</code> textura
+atribuída ao <code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> como ponto de ligação, é sempre suposto irá funcionar.
 Formatos de textura mais exótica ou combinações de anexos podem não funcionar.
 Nesse caso, você deve vincular o framebuffer e depois chamar
-<code>gl.checkFramebufferStatus</code> e veja se ele retorna <code>gl.FRAMEBUFFER_COMPLETE</code>.
+<code class="notranslate" translate="no">gl.checkFramebufferStatus</code> e veja se ele retorna <code class="notranslate" translate="no">gl.FRAMEBUFFER_COMPLETE</code>.
 Se sim, você está pronto para ir. Caso contrário, você precisará dizer ao usuário que
 recorra a outra coisa. Felizmente a WebGL2 suporta muitos formatos e combinações.</p>
 <p>A WebGL tem que converter de <a href="webgl-fundamentals.html">clipspace</a> novamente em pixels.
-Ela faz isso com base nas configurações de <code>gl.viewport</code>. Uma vez que os framebuffers
+Ela faz isso com base nas configurações de <code class="notranslate" translate="no">gl.viewport</code>. Uma vez que os framebuffers
 em que estamos renderizando são de tamanho diferente da tela que precisamos para configurar
 a viewport adequadamente, isso depende se estamos renderizando uma textura ou na tela.</p>
 <p>Finalmente, no <a href="webgl-fundamentals.html">exemplo original</a> nós invertemos a
@@ -413,8 +413,8 @@ necessário ao renderizar um framebuffer. Como o framebuffer nunca é exibido,
 qual parte é superior e inferior é irrelevante. Tudo o que importa é
 que o pixel 0,0 no framebuffer correspondam a 0,0 em nossos cálculos.
 Para lidar com isso, eu tornei possível definir se deve virar ou não,
-adicionando mais uma entrada uniforme na chamada do shader <code>u_flipY</code>.</p>
-<pre class="prettyprint"><code>...
+adicionando mais uma entrada uniforme na chamada do shader <code class="notranslate" translate="no">u_flipY</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 +uniform float u_flipY;
 ...
 
@@ -424,7 +424,7 @@ void main() {
   ...
 }
 </code></pre><p>E então podemos configurá-lo quando renderizamos com</p>
-<pre class="prettyprint"><code>  ...
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
 +  var flipYLocation = gl.getUniformLocation(program, &quot;u_flipY&quot;);
 
   ...

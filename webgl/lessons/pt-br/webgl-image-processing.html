@@ -226,7 +226,7 @@ vertex shader pois desenha cada pixel usando o fragmento shader.</p>
 <p>Usando <a href="webgl-fundamentals.html">o vertex shader do final da publicação anterior</a>
 precisamos adicionar um atributo para passar em coordenadas de textura e depois
 passar para o fragmento shader.</p>
-<pre class="prettyprint"><code>...
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 
 +in vec2 a_texCoord;
 
@@ -241,7 +241,7 @@ void main() {
 +   v_texCoord = a_texCoord;
 }
 </code></pre><p>Então, fornecemos um fragmento shader para procurar cores da textura.</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
 // nossa textura
@@ -261,7 +261,7 @@ void main() {
 para a textura. Como estamos em imagens de um navegador, carregamos de forma assíncrona,
 então devemos reorganizar nosso código um pouco para aguardar o carregamento da textura.
 Uma vez que carregada, vamos desenhá-la.</p>
-<pre class="prettyprint"><code>+function main() {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+function main() {
 +  var image = new Image();
 +  image.src = &quot;https://someimage/on/our/server&quot;;  // DEVE SER MESMO DOMÍNIO!!!
 +  image.onload = function() {
@@ -358,7 +358,7 @@ function render(image) {
 </p>
 <p>Não muito emocionante, então vamos manipular essa imagem. Que tal simplesmente 
 trocar vermelho e azul?</p>
-<pre class="prettyprint"><code>...
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 outColor = texture(u_image, v_texCoord).bgra;
 ...
 </code></pre><p>E agora vermelho e azul foram trocados.</p>
@@ -371,10 +371,10 @@ outColor = texture(u_image, v_texCoord).bgra;
 <p>E se quisermos processar imagens que realmente olhem para outros
 pixels? Uma vez que a WebGL faz referência a texturas em coordenadas de textura que
 variam de 0,0 a 1,0, podemos calcular o quanto move 1 pixel
- com o simples math <code>onePixel = 1.0 / textureSize</code>.</p>
+ com o simples math <code class="notranslate" translate="no">onePixel = 1.0 / textureSize</code>.</p>
 <p>Aqui está um fragmento que mede os pixels esquerdos e direitos de
 cada pixel na textura.</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 // fragmentos shaders não têm uma precisão padrão, então precisamos
 // para escolher um. O médio é um bom padrão. Significa &quot;precisão média&quot;
@@ -414,7 +414,7 @@ ou 1,0, o que for maior. <a href="https://docs.gimp.org/2.6/en/plug-in-convmatri
 E <a href="https://www.codeproject.com/KB/graphics/ImageConvolution.aspx">aqui está outro artigo que mostra algum código real se
 você escrevesse isso manualmente em C ++</a>.</p>
 <p>No nosso caso, vamos fazer isso funcionar no shader, então aqui está o novo fragment shader.</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 // fragmentos shaders não têm uma precisão padrão, então precisamos
 // para escolher um. O médio é um bom padrão. Significa &quot;precisão média&quot;
@@ -449,7 +449,7 @@ void main() {
   outColor = vec4((colorSum / u_kernelWeight).rgb, 1);
 }
 </code></pre><p>Em JavaScript, precisamos fornecer um convolution kernel e seu peso</p>
-<pre class="prettyprint"><code> function computeKernelWeight(kernel) {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> function computeKernelWeight(kernel) {
    var weight = kernel.reduce(function(prev, curr) {
        return prev + curr;
    });
@@ -481,7 +481,7 @@ void main() {
 falarei como <a href="webgl-image-processing-continued.html">aplicar mais de um efeito à imagem</a>.</p>
 <div class="webgl_bottombar">
 <h3>O que são unidades de textura?</h3>
-Quando você chama <code>gl.draw???</code> seu shader pode fazer referência a texturas. Texturas estão vinculadas
+Quando você chama <code class="notranslate" translate="no">gl.draw???</code> seu shader pode fazer referência a texturas. Texturas estão vinculadas
 com unidades de texturas. Embora a máquina do usuário possa suportar, todas as implementações WebGL2 
 são necessárias suportar pelo menos 16 unidades de textura. Qual unidade de textura cada referência
 uniforme de amostras é definida procurando a localização dessa amostra uniforme e, em seguida, ajuste o

@@ -210,7 +210,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <a href="webgl-fundamentals.html">started with fundamentals</a> and the previous
 was <a href="webgl-3d-camera.html">about 3d cameras</a>.</p>
 <p>As the entire site has pointed out pretty much everything about WebGL is
-100% up to you. Except for a few pre-defined names like <code>gl_Position</code>
+100% up to you. Except for a few pre-defined names like <code class="notranslate" translate="no">gl_Position</code>
 almost everything about WebGL is defined by you, the programmer.</p>
 <p>That said there are some common or semi-common naming conventions. Especially
 when related to matrices. I don&#39;t know who first game up with these names. I
@@ -234,8 +234,8 @@ This is the inverse of the <em>camera matrix</em>.</p>
 <li><p>projection matrix</p>
 <p>a matrix and converts a frustum of space into clip space or some orthographic
 space into clip space. Another way of thinking about this is it&#39;s the matrix
-returned by your matrix math library&#39;s <code>perspective</code> and/or <code>ortho</code> or
-<code>orthographic</code> function.</p>
+returned by your matrix math library&#39;s <code class="notranslate" translate="no">perspective</code> and/or <code class="notranslate" translate="no">ortho</code> or
+<code class="notranslate" translate="no">orthographic</code> function.</p>
 </li>
 <li><p>local matrix</p>
 <p>when using <a href="webgl-scene-graph.html">a scene graph</a> the local matrix is the
@@ -245,11 +245,11 @@ nodes.</p>
 </ul>
 <p>If a shader needs a combination of these they are usually listed right to left
 even though in the shader they&#39;d be multiplied <em>on the right</em>. For example:</p>
-<pre class="prettyprint"><code>worldViewProjection = projection * view * world
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">worldViewProjection = projection * view * world
 </code></pre><p>The other two common things to do with a matrix are to take the inverse</p>
-<pre class="prettyprint"><code>viewMatrix = inverse(cameraMatrix)
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">viewMatrix = inverse(cameraMatrix)
 </code></pre><p>And to transpose</p>
-<pre class="prettyprint"><code>worldInverseTranspose = transpose(inverse(world))
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">worldInverseTranspose = transpose(inverse(world))
 </code></pre><p>Hopefully knowing these terms you can look at someone else&#39;s shader
 and if you&#39;re lucky they used names that are close to or similar to
 these ones. Then you can hopefully derive what those shaders are

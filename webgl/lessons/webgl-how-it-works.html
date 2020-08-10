@@ -213,15 +213,15 @@ parts to this GPU thing.  The first part processes vertices (or streams of
 data) into clip space vertices.  The second part draws pixels based on the
 first part.</p>
 <p>When you call</p>
-<pre class="prettyprint"><code>gl.drawArrays(gl.TRIANGLE, 0, 9);
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.drawArrays(gl.TRIANGLE, 0, 9);
 </code></pre><p>The 9 there means &quot;process 9 vertices&quot; so here are 9 vertices being processed.</p>
 <div class="webgl_center"><img src="resources/vertex-shader-anim.gif" /></div>
 
 <p>On the left is the data you provide.  The vertex shader is a function you
 write in <a href="webgl-shaders-and-glsl.html">GLSL</a>.  It gets called once for each vertex.
-You do some math and set the special variable <code>gl_Position</code> with a clip space value
+You do some math and set the special variable <code class="notranslate" translate="no">gl_Position</code> with a clip space value
 for the current vertex. The GPU takes that value and stores it internally.</p>
-<p>Assuming you&#39;re drawing <code>TRIANGLES</code>, every time this first part generates 3
+<p>Assuming you&#39;re drawing <code class="notranslate" translate="no">TRIANGLES</code>, every time this first part generates 3
 vertices the GPU uses them to make a triangle.  It figures out which
 pixels the 3 points of the triangle correspond to, and then rasterizes the
 triangle which is a fancy word for “draws it with pixels”.  For each
@@ -237,7 +237,7 @@ directly from the vertex shader to the fragment shader.</p>
 <p>We&#39;ll draw with a simple triangle.  Continuing from our
 <a href="webgl-2d-matrices.html">previous example</a> let&#39;s change our rectangle to a
 triangle.</p>
-<pre class="prettyprint"><code>// Fill the buffer with the values that define a triangle.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Fill the buffer with the values that define a triangle.
 function setGeometry(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
@@ -248,15 +248,15 @@ function setGeometry(gl) {
       gl.STATIC_DRAW);
 }
 </code></pre><p>And we have to only draw 3 vertices.</p>
-<pre class="prettyprint"><code>// Draw the scene.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Draw the scene.
 function drawScene() {
   ...
   // Draw the geometry.
 *  gl.drawArrays(gl.TRIANGLES, 0, 3);
 }
-</code></pre><p>Then in our vertex shader we declare a <em>varying</em> by making an <code>out</code> to pass data to the
+</code></pre><p>Then in our vertex shader we declare a <em>varying</em> by making an <code class="notranslate" translate="no">out</code> to pass data to the
 fragment shader.</p>
-<pre class="prettyprint"><code>out vec4 v_color;
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">out vec4 v_color;
 ...
 void main() {
   // Multiply the position by the matrix.
@@ -267,8 +267,8 @@ void main() {
   // Color space goes from 0.0 to 1.0
 *  v_color = gl_Position * 0.5 + 0.5;
 }
-</code></pre><p>And then we declare the same <em>varying</em> as an <code>in</code> in the fragment shader.</p>
-<pre class="prettyprint"><code>#version 300 es
+</code></pre><p>And then we declare the same <em>varying</em> as an <code class="notranslate" translate="no">in</code> in the fragment shader.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 precision highp float;
 
@@ -365,7 +365,7 @@ on to the fragment shader.  So for example let&#39;s draw a rectangle, that
 consists of 2 triangles, in 2 colors.  To do this we&#39;ll add another
 attribute to the vertex shader so we can pass it more data and we&#39;ll pass
 that data directly to the fragment shader.</p>
-<pre class="prettyprint"><code>in vec2 a_position;
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">in vec2 a_position;
 +in vec4 a_color;
 ...
 out vec4 v_color;
@@ -376,7 +376,7 @@ void main() {
 *  v_color = a_color;
 }
 </code></pre><p>We now have to supply colors for WebGL to use.</p>
-<pre class="prettyprint"><code>  // look up where the vertex data needs to go.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // look up where the vertex data needs to go.
   var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 +  var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
   ...
@@ -435,7 +435,7 @@ in a <em>varying</em> so they are being varied or interpolated across the
 triangle.  It&#39;s just that we used the same color on each of the 3 vertices
 of each triangle.  If we make each color different we&#39;ll see the
 interpolation.</p>
-<pre class="prettyprint"><code>// Fill the buffer with colors for the 2 triangles
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Fill the buffer with colors for the 2 triangles
 // that make the rectangle.
 function setColors(gl) {
   // Make every vertex a different color.
@@ -463,20 +463,20 @@ you check out <a href="webgl-image-processing.html">the image processing example
 you&#39;ll see they also use an extra attribute to pass in texture coordinates.</p>
 <h2 id="what-do-these-buffer-and-attribute-commands-do-">What do these buffer and attribute commands do?</h2>
 <p>Buffers are the way of getting vertex and other per vertex data onto the
-GPU.  <code>gl.createBuffer</code> creates a buffer.
-<code>gl.bindBuffer</code> sets that buffer as the buffer to be worked on.
-<code>gl.bufferData</code> copies data into the current buffer.</p>
+GPU.  <code class="notranslate" translate="no">gl.createBuffer</code> creates a buffer.
+<code class="notranslate" translate="no">gl.bindBuffer</code> sets that buffer as the buffer to be worked on.
+<code class="notranslate" translate="no">gl.bufferData</code> copies data into the current buffer.</p>
 <p>Once the data is in the buffer we need to tell WebGL how to get data out
 of it and provide it to the vertex shader&#39;s attributes.</p>
 <p>To do this, first we ask WebGL what locations it assigned to the
 attributes.  For example in the code above we have</p>
-<pre class="prettyprint"><code>// look up where the vertex data needs to go.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// look up where the vertex data needs to go.
 var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
 </code></pre><p>Once we know the location of the attribute we then issue 2 commands.</p>
-<pre class="prettyprint"><code>gl.enableVertexAttribArray(location);
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.enableVertexAttribArray(location);
 </code></pre><p>This command tells WebGL we want to supply data from a buffer.</p>
-<pre class="prettyprint"><code>gl.vertexAttribPointer(
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.vertexAttribPointer(
     location,
     numComponents,
     typeOfData,
@@ -485,7 +485,7 @@ var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
     offsetIntoBuffer);
 </code></pre><p>And this command tells WebGL to get data from the buffer that was last
 bound with gl.bindBuffer, how many components per vertex (1 - 4), what the
-type of data is (<code>BYTE</code>, <code>FLOAT</code>, <code>INT</code>, <code>UNSIGNED_SHORT</code>, etc...), the stride
+type of data is (<code class="notranslate" translate="no">BYTE</code>, <code class="notranslate" translate="no">FLOAT</code>, <code class="notranslate" translate="no">INT</code>, <code class="notranslate" translate="no">UNSIGNED_SHORT</code>, etc...), the stride
 which means how many bytes to skip to get from one piece of data to the
 next piece of data, and an offset for how far into the buffer our data is.</p>
 <p>Number of components is always 1 to 4.</p>

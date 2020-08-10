@@ -213,8 +213,8 @@ You should also be aware of how textures and texture coordinates work please rea
 <p>To implement most games in 2D requires just a single function to draw an image. Sure some 2d games
 do fancy thing with lines etc but if you only have a way to draw a 2D image on the screen
 you can pretty much make most 2d games.</p>
-<p>The Canvas 2D api has very flexible function for drawing image called <code>drawImage</code>. It has 3 versions</p>
-<pre class="prettyprint"><code>ctx.drawImage(image, dstX, dstY);
+<p>The Canvas 2D api has very flexible function for drawing image called <code class="notranslate" translate="no">drawImage</code>. It has 3 versions</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">ctx.drawImage(image, dstX, dstY);
 ctx.drawImage(image, dstX, dstY, dstWidth, dstHeight);
 ctx.drawImage(image, srcX, srcY, srcWidth, srcHeight,
                      dstX, dstY, dstWidth, dstHeight);
@@ -224,10 +224,10 @@ Sending vertices to the GPU is generally a slow operation (although there are ca
 <p>This is where the whole point of WebGL comes into play. It&#39;s all about creatively writing
 a shader and then creatively using that shader to solve your problem.</p>
 <p>Let&#39;s start with the first version</p>
-<pre class="prettyprint"><code>ctx.drawImage(image, x, y);
-</code></pre><p>It draws an image at location <code>x, y</code> the same size as the image.
-To make a similar WebGL based function we could upload vertices that for <code>x, y</code>, <code>x + width, y</code>, <code>x, y + height</code>,
-and <code>x + width, y + height</code> then as we draw different images at different locations
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">ctx.drawImage(image, x, y);
+</code></pre><p>It draws an image at location <code class="notranslate" translate="no">x, y</code> the same size as the image.
+To make a similar WebGL based function we could upload vertices that for <code class="notranslate" translate="no">x, y</code>, <code class="notranslate" translate="no">x + width, y</code>, <code class="notranslate" translate="no">x, y + height</code>,
+and <code class="notranslate" translate="no">x + width, y + height</code> then as we draw different images at different locations
 we&#39;d generate different sets of vertices. In fact <a href="webgl-fundamentals.html">that&#39;s exactly what we did in our first
 article</a>.</p>
 <p>A far more common way though is just to use a unit quad. We upload a single square 1 unit big. We
@@ -235,7 +235,7 @@ then use <a href="webgl-2d-matrices.html">matrix math</a> to scale and translate
 it ends up being at the desired place.</p>
 <p>Here&#39;s the code.</p>
 <p>First we need a simple vertex shader</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 in vec4 a_position;
 in vec2 a_texcoord;
@@ -249,7 +249,7 @@ void main() {
    v_texcoord = a_texcoord;
 }
 </code></pre><p>And a simple fragment shader</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
 in vec2 v_texcoord;
@@ -262,7 +262,7 @@ void main() {
    outColor = texture(texture, v_texcoord);
 }
 </code></pre><p>And now the function</p>
-<pre class="prettyprint"><code>function drawImage(tex, texWidth, texHeight, dstX, dstY) {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawImage(tex, texWidth, texHeight, dstX, dstY) {
   gl.useProgram(program);
 
   // Setup the attributes for the quad
@@ -295,7 +295,7 @@ void main() {
   gl.drawArrays(gl.TRIANGLES, offset, count);
 }
 </code></pre><p>Let&#39;s load some images into textures</p>
-<pre class="prettyprint"><code>// creates a texture info { width: w, height: h, texture: tex }
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// creates a texture info { width: w, height: h, texture: tex }
 // The texture will start with 1x1 pixels and be updated
 // when the image has loaded
 function loadImageAndCreateTextureInfo(url) {
@@ -329,7 +329,7 @@ var textureInfos = [
   loadImageAndCreateTextureInfo(&#39;resources/keyboard.jpg&#39;),
 ];
 </code></pre><p>And lets draw them at random places</p>
-<pre class="prettyprint"><code>var drawInfos = [];
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var drawInfos = [];
 var numToDraw = 9;
 var speed = 60;
 for (var ii = 0; ii &lt; numToDraw; ++ii) {
@@ -401,11 +401,11 @@ requestAnimationFrame(render);
 </div>
 
 </p>
-<p>Handling version 2 of the original canvas <code>drawImage</code> function</p>
-<pre class="prettyprint"><code>ctx.drawImage(image, dstX, dstY, dstWidth, dstHeight);
-</code></pre><p>Is really no different. We just use <code>dstWidth</code> and <code>dstHeight</code> instead of
-<code>texWidth</code> and <code>texHeight</code>.</p>
-<pre class="prettyprint"><code>*function drawImage(tex, texWidth, texHeight, dstX, dstY, dstWidth, dstHeight) {
+<p>Handling version 2 of the original canvas <code class="notranslate" translate="no">drawImage</code> function</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">ctx.drawImage(image, dstX, dstY, dstWidth, dstHeight);
+</code></pre><p>Is really no different. We just use <code class="notranslate" translate="no">dstWidth</code> and <code class="notranslate" translate="no">dstHeight</code> instead of
+<code class="notranslate" translate="no">texWidth</code> and <code class="notranslate" translate="no">texHeight</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*function drawImage(tex, texWidth, texHeight, dstX, dstY, dstWidth, dstHeight) {
 +  if (dstWidth === undefined) {
 +    dstWidth = texWidth;
 +  }
@@ -452,8 +452,8 @@ requestAnimationFrame(render);
 </div>
 
 </p>
-<p>So that was easy. But what about the 3rd version of canvas <code>drawImage</code>?</p>
-<pre class="prettyprint"><code>ctx.drawImage(image, srcX, srcY, srcWidth, srcHeight,
+<p>So that was easy. But what about the 3rd version of canvas <code class="notranslate" translate="no">drawImage</code>?</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">ctx.drawImage(image, srcX, srcY, srcWidth, srcHeight,
                      dstX, dstY, dstWidth, dstHeight);t
 </code></pre><p>In order to select part of the texture we need to manipulate the texture coordinates. How
 texture coordinates work was <a href="webgl-3d-textures.html">covered in the article about textures</a>.
@@ -462,7 +462,7 @@ but we can also create them on the fly and just like we&#39;re manipulating our 
 a matrix we can similarly manipulate texture coordinates using another matrix.</p>
 <p>Let&#39;s add a texture matrix to the vertex shader and multiply the texture coordinates
 by this texture matrix.</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 in vec4 a_position;
 in vec2 a_texcoord;
@@ -477,12 +477,12 @@ void main() {
 *   v_texcoord = (u_textureMatrix * vec4(a_texcoord, 0, 1)).xy;
 }
 </code></pre><p>Now we need to look up the location of the texture matrix</p>
-<pre class="prettyprint"><code>var matrixLocation = gl.getUniformLocation(program, &quot;u_matrix&quot;);
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var matrixLocation = gl.getUniformLocation(program, &quot;u_matrix&quot;);
 +var textureMatrixLocation = gl.getUniformLocation(program, &quot;u_textureMatrix&quot;);
-</code></pre><p>And inside <code>drawImage</code> we need to set it so it will select the part of the texture we want.
+</code></pre><p>And inside <code class="notranslate" translate="no">drawImage</code> we need to set it so it will select the part of the texture we want.
 We know the texture coordinates are also effectively a unit quad so it&#39;s very similar to
 what we&#39;ve already done for the positions.</p>
-<pre class="prettyprint"><code>*function drawImage(
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*function drawImage(
 *    tex, texWidth, texHeight,
 *    srcX, srcY, srcWidth, srcHeight,
 *    dstX, dstY, dstWidth, dstHeight) {
@@ -545,9 +545,9 @@ what we&#39;ve already done for the positions.</p>
 </div>
 
 </p>
-<p>Unlike the canvas 2D api our WebGL version handles cases the canvas 2D <code>drawImage</code> does not.</p>
-<p>For one we can pass in a negative width or height for either source or dest. A negative <code>srcWidth</code>
-will select pixels to the left of <code>srcX</code>. A negative <code>dstWidth</code> will draw to the left of <code>dstX</code>.
+<p>Unlike the canvas 2D api our WebGL version handles cases the canvas 2D <code class="notranslate" translate="no">drawImage</code> does not.</p>
+<p>For one we can pass in a negative width or height for either source or dest. A negative <code class="notranslate" translate="no">srcWidth</code>
+will select pixels to the left of <code class="notranslate" translate="no">srcX</code>. A negative <code class="notranslate" translate="no">dstWidth</code> will draw to the left of <code class="notranslate" translate="no">dstX</code>.
 In the canvas 2D api these are errors at best or undefined behavior at worst.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-drawimage-04.html"></iframe>
@@ -558,7 +558,7 @@ In the canvas 2D api these are errors at best or undefined behavior at worst.</p
 <p>Another is since we&#39;re using a matrix we can do <a href="webgl-2d-matrices.html">any matrix math we want</a>.</p>
 <p>For example we could rotate the texture coordinates around the center of the texture.</p>
 <p>Changing the texture matrix code to this</p>
-<pre class="prettyprint"><code>*  // just like a 2d projection matrix except in texture space (0 to 1)
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*  // just like a 2d projection matrix except in texture space (0 to 1)
 *  // instead of clip space. This matrix puts us in pixel space.
 *  var texMatrix = m4.scaling(1 / texWidth, 1 / texHeight, 1);
 *
@@ -583,10 +583,10 @@ In the canvas 2D api these are errors at best or undefined behavior at worst.</p
 
 </p>
 <p>you can see one problem which is that because of the rotation sometimes we see past the
-edge of the texture. As it&#39;s set to <code>CLAMP_TO_EDGE</code> the edge just gets repeated.</p>
+edge of the texture. As it&#39;s set to <code class="notranslate" translate="no">CLAMP_TO_EDGE</code> the edge just gets repeated.</p>
 <p>We could fix that by discarding any pixels outside of the 0 to 1 range inside the shader.
-<code>discard</code> exits the shader immediately without writing a pixel.</p>
-<pre class="prettyprint"><code>#version 300 es
+<code class="notranslate" translate="no">discard</code> exits the shader immediately without writing a pixel.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
 in vec2 v_texcoord;
@@ -612,7 +612,7 @@ void main() {
 
 </p>
 <p>or maybe you&#39;d like to use a solid color when the texture coordinates are outside the texture</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
 in vec2 v_texcoord;

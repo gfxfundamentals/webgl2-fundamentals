@@ -232,7 +232,7 @@ de certa forma, é como multiplicar por 1, exceto que a magia acontece e as cois
 <p>Nós vamos pegar os valores de X e Y, de qualquer ponto no círculo unitário e,
 vamos multiplicar nossa geometria de acordo com <a href="webgl-2d-translation.html">nosso exemplo anterior</a>.</p>
 <p>Aqui vão alguns updates para o nosso shader.</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 in vec2 a_position;
 
@@ -251,7 +251,7 @@ void main() {
 
 ...
 </code></pre><p>E também atualizamos o JavaScript para que possámos passar os dois valores.</p>
-<pre class="prettyprint"><code>  ...
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
 
 +  var rotationLocation = gl.getUniformLocation(program, &quot;u_rotation&quot;);
 
@@ -339,19 +339,19 @@ Esse padrão nos dá a rotação.</p>
 unitário. Eles são chamados de seno e cosseno. Então, para qualquer ângulo
 que seja fornecido, nós podemos simplesmente ver o seno e cosseno da seguinte
 maneira.</p>
-<pre class="prettyprint"><code>function printSineAndCosineForAnAngle(angleInDegrees) {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function printSineAndCosineForAnAngle(angleInDegrees) {
   var angleInRadians = angleInDegrees * Math.PI / 180;
   var s = Math.sin(angleInRadians);
   var c = Math.cos(angleInRadians);
   console.log(&quot;s = &quot; + s + &quot; c = &quot; + c);
 }
 </code></pre><p>Se você copiar e colar o código no seu console de JavaScript e
-escrever <code>printSineAndCosignForAngle(30)</code>, você verá que
-<code>s = 0.49 c = 0.87</code> será impresso (nota: eu arredondei os valores).</p>
+escrever <code class="notranslate" translate="no">printSineAndCosignForAngle(30)</code>, você verá que
+<code class="notranslate" translate="no">s = 0.49 c = 0.87</code> será impresso (nota: eu arredondei os valores).</p>
 <p>Se você colocar tudo isso junto, você será capaz de rotacionar sua 
 geometria em qualquer ângulo que vocẽ desejar. Apenas defina a rotação
 com o seno e o cosseno referentes ao ângulo que você deseja.</p>
-<pre class="prettyprint"><code>  ...
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
   var angleInRadians = angleInDegrees * Math.PI / 180;
   rotation[0] = Math.sin(angleInRadians);
   rotation[1] = Math.cos(angleInRadians);
@@ -386,8 +386,8 @@ Radianos fazem a matemática ser fácil. Existem 360 graus em um círculo,
 mas existem apenas 2π radianos em um círculo. Então, uma volta completa é 2π radianos. 
 Uma volta e meia é 1π radiano. Um 1/4 de volta, ou seja, 90 graus é 1 / 2π radianos. 
 Então, se você quiser girar algo em 90 graus, apenas use
-<code>Math.PI * 0.5</code>. Se você quiser rotacionar em 15 graus, use o seguinte 
-<code>Math.PI * 0.25</code> etc.
+<code class="notranslate" translate="no">Math.PI * 0.5</code>. Se você quiser rotacionar em 15 graus, use o seguinte 
+<code class="notranslate" translate="no">Math.PI * 0.25</code> etc.
 </p>
 <p>
 Certamente, toda a matemática que envolve ângulos, círculos ou rotação,

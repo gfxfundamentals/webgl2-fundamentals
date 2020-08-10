@@ -217,7 +217,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>마지막 예제를 3D로 변경해 봅시다. F를 다시 사용하지만 이번에는 3D &#39;F&#39;를 사용합니다.</p>
 <p>첫 번쨰 할일은 버텍스 쉐이더가 3D를 처리하도록 변경하는 것입니다.
 여기에 예전 버텍스 쉐이더가 있습니다.</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 // 버텍스 쉐이더로 입력되는 attribute입니다.
 // 버퍼로부터 데이터를 받습니다.
@@ -232,7 +232,7 @@ void main() {
   gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
 }
 </code></pre><p>여기에 새로운 쉐이더가 있습니다.</p>
-<pre class="prettyprint"><code>// 버텍스 쉐이더로 입력되는 attribute입니다.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 버텍스 쉐이더로 입력되는 attribute입니다.
 // 버퍼로부터 데이터를 받습니다.
 in vec2 a_position;
 
@@ -244,11 +244,11 @@ void main() {
   // 행렬에 위치를 곱합니다.
 *  gl_Position = u_matrix * a_position;
 }
-</code></pre><p>더 간단 해졌습니다! <code>x</code>와<code>y</code>를 제공하고<code>z</code>를 1로 설정했던 2 차원과 마찬가지로, 
-3d에서는 <code>x</code>,<code>y</code>와<code>z</code>를 제공하고<code>w</code>가 1이 되어야합니다. 
-<code>w</code> 속성의 기본값은 1이라는 사실을 이용할 수 있습니다.</p>
+</code></pre><p>더 간단 해졌습니다! <code class="notranslate" translate="no">x</code>와<code class="notranslate" translate="no">y</code>를 제공하고<code class="notranslate" translate="no">z</code>를 1로 설정했던 2 차원과 마찬가지로, 
+3d에서는 <code class="notranslate" translate="no">x</code>,<code class="notranslate" translate="no">y</code>와<code class="notranslate" translate="no">z</code>를 제공하고<code class="notranslate" translate="no">w</code>가 1이 되어야합니다. 
+<code class="notranslate" translate="no">w</code> 속성의 기본값은 1이라는 사실을 이용할 수 있습니다.</p>
 <p>그 다음 3D 데이터를 제공해야합니다.</p>
-<pre class="prettyprint"><code>  ...
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
 
   // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
 *  var size = 3;          // 3 components per iteration
@@ -294,7 +294,7 @@ void main() {
   }
 </code></pre><p>Next we need to change all the matrix functions from 2D to 3D</p>
 <p>Here are the 2D (before) versions of m3.translation, m3.rotation, and m3.scaling</p>
-<pre class="prettyprint"><code>var m3 = {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m3 = {
   translation: function translation(tx, ty) {
     return [
       1, 0, 0,
@@ -322,7 +322,7 @@ void main() {
   },
 };
 </code></pre><p>And here are the updated 3D versions.</p>
-<pre class="prettyprint"><code>var m4 = {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m4 = {
   translation: function(tx, ty, tz) {
     return [
        1,  0,  0,  0,
@@ -404,7 +404,7 @@ work them out you&#39;d see them simplify just like before</p>
 <iframe class="external_diagram" src="../resources/axis-diagram.html" style="width: 540px; height: 240px;"></iframe>
 
 <p>Similarly we&#39;ll make our simplified functions</p>
-<pre class="prettyprint"><code>  translate: function(m, tx, ty, tz) {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  translate: function(m, tx, ty, tz) {
     return m4.multiply(m, m4.translation(tx, ty, tz));
   },
 
@@ -424,7 +424,7 @@ work them out you&#39;d see them simplify just like before</p>
     return m4.multiply(m, m4.scaling(sx, sy, sz));
   },
 </code></pre><p>We also need to update the projection function. Here&#39;s the old one</p>
-<pre class="prettyprint"><code>  projection: function (width, height) {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  projection: function (width, height) {
     // Note: This matrix flips the Y axis so 0 is at the top.
     return [
       2 / width, 0, 0,
@@ -435,7 +435,7 @@ work them out you&#39;d see them simplify just like before</p>
 }
 </code></pre><p>which converted from pixels to clip space. For our first attempt at
 expanding it to 3D let&#39;s try</p>
-<pre class="prettyprint"><code>  projection: function(width, height, depth) {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  projection: function(width, height, depth) {
     // Note: This matrix flips the Y axis so 0 is at the top.
     return [
        2 / width, 0, 0, 0,
@@ -446,11 +446,11 @@ expanding it to 3D let&#39;s try</p>
   },
 </code></pre><p>Just like we needed to convert from pixels to clip space for X and Y, for
 Z we need to do the same thing.  In this case I&#39;m making the Z axis pixel
-units as well.  I&#39;ll pass in some value similar to <code>width</code> for the <code>depth</code>
-so our space will be 0 to <code>width</code> pixels wide, 0 to <code>height</code> pixels tall, but
-for <code>depth</code> it will be <code>-depth / 2</code> to <code>+depth / 2</code>.</p>
+units as well.  I&#39;ll pass in some value similar to <code class="notranslate" translate="no">width</code> for the <code class="notranslate" translate="no">depth</code>
+so our space will be 0 to <code class="notranslate" translate="no">width</code> pixels wide, 0 to <code class="notranslate" translate="no">height</code> pixels tall, but
+for <code class="notranslate" translate="no">depth</code> it will be <code class="notranslate" translate="no">-depth / 2</code> to <code class="notranslate" translate="no">+depth / 2</code>.</p>
 <p>Finally we need to to update the code that computes the matrix.</p>
-<pre class="prettyprint"><code>  // Compute the matrix
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // Compute the matrix
 *  var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 400);
 *  matrix = m4.translate(matrix, translation[0], translation[1], translation[2]);
 *  matrix = m4.xRotate(matrix, rotation[0]);
@@ -477,7 +477,7 @@ back, 1 on the left, 4 on the right, 2 on the tops, 3 on the bottoms.</p>
 16 rectangles with 2 triangles per rectangle and 3 vertices per triangle is 96
 vertices.  If you want to see all of them view the source of the sample.</p>
 <p>We have to draw more vertices so</p>
-<pre class="prettyprint"><code>    // Draw the geometry.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    // Draw the geometry.
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
 *    var count = 16 * 6;
@@ -494,7 +494,7 @@ coloring each rectangle a different color.  To do this we will add another
 attribute to our vertex shader and a varying to pass it from the vertex
 shader to the fragment shader.</p>
 <p>Here&#39;s the new vertex shader</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 // an attribute is an input (in) to a vertex shader.
 // It will receive data from a buffer
@@ -516,7 +516,7 @@ void main() {
 +  v_color = a_color;
 }
 </code></pre><p>And we need to use that color in the fragment shader</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 precision highp float;
 
@@ -531,7 +531,7 @@ void main() {
 }
 </code></pre><p>We need to lookup the attribute location to supply the colors, then setup another
 buffer and attribute to give it the colors.</p>
-<pre class="prettyprint"><code>  ...
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
   var colorAttributeLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
 
   ...
@@ -601,8 +601,8 @@ back facing triangle has its vertices go in a counter clockwise direction</p>
 <p><img src="../resources/triangle-winding.svg" class="webgl_center" width="400" /></p>
 <p>WebGL has the ability to draw only forward facing or back facing
 triangles.  We can turn that feature on with</p>
-<pre class="prettyprint"><code>  gl.enable(gl.CULL_FACE);
-</code></pre><p>Well put that in our <code>drawScene</code> function. With that
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  gl.enable(gl.CULL_FACE);
+</code></pre><p>Well put that in our <code class="notranslate" translate="no">drawScene</code> function. With that
 feature turned on, WebGL defaults to &quot;culling&quot; back facing triangles.
 &quot;Culling&quot; in this case is a fancy word for &quot;not drawing&quot;.</p>
 <p>Note that as far as WebGL is concerned, whether or not a triangle is
@@ -631,11 +631,11 @@ facing the wrong way.  Rotate it and you&#39;ll see them appear when you look
 at the other side.  Fortunately it&#39;s easy to fix.  We just look at which
 ones are backward and exchange 2 of their vertices.  For example if one
 backward triangle is</p>
-<pre class="prettyprint"><code>           1,   2,   3,
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">           1,   2,   3,
           40,  50,  60,
          700, 800, 900,
 </code></pre><p>we just swap the last 2 vertices to make it forward.</p>
-<pre class="prettyprint"><code>           1,   2,   3,
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">           1,   2,   3,
 *         700, 800, 900,
 *          40,  50,  60,
 </code></pre><p>Going through and fixing all the backward triangles gets us to this</p>
@@ -664,9 +664,9 @@ color from your fragment shader AND it draws the depth pixel with the new
 depth value.  This means, pixels that are behind other pixels won&#39;t get
 drawn.</p>
 <p>We can turn on this feature nearly as simply as we turned on culling with</p>
-<pre class="prettyprint"><code>  gl.enable(gl.DEPTH_TEST);
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  gl.enable(gl.DEPTH_TEST);
 </code></pre><p>We also need to clear the depth buffer back to 1.0 before we start drawing.</p>
-<pre class="prettyprint"><code>  // Draw the scene.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // Draw the scene.
   function drawScene() {
 
     ...
@@ -683,10 +683,10 @@ drawn.</p>
 
 </p>
 <p>which is 3D!</p>
-<p>One minor thing. In most 3d math libraries there is no <code>projection</code> function to
+<p>One minor thing. In most 3d math libraries there is no <code class="notranslate" translate="no">projection</code> function to
 do our conversions from clip space to pixel space. Rather there&#39;s usually a function
-called <code>ortho</code> or <code>orthographic</code> that looks like this</p>
-<pre class="prettyprint"><code>var m4 = {
+called <code class="notranslate" translate="no">ortho</code> or <code class="notranslate" translate="no">orthographic</code> that looks like this</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m4 = {
   orthographic: function(left, right, bottom, top, near, far) {
     return [
       2 / (right - left), 0, 0, 0,
@@ -699,11 +699,11 @@ called <code>ortho</code> or <code>orthographic</code> that looks like this</p>
       1,
     ];
   }
-</code></pre><p>Unlike our simplified <code>projection</code> function above which only had width, height, and depth
+</code></pre><p>Unlike our simplified <code class="notranslate" translate="no">projection</code> function above which only had width, height, and depth
 parameters this more common orthographic projection function we can pass in left, right,
 bottom, top, near, and far which gives as more flexibility. To use it the same as
 our original projection function we&#39;d call it with</p>
-<pre class="prettyprint"><code>var left = 0;
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var left = 0;
 var right = gl.canvas.clientWidth;
 var bottom = gl.canvas.clientHeight;
 var top = 0;

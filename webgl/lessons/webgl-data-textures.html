@@ -329,18 +329,18 @@ It is defined in WebGL2. In addition to those un-sized formats there are a slew 
 
 <p>Legend:</p>
 <ul>
-<li>a single number like <code>8</code> means 8bits that will be normalized from 0 to 1</li>
-<li>a number preceded by an <code>s</code> like <code>s8</code> means a signed 8bit number that will be normalized from -1 to 1</li>
-<li>a number preceded by an <code>f</code> like <code>f16</code> means a floating point number.</li>
-<li>a number preceded by in <code>i</code> like <code>i8</code> means an integer number.</li>
-<li>a number preceded by in <code>ui</code> like <code>ui8</code> means an unsigned integer number.</li>
+<li>a single number like <code class="notranslate" translate="no">8</code> means 8bits that will be normalized from 0 to 1</li>
+<li>a number preceded by an <code class="notranslate" translate="no">s</code> like <code class="notranslate" translate="no">s8</code> means a signed 8bit number that will be normalized from -1 to 1</li>
+<li>a number preceded by an <code class="notranslate" translate="no">f</code> like <code class="notranslate" translate="no">f16</code> means a floating point number.</li>
+<li>a number preceded by in <code class="notranslate" translate="no">i</code> like <code class="notranslate" translate="no">i8</code> means an integer number.</li>
+<li>a number preceded by in <code class="notranslate" translate="no">ui</code> like <code class="notranslate" translate="no">ui8</code> means an unsigned integer number.</li>
 </ul>
 <p>We won&#39;t use this info here but I <span class="tabular-highlight">highlighted</span>
 the half and float texture formats to show unlike WebGL1 they are always available in WebGL2
 but they are not marked as either color renderable and/or texture filterable by default.
 Not being color renderable means they can not be rendered to. <a href="webgl-render-to-texture.html">Rendering to a texture is
 covered in another lesson</a>. Not texture filterable means they
-must be used with <code>gl.NEAREST</code> only. Both of those features are available as optional
+must be used with <code class="notranslate" translate="no">gl.NEAREST</code> only. Both of those features are available as optional
 extensions in WebGL2.</p>
 <p>For each of the formats you specify both the <em>internal format</em> (the format the GPU will use internally)
 and the <em>format</em> and <em>type</em> of the data you&#39;re supplying to WebGL. Here is a table showing which format
@@ -423,11 +423,11 @@ and type you must supply data for a given internal format</p>
 </div>
 
 
-<p>Let&#39;s create a 3x2 pixel <code>R8</code> texture. Because it&#39;s an <code>R8</code> texture
+<p>Let&#39;s create a 3x2 pixel <code class="notranslate" translate="no">R8</code> texture. Because it&#39;s an <code class="notranslate" translate="no">R8</code> texture
 there is only 1 value per pixel in the red channel.</p>
 <p>We&#39;ll take the sample from the <a href="webgl-3d-textures.html">last article</a>. First we&#39;ll change
 the texture coordinates to use the entire texture on each face of the cube.</p>
-<pre class="prettyprint"><code>// Fill the buffer with texture coordinates the cube.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Fill the buffer with texture coordinates the cube.
 function setTexcoords(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
@@ -441,7 +441,7 @@ function setTexcoords(gl) {
         1, 1,
         ...
 </code></pre><p>Then we&#39;ll change the code that creates a texture</p>
-<pre class="prettyprint"><code>// Create a texture.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Create a texture.
 var texture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -481,7 +481,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 </p>
 <p>Oops! Why is this not working?!?!?</p>
 <p>Checking the JavaScript console we see this error something like this</p>
-<pre class="prettyprint"><code>WebGL: INVALID_OPERATION: texImage2D: ArrayBufferView not big enough for request
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">WebGL: INVALID_OPERATION: texImage2D: ArrayBufferView not big enough for request
 </code></pre><p>It turns out there&#39;s a kind of obscure setting in WebGL left
 over from when OpenGL was first created. Computers sometimes
 go faster then data is a certain size. For example it can
@@ -492,7 +492,7 @@ row of data to be a multiple of 4 bytes (except for the last row).</p>
 is going to try to read 4 bytes for the first row and 3 bytes
 for the 2nd row for a total of 7 bytes which is why it&#39;s complaining.</p>
 <p>We can tell WebGL to deal with 1 byte at a time like this</p>
-<pre class="prettyprint"><code>const alignment = 1;
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const alignment = 1;
 gl.pixelStorei(gl.UNPACK_ALIGNMENT, alignment);
 </code></pre><p>Valid alignment values are 1, 2, 4, and 8.</p>
 <p>I suspect in WebGL you will not be able to measure a difference
@@ -500,7 +500,7 @@ in speed between aligned data and un-aligned data. I wish the default
 was 1 instead of 4 so this issue wouldn&#39;t bite new users but, in order
 to stay compatible with OpenGL the default needed to stay the same.
 That way if a ported app supplies padded rows it will work unchanged.
-At the same time, in a new app you can just always set it to <code>1</code> and
+At the same time, in a new app you can just always set it to <code class="notranslate" translate="no">1</code> and
 then be done with it.</p>
 <p>With that set things should be working</p>
 <p><div class="webgl_example_container">

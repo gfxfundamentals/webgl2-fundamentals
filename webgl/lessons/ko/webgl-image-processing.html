@@ -214,7 +214,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 가장 좋은 방법은 각자 사용하는 방법에 달려 있지만 픽셀 좌표 보단 텍스처 좌표를 사용하는 것이 더 일반적이라고 생각 합니다.</p>
 <p>오직 하나의 사각형(2개의 삼각형)을 그리기 때문에 WebGL에 직사각형의 각 점이 텍스처의 어느 위치에 해당하는지 알려주는게 필요합니다. 이 정보를 버텍스 쉐이더에서 프래그먼트 쉐이더로 &#39;varying&#39;이라 불리는 특별한 변수를 사용하여 전달합니다. varying은 변하기 때문에 varying이라고 불립니다. WebGL은 프래그먼트 쉐이더를 사용하여 각 픽셀을 그릴때 마다 버텍스 쉐이더에서 제공 한 <a href="webgl-how-it-works.html">값을 보간합니다</a>.</p>
 <p><a href="webgl-fundamentals.html">이전 글의 끝에 있는 버텍스 쉐이더</a>를 사용하여 텍스처 좌표로 전달할 속성을 추가 한 다음 프래그먼트 쉐이더로 전달 해야합니다.</p>
-<pre class="prettyprint"><code>...
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 
 +in vec2 a_texCoord;
 
@@ -229,7 +229,7 @@ void main() {
 +   v_texCoord = a_texCoord;
 }
 </code></pre><p>그런 다음 텍스처에서 색상을 찾기 위해 프래그먼트 쉐이더를 제공합니다.</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
 // 사용할 텍스처
@@ -246,7 +246,7 @@ void main() {
    outColor = texture(u_image, v_texCoord);
 }
 </code></pre><p>마지막으로 이미지를 로드하고 텍스처를 생성해고 이미지를 텍스처로 복사해야 합니다. 브라우저 이미지를 비동기적으로 로드하기 때문에 텍스처가 로드 될 때까지를 기디리기 위해 코드를 약간 변경합니다. 일단 로드되면 그릴 것입니다.</p>
-<pre class="prettyprint"><code>+function main() {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+function main() {
 +  var image = new Image();
 +  image.src = &quot;https://someimage/on/our/server&quot;;  // 반드시 같은 도메인 이여야 합니다!!!
 +  image.onload = function() {
@@ -341,7 +341,7 @@ function render(image) {
 
 </p>
 <p>너무 과하지 않게 이미지를 조작해봅시다. 빨간색이랑 파란색을 바꾸는 건 어떨까요?</p>
-<pre class="prettyprint"><code>...
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 outColor = texture(u_image, v_texCoord).bgra;
 ...
 </code></pre><p>이제 빨간색과 파란색을 바꿨습니다.</p>
@@ -351,9 +351,9 @@ outColor = texture(u_image, v_texCoord).bgra;
 </div>
 
 </p>
-<p>만약에 실제로 다른 픽셀들에서 다른 모양을 가지는 이미치 처리를 한다면 어떻까요? WebGL은 0.0에서 1.0까지인 텍스처 좌표에서 텍스처들을 참조하므로 간단한 계산 <code>onePixel = 1.0 / textureSize</code>을 통해 1픽셀에 얼마큼 이동하는지를 계산할 수 있습니다.</p>
+<p>만약에 실제로 다른 픽셀들에서 다른 모양을 가지는 이미치 처리를 한다면 어떻까요? WebGL은 0.0에서 1.0까지인 텍스처 좌표에서 텍스처들을 참조하므로 간단한 계산 <code class="notranslate" translate="no">onePixel = 1.0 / textureSize</code>을 통해 1픽셀에 얼마큼 이동하는지를 계산할 수 있습니다.</p>
 <p>다음은 텍스처에서 각 픽셀의 왼쪽, 오른쪽 픽셀을 평균화하는 프래그먼트 쉐이더 입니다.</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 // 프래그먼트 쉐이더는 기본 정밀도 가지고 있지 않으므로 선택해야 합니다.
 // highp는 기본으로 괜찮습니다. &quot;중간 정밀도&quot;를 의미합니다.
@@ -386,7 +386,7 @@ void main() {
 </p>
 <p>이제 다른 픽셀을 참조하는 방법을 알았으니 컨벤션 커널(convolution kernel)을 사용하여 일반적인 이미지 처리를 해보겠습니다. 여기에서는 3x3 커널을 사용할 것입니다. 컨번션 커널은 단순히 3x3 행렬이며 여기서 행렬의 각 항목은 렌더랑 픽셀 주위에 있는 8개의 픽셀에 얼만큼 곱할 것인지를 나타냅니다. 그 다음 결과를 커널 가중치(커널의 모든 값들의 합)나 1.0 중 큰 값으로 나눕니다. <a href="https://docs.gimp.org/2.6/en/plug-in-convmatrix.html">여기서 꽤 좋은 읽을거리가 있습니다</a>. 그리고 <a href="https://www.codeproject.com/KB/graphics/ImageConvolution.aspx">C++으로 직접 작성하면 어떤지 실제 코드를 보여주는 다른 읽을거리가 있습니다</a>.</p>
 <p>우리의 경우 쉐이더에서 이 작업을 수행할 것이므로 여기에 새로운 프래그먼트 쉐이더가 있습니다.</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 // 프래그먼트 쉐이더는 기본 정밀도 가지고 있지 않으므로 선택해야 합니다.
 // highp는 기본으로 괜찮습니다. &quot;중간 정밀도&quot;를 의미합니다.
@@ -421,7 +421,7 @@ void main() {
   outColor = vec4((colorSum / u_kernelWeight).rgb, 1);
 }
 </code></pre><p>자바스크립트에서 컨벤션 커널과 가중치를 제공해야 합니다.</p>
-<pre class="prettyprint"><code> function computeKernelWeight(kernel) {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> function computeKernelWeight(kernel) {
    var weight = kernel.reduce(function(prev, curr) {
        return prev + curr;
    });
@@ -452,7 +452,7 @@ void main() {
 <p>이 글을 통해 WebGL에서의 이미지 처리가 매우 간단하다고 확신이 들어기를 바랍니다. 다음으로 <a href="webgl-image-processing-continued.html">이미지에 두가지 이상의 효과를 적용하는 방법</a>을 살펴 보겠습니다.</p>
 <div class="webgl_bottombar">
 <h3>텍스쳐 유닛(texture units)이란 무엇 입니까?</h3>
-<code>gl.draw???</code>를 호출할때 쉐이더는 텍스처를 참조 할 수 있습니다. 텍스처들은 텍스처 유닛에 바운딩됩니다. 사용자의 머신은 더 많은 WebGL2 구현들을 지원할 수도 있지만 적어도 16 개의 텍스처 유닛을 지원해야합니다. 각 샘플러 유닛이 참조하는 텍스쳐 유닛은 샘플러의 위치를 찾고 참조하길 원하는 텍스처 유닛의 인덱스를 설정합니다.
+<code class="notranslate" translate="no">gl.draw???</code>를 호출할때 쉐이더는 텍스처를 참조 할 수 있습니다. 텍스처들은 텍스처 유닛에 바운딩됩니다. 사용자의 머신은 더 많은 WebGL2 구현들을 지원할 수도 있지만 적어도 16 개의 텍스처 유닛을 지원해야합니다. 각 샘플러 유닛이 참조하는 텍스쳐 유닛은 샘플러의 위치를 찾고 참조하길 원하는 텍스처 유닛의 인덱스를 설정합니다.
 
 예제:
 <pre class="prettyprint showlinemods">

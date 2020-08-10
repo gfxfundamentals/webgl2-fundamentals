@@ -305,9 +305,9 @@ newY = y * sy;
 
 <p>이는 <a href="webgl-2d-scale.html">크기 변환 예제</a>와 같습니다.</p>
 <p>아마 아직도 &quot;그래서 요점이 무엇입니까?&quot;라고 생각이 들수 있고 이미 했던 것을 더 많은 일을 해서 하는 것 처럼 보일수 있습니다.</p>
-<p>이제 마법을 할 차례 입니다. 행렬을 모두 곱하고 모든 변환을 한번에 적용 할 수 있다는 것이 밝혀졌습니다. 2개의 행렬을 가지고 곱한다음 결과를 반환하는 <code>m3.multiply</code>함수를 가지고 있다고 가정 해 봅시다.</p>
+<p>이제 마법을 할 차례 입니다. 행렬을 모두 곱하고 모든 변환을 한번에 적용 할 수 있다는 것이 밝혀졌습니다. 2개의 행렬을 가지고 곱한다음 결과를 반환하는 <code class="notranslate" translate="no">m3.multiply</code>함수를 가지고 있다고 가정 해 봅시다.</p>
 <p>명확하게 하기 위해 이동, 회전, 크기 행렬을 만드는 함수를 만들어 보겠습니다.</p>
-<pre class="prettyprint"><code>var m3 = {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m3 = {
   translation: function(tx, ty) {
     return [
       1, 0, 0,
@@ -335,7 +335,7 @@ newY = y * sy;
   },
 };
 </code></pre><p>이제 쉐이더를 변경해 보겠습니다. 오래된 쉐이더는 다음과 같습니다.</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 in vec2 a_position;
 
@@ -356,7 +356,7 @@ void main() {
   // 이동에 추가
   vec2 position = rotatedPosition + u_translation;
 </code></pre><p>다음 새로운 쉐이더는 더 간단합니다.</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 in vec2 a_position;
 
@@ -368,7 +368,7 @@ void main() {
   vec2 position = (u_matrix * vec3(a_position, 1)).xy;
   ...
 </code></pre><p>그다음 여기에 사용 방법이 있습니다.</p>
-<pre class="prettyprint"><code>  // scene 그리기.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // scene 그리기.
   function drawScene() {
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
@@ -418,7 +418,7 @@ void main() {
 
 </p>
 <p>아직도 더 좋은 것처럼 보이지 않는다고 생각할 수도 있습니다. 그러나 이제 순서를 변경하기 위해 새로운 쉐이더를 작성할 필요가 없습니다. 단지 계산만 바꾸면 됩니다.</p>
-<pre class="prettyprint"><code>    ...
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    ...
     // Multiply the matrices.
     var matrix = m3.multiply(scaleMatrix, rotationMatrix);
     matrix = m3.multiply(matrix, translationMatrix);
@@ -431,7 +431,7 @@ void main() {
 
 </p>
 <p>이와 같은 행렬을 적용 할수 있다는 것은 신체의 팔, 태양 주위의 행성의 위성, 나무의 가지와 같은 계층적 애니메이션에 특히 중요합니다. 계층적 애니메이션의 간단한 예제로 &#39;F&#39;를 5번 그리는데 그릴떄 마다 전 &#39;F&#39;에서 행렬을 시작한다고 해봅시다.</p>
-<pre class="prettyprint"><code>    // scene 그리기.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    // scene 그리기.
     function drawScene() {
 
       ...
@@ -460,14 +460,14 @@ void main() {
         gl.drawArrays(primitiveType, offset, count);
       }
     }
-</code></pre><p>이를 하기 위해 단위 행렬을 만드는 함수인 <code>m3.identity</code>를 사용해 봅시다. 단위 행렬은 1.0을 나타내는 행렬이며 이를 곱한다면 아무 일도 일어나지 않습니다. 다음과 같습니다.</p>
+</code></pre><p>이를 하기 위해 단위 행렬을 만드는 함수인 <code class="notranslate" translate="no">m3.identity</code>를 사용해 봅시다. 단위 행렬은 1.0을 나타내는 행렬이며 이를 곱한다면 아무 일도 일어나지 않습니다. 다음과 같습니다.</p>
 <div class="webgl_center">X * 1 = X</div>
 
 <p>다음도 같습니다.</p>
 <div class="webgl_center">matrixX * identity = matrixX</div>
 
 <p>여기에 단위 행렬을 만드는 코드 입니다.</p>
-<pre class="prettyprint"><code>var m3 = {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m3 = {
   identity: function () {
     return [
       1, 0, 0,
@@ -485,7 +485,7 @@ void main() {
 </p>
 <p>한 가지 더 에를 들어 봅시다. 지금까지 모든 예제에서 우리의 &#39;F&#39;는 왼쪽 상단 모서리로 회전을 합니다. 이것은 우리가 사용하는 수학이 항상 원점을 중심으로 회전하고 &#39;F&#39;의 왼쪽 위 모서리가 원점 (0, 0)에 있기 때문입니다.</p>
 <p>이제 행렬로 할 수 있기 떄문에 적용할 변환 순서를 선택 할 수 있으므로 나머지 변환이 적용되기 전에 원점을 효과적으로 이동할 수 있습니다.</p>
-<pre class="prettyprint"><code>    // &#39;F&#39;의 원점을 한가운데로 이동시키는 행렬을 만듭니다.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    // &#39;F&#39;의 원점을 한가운데로 이동시키는 행렬을 만듭니다.
     var moveOriginMatrix = m3.translation(-50, -75);
     ...
 
@@ -502,7 +502,7 @@ void main() {
 </p>
 <p>이 기술을 사용하면 어떤 지점에서든 회전하거나 크기를 조정할 수 있습니다. 이제 포토샵이나 플래쉬에서 이미지의 회점 지점을 이동하는 방법을 알게 되었습니다.</p>
 <p>더 해봅시다. 만약 첫번째 글 <a href="webgl-fundamentals.html">WebGL 기초</a>로 돌아간다면 쉐이더에서 픽셀에서 클립공간으로 변환하는 코드가 다음과 같이 있다는 것을 기억할 것입니다.</p>
-<pre class="prettyprint"><code>  ...
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
   // 직사각형을 픽셀에서 0.0 에서 1.0으로 변환합니다.
   vec2 zeroToOne = position / u_resolution;
 
@@ -514,7 +514,7 @@ void main() {
 
   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 </code></pre><p>만약 이 단계를 차례대로 살펴보면 첫 단계인 &quot;픽셀을 0.0에서 1.0으로 변환 &quot;은 실제로 크기 변환입니다. 두 번째 단계 역시 크기 변환입니다. 다음은 이동을 하고 마지막으로 Y 축 -1만큼 크기 변환을 합니다. 우리는 실제로 이 모든 것을 하는 행렬을 쉐이더 전달할 수 있습니다. 2개의 크기 변환 행렬을 만들 수 있으며 하나는 1.0/해상도이며 하나는 2.0 크기 변환을 하며 3번째는 -1.0, -1.0만큼 이동하며 4번째로 Y 축 -1만큼 크기 변환하고 이 모든 것을 곱하는 대신에 수학은 간단하기 때문에 해상도에 대한 &#39;투영&#39;(projection) 함수를 만들 것입니다.</p>
-<pre class="prettyprint"><code>var m3 = {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m3 = {
   projection: function (width, height) {
     // 참고: 0축이 맨위에 오도록 Y축을 뒤집습니다.
     return [
@@ -525,7 +525,7 @@ void main() {
   },
   ...
 </code></pre><p>이제 쉐이더를 더 단순화 할 수 있습니다. 여기에 새로운 버텍스 쉐이더가 있습니다.</p>
-<pre class="prettyprint"><code>#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 in vec2 a_position;
 
@@ -536,7 +536,7 @@ void main() {
   gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
 }
 </code></pre><p>그리고 JavaScript에서는 투영 행렬을 곱해야합니다.</p>
-<pre class="prettyprint"><code>  // scene 그리기.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // scene 그리기.
   function drawScene() {
     ...
 -    // 쉐이더에서 픽셀에서 클립공간으로 변환 할 수 있게 캔버스 해상도를 전달합니다.
@@ -565,7 +565,7 @@ void main() {
 
 </p>
 <p>더 나아 가기 전에 조금 더 간단하게 해봅시다. 다양한 매트릭스를 생성하고 개별적으로 곱하는 것이 일반적이지만, 또한 생성할 때마다 곱하는 것도 일반적입니다. 효과적으로 다음과 같은 함수를 만들 수 있습니다.</p>
-<pre class="prettyprint"><code>var m3 = {
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m3 = {
 
   ...
 
@@ -585,7 +585,7 @@ void main() {
 
 };
 </code></pre><p>이렇게 하면 위의 행렬 7줄을 다음과 같이 5줄로 바꿀 수 있습니다.</p>
-<pre class="prettyprint"><code>// 행렬 계산
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 행렬 계산
 var matrix = m3.projection(gl.canvas.clientWidth, gl.canvas.clientHeight);
 matrix = m3.translate(matrix, translation[0], translation[1]);
 matrix = m3.rotate(matrix, rotationInRadians);
@@ -598,21 +598,21 @@ matrix = m3.scale(matrix, scale[0], scale[1]);
 
 </p>
 <p>마지막으로 위에서 순서 문제를 보았습니다. 첫 번쨰 예에서는</p>
-<pre class="prettyprint"><code>translation * rotation * scale
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">translation * rotation * scale
 </code></pre><p>두 번쨰 에제에서는</p>
-<pre class="prettyprint"><code>scale * rotation * translation
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">scale * rotation * translation
 </code></pre><p>그리고 이들이 어떻게 다른지를 보았습니다.</p>
 <p>행렬을 보는 두 가지 방법이 있습니다. 표현식을 감안할 때</p>
-<pre class="prettyprint"><code>projectionMat * translationMat * rotationMat * scaleMat * position
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">projectionMat * translationMat * rotationMat * scaleMat * position
 </code></pre><p>많은 사람들이 자연스럽게 발견하는 첫 번쨰 방법은 오른쪽에서 시작하여 왼쪽으로 작업하는 것 입니다.</p>
 <p>먼저 크기 변환 행렬을 위치에 곱하여 scaledPosition를 얻습니다.</p>
-<pre class="prettyprint"><code>scaledPosition = scaleMat * position
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">scaledPosition = scaleMat * position
 </code></pre><p>그런 다음 scaledPosition를에 회전 행렬을 곱하여 rotatedScaledPosition를 얻습니다.</p>
-<pre class="prettyprint"><code>rotatedScaledPosition = rotationMat * scaledPosition
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">rotatedScaledPosition = rotationMat * scaledPosition
 </code></pre><p>그런 다음 rotatedScaledPositon에 이동 행렬을 곱하여 translatedRotatedScaledPosition를 얻습니다.</p>
-<pre class="prettyprint"><code>translatedRotatedScaledPosition = translationMat * rotatedScaledPosition
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">translatedRotatedScaledPosition = translationMat * rotatedScaledPosition
 </code></pre><p>마지막으로 투영 행렬을 곱하여 클립 공간 위치를 얻습니다.</p>
-<pre class="prettyprint"><code>clipspacePosition = projectioMatrix * translatedRotatedScaledPosition
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">clipspacePosition = projectioMatrix * translatedRotatedScaledPosition
 </code></pre><p>2번쨰 방법은 왼쪽에서 오른쪽으로 행렬을 읽는 것 입니다. 이 경우 각 행렬은 캔버스가 나타내는 *공간&quot;을 변경합니다. 캔버스는 각 방향에서 클립 공간(-1에서 +1)을 나타내는 것으로에서 시작합니다. 왼쪽에서 오른쪽으로 적용된 각 행렬은 캔버스가 나타내는 공간을 변경합니다.</p>
 <p>1 단계:  행렬이 없을떄(또는 단위 행렬)</p>
 <blockquote>
@@ -625,7 +625,7 @@ matrix = m3.scale(matrix, scale[0], scale[1]);
 <p>흰색 영역은 캔버스입니다. 파랑색은 캔버스 밖입니다. 우리는 클립 공간에 있습니다.
 전달 된 위치가 클립 공간에 있어야 합니다.</p>
 </blockquote>
-<p>2 단계:  <code>matrix = m3.projection(gl.canvas.clientWidth, gl.canvas.clientHeight)</code>;</p>
+<p>2 단계:  <code class="notranslate" translate="no">matrix = m3.projection(gl.canvas.clientWidth, gl.canvas.clientHeight)</code>;</p>
 <blockquote>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/matrix-space-change.html?stage=1"></iframe>
@@ -637,7 +637,7 @@ matrix = m3.scale(matrix, scale[0], scale[1]);
 이 행렬을 사용하여 전달된 위치는 픽셀 공간에 있어야 합니다.
 공간이 Y 위치가 위에서 Y 위치 아래로 뒤집힐떄 할떄 휙 지나가는 것을 볼수 있습니다.</p>
 </blockquote>
-<p>3 단계:  <code>matrix = m3.translate(matrix, tx, ty);</code></p>
+<p>3 단계:  <code class="notranslate" translate="no">matrix = m3.translate(matrix, tx, ty);</code></p>
 <blockquote>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/matrix-space-change.html?stage=2"></iframe>
@@ -647,7 +647,7 @@ matrix = m3.scale(matrix, scale[0], scale[1]);
 </p>
 <p>원점은 이제 tx, ty (150, 100)만큼 이동 되었으며, 공간이 이동했습니다.</p>
 </blockquote>
-<p>4 단계:  <code>matrix = m3.rotate(matrix, rotationInRadians);</code></p>
+<p>4 단계:  <code class="notranslate" translate="no">matrix = m3.rotate(matrix, rotationInRadians);</code></p>
 <blockquote>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/matrix-space-change.html?stage=3"></iframe>
@@ -657,7 +657,7 @@ matrix = m3.scale(matrix, scale[0], scale[1]);
 </p>
 <p>공간이 tx, ty만큼 회전합니다.</p>
 </blockquote>
-<p>Step 5:  <code>matrix = m3.scale(matrix, sx, sy);</code></p>
+<p>Step 5:  <code class="notranslate" translate="no">matrix = m3.scale(matrix, sx, sy);</code></p>
 <blockquote>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/matrix-space-change.html?stage=4"></iframe>
@@ -666,14 +666,14 @@ matrix = m3.scale(matrix, scale[0], scale[1]);
 </p>
 <p>tx, ty가 중심이던 전에 회전된 공간은 x가 2배, y가 1.5배만큼 크기 변환이 되었습니다.</p>
 </blockquote>
-<p>쉐이더에서 우리는 <code>gl_Position = matrix * position;</code>를 수행합니다. <code>position</code> 값은 최종 공간에서 실제로 나타납니다.</p>
+<p>쉐이더에서 우리는 <code class="notranslate" translate="no">gl_Position = matrix * position;</code>를 수행합니다. <code class="notranslate" translate="no">position</code> 값은 최종 공간에서 실제로 나타납니다.</p>
 <p>이해하기 쉬운 느낌이 드는 걸로 사용하면 됩니다.</p>
 <p>이 글이 행렬 수학을 이해하기 쉽게 해주는데 도움이 되었기를 바랍니다. 2D를 더하고 싶다면 <a href="webgl-2d-drawimage.html">캔버스 2d drawImage 함수 재 작성</a>를 확인 한 다음 <a href="webgl-2d-matrix-stack.html">캔버스 2d 행렬 스택 재 작성</a>를 보시면 됩니다.</p>
 <p>그럴지 않으면 다음으로 <a href="webgl-3d-orthographic.html">3D로 이동할 것입니다</a>. 3D에서 행렬 수학은 동일한 원칙과 사용법을 따릅니다. 2D로 시작하여 이해하기 쉽도록하기 시작했습니다.</p>
 <p>물론 행렬 수학의 전문가가 되고 싶다면 <a href="https://www.youtube.com/watch?v=kjBOesZCoqc&amp;list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab">이 놀라운 동영상을 보세요</a>.</p>
 <div class="webgl_bottombar">
-<h3><code>clientWidth</code>이랑 <code>clientHeight</code>는 무엇입니까?</h3>
-<p>이 시점까지는 캔버스의 크기를 참조 할 때마다 <code> m3.projection </ code>을 호출했을 때 위의 <code> canvas.width </ code>와 <code> canvas.height </ code> 대신 <code> canvas.clientWidth </ code> 및 <code> canvas.clientHeight </ code>를 사용했습니다.
+<h3><code class="notranslate" translate="no">clientWidth</code>이랑 <code class="notranslate" translate="no">clientHeight</code>는 무엇입니까?</h3>
+<p>이 시점까지는 캔버스의 크기를 참조 할 때마다 <code class="notranslate" translate="no"> m3.projection </ code>을 호출했을 때 위의 <code class="notranslate" translate="no"> canvas.width </ code>와 <code class="notranslate" translate="no"> canvas.height </ code> 대신 <code class="notranslate" translate="no"> canvas.clientWidth </ code> 및 <code class="notranslate" translate="no"> canvas.clientHeight </ code>를 사용했습니다.
 왜일까요?</p>
 <p>투영 행렬은 클립 공간(각 차원에서 -1에서 +1)을 가져 와서 다시 픽셀로 변환하는 방법과 관련이 있습니다. 그러나 브라우저에는 두 가지 유형의 픽셀이 있습니다. 하나는 캔버스 자체의 픽셀 수입니다. 예를 들어 이렇게 정의 된 캔버스입니다.</p>
 <pre class="prettyprint">
@@ -698,14 +698,14 @@ matrix = m3.scale(matrix, scale[0], scale[1]);
   &lt;canvas width="400" height="300">&lt;/canvas&gt;
 </pre>
 <p>컨테이너의 크기에 상관없이 캔버스가 표시됩니다. 400x300이 아닙니다.</p>
-<p>다음은 캔버스의 CSS 표시 크기를 100 %로 설정하여 캔버스가 페이지를 채우도록 펼쳐지는 두 가지 예입니다. 첫 번째는 <code> canvas.width </ code>와 <code> canvas.height </ code>를 사용합니다. 새 창에서 열어 창 크기를 조정해보세요. 'F'가 어떻게 맞는 모양을 가지지 않는지 확인해보세요. 왜곡됩니다.</p>
+<p>다음은 캔버스의 CSS 표시 크기를 100 %로 설정하여 캔버스가 페이지를 채우도록 펼쳐지는 두 가지 예입니다. 첫 번째는 <code class="notranslate" translate="no"> canvas.width </ code>와 <code class="notranslate" translate="no"> canvas.height </ code>를 사용합니다. 새 창에서 열어 창 크기를 조정해보세요. 'F'가 어떻게 맞는 모양을 가지지 않는지 확인해보세요. 왜곡됩니다.</p>
 <div class="webgl_example_container">
   <iframe class="webgl_example" style="width:  500px; height: 150px;" src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-canvas-width-height.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-canvas-width-height.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 
-<p>두 번째 예제에서는 <code> canvas.clientWidth </ code>와 <code> canvas.clientHeight </ code>를 사용합니다. <code> canvas.clientWidth </ code>와<code> canvas.clientHeight </ code>는 브라우저에서 실제로 캔버스가 표시되는 크기를 표시합니다. 이 경우 캔버스는 여전히 400x300 픽셀 밖에 없지만 캔버스가 표시되는 크기에 따라 가로 세로 비율을 정의하면 <code> F </ code>가 항상 올바르게 보입니다.</p>
+<p>두 번째 예제에서는 <code class="notranslate" translate="no"> canvas.clientWidth </ code>와 <code class="notranslate" translate="no"> canvas.clientHeight </ code>를 사용합니다. <code class="notranslate" translate="no"> canvas.clientWidth </ code>와<code class="notranslate" translate="no"> canvas.clientHeight </ code>는 브라우저에서 실제로 캔버스가 표시되는 크기를 표시합니다. 이 경우 캔버스는 여전히 400x300 픽셀 밖에 없지만 캔버스가 표시되는 크기에 따라 가로 세로 비율을 정의하면 <code class="notranslate" translate="no"> F </ code>가 항상 올바르게 보입니다.</p>
 <div class="webgl_example_container">
   <iframe class="webgl_example" style="width:  500px; height: 150px;" src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-canvas-clientwidth-clientheight.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-canvas-clientwidth-clientheight.html" target="_blank">click here to open in a separate window</a>

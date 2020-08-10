@@ -210,13 +210,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 我们需要探讨一个基本问题：WebGL 和 GPU 到底在做什么。CPU 基本做了两部分事情：
 第一部分是处理顶点(数据流)，变成裁剪空间节点；第二部分是基于第一部分的结果绘制像素。</p>
 <p>当你调用</p>
-<pre class="prettyprint"><code>gl.drawArrays(gl.TRIANGLE, 0, 9);
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.drawArrays(gl.TRIANGLE, 0, 9);
 </code></pre><p>数字9意味着处理“9个顶点”，相应地就有9个点被处理。</p>
 <div class="webgl_center"><img src="../resources/vertex-shader-anim.gif" /></div>
 
 <p>左边是你提供的数据。点着色器是用<a href="webgl-shaders-and-glsl.html">GLSL</a>写的函数。
 每个顶点都用调用一次它。在这个函数里面， 做了一些数学运算和设置裁剪空间的顶点坐标
-到一个特殊变量<code>gl_position</code>。GPU 获得了这些坐标值并在内部存起来。</p>
+到一个特殊变量<code class="notranslate" translate="no">gl_position</code>。GPU 获得了这些坐标值并在内部存起来。</p>
 <p>假设你在画一些三角形，每次 GPU 都会取出 3 个顶点来生成三角形。它指出三角形的 3 个点对应哪些像素，
 然后这些像素值画出这个三角形，这个过程就叫“像素栅格化”。对于每个像素，都会调用片段着色器。
 它有一个 vec4 类型的输出变量，它指示绘制像素的颜色是什么。</p>
@@ -224,7 +224,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 实际上，我们能够传给它更多信息。“varyings”就能够从点着色器传值到片段着色器。</p>
 <p>我们先简单示例如何将裁剪空间坐标系的值从点着色器到片段着色器。</p>
 <p>为方便演示，我们修改之前的一个<a href="webgl-2d-matrices.html">例子</a>，将绘制的图形从长方形变成三角形。</p>
-<pre class="prettyprint"><code>// Fill the buffer with the values that define a triangle.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Fill the buffer with the values that define a triangle.
 function setGeometry(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
@@ -235,14 +235,14 @@ function setGeometry(gl) {
       gl.STATIC_DRAW);
 }
 </code></pre><p>我们只有三个顶点。</p>
-<pre class="prettyprint"><code>// Draw the scene.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Draw the scene.
 function drawScene() {
   ...
   // Draw the geometry.
 *  gl.drawArrays(gl.TRIANGLES, 0, 3);
 }
-</code></pre><p>在点着色器代码中，我们声明了前面带<code>out</code>的<em>varying</em>变量，它能够传给片段着色器。</p>
-<pre class="prettyprint"><code>out vec4 v_color;
+</code></pre><p>在点着色器代码中，我们声明了前面带<code class="notranslate" translate="no">out</code>的<em>varying</em>变量，它能够传给片段着色器。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">out vec4 v_color;
 ...
 void main() {
   // Multiply the position by the matrix.
@@ -253,8 +253,8 @@ void main() {
   // Color space goes from 0.0 to 1.0
 *  v_color = gl_Position * 0.5 + 0.5;
 }
-</code></pre><p>相应地，在片段着色器中,我们以前置<code>in</code>声明了同样的<em>varying</em>变量。</p>
-<pre class="prettyprint"><code>#version 300 es
+</code></pre><p>相应地，在片段着色器中,我们以前置<code class="notranslate" translate="no">in</code>声明了同样的<em>varying</em>变量。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 precision highp float;
 
@@ -341,7 +341,7 @@ table.vertex_table {
 例如，让我们绘制一个由 2 个不同颜色三角形组成的矩形。
 为此，我们将向点着色器添加另一个属性，以便我们可以向其传递更多数据，
 并将该数据直接传递给片段着色器。</p>
-<pre class="prettyprint"><code>in vec2 a_position;
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">in vec2 a_position;
 +in vec4 a_color;
 ...
 out vec4 v_color;
@@ -352,7 +352,7 @@ void main() {
 *  v_color = a_color;
 }
 </code></pre><p>现在，我们必须提供供 WebGL 使用的颜色。</p>
-<pre class="prettyprint"><code>  // look up where the vertex data needs to go.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // look up where the vertex data needs to go.
   var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 +  var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
   ...
@@ -409,7 +409,7 @@ void main() {
 <p>注意，我们有 2 个纯色三角形。 但是，我们以 <em>varying</em> 的形式传递值，
 因此它们在三角形上变化或内插。 只是我们在每个三角形的 3 个顶点上使用了相同的颜色。
 如果我们使每种颜色不同，我们将看到插值。</p>
-<pre class="prettyprint"><code>// Fill the buffer with colors for the 2 triangles
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Fill the buffer with colors for the 2 triangles
 // that make the rectangle.
 function setColors(gl) {
   // Make every vertex a different color.
@@ -434,17 +434,17 @@ function setColors(gl) {
 <p>我想这不是很令人兴奋，但是它确实演示了使用多个属性并将数据从顶点着色器传递到片段着色器的过程。
 如果您查看[图像处理示例]（webgl-image-processing.html），您会发现它们还使用额外的属性来传递纹理坐标。</p>
 <h2 id="-">缓冲区和属性的命令做了什么?</h2>
-<p>缓冲区是将顶点和将每个顶点数据传给GPU的方法。 <code>gl.createBuffer</code>创建一个缓冲区。 
-<code>gl.bindBuffer</code>将该缓冲区设置为正在处理的缓冲区。 <code>gl.bufferData</code>将数据复制到当前缓冲区中。</p>
+<p>缓冲区是将顶点和将每个顶点数据传给GPU的方法。 <code class="notranslate" translate="no">gl.createBuffer</code>创建一个缓冲区。 
+<code class="notranslate" translate="no">gl.bindBuffer</code>将该缓冲区设置为正在处理的缓冲区。 <code class="notranslate" translate="no">gl.bufferData</code>将数据复制到当前缓冲区中。</p>
 <p>数据进入缓冲区后，我们需要告诉WebGL如何获取数据并将其提供给顶点着色器的属性。</p>
 <p>为此，首先我们要问WebGL给它分配给属性的位置。 例如，下面的代码：</p>
-<pre class="prettyprint"><code>// look up where the vertex data needs to go.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// look up where the vertex data needs to go.
 var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
 </code></pre><p>一旦知道了属性的位置，便发出2条命令。</p>
-<pre class="prettyprint"><code>gl.enableVertexAttribArray(location);
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.enableVertexAttribArray(location);
 </code></pre><p>这条命令告诉WebGL我们想要从缓冲区取数据</p>
-<pre class="prettyprint"><code>gl.vertexAttribPointer(
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.vertexAttribPointer(
     location,
     numComponents,
     typeOfData,
