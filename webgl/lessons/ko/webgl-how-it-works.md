@@ -139,7 +139,7 @@ table.vertex_table td {
 
 그런 다음 v_color에 작성된 3개의 값이 각 픽셀마다 보간되고 프래그먼트 쉐이더에 전달 됩니다.
 
-{{{diagram url="resources/fragment-shader-anim.html" caption="v_color는 v0, v1 그리고 v2 사이에서 보간됩니다." }}}
+{{{diagram url="resources/fragment-shader-anim.html" width="600" height="400" caption="v_color는 v0, v1 그리고 v2 사이에서 보간됩니다." }}}
 
 또한 더 많은 데이터를 버텍스 쉐이더로 전달할 수 있고 이를 프레그먼트 쉐이더에 전달할 수 있습니다. 예를 들어 2개의 삼각형과 2개의 색상으로 구성된 직사각형을 그려 본다고 합시다. 이를 위해 또다른 attribute를 버텍스 쉐이더에 추가하여 더 많은 데이터를 전달 하고 그 데이터를 프래그먼트 쉐이더에 직접 전달할 수 있습니다.
 
