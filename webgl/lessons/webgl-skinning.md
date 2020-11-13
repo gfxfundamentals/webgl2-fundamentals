@@ -1209,6 +1209,6 @@ Once things were working I got an image like this
 
 Again it was originally a mess of colors. The image above is what it looked like after it was fixed. That's pretty much what you'd expect to see for weights for the killer whale. Rings of color around each bone.
 
-The bug had to do with how `webgl.createBufferInfoFromArrays`, which I used instead of twgl when I started making this sample, was figuring out the number of components. There were cases where it ignored the one specified, tried to guess, and guessed wrong. Once the bug was fixed then I removed those changes to the shaders. Note that I left them in the code above commented out if you want to play with them.
+The bug had to do with how `twgl.createBufferInfoFromArrays`, which I used instead of twgl when I started making this sample, was figuring out the number of components. There were cases where it ignored the one specified, tried to guess, and guessed wrong. Once the bug was fixed then I removed those changes to the shaders. Note that I left them in the code above commented out if you want to play with them.
 
 I want to make it clear the code above is meant to help explain skinning. It is not meant to be a production ready skinning engine. I think if we were to try to make a production quality engine we'd run into many things we'd probably want to change but I hope going through this example helps slight demystify skinning.
