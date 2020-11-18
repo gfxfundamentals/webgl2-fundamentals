@@ -643,7 +643,7 @@ function printResults(gl, buffer, label) {
 }
 ```
 
-{{{example url=".../webgl-gpgpu-sum-difference-product-transformfeedback.html"}}}
+{{{example url="../webgl-gpgpu-sum-difference-product-transformfeedback.html"}}}
 
 You can see it worked. We got the GPU to compute the sum, difference, and product
 of the 'a' and 'b' values we passed in.
@@ -1260,7 +1260,7 @@ and finally read the result
 
 If we run it
 
-{{{example url="../webgl-gpgpu-closest-line-results-transform-feedback.html"}}}
+{{{example url="../webgl-gpgpu-closest-line-results-transformfeedback.html"}}}
 
 We should get the expected result of `[1, 3]`
 
@@ -1556,7 +1556,7 @@ const numLineSegments = lines.length / 2 / 2;
 
 and if we run that
 
-{{{example url="../webgl-gpgpu-closest-line.html"}}}
+{{{example url="../webgl-gpgpu-closest-line-transformfeedback.html"}}}
 
 You can bump up the number of points and lines
 but at some point you won't be able to tell which
@@ -1990,7 +1990,7 @@ is happening on the GPU
   their implementations.
   
   * [particles](../webgl-gpgpu-particles.html)
-  * [closest lines results](../webgl-gpgpg-closest-line-results.html)
+  * [closest lines results](../webgl-gpgpu-closest-line-results.html)
   * [closest lines visualized](../webgl-gpgpu-closest-line.html)
   * [closest lines dynamic](../webgl-gpgpu-closest-line-dynamic.html)
 
