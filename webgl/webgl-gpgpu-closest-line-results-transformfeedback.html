@@ -1,0 +1,261 @@
+<!-- Licensed under a BSD license. See license.html for license -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>WebGL2 - GPGPU - Closest Line - Transform Feedback</title>
+<link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
+</head>
+<body>
+<div class="description">
+  Closest Line
+</div>
+</body>
+<!--
+for most samples webgl-utils only provides shader compiling/linking and
+canvas resizing because why clutter the examples with code that's the same in every sample.
+See https://webgl2fundamentals.org/webgl/lessons/webgl-boilerplate.html
+and https://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+for webgl-utils, m3, m4, and webgl-lessons-ui.
+-->
+<script src="resources/webgl-utils.js"></script>
+<script src="resources/m4.js"></script>
+
+<script>
+'use strict';
+
+/* eslint no-alert: 0 */
+
+function main() {
+  const closestLineVS = `#version 300 es
+  in vec3 point;
+
+  uniform sampler2D linesTex;
+  uniform int numLineSegments;
+
+  flat out int closestNdx;
+
+  vec4 getAs1D(sampler2D tex, ivec2 dimensions, int index) {
+    int y = index / dimensions.x;
+    int x = index % dimensions.x;
+    return texelFetch(tex, ivec2(x, y), 0);
+  }
+
+  // from https://stackoverflow.com/a/6853926/128511
+  // a is the point, b,c is the line segment
+  float distanceFromPointToLine(in vec3 a, in vec3 b, in vec3 c) {
+    vec3 ba = a - b;
+    vec3 bc = c - b;
+    float d = dot(ba, bc);
+    float len = length(bc);
+    float param = 0.0;
+    if (len != 0.0) {
+      param = clamp(d / (len * len), 0.0, 1.0);
+    }
+    vec3 r = b + bc * param;
+    return distance(a, r);
+  }
+
+  void main() {
+    ivec2 linesTexDimensions = textureSize(linesTex, 0);
+    
+    // find the closest line segment
+    float minDist = 10000000.0; 
+    int minIndex = -1;
+    for (int i = 0; i < numLineSegments; ++i) {
+      vec3 lineStart = getAs1D(linesTex, linesTexDimensions, i * 2).xyz;
+      vec3 lineEnd = getAs1D(linesTex, linesTexDimensions, i * 2 + 1).xyz;
+      float dist = distanceFromPointToLine(point, lineStart, lineEnd);
+      if (dist < minDist) {
+        minDist = dist;
+        minIndex = i;
+      }
+    }
+    
+    closestNdx = minIndex;
+  }
+  `;
+
+  const closestLineFS = `#version 300 es
+precision highp float;
+void main() {
+}
+`;
+
+  // Get A WebGL context
+  /** @type {HTMLCanvasElement} */
+  const canvas = document.createElement("canvas");
+  const gl = canvas.getContext("webgl2");
+  if (!gl) {
+    return;
+  }
+
+  function createShader(gl, type, src) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, src);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      throw new Error(gl.getShaderInfoLog(shader));
+    }
+    return shader;
+  }
+
+  function createProgram(gl, shaderSources, transformFeedbackVaryings) {
+    const program = gl.createProgram();
+    [gl.VERTEX_SHADER, gl.FRAGMENT_SHADER].forEach((type, ndx) => {
+      const shader = createShader(gl, type, shaderSources[ndx]);
+      gl.attachShader(program, shader);
+    });
+    if (transformFeedbackVaryings) {
+      gl.transformFeedbackVaryings(
+          program,
+          transformFeedbackVaryings,
+          gl.SEPARATE_ATTRIBS,
+      );
+    }
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      throw new Error(gl.getProgramParameter(program));
+    }
+    return program;
+  }
+
+  const points = [
+    100, 100,
+    200, 100,
+  ];
+  const lines = [
+     25,  50,
+     25, 150,
+     90,  50,
+     90, 150,
+    125,  50,
+    125, 150,
+    185,  50,
+    185, 150,
+    225,  50,
+    225, 150,
+  ];
+  const numPoints = points.length / 2;
+  const numLineSegments = lines.length / 2 / 2;
+
+  function makeBuffer(gl, sizeOrData, usage) {
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, sizeOrData, usage);
+    return buf;
+  }
+
+  const closestNdxBuffer = makeBuffer(gl, points.length * 4, gl.STATIC_DRAW);
+  const pointsBuffer = makeBuffer(gl, new Float32Array(points), gl.DYNAMIC_DRAW);
+
+  function createDataTexture(gl, data, numComponents, internalFormat, format, type) {
+    const numElements = data.length / numComponents;
+
+    // compute a size that will hold all of our data
+    const width = Math.ceil(Math.sqrt(numElements));
+    const height = Math.ceil(numElements / width);
+
+    const bin = new Float32Array(width * height * numComponents);
+    bin.set(data);
+
+    const tex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,        // mip level
+        internalFormat,
+        width,
+        height,
+        0,        // border
+        format,
+        type,
+        bin,
+    );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    return {tex, dimensions: [width, height]};
+  }
+
+  const {tex: linesTex, dimensions: linesTexDimensions} =
+      createDataTexture(gl, lines, 2, gl.RG32F, gl.RG, gl.FLOAT);
+
+  const closestLinePrg = createProgram(
+      gl, [closestLineVS, closestLineFS], ['closestNdx']);
+
+  const closestLinePrgLocs = {
+    point: gl.getAttribLocation(closestLinePrg, 'point'),
+    linesTex: gl.getUniformLocation(closestLinePrg, 'linesTex'),
+    numLineSegments: gl.getUniformLocation(closestLinePrg, 'numLineSegments'),
+  };
+
+  function makeVertexArray(gl, bufLocPairs) {
+    const va = gl.createVertexArray();
+    gl.bindVertexArray(va);
+    for (const [buffer, loc] of bufLocPairs) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(
+          loc,      // attribute location
+          2,        // number of elements
+          gl.FLOAT, // type of data
+          false,    // normalize
+          0,        // stride (0 = auto)
+          0,        // offset
+      );
+    }
+    return va;
+  }
+
+  const closestLinesVA = makeVertexArray(gl, [
+    [pointsBuffer, closestLinePrgLocs.point],
+  ]);
+
+  function makeTransformFeedback(gl, buffer) {
+    const tf = gl.createTransformFeedback();
+    gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, tf);
+    gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, buffer);
+    return tf;
+  }
+
+  const closestNdxTF = makeTransformFeedback(gl, closestNdxBuffer);
+
+  // compute the closest lines
+  gl.bindVertexArray(closestLinesVA);
+  gl.useProgram(closestLinePrg);
+  gl.uniform1i(closestLinePrgLocs.linesTex, 0);
+  gl.uniform1i(closestLinePrgLocs.numLineSegments, numLineSegments);
+
+  // turn of using the fragment shader
+  gl.enable(gl.RASTERIZER_DISCARD);
+
+  gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, closestNdxTF);
+  gl.beginTransformFeedback(gl.POINTS);
+  gl.drawArrays(gl.POINTS, 0, numPoints);
+  gl.endTransformFeedback();
+  gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, null);
+
+  // turn on using fragment shaders again
+  gl.disable(gl.RASTERIZER_DISCARD);
+
+  // get the results.
+  {
+    const results = new Int32Array(numPoints);
+    gl.bindBuffer(gl.ARRAY_BUFFER, closestNdxBuffer);
+    gl.getBufferSubData(gl.ARRAY_BUFFER, 0, results);
+    log(results);
+  }
+}
+
+function log(...args) {
+  const elem = document.createElement('pre');
+  elem.textContent = args.join(' ');
+  document.body.appendChild(elem);
+}
+
+main();
+</script>
+</html>
