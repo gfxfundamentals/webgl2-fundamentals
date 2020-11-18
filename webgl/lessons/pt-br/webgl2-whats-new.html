@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/pt-br/webgl2-whats-new.md. Do not edited directly -->
+<!--
+Copyright 2012, Gregg Tavares.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of Gregg Tavares. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="O que há de novo no WebGL2">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl2-whats-new_pt-br.jpg">
+
+<meta property="og:title" content="WebGL2 O que há de novo">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl2-whats-new_pt-br.jpg">
+<meta property="og:description" content="O que há de novo no WebGL2">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/pt-br/webgl2-whats-new.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 O que há de novo">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/pt-br/webgl2-whats-new.html">
+<meta name="twitter:description" content="O que há de novo no WebGL2">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl2-whats-new_pt-br.jpg">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl2-whats-new.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl2-whats-new.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl2-whats-new.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl2-whats-new.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl2-whats-new.html">
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/pt-br/webgl2-whats-new.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl2-whats-new_pt-br.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/pt-br/webgl2-whats-new.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/pt-br/webgl2-whats-new.html",
+      "inLanguage":"pt-br",
+      "name":"WebGL2 O que há de novo",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/pt-br/webgl2-whats-new.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 O que há de novo</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl2-whats-new.html" >English</a>
+    <option value="/webgl/lessons/de/webgl2-whats-new.html" >Deutsch</a>
+    <option value="/webgl/lessons/ko/webgl2-whats-new.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl2-whats-new.html" selected>Português Brasileiro</a>
+    <option value="/webgl/lessons/zh_cn/webgl2-whats-new.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Índice</a>
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/pt-br/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub a {
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 2rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 300px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(150px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub a::before,#forkongithub a::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub a::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+@media (max-width: 900px) {
+    #forkongithub a{
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub a{
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 O que há de novo</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>WebGL2 é uma atualização bastante significativa da WebGL1.
+Se você está vindo da WebGL1 e quer saber
+como ajustar seu código para que você possa aproveitar
+da WebGL2 <a href="webgl1-to-webgl2.html">veja este artigo</a>.</p>
+<p>Aqui está uma pequena lista sem uma ordem específica</p>
+<h2 id="objetos-vertex-array-sempre-disponiveis">Objetos Vertex Array sempre disponiveis</h2>
+<p>Eu acho que isso é bastante importante mesmo que
+estava opcionalmente disponível na WebGL1 e agora que é
+sempre disponível na WebGL2 [acho que você provavelmente deveria
+sempre usá-lo] (webgl1-to-webgl2.html # Vertex-Array-Objects).</p>
+<h2 id="o-tamanho-de-uma-textura-est-dispon-vel-para-shaders-">O tamanho de uma textura está disponível para shaders.</h2>
+<p>Na WebGL1 se o seu shader precisasse conhecer o tamanho 
+de uma textura, que você precisava passar do tamanho
+em uniformente. Na WebGL2 você pode chamar</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec2 size = textureSize(sampler, lod)
+</code></pre><p>Para obter o tamanho de qualquer lod de uma textura</p>
+<h2 id="pesquisa-direta-texel">Pesquisa Direta Texel</h2>
+<p>Muitas vezes, é conveniente armazenar grandes matrizes de dados em uma textura.
+Na WebGL1 você poderia fazer isso, mas você só poderia abordar as texturas
+com cooridados de textura (0,0 a 1,0). Na WebGL2 você pode olhar
+valores de uma textura por pixel / texel coordenadas diretamente
+tornando o acesso à rede ligeiramente mais fácil</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 values = texelFetch(sampler, ivec2Position, lod);
+</code></pre><h2 id="muitos-formatos-de-textura">Muitos formatos de textura</h2>
+<p>A WebGL1 tinha apenas alguns formatos de textura. WebGL2 tem TONELADAS!</p>
+<ul>
+<li><code class="notranslate" translate="no">RGBA32I</code></li>
+<li><code class="notranslate" translate="no">RGBA32UI</code></li>
+<li><code class="notranslate" translate="no">RGBA16I</code></li>
+<li><code class="notranslate" translate="no">RGBA16UI</code></li>
+<li><code class="notranslate" translate="no">RGBA8</code></li>
+<li><code class="notranslate" translate="no">RGBA8I</code></li>
+<li><code class="notranslate" translate="no">RGBA8UI</code></li>
+<li><code class="notranslate" translate="no">SRGB8_ALPHA8</code></li>
+<li><code class="notranslate" translate="no">RGB10_A2</code></li>
+<li><code class="notranslate" translate="no">RGB10_A2UI</code></li>
+<li><code class="notranslate" translate="no">RGBA4</code></li>
+<li><code class="notranslate" translate="no">RGB5_A1</code></li>
+<li><code class="notranslate" translate="no">RGB8</code></li>
+<li><code class="notranslate" translate="no">RGB565</code></li>
+<li><code class="notranslate" translate="no">RG32I</code></li>
+<li><code class="notranslate" translate="no">RG32UI</code></li>
+<li><code class="notranslate" translate="no">RG16I</code></li>
+<li><code class="notranslate" translate="no">RG16UI</code></li>
+<li><code class="notranslate" translate="no">RG8</code></li>
+<li><code class="notranslate" translate="no">RG8I</code></li>
+<li><code class="notranslate" translate="no">RG8UI</code></li>
+<li><code class="notranslate" translate="no">R32I</code></li>
+<li><code class="notranslate" translate="no">R32UI</code></li>
+<li><code class="notranslate" translate="no">R16I</code></li>
+<li><code class="notranslate" translate="no">R16UI</code></li>
+<li><code class="notranslate" translate="no">R8</code></li>
+<li><code class="notranslate" translate="no">R8I</code></li>
+<li><code class="notranslate" translate="no">R8UI</code></li>
+<li><code class="notranslate" translate="no">RGBA32F</code></li>
+<li><code class="notranslate" translate="no">RGBA16F</code></li>
+<li><code class="notranslate" translate="no">RGBA8_SNORM</code></li>
+<li><code class="notranslate" translate="no">RGB32F</code></li>
+<li><code class="notranslate" translate="no">RGB32I</code></li>
+<li><code class="notranslate" translate="no">RGB32UI</code></li>
+<li><code class="notranslate" translate="no">RGB16F</code></li>
+<li><code class="notranslate" translate="no">RGB16I</code></li>
+<li><code class="notranslate" translate="no">RGB16UI</code></li>
+<li><code class="notranslate" translate="no">RGB8_SNORM</code></li>
+<li><code class="notranslate" translate="no">RGB8I</code></li>
+<li><code class="notranslate" translate="no">RGB8UI</code></li>
+<li><code class="notranslate" translate="no">SRGB8</code></li>
+<li><code class="notranslate" translate="no">R11F_G11F_B10F</code></li>
+<li><code class="notranslate" translate="no">RGB9_E5</code></li>
+<li><code class="notranslate" translate="no">RG32F</code></li>
+<li><code class="notranslate" translate="no">RG16F</code></li>
+<li><code class="notranslate" translate="no">RG8_SNORM</code></li>
+<li><code class="notranslate" translate="no">R32F</code></li>
+<li><code class="notranslate" translate="no">R16F</code></li>
+<li><code class="notranslate" translate="no">R8_SNORM</code></li>
+<li><code class="notranslate" translate="no">DEPTH_COMPONENT32F</code></li>
+<li><code class="notranslate" translate="no">DEPTH_COMPONENT24</code></li>
+<li><code class="notranslate" translate="no">DEPTH_COMPONENT16</code></li>
+</ul>
+<h2 id="texturas-3d">Texturas 3D</h2>
+<p>A textura 3D é exatamente isso. Texturas que têm 3 dimensões.</p>
+<h2 id="arrays-de-textura">Arrays de textura</h2>
+<p>Uma matriz de textura é muito semelhante a uma textura 3D, exceto que
+cada fatia é considerada uma textura separada. Todas as fatias
+tem que ser do mesmo tamanho, mas esta é uma ótima maneira de dar
+um acesso de shader a centenas de texturas, embora
+apenas tem um número relativamente pequeno de unidades de textura. Você pode
+selecione a fatia em seu shader</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 color = texture(someSampler2DArray, vec3(u, v, slice));
+</code></pre><h2 id="non-power-de-2-formatos-de-textura">Non-Power de 2 formatos de textura</h2>
+<p>Nas texturas WebGL1 que não eram um poder de 2 não podiam ter mips.
+Na WebGL2, esse limite é removido. A Non-power de textura 2 funciona exatamente
+o mesmo que o poder de 2 texturas.</p>
+<h2 id="restri-es-de-loop-em-shaders-removidas">Restrições de loop em shaders removidas</h2>
+<p>Na WebGL1, um loop em um shader precisava usar uma expressão de inteiro constante.
+WebGL2 remove esse limite (em GLSL 300 es)</p>
+<h2 id="fun-es-da-matriz-no-glsl">Funções da matriz no GLSL</h2>
+<p>Na WebGL1 se necessário para obter o inverso de uma matriz que você precisava
+passe-o como um uniforme. No WebGL2 GLSL 300 é existe o construído em
+função <code class="notranslate" translate="no">inverse</code>, bem como <code class="notranslate" translate="no">transpose</code>.</p>
+<h2 id="texturas-comprimidas-comuns">Texturas comprimidas comuns</h2>
+<p>Na WebGL1 existem vários formatos de textura comprimida
+que dependem de hardware. O S3TC era basicamente apenas de desktop.
+PVTC era apenas iOS. Etc ..</p>
+<p>Na WebGL2, esses formatos devem ser suportados em todos os lugares</p>
+<ul>
+<li><code class="notranslate" translate="no">COMPRESSED_R11_EAC RED</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_SIGNED_R11_EAC RED</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_RG11_EAC RG</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_SIGNED_RG11_EAC RG</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_RGB8_ETC2 RGB</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_SRGB8_ETC2 RGB</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2 RGBA</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2 RGBA</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_RGBA8_ETC2_EAC RGBA</code></li>
+<li><code class="notranslate" translate="no">COMPRESSED_SRGB8_ALPHA8_ETC2_EAC</code></li>
+</ul>
+<h2 id="objetos-de-buffer-uniform">Objetos de Buffer Uniform</h2>
+<p>Objetos de Buffer Uniform permitem que você especifique um monte de uniformes
+de um buffer. As vantagens são</p>
+<ol>
+<li><p>Você pode manipular todos os uniformes no buffer
+fora da WebGL</p>
+<p>Na WebGL1, se você tivesse 16 uniformes que exigiriam
+16 chamadas para <code class="notranslate" translate="no">gl.uinformXXX</code>. Isso é relativamente lento.
+Na WebGL2 se você usar
+Um Objeto de Buffer Uniform, você pode definir os valores em
+uma matriz digitada tudo dentro do JavaScript, o que significa que é
+muito mais rápido. Quando todos os valores estiverem configurados
+você carrega todos eles com 1 chamada para <code class="notranslate" translate="no">gl.bufferData</code>
+ou <code class="notranslate" translate="no">gl.bufferSubData</code> e depois diga ao programa
+usar esse buffer com <code class="notranslate" translate="no">gl.bindBufferRange</code> para que apenas
+2 chamadas.</p>
+</li>
+<li><p>Você pode ter diferentes conjuntos de uniformes de objetos buffer</p>
+<p>Primeiro, alguns termos. Um bloco uniforme é uma coleção
+de uniformes definidos em um shader. Um Objeto de Buffer Uniform
+é um buffer que contém os valores de um bloco uniforme
+usará. Você pode criar tantos Objetos de Buffer Uniform
+como você deseja e vincular um deles a um determinado bloco uniforme
+quando você desenha.</p>
+<p>Por exemplo, você poderia ter 4 blocos uniformes definidos
+em um sombreador.</p>
+<ul>
+<li><p>Um bloco uniforme de matriz global que contém
+matrizes que são iguais para todas as chamadas de desenho como a
+matriz de projeção, matriz de exibição, etc.</p>
+</li>
+<li><p>Um bloco modelo uniforme que contém matrizes que são
+diferentes por modelo, por exemplo, a matriz mundial e
+matriz normal.</p>
+</li>
+<li><p>Um bloco de material uniforme que contém as configurações de material
+como difusa, ambiente, especular, etc.</p>
+</li>
+<li><p>Um bloco uniforme de iluminação que contém os dados de iluminação
+como a cor clara, a posição da luz, etc.</p>
+</li>
+</ul>
+<p>Em seguida, em tempo de execução, você poderia criar um objeto buffer
+uniforme global, um modelo de objeto de buffer uniforme por modelo, um
+objeto de buffer uinformado leve por luz e um objeto buffer uniforme
+por material.</p>
+<p>Para desenhar qualquer item em particular, assumindo que todos os valores
+já estão atualizados, tudo o que você precisa fazer é vincular os
+4 objetos de buffer uniformes desejados</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindBufferRange(..., globalBlockIndx, globalMatrixUBO, ...);
+gl.bindBufferRange(..., modelBlockIndx, someModelMatrixUBO, ...);
+gl.bindBufferRange(..., materialBlockIndx, someMaterialSettingsUBO, ...);
+gl.bindBufferRange(..., lightBlockIndx, someLightSettingsUBO, ...);
+</code></pre></li>
+</ol>
+<h2 id="texturas-inteiras-atributos-e-matem-tica">Texturas inteiras, atributos e matemática</h2>
+<p>Na WebGL2 você pode ter texturas baseadas em números inteiros onde, como
+na WebGL1, todas as texturas representavam valores de ponto flutuante
+mesmo que não fossem representados por valores de ponto flutuante.</p>
+<p>Você também pode ter atributos inteiros.</p>
+<p>Além disso, o GLSL 300 es permite que você faça manipulações de bits
+de inteiros nos shaders.</p>
+<h2 id="transformar-feedback">Transformar feedback</h2>
+<p>WebGL2 permite que seu vertex shader escreva seus resultados de volta
+para um buffer.</p>
+<h2 id="amostras">Amostras</h2>
+<p>Na WebGL1, todos os parâmetros de textura foram por textura.
+Na WebGL2 você pode opcionalmente usar objetos de amostras. Com
+amostras, todos os parâmetros de filtragem e repetição/aperto
+que faziam parte de um movimento de textura para o amostrador. Isso significa
+uma única textura pode ser amostrada de maneiras diferentes. recorrente
+ou clamada. Filtrado ou não filtrado.</p>
+<p>Um mini-side rant: Eu escrevi 6 motores de jogo. Eu nunca,
+pessoalmente, de um artista precisasse filtrar texturas em
+de várias maneiras. Eu ficaria curioso para saber se algum outro jogo
+os desenvolvedores de motores tiveram uma experiência diferente.</p>
+<h2 id="texturas-de-profundidade">Texturas de profundidade</h2>
+<p>As texturas de profundidade foram opcionais no WebGL1 e PITA para trabalhar. Agora eles são padrão.
+Comumente usado para computação de mapas de sombra</p>
+<h2 id="derivados-padr-o">Derivados Padrão</h2>
+<p>Estes são agora padrão. Os usos comuns incluem padrões de computação nos shaders em vez de passá-los</p>
+<h2 id="instanciado-desenho">Instanciado Desenho</h2>
+<p>Agora Padrão, usos comuns estão desenhando muitas árvores, arbustos ou grama rapidamente.</p>
+<h2 id="unsigned_int-ndices">UNSIGNED_INT índices</h2>
+<p>Ser capaz de usar entradas de 32 bits para índices remove o limite de tamanho da geometria indexada</p>
+<h2 id="configura-o-gl_fragdepth-">Configuração <code class="notranslate" translate="no">gl_FragDepth</code></h2>
+<p>Permitindo que você escreva seus próprios valores personalizados para o buffer de profundidade / z-buffer.</p>
+<h2 id="equa-o-de-mistura-min-max">Equação de mistura MIN / MAX</h2>
+<p>Podendo levar o mínimo ou máximo de 2 cores ao misturar</p>
+<h2 id="multiplos-desenhos-buffers">Multiplos desenhos Buffers</h2>
+<p>Ser capaz de desenhar vários buffers de uma só vez a partir de um shader. Isso é comumente usado
+para várias técnicas de renderização diferida.</p>
+<h2 id="acesso-textura-em-sombreadores-de-v-rtices">Acesso à textura em sombreadores de vértices</h2>
+<p>Na WebGL1, essa era uma característica opcional. Houve uma contagem de quantas texturas
+você poderia acessar em um vertex shader e essa contagem permitia ser 0. Mais
+os dispositivos os apoiaram. Na WebGL2, a contagem é necessária para ser pelo menos 16.</p>
+<h2 id="multi-amostras-de-renderbuffers">Multi-amostras de renderbuffers</h2>
+<p>Na WebGL1, a tela em si poderia ser anti-aliased com o GPU incorporamdo
+sistema multi-amostras, mas não houve suporte para mutli-amostragem controlada pelo usuário. No WebGL2
+agora você pode fazer várias multi-amostras de renderbuffers.</p>
+<h2 id="consultas-de-oclus-o">Consultas de oclusão</h2>
+<p>As consultas de oclusão permitem que você pergunte a GPU para verificar se deve renderizar algo
+que qualquer pixel realmente seria desenhado.</p>
+<h2 id="texturas-de-ponto-flutuante-sempre-dispon-veis">Texturas de ponto flutuante sempre disponíveis</h2>
+<p>As texturas de ponto flutuante são usadas para muitos efeitos especiais
+e cálculos. Na WebGL1 eles eram opcionais. Na WebGL2
+eles apenas existem.</p>
+<p>Nota: Infelizmente eles ainda estão restritos naquela filtragem e a renderização,
+para texturas de pontos flutuantes ainda é opcional. Veja
+<a href="https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/"><code class="notranslate" translate="no">OES_texture_float_linear</code></a>
+ e <a href="https://www.khronos.org/registry/webgl/extensions/EXT_color_buffer_float/"><code class="notranslate" translate="no">EXT_color_buffer_float</code></a>.</p>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl2-whats-new.html" >English</a>
+    <option value="/webgl/lessons/de/webgl2-whats-new.html" >Deutsch</a>
+    <option value="/webgl/lessons/ko/webgl2-whats-new.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl2-whats-new.html" selected>Português Brasileiro</a>
+    <option value="/webgl/lessons/zh_cn/webgl2-whats-new.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fundamentos</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-getting-webgl2.html">Como utilizar a WebGL2</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-fundamentals.html">Fundamentos da WebGL2</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-how-it-works.html">How It Works</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-shaders-and-glsl.html">Shaders and GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 State Diagram</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl2-whats-new.html">O que há de novo na WebGL2</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl1-to-webgl2.html">Migrando do WebGL1 para a WebGL2</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl1-to-webgl2-fundamentals.html">Diferenças entre a WebGLFundamentals.org e a WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Processamento de Imagem</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-image-processing.html">Processamento de Imagem WebGL2</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-image-processing-continued.html">Processamento de Imagem Continuada WebGL2</a></li>
+        </ul>
+  <li>Translação 2D, rotação, escala, matriz matemática</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-2d-translation.html">Translação 2D WebGL2</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-2d-rotation.html">Rotação 2D WebGL2</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-2d-scale.html">Escala 2D WebGL2</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-2d-matrices.html">2D Matrices</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-3d-orthographic.html">Orthographic 3D</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-3d-perspective.html">WebGL2 3D Perspective</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-3d-camera.html">3D - Cameras</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-matrix-naming.html">WebGL2 3D - Nomenclatura das Matrizes</a></li>
+        </ul>
+  <li>Iluminação</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-3d-lighting-directional.html">Directional Lighting</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-3d-lighting-point.html">Point Lighting</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-3d-lighting-spot.html">Spot Lighting</a></li>
+        </ul>
+  <li>Estrutura e Organização</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-less-code-more-fun.html">Less Code, More Fun</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-drawing-multiple-things.html">Drawing Multiple Things</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-scene-graph.html">Scene Graphs</a></li>
+        </ul>
+  <li>Geometria</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-3d-geometry-lathe.html">3D Geometry - Lathe</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-load-obj.html">Loading .obj files</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-load-obj-w-mtl.html">Loading .obj w .mtl files</a></li>
+        </ul>
+  <li>Texturas</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-data-textures.html">Data Textures</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-2-textures.html">Using 2 or More Textures</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-cors-permission.html">WebGL2 - Cross Origin Images</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-3d-perspective-correct-texturemapping.html">Perspective Correct Texture Mapping</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-planar-projection-mapping.html">Planar and Perspective Projection Mapping</a></li>
+        </ul>
+  <li>Renderizando Uma Textura</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-render-to-texture.html">Render to Texture</a></li>
+        </ul>
+  <li>Shadows</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-shadows.html">Shadows</a></li>
+        </ul>
+  <li>Técnicas</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-2d-matrix-stack.html">2D - Matrix Stack</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-environment-maps.html">Environment maps</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-fog.html">Fog</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-picking.html">Picking (clicking on stuff)</a></li>
+        </ul>
+  <li>Text</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-text-html.html">WebGL2 Texto - HTML</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-text-canvas2d.html">WebGL2 Texto - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-text-texture.html">Text - Using a Texture</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-text-glyphs.html">Text - Using a Glyph Texture</a></li>
+        </ul>
+        </ul>
+  <li>Tips</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-smallest-programs.html">Smallest Programs</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-drawing-without-data.html">Drawing Without Data</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-pulling-vertices.html">Pulling Vertices</a></li>
+        </ul>
+  <li>Optimization</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-indexed-vertices.html">Indexed Vertices (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-instanced-drawing.html">Instanced Drawing</a></li>
+        </ul>
+  <li>Diversos</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-setup-and-installation.html">WebGL2 Configuração e Instalação</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-boilerplate.html">Boilerplate</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-resizing-the-canvas.html">Resizing the Canvas</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-animation.html">WebGL2 - Animação</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-points-lines-triangles.html">Points, Lines, and Triangles</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-multiple-views.html">Multiple Views, Multiple Canvases</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-visualizing-the-camera.html">Visualizing the Camera</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-and-alpha.html">WebGL2 e o Alpha</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-2d-vs-3d-library.html">WebGL2 - Bibliotecas 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-matrix-vs-math.html">WebGL Matrices vs Math Matrices</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-precision-issues.html">Precision Issues</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-tips.html#screenshot">Taking a screenshot</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-tips.html#preservedrawingbuffer">Prevent the Canvas Being Cleared</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-tips.html#tabindex">Get Keyboard Input From a Canvas</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-tips.html#html-background">Use WebGL2 as Background in HTML</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Reference</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-attributes.html">Attributes</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-texture-units.html">Texture Units</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-references.html">References</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentação da API</a></li>
+  <li><a href="https://twgljs.org">TWGL, Uma Pequena Biblioteca Auxiliar da WebGL</a></li>
+  <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a></li>
+</ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        <div>Dúvidas? <a href="https://stackoverflow.com/questions/tagged/webgl2">Pergunte no stackoverflow</a>.</div>
+        <div>Problemas/Bug? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Pergunte no github</a>.</div>
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 O que há de novo';
+            var disqus_title = 'WebGL2 O que há de novo';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js"></script>
+<script>
+(function() {
+  if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+      return;
+  }
+
+  function addScript(src, fn) {
+    const script = document.createElement('script');
+    const firstScript = document.getElementsByTagName('script')[0];
+    script.async = true;
+    script.defer = true;
+    if (fn) {
+      script.addEventListener('load', fn);
+    }
+    script.src = src;
+    firstScript.parentNode.insertBefore(script, firstScript);
+  }
+
+  addScript('//cdn.webglstats.com/stat.js');
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-90754717-1', 'auto');
+  ga('send', 'pageview');
+}());
+</script>
+
+
+</html>
+
+
+

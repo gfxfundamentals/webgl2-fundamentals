@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/ko/webgl-image-processing.md. Do not edited directly -->
+<!--
+Copyright 2012, Gregg Tavares.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of Gregg Tavares. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="WebGL에서 이미지는 처리 방법">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-image-processing_ko.jpg">
+
+<meta property="og:title" content="WebGL2 이미지 처리">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-image-processing_ko.jpg">
+<meta property="og:description" content="WebGL에서 이미지는 처리 방법">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ko/webgl-image-processing.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 이미지 처리">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ko/webgl-image-processing.html">
+<meta name="twitter:description" content="WebGL에서 이미지는 처리 방법">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-image-processing_ko.jpg">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-image-processing.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-image-processing.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-image-processing.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-image-processing.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-image-processing.html">
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-image-processing.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-image-processing_ko.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-image-processing.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-image-processing.html",
+      "inLanguage":"ko",
+      "name":"WebGL2 이미지 처리",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-image-processing.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 이미지 처리</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/ko/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-image-processing.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-image-processing.html" >Deutsch</a>
+    <option value="/webgl/lessons/ko/webgl-image-processing.html" selected>한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-image-processing.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/zh_cn/webgl-image-processing.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc"></a>
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/ko/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub a {
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 2rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 300px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(150px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub a::before,#forkongithub a::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub a::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+@media (max-width: 900px) {
+    #forkongithub a{
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub a{
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 이미지 처리</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>WebGL에서 이미지 처리는 쉽습니다. 얼마나 쉽냐고요? 아래를 읽어 보면 됩니다.</p>
+<p>이 글은 <a href="webgl-fundamentals.html">WebGL2 기초</a>에서 이어지는 글입니다.
+만약에 아직 읽어 보지 않았다면 <a href="webgl-fundamentals.html">먼저 읽어 보는 것</a>이 좋습니다.</p>
+<p>WebGL에서 이미지를 그리려면 텍스처를 사용 해야 합니다. WebGL은 픽셀 대신 렌더링 할 때 클립 공간 좌표를 예상하는 것과 마찬가지로 일반적으로 텍스처를 읽을 때 텍스처 좌표를 예상합니다. 텍스쳐 좌표는 텍스처의 크기에 상관없이 0.0에서 1.0의 크기를 가집니다.</p>
+<p>WebGL2는 텍스처 좌표를 사용하여 텍스처를 읽을수 있는 기능이 추가 되었습니다.
+가장 좋은 방법은 각자 사용하는 방법에 달려 있지만 픽셀 좌표 보단 텍스처 좌표를 사용하는 것이 더 일반적이라고 생각 합니다.</p>
+<p>오직 하나의 사각형(2개의 삼각형)을 그리기 때문에 WebGL에 직사각형의 각 점이 텍스처의 어느 위치에 해당하는지 알려주는게 필요합니다. 이 정보를 버텍스 쉐이더에서 프래그먼트 쉐이더로 &#39;varying&#39;이라 불리는 특별한 변수를 사용하여 전달합니다. varying은 변하기 때문에 varying이라고 불립니다. WebGL은 프래그먼트 쉐이더를 사용하여 각 픽셀을 그릴때 마다 버텍스 쉐이더에서 제공 한 <a href="webgl-how-it-works.html">값을 보간합니다</a>.</p>
+<p><a href="webgl-fundamentals.html">이전 글의 끝에 있는 버텍스 쉐이더</a>를 사용하여 텍스처 좌표로 전달할 속성을 추가 한 다음 프래그먼트 쉐이더로 전달 해야합니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
+
++in vec2 a_texCoord;
+
+...
+
++out vec2 v_texCoord;
+
+void main() {
+   ...
++   // 프래그먼트 쉐이더로 texCoord 전달
++   // GPU가 이 값들을 점 사이로 보간 할 것입니다.
++   v_texCoord = a_texCoord;
+}
+</code></pre><p>그런 다음 텍스처에서 색상을 찾기 위해 프래그먼트 쉐이더를 제공합니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+precision highp float;
+
+// 사용할 텍스처
+uniform sampler2D u_image;
+
+// texCoords는 버텍스 쉐이더에서 전달된 것입니다.
+in vec2 v_texCoord;
+
+// 프래그먼트 쉐이더에서 출력을 선언해야합니다.
+out vec4 outColor;
+
+void main() {
+   // 텍스처에서 색상을 찾습니다.
+   outColor = texture(u_image, v_texCoord);
+}
+</code></pre><p>마지막으로 이미지를 로드하고 텍스처를 생성해고 이미지를 텍스처로 복사해야 합니다. 브라우저 이미지를 비동기적으로 로드하기 때문에 텍스처가 로드 될 때까지를 기디리기 위해 코드를 약간 변경합니다. 일단 로드되면 그릴 것입니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+function main() {
++  var image = new Image();
++  image.src = &quot;https://someimage/on/our/server&quot;;  // 반드시 같은 도메인 이여야 합니다!!!
++  image.onload = function() {
++    render(image);
++  }
++}
+
+function render(image) {
+  ...
+  // 버텍스 데이터가 가야할 위치를 찾습니다.
+  var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
++  var texCoordAttributeLocation = gl.getAttribLocation(program, &quot;a_texCoord&quot;);
+
+  // uniforms 찾기
+  var resolutionLocation = gl.getUniformLocation(program, &quot;u_resolution&quot;);
++  var imageLocation = gl.getUniformLocation(program, &quot;u_image&quot;);
+
+  ...
+
++  // 직사각형 텍스처 좌표를 제공합니다.
++  var texCoordBuffer = gl.createBuffer();
++  gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
++  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
++      0.0,  0.0,
++      1.0,  0.0,
++      0.0,  1.0,
++      0.0,  1.0,
++      1.0,  0.0,
++      1.0,  1.0]), gl.STATIC_DRAW);
++  gl.enableVertexAttribArray(texCoordAttributeLocation);
++  var size = 2;          // 반복될떄 2개의 구성요소 사용
++  var type = gl.FLOAT;   // 데이터는 32비트 부동소수점
++  var normalize = false; // 정규화 되지 않은 데이터
++  var stride = 0;        // 0 = 반복할때마다 다음 위치를 얻기 위해 size * sizeof(type)식 앞으로 이동
++  var offset = 0;        // 버퍼의 시작 지점
++  gl.vertexAttribPointer(
++      texCoordAttributeLocation, size, type, normalize, stride, offset)
++
++  // Create a texture.
++  var texture = gl.createTexture();
++
++  // 활성화된 텍스처 단위를 단위 0으로 만듭니다.
++  // 즉 다른 모든 텍스처 명령에 영향을 미침니다.
++  gl.activeTexture(gl.TEXTURE0 + 0);
++
++  // 텍스처 단위0 2D 바인딩 포인트에 바인드 합니다.
+ &lt;!-- Bind it to texture unit 0&#39; 2D bind point --&gt;
++  gl.bindTexture(gl.TEXTURE_2D, texture);
++
++  // 매개 변수를 설정하여 밉맵스가 필요 없으므로 필터링 하지 않고 반복도 하지 않습니다.
++  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
++  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
++  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
++  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
++
++  // 텍스처로 이미지 업로드
++  var mipLevel = 0;               // 가장큰 민맵
++  var internalFormat = gl.RGBA;   // 텍스처에서 원하는 포맷
++  var srcFormat = gl.RGBA;        // 제공하는 데이터의 포맷
++  var srcType = gl.UNSIGNED_BYTE  // 제공하는 데이터의 타입
++  gl.texImage2D(gl.TEXTURE_2D,
++                mipLevel,
++                internalFormat,
++                srcFormat,
++                srcType,
++                image);
+
+  ...
+
+  // 프로그램을 사용하라고 알려줍니다.(쉐이더 쌍)
+  gl.useProgram(program);
+
+  // 캔버스에 쉐이더에서 픽셀에서 클립공간으로 변환 할수 있게 해상도를 전달합니다.
+  gl.uniform2f(resolutionLocation, gl.canvas.width, gl.canvas.height);
+
++  // 쉐이더에 텍스처 유닛 0에서 텍스처를 가져오라고 알려줍니다.
++  gl.uniform1i(imageLocation, 0);
+
++  // position 버퍼를 바인딩하여 setRectangle에서 호출 될
++  // gl.bufferData가 position 버퍼에 데이터를 넣습니다.
++  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
++
++  // 사각형의 크기를 이미지와 같은 크기로 설정합니다.
++  setRectangle(gl, 0, 0, image.width, image.height);
+
+}
+</code></pre><p>여기에 WebGL로 렌더된 이미지가 있습니다.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+</p>
+<p>너무 과하지 않게 이미지를 조작해봅시다. 빨간색이랑 파란색을 바꾸는 건 어떨까요?</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
+outColor = texture(u_image, v_texCoord).bgra;
+...
+</code></pre><p>이제 빨간색과 파란색을 바꿨습니다.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-red2blue.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-red2blue.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+</p>
+<p>만약에 실제로 다른 픽셀들에서 다른 모양을 가지는 이미치 처리를 한다면 어떻까요? WebGL은 0.0에서 1.0까지인 텍스처 좌표에서 텍스처들을 참조하므로 간단한 계산 <code class="notranslate" translate="no">onePixel = 1.0 / textureSize</code>을 통해 1픽셀에 얼마큼 이동하는지를 계산할 수 있습니다.</p>
+<p>다음은 텍스처에서 각 픽셀의 왼쪽, 오른쪽 픽셀을 평균화하는 프래그먼트 쉐이더 입니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+
+// 프래그먼트 쉐이더는 기본 정밀도 가지고 있지 않으므로 선택해야 합니다.
+// highp는 기본으로 괜찮습니다. &quot;중간 정밀도&quot;를 의미합니다.
+precision highp float;
+
+// 텍스처
+uniform sampler2D u_image;
+
+// texCoords는 버텍스 쉐이더에서 전달됩니다.
+in vec2 v_texCoord;
+
+// 프래그먼트 쉐이더 출력을 선언 해야합니다.
+out vec4 outColor;
+
+void main() {
++  vec2 onePixel = vec2(1) / vec2(textureSize(u_image, 0));
++
++  // 왼쪽, 중간, 오른쪽 픽셀의 평균값
++  outColor = (
++      texture(u_image, v_texCoord) +
++      texture(u_image, v_texCoord + vec2( onePixel.x, 0.0)) +
++      texture(u_image, v_texCoord + vec2(-onePixel.x, 0.0))) / 3.0;
+}
+</code></pre><p>위의 예제와 비교해서 흐리지 않은지 비교해보세요.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-blend.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-blend.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+</p>
+<p>이제 다른 픽셀을 참조하는 방법을 알았으니 컨벤션 커널(convolution kernel)을 사용하여 일반적인 이미지 처리를 해보겠습니다. 여기에서는 3x3 커널을 사용할 것입니다. 컨번션 커널은 단순히 3x3 행렬이며 여기서 행렬의 각 항목은 렌더랑 픽셀 주위에 있는 8개의 픽셀에 얼만큼 곱할 것인지를 나타냅니다. 그 다음 결과를 커널 가중치(커널의 모든 값들의 합)나 1.0 중 큰 값으로 나눕니다. <a href="https://docs.gimp.org/2.6/en/plug-in-convmatrix.html">여기서 꽤 좋은 읽을거리가 있습니다</a>. 그리고 <a href="https://www.codeproject.com/KB/graphics/ImageConvolution.aspx">C++으로 직접 작성하면 어떤지 실제 코드를 보여주는 다른 읽을거리가 있습니다</a>.</p>
+<p>우리의 경우 쉐이더에서 이 작업을 수행할 것이므로 여기에 새로운 프래그먼트 쉐이더가 있습니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+
+// 프래그먼트 쉐이더는 기본 정밀도 가지고 있지 않으므로 선택해야 합니다.
+// highp는 기본으로 괜찮습니다. &quot;중간 정밀도&quot;를 의미합니다.
+precision highp float;
+
+// 텍스처
+uniform sampler2D u_image;
+
+// 컨벤션 커널 데이터
+uniform float u_kernel[9];
+uniform float u_kernelWeight;
+
+// texCoords는 버텍스 쉐이더에서 전달됩니다.
+in vec2 v_texCoord;
+
+// 프래그먼트 쉐이더 출력을 선언 해야합니다.
+out vec4 outColor;
+
+void main() {
+  vec2 onePixel = vec2(1) / vec2(textureSize(u_image, 0));
+
+  vec4 colorSum =
+      texture(u_image, v_texCoord + onePixel * vec2(-1, -1)) * u_kernel[0] +
+      texture(u_image, v_texCoord + onePixel * vec2( 0, -1)) * u_kernel[1] +
+      texture(u_image, v_texCoord + onePixel * vec2( 1, -1)) * u_kernel[2] +
+      texture(u_image, v_texCoord + onePixel * vec2(-1,  0)) * u_kernel[3] +
+      texture(u_image, v_texCoord + onePixel * vec2( 0,  0)) * u_kernel[4] +
+      texture(u_image, v_texCoord + onePixel * vec2( 1,  0)) * u_kernel[5] +
+      texture(u_image, v_texCoord + onePixel * vec2(-1,  1)) * u_kernel[6] +
+      texture(u_image, v_texCoord + onePixel * vec2( 0,  1)) * u_kernel[7] +
+      texture(u_image, v_texCoord + onePixel * vec2( 1,  1)) * u_kernel[8] ;
+  outColor = vec4((colorSum / u_kernelWeight).rgb, 1);
+}
+</code></pre><p>자바스크립트에서 컨벤션 커널과 가중치를 제공해야 합니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> function computeKernelWeight(kernel) {
+   var weight = kernel.reduce(function(prev, curr) {
+       return prev + curr;
+   });
+   return weight &lt;= 0 ? 1 : weight;
+ }
+
+ ...
+ var kernelLocation = gl.getUniformLocation(program, &quot;u_kernel[0]&quot;);
+ var kernelWeightLocation = gl.getUniformLocation(program, &quot;u_kernelWeight&quot;);
+ ...
+ var edgeDetectKernel = [
+     -1, -1, -1,
+     -1,  8, -1,
+     -1, -1, -1
+ ];
+
+// set the kernel and it&#39;s weight
+ gl.uniform1fv(kernelLocation, edgeDetectKernel);
+ gl.uniform1f(kernelWeightLocation, computeKernelWeight(edgeDetectKernel));
+ ...
+</code></pre><p>그리고 드랍 다운 목록을 사용하여 다른 커널을 사용해 보세요.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-3x3-convolution.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-3x3-convolution.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+</p>
+<p>이 글을 통해 WebGL에서의 이미지 처리가 매우 간단하다고 확신이 들어기를 바랍니다. 다음으로 <a href="webgl-image-processing-continued.html">이미지에 두가지 이상의 효과를 적용하는 방법</a>을 살펴 보겠습니다.</p>
+<div class="webgl_bottombar">
+<h3>텍스쳐 유닛(texture units)이란 무엇 입니까?</h3>
+<code class="notranslate" translate="no">gl.draw???</code>를 호출할때 쉐이더는 텍스처를 참조 할 수 있습니다. 텍스처들은 텍스처 유닛에 바운딩됩니다. 사용자의 머신은 더 많은 WebGL2 구현들을 지원할 수도 있지만 적어도 16 개의 텍스처 유닛을 지원해야합니다. 각 샘플러 유닛이 참조하는 텍스쳐 유닛은 샘플러의 위치를 찾고 참조하길 원하는 텍스처 유닛의 인덱스를 설정합니다.
+
+예제:
+<pre class="prettyprint showlinemods">
+var textureUnitIndex = 6; // 텍스쳐 유닛 6 사용
+var u_imageLoc = gl.getUniformLocation(
+    program, "u_image");
+gl.uniform1i(u_imageLoc, textureUnitIndex);
+</pre>
+
+다른 텍스쳐들을 다른 유닛에 설정하기 위해 gl.activeTexture를 호출하고 원하는 유닛으로 텍스처를 바인딩 하면 됩니다.
+
+<pre class="prettyprint showlinemods">
+// 텍스처를 텍스쳐 유닛 6에 바인드 합니다.
+gl.activeTexture(gl.TEXTURE6);
+gl.bindTexture(gl.TEXTURE_2D, someTexture);
+</pre>
+
+다음도 작동합니다.
+
+<pre class="prettyprint showlinemods">
+var textureUnitIndex = 6; // 텍스쳐 유닛 6 사용.
+// 텍스처를 텍스쳐 유닛 6에 바인드 합니다.
+gl.activeTexture(gl.TEXTURE0 + textureUnitIndex);
+gl.bindTexture(gl.TEXTURE_2D, someTexture);
+</pre>
+</div>
+
+<div class="webgl_bottombar">
+<h3>GLSL 변수에서 a_, u_, v_ 접두어는 무엇입니까?</h3>
+<p>
+이는 단지 네이밍 컨벤션 입니다. 꼭 필요하지는 않지만 어디서 값이 오는지 한눈에 보기 쉽게 해줍니다. a_는 버퍼에서 제공된 데이터를 나타내는 attributes, v_는 버텍스 쉐이더에서 프래그먼트 쉐이더로 전달하고 그려지는 각 픽셀의 꼭지점 사이에 보간 (또는 변화) 된 값들을 나타내는 varyings를 나타냅니다. <a href="webgl-how-it-works.html">작동 방법</a>에서 더 자세히 알수 있습니다.
+</p>
+</div>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-image-processing.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-image-processing.html" >Deutsch</a>
+    <option value="/webgl/lessons/ko/webgl-image-processing.html" selected>한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-image-processing.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/zh_cn/webgl-image-processing.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>기초</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-getting-webgl2.html">WebGL2 사용하기</a></li>
+<li><a href="/webgl/lessons/ko/webgl-fundamentals.html">WebGL2 기초</a></li>
+<li><a href="/webgl/lessons/ko/webgl-how-it-works.html">WebGL2 작동 원리</a></li>
+<li><a href="/webgl/lessons/ko/webgl-shaders-and-glsl.html">WebGL2 쉐이더와 GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 State Diagram</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl2-whats-new.html">WebGL2 새로운 기능</a></li>
+<li><a href="/webgl/lessons/ko/webgl1-to-webgl2.html">Moving from WebGL1 to WebGL2</a></li>
+<li><a href="/webgl/lessons/ko/webgl1-to-webgl2-fundamentals.html">Differences from WebGLFundamentals.org to WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>이미지 처리</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-image-processing.html">WebGL2 이미지 처리</a></li>
+<li><a href="/webgl/lessons/ko/webgl-image-processing-continued.html">WebGL2 이미지 처리 심화</a></li>
+        </ul>
+  <li>2D 이동, 회전, 크기 변환 행렬 계산</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-2d-translation.html">WebGL2 2D 이동</a></li>
+<li><a href="/webgl/lessons/ko/webgl-2d-rotation.html">WebGL2 2D 회전</a></li>
+<li><a href="/webgl/lessons/ko/webgl-2d-scale.html">WebGL2 2D 크기</a></li>
+<li><a href="/webgl/lessons/ko/webgl-2d-matrices.html">WebGL2 2D 행렬</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-3d-orthographic.html">WebGL2 - Orthographic 3D</a></li>
+<li><a href="/webgl/lessons/ko/webgl-3d-perspective.html">WebGL2 3D Perspective</a></li>
+<li><a href="/webgl/lessons/ko/webgl-3d-camera.html">3D - Cameras</a></li>
+<li><a href="/webgl/lessons/ko/webgl-matrix-naming.html">3D - Matrix Naming</a></li>
+        </ul>
+  <li>Lighting</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-3d-lighting-directional.html">Directional Lighting</a></li>
+<li><a href="/webgl/lessons/ko/webgl-3d-lighting-point.html">Point Lighting</a></li>
+<li><a href="/webgl/lessons/ko/webgl-3d-lighting-spot.html">Spot Lighting</a></li>
+        </ul>
+  <li>Structure and Organization</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-less-code-more-fun.html">Less Code, More Fun</a></li>
+<li><a href="/webgl/lessons/ko/webgl-drawing-multiple-things.html">여러 물체를 그리는 법</a></li>
+<li><a href="/webgl/lessons/ko/webgl-scene-graph.html">Scene Graphs</a></li>
+        </ul>
+  <li>Geometry</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-3d-geometry-lathe.html">3D Geometry - Lathe</a></li>
+<li><a href="/webgl/lessons/ko/webgl-load-obj.html">Loading .obj files</a></li>
+<li><a href="/webgl/lessons/ko/webgl-load-obj-w-mtl.html">Loading .obj w .mtl files</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/ko/webgl-data-textures.html">Data Textures</a></li>
+<li><a href="/webgl/lessons/ko/webgl-2-textures.html">Using 2 or More Textures</a></li>
+<li><a href="/webgl/lessons/ko/webgl-cors-permission.html">Cross Origin Images</a></li>
+<li><a href="/webgl/lessons/ko/webgl-3d-perspective-correct-texturemapping.html">Perspective Correct Texture Mapping</a></li>
+<li><a href="/webgl/lessons/ko/webgl-planar-projection-mapping.html">Planar and Perspective Projection Mapping</a></li>
+        </ul>
+  <li>Rendering To A Texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-render-to-texture.html">Render to Texture</a></li>
+        </ul>
+  <li>Shadows</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-shadows.html">Shadows</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/ko/webgl-2d-matrix-stack.html">2D - Matrix Stack</a></li>
+<li><a href="/webgl/lessons/ko/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/ko/webgl-environment-maps.html">Environment maps</a></li>
+<li><a href="/webgl/lessons/ko/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/ko/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/ko/webgl-fog.html">Fog</a></li>
+<li><a href="/webgl/lessons/ko/webgl-picking.html">Picking (clicking on stuff)</a></li>
+        </ul>
+  <li>Text</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-text-html.html">Text - HTML</a></li>
+<li><a href="/webgl/lessons/ko/webgl-text-canvas2d.html">Text - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/ko/webgl-text-texture.html">Text - Using a Texture</a></li>
+<li><a href="/webgl/lessons/ko/webgl-text-glyphs.html">Text - Using a Glyph Texture</a></li>
+        </ul>
+        </ul>
+  <li>Tips</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-smallest-programs.html">Smallest Programs</a></li>
+<li><a href="/webgl/lessons/ko/webgl-drawing-without-data.html">Drawing Without Data</a></li>
+<li><a href="/webgl/lessons/ko/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/ko/webgl-pulling-vertices.html">Pulling Vertices</a></li>
+        </ul>
+  <li>Optimization</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-indexed-vertices.html">Indexed Vertices (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/ko/webgl-instanced-drawing.html">Instanced Drawing</a></li>
+        </ul>
+  <li>Misc</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-setup-and-installation.html">Setup And Installation</a></li>
+<li><a href="/webgl/lessons/ko/webgl-boilerplate.html">Boilerplate</a></li>
+<li><a href="/webgl/lessons/ko/webgl-resizing-the-canvas.html">Resizing the Canvas</a></li>
+<li><a href="/webgl/lessons/ko/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/ko/webgl-points-lines-triangles.html">Points, Lines, and Triangles</a></li>
+<li><a href="/webgl/lessons/ko/webgl-multiple-views.html">Multiple Views, Multiple Canvases</a></li>
+<li><a href="/webgl/lessons/ko/webgl-visualizing-the-camera.html">Visualizing the Camera</a></li>
+<li><a href="/webgl/lessons/ko/webgl-and-alpha.html">WebGL2 and Alpha</a></li>
+<li><a href="/webgl/lessons/ko/webgl-2d-vs-3d-library.html">2D vs 3D libraries</a></li>
+<li><a href="/webgl/lessons/ko/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/ko/webgl-matrix-vs-math.html">WebGL Matrices vs Math Matrices</a></li>
+<li><a href="/webgl/lessons/ko/webgl-precision-issues.html">Precision Issues</a></li>
+<li><a href="/webgl/lessons/ko/webgl-tips.html#screenshot">Taking a screenshot</a></li>
+<li><a href="/webgl/lessons/ko/webgl-tips.html#preservedrawingbuffer">Prevent the Canvas Being Cleared</a></li>
+<li><a href="/webgl/lessons/ko/webgl-tips.html#tabindex">Get Keyboard Input From a Canvas</a></li>
+<li><a href="/webgl/lessons/ko/webgl-tips.html#html-background">Use WebGL2 as Background in HTML</a></li>
+<li><a href="/webgl/lessons/ko/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
+<li><a href="/webgl/lessons/ko/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Reference</li>
+        <ul>
+          <li><a href="/webgl/lessons/ko/webgl-attributes.html">Attributes</a></li>
+<li><a href="/webgl/lessons/ko/webgl-texture-units.html">Texture Units</a></li>
+<li><a href="/webgl/lessons/ko/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/ko/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/ko/webgl-references.html">References</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Helper API Docs</a></li>
+  <li><a href="https://twgljs.org">TWGL, A tiny WebGL helper library</a></li>
+  <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a></li>
+</ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        <div>질문? <a href="https://stackoverflow.com/questions/tagged/webgl">stackoverflow에서 질문하기</a>.</div>
+        <div>이슈/버그? <a href="https://github.com/greggman/webgl-fundamentals/issues">깃헙에서 이슈만들기</a>.</div>
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 이미지 처리';
+            var disqus_title = 'WebGL2 이미지 처리';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js"></script>
+<script>
+(function() {
+  if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+      return;
+  }
+
+  function addScript(src, fn) {
+    const script = document.createElement('script');
+    const firstScript = document.getElementsByTagName('script')[0];
+    script.async = true;
+    script.defer = true;
+    if (fn) {
+      script.addEventListener('load', fn);
+    }
+    script.src = src;
+    firstScript.parentNode.insertBefore(script, firstScript);
+  }
+
+  addScript('//cdn.webglstats.com/stat.js');
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-90754717-1', 'auto');
+  ga('send', 'pageview');
+}());
+</script>
+
+
+</html>
+
+
+

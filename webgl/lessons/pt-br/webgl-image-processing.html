@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/pt-br/webgl-image-processing.md. Do not edited directly -->
+<!--
+Copyright 2012, Gregg Tavares.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of Gregg Tavares. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Como processar imagens na WebGL">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-image-processing_pt-br.jpg">
+
+<meta property="og:title" content="Processamento de imagem WebGL2">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-image-processing_pt-br.jpg">
+<meta property="og:description" content="Como processar imagens na WebGL">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/pt-br/webgl-image-processing.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="Processamento de imagem WebGL2">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/pt-br/webgl-image-processing.html">
+<meta name="twitter:description" content="Como processar imagens na WebGL">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-image-processing_pt-br.jpg">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-image-processing.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-image-processing.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-image-processing.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-image-processing.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-image-processing.html">
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/pt-br/webgl-image-processing.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-image-processing_pt-br.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/pt-br/webgl-image-processing.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/pt-br/webgl-image-processing.html",
+      "inLanguage":"pt-br",
+      "name":"Processamento de imagem WebGL2",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/pt-br/webgl-image-processing.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>Processamento de imagem WebGL2</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-image-processing.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-image-processing.html" >Deutsch</a>
+    <option value="/webgl/lessons/ko/webgl-image-processing.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-image-processing.html" selected>Português Brasileiro</a>
+    <option value="/webgl/lessons/zh_cn/webgl-image-processing.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Índice</a>
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/pt-br/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub a {
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 2rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 300px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(150px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub a::before,#forkongithub a::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub a::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+@media (max-width: 900px) {
+    #forkongithub a{
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub a{
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>Processamento de imagem WebGL2</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>O processamento de imagens é fácil na WebGL. Quão fácil? Leia abaixo.</p>
+<p>Esta é uma continuação de <a href="webgl-fundamentals.html">Fundamentos da WebGL2</a>.
+Se você não leu, eu sugiro <a href="webgl-fundamentals.html">ir lá primeiro</a>.</p>
+<p>Para desenhar imagens na WebGL precisamos usar texturas. Da mesma forma que a
+WebGL espera coordenadas de clipspace ao renderizar em vez de pixels,
+a WebGL geralmente espera coordenadas de textura ao ler uma textura.
+As coordenadas da textura variam de 0,0 a 1,0 independentemente das dimensões da textura.</p>
+<p>A WebGL2 adiciona a capacidade de ler uma textura usando coordenadas de pixels também.
+Qual caminho é melhor depende de você. Sinto que é mais comum usar as 
+coordenadas de textura do que as coordenadas de pixels.</p>
+<p>Uma vez que estamos apenas desenhando um único retângulo (bem, 2 triângulos),
+precisamos dizer a WebGL qual lugar na textura em que cada ponto do
+retângulo corresponde. Vamos passar esta informação do vertex
+para o fragmento shader usando um tipo especial de variável chamado
+de &#39;varying&#39;. É chamado de varying porque isso varia. <a href="webgl-how-it-works.html">WebGL irá
+interpolar os valores</a> que fornecemos no
+vertex shader pois desenha cada pixel usando o fragmento shader.</p>
+<p>Usando <a href="webgl-fundamentals.html">o vertex shader do final da publicação anterior</a>
+precisamos adicionar um atributo para passar em coordenadas de textura e depois
+passar para o fragmento shader.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
+
++in vec2 a_texCoord;
+
+...
+
++out vec2 v_texCoord;
+
+void main() {
+   ...
++   // passe o texCoord para o fragmento shader
++   // O GPU irá interpolar esse valor entre pontos
++   v_texCoord = a_texCoord;
+}
+</code></pre><p>Então, fornecemos um fragmento shader para procurar cores da textura.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+precision highp float;
+
+// nossa textura
+uniform sampler2D u_image;
+
+// O texCoords passou do vertex shader.
+in vec2 v_texCoord;
+
+// precisamos declarar uma saída para o fragmento shader
+out vec4 outColor;
+
+void main() {
+   // Procure uma cor da textura.
+   outColor = texture(u_image, v_texCoord);
+}
+</code></pre><p>Finalmente, precisamos carregar uma imagem, criar uma textura e copiar a imagem
+para a textura. Como estamos em imagens de um navegador, carregamos de forma assíncrona,
+então devemos reorganizar nosso código um pouco para aguardar o carregamento da textura.
+Uma vez que carregada, vamos desenhá-la.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+function main() {
++  var image = new Image();
++  image.src = &quot;https://someimage/on/our/server&quot;;  // DEVE SER MESMO DOMÍNIO!!!
++  image.onload = function() {
++    render(image);
++  }
++}
+
+function render(image) {
+  ...
+  // procure onde os dados do vértice precisam ir.
+  var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
++  var texCoordAttributeLocation = gl.getAttribLocation(program, &quot;a_texCoord&quot;);
+
+  // uniforms de pesquisa
+  var resolutionLocation = gl.getUniformLocation(program, &quot;u_resolution&quot;);
++  var imageLocation = gl.getUniformLocation(program, &quot;u_image&quot;);
+
+  ...
+
++  // fornecer coordenadas de textura para o retângulo.
++  var texCoordBuffer = gl.createBuffer();
++  gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
++  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
++      0.0,  0.0,
++      1.0,  0.0,
++      0.0,  1.0,
++      0.0,  1.0,
++      1.0,  0.0,
++      1.0,  1.0]), gl.STATIC_DRAW);
++  gl.enableVertexAttribArray(texCoordAttributeLocation);
++  var size = 2;          // 2 componentes por iteração
++  var type = gl.FLOAT;   // os dados são floats de 32bit 
++  var normalize = false; // não normalize os dados
++  var stride = 0;        // 0 = mover para o tamanho * sizeof (tipo) cada iteração para obter a próxima posição
++  var offset = 0;        // comece no início do buffer
++  gl.vertexAttribPointer(
++      texCoordAttributeLocation, size, type, normalize, stride, offset)
++
++  // Create a texture.
++  var texture = gl.createTexture();
++
++  // faça da unidade 0 a unidade de textura ativa
++  // (ie, the unit all other texture commands will affect
++  gl.activeTexture(gl.TEXTURE0 + 0);
++
++  // Vincule a unidade de textura 0&#39; ponto de ligação 2D
++  gl.bindTexture(gl.TEXTURE_2D, texture);
++
++  // Defina os parâmetros para que não precisemos de mips e por isso não estamos filtrando
++  // e não repetindo
++  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
++  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
++  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
++  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
++
++  // Carregue a imagem para a textura.
++  var mipLevel = 0;               // the largest mip
++  var internalFormat = gl.RGBA;   // format we want in the texture
++  var srcFormat = gl.RGBA;        // format of data we are supplying
++  var srcType = gl.UNSIGNED_BYTE  // type of data we are supplying
++  gl.texImage2D(gl.TEXTURE_2D,
++                mipLevel,
++                internalFormat,
++                srcFormat,
++                srcType,
++                image);
+
+  ...
+
+  // Diga para usar nosso programa (par de shaders)
+  gl.useProgram(program);
+
+  // Passe na resolução da tela para que possamos converter
+  // pixels para clipspace no shader
+  gl.uniform2f(resolutionLocation, gl.canvas.width, gl.canvas.height);
+
++  // Diga ao shader para obter a textura da unidade de textura 0
++  gl.uniform1i(imageLocation, 0);
+
++  // Vincule o buffer de posição para que gl.bufferData seja chamado
++  // em setRectangle para colocar dados no buffer de posição
++  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
++
++  // Defina um retângulo do mesmo tamanho que a imagem.
++  setRectangle(gl, 0, 0, image.width, image.height);
+
+}
+</code></pre><p>E aqui está a imagem renderizada na WebGL.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image.html" target="_blank">clique aqui para abrir em uma janela separada</a>
+</div>
+
+</p>
+<p>Não muito emocionante, então vamos manipular essa imagem. Que tal simplesmente 
+trocar vermelho e azul?</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
+outColor = texture(u_image, v_texCoord).bgra;
+...
+</code></pre><p>E agora vermelho e azul foram trocados.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-red2blue.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-red2blue.html" target="_blank">clique aqui para abrir em uma janela separada</a>
+</div>
+
+</p>
+<p>E se quisermos processar imagens que realmente olhem para outros
+pixels? Uma vez que a WebGL faz referência a texturas em coordenadas de textura que
+variam de 0,0 a 1,0, podemos calcular o quanto move 1 pixel
+ com o simples math <code class="notranslate" translate="no">onePixel = 1.0 / textureSize</code>.</p>
+<p>Aqui está um fragmento que mede os pixels esquerdos e direitos de
+cada pixel na textura.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+
+// fragmentos shaders não têm uma precisão padrão, então precisamos
+// para escolher um. O médio é um bom padrão. Significa &quot;precisão média&quot;
+precision highp float;
+
+// nossa textura
+uniform sampler2D u_image;
+
+// o texCoords passou do vertex shader.
+in vec2 v_texCoord;
+
+// precisamos declarar uma saída para o fragmento shader
+out vec4 outColor;
+
+void main() {
++  vec2 onePixel = vec2(1) / vec2(textureSize(u_image, 0));
++
++  // média dos pixels esquerdo, médio e direito.
++  outColor = (
++      texture(u_image, v_texCoord) +
++      texture(u_image, v_texCoord + vec2( onePixel.x, 0.0)) +
++      texture(u_image, v_texCoord + vec2(-onePixel.x, 0.0))) / 3.0;
+}
+</code></pre><p>Compare com a imagem não borrada acima.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-blend.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-blend.html" target="_blank">clique aqui para abrir em uma janela separada</a>
+</div>
+
+</p>
+<p>Agora que sabemos como fazer referência a outros pixels, vamos usar um convolution kernel
+para fazer varios processamentos de imagem comum. Neste caso, usaremos um kernel 3x3.
+Um convolution kernel é apenas uma matriz de 3x3, onde cada entrada na matriz representa
+o quanto para multiplicar os 8 pixels ao redor do pixel que estamos renderizando. Em seguida,
+dividimos o resultado pelo peso do kernel (a soma de todos os valores no kernel)
+ou 1,0, o que for maior. <a href="https://docs.gimp.org/2.6/en/plug-in-convmatrix.html">Aqui está um artigo muito bom sobre isso</a>.
+E <a href="https://www.codeproject.com/KB/graphics/ImageConvolution.aspx">aqui está outro artigo que mostra algum código real se
+você escrevesse isso manualmente em C ++</a>.</p>
+<p>No nosso caso, vamos fazer isso funcionar no shader, então aqui está o novo fragment shader.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+
+// fragmentos shaders não têm uma precisão padrão, então precisamos
+// para escolher um. O médio é um bom padrão. Significa &quot;precisão média&quot;
+precision highp float;
+
+// nossa textura
+uniform sampler2D u_image;
+
+// os dados do convolution kernal
+uniform float u_kernel[9];
+uniform float u_kernelWeight;
+
+// o texCoords passou do vertex shader.
+in vec2 v_texCoord;
+
+// precisamos declarar uma saída para o fragmento shader
+out vec4 outColor;
+
+void main() {
+  vec2 onePixel = vec2(1) / vec2(textureSize(u_image, 0));
+
+  vec4 colorSum =
+      texture(u_image, v_texCoord + onePixel * vec2(-1, -1)) * u_kernel[0] +
+      texture(u_image, v_texCoord + onePixel * vec2( 0, -1)) * u_kernel[1] +
+      texture(u_image, v_texCoord + onePixel * vec2( 1, -1)) * u_kernel[2] +
+      texture(u_image, v_texCoord + onePixel * vec2(-1,  0)) * u_kernel[3] +
+      texture(u_image, v_texCoord + onePixel * vec2( 0,  0)) * u_kernel[4] +
+      texture(u_image, v_texCoord + onePixel * vec2( 1,  0)) * u_kernel[5] +
+      texture(u_image, v_texCoord + onePixel * vec2(-1,  1)) * u_kernel[6] +
+      texture(u_image, v_texCoord + onePixel * vec2( 0,  1)) * u_kernel[7] +
+      texture(u_image, v_texCoord + onePixel * vec2( 1,  1)) * u_kernel[8] ;
+  outColor = vec4((colorSum / u_kernelWeight).rgb, 1);
+}
+</code></pre><p>Em JavaScript, precisamos fornecer um convolution kernel e seu peso</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> function computeKernelWeight(kernel) {
+   var weight = kernel.reduce(function(prev, curr) {
+       return prev + curr;
+   });
+   return weight &lt;= 0 ? 1 : weight;
+ }
+
+ ...
+ var kernelLocation = gl.getUniformLocation(program, &quot;u_kernel[0]&quot;);
+ var kernelWeightLocation = gl.getUniformLocation(program, &quot;u_kernelWeight&quot;);
+ ...
+ var edgeDetectKernel = [
+     -1, -1, -1,
+     -1,  8, -1,
+     -1, -1, -1
+ ];
+
+// definir o kernel e seu peso
+ gl.uniform1fv(kernelLocation, edgeDetectKernel);
+ gl.uniform1f(kernelWeightLocation, computeKernelWeight(edgeDetectKernel));
+ ...
+</code></pre><p>Aí está... Use a lista suspensa para selecionar diferentes kernels.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-3x3-convolution.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-3x3-convolution.html" target="_blank">clique aqui para abrir em uma janela separada</a>
+</div>
+
+</p>
+<p>Espero que este artigo tenha o convencido de que o processamento de imagens na WebGL é bastante simples. Em seguida,
+falarei como <a href="webgl-image-processing-continued.html">aplicar mais de um efeito à imagem</a>.</p>
+<div class="webgl_bottombar">
+<h3>O que são unidades de textura?</h3>
+Quando você chama <code class="notranslate" translate="no">gl.draw???</code> seu shader pode fazer referência a texturas. Texturas estão vinculadas
+com unidades de texturas. Embora a máquina do usuário possa suportar, todas as implementações WebGL2 
+são necessárias suportar pelo menos 16 unidades de textura. Qual unidade de textura cada referência
+uniforme de amostras é definida procurando a localização dessa amostra uniforme e, em seguida, ajuste o
+índice da unidade de textura que você deseja que ela faça referência.
+
+Por exemplo:
+<pre class="prettyprint showlinemods">
+var textureUnitIndex = 6; // use a unidade de textura 6.
+var u_imageLoc = gl.getUniformLocation(
+    program, "u_image");
+gl.uniform1i(u_imageLoc, textureUnitIndex);
+</pre>
+
+Para definir texturas em diferentes unidades, chame gl.activeTexture e, em seguida, vincule a textura desejada nessa unidade. Exemplo
+
+<pre class="prettyprint showlinemods">
+// Vincule someTexture à unidade de textura 6.
+gl.activeTexture(gl.TEXTURE6);
+gl.bindTexture(gl.TEXTURE_2D, someTexture);
+</pre>
+
+Isso também funciona
+
+<pre class="prettyprint showlinemods">
+var textureUnitIndex = 6; // use a unidade de textura 6.
+// Vincule someTexture à unidade de textura 6.
+gl.activeTexture(gl.TEXTURE0 + textureUnitIndex);
+gl.bindTexture(gl.TEXTURE_2D, someTexture);
+</pre>
+</div>
+
+<div class="webgl_bottombar">
+<h3>O que são os prefixos a_, u_ e v_ de variáveis no GLSL?</h3>
+<p>
+Isso é apenas uma convenção de nomeação. Eles não são necessários, mas para mim é mais fácil ver de relance de onde
+os valores estão vindo. a_ para atributos que são os dados fornecidos por buffers. u_ para uniforms
+que são inputs para os shaders, v_ para variações que são valores passados de um vertex shader para um
+fragmento shader e interpolados (ou variados) entre os vértices para cada pixel desenhado.
+Veja <a href="webgl-how-it-works.html">Como funciona</a> para mais detalhes.
+</p>
+</div>
+
+
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-image-processing.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-image-processing.html" >Deutsch</a>
+    <option value="/webgl/lessons/ko/webgl-image-processing.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-image-processing.html" selected>Português Brasileiro</a>
+    <option value="/webgl/lessons/zh_cn/webgl-image-processing.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fundamentos</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-getting-webgl2.html">Como utilizar a WebGL2</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-fundamentals.html">Fundamentos da WebGL2</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-how-it-works.html">How It Works</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-shaders-and-glsl.html">Shaders and GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 State Diagram</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl2-whats-new.html">O que há de novo na WebGL2</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl1-to-webgl2.html">Migrando do WebGL1 para a WebGL2</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl1-to-webgl2-fundamentals.html">Diferenças entre a WebGLFundamentals.org e a WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Processamento de Imagem</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-image-processing.html">Processamento de Imagem WebGL2</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-image-processing-continued.html">Processamento de Imagem Continuada WebGL2</a></li>
+        </ul>
+  <li>Translação 2D, rotação, escala, matriz matemática</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-2d-translation.html">Translação 2D WebGL2</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-2d-rotation.html">Rotação 2D WebGL2</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-2d-scale.html">Escala 2D WebGL2</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-2d-matrices.html">2D Matrices</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-3d-orthographic.html">Orthographic 3D</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-3d-perspective.html">WebGL2 3D Perspective</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-3d-camera.html">3D - Cameras</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-matrix-naming.html">WebGL2 3D - Nomenclatura das Matrizes</a></li>
+        </ul>
+  <li>Iluminação</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-3d-lighting-directional.html">Directional Lighting</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-3d-lighting-point.html">Point Lighting</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-3d-lighting-spot.html">Spot Lighting</a></li>
+        </ul>
+  <li>Estrutura e Organização</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-less-code-more-fun.html">Less Code, More Fun</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-drawing-multiple-things.html">Drawing Multiple Things</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-scene-graph.html">Scene Graphs</a></li>
+        </ul>
+  <li>Geometria</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-3d-geometry-lathe.html">3D Geometry - Lathe</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-load-obj.html">Loading .obj files</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-load-obj-w-mtl.html">Loading .obj w .mtl files</a></li>
+        </ul>
+  <li>Texturas</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-data-textures.html">Data Textures</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-2-textures.html">Using 2 or More Textures</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-cors-permission.html">WebGL2 - Cross Origin Images</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-3d-perspective-correct-texturemapping.html">Perspective Correct Texture Mapping</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-planar-projection-mapping.html">Planar and Perspective Projection Mapping</a></li>
+        </ul>
+  <li>Renderizando Uma Textura</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-render-to-texture.html">Render to Texture</a></li>
+        </ul>
+  <li>Shadows</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-shadows.html">Shadows</a></li>
+        </ul>
+  <li>Técnicas</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-2d-matrix-stack.html">2D - Matrix Stack</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-environment-maps.html">Environment maps</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-fog.html">Fog</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-picking.html">Picking (clicking on stuff)</a></li>
+        </ul>
+  <li>Text</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-text-html.html">WebGL2 Texto - HTML</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-text-canvas2d.html">WebGL2 Texto - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-text-texture.html">Text - Using a Texture</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-text-glyphs.html">Text - Using a Glyph Texture</a></li>
+        </ul>
+        </ul>
+  <li>Tips</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-smallest-programs.html">Smallest Programs</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-drawing-without-data.html">Drawing Without Data</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-pulling-vertices.html">Pulling Vertices</a></li>
+        </ul>
+  <li>Optimization</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-indexed-vertices.html">Indexed Vertices (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-instanced-drawing.html">Instanced Drawing</a></li>
+        </ul>
+  <li>Diversos</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-setup-and-installation.html">WebGL2 Configuração e Instalação</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-boilerplate.html">Boilerplate</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-resizing-the-canvas.html">Resizing the Canvas</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-animation.html">WebGL2 - Animação</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-points-lines-triangles.html">Points, Lines, and Triangles</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-multiple-views.html">Multiple Views, Multiple Canvases</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-visualizing-the-camera.html">Visualizing the Camera</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-and-alpha.html">WebGL2 e o Alpha</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-2d-vs-3d-library.html">WebGL2 - Bibliotecas 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-matrix-vs-math.html">WebGL Matrices vs Math Matrices</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-precision-issues.html">Precision Issues</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-tips.html#screenshot">Taking a screenshot</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-tips.html#preservedrawingbuffer">Prevent the Canvas Being Cleared</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-tips.html#tabindex">Get Keyboard Input From a Canvas</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-tips.html#html-background">Use WebGL2 as Background in HTML</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Reference</li>
+        <ul>
+          <li><a href="/webgl/lessons/pt-br/webgl-attributes.html">Attributes</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-texture-units.html">Texture Units</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/pt-br/webgl-references.html">References</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentação da API</a></li>
+  <li><a href="https://twgljs.org">TWGL, Uma Pequena Biblioteca Auxiliar da WebGL</a></li>
+  <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a></li>
+</ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        <div>Dúvidas? <a href="https://stackoverflow.com/questions/tagged/webgl2">Pergunte no stackoverflow</a>.</div>
+        <div>Problemas/Bug? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Pergunte no github</a>.</div>
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'Processamento de imagem WebGL2';
+            var disqus_title = 'Processamento de imagem WebGL2';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js"></script>
+<script>
+(function() {
+  if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+      return;
+  }
+
+  function addScript(src, fn) {
+    const script = document.createElement('script');
+    const firstScript = document.getElementsByTagName('script')[0];
+    script.async = true;
+    script.defer = true;
+    if (fn) {
+      script.addEventListener('load', fn);
+    }
+    script.src = src;
+    firstScript.parentNode.insertBefore(script, firstScript);
+  }
+
+  addScript('//cdn.webglstats.com/stat.js');
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-90754717-1', 'auto');
+  ga('send', 'pageview');
+}());
+</script>
+
+
+</html>
+
+
+
