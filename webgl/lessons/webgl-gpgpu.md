@@ -1793,7 +1793,26 @@ const linesFB1 = createFramebuffer(gl, linesTex1);
 const linesFB2 = createFramebuffer(gl, linesTex2);
 ```
 
-And we need to setup some object to track current and next so we can
+Because we want to write to floating point textures and that's an optional
+feature of WebGL2 we need to check if we can by checking for the
+`EXT_color_buffer_float` extension
+
+```js
+// Get A WebGL context
+/** @type {HTMLCanvasElement} */
+const canvas = document.querySelector("#canvas");
+const gl = canvas.getContext("webgl2");
+if (!gl) {
+  return;
+}
++const ext = gl.getExtension('EXT_color_buffer_float');
++if (!ext) {
++  alert('need EXT_color_buffer_float');
++  return;
++}
+```
+
+And we need to setup some objects to track current and next so we can
 easily swap the things we need to swap each frame
 
 ```js
@@ -2110,14 +2129,65 @@ is happening on the GPU
 
 * Mobile devices don't generally support rendering to floating point textures
 
-  There are various ways of working around the issue but it's beyond the
-  scope of this article.
+  There are various ways of working around the issue. One use you can
+  use the GLSL functions `floatBitsToInt`, `floatBitsToUint`, `IntBitsToFloat`,
+  and `UintBitsToFloat`.
+
+  As an example [the texture based version of the particle example](../webgl-gpgpu-particles.html)
+  need to write to floating point textures. We could fix it so it doesn't require them with by
+  declaring out texture to be type `RG32I` (32 integer textures) but still
+  upload floats.
+
+  In the shader we'd need to read the textures as integers and decode them
+  to floats and then encode the result back into integers. For example
+
+  ```glsl
+  #version 300 es
+  precision highp float;
+
+  -uniform highp sampler2D positionTex;
+  -uniform highp sampler2D velocityTex;
+  +uniform highp isampler2D positionTex;
+  +uniform highp isampler2D velocityTex;
+  uniform vec2 canvasDimensions;
+  uniform float deltaTime;
+
+  out ivec4 outColor;
+
+  vec2 euclideanModulo(vec2 n, vec2 m) {
+  	return mod(mod(n, m) + m, m);
+  }
+
+  void main() {
+    // there will be one velocity per position
+    // so the velocity texture and position texture
+    // are the same size.
+
+    // further, we're generating new positions
+    // so we know our destination is the same size
+    // as our source
+
+    // compute texcoord from gl_FragCoord;
+    ivec2 texelCoord = ivec2(gl_FragCoord.xy);
+    
+  -  vec2 position = texelFetch(positionTex, texelCoord, 0).xy;
+  -  vec2 velocity = texelFetch(velocityTex, texelCoord, 0).xy;
+  +  vec2 position = intBitsToFloat(texelFetch(positionTex, texelCoord, 0).xy);
+  +  vec2 velocity = intBitsToFloat(texelFetch(velocityTex, texelCoord, 0).xy);
+    vec2 newPosition = euclideanModulo(position + velocity * deltaTime, canvasDimensions);
+
+  -  outColor = vec4(newPosition, 0, 1);
+  +  outColor = ivec4(floatBitsToInt(newPosition), 0, 1);
+  }
+  ```
+
+  [Here's a working example](../webgl-gpgpu-particles-no-floating-point-textures.html)
 
 I hope these examples helped you understand the key idea of GPGPU in WebGL
 is just the fact that WebGL reads from and writes to arrays of **data**,
 not pixels.
 
-They work similar to `map` functions in that the function being called
+Shaders work similar to `map` functions in that the function being called
 for each value doesn't get to decide where its value will be stored.
 Rather that is decided from outside the function. In WebGL's case
 that's decided by how you setup what you're drawing. Once you call `gl.drawXXX`
