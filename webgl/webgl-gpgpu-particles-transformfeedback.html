@@ -1,0 +1,276 @@
+<!-- Licensed under a BSD license. See license.html for license -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>WebGL2 - GPGPU - particles</title>
+<link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
+</head>
+<body>
+<div class="description">
+gpgpu particles
+</div>
+<canvas id="canvas"></canvas>
+</body>
+<!--
+for most samples webgl-utils only provides shader compiling/linking and
+canvas resizing because why clutter the examples with code that's the same in every sample.
+See https://webgl2fundamentals.org/webgl/lessons/webgl-boilerplate.html
+and https://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+for webgl-utils, m3, m4, and webgl-lessons-ui.
+-->
+<script src="resources/webgl-utils.js"></script>
+<script src="resources/m4.js"></script>
+<script>
+'use strict';
+
+/* eslint no-alert: 0 */
+
+function main() {
+  const updatePositionVS = `#version 300 es
+  in vec2 oldPosition;
+  in vec2 velocity;
+
+  uniform float deltaTime;
+  uniform vec2 canvasDimensions;
+
+  out vec2 newPosition;
+
+  vec2 euclideanModulo(vec2 n, vec2 m) {
+  	return mod(mod(n, m) + m, m);
+  }
+
+  void main() {
+    newPosition = euclideanModulo(
+        oldPosition + velocity * deltaTime,
+        canvasDimensions);
+  }
+  `;
+
+  const updatePositionFS = `#version 300 es
+  precision highp float;
+  void main() {
+  }
+  `;
+
+  const drawParticlesVS = `#version 300 es
+  in vec4 position;
+  uniform mat4 matrix;
+
+  void main() {
+    // do the common matrix math
+    gl_Position = matrix * position;
+    gl_PointSize = 10.0;
+  }
+  `;
+
+  const drawParticlesFS = `#version 300 es
+  precision highp float;
+  out vec4 outColor;
+  void main() {
+    outColor = vec4(1, 0, 0, 1);
+  }
+  `;
+
+  // Get A WebGL context
+  /** @type {HTMLCanvasElement} */
+  const canvas = document.querySelector("#canvas");
+  const gl = canvas.getContext("webgl2");
+  if (!gl) {
+    return;
+  }
+
+  function createShader(gl, type, src) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, src);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      throw new Error(gl.getShaderInfoLog(shader));
+    }
+    return shader;
+  }
+
+  function createProgram(gl, shaderSources, transformFeedbackVaryings) {
+    const program = gl.createProgram();
+    [gl.VERTEX_SHADER, gl.FRAGMENT_SHADER].forEach((type, ndx) => {
+      const shader = createShader(gl, type, shaderSources[ndx]);
+      gl.attachShader(program, shader);
+    });
+    if (transformFeedbackVaryings) {
+      gl.transformFeedbackVaryings(
+          program,
+          transformFeedbackVaryings,
+          gl.SEPARATE_ATTRIBS,
+      );
+    }
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      throw new Error(gl.getProgramParameter(program));
+    }
+    return program;
+  }
+
+  const updatePositionProgram = createProgram(
+      gl, [updatePositionVS, updatePositionFS], ['newPosition']);
+  const drawParticlesProgram = createProgram(
+      gl, [drawParticlesVS, drawParticlesFS]);
+
+  const updatePositionPrgLocs = {
+    oldPosition: gl.getAttribLocation(updatePositionProgram, 'oldPosition'),
+    velocity: gl.getAttribLocation(updatePositionProgram, 'velocity'),
+    canvasDimensions: gl.getUniformLocation(updatePositionProgram, 'canvasDimensions'),
+    deltaTime: gl.getUniformLocation(updatePositionProgram, 'deltaTime'),
+  };
+
+  const drawParticlesProgLocs = {
+    position: gl.getAttribLocation(drawParticlesProgram, 'position'),
+    matrix: gl.getUniformLocation(drawParticlesProgram, 'matrix'),
+  };
+
+  // we're going to base the initial positions on the size
+  // of the canvas so lets update the size of the canvas
+  // to the initial size we want
+  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
+  // create random positions and velocities.
+  const rand = (min, max) => {
+    if (max === undefined) {
+      max = min;
+      min = 0;
+    }
+    return Math.random() * (max - min) + min;
+  };
+  const numParticles = 200;
+  const createPoints = (num, ranges) =>
+     new Array(num).fill(0).map(_ => ranges.map(range => rand(...range))).flat();
+  const positions = new Float32Array(createPoints(numParticles, [[canvas.width], [canvas.height]]));
+  const velocities = new Float32Array(createPoints(numParticles, [[-300, 300], [-300, 300]]));
+
+  function makeBuffer(gl, sizeOrData, usage) {
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, sizeOrData, usage);
+    return buf;
+  }
+
+  const position1Buffer = makeBuffer(gl, positions, gl.DYNAMIC_DRAW);
+  const position2Buffer = makeBuffer(gl, positions, gl.DYNAMIC_DRAW);
+  const velocityBuffer = makeBuffer(gl, velocities, gl.STATIC_DRAW);
+
+  function makeVertexArray(gl, bufLocPairs) {
+    const va = gl.createVertexArray();
+    gl.bindVertexArray(va);
+    for (const [buffer, loc] of bufLocPairs) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(
+          loc,      // attribute location
+          2,        // number of elements
+          gl.FLOAT, // type of data
+          false,    // normalize
+          0,        // stride (0 = auto)
+          0,        // offset
+      );
+    }
+    return va;
+  }
+
+  const updatePositionVA1 = makeVertexArray(gl, [
+    [position1Buffer, updatePositionPrgLocs.oldPosition],
+    [velocityBuffer, updatePositionPrgLocs.velocity],
+  ]);
+  const updatePositionVA2 = makeVertexArray(gl, [
+    [position2Buffer, updatePositionPrgLocs.oldPosition],
+    [velocityBuffer, updatePositionPrgLocs.velocity],
+  ]);
+
+  const drawVA1 = makeVertexArray(
+      gl, [[position1Buffer, drawParticlesProgLocs.position]]);
+  const drawVA2 = makeVertexArray(
+      gl, [[position2Buffer, drawParticlesProgLocs.position]]);
+
+  function makeTransformFeedback(gl, buffer) {
+    const tf = gl.createTransformFeedback();
+    gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, tf);
+    gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, buffer);
+    return tf;
+  }
+
+  const tf1 = makeTransformFeedback(gl, position1Buffer);
+  const tf2 = makeTransformFeedback(gl, position2Buffer);
+
+  // unbind left over stuff
+  gl.bindBuffer(gl.ARRAY_BUFFER, null);
+  gl.bindBuffer(gl.TRANSFORM_FEEDBACK_BUFFER, null);
+
+  let current = {
+    updateVA: updatePositionVA1,  // read from position1
+    tf: tf2,                      // write to position2
+    drawVA: drawVA2,              // draw with position2
+  };
+  let next = {
+    updateVA: updatePositionVA2,  // read from position2
+    tf: tf1,                      // write to position1
+    drawVA: drawVA1,              // draw with position1
+  };
+
+  let then = 0;
+  function render(time) {
+    // convert to seconds
+    time *= 0.001;
+    // Subtract the previous time from the current time
+    const deltaTime = time - then;
+    // Remember the current time for the next frame.
+    then = time;
+
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    // compute the new positions
+    gl.useProgram(updatePositionProgram);
+    gl.bindVertexArray(current.updateVA);
+    gl.uniform2f(updatePositionPrgLocs.canvasDimensions, gl.canvas.width, gl.canvas.height);
+    gl.uniform1f(updatePositionPrgLocs.deltaTime, deltaTime);
+
+    gl.enable(gl.RASTERIZER_DISCARD);
+
+    gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, current.tf);
+    gl.beginTransformFeedback(gl.POINTS);
+    gl.drawArrays(gl.POINTS, 0, numParticles);
+    gl.endTransformFeedback();
+    gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, null);
+
+    // turn on using fragment shaders again
+    gl.disable(gl.RASTERIZER_DISCARD);
+
+    // now draw the particles.
+    gl.useProgram(drawParticlesProgram);
+    gl.bindVertexArray(current.drawVA);
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    gl.uniformMatrix4fv(
+        drawParticlesProgLocs.matrix,
+        false,
+        m4.orthographic(0, gl.canvas.width, 0, gl.canvas.height, -1, 1));
+    gl.drawArrays(gl.POINTS, 0, numParticles);
+
+    // swap which buffer we will read from
+    // and which one we will write to
+    {
+      const temp = current;
+      current = next;
+      next = temp;
+    }
+
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+}
+
+main();
+</script>
+</html>
+
+
+
