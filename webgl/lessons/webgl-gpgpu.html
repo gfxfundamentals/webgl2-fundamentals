@@ -1768,7 +1768,23 @@ write to <code class="notranslate" translate="no">linesTex1</code> and one to wr
 const linesFB1 = createFramebuffer(gl, linesTex1);
 const linesFB2 = createFramebuffer(gl, linesTex2);
 </code></pre>
-<p>And we need to setup some object to track current and next so we can
+<p>Because we want to write to floating point textures and that&#39;s an optional
+feature of WebGL2 we need to check if we can by checking for the
+<code class="notranslate" translate="no">EXT_color_buffer_float</code> extension</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Get A WebGL context
+/** @type {HTMLCanvasElement} */
+const canvas = document.querySelector(&quot;#canvas&quot;);
+const gl = canvas.getContext(&quot;webgl2&quot;);
+if (!gl) {
+  return;
+}
++const ext = gl.getExtension(&#39;EXT_color_buffer_float&#39;);
++if (!ext) {
++  alert(&#39;need EXT_color_buffer_float&#39;);
++  return;
++}
+</code></pre>
+<p>And we need to setup some objects to track current and next so we can
 easily swap the things we need to swap each frame</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">let current = {
   // for updating points
@@ -2057,14 +2073,60 @@ know for sure how much work you can give a GPU before its &quot;too slow&quot;</
 trying to do you may run into that issue.</p>
 </li>
 <li><p>Mobile devices don&#39;t generally support rendering to floating point textures</p>
-<p>There are various ways of working around the issue but it&#39;s beyond the
-scope of this article.</p>
+<p>There are various ways of working around the issue. One use you can
+use the GLSL functions <code class="notranslate" translate="no">floatBitsToInt</code>, <code class="notranslate" translate="no">floatBitsToUint</code>, <code class="notranslate" translate="no">IntBitsToFloat</code>,
+and <code class="notranslate" translate="no">UintBitsToFloat</code>.</p>
+<p>As an example <a href="../webgl-gpgpu-particles.html">the texture based version of the particle example</a>
+need to write to floating point textures. We could fix it so it doesn&#39;t require them with by
+declaring out texture to be type <code class="notranslate" translate="no">RG32I</code> (32 integer textures) but still
+upload floats.</p>
+<p>In the shader we&#39;d need to read the textures as integers and decode them
+to floats and then encode the result back into integers. For example</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+precision highp float;
+
+-uniform highp sampler2D positionTex;
+-uniform highp sampler2D velocityTex;
++uniform highp isampler2D positionTex;
++uniform highp isampler2D velocityTex;
+uniform vec2 canvasDimensions;
+uniform float deltaTime;
+
+out ivec4 outColor;
+
+vec2 euclideanModulo(vec2 n, vec2 m) {
+    return mod(mod(n, m) + m, m);
+}
+
+void main() {
+  // there will be one velocity per position
+  // so the velocity texture and position texture
+  // are the same size.
+
+  // further, we&#39;re generating new positions
+  // so we know our destination is the same size
+  // as our source
+
+  // compute texcoord from gl_FragCoord;
+  ivec2 texelCoord = ivec2(gl_FragCoord.xy);
+
+-  vec2 position = texelFetch(positionTex, texelCoord, 0).xy;
+-  vec2 velocity = texelFetch(velocityTex, texelCoord, 0).xy;
++  vec2 position = intBitsToFloat(texelFetch(positionTex, texelCoord, 0).xy);
++  vec2 velocity = intBitsToFloat(texelFetch(velocityTex, texelCoord, 0).xy);
+  vec2 newPosition = euclideanModulo(position + velocity * deltaTime, canvasDimensions);
+
+-  outColor = vec4(newPosition, 0, 1);
++  outColor = ivec4(floatBitsToInt(newPosition), 0, 1);
+}
+</code></pre>
+<p><a href="../webgl-gpgpu-particles-no-floating-point-textures.html">Here&#39;s a working example</a></p>
 </li>
 </ul>
 <p>I hope these examples helped you understand the key idea of GPGPU in WebGL
 is just the fact that WebGL reads from and writes to arrays of <strong>data</strong>,
 not pixels.</p>
-<p>They work similar to <code class="notranslate" translate="no">map</code> functions in that the function being called
+<p>Shaders work similar to <code class="notranslate" translate="no">map</code> functions in that the function being called
 for each value doesn&#39;t get to decide where its value will be stored.
 Rather that is decided from outside the function. In WebGL&#39;s case
 that&#39;s decided by how you setup what you&#39;re drawing. Once you call <code class="notranslate" translate="no">gl.drawXXX</code>

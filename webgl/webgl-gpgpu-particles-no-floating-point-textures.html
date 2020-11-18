@@ -65,7 +65,7 @@ function main() {
     vec2 velocity = intBitsToFloat(texelFetch(velocityTex, texelCoord, 0).xy);
     vec2 newPosition = euclideanModulo(position + velocity * deltaTime, canvasDimensions);
 
-    outColor = ivec4(floatToIntBits(newPosition);, 0, 1);
+    outColor = ivec4(floatBitsToInt(newPosition), 0, 1);
   }
   `;
 
@@ -202,7 +202,7 @@ function main() {
   // create a texture for the velocity and 2 textures for the positions.
   const velocityTex = createTexture(gl, velocities, particleTexWidth, particleTexHeight);
   const positionTex1 = createTexture(gl, positions, particleTexWidth, particleTexHeight);
-  const positionTex2 = createTexture(gl, null, particleTexWidth, particleTexHeight);
+  const positionTex2 = createTexture(gl, positions, particleTexWidth, particleTexHeight);
 
   function createFramebuffer(gl, tex) {
     const fb = gl.createFramebuffer();
