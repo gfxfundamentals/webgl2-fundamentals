@@ -1,6 +1,10 @@
 /* global require module */
 'use strict';
 
+process.on('unhandledRejection', up => {
+  throw up;
+});
+
 const fs = require('fs');
 const path = require('path');
 const liveEditor = require('@gfxfundamentals/live-editor');
