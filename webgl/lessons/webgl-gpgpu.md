@@ -2001,7 +2001,7 @@ is happening on the GPU
   WebGL2 adds the ability to just process a 1D array of arbitrary size via
   transform feedback.
   
-  If you're curious see [the same article for webgl1](https://webglfundamentals.org/webgl/lessons/webgl-gpgpu.html] to see how all of these were done using only the ability
+  If you're curious see [the same article for webgl1](https://webglfundamentals.org/webgl/lessons/webgl-gpgpu.html) to see how all of these were done using only the ability
   to output to textures. Of course with a little thought that should be obvious.
 
   WebGL2 versions using textures instead of transform feedback are available as well
