@@ -35,7 +35,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <html lang="{{langInfo.langCode}}">
 <head>
 <meta charset="utf-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="description" content="Modern WebGL tutorials that teach WebGL from basic principles">
@@ -79,8 +78,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   {{{langInfo.carousel}}}
 }
 </script>
-
-
 </head>
 <body>
 <div class="webgl_navbar">
@@ -102,8 +99,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 {{{include "build/templates/repobanner.template"}}}
 <iframe class="background" src="/webgl/background.html"></iframe>
 </body>
+<script>
+const settings = {
+  contribTemplate: {{{stringify names="langInfo.contribTemplate,originalLangInfo.contribTemplate"}}},
+  owner: {{{stringify names="settings.owner"}}},
+  repo: {{{stringify names="settings.repo"}}},
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 {{{include "build/templates/analytics.template" }}}
 </html>
 

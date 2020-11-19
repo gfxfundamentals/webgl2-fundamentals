@@ -56,8 +56,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <meta name="twitter:description" content="{{description}}">
 <meta name="twitter:image:src" content="{{screenshot}}">
 
-{{{include "build/templates/langs-meta.template"}}}
-
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
@@ -101,6 +99,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <link rel="stylesheet" href="/webgl/lessons/{{langInfo.baseDirname}}/lang.css">
 {{/ifexists}}
 <link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+{{{include "build/templates/langs-meta.template"}}}
+
 </head>
 <body>
 {{{include "build/templates/header.template"}}}
@@ -144,9 +145,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: {{{stringify names="langInfo.contribTemplate,originalLangInfo.contribTemplate"}}},
+  owner: {{{stringify names="settings.owner"}}},
+  repo: {{{stringify names="settings.repo"}}},
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 {{{include "build/templates/analytics.template" }}}
 </html>
 
