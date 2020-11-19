@@ -1,4 +1,5 @@
-/* global require module */
+/*eslint-env node*/
+
 'use strict';
 
 process.on('unhandledRejection', up => {
@@ -95,6 +96,7 @@ module.exports = function(grunt) {
         files: [
           'webgl/**',
           '3rdparty/**',
+          'node_modules/@gfxfundamentals/live-editor/src/**',
         ],
         tasks: ['copy'],
         options: {
@@ -116,10 +118,17 @@ module.exports = function(grunt) {
   let changedFiles = {};
   const onChange = grunt.util._.debounce(function() {
     grunt.config('copy.main.files', Object.keys(changedFiles).filter(noMds).map((file) => {
-      return {
+      const copy = {
         src: file,
         dest: 'out/',
       };
+      if (file.indexOf('live-editor') >= 0) {
+        copy.cwd = `${path.dirname(file)}/`;
+        copy.src = path.basename(file);
+        copy.expand = true;
+        copy.dest = 'out/webgl/resources/';
+      }
+      return copy;
     }));
     grunt.config('buildlesson.main.files', Object.keys(changedFiles).filter(mdsOnly).map((file) => {
       return {
@@ -141,6 +150,8 @@ module.exports = function(grunt) {
     siteName: 'WebGL2Fundamentals',
     siteThumbnail: 'webgl2fundamentals.jpg',  // in rootFolder/lessons/resources
     templatePath: 'build/templates',
+    owner: 'gfxfundamentals',
+    repo: 'webgl2-fundamentals',
     thumbnailOptions: {
       thumbnailBackground: 'webgl2fundamentals.jpg',
       text: [
@@ -174,8 +185,8 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('buildlessons', function() {
-    var buildStuff = require('@gfxfundamentals/lesson-builder');
-    var finish = this.async();
+    const buildStuff = require('@gfxfundamentals/lesson-builder');
+    const finish = this.async();
     buildStuff(buildSettings).finally(finish);
   });
 
