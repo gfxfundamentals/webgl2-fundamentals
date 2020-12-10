@@ -428,7 +428,7 @@ data in the same texture.
 of varyings in a vertex shader to one or more buffers.
 
 The advantage to using transform feedback is the output is 1D
-so it's probably easier to reason about. It's even closed to `map` from JavaScript.
+so it's probably easier to reason about. It's even closer to `map` from JavaScript.
 
 Let's take in 2 arrays of values and output their sum, their difference,
 and their product. Here's the vertex shader
@@ -502,7 +502,7 @@ if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
 ```
 
 `gl.transformFeedbackVaryings` takes 3 arguments. The program, an array of the names
-of the varyings we want to write in the order you want the written. 
+of the varyings we want to write in the order you want them written. 
 If you did have a fragment shader that actually did
 something then maybe some of your varyings are only for the fragment shader and so
 don't need to be written. In our case we will write all of our varyings so we pass
@@ -519,7 +519,7 @@ each output will be written to the a different buffer.
 
 So, like other examples we need to setup buffers for our input attributes
 
-```
+```js
 const aLoc = gl.getAttribLocation(program, 'a');
 const bLoc = gl.getAttribLocation(program, 'b');
 
@@ -593,10 +593,10 @@ When we're done the "transform feedback" we created has state like this
 
 <img src="resources/transform-feedback-diagram.png" style="width: 625px;" class="webgl_center">
 
-There is also a function `bindBufferRange` that lets us specify a sub range with a buffer where
+There is also a function `bindBufferRange` that lets us specify a sub range within a buffer where
 we will write to but we won't use that here.
 
-So to render we do this
+So to execute the shader we do this
 
 ```js
 gl.useProgram(program);
@@ -649,7 +649,7 @@ You can see it worked. We got the GPU to compute the sum, difference, and produc
 of the 'a' and 'b' values we passed in.
 
 Note: You might find [this state diagram transform feedback example](https://webgl2fundamentals.org/webgl/lessons/resources/webgl-state-diagram.html?exampleId=transform-feedback) helpful in visualizing what a "transform feedback"
-is. It's not the same example as above though.
+is. It's not the same example as above though. The vertex shader it uses with transform feedback generates positions and colors for a circle of points.
 
 ## First example: particles
 
