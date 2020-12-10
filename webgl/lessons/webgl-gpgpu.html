@@ -605,7 +605,7 @@ data in the same texture.</p>
 <p>&quot;Transform Feedback&quot; is a fancy name for the ability to write the output
 of varyings in a vertex shader to one or more buffers.</p>
 <p>The advantage to using transform feedback is the output is 1D
-so it&#39;s probably easier to reason about. It&#39;s even closed to <code class="notranslate" translate="no">map</code> from JavaScript.</p>
+so it&#39;s probably easier to reason about. It&#39;s even closer to <code class="notranslate" translate="no">map</code> from JavaScript.</p>
 <p>Let&#39;s take in 2 arrays of values and output their sum, their difference,
 and their product. Here&#39;s the vertex shader</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
@@ -665,7 +665,7 @@ if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
 }
 </code></pre>
 <p><code class="notranslate" translate="no">gl.transformFeedbackVaryings</code> takes 3 arguments. The program, an array of the names
-of the varyings we want to write in the order you want the written. 
+of the varyings we want to write in the order you want them written. 
 If you did have a fragment shader that actually did
 something then maybe some of your varyings are only for the fragment shader and so
 don&#39;t need to be written. In our case we will write all of our varyings so we pass
@@ -679,7 +679,7 @@ would be <code class="notranslate" translate="no">sum0, difference0, product0, s
 into a single buffer. We&#39;re using <code class="notranslate" translate="no">SEPARATE_ATTRIBS</code> though so instead
 each output will be written to the a different buffer.</p>
 <p>So, like other examples we need to setup buffers for our input attributes</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const aLoc = gl.getAttribLocation(program, &#39;a&#39;);
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const aLoc = gl.getAttribLocation(program, &#39;a&#39;);
 const bLoc = gl.getAttribLocation(program, &#39;b&#39;);
 
 // Create a vertex array object (attribute state)
@@ -714,7 +714,8 @@ const b = [3, 6, 9, 12, 15, 18];
 // put data in buffers
 const aBuffer = makeBufferAndSetAttribute(gl, new Float32Array(a), aLoc);
 const bBuffer = makeBufferAndSetAttribute(gl, new Float32Array(b), bLoc);
-</code></pre><p>Then we need to setup a &quot;transform feedback&quot;. A &quot;transform feedback&quot; is an object
+</code></pre>
+<p>Then we need to setup a &quot;transform feedback&quot;. A &quot;transform feedback&quot; is an object
 that contains the state of the buffers we will write to. Where as an <a href="webgl-attributes.html">vertex array</a>
 specifies the state of all the input attributes, a &quot;transform feedback&quot; contains the
 state of all the output attributes.</p>
@@ -743,9 +744,9 @@ will write to. Outputs 0, 1, 2 correspond to the names we passed to <code class=
 when we linked the program.</p>
 <p>When we&#39;re done the &quot;transform feedback&quot; we created has state like this</p>
 <p><img src="resources/transform-feedback-diagram.png" style="width: 625px;" class="webgl_center"></p>
-<p>There is also a function <code class="notranslate" translate="no">bindBufferRange</code> that lets us specify a sub range with a buffer where
+<p>There is also a function <code class="notranslate" translate="no">bindBufferRange</code> that lets us specify a sub range within a buffer where
 we will write to but we won&#39;t use that here.</p>
-<p>So to render we do this</p>
+<p>So to execute the shader we do this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.useProgram(program);
 
 // bind our input attribute state for the a and b buffers
@@ -794,7 +795,7 @@ function printResults(gl, buffer, label) {
 <p>You can see it worked. We got the GPU to compute the sum, difference, and product
 of the &#39;a&#39; and &#39;b&#39; values we passed in.</p>
 <p>Note: You might find <a href="https://webgl2fundamentals.org/webgl/lessons/resources/webgl-state-diagram.html?exampleId=transform-feedback">this state diagram transform feedback example</a> helpful in visualizing what a &quot;transform feedback&quot;
-is. It&#39;s not the same example as above though.</p>
+is. It&#39;s not the same example as above though. The vertex shader it uses with transform feedback generates positions and colors for a circle of points.</p>
 <h2 id="first-example-particles">First example: particles</h2>
 <p>Let&#39;s say you have a very simple particle system.
 Every particle just has a position and a velocity and
