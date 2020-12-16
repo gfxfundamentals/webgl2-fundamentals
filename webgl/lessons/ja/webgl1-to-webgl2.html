@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/ja/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/ja/webgl1-to-webgl2.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of Gregg Tavares. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of Gregg Tavares. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,25 +36,77 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL2 from WebGL1" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="How to move from WebGL1 to WebGL2" />
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ja/webgl1-to-webgl2.html" />
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL2 from WebGL1" />
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ja/webgl1-to-webgl2.html" />
-<meta name="twitter:description" content="How to move from WebGL1 to WebGL2" />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="description" content="WebGL1からWebGL2への移行の仕方">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl1-to-webgl2_ja.jpg">
+
+<meta property="og:title" content="WebGL1からWebGL2への移行">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl1-to-webgl2_ja.jpg">
+<meta property="og:description" content="WebGL1からWebGL2への移行の仕方">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ja/webgl1-to-webgl2.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL1からWebGL2への移行">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ja/webgl1-to-webgl2.html">
+<meta name="twitter:description" content="WebGL1からWebGL2への移行の仕方">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl1-to-webgl2_ja.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ja/webgl1-to-webgl2.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl1-to-webgl2_ja.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ja/webgl1-to-webgl2.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/ja/webgl1-to-webgl2.html",
+      "inLanguage":"ja",
+      "name":"WebGL1からWebGL2への移行",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/ja/webgl1-to-webgl2.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL2 from WebGL1</title>
+<title>WebGL1からWebGL2への移行</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl1-to-webgl2.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl1-to-webgl2.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl1-to-webgl2.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl1-to-webgl2.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl1-to-webgl2.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl1-to-webgl2.html">
+
+
+
+
 </head>
 <body>
 <div class="webgl_navbar">
@@ -177,16 +231,347 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 from WebGL1</h1>
+    <h1>WebGL1からWebGL2への移行</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">ごめんなさい、この記事はまだ翻訳されていません。
+      <p>WebGL2はWebGL1と <strong>ほぼ</strong> 100%の下位互換性を持っています。
+WebGL1を使用してる場合、<strong>主な</strong>違いは2つだけです。</p>
+<ol>
+<li><p><code class="notranslate" translate="no">getContext</code> を呼び出す際に <code class="notranslate" translate="no">&quot;webgl&quot;</code> の代わりに <code class="notranslate" translate="no">&quot;webgl2&quot;</code> を使用します</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> var gl = someCanvas.getContext(&quot;webgl2&quot;);
+</code></pre><p> 注意: &quot;experimental-webgl2&quot; はありません。
+ プレフィックスに依存するためブラウザベンダーが集まり、
+ これ以上プレフィックスをつけるのはやめようという事になりました。</p>
+</li>
+<li><p>多くの拡張機能はWebGL2の標準的な部分で拡張機能としては利用できません</p>
+<p> 例えば頂点配列オブジェクトの <code class="notranslate" translate="no">OES_vertex_array_object</code> はWebGL2の標準機能です。
+ 例えばWebGL1では次のようになります。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> var ext = gl.getExtension(&quot;OES_vertex_array_object&quot;);
+ if (!ext) {
+   // tell user they don&#39;t have the required extension or work around it
+ } else {
+   var someVAO = ext.createVertexArrayOES();
+ }
+</code></pre><p> WebGL2では次のようにします。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> var someVAO = gl.createVertexArray();
+</code></pre><p> WebGL2ではこの関数が存在しています。</p>
+</li>
+</ol>
+<p>WebGL2の機能を利用するためには、いくつか変更を行う必要があります。</p>
+<h2 id="glsl-300-es-">GLSL 300 esへの切り替え</h2>
+<p>最大の変更点はシェーダーをGLSL 3.00 ESにアップグレードです。
+そのため、シェーダーの最初の行に以下を追加します。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+</code></pre><p><strong>注意：これは最初の行でなければなりません。コメントも空白もこの行の前にありません。</strong></p>
+<p>言い換えると以下は良くないです。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// BAD!!!!                +---There&#39;s a new line here!
+// BAD!!!!                V
+var vertexShaderSource = `
+#version 300 es
+..
+`;
+</code></pre><p>これもヤバいです。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;!-- BAD!!                   V&lt;- there&#39;s a new line here
+&lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;
+#version 300 es
+...
+&lt;/script&gt;
+</code></pre><p>これはOKです。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var vertexShaderSource = `#version 300 es
+...
+`;
+</code></pre><p>これもOKです。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;#version 300 es
+...
+&lt;/script&gt;
+</code></pre><p>または、シェーダーのコンパイル関数で最初の空白行を取り除く事もできます。</p>
+<h3 id="glsl-100-glsl-300-es-">GLSL 100からGLSL 300 esへの変更点</h3>
+<p>上記のバージョン文字列を追加するだけでなく、シェーダーにいくつかの変更を加える必要があります。</p>
+<h4 id="-attribute-in-"><code class="notranslate" translate="no">attribute</code> は <code class="notranslate" translate="no">in</code> へ</h4>
+<p>GLSL 100では以下でした。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">attribute vec4 a_position;
+attribute vec2 a_texcoord;
+attribute vec3 a_normal;
+</code></pre><p>GLSL 300 esでは次のようになります。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">in vec4 a_position;
+in vec2 a_texcoord;
+in vec3 a_normal;
+</code></pre><h4 id="-varying-in-out-"><code class="notranslate" translate="no">varying</code> から <code class="notranslate" translate="no">in</code> / <code class="notranslate" translate="no">out</code> へ</h4>
+<p>GLSL 100では頂点シェーダーとフラグメントシェーダーの両方でヴァリイングを宣言しました。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">varying vec2 v_texcoord;
+varying vec3 v_normal;
+</code></pre><p>GLSL 300 es の頂点シェーダーでの次のようになります。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">out vec2 v_texcoord;
+out vec3 v_normal;
+</code></pre><p>フラグメントシェーダーは次のようになります。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">in vec2 v_texcoord;
+in vec3 v_normal;
+</code></pre><h4 id="-gl_fragcolor-">もう <code class="notranslate" translate="no">gl_FragColor</code> はありません</h4>
+<p>GLSL 100ではフラグメントシェーダーは特別な変数 <code class="notranslate" translate="no">gl_FragColor</code> でシェーダーの出力しました。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl_FragColor = vec4(1, 0, 0, 1);  // red
+</code></pre><p>GLSL 300 esでは出力変数を自分で宣言し、シェーダーの出力を設定します。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">out vec4 myOutputColor;
 
-[翻訳を歓迎します](https://github.com/gfxfundamentals/webgl2-fundamentals)! 😄
+void main() {
+   myOutputColor = vec4(1, 0, 0, 1);  // red
+}
+</code></pre><p>注意点: 好きな変数名を選べますが、<code class="notranslate" translate="no">gl_</code> で始まる変数名は<strong>できない</strong>ので <code class="notranslate" translate="no">out vec4 gl_FragColor</code> とする事はできません。</p>
+<h4 id="-texture2d-texture-etc-"><code class="notranslate" translate="no">texture2D</code> -&gt; <code class="notranslate" translate="no">texture</code> etc.</h4>
+<p>GLSL 100では次のようにテクスチャから色を取得できます。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler2D u_some2DTexture;
+uniform samplerCube u_someCubeTexture;
 
-[英語の元記事はこちら](/webgl/lessons/webgl1-to-webgl2.html).
-</code></pre>
+...
+
+vec4 color1 = texture2D(u_some2DTexture, ...);
+vec4 color2 = textureCube(u_someCubeTexture, ...);
+</code></pre><p>GLSL 300esではテクスチャ関数はサンプラーのタイプで何をすべきかを知っています。
+そのため、今はただの <code class="notranslate" translate="no">texture</code> になりました。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler2D u_some2DTexture;
+uniform samplerCube u_someCubeTexture;
+
+...
+
+vec4 color1 = texture(u_some2DTexture, ...);
+vec4 color2 = texture(u_someCubeTexture, ...);
+</code></pre><h2 id="webgl2-">WebGL2の標準機能</h2>
+<p>WebGL1では多くの機能はオプションの拡張機能でした。
+WebGL2では以下の機能は全て標準機能です。</p>
+<ul>
+<li>深度テクスチャ (<a href="https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/">WEBGL_depth_texture</a>)</li>
+<li>浮動小数点テクスチャ (<a href="https://www.khronos.org/registry/webgl/extensions/OES_texture_float/">OES_texture_float</a>/<a href="https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/">OES_texture_float_linear</a>)</li>
+<li>ハーフ浮動小数点テクスチャ (<a href="https://www.khronos.org/registry/webgl/extensions/OES_texture_half_float/">OES_texture_half_float</a>/<a href="https://www.khronos.org/registry/webgl/extensions/OES_texture_half_float_linear/">OES_texture_half_float_linear</a>)</li>
+<li>頂点配列オブジェクト (<a href="https://www.khronos.org/registry/webgl/extensions/OES_vertex_array_object/">OES_vertex_array_object</a>)</li>
+<li>標準的なデリバティブ (<a href="https://www.khronos.org/registry/webgl/extensions/OES_standard_derivatives/">OES_standard_derivatives</a>)</li>
+<li>インスタンス描画 (<a href="https://www.khronos.org/registry/webgl/extensions/ANGLE_instanced_arrays/">ANGLE_instanced_arrays</a>)</li>
+<li>UNSIGNED_INTインデックス (<a href="https://www.khronos.org/registry/webgl/extensions/OES_element_index_uint/">OES_element_index_uint</a>)</li>
+<li><code class="notranslate" translate="no">gl_FragDepth</code> の設定 (<a href="https://www.khronos.org/registry/webgl/extensions/EXT_frag_depth/">EXT_frag_depth</a>)</li>
+<li>ブレンド式 MIN/MAX (<a href="https://www.khronos.org/registry/webgl/extensions/EXT_blend_minmax/">EXT_blend_minmax</a>)</li>
+<li>ダイレクトテクスチャLODアクセス (<a href="https://www.khronos.org/registry/webgl/extensions/EXT_shader_texture_lod/">EXT_shader_texture_lod</a>)</li>
+<li>複数の描画バッファ (<a href="https://www.khronos.org/registry/webgl/extensions/WEBGL_draw_buffers/">WEBGL_draw_buffers</a>)</li>
+<li>頂点シェーダーのテクスチャアクセス</li>
+</ul>
+<h2 id="2-">2のべき乗以外のテクスチャサポート</h2>
+<p>WebGL1では、2のべき乗でないテクスチャはミップマップを持てませんでした。
+WebGL2ではこの制限は削除されています。
+2のべき乗でないテクスチャも2のべき乗のテクスチャと同じように動作します。</p>
+<h2 id="-">浮動小数点フレームバッファアタッチメント</h2>
+<p>WebGL1では浮動小数点テクスチャへのレンダリングのサポートをチェックするために、
+まず <code class="notranslate" translate="no">OES_texture_float</code> エクステンションをチェックして有効にします。
+そして、浮動小数点テクスチャを作成してフレームバッファにアタッチし、<code class="notranslate" translate="no">gl.checkFramebufferStatus</code> を呼び出して <code class="notranslate" translate="no">gl.FRAMEBUFFER_COMPLETE</code> が返されたかどうかを確認します。</p>
+<p>WebGL2では <code class="notranslate" translate="no">EXT_color_buffer_float</code> をチェックして有効にしないと浮動小数点テクスチャに対して <code class="notranslate" translate="no">gl.checkFramebufferStatus</code> が <code class="notranslate" translate="no">gl.FRAMEBUFFER_COMPLETE</code> を返さなくなります。</p>
+<p>これは <code class="notranslate" translate="no">HALF_FLOAT</code> フレームバッファアタッチメントにも当てはまる事に注意して下さい。</p>
+<blockquote>
+<p>これはWebLG1仕様の<em>バグ</em>でした。
+何が起こったかというとWebGL1に <code class="notranslate" translate="no">OES_texture_float</code> が追加されブラウザに実装されました。
+レンダリングに使用するための正しい方法はテクスチャを作成しフレームバッファにアタッチし、その状態をチェックする事だと思われていました。
+その後、仕様書によるとフラグメントシェーダーに書かれた色は常に0〜1にクランプされているので、それでは十分ではないとある人が指摘しました。
+<code class="notranslate" translate="no">EXT_color_buffer_float</code> はその制限を解除しますが、WebGLはすでに1年ほど前からブラウザに実装されてたので、
+制限を強制するために多くのWebサイトが壊れていたでしょう。
+WebGL2でこれを修正できたので、浮動小数点テクスチャをフレームバッファアタッチメントとして使うには <code class="notranslate" translate="no">EXT_color_buffer_float</code> を有効にする必要があります。</p>
+<p>注意点：私の知る限りで2017年3月現在、浮動小数点テクスチャのレンダリングをサポートしているモバイルデバイスは非常に少ないです。</p>
+</blockquote>
+<h2 id="-">頂点配列オブジェクト</h2>
+<p>上記の全ての機能の中で、個人的に常に使用すべき機能は頂点配列オブジェクトです。
+何をしようとしているのかによりますが、特に頂点配列オブジェクトは常に使用されるべき基本的な機能に思えます。</p>
+<p>頂点配列オブジェクトのないWebGL1では、属性に関するデータは全てグローバルなWebGLの状態でした。
+それはこのように想像できます。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var glState = {
+  attributeState: {
+    ELEMENT_ARRAY_BUFFER: null,
+    attributes: [
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+    ],
+  },
+}
+</code></pre><p><code class="notranslate" translate="no">gl.vertexAttribPointer</code> や <code class="notranslate" translate="no">gl.enableVertexAttribArray</code>、<code class="notranslate" translate="no">gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ??)</code> のような関数を呼び出すと、
+グローバル状態に影響を与えます。
+描画前に全ての属性を設定する必要があります。
+また、インデックスデータを描画する場合は <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code> を設定します。</p>
+<p>頂点配列オブジェクトでは上記の <code class="notranslate" translate="no">attributeState</code> 全体が <em>頂点配列</em> です。</p>
+<p>つまり</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var someVAO = gl.createVertexArray();
+</code></pre><p><code class="notranslate" translate="no">attributeState</code> と呼ばれるものの新しいインスタンスを作成します。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(someVAO);
+</code></pre><p>以下に相当するものです。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">glState.attributeState = someVAO;
+</code></pre><p>つまり、初期化時に全ての属性を設定する必要があります。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// at init time
+for each model / geometry / ...
+  var vao = gl.createVertexArray()
+  gl.bindVertexArray(vao);
+  for each attribute
+    gl.enableVertexAttribArray(...);
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufferForAttribute);
+    gl.vertexAttribPointer(...);
+  if indexed geometry
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+  gl.bindVertexArray(null);
+</code></pre><p>レンダリング時に特定のジオメトリを使用するために必要なのは次の通りです。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(vaoForGeometry);
+</code></pre><p>WebGL1では上記の初期化ループはレンダリング時にありました。
+これは大幅なスピードアップです。</p>
+<p>しかし、いくつかの注意点があります。</p>
+<ol>
+<li><p>属性のロケーションはプログラムに依存します</p>
+<p> 複数のプログラムで同じジオメトリを使用する場合は、属性のロケーションを手動で割り当てる事を検討して下さい。
+ GLSL 300 esではシェーダーでこれができます。</p>
+<p> 例:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> layout(location = 0) in vec4 a_position;
+ layout(location = 1) in vec2 a_texcoord;
+ layout(location = 2) in vec3 a_normal;
+ layout(location = 3) in vec4 a_color;
+</code></pre><p> 4つの属性のロケーションを設定します。</p>
+<p> また、<code class="notranslate" translate="no">gl.linkProgram</code> を呼び出す前に <code class="notranslate" translate="no">gl.bindAttribLocation</code> を呼び出す事でWebGL1でも行う事もできます。</p>
+<p> 例:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> gl.bindAttribLocation(someProgram, 0, &quot;a_position&quot;);
+ gl.bindAttribLocation(someProgram, 1, &quot;a_texcoord&quot;);
+ gl.bindAttribLocation(someProgram, 2, &quot;a_normal&quot;);
+ gl.bindAttribLocation(someProgram, 3, &quot;a_color&quot;);
+</code></pre><p> つまり、複数のシェーダープログラム間で強制的に互換性を持たせる事ができます。
+ プログラムが全ての属性を必要としない場合でも、必要な属性は同じロケーションに割り当てられます。</p>
+<p> 同じジオメトリを使用している場合、またはWebGL1でVAOを使用しない場合、レンダリング時に常に属性を設定する必要があります。
+ これを行わないとシェーダープログラムごとに異なるVAOが必要です。</p>
+<p> 注意点: 上記の2つのメソッドでは、私は <code class="notranslate" translate="no">gl.bindAttribLocation</code> を使う事にしています。
+ 私のコードでは <code class="notranslate" translate="no">layout(location = ? )</code> を使用するメソッドは全てのシェーダーで使用しなければならないので、
+ D.R.Y.の観点から <code class="notranslate" translate="no">gl.bindAttribLocation</code> の方が良いように思います。
+ シェーダージェネレーターを使っていたら違いはないかもしれません。</p>
+</li>
+<li><p>使い終わったらVAOをアンバインドする</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> gl.bindVertexArray(null);
+</code></pre><p> これは私の経験から来たものです。
+ 上記を見ると <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code> の状態は頂点配列の一部です。</p>
+<p> そこでこの問題にぶつかりました。
+ ジオメトリを作成し、そのジオメトリ用のVAOを作成して、属性と <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code> を設定しました。
+ そして、さらにいくつかのジオメトリを作成しました。
+ そのジオメトリがインデックスを設定すると、前のVAOバインドが残っていたため、
+ インデックスを設定すると前のVAOの <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code> バインドに影響が出てしまいました。
+ デバッグに数時間かかりました。</p>
+<p> だから私からの提案はVAOバウンドが終わったら絶対に放置しない事です。
+ 次のVAOをすぐにバインドするか、バインドが終わったら <code class="notranslate" translate="no">null</code> をバインドします。</p>
+</li>
+</ol>
+<p>上記で述べたようにWebGL1の拡張機能の多くはWebGL2の標準機能です。
+WebGL1で拡張機能を使用していた場合は、WebGL2の拡張機能としてではなく、コードを変更する必要があります。
+以下を参照して下さい。</p>
+<p>2つの特別な対応が必要です。</p>
+<ol>
+<li><p><code class="notranslate" translate="no">OES_texture_float</code> と浮動小数点テクスチャ</p>
+<p> 浮動小数点テクスチャはWebGL2の標準機能ですが</p>
+<ul>
+<li><p>浮動小数点テクスチャをフィルタリング可能になったのは、拡張機能の <code class="notranslate" translate="no">OES_texture_float_linear</code> です。</p>
+</li>
+<li><p>浮動小数点テクスチャにレンダリング可能になったのは、拡張機能の <code class="notranslate" translate="no">EXT_color_buffer_float</code> です。</p>
+</li>
+<li><p>浮遊点テクスチャの作成は別物です。
+WebGL2の内部フォーマットである <code class="notranslate" translate="no">RGBA32F</code> や <code class="notranslate" translate="no">R32F</code> などのいずれかを使用する必要があります。
+WebGL1の <code class="notranslate" translate="no">OES_texture_float</code> 拡張モジュールとは異なり、内部フォーマットは <code class="notranslate" translate="no">texImage2D</code> に渡された <code class="notranslate" translate="no">type</code> から推測されます。</p>
+</li>
+</ul>
+</li>
+<li><p><code class="notranslate" translate="no">WEBGL_depth_texture</code> と深度テクスチャ</p>
+<p> 先ほどの違いと同様にWebGL2で深度テクスチャを作成するには、内部フォーマット <code class="notranslate" translate="no">DEPTH_COMPONENT16</code>、<code class="notranslate" translate="no">DEPTH_COMPONENT24</code> のいずれかを使用しなければなりません。
+ <code class="notranslate" translate="no">DEPTH_COMPONENT32F</code>、<code class="notranslate" translate="no">DEPTH24_STENCIL8</code>、<code class="notranslate" translate="no">DEPTH32F_STENCIL8</code> のように WEBGL1の <code class="notranslate" translate="no">WEBGL_depth_texture</code> エクステンションでは <code class="notranslate" translate="no">DEPTH_COMPONENT</code> と <code class="notranslate" translate="no">DEPTH_STENCIL_COMPONENT</code> を使用していました。</p>
+</li>
+</ol>
+<p>以上、個人的にWebGL1からWebGL2に切り替える際に注意すべきショートリストでした。
+<a href="webgl2-whats-new.html">WebGL2でできる事はもっとたくさんあります</a>。</p>
+<div class="webgl_bottombar">
+<h3>WebGL1の拡張機能をWebGL2のように見せる</h3>
+<p>WebGL1での拡張機能はWebGL2ではメインコンテキスト上になりました。例えばWebGLでは以下のようになります。</p>
+<pre class="prettyprint">
+var ext = gl.getExtension("OES_vertex_array_object");
+if (!ext) {
+  // tell user they don't have the required extension or work around it
+} else {
+  var someVAO = ext.createVertexArrayOES();
+}
+</pre>
+<p>
+それに対してWebGL2では以下のようになります。
+</p>
+<pre class="prettyprint">
+var someVAO = gl.createVertexArray();
+</pre>
+<p>WebGL1とWebGL2の両方で実行したい場合は、いくつかの課題があります。</p>
+<p>1つの回避策は、初期化時にWebGL1の拡張機能をWebGLコンテキストにコピーする事です。そうすると残りのコードをそのままにできます。以下が例です。
+</p>
+<pre class="prettyprint">
+const gl = someCanvas.getContext("webgl");
+const haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object");
+
+function getAndApplyExtension(gl, name) {
+  const ext = gl.getExtension(name);
+  if (!ext) {
+    return null;
+  }
+  const fnSuffix = name.split("_")[0];
+  const enumSuffix = '_' + fnSuffix;
+  for (const key in ext) {
+    const value = ext[key];
+    const isFunc = typeof (value) === 'function';
+    const suffix = isFunc ? fnSuffix : enumSuffix;
+    let name = key;
+    // examples of where this is not true are WEBGL_compressed_texture_s3tc
+    // and WEBGL_compressed_texture_pvrtc
+    if (key.endsWith(suffix)) {
+      name = key.substring(0, key.length - suffix.length);
+    }
+    if (gl[name] !== undefined) {
+      if (!isFunc && gl[name] !== value) {
+        console.warn("conflict:", name, gl[name], value, key);
+      }
+    } else {
+      if (isFunc) {
+        gl[name] = function(origFn) {
+          return function() {
+            return origFn.apply(ext, arguments);
+          };
+        }(value);
+      } else {
+        gl[name] = value;
+      }
+    }
+  }
+  return ext;
+}
+</pre>
+<p>コードが両方で同じように動作するようになりました。例:</p>
+<pre class="prettyprint">
+if (haveVAOs) {
+  var someVAO = gl.createVertexArray();
+  ...
+} else {
+  ... do whatever for no VAOs.
+}
+</pre>
+<p>代替案は次のような事をしなければならないでしょう。</p>
+<pre class="prettyprint">
+if (haveVAOs) {
+  if (isWebGL2)
+     someVAO = gl.createVertexArray();
+  } else {
+     someVAO = vaoExt.createVertexArrayOES();
+  }
+  ...
+} else {
+  ... do whatever for no VAOs.
+}
+</pre>
+<p>注意点： 特に頂点配列オブジェクトの場合、<a href="https://github.com/greggman/oes-vertex-array-object-polyfill">ポリフィルを使用する</a>事をお勧めします。
+VAOはほとんどのシステムで利用可能です。
+VAOが利用可能ではない場合、ポリフィルが処理しコードがシンプルになります。
+</p>
+</div>
+
     </div>
     <div class="lesson-sidebar">
         <select class="language">
@@ -199,7 +584,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>基本</li>
+        <div id="toc">
+          <ul>  <li>基本</li>
         <ul>
           <li><a href="/webgl/lessons/ja/webgl-getting-webgl2.html">WebGL2の使い方</a></li>
 <li><a href="/webgl/lessons/ja/webgl-fundamentals.html">基本</a></li>
@@ -209,9 +595,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </ul>
   <li>WebGL2 vs WebGL1</li>
         <ul>
-          <li><a href="/webgl/lessons/ja/webgl2-whats-new.html">What's new in WebGL2</a></li>
-<li><a href="/webgl/lessons/ja/webgl1-to-webgl2.html">Moving from WebGL1 to WebGL2</a></li>
-<li><a href="/webgl/lessons/ja/webgl1-to-webgl2-fundamentals.html">Differences from WebGLFundamentals.org to WebGL2Fundamentals.org</a></li>
+          <li><a href="/webgl/lessons/ja/webgl2-whats-new.html">WebGL2の新機能</a></li>
+<li><a href="/webgl/lessons/ja/webgl1-to-webgl2.html">WebGL1からWebGL2への移行</a></li>
+<li><a href="/webgl/lessons/ja/webgl1-to-webgl2-fundamentals.html">WebGLFundamentals.orgとWebGL2Fundamentals.orgとの違い</a></li>
         </ul>
   <li>画像処理</li>
         <ul>
@@ -342,13 +728,51 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://twgljs.org">TWGL, A tiny WebGL helper library</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+    <div>Questions? <a href="https://stackoverflow.com/questions/tagged/webgl2">Ask on stackoverflow</a>.</div>
+    <div>Issue/Bug? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Create an issue on github</a>.</div>
+    <div class="lesson-comment-notes">
+       Use <b>&lt;pre&gt;&lt;code&gt;</b>code goes here<b>&lt;/code&gt;&lt;/pre&gt;</b> for code blocks
+    </div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL1からWebGL2への移行';
+            var disqus_title = 'WebGL1からWebGL2への移行';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: "Thank you <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>for <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 <script>
 (function() {
   if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {

@@ -386,7 +386,7 @@ void main() {
 }
 `;
 </code></pre><p>ほとんどの3Dエンジンでは様々なタイプのテンプレートや文字列の連結を使用し、動的にGLSLシェーダーを生成しています。
-このサイトのサンプルでは、複雑なものはないので実行時にGLSLを生成する必要はありません。</p>
+このサイトのサンプルでは、複雑でないので実行時に動的にGLSLを生成する必要はありません。</p>
 <blockquote>
 <p>注意: <code class="notranslate" translate="no">#version 300 es</code> <strong>必ずシェーダーの最初の行にして下さい</strong>。
 最初の行にコメントや空行を入れてはいけません。
@@ -427,11 +427,11 @@ var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 </code></pre><p>そして、上記の関数を呼び出します。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var program = createProgram(gl, vertexShader, fragmentShader);
 </code></pre><p>GPU上でGLSLプログラムを作成したのでデータを送ります。
-WebGL APIの大部分は、GLSLプログラムにデータを送り状態を設定する事です。
+WebGL APIの大部分は、GLSLプログラムにデータを送り状態を設定します。
 この場合、GLSLプログラムへの入力は <code class="notranslate" translate="no">a_position</code> でこれが属性です。
 最初にgl.getAttribLocationで作成したプログラムの属性の位置を調べます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
-</code></pre><p>属性の位置（およびユニフォームの位置）を調べるコードは、レンダーループ内でなく初期化中に行うべきです。</p>
+</code></pre><p>属性の位置（およびユニフォームの位置）を調べるコードは、描画ループ内でなく初期化中に行うべきです。</p>
 <p>属性はバッファからデータを取得し、バッファを作成します。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var positionBuffer = gl.createBuffer();
 </code></pre><p>WebGLでは、グローバルバインドポイント上で多くのWebGLリソースを操作できます。
@@ -448,7 +448,7 @@ var positions = [
   0.7, 0,
 ];
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-</code></pre><p>ここでは色々な事が行われています。
+</code></pre><p>ここでは様々な事が行われています。
 まず、JavaScriptの配列の <code class="notranslate" translate="no">positions</code> があります。
 WebGLでは型付けのデータが必要です。
 <code class="notranslate" translate="no">new Float32Array(positions)</code> は32ビットの浮動小数点数の新しい配列を作成し、 <code class="notranslate" translate="no">positions</code> の値をコピーします。
@@ -465,7 +465,7 @@ WebGLは、このヒントを使って特定のものを最適化できます。
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(vao);
 </code></pre><p>ここで頂点配列の属性を設定します。まず、属性を有効にします。
 そして、バッファからデータを取得します。
-もしこの属性を有効にしなかった場合、この属性は定数になります。</p>
+もしこの属性を有効にしない場合、この属性は定数になります。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.enableVertexAttribArray(positionAttributeLocation);
 </code></pre><p>次にデータを取り出す方法を指定します。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var size = 2;          // 2 components per iteration
@@ -496,7 +496,7 @@ CSSは他の方法よりも柔軟性があります。</p>
 このページのようにiframeの中にある場合はiframeのサイズに合わされます。</p>
 <p>CSSでサイズを調整し、この2つの場合を簡単に対応できます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">webglUtils.resizeCanvasToDisplaySize(gl.canvas);
-</code></pre><p>クリップ空間の値から <code class="notranslate" translate="no">gl_Position</code>を設定し、ピクセルに変換します。
+</code></pre><p>クリップ空間の値から <code class="notranslate" translate="no">gl_Position</code> を設定し、ピクセルに変換します。
 そして、 <code class="notranslate" translate="no">gl.viewport</code> を呼び出し、キャンバスの現在のサイズを渡します。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 </code></pre><p>これは -1 〜 +1 のクリップ空間で、X軸が「0 〜 <code class="notranslate" translate="no">gl.canvas.width</code>」、y軸が「0 〜 <code class="notranslate" translate="no">gl.canvas.height</code>」になるように設定しています。</p>
@@ -578,7 +578,7 @@ gl.drawArrays(primitiveType, offset, count);
 これを設定するには、ロケーションを指定する必要があります。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var resolutionUniformLocation = gl.getUniformLocation(program, &quot;u_resolution&quot;);
 </code></pre><p>あとはコメントを見れば一目瞭然でしょう。
-<code class="notranslate" translate="no">u_resolution</code> をキャンバスの解像度に設定すると、シェーダーは <code class="notranslate" translate="no">positionBuffer</code> で指定した位置をピクセル座標で受け取りクリップ空間に変換します。</p>
+<code class="notranslate" translate="no">u_resolution</code> にキャンバスの解像度に設定すると、シェーダーは <code class="notranslate" translate="no">positionBuffer</code> で指定した位置をピクセル座標で受け取りクリップ空間に変換します。</p>
 <p>これで位置の値をクリップ空間からピクセルに変更できるようになりました。
 今回は3点ずつの2つの三角形で作った長方形を描きます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var positions = [
@@ -616,7 +616,7 @@ gl.drawArrays(primitiveType, offset, count);
 <p>もう1度言いますが、長方形がその領域の下の方にあります。
 WebGLではYが正の場合は上、Yが負の場合は下となります。
 クリップ空間で左下隅 -1, -1です。
-符号を変えていないので、0が左下になります。
+コードを変えていないので、0が左下になります。
 2DグラフィックスAPIで使用されているように左上を0, 0にしたければ、クリップ空間のy座標を反転させます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 </code></pre><p>四角形は期待通りの位置になります。</p>
@@ -741,9 +741,9 @@ WebGLはただ単純に描画するAPIです。</p>
         </ul>
   <li>WebGL2 vs WebGL1</li>
         <ul>
-          <li><a href="/webgl/lessons/ja/webgl2-whats-new.html">What's new in WebGL2</a></li>
-<li><a href="/webgl/lessons/ja/webgl1-to-webgl2.html">Moving from WebGL1 to WebGL2</a></li>
-<li><a href="/webgl/lessons/ja/webgl1-to-webgl2-fundamentals.html">Differences from WebGLFundamentals.org to WebGL2Fundamentals.org</a></li>
+          <li><a href="/webgl/lessons/ja/webgl2-whats-new.html">WebGL2の新機能</a></li>
+<li><a href="/webgl/lessons/ja/webgl1-to-webgl2.html">WebGL1からWebGL2への移行</a></li>
+<li><a href="/webgl/lessons/ja/webgl1-to-webgl2-fundamentals.html">WebGLFundamentals.orgとWebGL2Fundamentals.orgとの違い</a></li>
         </ul>
   <li>画像処理</li>
         <ul>
