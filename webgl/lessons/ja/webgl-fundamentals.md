@@ -184,7 +184,7 @@ GLSLを文字列にする方法はいくつかあります。
     `;
 
 ほとんどの3Dエンジンでは様々なタイプのテンプレートや文字列の連結を使用し、動的にGLSLシェーダーを生成しています。
-このサイトのサンプルでは、複雑なものはないので実行時にGLSLを生成する必要はありません。
+このサイトのサンプルでは、複雑でないので実行時に動的にGLSLを生成する必要はありません。
 
 > 注意: `#version 300 es` **必ずシェーダーの最初の行にして下さい**。
 > 最初の行にコメントや空行を入れてはいけません。
@@ -233,13 +233,13 @@ GLSLを文字列にする方法はいくつかあります。
     var program = createProgram(gl, vertexShader, fragmentShader);
 
 GPU上でGLSLプログラムを作成したのでデータを送ります。
-WebGL APIの大部分は、GLSLプログラムにデータを送り状態を設定する事です。
+WebGL APIの大部分は、GLSLプログラムにデータを送り状態を設定します。
 この場合、GLSLプログラムへの入力は `a_position` でこれが属性です。
 最初にgl.getAttribLocationで作成したプログラムの属性の位置を調べます。
 
     var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
 
-属性の位置（およびユニフォームの位置）を調べるコードは、レンダーループ内でなく初期化中に行うべきです。
+属性の位置（およびユニフォームの位置）を調べるコードは、描画ループ内でなく初期化中に行うべきです。
 
 属性はバッファからデータを取得し、バッファを作成します。
 
@@ -263,7 +263,7 @@ WebGLでは、グローバルバインドポイント上で多くのWebGLリソ�
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-ここでは色々な事が行われています。
+ここでは様々な事が行われています。
 まず、JavaScriptの配列の `positions` があります。
 WebGLでは型付けのデータが必要です。
 `new Float32Array(positions)` は32ビットの浮動小数点数の新しい配列を作成し、 `positions` の値をコピーします。
@@ -286,7 +286,7 @@ createVertexArrayで頂点配列を作成します。
 
 ここで頂点配列の属性を設定します。まず、属性を有効にします。
 そして、バッファからデータを取得します。
-もしこの属性を有効にしなかった場合、この属性は定数になります。
+もしこの属性を有効にしない場合、この属性は定数になります。
 
     gl.enableVertexAttribArray(positionAttributeLocation);
 
@@ -330,7 +330,7 @@ CSSでサイズを調整し、この2つの場合を簡単に対応できます�
 
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
-クリップ空間の値から `gl_Position `を設定し、ピクセルに変換します。
+クリップ空間の値から `gl_Position ` を設定し、ピクセルに変換します。
 そして、 `gl.viewport` を呼び出し、キャンバスの現在のサイズを渡します。
 
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -435,7 +435,7 @@ CSSでサイズを調整し、この2つの場合を簡単に対応できます�
     var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
 
 あとはコメントを見れば一目瞭然でしょう。
-`u_resolution` をキャンバスの解像度に設定すると、シェーダーは `positionBuffer` で指定した位置をピクセル座標で受け取りクリップ空間に変換します。
+`u_resolution` にキャンバスの解像度に設定すると、シェーダーは `positionBuffer` で指定した位置をピクセル座標で受け取りクリップ空間に変換します。
 
 これで位置の値をクリップ空間からピクセルに変更できるようになりました。
 今回は3点ずつの2つの三角形で作った長方形を描きます。

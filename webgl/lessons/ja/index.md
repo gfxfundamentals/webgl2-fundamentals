@@ -11,10 +11,10 @@ WebGL1.0に興味がある方は[ここをクリックして下さい](https://w
 WebGL1にすでに精通している方は、以下の記事を参照して下さい。
 
 <ul>
-<li><a href="/webgl/lessons/webgl-getting-webgl2.html">WebGL2の使い方</a></li>
-<li><a href="/webgl/lessons/webgl2-whats-new.html">WebGL2の新機能</a></li>
-<li><a href="/webgl/lessons/webgl1-to-webgl2.html">WebGL1からWebGL2への移行</a></li>
-<li><a href="/webgl/lessons/webgl1-to-webgl2-fundamentals.html">WebGLFundamentals.orgとWebGL2Fundamentals.orgの違い</a></li>
+<li><a href="/webgl/lessons/ja/webgl-getting-webgl2.html">WebGL2の使い方</a></li>
+<li><a href="/webgl/lessons/ja/webgl2-whats-new.html">WebGL2の新機能</a></li>
+<li><a href="/webgl/lessons/ja/webgl1-to-webgl2.html">WebGL1からWebGL2への移行</a></li>
+<li><a href="/webgl/lessons/ja/webgl1-to-webgl2-fundamentals.html">WebGLFundamentals.orgとWebGL2Fundamentals.orgの違い</a></li>
 </ul>
 
 #目次
