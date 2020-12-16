@@ -3,16 +3,16 @@ Description: WebGL2の新機能
 TOC: WebGL2の新機能
 
 WebGL2はWebGL1からかなり大幅にアップグレードされています。
-WebGL1からWebGL2へ変更する方法を知りたい場合は、[この記事](webgl1-to-webgl2.html)を参照して下さい。
+WebGL1からWebGL2へ変更する方法は[この記事](webgl1-to-webgl2.html)を参照して下さい。
 
-以下は、WebGL2新機能の順不同のリストです。
+以下はWebGL2新機能の順不同のリストです。
 
 ## 頂点配列オブジェクトが常に利用可能
 
-WebGL1ではオプション指定ですが、WebGL2では常に利用可能になりました。
+WebGL1ではオプションですが、WebGL2では常に利用可能になりました。
 これはかなり重要で[常に使った方がいいと思います](webgl1-to-webgl2.html#Vertex-Array-Objects)。
 
-## テクスチャのサイズはシェーダーで利用可能
+## テクスチャのサイズをシェーダーで利用可能
 
 WebGL1ではシェーダーでテクスチャサイズがほしい場合、ユニフォームでサイズを渡す必要がありました。
 WebGL2では以下のようになります。
@@ -23,9 +23,9 @@ lodはテクスチャのレベルを指定します。
 
 ## ダイレクトテクセルルックアップ
 
-大きな配列のデータをテクスチャに保存しておくと便利な事が多いです。
-WebGL1でもそれができましたが、テクスチャのアドレスはテクスチャ座標（0.0～1.0）でしか指定できませんでした。
-WebGL2では、ピクセル/テクセル座標で直接テクスチャの値を調べられるので、配列へのアクセスが少し簡単になります。
+大きな配列のデータをテクスチャに保存しておくと便利です。
+WebGL1でも可能でしたが、テクスチャのアドレスはテクスチャ座標（0.0～1.0）でしか指定できませんでした。
+WebGL2ではピクセル/テクセル座標で直接テクスチャの値を調べられるので、配列へのアクセスが少し簡単になります。
 
     vec4 values = texelFetch(sampler, ivec2Position, lod);
 
@@ -89,39 +89,39 @@ WebGL2ではたくさんの種類があります！
 
 ## 3Dテクスチャ
 
-3Dテクスチャは、名前の通り3Dのテクスチャです。
+3Dテクスチャは名前の通り3Dのテクスチャです。
 
 ## テクスチャ配列
 
-テクスチャ配列は各スライスが別のテクスチャとみなされる点を除き、3Dテクスチャに非常によく似ています。
-全てのスライスは同じサイズでなければなりません。
-しかし、これはシェーダーがテクスチャユニットの数が比較的少ないにも関わらず、何百ものテクスチャにアクセスできます。
-シェーダーでスライスを選択する事ができます。
+テクスチャ配列はテクスチャを分割する場合を除き、3Dテクスチャに非常によく似ています。
+全ての分割は同じサイズでなければなりません。
+これはシェーダーがテクスチャユニットの数が比較的少ないにも関わらず、何百ものテクスチャにアクセスできるようになる素晴らしい方法です。
+シェーダーで分割するか(slice)を選択できます。
 
     vec4 color = texture(someSampler2DArray, vec3(u, v, slice));
 
-## 2のべき乗の以外のテクスチャサポート
+## 2のべき乗以外のテクスチャサポート
 
 WebGL1では、2のべき乗でないテクスチャはミップマップを持てませんでした。
 WebGL2ではこの制限は削除されています。
-2のべき乗でないテクスチャは、2のべき乗のテクスチャと同じように動作します。
+2のべき乗でないテクスチャも2のべき乗のテクスチャと同じように動作します。
 
-## シェーダーのループ制限を解除
+## シェーダーでのループ制限を解除
 
-WebGL1では、シェーダ内のループは定数整数式を使用しなければなりませんでした。
-WebGL2 はその制限を取り除きます (GLSL 300 es)
+WebGL1ではシェーダー内のループは整数定数式を使用する必要がありました。
+WebGL2ではその制限が削除されています (GLSL 300 es)
 
 ## GLSLの行列関数
 
-WebGL1では逆行列を取得する場合、ユニフォームに渡さなければなりませんでした。
-WebGL2 GLSL 300 esでは、`transpose` と同様に `inverse` 関数が組み込まれています。
+WebGL1では逆行列を取得する場合、ユニフォームに渡す必要がありました。
+WebGL2 GLSL 300 esでは `transpose` と同じく `inverse` 関数が組み込まれています。
 
 ## 一般的な圧縮テクスチャ
 
-WebGL1では、ハードウェアに依存する様々な圧縮テクスチャフォーマットがありました。
-S3TCはデスクトップのみ、PVTCはiOSのみなどなど。
+WebGL1ではハードウェアに依存する様々な圧縮テクスチャフォーマットがありました。
+S3TCはデスクトップのみ、PVTCはiOSのみなど。
 
-WebGL2では、これらのフォーマットはどこでもサポートされています。
+WebGL2では以下のフォーマットがサポートされています。
 
 *   `COMPRESSED_R11_EAC RED`
 *   `COMPRESSED_SIGNED_R11_EAC RED`
@@ -144,9 +144,9 @@ WebGL2では、これらのフォーマットはどこでもサポートされ�
    WebGL1で16個のユニフォームがあった場合、`gl.uniformXXX` を16回呼び出す必要がありました。
    それは比較的遅いです。
    WebGL2では、ユニフォームバッファオブジェクトを使用すると、
-   型付き配列を全てJavaScript内で使用する事ができ、これははるかに高速である事を意味します。
-   全ての値が設定されたら、`gl.bufferData` または `gl.bufferSubData` を 1 回呼び出して全ての値をアップロードします。
-   `gl.bindBufferRange` でそのバッファを使用するようにプログラムで指示し、2回の呼び出しを行います。
+   型付き配列をJavaScript内で使用する事ができてとても高速です。
+   全ての値が設定されたら `gl.bufferData` または `gl.bufferSubData` を1回呼び出して全ての値をアップロードします。
+   `gl.bindBufferRange` でそのバッファを使用するように指定して2回呼び出します。
 
 2. 異なるユニフォームバッファオブジェクトのセットを持てます
 
@@ -155,117 +155,102 @@ WebGL2では、これらのフォーマットはどこでもサポートされ�
    ユニフォームバッファオブジェクトは、ユニフォームブロックが使用する値を含むバッファです。
    ユニフォームバッファオブジェクトを好きなだけ作成し、描画時に特定のユニフォームブロックにバインドできます。
 
-   例えば、シェーダーで4つのユニフォームをブロックする事ができます。
+   例えば、シェーダーで4つのユニフォームブロックを定義できます。
 
-   * A global matrix uniform block that contains
-     matrices that are the same for all draw calls like the
-     projection matrix, view matrix, etc.
+   * グローバル行列のユニフォームブロックは投影行列、ビュー行列のように全ての描画呼び出しで同じ行列を含みます。
 
-   * A per model uniform block that contains matrices that are
-     different per model for example the world matrix and
-     normal matrix.
+   * モデルユニフォームブロックはワールド行列と法線行列など異なる行列を含みます。
 
-   * A material uniform block that contains the material settings
-     like diffuse, ambient, specular, etc..
+   * マテリアルユニフォームブロックはディフューズ（拡散反射光）、アンビエント（環境光）、（鏡面反射光）などのマテリアル設定を含みます。
 
-   * A lighting uniform block that contains the lighting data
-     like light color, light position, etc..
+   * ライティングユニフォームブロックはライティングの色や位置などのデータを格納したライティングを含みます。
 
-   Then at runtime you could create one global uniform buffer
-   object, one model uniform buffer object per model, one
-   light uniform buffer object per light and one uniform buffer
-   object per material.
+   実行時にグローバルユニフォームバッファオブジェクトを1つ、
+   モデルユニフォームバッファオブジェクトをモデルごとに1つ、
+   ライトユニフォームバッファオブジェクトをライトごとに1つ、
+   マテリアルごとに1つのユニフォームバッファオブジェクトを作成できます。
 
-   To draw any particular item assuming all the values are
-   already up to date all you have to do is bind your desired
-   4 uniform buffer objects
+   全ての値が最新状態の場合は、4つのユニフォームバッファオブジェクトをバインドします。
 
        gl.bindBufferRange(..., globalBlockIndx, globalMatrixUBO, ...);
        gl.bindBufferRange(..., modelBlockIndx, someModelMatrixUBO, ...);
        gl.bindBufferRange(..., materialBlockIndx, someMaterialSettingsUBO, ...);
        gl.bindBufferRange(..., lightBlockIndx, someLightSettingsUBO, ...);
 
-##  Integer textures, attributes and math
+## 整数テクスチャ、属性、数学
 
-In WebGL2 you can have integer based textures where as
-in WebGL1 all textures represented floating point values
-even if they weren't represented by floating point values.
+WebGL2では整数値のテクスチャを持てます。
+WebGL1では浮動小数点値で表現されていました。
 
-You can also have integer attributes.
+整数値の属性を持つ事も可能です。
 
-On top of that, GLSL 300 es allows you to do bit manipulations
-of integers in the shaders.
+さらにGLSL 300 esではシェーダーで整数のビット操作を行えます。
 
-##  Transform feedback
+## トランスフォームフィードバック
 
-WebGL2 allows your vertex shader to write its results back
-to a buffer.
+WebGL2では頂点シェーダーの結果をバッファに書き戻せます。
 
-##  Samplers
+## サンプラー
 
-In WebGL1 all the texture parameters were per texture.
-In WebGL2 you can optionally use sampler objects. With
-samplers, all the filtering and repeat/clamping parameters
-that were part of a texture move to the sampler. This means
-a single texture can be sampled in different ways. Repeating
-or clamped. Filtered or not filtered.
+WebGL1では全てのテクスチャパラメーターはテクスチャごとに設定されてました。
+WebGL2ではオプションでサンプラーオブジェクトを使用できます。
+テクスチャの一部であるフィルタリングとリピート/クランプのパラメーターを全てサンプラーに移動します。
+つまり、1つのテクスチャを様々な方法でサンプリングできます。
+リピートするか、クランプするか、フィルタリングされているか、フィルタリングされていないかなどです。
 
-## Depth Textures
+## 深度テクスチャ
 
-Depth textures were optional in WebGL1 and a PITA to work around. Now they're standard.
-Commonly used for computing shadow maps
+WebGL1では深度テクスチャはオプションであり、手間がかかりました。
+WebGL2では標準です。シャドウマップの計算によく使用されます。
 
-## Standard Derivatives
+## 標準的なデリバティブ
 
-These are now standard. Common uses include computing normals in the shaders instead of passing them in
+これはWebGL2では標準的です。
+一般的な使用法はシェーダーに法線を渡すのではなく、シェーダー内で法線を計算できます。
 
-## Instanced Drawing
+## インスタンス描画
 
-Now Standard, common uses are drawing lots of trees, bushes or grass quickly.
+インスタンス描画の一般的な使用は迅速に木や茂み、草を描画したい時に役に立ちます。
 
-## UNSIGNED_INT indices
+## UNSIGNED_INTインデックス
 
-Being able to use 32bit ints for indices removes the size limit of indexed geometry
+インデックスに32ビットのintを使用できるので、インデックス付きジオメトリのサイズ制限がなくなりました。
 
-## Setting `gl_FragDepth`
+## `gl_FragDepth` を設定可能
 
-Letting you write your own custom values to the depth buffer / z-buffer.
+デプスバッファ/Zバッファに独自の値を書き込めます。
 
-## Blend Equation MIN / MAX
+## ブレンド式 MIN / MAX
 
-Being able to take the min or max of 2 colors when blending
+ブレンド時に2色の最小値または最大値を取得できます。
 
-## Multiple Draw Buffers
+## 複数の描画バッファ
 
-Being able to draw to multiple buffers at once from a shader. This is commonly used
-for various deferred rendering techniques.
+シェーダーから1度に複数のバッファに描画できます。
+様々な遅延レンダリング（ディファードレンダリング）でよく使用されます。
 
-## Texture access in vertex shaders
+## 頂点シェーダーのテクスチャにアクセス可能
 
-In WebGL1 this was an optional feature. There was a count of how many textures
-you could access in a vertex shader and that count was allowed to be 0. Most
-devices supported them. In WebGL2 that count is required to be at least 16.
+WebGL1ではオプションでした。
+頂点シェーダーでアクセスできるテクスチャの制限数があり、制限数は0にできました。
+ほとんどのデバイスでサポートされています。
+WebGL2ではこの制限数は少なくとも16です。
 
-## Multi-Sampled renderbuffers
+## マルチサンプルレンダリングバッファ
 
-In WebGL1 the canvas itself could be anti-aliased with the GPU's built in
-multi-sample system but there was no support for user controlled multi-sampling. In WebGL2
-you can now make multi-sampled renderbuffers.
+WebGL1ではGPUに内蔵されたマルチサンプルシステムを使用し、キャンバスをアンチエイリアスできました。
+しかし、ユーザーが制御するマルチサンプリングはサポートされていませんでした。
+WebGL2ではマルチサンプルのレンダーバッファを作成できるようになりました。
 
-## Occlusion Queries
+## オクルージョンクエリー
 
-Occlusion queries let you ask the GPU to check if it were to render something
-would any pixels actually get drawn.
+オクルージョンクエリは何かをレンダリングする時、実際に描画されるピクセルがあるかどうかをGPUに確認できます。
 
-## Floating point textures always available
+## 浮動小数点テクスチャがいつでも利用可能
 
-Floating point textures are used for many special effects
-and calculations. In WebGL1 they were optional. In WebGL2
-they just exist.
+浮動小数点テクスチャは多くの特殊効果や計算に使用されます。
+WebGL1ではオプションでした。
+WebGL2では存在しますがオプションです。
 
-Note: Unfortunately they are still restricted in that filtering
-and rendering to float point textures is still optional. See
-[`OES_texture_float_linear`](https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/)
- and [`EXT_color_buffer_float`](https://www.khronos.org/registry/webgl/extensions/EXT_color_buffer_float/).
-
-
+注意: 残念ながらこれはまだ制限されており、浮動小数点テクスチャへのフィルタリングとレンダリングはオプションのままです。
+[`OES_texture_float_linear`](https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/)と [`EXT_color_buffer_float`](https://www.khronos.org/registry/webgl/extensions/EXT_color_buffer_float/)を参照して下さい。
