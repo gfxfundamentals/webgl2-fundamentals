@@ -284,7 +284,7 @@ WebGLで何かしたい場合、点、線、三角形を使用したコードを
 プログラマーの役割は、この2つをWebGLに渡す事です。
 これを行うために2つの「シェーダー」を用意します。
 クリップ空間の頂点座標を与える頂点シェーダー、色を与えるフラグメントシェーダーです。</p>
-<p>キャンバスのサイズに関係なく、クリップ空間の頂点座標は常に -1 から +1 になります。
+<p>キャンバスのサイズに関係なく、クリップ空間の頂点座標は常に -1 〜 +1 になります。
 以下は一番単純なWebGLの例です。</p>
 <p>まず頂点シェーダーから始めましょう。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
@@ -341,7 +341,7 @@ void main() {
 }
 </code></pre><p>上記でフラグメントシェーダーの出力として <code class="notranslate" translate="no">outColor</code> を宣言しました。
 <code class="notranslate" translate="no">outColor</code> を <code class="notranslate" translate="no">1, 0, 0.5, 1</code> にすると、赤＝1、緑＝0、青＝0.5、アルファ＝1になります。
-WebGLでは色は0〜1の間を指定ます。</p>
+WebGLでは色は0〜1の間を指定します。</p>
 <p>2つのシェーダー関数を書いたのでWebGLで使ってみましょう。</p>
 <p>まず、HTMLのcanvas要素が必要です。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> &lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;
@@ -489,7 +489,7 @@ zとwはそれぞれデフォルトの0と1になります。</p>
 <p>描画前にキャンバスの表示サイズに合わせて、サイズを変更しておきましょう。
 画像のようなキャンバスには2つのサイズがあります。
 実際に入っているピクセル数と表示されるサイズを分けて表示しています。
-CSSで <strong>キャンバスを表示するサイズはCSS</strong> で必ず設定して下さい。
+<strong>キャンバスを表示するサイズはCSS</strong> で必ず設定して下さい。
 CSSは他の方法よりも柔軟性があります。</p>
 <p>キャンバスのピクセル数と表示サイズを一致させるために<a href="webgl-resizing-the-canvas.html">こちらで紹介しているヘルパー関数を使っています</a>。</p>
 <p>サンプルをブラウザの別ウィンドウで開いて実行した場合、キャンバスサイズは400 x 300ピクセルです。
@@ -578,7 +578,7 @@ gl.drawArrays(primitiveType, offset, count);
 これを設定するには、ロケーションを指定する必要があります。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var resolutionUniformLocation = gl.getUniformLocation(program, &quot;u_resolution&quot;);
 </code></pre><p>あとはコメントを見れば一目瞭然でしょう。
-<code class="notranslate" translate="no">u_resolution</code> にキャンバスの解像度に設定すると、シェーダーは <code class="notranslate" translate="no">positionBuffer</code> で指定した位置をピクセル座標で受け取りクリップ空間に変換します。</p>
+<code class="notranslate" translate="no">u_resolution</code> にキャンバスの解像度を設定すると、シェーダーは <code class="notranslate" translate="no">positionBuffer</code> で指定した位置をピクセル座標で受け取りクリップ空間に変換します。</p>
 <p>これで位置の値をクリップ空間からピクセルに変更できるようになりました。
 今回は3点ずつの2つの三角形で作った長方形を描きます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var positions = [
@@ -709,14 +709,14 @@ WebGLはただ単純に描画するAPIです。</p>
 この方法が適切である場合もありますが、
 <a href="webgl-2d-translation.html">WebGLで移動、回転、拡大縮小する、一般的な方法も読んでみて下さい</a>。</p>
 <p>WebGLの知識が全くなくて、GLSLやシェーダー、GPUが何をしているのかわからない場合は、
-<a href="webgl-how-it-works.html">WebGLの基本的な動き方</a>をチェックしてみて下さい。</p>
+<a href="webgl-how-it-works.html">WebGLの仕組み</a>をチェックしてみて下さい。</p>
 <p>また、WebGLの基本的な動き方を理解する別の方法として、
 この<a href="/webgl/lessons/resources/webgl-state-diagram.html">インタラクティブな状態図</a>を見るのもいいかもしれません。</p>
 <p>また、サンプルで使用している <a href="webgl-boilerplate.html">ボイラープレートコード</a>も簡単に読んでおきましょう。
 通常のWebGLアプリの構造を理解するために<a href="webgl-drawing-multiple-things.html">複数のものを描画する方法</a>も読んでおくと良いです。</p>
 <p>それ以外の場合は、ここからは2つの方向に進む事ができます。
-画像処理に興味がある方は、<a href="webgl-image-processing.html">2次元画像処理をする方法</a>を見て下さい。
-もし移動、回転、拡大縮小の学習に興味があれば<a href="webgl-2d-translation.html">ここから始めて下さい</a>。</p>
+画像処理に興味がある方は、<a href="webgl-image-processing.html">2D画像を処理する方法</a>を見て下さい。
+もし移動・回転・拡大縮小の学習に興味があれば<a href="webgl-2d-translation.html">ここから始めて下さい</a>。</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -735,7 +735,7 @@ WebGLはただ単純に描画するAPIです。</p>
         <ul>
           <li><a href="/webgl/lessons/ja/webgl-getting-webgl2.html">WebGL2の使い方</a></li>
 <li><a href="/webgl/lessons/ja/webgl-fundamentals.html">基本</a></li>
-<li><a href="/webgl/lessons/ja/webgl-how-it-works.html">How It Works</a></li>
+<li><a href="/webgl/lessons/ja/webgl-how-it-works.html">どのように動作するか</a></li>
 <li><a href="/webgl/lessons/ja/webgl-shaders-and-glsl.html">Shaders and GLSL</a></li>
 <li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 State Diagram</a></li>
         </ul>
