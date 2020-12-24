@@ -1,6 +1,6 @@
 Title: WebGLの仕組み
 Description: WebGLが実際に何をしているか
-TOC: どのように動作するか
+TOC: WebGLの仕組み
 
 この記事は[WebGL2の基本](webgl-fundamentals.html)からの続きです。
 続きを始める前にWebGLとGPUがどのように動作してるか、説明する必要があります。
