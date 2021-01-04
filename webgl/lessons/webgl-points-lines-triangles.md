@@ -1,4 +1,4 @@
-Title: WebGL Points, Lines, and Triangles
+Title: WebGL2 Points, Lines, and Triangles
 Description: Details on drawing Points, Lines, and Triangles
 TOC: Points, Lines, and Triangles
 

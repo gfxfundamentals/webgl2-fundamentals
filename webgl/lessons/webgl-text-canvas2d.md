@@ -1,4 +1,4 @@
-Title: WebGL Text - Canvas 2D
+Title: WebGL2 Text - Canvas 2D
 Description: How to display text using a 2D canvas that is in sync with WebGL
 TOC: Text - Canvas 2D
 

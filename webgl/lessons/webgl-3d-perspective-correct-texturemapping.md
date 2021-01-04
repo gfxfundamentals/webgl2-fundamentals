@@ -1,4 +1,4 @@
-Title: WebGL 3D Perspective Correct Texture Mapping
+Title: WebGL2 3D Perspective Correct Texture Mapping
 Description: What's special about W
 TOC: Perspective Correct Texture Mapping
 

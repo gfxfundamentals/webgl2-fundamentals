@@ -1,4 +1,4 @@
-Title: WebGL - Animção
+Title: WebGL2 - Animção
 Description: Como fazer animação na WebGL
 TOC: WebGL2 - Animação
 

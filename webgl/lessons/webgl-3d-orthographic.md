@@ -1,4 +1,4 @@
-Title: WebGL - Orthographic 3D
+Title: WebGL2 - Orthographic 3D
 Description: How to do 3D in WebGL starting with an orthographic projection.
 TOC: Orthographic 3D
 

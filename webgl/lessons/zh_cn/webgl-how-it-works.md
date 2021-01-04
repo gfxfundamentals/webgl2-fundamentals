@@ -1,4 +1,4 @@
-Title: WebGL 是如何工作的
+Title: WebGL2 是如何工作的
 Description: WebGL 的底层到底做了什么
 TOC: 如何工作的
 

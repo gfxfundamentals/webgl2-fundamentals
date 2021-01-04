@@ -1,4 +1,4 @@
-Title: WebGL 쉐이더와 GLSL
+Title: WebGL2 쉐이더와 GLSL
 Description: 쉐이더란 무엇이며 GLSL는 무엇입니까?
 TOC: WebGL2 쉐이더와 GLSL
 

@@ -1,4 +1,4 @@
-Title: WebGL How It Works
+Title: WebGL2 How It Works
 Description: What WebGL is really doing under the hood
 TOC: How It Works
 

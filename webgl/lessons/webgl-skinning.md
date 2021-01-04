@@ -1,4 +1,4 @@
-Title: WebGL Skinning
+Title: WebGL2 Skinning
 Description: How to skin a mesh in WebGL
 TOC: Skinning
 

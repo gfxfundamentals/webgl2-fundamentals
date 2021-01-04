@@ -1,4 +1,4 @@
-Title: WebGL Anti-Patterns
+Title: WebGL2 Anti-Patterns
 Description: What not to do in WebGL, why not to do it, and what to do instead
 TOC: Anti-Patterns
 

@@ -1,4 +1,4 @@
-Title: WebGL GPGPU
+Title: WebGL2 GPGPU
 Description: How to do general computing with WebGL
 TOC: GPGPU
 

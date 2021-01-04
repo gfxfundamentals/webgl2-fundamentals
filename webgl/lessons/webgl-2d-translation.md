@@ -1,4 +1,4 @@
-Title: WebGL 2D Translation
+Title: WebGL2 2D Translation
 Description: How to translate in 2D
 TOC: 2D Translation
 

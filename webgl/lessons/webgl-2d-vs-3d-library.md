@@ -1,4 +1,4 @@
-Title: WebGL - Rasterization vs 3D libraries
+Title: WebGL2 - Rasterization vs 3D libraries
 Description: Why WebGL is not a 3D library and why it matters.
 TOC: 2D vs 3D libraries
 

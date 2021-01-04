@@ -1,4 +1,4 @@
-Title: WebGL Boilerplate
+Title: WebGL2 Boilerplate
 Description: Some of the code you need for all WebGL programs
 TOC: Boilerplate
 

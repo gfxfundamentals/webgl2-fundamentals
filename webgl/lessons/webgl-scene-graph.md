@@ -1,4 +1,4 @@
-Title: WebGL - Scene Graph
+Title: WebGL2 - Scene Graph
 Description: What a scene graph is want what it's used for
 TOC: Scene Graphs
 

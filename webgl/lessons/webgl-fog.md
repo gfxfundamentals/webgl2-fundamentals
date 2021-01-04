@@ -1,4 +1,4 @@
-Title: WebGL Fog
+Title: WebGL2 Fog
 Description: How to implement fog
 TOC: Fog
 

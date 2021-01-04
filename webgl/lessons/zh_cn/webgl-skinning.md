@@ -1,4 +1,4 @@
-Title: WebGL 蒙皮
+Title: WebGL2 蒙皮
 Description: 在WebGL中如何蒙皮网格
 TOC: WebGL2 蒙皮
 

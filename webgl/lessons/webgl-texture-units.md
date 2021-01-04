@@ -1,4 +1,4 @@
-Title: WebGL Texture Units
+Title: WebGL2 Texture Units
 Description: What are texture units in WebGL?
 TOC: Texture Units
 

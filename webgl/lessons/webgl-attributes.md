@@ -1,4 +1,4 @@
-Title: WebGL Attributes
+Title: WebGL2 Attributes
 Description: What are attributes in WebGL?
 TOC: Attributes
 

@@ -1,4 +1,4 @@
-Title: WebGL DrawImage 구현
+Title: WebGL2 DrawImage 구현
 Description: WebGL로 캔버스 2D의 drawImage 함수를 구현하는 방법
 TOC: 2D - DrawImage
 

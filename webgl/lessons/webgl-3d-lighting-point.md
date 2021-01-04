@@ -1,4 +1,4 @@
-Title: WebGL 3D - Point Lighting
+Title: WebGL2 3D - Point Lighting
 Description: How to implement point lighting in WebGL
 TOC: Point Lighting
 

@@ -1,4 +1,4 @@
-Title: WebGL 3D Perspective
+Title: WebGL2 3D Perspective
 Description: How to display perspective in 3D in WebGL
 TOC: 3D Perspective
 

@@ -1,4 +1,4 @@
-Title: WebGL Picking
+Title: WebGL2 Picking
 Description: How to pick things in WebGL
 TOC: Picking (clicking on stuff)
 

@@ -1,4 +1,4 @@
-Title: WebGL Cross Platform Issues
+Title: WebGL2 Cross Platform Issues
 Description: Things to be aware of when trying to make your WebGL app work everywhere.
 TOC: Cross Platform Issues
 

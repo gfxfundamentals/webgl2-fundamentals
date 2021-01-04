@@ -1,4 +1,4 @@
-Title: WebGL Using 2 or More Textures
+Title: WebGL2 Using 2 or More Textures
 Description: How to use 2 or more textures in WebGL
 TOC: Using 2 or More Textures
 

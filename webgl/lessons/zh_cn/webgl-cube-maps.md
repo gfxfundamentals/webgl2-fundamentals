@@ -1,4 +1,4 @@
-Title: WebGL 立方体贴图
+Title: WebGL2 立方体贴图
 Description: 如何在WebGL中使用立方体贴图
 TOC: WebGL2 立方体贴图
 

@@ -1,4 +1,4 @@
-Title: WebGL Image Processing Continued
+Title: WebGL2 Image Processing Continued
 Description: How to apply multiple image processing techniques to images in WebGL
 TOC: Image Processing Continued
 

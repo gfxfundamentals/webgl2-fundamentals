@@ -1,4 +1,4 @@
-Title: WebGL Texto - HTML
+Title: WebGL2 Texto - HTML
 Description: Como usar o HTML para exibir o texto que está posicionado para corresponder a WebGL
 TOC: WebGL2 Texto - HTML
 

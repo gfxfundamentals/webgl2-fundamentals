@@ -1,4 +1,4 @@
-Title: WebGL 着色器和 GLSL 语言
+Title: WebGL2 着色器和 GLSL 语言
 Description: 什么是着色器和 GLSL 语言
 TOC: 着色器和 GLSL 语言
 

@@ -1,4 +1,4 @@
-Title: WebGL Shaders and GLSL
+Title: WebGL2 Shaders and GLSL
 Description: What's a shader and what's GLSL
 TOC: Shaders and GLSL
 

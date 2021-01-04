@@ -1,4 +1,4 @@
-Title: WebGL Tips
+Title: WebGL2 Tips
 Description: Small issues that might trip you up with WebGL
 TOC: #
 

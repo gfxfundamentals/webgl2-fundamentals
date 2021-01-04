@@ -1,4 +1,4 @@
-Title: WebGL 3D Geometry - Lathe
+Title: WebGL2 3D Geometry - Lathe
 Description: How to lathe a bezier curve.
 TOC: 3D Geometry - Lathe
 

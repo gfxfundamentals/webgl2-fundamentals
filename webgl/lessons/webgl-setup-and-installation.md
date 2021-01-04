@@ -1,4 +1,4 @@
-Title: WebGL Setup and Installation
+Title: WebGL2 Setup and Installation
 Description: How to do WebGL development
 TOC: Setup And Installation
 

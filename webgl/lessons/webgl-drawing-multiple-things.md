@@ -1,4 +1,4 @@
-Title: WebGL - Drawing Multiple Things
+Title: WebGL2 - Drawing Multiple Things
 Description: How to draw multiple different kinds of things in WebGL
 TOC: Drawing Multiple Things
 

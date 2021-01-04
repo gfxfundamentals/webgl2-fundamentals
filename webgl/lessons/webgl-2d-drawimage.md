@@ -1,4 +1,4 @@
-Title: WebGL Implementing DrawImage
+Title: WebGL2 Implementing DrawImage
 Description: How to implement canvas 2d's drawImage function in WebGL
 TOC: 2D - DrawImage
 

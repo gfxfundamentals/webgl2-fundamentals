@@ -1,4 +1,4 @@
-Title: WebGL Framebuffers
+Title: WebGL2 Framebuffers
 Description: What are framebuffers in WebGL?
 TOC: Framebuffers
 
