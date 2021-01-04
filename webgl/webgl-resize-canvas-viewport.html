@@ -106,7 +106,7 @@ function main() {
 
   // Draw the scene.
   function drawScene(now) {
-    resize(gl.canvas);
+    resizeCanvasToDisplaySize(gl.canvas);
 
     now *= 0.001;  // convert to seconds
 
@@ -141,19 +141,22 @@ function main() {
   }
 }
 
-function resize(canvas) {
-  // Lookup the size the browser is displaying the canvas.
-  var displayWidth  = canvas.clientWidth;
-  var displayHeight = canvas.clientHeight;
+function resizeCanvasToDisplaySize(canvas) {
+  // Lookup the size the browser is displaying the canvas in CSS pixels.
+  const displayWidth  = canvas.clientWidth;
+  const displayHeight = canvas.clientHeight;
 
   // Check if the canvas is not the same size.
-  if (canvas.width  !== displayWidth ||
-      canvas.height !== displayHeight) {
+  const needResize = canvas.width  !== displayWidth ||
+                     canvas.height !== displayHeight;
 
+  if (needResize) {
     // Make the canvas the same size
     canvas.width  = displayWidth;
     canvas.height = displayHeight;
   }
+
+  return needResize;
 }
 
 main();
