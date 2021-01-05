@@ -113,7 +113,7 @@ mapDst(dst, multBy2(src));
 // dst is now [2, 4, 6, 8, 10, 12];
 ```
 
-## In WebGL the index or ID of the pixel who's value you're being asked to provide is called `gl_FragCoord`
+## In WebGL the index or ID of the pixel whose value you're being asked to provide is called `gl_FragCoord`
 
 ```js
 let outColor;
