@@ -35,7 +35,7 @@ WebGLの仕組みを読んでいない場合は[まずこれを読んでみて�
 ### 属性（attribute）
 
 頂点シェーダーでデータを取得する最も一般的な方法は、バッファと *属性* を使う方法です。
-バッファと属性については[WebGL2の基本]](webgl-how-it-works.html)で説明しました。
+バッファと属性については[WebGL2の基本](webgl-how-it-works.html)で説明しました。
 まずはバッファを作成します。
 
     var buf = gl.createBuffer();
