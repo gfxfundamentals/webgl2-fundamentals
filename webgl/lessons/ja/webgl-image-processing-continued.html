@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/ja/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/ja/webgl-image-processing-continued.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of Gregg Tavares. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of Gregg Tavares. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,25 +36,77 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL2 Image Processing Continued" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="How to apply multiple image processing techniques to images in WebGL" />
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ja/webgl-image-processing-continued.html" />
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL2 Image Processing Continued" />
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ja/webgl-image-processing-continued.html" />
-<meta name="twitter:description" content="How to apply multiple image processing techniques to images in WebGL" />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="description" content="複数の画像にエフェクトをかける方法">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-image-processing-continued_ja.jpg">
+
+<meta property="og:title" content="WebGL2における画像処理の続き">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-image-processing-continued_ja.jpg">
+<meta property="og:description" content="複数の画像にエフェクトをかける方法">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ja/webgl-image-processing-continued.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2における画像処理の続き">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ja/webgl-image-processing-continued.html">
+<meta name="twitter:description" content="複数の画像にエフェクトをかける方法">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-image-processing-continued_ja.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ja/webgl-image-processing-continued.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-image-processing-continued_ja.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ja/webgl-image-processing-continued.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/ja/webgl-image-processing-continued.html",
+      "inLanguage":"ja",
+      "name":"WebGL2における画像処理の続き",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/ja/webgl-image-processing-continued.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL2 Image Processing Continued</title>
+<title>WebGL2における画像処理の続き</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-image-processing-continued.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-image-processing-continued.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-image-processing-continued.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-image-processing-continued.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-image-processing-continued.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-image-processing-continued.html">
+
+
+
+
 </head>
 <body>
 <div class="webgl_navbar">
@@ -177,13 +231,244 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 Image Processing Continued</h1>
+    <h1>WebGL2における画像処理の続き</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>ごめんなさい、この記事はまだ翻訳されていません。</p>
-<p><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">翻訳を歓迎します</a>! 😄</p>
-<p><a href="/webgl/lessons/webgl-image-processing-continued.html">英語の元記事はこちら</a>.</p>
+      <p>この記事は<a href="webgl-image-processing.html">WebGL2における画像処理</a>からの続きです。
+もし読んでいない場合は<a href="webgl-image-processing.html">まずは前回の記事を読んでみて下さい</a>。</p>
+<p>画像処理で次の問題は、複数のエフェクトを適用する方法です。</p>
+<p>もちろん、色んな処理を行う専用シェーダーを生成する事もできます。
+使用したいエフェクトを選択するUIを用意し、全てのエフェクトを実行するシェーダーを生成する事もできます。
+この方法は万能ではないですが、<a href="https://www.youtube.com/watch?v=cQUn0Zeh-0Q">リアルタイムグラフィックスのエフェクト作成</a>では実際に使われています。</p>
+<p>もっと柔軟な方法は、2枚のテクスチャを交互に使って次々に別のエフェクトをかけていく事です。</p>
+<blockquote><pre>Original Image -&gt; [Blur]        -&gt; Texture 1
+Texture 1      -&gt; [Sharpen]     -&gt; Texture 2
+Texture 2      -&gt; [Edge Detect] -&gt; Texture 1
+Texture 1      -&gt; [Blur]        -&gt; Texture 2
+Texture 2      -&gt; [Normal]      -&gt; Canvas</pre></blockquote>
+
+<p>これを行うにはフレームバッファを作成する必要があります。
+WebGLやOpenGLではフレームバッファは貧弱な名称です。
+WebGL/OpenGLのフレームバッファは、単なるアタッチメントのリストで実際にはどのような種類のバッファでもありません。
+フレームバッファにテクスチャをアタッチするとそのテクスチャをレンダリングできます。</p>
+<p>まずは<a href="webgl-image-processing.html">前回のテクスチャ作成コード</a>を関数にしてみましょう。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  function createAndSetupTexture(gl) {
+    var texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    // Set up texture so we can render any size image and so we are
+    // working with pixels.
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+    return texture;
+  }
+
+  // Create a texture and put the image in it.
+  var originalImageTexture = createAndSetupTexture(gl);
+
+  // Upload the image into the texture.
+  var mipLevel = 0;               // the largest mip
+  var internalFormat = gl.RGBA;   // format we want in the texture
+  var srcFormat = gl.RGBA;        // format of data we are supplying
+  var srcType = gl.UNSIGNED_BYTE  // type of data we are supplying
+  gl.texImage2D(gl.TEXTURE_2D,
+                mipLevel,
+                internalFormat,
+                srcFormat,
+                srcType,
+                image);
+</code></pre><p>この関数を使い2枚のテクスチャを作成し、2つのフレームバッファにアタッチしてみます。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // create 2 textures and attach them to framebuffers.
+  var textures = [];
+  var framebuffers = [];
+  for (var ii = 0; ii &lt; 2; ++ii) {
+    var texture = createAndSetupTexture(gl);
+    textures.push(texture);
+
+    // make the texture the same size as the image
+    var mipLevel = 0;               // the largest mip
+    var internalFormat = gl.RGBA;   // format we want in the texture
+    var border = 0;                 // must be 0
+    var srcFormat = gl.RGBA;        // format of data we are supplying
+    var srcType = gl.UNSIGNED_BYTE  // type of data we are supplying
+    var data = null;                // no data = create a blank texture
+    gl.texImage2D(
+        gl.TEXTURE_2D, mipLevel, internalFormat, image.width, image.height, border,
+        srcFormat, srcType, data);
+
+    // Create a framebuffer
+    var fbo = gl.createFramebuffer();
+    framebuffers.push(fbo);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+
+    // Attach a texture to it.
+    var attachmentPoint = gl.COLOR_ATTACHMENT0;
+    gl.framebufferTexture2D(
+        gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, texture, mipLevel);
+  }
+</code></pre><p>色々なエフェクトを畳み込み行列で定義し、エフェクトリストを作ってみます。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // Define several convolution kernels
+  var kernels = {
+    normal: [
+      0, 0, 0,
+      0, 1, 0,
+      0, 0, 0
+    ],
+    gaussianBlur: [
+      0.045, 0.122, 0.045,
+      0.122, 0.332, 0.122,
+      0.045, 0.122, 0.045
+    ],
+    unsharpen: [
+      -1, -1, -1,
+      -1,  9, -1,
+      -1, -1, -1
+    ],
+    emboss: [
+       -2, -1,  0,
+       -1,  1,  1,
+        0,  1,  2
+    ]
+  };
+
+  // List of effects to apply.
+  var effectsToApply = [
+    &quot;gaussianBlur&quot;,
+    &quot;emboss&quot;,
+    &quot;gaussianBlur&quot;,
+    &quot;unsharpen&quot;
+  ];
+</code></pre><p>最後に2つのテクスチャを交互に使い、エフェクトを次々に適用してみます。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  function drawEffects() {
+    // Tell it to use our program (pair of shaders)
+    gl.useProgram(program);
+
+    // Bind the attribute/buffer set we want.
+    gl.bindVertexArray(vao);
+
+    // start with the original image on unit 0
+    gl.activeTexture(gl.TEXTURE0 + 0);
+    gl.bindTexture(gl.TEXTURE_2D, originalImageTexture);
+
+    // Tell the shader to get the texture from texture unit 0
+    gl.uniform1i(imageLocation, 0);
+
+    // don&#39;t y flip images while drawing to the textures
+    gl.uniform1f(flipYLocation, 1);
+
+    // loop through each effect we want to apply.
+    var count = 0;
+    for (var ii = 0; ii &lt; tbody.rows.length; ++ii) {
+      var checkbox = tbody.rows[ii].firstChild.firstChild;
+      if (checkbox.checked) {
+        // Setup to draw into one of the framebuffers.
+        setFramebuffer(framebuffers[count % 2], image.width, image.height);
+
+        drawWithKernel(checkbox.value);
+
+        // for the next draw, use the texture we just rendered to.
+        gl.bindTexture(gl.TEXTURE_2D, textures[count % 2]);
+
+        // increment count so we use the other texture next time.
+        ++count;
+      }
+    }
+
+    // finally draw the result to the canvas.
+    gl.uniform1f(flipYLocation, -1);  // need to y flip for canvas
+
+    setFramebuffer(null, gl.canvas.width, gl.canvas.height);
+
+    drawWithKernel(&quot;normal&quot;);
+  }
+
+  function setFramebuffer(fbo, width, height) {
+    // make this the framebuffer we are rendering to.
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+
+    // Tell the shader the resolution of the framebuffer.
+    gl.uniform2f(resolutionLocation, width, height);
+
+    // Tell WebGL how to convert from clip space to pixels
+    gl.viewport(0, 0, width, height);
+  }
+
+  function drawWithKernel(name) {
+    // set the kernel and it&#39;s weight
+    gl.uniform1fv(kernelLocation, kernels[name]);
+    gl.uniform1f(kernelWeightLocation, computeKernelWeight(kernels[name]));
+
+    // Draw the rectangle.
+    var primitiveType = gl.TRIANGLES;
+    var offset = 0;
+    var count = 6;
+    gl.drawArrays(primitiveType, offset, count);
+  }
+</code></pre><p>以下は少し手を加えて、柔軟なUIを追加したバージョンです。
+チェックを入れたエフェクトが適用されます。
+エフェクトの適用順はドラッグで並べ替えできます。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-processing.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-processing.html" target="_blank">ここをクリックすると別ウィンドウで開きます</a>
+</div>
+
+</p>
+<p>まだ説明していない事がいくつかあります。</p>
+<p><code class="notranslate" translate="no">gl.bindFramebuffer</code> を <code class="notranslate" translate="no">null</code> で呼び出した場合、フレームバッファではなくキャンバスにレンダリングします。</p>
+<p>また、フレームバッファはアタッチメントによっては動作しない場合があります。
+ここに常に動作するアタッチメントの種類と組み合わせのリストがあります。
+ここで使用したのは、<code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> アタッチメントポイントに割り当てられた <code class="notranslate" translate="no">RGBA</code>/<code class="notranslate" translate="no">UNSIGNED_BYTE</code> テクスチャで常に動作します。
+もっとエキゾチックなテクスチャフォーマットやアタッチメントの組み合わせでは動作しない場合があります。
+今回はフレームバッファをバインドしてから <code class="notranslate" translate="no">gl.checkFramebufferStatus</code> で <code class="notranslate" translate="no">gl.FRAMEBUFFER_COMPLETE</code> を返すか確認します。
+gl.FRAMEBUFFER_COMPLETEを返すなら問題ないです。
+そうでない場合、他のものにフォールバックするようにします。
+幸いな事にWebGL2は多くのフォーマットや組み合わせをサポートしています。</p>
+<p>WebGLは<a href="webgl-fundamentals.html">クリップ空間</a>からピクセルに変換する必要があります。
+この時に <code class="notranslate" translate="no">gl.viewport</code> の設定を基準にします。
+レンダリングに使ってるフレームバッファとキャンバスのサイズが異なるため、
+フレームバッファとキャンバスにレンダリング時にそれぞれビューポートを適切に設定する必要があります。</p>
+<p>最後に<a href="webgl-fundamentals.html">オリジナルのサンプルコード</a>では、レンダリング時にY座標を反転させてます。
+これはWebGLでは座標（0,0）がキャンバスの左下で、左上を基準とする従来の座標系とは違うためです。
+この反転はフレームバッファにレンダリング時は不要です。
+フレームバッファが表示されないので、どちらを上か下かにするかは無関係だからです。
+重要なのはフレームバッファのピクセル(0, 0)が、エフェクトの計算上の(0, 0)と一致していれば良いです。
+これに対応するため、反転させるかはシェーダーのユニフォームの <code class="notranslate" translate="no">u_flipY</code> を使い設定できるようにしました。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
++uniform float u_flipY;
+...
+
+void main() {
+  ...
++   gl_Position = vec4(clipSpace * vec2(1, u_flipY), 0, 1);
+  ...
+}
+</code></pre><p>反転するかどうかをレンダリング時に設定します。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
++  var flipYLocation = gl.getUniformLocation(program, &quot;u_flipY&quot;);
+
+  ...
+
++  // don&#39;t flip
++  gl.uniform1f(flipYLocation, 1);
+
+  ...
+
++  // flip
++  gl.uniform1f(flipYLocation, -1);
+</code></pre><p>今回はサンプルコードをシンプルにするために、GLSLプログラムを1つだけ使って複数のエフェクトを実現してみました。
+本格的な画像処理をする場合は、GLSLプログラムが複数必要になるでしょう。
+色相や彩度や輝度を調整するGLSLプログラム、明度やコントラストを調整するプGLSLログラム、反転したり量を調整するGLSLプログラムが必要な場合もあります。
+また、GLSLプログラムを切り替えたりパラメーターを更新するために、コードを書き換える必要もあります。
+今回のサンプルコードに書く事も考えましたが、スパゲッティコードで大混乱になるため読者の練習のために残して置く事にしました。
+複数のGLSLプログラムやパラメーターを扱うのはなかなか大変です。
+プログラムが混沌とするのを抑えるためのリファクタリング作業は、大掛かりなものになると思います。</p>
+<p>今回のサンプルコードやこれまで登場したサンプルコードによって、 WebGLが読者にとって親しみやすいものとなれば良いです。
+時間があれば3Dの扱い方の<a href="webgl-2d-translation.html">いくつかの記事</a>や<a href="webgl-how-it-works.html">WebGLの仕組み</a>の詳細を書く予定です。</p>
+<p>次回は<a href="webgl-2-textures.html">2つ以上のテクスチャの使い方</a>の学習を検討してみて下さい。</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -197,7 +482,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>基本</li>
+        <div id="toc">
+          <ul>  <li>基本</li>
         <ul>
           <li><a href="/webgl/lessons/ja/webgl-getting-webgl2.html">WebGL2の使い方</a></li>
 <li><a href="/webgl/lessons/ja/webgl-fundamentals.html">基本</a></li>
@@ -214,7 +500,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li>画像処理</li>
         <ul>
           <li><a href="/webgl/lessons/ja/webgl-image-processing.html">WebGL2における画像処理</a></li>
-<li><a href="/webgl/lessons/ja/webgl-image-processing-continued.html">Image Processing Continued</a></li>
+<li><a href="/webgl/lessons/ja/webgl-image-processing-continued.html">WebGL2における画像処理の続き</a></li>
         </ul>
   <li>2Dの移動、回転、スケール、行列計算</li>
         <ul>
@@ -340,13 +626,51 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://twgljs.org">TWGL, A tiny WebGL helper library</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+    <div>Questions? <a href="https://stackoverflow.com/questions/tagged/webgl2">Ask on stackoverflow</a>.</div>
+    <div>Issue/Bug? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Create an issue on github</a>.</div>
+    <div class="lesson-comment-notes">
+       Use <b>&lt;pre&gt;&lt;code&gt;</b>code goes here<b>&lt;/code&gt;&lt;/pre&gt;</b> for code blocks
+    </div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2における画像処理の続き';
+            var disqus_title = 'WebGL2における画像処理の続き';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: "Thank you <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>for <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 <script>
 (function() {
   if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
