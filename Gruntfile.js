@@ -48,6 +48,7 @@ module.exports = function(grunt) {
       examples: {
         src: [
           'webgl/*.html',
+          '!webgl/webgl-qna-*.html',
           // 'webgl/lessons/*.md',
         ],
       },
