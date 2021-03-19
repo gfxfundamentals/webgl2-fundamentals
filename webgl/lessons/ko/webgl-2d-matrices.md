@@ -54,19 +54,19 @@ TOC: WebGL2 2D 행렬
 
 또는 더 간결하게
 
-<pre class="webgl_center">
+<div class="webgl_center"><pre class="webgl_math">
 newX = x + tx;
 newY = y + ty;
-</pre>
+</pre></div>
 
 추가적으로 더 다룰 필요는 없습니다. 놀랍게도 [이동(translation)예제의 이동(translation)코드](webgl-2d-translation.html)와 비슷합니다.
 
 비슷하게 회전도 해봅시다. 회전 글에서 언급한것 처럼 회전하고자 하는 각도의 사인과 코사인만 필요합니다.
 
-<pre class="webgl_center">
+<div class="webgl_center"><pre class="webgl_math">
 s = Math.sin(angleToRotateInRadians);
 c = Math.cos(angleToRotateInRadians);
-</pre>
+</pre></div>
 
 그리고 다음와 같은 행렬을 만듭니다.
 
