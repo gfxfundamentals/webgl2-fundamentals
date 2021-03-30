@@ -236,6 +236,7 @@ precision highp float;
                   format,
                   type,
                   data);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
 然后再着色器程序中查找 uniform 的位置。
 

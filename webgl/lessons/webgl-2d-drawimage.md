@@ -82,7 +82,7 @@ And now the function
       gl.bindVertexArray(vao);
 
       var textureUnit = 0;
-      // The the shader we're putting the texture on texture unit 0
+      // the shader we're putting the texture on texture unit 0
       gl.uniform1i(textureLocation, textureUnit);
 
       // Bind the texture to texture unit 0
@@ -238,7 +238,7 @@ Is really no different. We just use `dstWidth` and `dstHeight` instead of
       gl.bindVertexArray(vao);
 
       var textureUnit = 0;
-      // The the shader we're putting the texture on texture unit 0
+      // the shader we're putting the texture on texture unit 0
       gl.uniform1i(textureLocation, textureUnit);
 
       // Bind the texture to texture unit 0

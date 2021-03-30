@@ -417,8 +417,7 @@ If you like really dry and verbose stuff you can try
 
 That's the point of this entire series of posts. WebGL is all about creating various shaders, supplying
 the data to those shaders and then calling `gl.drawArrays`, `gl.drawElements`, etc to have WebGL process
-the vertices by calling the current vertex shader for each vertex and then render pixels by calling the
-the current fragment shader for each pixel.
+the vertices by calling the current vertex shader for each vertex and then render pixels by calling the current fragment shader for each pixel.
 
 Actually creating the shaders requires several lines of code. Since those lines are the same in
 most WebGL programs and since once written you can pretty much ignore them [how to compile GLSL shaders

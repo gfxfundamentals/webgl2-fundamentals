@@ -235,6 +235,7 @@ Uniforms은 여러 타입이 될 수 있습니다. 각 타입별로 해당 함�
                   format,
                   type,
                   data);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
 그런 다음 쉐이더 프로그램에서 uniform 위치를 찾습니다.
 

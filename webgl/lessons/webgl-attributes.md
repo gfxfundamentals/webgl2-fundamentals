@@ -119,7 +119,7 @@ When you link a vertex shader with a fragment shader by calling
 `gl.linkProgram(someProgram)` WebGL (the driver/GPU/browser) decide on their own
 which index/location to use for each attribute. Unless you manually assign
 locations (see below) you have no idea which ones they're going to pick. It's up
-the the browser/driver/GPU. So, you have to ask it which attribute did you use
+the browser/driver/GPU. So, you have to ask it which attribute did you use
 for position, texcoord, and normal?. You do this by calling
 `gl.getAttribLocation`
 

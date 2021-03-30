@@ -247,6 +247,7 @@ WebGLの仕組みを読んでいない場合は[まずこれを読んでみて�
                   format,
                   type,
                   data);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
 次にシェーダープログラムでユニフォームのロケーションを調べます。
 

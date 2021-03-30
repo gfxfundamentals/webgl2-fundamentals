@@ -19,7 +19,7 @@ Similar to the other examples we make a container but this time we put
       <canvas id="text" width="400" height="300"></canvas>
     </div>
 
-Next setup the CSS so the the canvas and the HTML overlap
+Next setup the CSS so the canvas and the HTML overlap
 
     .container {
         position: relative;
