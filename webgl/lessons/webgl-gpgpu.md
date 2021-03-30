@@ -2201,5 +2201,5 @@ And that's really it.
 Since we made some particles via GPGPU I ran into [this wonderful video](https://www.youtube.com/watch?v=X-iSQQgOd1A) which in its second half
 uses compute shaders to do a "slime" simulation.
 
-Using the techniques above <a href="https://jsgist.org/embed.html?src=94e9058c7ef1a4f124eccab4e7fdcd1d">I translated it into WebGL2</a>
+Using the techniques above <a href="https://jsgist.org/?src=94e9058c7ef1a4f124eccab4e7fdcd1d">here it is translated into WebGL2</a>.
 
