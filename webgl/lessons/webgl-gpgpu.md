@@ -177,7 +177,7 @@ function mapDst(dst, across, up, fn) {
 
 const src = [1, 2, 3, 4, 5, 6];
 const dst = new Array(6);    // to simulate that in WebGL we have to allocate a texture
-mapDst(dst, 2, 3, multBy2(src));
+mapDst(dst, 3, 2, multBy2(src, 3));
 
 // dst is now [2, 4, 6, 8, 10, 12];
 ```
