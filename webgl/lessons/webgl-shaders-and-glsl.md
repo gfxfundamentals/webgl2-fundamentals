@@ -250,6 +250,10 @@ At a minimum we need to create and put data in the texture, for example
                   type,
                   data);
 
+Set the filtering
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+
 Then look up the uniform location in the shader program
 
     var someSamplerLoc = gl.getUniformLocation(someProgram, "u_texture");
