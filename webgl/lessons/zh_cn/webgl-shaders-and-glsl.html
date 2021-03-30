@@ -418,6 +418,7 @@ gl.texImage2D(gl.TEXTURE_2D,
               format,
               type,
               data);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 </code></pre><p>然后再着色器程序中查找 uniform 的位置。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var someSamplerLoc = gl.getUniformLocation(someProgram, &quot;u_texture&quot;);
 </code></pre><p>WebGL 要求你必须绑定它到纹理单元去。</p>
