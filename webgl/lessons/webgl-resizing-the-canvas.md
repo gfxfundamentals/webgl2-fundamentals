@@ -172,8 +172,8 @@ pixels. Depending on if the user has an HD-DPI display, or is zoomed in or
 zoomed out, or has an OS zoom level set, how many actual pixels that becomes on
 the monitor will be different.
 
-`window.devicePixelRatio` will tell us in general, the ratio of CSS pixels
-to actual pixels on your monitor. For example here's your browser's current setting
+`window.devicePixelRatio` will tell us in general, the ratio of actual pixels
+to CSS pixels on your monitor. For example here's your browser's current setting
 
 > <div>devicePixelRatio = <span data-diagram="dpr"></span></div>
 
@@ -208,7 +208,7 @@ function resizeCanvasToDisplaySize(canvas) {
 We need to call `Math.round` (or `Math.ceil`, or `Math.floor` or `| 0`) to get the number
 to an integer because `canvas.width` and `canvas.height` are always in integers so
 our comparison might fail if `devicePixelRatio` is not an integer which is common, especially
-if the user's zooms.
+if the user zooms.
 
 > Note: Whether to use `Math.floor` or `Math.ceil` or `Math.round` is not defined by the HTML
 spec. It's up to the browser. 🙄
