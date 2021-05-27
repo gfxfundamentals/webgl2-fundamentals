@@ -7,7 +7,7 @@ TOC: WebGL2 작동 원리
 
 다음과 같이 호출할 수 있습니다.
 
-    gl.drawArrays(gl.TRIANGLE, 0, 9);
+    gl.drawArrays(gl.TRIANGLES, 0, 9);
 
 여기서 9의미는 "9개 정점 처리"를 의미하므로 9개의 정점들이 처리됩니다.
 

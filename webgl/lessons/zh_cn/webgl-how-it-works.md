@@ -8,7 +8,7 @@ TOC: 如何工作的
 
 当你调用
 
-    gl.drawArrays(gl.TRIANGLE, 0, 9);
+    gl.drawArrays(gl.TRIANGLES, 0, 9);
 
 数字9意味着处理“9个顶点”，相应地就有9个点被处理。
 

@@ -10,7 +10,7 @@ GPUには2つの基本的な動作があります。
 
 以下のコードでは
 
-    gl.drawArrays(gl.TRIANGLE, 0, 9);
+    gl.drawArrays(gl.TRIANGLES, 0, 9);
 
 第3引数は9つの頂点を処理するという意味でGPUに対する命令です。
 
