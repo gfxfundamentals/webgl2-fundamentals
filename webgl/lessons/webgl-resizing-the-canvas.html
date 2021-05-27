@@ -375,8 +375,8 @@ at the top of this article we set the canvas&#39;s display size to 400x300 CSS
 pixels. Depending on if the user has an HD-DPI display, or is zoomed in or
 zoomed out, or has an OS zoom level set, how many actual pixels that becomes on
 the monitor will be different.</p>
-<p><code class="notranslate" translate="no">window.devicePixelRatio</code> will tell us in general, the ratio of CSS pixels
-to actual pixels on your monitor. For example here&#39;s your browser&#39;s current setting</p>
+<p><code class="notranslate" translate="no">window.devicePixelRatio</code> will tell us in general, the ratio of actual pixels
+to CSS pixels on your monitor. For example here&#39;s your browser&#39;s current setting</p>
 <blockquote>
 <div>devicePixelRatio = <span data-diagram="dpr"></span></div>
 
@@ -408,7 +408,7 @@ the seemingly obvious solution would be to multiply <code class="notranslate" tr
 <p>We need to call <code class="notranslate" translate="no">Math.round</code> (or <code class="notranslate" translate="no">Math.ceil</code>, or <code class="notranslate" translate="no">Math.floor</code> or <code class="notranslate" translate="no">| 0</code>) to get the number
 to an integer because <code class="notranslate" translate="no">canvas.width</code> and <code class="notranslate" translate="no">canvas.height</code> are always in integers so
 our comparison might fail if <code class="notranslate" translate="no">devicePixelRatio</code> is not an integer which is common, especially
-if the user&#39;s zooms.</p>
+if the user zooms.</p>
 <blockquote>
 <p>Note: Whether to use <code class="notranslate" translate="no">Math.floor</code> or <code class="notranslate" translate="no">Math.ceil</code> or <code class="notranslate" translate="no">Math.round</code> is not defined by the HTML
 spec. It&#39;s up to the browser. 🙄</p>
