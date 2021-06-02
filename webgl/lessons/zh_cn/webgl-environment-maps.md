@@ -1,4 +1,4 @@
-Title: WebGL 环境贴图 (反射)
+Title: WebGL2 环境贴图 (反射)
 Description: 如何实现环境贴图。
 TOC: WebGL2 环境贴图
 

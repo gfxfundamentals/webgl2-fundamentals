@@ -1,11 +1,11 @@
-Title: WebGL Anti-Patterns
+Title: WebGL2 Anti-Patterns
 Description: What not to do in WebGL, why not to do it, and what to do instead
 TOC: Anti-Patterns
 
 
 This is a list of anti patterns for WebGL. Anti patterns are things you should avoid doing
 
-1.  Putting `viewportWidth` and `viewportHeight` on the `WebGLRenderingContext`
+1.  <a id="viewportwidth"></a>Putting `viewportWidth` and `viewportHeight` on the `WebGLRenderingContext`
 
     Some code adds properties for their viewport width and height
     and sticks them on the `WebGLRenderingContext` something like this
@@ -31,8 +31,14 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
 
     **What to do instead:**
 
-    Why make more work for yourself? The WebGL context has its width and height
-    directly on it. Just use that.
+    Why make more work for yourself? The WebGL context has its canvas available
+    and that has a size.
+
+    <pre class="prettyprint">
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    </pre>
+
+    The context also has its width and height directly on it.
 
         // When you need to set the viewport to match the size of the canvas's
         // drawingBuffer this will always be correct
@@ -41,7 +47,7 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
     Even better it will handle extreme cases whereas using `gl.canvas.width`
     and `gl.canvas.height` will not. [As for why see here](#drawingbuffer).
 
-2.  Using `canvas.width` and `canvas.height` for aspect ratio
+2.  <a id="canvaswidth"></a>Using `canvas.width` and `canvas.height` for aspect ratio
 
     Often code uses `canvas.width` and `canvas.height` for aspect ratio like this
 
@@ -62,9 +68,9 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
         var aspect = canvas.clientWidth / canvas.clientHeight;
         perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
 
-    Here are examples of a canvas that's the same size (`width="400" height="300"`)
+    Here are examples of a canvas who's drawingbuffers are the same size (`width="400" height="300"`)
     but using CSS we've told the browser to display the canvas a different size.
-    Notice the samples all display the 'F' in the correct aspect ratio.
+    Notice the samples both display the 'F' in the correct aspect ratio.
 
     {{{diagram url="../webgl-canvas-clientwidth-clientheight.html" width="150" height="200" }}}
     <p></p>
@@ -76,7 +82,7 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
     <p></p>
     {{{diagram url="../webgl-canvas-width-height.html" width="400" height="150" }}}
 
-3.  Using `window.innerWidth` and `window.innerHeight` to compute anything
+3.  <a id="innerwidth"></a>Using `window.innerWidth` and `window.innerHeight` to compute anything
 
     Many WebGL programs use `window.innerWidth` and `window.innerHeight` in many places.
     For example:
@@ -96,7 +102,7 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
 
     **What to do instead:**
 
-    Instead of fighting the Web platform, embrace the Web platform as it was designed to be used.
+    Instead of fighting the Web platform, use the Web platform as it was designed to be used.
     Use CSS and `clientWidth` and `clientHeight`.
 
         var width = gl.canvas.clientWidth;
@@ -105,7 +111,7 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
         gl.canvas.width = width;
         gl.canvas.height = height;
 
-    Here are 9 cases. They all use exactly the same code. If you look at their code you'll see none of them
+    Here are 9 cases. They all use exactly the same code. Notice that none of them
     reference `window.innerWidth` nor `window.innerHeight`.
 
     <a href="../webgl-same-code-canvas-fullscreen.html" target="_blank">A page with nothing but a canvas using CSS to make it fullscreen</a>
@@ -134,7 +140,7 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
 
     Again, the point is, if you embrace the web and write your code using the techniques above you won't have to change any code when you run into different use cases.
 
-4.  Using the `'resize'` event to change the size of your canvas.
+4.  <a id="resize"></a>Using the `'resize'` event to change the size of your canvas.
 
     Some apps check for the window `'resize'` event like this to resize their canvas.
 
@@ -162,7 +168,7 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
     so it just works for most cases. For WebGL apps that constantly draw every frame
     the solution is to check if you need to resize every time you draw like this
 
-        function resize() {
+        function resizeCanvasToDisplaySize() {
           var width = gl.canvas.clientWidth;
           var height = gl.canvas.clientHeight;
           if (gl.canvas.width != width ||
@@ -173,7 +179,7 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
         }
 
         function render() {
-           resize();
+           resizeCanvasToDisplaySize();
            drawStuff();
            requestAnimationFrame(render);
         }
@@ -189,37 +195,14 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
     based on the size of other dynamic elements on the page.
 
     For WebGL apps that don't re-draw every frame the code above is still correct, you'll just need
-    to trigger a re-draw in every case where the canvas can possibly get resized. One easy way to do
-    that would be to setup a requestAnimationFrame loop like this.
+    to trigger a re-draw in every case where the canvas can possibly get resized. One easy way to use a `ResizeObserver`
 
-        function resize() {
-          var width = gl.canvas.clientWidth;
-          var height = gl.canvas.clientHeight;
-          if (gl.canvas.width != width ||
-              gl.canvas.height != height) {
-             gl.canvas.width = width;
-             gl.canvas.height = height;
-             return true;
-          }
-          return false;
-        }
+    <pre class="prettyprint">
+    const resizeObserver = new ResizeObserver(render);
+    resizeObserver.observe(gl.canvas, {box: 'content-box'});
+    </pre>
 
-        var needToRender = true;  // draw at least once
-        function checkRender() {
-           if (resize() || needToRender) {
-             needToRender = false;
-             drawStuff();
-           }
-           requestAnimationFrame(checkRender);
-        }
-        checkRender();
-
-    This would only draw if the canvas has been resized or if `needToRender` is true.
-    This would handle the resize case for apps that don't render the scene every frame.
-    Just set `needToRender` any time you've changed something in the scene and you want
-    the scene to be rendered incorporating your changes.
-
-5.  Adding properties to `WebGLObject`s
+5.  <a id="properties"></a>Adding properties to `WebGLObject`s
 
     `WebGLObject`s are the various types of resources in WebGL like a `WebGLBuffer`
     or `WebGLTexture`. Some apps add properties to those objects. For example code like this:
@@ -318,7 +301,7 @@ been hitting this limit.</p>
 So, if you want to handle these cases use <code>gl.drawingBufferWidth</code> and <code>gl.drawingBufferHeight</code> as
 shown in #1 above. For most apps if you follow the best practices above things will just work. Be aware
 though if you are doing calculations that need to know the actual size of the drawingbuffer you need
-to take that into account. Examples off the top of my head, picking, in other words converting from
+to take that into account. Examples off the top of my head, [picking](webgl-picking.html), in other words converting from
 mouse coordinates into canvas pixel coordinates. Another would be any kind of post processing
 effects that want to know the actual size of the drawingbuffer.
 </p>

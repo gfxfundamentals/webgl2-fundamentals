@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- this file is auto-generated from {{src_file_name}}. Do not edited directly -->
 <!--
-Copyright 2012, Gregg Tavares.
+Copyright 2021, GFXFundamentals.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -16,7 +16,7 @@ met:
     in the documentation and/or other materials provided with the
     distribution.
 
-*   Neither the name of Gregg Tavares. nor the names of his
+*   Neither the name of GFXFundamentals. nor the names of his
     contributors may be used to endorse or promote products derived from
     this software without specific prior written permission.
 
@@ -37,24 +37,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="{{description}}" />
-<meta name="keywords" content="webgl webgl2 graphics" />
-<meta name="thumbnail" content="{{screenshot}}" />
+<meta name="description" content="{{description}}">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="{{screenshot}}">
 
-<meta property="og:title" content="{{title}}" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="{{screenshot}}" />
-<meta property="og:description" content="{{description}}" />
-<meta property="og:url" content="{{url}}" />
+<meta property="og:title" content="{{title}}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="{{screenshot}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:url" content="{{url}}">
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="{{title}}" />
-<meta name="twitter:url" content="{{url}}" />
-<meta name="twitter:description" content="{{description}}" />
-<meta name="twitter:image:src" content="{{screenshot}}" />
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="{{title}}">
+<meta name="twitter:url" content="{{url}}">
+<meta name="twitter:description" content="{{description}}">
+<meta name="twitter:image:src" content="{{screenshot}}">
 
 <script type="application/ld+json">
 {
@@ -94,7 +94,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <title>{{title}}</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+{{#ifexists filename="/webgl/lessons/{{langCode}}/lang.css" langCode=langInfo.baseDirname}}
+<link rel="stylesheet" href="/webgl/lessons/{{langInfo.baseDirname}}/lang.css">
+{{/ifexists}}
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+{{{include "build/templates/langs-meta.template"}}}
+
 </head>
 <body>
 {{{include "build/templates/header.template"}}}
@@ -138,9 +145,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: {{{stringify names="langInfo.contribTemplate,originalLangInfo.contribTemplate"}}},
+  owner: {{{stringify names="settings.owner"}}},
+  repo: {{{stringify names="settings.repo"}}},
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 {{{include "build/templates/analytics.template" }}}
 </html>
 

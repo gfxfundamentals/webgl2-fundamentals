@@ -1,4 +1,4 @@
-Title: WebGL SkyBox
+Title: WebGL2 SkyBox
 Description: Show the sky with a skybox!
 TOC: Skyboxes
 

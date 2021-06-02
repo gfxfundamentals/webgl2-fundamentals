@@ -1,0 +1,369 @@
+<!-- Licensed under a BSD license. See license.html for license -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>WebGL - GPGPU - Closest Line</title>
+<link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet" />
+</head>
+<body>
+<div class="description">
+  Closest Line
+</div>
+<canvas id="canvas"></canvas>
+</body>
+<!--
+for most samples webgl-utils only provides shader compiling/linking and
+canvas resizing because why clutter the examples with code that's the same in every sample.
+See https://webglfundamentals.org/webgl/lessons/webgl-boilerplate.html
+and https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+for webgl-utils, m3, m4, and webgl-lessons-ui.
+-->
+<script src="resources/twgl-full.min.js"></script>
+<script src="resources/m4.js"></script>
+
+<script>
+'use strict';
+
+/* eslint no-alert: 0 */
+
+function main() {
+  const closestLineVS = `#version 300 es
+  in vec4 position;
+  void main() {
+    gl_Position = position;
+  }
+  `;
+
+  const closestLineFS = `#version 300 es
+  precision highp float;
+
+  uniform sampler2D pointsTex;
+  uniform sampler2D linesTex;
+  uniform int numLineSegments;
+
+  out int outColor;
+
+  vec4 getAs1D(sampler2D tex, ivec2 dimensions, int index) {
+    int y = index / dimensions.x;
+    int x = index % dimensions.x;
+    return texelFetch(tex, ivec2(x, y), 0);
+  }
+
+  // from https://stackoverflow.com/a/6853926/128511
+  // a is the point, b,c is the line segment
+  float distanceFromPointToLine(in vec3 a, in vec3 b, in vec3 c) {
+    vec3 ba = a - b;
+    vec3 bc = c - b;
+    float d = dot(ba, bc);
+    float len = length(bc);
+    float param = 0.0;
+    if (len != 0.0) {
+      param = clamp(d / (len * len), 0.0, 1.0);
+    }
+    vec3 r = b + bc * param;
+    return distance(a, r);
+  }
+
+  void main() {
+    ivec2 pointsTexDimensions = textureSize(pointsTex, 0);
+    ivec2 linesTexDimensions = textureSize(linesTex, 0);
+
+    int ndx = int(gl_FragCoord.y) * pointsTexDimensions.x + int(gl_FragCoord.x); 
+    
+    // find the closest line segment
+    float minDist = 10000000.0; 
+    int minIndex = -1;
+    vec3 point = getAs1D(pointsTex, pointsTexDimensions, ndx).xyz;
+    for (int i = 0; i < numLineSegments; ++i) {
+      vec3 lineStart = getAs1D(linesTex, linesTexDimensions, i * 2).xyz;
+      vec3 lineEnd = getAs1D(linesTex, linesTexDimensions, i * 2 + 1).xyz;
+      float dist = distanceFromPointToLine(point, lineStart, lineEnd);
+      if (dist < minDist) {
+        minDist = dist;
+        minIndex = i;
+      }
+    }
+    
+    outColor = minIndex;
+  }
+  `;
+
+  const drawLinesVS = `#version 300 es
+  uniform sampler2D linesTex;
+  uniform mat4 matrix;
+
+  vec4 getAs1D(sampler2D tex, ivec2 dimensions, int index) {
+    int y = index / dimensions.x;
+    int x = index % dimensions.x;
+    return texelFetch(tex, ivec2(x, y), 0);
+  }
+
+  void main() {
+    ivec2 linesTexDimensions = textureSize(linesTex, 0);
+ 
+    // pull the position from the texture
+    vec4 position = getAs1D(linesTex, linesTexDimensions, gl_VertexID);
+
+    // do the common matrix math
+    gl_Position = matrix * vec4(position.xy, 0, 1);
+  }
+  `;
+
+  const drawLinesFS = `#version 300 es
+  precision highp float;
+  out vec4 outColor;
+  void main() {
+    outColor = vec4(vec3(0.8), 1);
+  }
+  `;
+
+  const drawPointsVS = `#version 300 es
+  uniform float numPoints;
+  uniform sampler2D pointsTex;
+  uniform mat4 matrix;
+
+  out vec4 v_color;
+
+  vec4 getAs1D(sampler2D tex, ivec2 dimensions, int index) {
+    int y = index / dimensions.x;
+    int x = index % dimensions.x;
+    return texelFetch(tex, ivec2(x, y), 0);
+  }
+
+  vec3 hsv2rgb(vec3 c) {
+    c = vec3(c.x, clamp(c.yz, 0.0, 1.0));
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+  }
+
+  void main() {
+    ivec2 pointsTexDimensions = textureSize(pointsTex, 0);
+ 
+    // pull the position from the texture
+    vec4 position = getAs1D(pointsTex, pointsTexDimensions, gl_VertexID);
+
+    // do the common matrix math
+    gl_Position = matrix * vec4(position.xy, 0, 1);
+    gl_PointSize = 5.0;
+
+    float hue = float(gl_VertexID) / numPoints;
+    v_color = vec4(hsv2rgb(vec3(hue, 1, 1)), 1);
+  }
+  `;
+
+  const drawClosestLinesVS = `#version 300 es
+  uniform float numPoints;
+  uniform highp isampler2D closestLinesTex;
+  uniform sampler2D linesTex;
+  uniform mat4 matrix;
+
+  out vec4 v_color;
+
+  vec4 getAs1D(sampler2D tex, ivec2 dimensions, int index) {
+    int y = index / dimensions.x;
+    int x = index % dimensions.x;
+    return texelFetch(tex, ivec2(x, y), 0);
+  }
+
+  ivec4 getAs1D(isampler2D tex, ivec2 dimensions, int index) {
+    int y = index / dimensions.x;
+    int x = index % dimensions.x;
+    return texelFetch(tex, ivec2(x, y), 0);
+  }
+
+  vec3 hsv2rgb(vec3 c) {
+    c = vec3(c.x, clamp(c.yz, 0.0, 1.0));
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+  }
+
+  void main() {
+    ivec2 closestLinesTexDimensions = textureSize(closestLinesTex, 0);
+    ivec2 linesTexDimensions = textureSize(linesTex, 0);
+
+    // pull the position from the texture
+    int pointId = gl_VertexID / 2;
+    int lineId = getAs1D(closestLinesTex, closestLinesTexDimensions, pointId).r;
+    int linePointId = lineId * 2 + gl_VertexID % 2;
+    vec4 position = getAs1D(linesTex, linesTexDimensions, linePointId);
+
+    // do the common matrix math
+    gl_Position = matrix * vec4(position.xy, 0, 1);
+
+    float hue = float(pointId) / numPoints;
+    v_color = vec4(hsv2rgb(vec3(hue, 1, 1)), 1);
+  }
+  `;
+
+  const drawClosestPointsLinesFS = `#version 300 es
+  precision highp float;
+  in vec4 v_color;
+  out vec4 outColor;
+  void main() {
+    outColor = v_color;
+  }
+  `;
+
+  // Get A WebGL context
+  /** @type {HTMLCanvasElement} */
+  const canvas = document.querySelector("#canvas");
+  const gl = canvas.getContext("webgl2");
+  if (!gl) {
+    return;
+  }
+
+  // we're going to base the initial positions on the size
+  // of the canvas so lets update the size of the canvas
+  // to the initial size we want
+  twgl.resizeCanvasToDisplaySize(gl.canvas);
+
+  function createPoints(numPoints) {
+    const points = [];
+    for (let i = 0; i < numPoints; ++i) {
+      points.push(r(gl.canvas.width), r(gl.canvas.height));
+    }
+    return points;
+  }
+
+  const r = max => Math.random() * max;
+
+  const points = createPoints(8);
+  const lines = createPoints(125 * 2);
+  const numPoints = points.length / 2;
+  const numLineSegments = lines.length / 2 / 2;
+
+  const {tex: pointsTex, dimensions: pointsTexDimensions} =
+      createDataTexture(gl, points, 2, gl.RG32F, gl.RG, gl.FLOAT);
+  const {tex: linesTex, dimensions: linesTexDimensions} =
+      createDataTexture(gl, lines, 2, gl.RG32F, gl.RG, gl.FLOAT);
+
+  function createDataTexture(gl, data, numComponents, internalFormat, format, type) {
+    const numElements = data.length / numComponents;
+
+    // compute a size that will hold all of our data
+    const width = Math.ceil(Math.sqrt(numElements));
+    const height = Math.ceil(numElements / width);
+
+    const bin = type === gl.FLOAT
+        ? new Float32Array(width * height * numComponents)
+        : new Int32Array(width * height * numComponents);
+    bin.fill(type === gl.FLOAT ? Number.POSITIVE_INFINITY : 0);
+    bin.set(data);
+
+    const tex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,        // mip level
+        internalFormat,
+        width,
+        height,
+        0,        // border
+        format,
+        type,
+        bin,
+    );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    return {tex, dimensions: [width, height]};
+  }
+
+  const closestLinePrgInfo = twgl.createProgramInfo(
+      gl, [closestLineVS, closestLineFS]);
+  const drawLinesPrgInfo = twgl.createProgramInfo(
+      gl, [drawLinesVS, drawLinesFS]);
+  const drawPointsPrgInfo = twgl.createProgramInfo(
+      gl, [drawPointsVS, drawClosestPointsLinesFS]);
+  const drawClosestLinesPrgInfo = twgl.createProgramInfo(
+      gl, [drawClosestLinesVS, drawClosestPointsLinesFS]);
+
+  // create a texture for the results
+  const {tex: closestLinesTex, dimensions: closestLinesTexDimensions} =
+      createDataTexture(gl, new Array(numPoints), 1, gl.R32I, gl.RED_INTEGER, gl.INT);
+
+  function createFramebuffer(gl, tex) {
+    const fb = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+    return fb;
+  }
+
+  // create a framebuffer so we can write to the closestLinesTex
+  const closestLineFB = createFramebuffer(gl, closestLinesTex);
+
+  // setup a full canvas clip space quad
+  const quadBufferInfo = twgl.createBufferInfoFromArrays(gl, {
+    position: {
+      numComponents: 2,
+      data: [
+        -1, -1,
+         1, -1,
+        -1,  1,
+        -1,  1,
+         1, -1,
+         1,  1,
+      ],
+    },
+  });
+  const quadVA = twgl.createVAOFromBufferInfo(gl, closestLinePrgInfo, quadBufferInfo);
+
+  // compute the closest lines
+  gl.bindFramebuffer(gl.FRAMEBUFFER, closestLineFB);
+  gl.viewport(0, 0, ...closestLinesTexDimensions);
+
+  gl.bindVertexArray(quadVA);  // quad vertices
+  gl.useProgram(closestLinePrgInfo.program);
+  twgl.setUniforms(closestLinePrgInfo, {
+    pointsTex,
+    linesTex,
+    numLineSegments,
+  });
+  gl.drawArrays(gl.TRIANGLES, 0, 6);  // draw the clip space quad so we get one result for each pixel
+
+  // draw all the lines in gray
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+  const matrix = m4.orthographic(0, gl.canvas.width, 0, gl.canvas.height, -1, 1);
+
+  gl.useProgram(drawLinesPrgInfo.program);
+  twgl.setUniforms(drawLinesPrgInfo, {
+    linesTex,
+    matrix,
+  });
+  gl.drawArrays(gl.LINES, 0, numLineSegments * 2);
+
+  // draw the closest lines
+  gl.useProgram(drawClosestLinesPrgInfo.program);
+  twgl.setUniforms(drawClosestLinesPrgInfo, {
+    numPoints,
+    closestLinesTex,
+    linesTex,
+    matrix,
+  });
+
+  // there is one closest line for each point, 2 vertices per line
+  gl.drawArrays(gl.LINES, 0, numPoints * 2);
+
+  // draw the points
+  gl.useProgram(drawPointsPrgInfo.program);
+  twgl.setUniforms(drawPointsPrgInfo, {
+    numPoints,
+    pointsTex,
+    matrix,
+  });
+  gl.drawArrays(gl.POINTS, 0, numPoints);
+}
+
+main();
+</script>
+</html>
+
+
+

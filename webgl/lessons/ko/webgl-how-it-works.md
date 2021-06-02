@@ -1,4 +1,4 @@
-Title: WebGL 어떻게 작동하나요
+Title: WebGL2 어떻게 작동하나요
 Description: WebGL이 무엇인지 What WebGL is really doing under the hood
 TOC: WebGL2 작동 원리
 
@@ -7,7 +7,7 @@ TOC: WebGL2 작동 원리
 
 다음과 같이 호출할 수 있습니다.
 
-    gl.drawArrays(gl.TRIANGLE, 0, 9);
+    gl.drawArrays(gl.TRIANGLES, 0, 9);
 
 여기서 9의미는 "9개 정점 처리"를 의미하므로 9개의 정점들이 처리됩니다.
 
@@ -139,7 +139,7 @@ table.vertex_table td {
 
 그런 다음 v_color에 작성된 3개의 값이 각 픽셀마다 보간되고 프래그먼트 쉐이더에 전달 됩니다.
 
-{{{diagram url="resources/fragment-shader-anim.html" caption="v_color는 v0, v1 그리고 v2 사이에서 보간됩니다." }}}
+{{{diagram url="resources/fragment-shader-anim.html" width="600" height="400" caption="v_color는 v0, v1 그리고 v2 사이에서 보간됩니다." }}}
 
 또한 더 많은 데이터를 버텍스 쉐이더로 전달할 수 있고 이를 프레그먼트 쉐이더에 전달할 수 있습니다. 예를 들어 2개의 삼각형과 2개의 색상으로 구성된 직사각형을 그려 본다고 합시다. 이를 위해 또다른 attribute를 버텍스 쉐이더에 추가하여 더 많은 데이터를 전달 하고 그 데이터를 프래그먼트 쉐이더에 직접 전달할 수 있습니다.
 

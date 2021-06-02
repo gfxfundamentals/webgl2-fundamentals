@@ -1,4 +1,4 @@
-Title: WebGL Matrix Naming
+Title: WebGL2 Matrix Naming
 Description: Common names for matrices
 TOC: 3D - Matrix Naming
 

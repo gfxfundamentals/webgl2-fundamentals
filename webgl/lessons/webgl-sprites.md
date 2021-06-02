@@ -1,4 +1,4 @@
-Title: WebGL Sprites
+Title: WebGL2 Sprites
 Description: How to do sprites in WebGL
 TOC: Sprites
 

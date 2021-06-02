@@ -1,4 +1,4 @@
-Title: WebGL Implementing A Matrix Stack
+Title: WebGL2 Implementing A Matrix Stack
 Description: How to implement canvas 2d's translate/rotate/scale functions in WebGL
 TOC: 2D - Matrix Stack
 

@@ -1,10 +1,9 @@
-Title: WebGL Cross Platform Issues
+Title: WebGL2 Cross Platform Issues
 Description: Things to be aware of when trying to make your WebGL app work everywhere.
 TOC: Cross Platform Issues
 
 I probably comes as no shock that not all WebGL programs work on all devices or
-browser. For one WebGL2, at least as of July 2020, [is not supported at all in
-Safari](#safari).
+browser. 
 
 Here's a list of most of the issues you might run into off the top of my head
 
@@ -329,8 +328,3 @@ Here's a short list of some bugs unfixed for years
 * Safari doesn't handle common no attribute use case (1yr old)
 [bug](https://bugs.webkit.org/show_bug.cgi?id=197592)
 
-* <a id="safari"></a>Also note that while there is an option to enable WebGL2 in Safari
-  all it does is allow `#version 300 es` shaders. All other 80+ WebGL2
-  api functions are unimplemented, at least as of July 2020.
-  [See the source](https://trac.webkit.org/browser/webkit/trunk/Source/WebCore/html/canvas/WebGL2RenderingContext.cpp)
-  and search for "not implemented".

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012, Gregg Tavares.
+ * Copyright 2021, GFXFundamentals.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -12,7 +12,7 @@
  * copyright notice, this list of conditions and the following disclaimer
  * in the documentation and/or other materials provided with the
  * distribution.
- *     * Neither the name of Gregg Tavares. nor the names of his
+ *     * Neither the name of GFXFundamentals. nor the names of his
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
  *
@@ -71,6 +71,23 @@
     }
   }
 
+  const errorRE = /ERROR:\s*\d+:(\d+)/gi;
+  function addLineNumbersWithError(src, log = '') {
+    // Note: Error message formats are not defined by any spec so this may or may not work.
+    const matches = [...log.matchAll(errorRE)];
+    const lineNoToErrorMap = new Map(matches.map((m, ndx) => {
+      const lineNo = parseInt(m[1]);
+      const next = matches[ndx + 1];
+      const end = next ? next.index : log.length;
+      const msg = log.substring(m.index, end);
+      return [lineNo - 1, msg];
+    }));
+    return src.split('\n').map((line, lineNo) => {
+      const err = lineNoToErrorMap.get(lineNo);
+      return `${lineNo + 1}: ${line}${err ? `\n\n^^^ ${err}` : ''}`;
+    }).join('\n');
+  }
+
 
   /**
    * Error Callback
@@ -78,7 +95,6 @@
    * @param {string} msg error message.
    * @memberOf module:webgl-utils
    */
-
 
   /**
    * Loads a shader.
@@ -104,7 +120,7 @@
     if (!compiled) {
       // Something went wrong during compilation; get the error
       const lastError = gl.getShaderInfoLog(shader);
-      errFn("*** Error compiling shader '" + shader + "':" + lastError);
+      errFn(`Error compiling shader: ${lastError}\n${addLineNumbersWithError(shaderSource, lastError)}`);
       gl.deleteShader(shader);
       return null;
     }
@@ -144,7 +160,13 @@
     if (!linked) {
         // something went wrong with the link
         const lastError = gl.getProgramInfoLog(program);
-        errFn("Error in program linking:" + lastError);
+        errFn(`Error in program linking: ${lastError}\n${
+          shaders.map(shader => {
+            const src = addLineNumbersWithError(gl.getShaderSource(shader));
+            const type = gl.getShaderParameter(shader, gl.SHADER_TYPE);
+            return `${glEnumToString(gl, type)}:\n${src}`;
+          }).join('\n')
+        }`);
 
         gl.deleteProgram(program);
         return null;

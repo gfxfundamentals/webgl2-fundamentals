@@ -1,4 +1,4 @@
-Title: WebGL 2D 크기
+Title: WebGL2 2D 크기
 Description: 2D에서 크기 변환하는 방법
 TOC: WebGL2 2D 크기
 

@@ -1,4 +1,4 @@
-Title: WebGL 雾
+Title: WebGL2 雾
 Description: 怎样实现雾
 TOC: WebGL2 雾
 

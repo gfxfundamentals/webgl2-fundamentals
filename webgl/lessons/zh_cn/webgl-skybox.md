@@ -1,4 +1,4 @@
-Title: WebGL 天空盒
+Title: WebGL2 天空盒
 Description: 用天空盒来展示天空!
 TOC: WebGL2 天空盒
 

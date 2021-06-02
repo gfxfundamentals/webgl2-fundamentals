@@ -1,4 +1,4 @@
-Title: WebGL 2D 행렬
+Title: WebGL2 2D 행렬
 Description: 행렬의 수학적 작동 원리는 간단하고 쉽게 다음 지도서에 설명되어 있습니다.
 TOC: WebGL2 2D 행렬
 
@@ -20,7 +20,7 @@ TOC: WebGL2 2D 행렬
 
 저보다 똑똑한 사람들이 행렬 수학으로 모든 것을 똑같이 할 수 있다는 것을 알아냈습니다. 2D의 경우 3x3 행렬을 사용합니다. 3x3 행렬은 9개의 상자가 있는 격자와 같습니다.
 
-<style>.glocal-center { text-align: center; } .glocal-center-content { margin-left: auto; margin-right: auto; } .glocal-mat td, .glocal-b { border: 1px solid black; text-align: left;} .glocal-mat td { text-align: center; } .glocal-border { border: 1px solid black; } .glocal-sp { text-align: right !important;  width: 8em;} .glocal-blk { color: black; background-color: black; } .glocal-left { text-align: left; } .glocal-right { text-align: right; }</style>
+<link href="resources/webgl-2d-matrices.css" rel="stylesheet">
 <div class="glocal-center"><table class="glocal-center-content glocal-mat"><tr><td>1.0</td><td>2.0</td><td>3.0</td></tr><tr><td>4.0</td><td>5.0</td><td>6.0</td></tr><tr><td>7.0</td><td>8.0</td><td>9.0</td></tr></table></div>
 
 계산을 하기 위해 행렬의 열 아래로 위치를 곱하고 결과를 더합니다. 위치는 오직 2개의 값 x, y을 가지고 있습니다. 그러나 수학에서는 3개의 값이 필요하므로 1을 3번쨰 값으로 사용할 것입니다.
@@ -54,19 +54,19 @@ TOC: WebGL2 2D 행렬
 
 또는 더 간결하게
 
-<pre class="webgl_center">
+<div class="webgl_center"><pre class="webgl_math">
 newX = x + tx;
 newY = y + ty;
-</pre>
+</pre></div>
 
 추가적으로 더 다룰 필요는 없습니다. 놀랍게도 [이동(translation)예제의 이동(translation)코드](webgl-2d-translation.html)와 비슷합니다.
 
 비슷하게 회전도 해봅시다. 회전 글에서 언급한것 처럼 회전하고자 하는 각도의 사인과 코사인만 필요합니다.
 
-<pre class="webgl_center">
+<div class="webgl_center"><pre class="webgl_math">
 s = Math.sin(angleToRotateInRadians);
 c = Math.cos(angleToRotateInRadians);
-</pre>
+</pre></div>
 
 그리고 다음와 같은 행렬을 만듭니다.
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- this file is auto-generated from {{src_file_name}}. Do not edited directly -->
 <!--
-Copyright 2012, Gregg Tavares.
+Copyright 2021, GFXFundamentals.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -16,7 +16,7 @@ met:
     in the documentation and/or other materials provided with the
     distribution.
 
-*   Neither the name of Gregg Tavares. nor the names of his
+*   Neither the name of GFXFundamentals. nor the names of his
     contributors may be used to endorse or promote products derived from
     this software without specific prior written permission.
 
@@ -35,17 +35,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <html lang="{{langInfo.langCode}}">
 <head>
 <meta charset="utf-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Modern WebGL tutorials that teach WebGL from basic principles" />
-<meta name="keywords" content="webgl graphics" />
-<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="description" content="Modern WebGL tutorials that teach WebGL from basic principles">
+<meta name="keywords" content="webgl graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg">
 
-<meta property="og:title" content="{{title}}" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="{{templateOptions.description}}" />
+<meta property="og:title" content="{{title}}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg">
+<meta property="og:description" content="{{templateOptions.description}}">
 <meta property="og:url" content="https://webgl2fundamentals.org">
 
 <meta name="twitter:card" content="summary_large_image">
@@ -54,16 +53,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <meta name="twitter:domain" content="webgl2fundamentals.org">
 <meta name="twitter:title" content="webgl2fundamentals.org">
 <meta name="twitter:url" content="https://webgl2fundamentals.org">
-<meta name="twitter:description" content="{{templateOptions.description}}" />
+<meta name="twitter:description" content="{{templateOptions.description}}">
 <meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg">
 
 <title>{{title}}</title>
 
-<link rel="alternate" type="application/atom+xml" title="WebGL Fundamentals" href="https://webgl2fundamentals.org/atom.xml" />
+<link rel="alternate" type="application/atom+xml" title="WebGL Fundamentals" href="https://webgl2fundamentals.org/atom.xml">
 
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
-<link rel="stylesheet" href="/webgl/lessons/resources/index.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+{{#ifexists filename="/webgl/lessons/{{langCode}}/lang.css" langCode=langInfo.baseDirname}}
+<link rel="stylesheet" href="/webgl/lessons/{{langInfo.baseDirname}}/lang.css">
+{{/ifexists}}
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/index.css">
+
+{{{include "build/templates/langs-meta.template"}}}
 
 <script type="application/ld+json">
 {
@@ -73,8 +78,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   {{{langInfo.carousel}}}
 }
 </script>
-
-
 </head>
 <body>
 <div class="webgl_navbar">
@@ -96,8 +99,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 {{{include "build/templates/repobanner.template"}}}
 <iframe class="background" src="/webgl/background.html"></iframe>
 </body>
+<script>
+const settings = {
+  contribTemplate: {{{stringify names="langInfo.contribTemplate,originalLangInfo.contribTemplate"}}},
+  owner: {{{stringify names="settings.owner"}}},
+  repo: {{{stringify names="settings.repo"}}},
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 {{{include "build/templates/analytics.template" }}}
 </html>
 

@@ -1,10 +1,10 @@
-Title: WebGL Attributes
+Title: WebGL2 Attributes
 Description: What are attributes in WebGL?
 TOC: Attributes
 
 
 This article is meant to try to give you a mental image
-of how attribute state is setup in WebGL. There is [a similar article on texture units](webgl-texture-units.html).
+of how attribute state is setup in WebGL. There is [a similar article on texture units](webgl-texture-units.html) and on [framebuffers](webgl-framebuffers.html).
 
 As a prerequisite you probably want to read [How WebGL Works](webgl-how-it-works.html)
 and [WebGL Shaders and GLSL](https://webglfundamentals.org/webgl/lessons/webgl-shaders-and-glsl.html). 
@@ -119,7 +119,7 @@ When you link a vertex shader with a fragment shader by calling
 `gl.linkProgram(someProgram)` WebGL (the driver/GPU/browser) decide on their own
 which index/location to use for each attribute. Unless you manually assign
 locations (see below) you have no idea which ones they're going to pick. It's up
-the the browser/driver/GPU. So, you have to ask it which attribute did you use
+the browser/driver/GPU. So, you have to ask it which attribute did you use
 for position, texcoord, and normal?. You do this by calling
 `gl.getAttribLocation`
 

@@ -1,4 +1,4 @@
-Title: WebGL 2D Rotation
+Title: WebGL2 2D Rotation
 Description: How to rotate in 2D
 TOC: 2D Rotation
 

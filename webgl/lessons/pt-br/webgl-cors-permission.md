@@ -1,4 +1,4 @@
-Title: WebGL - Cross Origin Images
+Title: WebGL2 - Cross Origin Images
 Description: Usando imagens em vários domínios
 TOC: WebGL2 - Cross Origin Images
 

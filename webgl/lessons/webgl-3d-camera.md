@@ -1,4 +1,4 @@
-Title: WebGL 3D - Cameras
+Title: WebGL2 3D - Cameras
 Description: How cameras work in WebGL
 TOC: 3D - Cameras
 

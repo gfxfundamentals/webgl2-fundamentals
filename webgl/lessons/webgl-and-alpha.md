@@ -1,4 +1,4 @@
-Title: WebGL and Alpha
+Title: WebGL2 and Alpha
 Description: How alpha in WebGL is different than alpha in OpenGL
 TOC: WebGL2 and Alpha
 

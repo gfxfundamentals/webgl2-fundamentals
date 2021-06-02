@@ -1,4 +1,4 @@
-Title: WebGL 着色器和 GLSL 语言
+Title: WebGL2 着色器和 GLSL 语言
 Description: 什么是着色器和 GLSL 语言
 TOC: 着色器和 GLSL 语言
 
@@ -236,6 +236,7 @@ precision highp float;
                   format,
                   type,
                   data);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
 然后再着色器程序中查找 uniform 的位置。
 

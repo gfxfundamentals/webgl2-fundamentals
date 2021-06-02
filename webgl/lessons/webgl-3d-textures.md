@@ -1,4 +1,4 @@
-Title: WebGL Textures
+Title: WebGL2 Textures
 Description: How textures work in WebGL
 TOC: Textures
 

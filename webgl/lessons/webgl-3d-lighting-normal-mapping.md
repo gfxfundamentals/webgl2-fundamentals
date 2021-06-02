@@ -1,4 +1,4 @@
-Title: WebGL 3D - Normal Mapping
+Title: WebGL2 3D - Normal Mapping
 Description: How to implement normal maps
 TOC: Normal Mapping
 

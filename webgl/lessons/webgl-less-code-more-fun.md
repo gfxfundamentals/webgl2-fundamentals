@@ -1,4 +1,4 @@
-Title: WebGL - Less Code, More Fun
+Title: WebGL2 - Less Code, More Fun
 Description: Ways to make programming WebGL less verbose
 TOC: Less Code, More Fun
 

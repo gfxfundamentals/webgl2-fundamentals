@@ -1,4 +1,4 @@
-Title: WebGL How It Works
+Title: WebGL2 How It Works
 Description: What WebGL is really doing under the hood
 TOC: How It Works
 
@@ -12,7 +12,7 @@ first part.
 
 When you call
 
-    gl.drawArrays(gl.TRIANGLE, 0, 9);
+    gl.drawArrays(gl.TRIANGLES, 0, 9);
 
 The 9 there means "process 9 vertices" so here are 9 vertices being processed.
 
@@ -174,7 +174,7 @@ v_color that we declared.
 Those 3 values written to v_color are then interpolated and passed to the
 fragment shader for each pixel.
 
-{{{diagram url="resources/fragment-shader-anim.html" caption="v_color is interpolated between v0, v1 and v2" }}}
+{{{diagram url="resources/fragment-shader-anim.html" width="600" height="400" caption="v_color is interpolated between v0, v1 and v2" }}}
 
 We can also pass in more data to the vertex shader which we can then pass
 on to the fragment shader.  So for example let's draw a rectangle, that

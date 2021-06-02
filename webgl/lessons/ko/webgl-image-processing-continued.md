@@ -1,4 +1,4 @@
-Title: WebGL 이미지 처리 심화
+Title: WebGL2 이미지 처리 심화
 Description: WebGL에 있는 여러 이미지 처리 기술을 적용하는 방법
 TOC: WebGL2 이미지 처리 심화
 

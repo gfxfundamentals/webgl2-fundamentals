@@ -1,4 +1,4 @@
-Title: WebGL 3D Perspective Correct Texture Mapping
+Title: WebGL2 3D Perspective Correct Texture Mapping
 Description: What's special about W
 TOC: Perspective Correct Texture Mapping
 
@@ -17,7 +17,7 @@ for every pixel it will call our fragment shader and ask it what
 color to make that pixel. Between the 3 vertices of the triangle
 it will pass us our varyings interpolated between the 3 values.
 
-{{{diagram url="resources/fragment-shader-anim.html" caption="v_color is interpolated between v0, v1 and v2" }}}
+{{{diagram url="resources/fragment-shader-anim.html" width="600" height="400" caption="v_color is interpolated between v0, v1 and v2" }}}
 
 Going back to our [first article](webgl-fundamentals.html) we drew a triangle in
 clip space, no math. We just passed in some clip space coordinates

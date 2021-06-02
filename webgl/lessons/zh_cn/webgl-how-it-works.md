@@ -1,4 +1,4 @@
-Title: WebGL 是如何工作的
+Title: WebGL2 是如何工作的
 Description: WebGL 的底层到底做了什么
 TOC: 如何工作的
 
@@ -8,7 +8,7 @@ TOC: 如何工作的
 
 当你调用
 
-    gl.drawArrays(gl.TRIANGLE, 0, 9);
+    gl.drawArrays(gl.TRIANGLES, 0, 9);
 
 数字9意味着处理“9个顶点”，相应地就有9个点被处理。
 
@@ -150,7 +150,7 @@ table.vertex_table td {
 
 然后，写入到 v_color 的 3 个值被插值计算并传给绘制每个像素的片段着色器。
 
-{{{diagram url="resources/fragment-shader-anim.html" caption="v_color is interpolated between v0, v1 and v2" }}}
+{{{diagram url="resources/fragment-shader-anim.html" width="600" height="400" caption="v_color is interpolated between v0, v1 and v2" }}}
 
 我们还可以将更多数据传递给点着色器，然后再传递给片段着色器。
 例如，让我们绘制一个由 2 个不同颜色三角形组成的矩形。

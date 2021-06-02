@@ -1,4 +1,4 @@
-Title: WebGL Pulling Vertices
+Title: WebGL2 Pulling Vertices
 Description: Using independent indices
 TOC: Pulling Vertices
 

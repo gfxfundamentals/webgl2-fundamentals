@@ -1,4 +1,4 @@
-Title: WebGL 2D Scale
+Title: WebGL2 2D Scale
 Description: How to scale in 2D
 TOC: 2D Scale
 

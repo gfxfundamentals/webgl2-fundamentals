@@ -1,4 +1,4 @@
-Title: WebGL 蒙皮
+Title: WebGL2 蒙皮
 Description: 在WebGL中如何蒙皮网格
 TOC: WebGL2 蒙皮
 
@@ -1117,6 +1117,6 @@ v_normal = vec3(a_JOINTS_0.xyz) / float(textureSize(u_jointTexture, 0).y - 1) * 
 
 又一次得到了乱七八糟的颜色。上图是修复后的样子。这就是你期望看到的虎鲸的权重。每个骨骼周围的色环。
 
-这个bug和我在开始制作这个例子时使用的代替twgl的`webgl.createBufferInfoFromArrays`有关。修复bug后我移除了着色器的改动。注意如果你想使用它们，我在注释中保留了它们。
+这个bug和我在开始制作这个例子时使用的代替twgl的`twgl.createBufferInfoFromArrays`有关。修复bug后我移除了着色器的改动。注意如果你想使用它们，我在注释中保留了它们。
 
 我想说清楚上面的代码是为了帮助说明蒙皮。它并不意味是一个成熟的蒙皮引擎。我想如果我们试图做一个可使用的引擎，我们会遇到许多我们可能需要改动的地方，但我希望这个例子可以帮助轻微揭开蒙皮的神秘面纱。

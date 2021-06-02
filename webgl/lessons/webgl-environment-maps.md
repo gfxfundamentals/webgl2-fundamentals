@@ -1,4 +1,4 @@
-Title: WebGL Environment Maps (reflections)
+Title: WebGL2 Environment Maps (reflections)
 Description: How to implement environment maps.
 TOC: Environment maps
 

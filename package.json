@@ -5,30 +5,32 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
-    "@gfxfundamentals/lesson-builder": "git://github.com/gfxfundamentals/lesson-builder.git#v1.4.1",
-    "@gfxfundamentals/live-editor": "git://github.com/gfxfundamentals/live-editor.git#v1.0.8",
+    "@gfxfundamentals/lesson-builder": "git+https://github.com/gfxfundamentals/lesson-builder.git#v1.8.2",
+    "@gfxfundamentals/live-editor": "git+https://github.com/gfxfundamentals/live-editor.git#v1.0.17",
     "eslint-plugin-google-camelcase": "0.0.2",
-    "eslint-plugin-html": "^6.0.2",
+    "eslint-plugin-html": "6.1.1",
     "eslint-plugin-one-variable-per-var": "0.0.3",
     "eslint-plugin-optional-comma-spacing": "0.0.4",
     "eslint-plugin-require-trailing-comma": "0.0.1",
-    "grunt": "^1.2.1",
-    "grunt-cli": "^1.3.2",
-    "grunt-contrib-clean": "^2.0.0",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-watch": "^1.1.0",
-    "grunt-eslint": "^23.0.0",
-    "grunt-jsdoc": "^2.4.1",
-    "ld-check-dependencies": "^1.1.1",
-    "load-grunt-tasks": "^5.0.0",
-    "minami": "^1.2.3",
-    "servez": "^1.10.0"
+    "grunt": "1.3.0",
+    "grunt-cli": "1.3.2",
+    "grunt-contrib-clean": "2.0.0",
+    "grunt-contrib-copy": "1.0.0",
+    "grunt-contrib-watch": "1.1.0",
+    "grunt-eslint": "23.0.0",
+    "grunt-jsdoc": "2.4.1",
+    "ld-check-dependencies": "1.1.1",
+    "load-grunt-tasks": "5.1.0",
+    "minami": "1.2.3",
+    "servez": "1.11.0"
   },
   "scripts": {
     "build": "ld-check-dependencies && grunt",
     "build-ci": "grunt",
     "watch": "ld-check-dependencies && grunt buildwatch",
+    "watch-no-check": "grunt buildwatch",
     "pre-push": "ld-check-dependencies && grunt pre-push",
+    "pre-build": "grunt pre-push",
     "start": "servez out",
     "eslint": "ld-check-dependencies && grunt eslint",
     "test": "check-all-the-errors out \"*.html\""
@@ -40,7 +42,7 @@
   "keywords": [
     "WebGL"
   ],
-  "author": "Gregg Tavares",
+  "author": "GFXFundamentals",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/gfxfundamentals/webgl2-fundamentals/issues"

@@ -1,4 +1,4 @@
-Title: WebGL Cubemaps
+Title: WebGL2 Cubemaps
 Description: How to use cubemaps in WebGL
 TOC: Cubemaps
 

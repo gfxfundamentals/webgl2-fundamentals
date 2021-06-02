@@ -1,4 +1,4 @@
-Title: WebGL Shaders and GLSL
+Title: WebGL2 Shaders and GLSL
 Description: What's a shader and what's GLSL
 TOC: Shaders and GLSL
 
@@ -250,6 +250,10 @@ At a minimum we need to create and put data in the texture, for example
                   type,
                   data);
 
+Set the filtering
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+
 Then look up the uniform location in the shader program
 
     var someSamplerLoc = gl.getUniformLocation(someProgram, "u_texture");
@@ -413,8 +417,7 @@ If you like really dry and verbose stuff you can try
 
 That's the point of this entire series of posts. WebGL is all about creating various shaders, supplying
 the data to those shaders and then calling `gl.drawArrays`, `gl.drawElements`, etc to have WebGL process
-the vertices by calling the current vertex shader for each vertex and then render pixels by calling the
-the current fragment shader for each pixel.
+the vertices by calling the current vertex shader for each vertex and then render pixels by calling the current fragment shader for each pixel.
 
 Actually creating the shaders requires several lines of code. Since those lines are the same in
 most WebGL programs and since once written you can pretty much ignore them [how to compile GLSL shaders

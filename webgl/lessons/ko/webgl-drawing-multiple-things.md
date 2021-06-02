@@ -1,4 +1,4 @@
-Title: WebGL - 여러 물체를 그리는 법
+Title: WebGL2 - 여러 물체를 그리는 법
 Description: WebGL에서 다른 종류의 여러가지 물체를 그리는 법
 TOC: 여러 물체를 그리는 법
 
