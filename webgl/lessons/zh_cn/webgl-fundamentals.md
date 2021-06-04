@@ -399,7 +399,7 @@ WebGL会用这三个顶点画出三角形。对于每个像素，WebGL调用片�
     *  outColor = u_color;
     }
 
-下面代码在随机选择位置和颜色花了50个正方形。
+下面代码在随机选择位置和颜色画了50个正方形。
 
       var colorLocation = gl.getUniformLocation(program, "u_color");
       ...
