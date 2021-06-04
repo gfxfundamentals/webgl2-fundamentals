@@ -236,7 +236,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>이 글은 몇 가지 WebGL 글에서 이어지는 글입니다.
+      <p>이 글은 WebGL 시리즈에서 이어지는 글입니다.
 첫번째는 <a href="webgl-fundamentals.html">기초로 시작하기</a>이며 이 전 글은 <a href="webgl-2d-matrices.html">2D 행렬에 대하여</a>입니다. 
 만약 아직 이 글들을 읽지 않았다면 먼저 읽는 것을 권장합니다.</p>
 <p>지난번 글에서 2D 행렬이 어떻게 작동하는지 살펴 보았습니다. 
@@ -247,7 +247,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>마지막 예제를 3D로 변경해 봅시다. F를 다시 사용하지만 이번에는 3D &#39;F&#39;를 사용합니다.</p>
 <p>첫 번쨰 할일은 버텍스 쉐이더가 3D를 처리하도록 변경하는 것입니다.
 여기에 예전 버텍스 쉐이더가 있습니다.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">#version 300 es
 
 // 버텍스 쉐이더로 입력되는 attribute입니다.
 // 버퍼로부터 데이터를 받습니다.
@@ -261,8 +261,9 @@ void main() {
   // 행렬에 위치를 곱합니다.
   gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
 }
-</code></pre><p>여기에 새로운 쉐이더가 있습니다.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 버텍스 쉐이더로 입력되는 attribute입니다.
+</code></pre>
+<p>여기에 새로운 쉐이더가 있습니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">// 버텍스 쉐이더로 입력되는 attribute입니다.
 // 버퍼로부터 데이터를 받습니다.
 in vec2 a_position;
 
@@ -274,30 +275,30 @@ void main() {
   // 행렬에 위치를 곱합니다.
 *  gl_Position = u_matrix * a_position;
 }
-</code></pre><p>더 간단 해졌습니다! <code class="notranslate" translate="no">x</code>와<code class="notranslate" translate="no">y</code>를 제공하고<code class="notranslate" translate="no">z</code>를 1로 설정했던 2 차원과 마찬가지로, 
+</code></pre>
+<p>더 간단 해졌습니다! <code class="notranslate" translate="no">x</code>와<code class="notranslate" translate="no">y</code>를 제공하고<code class="notranslate" translate="no">z</code>를 1로 설정했던 2 차원과 마찬가지로, 
 3d에서는 <code class="notranslate" translate="no">x</code>,<code class="notranslate" translate="no">y</code>와<code class="notranslate" translate="no">z</code>를 제공하고<code class="notranslate" translate="no">w</code>가 1이 되어야합니다. 
 <code class="notranslate" translate="no">w</code> 속성의 기본값은 1이라는 사실을 이용할 수 있습니다.</p>
 <p>그 다음 3D 데이터를 제공해야합니다.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  ...
 
-  // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-*  var size = 3;          // 3 components per iteration
-  var type = gl.FLOAT;   // the data is 32bit floats
-  var normalize = false; // don&#39;t normalize the data
-  var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-  var offset = 0;        // start at the beginning of the buffer
+  // attribute에게 positionBuffer (ARRAY_BUFFER)로부터 데이터를 가져오는 법을 알려줍니다. 
+*  var size = 3;          // iteration마다 3 개의 component
+  var type = gl.FLOAT;   // 데이터는 32bit floats
+  var normalize = false; // 데이터를 정규화하지 않음
+  var stride = 0;        // 각 iteration마다 다음 위치값을 얻기 위해 size * sizeof(type) 만큼 앞으로 이동
+  var offset = 0;        // 버퍼의 맨 앞부분부터 시작
   gl.vertexAttribPointer(
       positionAttributeLocation, size, type, normalize, stride, offset);
 
   ...
 
-  // Fill the current ARRAY_BUFFER buffer
-  // with the values that define a letter &#39;F&#39;.
+  // 문자 &#39;F&#39;를 정의하는 값들로 현재 ARRAY_BUFFER 버퍼를 채움
   function setGeometry(gl) {
     gl.bufferData(
         gl.ARRAY_BUFFER,
         new Float32Array([
-            // left column
+            // 왼쪽 기둥
               0,   0,  0,
              30,   0,  0,
               0, 150,  0,
@@ -305,7 +306,7 @@ void main() {
              30,   0,  0,
              30, 150,  0,
 
-            // top rung
+            // 위쪽 가로선
              30,   0,  0,
             100,   0,  0,
              30,  30,  0,
@@ -313,7 +314,7 @@ void main() {
             100,   0,  0,
             100,  30,  0,
 
-            // middle rung
+            // 가운데 가로선
              30,  60,  0,
              67,  60,  0,
              30,  90,  0,
@@ -322,9 +323,10 @@ void main() {
              67,  90,  0]),
         gl.STATIC_DRAW);
   }
-</code></pre><p>Next we need to change all the matrix functions from 2D to 3D</p>
-<p>Here are the 2D (before) versions of m3.translation, m3.rotation, and m3.scaling</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m3 = {
+</code></pre>
+<p>다음으로, 모든 행렬 관련 함수들을 2D에서 3D로 변경해야 합니다.</p>
+<p>아래는 (이전에 사용했던) 2D 버전의 m3.translation, m3.rotation, and m3.scaling 입니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">var m3 = {
   translation: function translation(tx, ty) {
     return [
       1, 0, 0,
@@ -351,7 +353,8 @@ void main() {
     ];
   },
 };
-</code></pre><p>And here are the updated 3D versions.</p>
+</code></pre>
+<p>아래는 변경된 3D 버전입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m4 = {
   translation: function(tx, ty, tz) {
     return [
@@ -407,11 +410,9 @@ void main() {
     ];
   },
 };
-</code></pre><p>Notice we now have 3 rotation functions.  We only needed one in 2D as we
-were effectively only rotating around the Z axis.  Now though to do 3D we
-also want to be able to rotate around the X axis and Y axis as well.  You
-can see from looking at them they are all very similar.  If we were to
-work them out you&#39;d see them simplify just like before</p>
+</code></pre><p>이제 3개의 rotation 함수가 있다는 점에 주목하세요. 2D에서는 Z축을 기준으로만 회전하기 때문에 함수가 하나만 필요했습니다.
+3D에서는 Z축뿐만 아니라 X축, Y축에 대해서도 회전을 할 수 있어야 합니다. 보시면 세 개의 함수가 모두 비슷해 보이는 것을 알 수 있습니다.
+조금 살펴보면 이전과 비슷하게 간단하다는 것을 알 수 있습니다.</p>
 <p>Z rotation</p>
 <div class="webgl_center">
 <div>newX = x *  c + y * s;</div>
@@ -430,11 +431,11 @@ work them out you&#39;d see them simplify just like before</p>
 <div>newZ = y * -s + z * c;</div>
 </div>
 
-<p>which gives you these rotations.</p>
+<p>위와 같은 수식이 회전을 수행합니다.</p>
 <iframe class="external_diagram" src="../resources/axis-diagram.html" style="width: 540px; height: 240px;"></iframe>
 
-<p>Similarly we&#39;ll make our simplified functions</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  translate: function(m, tx, ty, tz) {
+<p>비슷하게, 단순한 버전의 회전 함수들을 만들 수 있습니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  translate: function(m, tx, ty, tz) {
     return m4.multiply(m, m4.translation(tx, ty, tz));
   },
 
@@ -453,9 +454,65 @@ work them out you&#39;d see them simplify just like before</p>
   scale: function(m, sx, sy, sz) {
     return m4.multiply(m, m4.scaling(sx, sy, sz));
   },
-</code></pre><p>We also need to update the projection function. Here&#39;s the old one</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  projection: function (width, height) {
-    // Note: This matrix flips the Y axis so 0 is at the top.
+</code></pre>
+<p>그리고 4x4 행렬 곱 함수가 필요합니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  multiply: multiply(a, b) {
+    var b00 = b[0 * 4 + 0];
+    var b01 = b[0 * 4 + 1];
+    var b02 = b[0 * 4 + 2];
+    var b03 = b[0 * 4 + 3];
+    var b10 = b[1 * 4 + 0];
+    var b11 = b[1 * 4 + 1];
+    var b12 = b[1 * 4 + 2];
+    var b13 = b[1 * 4 + 3];
+    var b20 = b[2 * 4 + 0];
+    var b21 = b[2 * 4 + 1];
+    var b22 = b[2 * 4 + 2];
+    var b23 = b[2 * 4 + 3];
+    var b30 = b[3 * 4 + 0];
+    var b31 = b[3 * 4 + 1];
+    var b32 = b[3 * 4 + 2];
+    var b33 = b[3 * 4 + 3];
+    var a00 = a[0 * 4 + 0];
+    var a01 = a[0 * 4 + 1];
+    var a02 = a[0 * 4 + 2];
+    var a03 = a[0 * 4 + 3];
+    var a10 = a[1 * 4 + 0];
+    var a11 = a[1 * 4 + 1];
+    var a12 = a[1 * 4 + 2];
+    var a13 = a[1 * 4 + 3];
+    var a20 = a[2 * 4 + 0];
+    var a21 = a[2 * 4 + 1];
+    var a22 = a[2 * 4 + 2];
+    var a23 = a[2 * 4 + 3];
+    var a30 = a[3 * 4 + 0];
+    var a31 = a[3 * 4 + 1];
+    var a32 = a[3 * 4 + 2];
+    var a33 = a[3 * 4 + 3];
+
+    return [
+      b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
+      b00 * a01 + b01 * a11 + b02 * a21 + b03 * a31,
+      b00 * a02 + b01 * a12 + b02 * a22 + b03 * a32,
+      b00 * a03 + b01 * a13 + b02 * a23 + b03 * a33,
+      b10 * a00 + b11 * a10 + b12 * a20 + b13 * a30,
+      b10 * a01 + b11 * a11 + b12 * a21 + b13 * a31,
+      b10 * a02 + b11 * a12 + b12 * a22 + b13 * a32,
+      b10 * a03 + b11 * a13 + b12 * a23 + b13 * a33,
+      b20 * a00 + b21 * a10 + b22 * a20 + b23 * a30,
+      b20 * a01 + b21 * a11 + b22 * a21 + b23 * a31,
+      b20 * a02 + b21 * a12 + b22 * a22 + b23 * a32,
+      b20 * a03 + b21 * a13 + b22 * a23 + b23 * a33,
+      b30 * a00 + b31 * a10 + b32 * a20 + b33 * a30,
+      b30 * a01 + b31 * a11 + b32 * a21 + b33 * a31,
+      b30 * a02 + b31 * a12 + b32 * a22 + b33 * a32,
+      b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33,
+    ];
+  },
+</code></pre>
+<p>투영 함수도 변경해야 합니다. 아래는 예전 버전이고,</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  projection: function (width, height) {
+    // 주의: 이 행렬은 Y축을 뒤집어 0이 위쪽이 되도록 합니다.
     return [
       2 / width, 0, 0,
       0, -2 / height, 0,
@@ -463,10 +520,11 @@ work them out you&#39;d see them simplify just like before</p>
     ];
   },
 }
-</code></pre><p>which converted from pixels to clip space. For our first attempt at
-expanding it to 3D let&#39;s try</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  projection: function(width, height, depth) {
-    // Note: This matrix flips the Y axis so 0 is at the top.
+</code></pre>
+<p>픽셀을 클립 공간으로 변환하는 역할을 합니다. 
+이걸 3D로 변경하기 위해 먼저 아래와 같이 해 봅시다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  projection: function(width, height, depth) {
+    // 주의: 이 행렬은 Y축을 뒤집어 0이 위쪽이 되도록 합니다.
     return [
        2 / width, 0, 0, 0,
        0, -2 / height, 0, 0,
@@ -474,13 +532,12 @@ expanding it to 3D let&#39;s try</p>
       -1, 1, 0, 1,
     ];
   },
-</code></pre><p>Just like we needed to convert from pixels to clip space for X and Y, for
-Z we need to do the same thing.  In this case I&#39;m making the Z axis pixel
-units as well.  I&#39;ll pass in some value similar to <code class="notranslate" translate="no">width</code> for the <code class="notranslate" translate="no">depth</code>
-so our space will be 0 to <code class="notranslate" translate="no">width</code> pixels wide, 0 to <code class="notranslate" translate="no">height</code> pixels tall, but
-for <code class="notranslate" translate="no">depth</code> it will be <code class="notranslate" translate="no">-depth / 2</code> to <code class="notranslate" translate="no">+depth / 2</code>.</p>
-<p>Finally we need to to update the code that computes the matrix.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // Compute the matrix
+</code></pre>
+<p>픽셀을 클립 공간으로 변환하기 위해 X와 Y값을 바꿔야 했던 것처럼, Z에 대해서도 동일한 작업을 해야 합니다.
+<code class="notranslate" translate="no">width</code>와 유사하게 <code class="notranslate" translate="no">depth</code>값을 입력했는데, 공간이 0에서 <code class="notranslate" translate="no">width</code>만큼의 너비, 0에서 <code class="notranslate" translate="no">height</code>만큼의 높이를 갖고
+<code class="notranslate" translate="no">depth</code> 쪽으로는 <code class="notranslate" translate="no">-depth / 2</code>에서 <code class="notranslate" translate="no">+depth / 2</code>만큼의 깊이를 갖게 됩니다. </p>
+<p>마지막으로, 행렬을 계산하는 코드를 수정해야 합니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  // Compute the matrix
 *  var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 400);
 *  matrix = m4.translate(matrix, translation[0], translation[1], translation[2]);
 *  matrix = m4.xRotate(matrix, rotation[0]);
@@ -490,110 +547,113 @@ for <code class="notranslate" translate="no">depth</code> it will be <code class
 
   // Set the matrix.
 *  gl.uniformMatrix4fv(matrixLocation, false, matrix);
-</code></pre><p>And here&#39;s that sample.</p>
+</code></pre>
+<p>아래는 그 예시 입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-step1.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>The first problem we have is that our geometry is a flat F which makes it
-hard to see any 3D.  To fix that let&#39;s expand the geometry to 3D.  Our
-current F is made of 3 rectangles, 2 triangles each.  To make it 3D will
-require a total of 16 rectangles.  the 3 rectangles on the front, 3 on the
-back, 1 on the left, 4 on the right, 2 on the tops, 3 on the bottoms.</p>
+<p>첫 번째 문제는 geometry가 납작한 F라서 3D로 보기 어렵다는 것입니다.
+이를 수정하기 위해 geometry를 3D로 확장해 봅시다.
+현재의 F는 각각 2개의 삼각형으로 이루어진 3개의 직사각형입니다.
+이를 3D로 만들기 위해서는 총 16개의 직사각형이 필요합니다. 
+앞쪽에 3개, 뒤쪽에 3개, 왼쪽에 하나, 오른쪽에 4개, 위쪽에 2개, 아래쪽에 3개의 직사각형이 필요합니다.</p>
 <p><img class="webgl_center noinvertdark" width="300" src="../resources/3df.svg" /></p>
-<p>That&#39;s quite a few to list out here.
-16 rectangles with 2 triangles per rectangle and 3 vertices per triangle is 96
-vertices.  If you want to see all of them view the source of the sample.</p>
-<p>We have to draw more vertices so</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    // Draw the geometry.
+<p>여기에 다 나열하기에는 좀 많네요.
+2개의 삼각형으로 이루어진 직사각형이 16개이고 삼각형마다 3개의 정점들이 있으므로 총 96개의 정점이 있습니다.
+전체 정점이 궁금하다면 샘플의 소스 코드를 살펴 보십시오.</p>
+<p>더 많은 정점을 그려야 하므로</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">    // 형상을 그림
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
 *    var count = 16 * 6;
     gl.drawArrays(primitiveType, offset, count);
-</code></pre><p>And here&#39;s that version</p>
+</code></pre>
+<p>아래는 수정된 버전입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step2.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-step2.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>Moving the sliders it&#39;s pretty hard to tell that it&#39;s 3D.  Let&#39;s try
-coloring each rectangle a different color.  To do this we will add another
-attribute to our vertex shader and a varying to pass it from the vertex
-shader to the fragment shader.</p>
-<p>Here&#39;s the new vertex shader</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+<p>슬라이더를 움직여도 3D로 보기에는 조금 어렵습니다.
+각 직사각형을 다른 색상으로 칠해 보도록 합시다.
+그러기 위해서는 정점 쉐이더에 또 다른 attribute를 추가해야 합니다.
+그리고 varying 추가해서 정점 쉐이더로부터 프래그먼트 쉐이더로 값을 전달할 수 있도록 합니다.</p>
+<p>아래는 새로운 정점 쉐이더입니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
 
-// an attribute is an input (in) to a vertex shader.
-// It will receive data from a buffer
+// attribute는 정점 쉐이더의 입력 입니다.
+// 버퍼로부터 데이터를 받습니다.
 in vec4 a_position;
 +in vec4 a_color;
 
-// A matrix to transform the positions by
+// position 변환 행렬
 uniform mat4 u_matrix;
 
-+// a varying the color to the fragment shader
++// 프래그먼트 쉐이더로 전달할 색상 varying
 +out vec4 v_color;
 
-// all shaders have a main function
+// 모든 쉐이더는 main 함수를 가집니다.
 void main() {
-  // Multiply the position by the matrix.
+  // position과 행렬을 곱합니다.
   gl_Position = u_matrix * a_position;
 
-+  // Pass the color to the fragment shader.
++  // 프래그먼트 쉐이더로 색상을 전달합니다.
 +  v_color = a_color;
 }
-</code></pre><p>And we need to use that color in the fragment shader</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+</code></pre>
+<p>그리고 프래그먼트 쉐이더에서는 전달된 색상을 사용해야 합니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
 
 precision highp float;
 
-+// the varied color passed from the vertex shader
++// 정점 쉐이더에서 전달된 색상 varying
 +in vec4 v_color;
 
-// we need to declare an output for the fragment shader
+// 프래그먼트 쉐이더의 출력을 선언해야 합니다.
 out vec4 outColor;
 
 void main() {
 *  outColor = v_color;
 }
-</code></pre><p>We need to lookup the attribute location to supply the colors, then setup another
-buffer and attribute to give it the colors.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
+</code></pre>
+<p>색상을 전달하기 위해서는 attribute location을 먼저 찾고,
+버퍼와 attribute를 설정해서 색상값을 전달해야 합니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  ...
   var colorAttributeLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
 
   ...
 
-  // create the color buffer, make it the current ARRAY_BUFFER
-  // and copy in the color values
+  // 색상 buffer를 생성하고, 현재 ARRAY_BUFFER로 설정한 뒤,
+  // 색상값들을 복사해 넣습니다.
   var colorBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
   setColors(gl);
 
-  // Turn on the attribute
+  // attribute를 활성화합니다.
   gl.enableVertexAttribArray(colorAttributeLocation);
 
-  // Tell the attribute how to get data out of colorBuffer (ARRAY_BUFFER)
-  var size = 3;          // 3 components per iteration
-  var type = gl.UNSIGNED_BYTE;   // the data is 8bit unsigned bytes
-  var normalize = true;  // convert from 0-255 to 0.0-1.0
-  var stride = 0;        // 0 = move forward size * sizeof(type) each
-                         // iteration to get the next color
-  var offset = 0;        // start at the beginning of the buffer
+  // attribute에게 colorBuffer (ARRAY_BUFFER)로부터 데이터를 가져오는 법을 알려줍니다. 
+  var size = 3;          // iteration마다 3개의 component
+  var type = gl.UNSIGNED_BYTE;   // 데이터는 8bit unsigned bytes
+  var normalize = true;  // 0-255 범위에서 0.0-1.0 범위로 변환
+  var stride = 0;        // 0 = 각 iteration마다 다음 색상값을 얻기 위해 size * sizeof(type) 만큼 앞으로 이동
+  var offset = 0;        // 버퍼의 맨 앞부분부터 시작
   gl.vertexAttribPointer(
       colorAttributeLocation, size, type, normalize, stride, offset);
 
   ...
 
-// Fill the buffer with colors for the &#39;F&#39;.
+// &#39;F&#39;에 입힐 색상으로 버퍼를 채웁니다.
 
 function setColors(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
       new Uint8Array([
-          // left column front
+          // 왼쪽 기둥 앞면
         200,  70, 120,
         200,  70, 120,
         200,  70, 120,
@@ -601,121 +661,108 @@ function setColors(gl) {
         200,  70, 120,
         200,  70, 120,
 
-          // top rung front
+          // 위쪽 가로선 앞면
         200,  70, 120,
         200,  70, 120,
         ...
         ...
       gl.STATIC_DRAW);
 }
-</code></pre><p>Now we get this.</p>
+</code></pre>
+<p>이제 결과는 아래와 같습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step3.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-step3.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>Uh oh, what&#39;s that mess?  Well, it turns out all the various parts of
-that 3D &#39;F&#39;, front, back, sides, etc get drawn in the order they appear in
-our geometry data.  That doesn&#39;t give us quite the desired results as sometimes
-the ones in the back get drawn after the ones in the front.</p>
+<p>어, 뭔가 이상하죠? 3차원 &#39;F&#39;의 앞면, 뒷면, 옆면 등등이 우리가 geometry 데이터를 선언한 순서로 그려지고 있습니다.
+뒷면이 앞면이 그려지고 나서 그려지기 때문에 우리가 기대한 결과와는 다르게 보입니다. </p>
 <p><img class="webgl_center" style="background-color: transparent;" width="163" height="190" src="../resources/polygon-drawing-order.gif" /></p>
-<p>The <span style="background: rgb(200, 70, 120); color: white; padding: 0.25em">reddish part</span> is
-the <strong>front</strong> of the &#39;F&#39;  but because it&#39;s the first part of our data
-it is drawn first and then the other triangles behind it get drawn
-after covering it up. For example the  <span style="background: rgb(80, 70, 200); color: white; padding: 0.25em">purple part</span>
-is actually the back of the &#39;F&#39;. It gets drawn 2nd because it comes 2nd in our data.</p>
-<p>Triangles in WebGL have the concept of front facing and back facing.  A
-front facing triangle has its vertices go in a clockwise direction.  A
-back facing triangle has its vertices go in a counter clockwise direction</p>
+<p><span style="background: rgb(200, 70, 120); color: white; padding: 0.25em">빨간색 부분</span>은 &#39;F&#39;의 <strong>앞면</strong> 이지만,
+우리가 데이터 선언을 앞부분에 했기 때문에 먼저 그려지고, 나머지 면(옆면 및 뒷면)이 나중에 그려지기 때문에 앞면이 덮여져 버립니다.
+예를 들어 <span style="background: rgb(80, 70, 200); color: white; padding: 0.25em">보라색 부분</span>은 사실 &#39;F&#39;의 뒷면입니다.
+이 부분이 두 번째로 그려지게 되는데 그 이유는 우리가 이 데이터를 두 번째로 선언했기 때문입니다.</p>
+<p>WebGL에서 삼각형은 정면(front facing)과 뒷면(back facing)이 있습니다.
+기본 설정에서 삼각형의 정면은 정점들이 반시계 방향으로 선언된 방향입니다.
+삼각형의 뒷면은 정점들이 시계 방향으로 선언된 방향입니다.</p>
 <p><img src="../resources/triangle-winding.svg" class="webgl_center" width="400" /></p>
-<p>WebGL has the ability to draw only forward facing or back facing
-triangles.  We can turn that feature on with</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  gl.enable(gl.CULL_FACE);
-</code></pre><p>Well put that in our <code class="notranslate" translate="no">drawScene</code> function. With that
-feature turned on, WebGL defaults to &quot;culling&quot; back facing triangles.
-&quot;Culling&quot; in this case is a fancy word for &quot;not drawing&quot;.</p>
-<p>Note that as far as WebGL is concerned, whether or not a triangle is
-considered to be going clockwise or counter clockwise depends on the
-vertices of that triangle in clip space.  In other words, WebGL figures out
-whether a triangle is front or back AFTER you&#39;ve applied math to the
-vertices in the vertex shader.  That means for example a clockwise
-triangle that is scaled in X by -1 becomes a counter clockwise triangle or
-a clockwise triangle rotated 180 degrees becomes a counter clockwise
-triangle.  Because we had CULL_FACE disabled we can see both
-clockwise(front) and counter clockwise(back) triangles.  Now that we&#39;ve
-turned it on, any time a front facing triangle flips around either because
-of scaling or rotation or for whatever reason, WebGL won&#39;t draw it.
-That&#39;s a good thing since as your turn something around in 3D you
-generally want whichever triangles are facing you to be considered front
-facing.</p>
-<p>With CULL_FACE turned on this is what we get</p>
+<p>WebGL에서는 정면 삼각형들만, 또는 뒷면 삼각형들만 그리도록 할 수 있습니다.
+이 기능은 아래 코드를 통해 설정됩니다. </p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  gl.enable(gl.CULL_FACE);
+</code></pre>
+<p>위 코드를 <code class="notranslate" translate="no">drawScene</code>안에 집어넣어 보세요. 
+이 기능이 설정되면, WebGL은 기본적으로 뒷면 삼각형들을 &quot;culling&quot;합니다.
+&quot;Culling&quot;은 &quot;그리지 않는다&quot;를 멋있게 표현한 단어 입니다.</p>
+<p>WebGL은 클립 공간에서 삼각형의 정점들이 시계방향 또는 반시계 방향으로 정의되었는지만 신경씁니다.
+다시말해, WebGL은 삼각형이 정면인지 뒷면인지를 정점 쉐이더에서 정점을 변환한 <strong>후에</strong> 판별한다는 것입니다.
+그 말은, 시계방향으로 정의된 삼각형의 X방향 스케일이 -1이 되면 반시계 방향이 된다는 뜻이고,
+시계방향으로 정의된 삼각형이 180도 회전하면 반시계방향이 된다는 뜻입니다. 
+우리가 위 기능을 켰기 때문에, 정면 삼각형이 어떤 이유에서건 스케일링이나 회전을 통해 뒤집히게 된다면, WebGL은 그 삼각형을 그리지 않을겁니다.
+일반적으로 3차원 상에서 어떤 삼각형이 당신쪽을 바라보고 있는 경우에만 정면으로 간주하는 것이 좋기 때문에 이러한 기능은 유용합니다. </p>
+<p>CULL_FACE 기능을 켜면 결과는 이렇게 됩니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step4.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-step4.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>Hey!  Where did all the triangles go?  It turns out, many of them are
-facing the wrong way.  Rotate it and you&#39;ll see them appear when you look
-at the other side.  Fortunately it&#39;s easy to fix.  We just look at which
-ones are backward and exchange 2 of their vertices.  For example if one
-backward triangle is</p>
+<p>아니! 삼각형들이 다 어디갔죠? 
+알고보니, 대부분의 삼각형들이 잘못된 방향을 바라보고 있었습니다.
+돌려보면 삼각형들의 뒷면을 바라보고 있었다는 것을 아실겁니다.
+다행히 이를 수정하는 것은 쉽습니다. 뒷면인 삼각형들의 2개 정점을 바꿔주기만 하면 됩니다.
+예를 들어 아래와 같은 뒷면 삼각형을</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">           1,   2,   3,
           40,  50,  60,
          700, 800, 900,
-</code></pre><p>we just swap the last 2 vertices to make it forward.</p>
+</code></pre><p>아래와 같이 뒤쪽 2개의 정점 선언 순서를 변경하여 정면으로 바꿀 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">           1,   2,   3,
 *         700, 800, 900,
 *          40,  50,  60,
-</code></pre><p>Going through and fixing all the backward triangles gets us to this</p>
+</code></pre><p>뒷면인 삼각형들을 모두 수정하면 아래와 같은 결과가 나옵니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step5.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-step5.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>That&#39;s closer but there&#39;s still one more problem.  Even with all the
-triangles facing in the correct direction and with the back facing ones
-being culled we still have places where triangles that should be in the back
-are being drawn over triangles that should be in front.</p>
-<p>Enter the DEPTH BUFFER.</p>
-<p>A depth buffer, sometimes called a Z-Buffer, is a rectangle of <em>depth</em>
-pixels, one depth pixel for each color pixel used to make the image.  As
-WebGL draws each color pixel it can also draw a depth pixel.  It does this
-based on the values we return from the vertex shader for Z.  Just like we
-had to convert to clip space for X and Y, Z is also in clip space or (-1
-to +1).  That value is then converted into a depth space value (0 to +1).
-Before WebGL draws a color pixel it will check the corresponding depth
-pixel.  If the depth value for the pixel it&#39;s about to draw is greater
-than the value of the corresponding depth pixel then WebGL does not draw
-the new color pixel.  Otherwise it draws both the new color pixel with the
-color from your fragment shader AND it draws the depth pixel with the new
-depth value.  This means, pixels that are behind other pixels won&#39;t get
-drawn.</p>
-<p>We can turn on this feature nearly as simply as we turned on culling with</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  gl.enable(gl.DEPTH_TEST);
-</code></pre><p>We also need to clear the depth buffer back to 1.0 before we start drawing.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // Draw the scene.
+<p>거의 해결되었지만 문제가 하나 남았습니다.
+뒷면인 삼각형들을 모두 cull하고 올바른 방향을 바라보는 삼각형들만 그렸다고 해도,
+뒤쪽에 있어야 하는 삼각형이 앞에 있어야 하는 삼각형보다 위쪽에 그려지는 경우가 있습니다.</p>
+<p><strong>depth 버퍼</strong> 이야기를 해 보죠.</p>
+<p>depth 버퍼는 Z-버퍼라고도 불리는데, <em>depth(깊이)</em> 픽셀로 이루어진 직사각형으로,
+이미지를 구성하는 하나의 각 색상 픽셀마다 하나의 깊이 픽셀을 갖습니다.
+WebGL에서는 색상 픽셀을 그릴 때 깊이 픽셀도 같이 그립니다.
+깊이 픽셀은 우리가 정점 쉐이더에서 반환하는 Z값을 기반으로 계산됩니다.
+X와 Y값에 대해 클립 공간으로 변환해야 하는 것처럼, Z값도 클립 공간(또는 -1에서 +1 사이)으로 변환해야 합니다.
+색상 픽셀값을 그리기 전에 WenGL은 대응하는 깊이 픽셀값을 확인합니다.
+그리려는 색상의 깊이가 이미 그러져있는 깊이값보다 크다면, WebGL은 새로운 색상을 그리지 않습니다.
+그렇지 않다면(작다면) 프래그먼트 쉐이더에서 반환한 색상값을 그리고 <strong>또한</strong> 해당하는 깊이 픽셀을 새로운 깊이값으로 대체합니다.
+그 말은, 어떤 픽셀의 뒤쪽에 있는 픽셀은 그려지지 않는다는 의미입니다.      </p>
+<p>culling을 켰던것과 유사하게 이 기능을 켤 수 있습니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  gl.enable(gl.DEPTH_TEST);
+</code></pre>
+<p>또한 그리기를 시작하기 전에 깊이 버퍼를 1.0으로 초기화해야 합니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  // scene 그리기
   function drawScene() {
 
     ...
 
-    // Clear the canvas AND the depth buffer.
+    // canvas와 깊이 버퍼를 clear
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     ...
-</code></pre><p>And now we get</p>
+</code></pre>
+<p>그러면 아래와 같이 됩니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step6.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-step6.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>which is 3D!</p>
-<p>One minor thing. In most 3d math libraries there is no <code class="notranslate" translate="no">projection</code> function to
-do our conversions from clip space to pixel space. Rather there&#39;s usually a function
-called <code class="notranslate" translate="no">ortho</code> or <code class="notranslate" translate="no">orthographic</code> that looks like this</p>
+<p>3D죠!</p>
+<p>사소한 것 하나가 남았습니다. 대부분의 3d 수학 라이브러리에는 클립 공간에서 픽셀 공간으로 변환하는 <code class="notranslate" translate="no">projection</code> 함수가 없습니다. 
+대신 보통 <code class="notranslate" translate="no">ortho</code> 또는 <code class="notranslate" translate="no">orthographic</code>이라고 정의된 함수가 있는데, 아래와 같이 생겼습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m4 = {
   orthographic: function(left, right, bottom, top, near, far) {
     return [
@@ -729,10 +776,9 @@ called <code class="notranslate" translate="no">ortho</code> or <code class="not
       1,
     ];
   }
-</code></pre><p>Unlike our simplified <code class="notranslate" translate="no">projection</code> function above which only had width, height, and depth
-parameters this more common orthographic projection function we can pass in left, right,
-bottom, top, near, and far which gives as more flexibility. To use it the same as
-our original projection function we&#39;d call it with</p>
+</code></pre><p>우리가 정의한 간단한 <code class="notranslate" translate="no">projection</code>함수는 width, height, depth만을 매개변수로 받지만,
+위 함수는 좀더 일반적인 직교 투영 함수로써 left, right, bottom, top, near, far를 매개변수로 받아 좀더 유연합니다.
+위 함수를 사용하여 원래 우리의 투영 함수와 동일한 결과를 얻기 위해서 아래와 같이 호출합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var left = 0;
 var right = gl.canvas.clientWidth;
 var bottom = gl.canvas.clientHeight;
@@ -740,49 +786,44 @@ var top = 0;
 var near = 400;
 var far = -400;
 m4.orthographic(left, right, bottom, top, near, far);
-</code></pre><p>In the next post I&#39;ll go over <a href="webgl-3d-perspective.html">how to make it have perspective</a>.</p>
+</code></pre><p>다음 글에서는 <a href="webgl-3d-perspective.html">원근감을 갖도록 하는 방법</a>에 대해 이야기하겠습니다.</p>
 <div class="webgl_bottombar">
-<h3>Why is the attribute vec4 but gl.vertexAttribPointer size 3</h3>
+<h3>attribute는 vec4인데 왜 gl.vertexAttribPointer의 size는 3인가요?</h3>
 <p>
-For those of you who are detail oriented you might have noticed we defined our 2 attributes as
+디테일에 신경쓰는 분들은 우리가 2개의 attribute를 아래와 같이 정의한 것을 알아차리셨을 겁니다.
 </p>
 <pre class="prettyprint showlinemods">
 in vec4 a_position;
 in vec4 a_color;
 </pre>
-<p>both of which are 'vec4' but when we tell WebGL how to take data out of our buffers we used</p>
+<p>둘 다 'vec4'지만, 우리가 버퍼에서 데이터를 가져오는 방법을 WebGL에 알려줄 때에는 아래와 같이 정의하였습니다.</p>
 <pre class="prettyprint showlinemods">
-// Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-var size = 3;          // 3 components per iteration
-var type = gl.FLOAT;   // the data is 32bit floats
-var normalize = false; // don't normalize the data
-var stride = 0;        // 0 = move forward size * sizeof(type) each
-                       // iteration to get the next position
-var offset = 0;        // start at the beginning of the buffer
+// attribute에게 positionBuffer (ARRAY_BUFFER)로부터 데이터를 가져오는 법을 알려줍니다. 
+var size = 3;          // iteration마다 3 개의 component
+var type = gl.FLOAT;   // 데이터는 32bit floats
+var normalize = false; // 데이터를 정규화하지 않음
+var stride = 0;        // 0 = 각 iteration마다 다음 위치값을 얻기 위해 size * sizeof(type) 만큼 앞으로 이동
+var offset = 0;        // 버퍼의 맨 앞부분부터 시작
 gl.vertexAttribPointer(
     positionAttributeLocation, size, type, normalize, stride, offset);
 
 ...
-// Tell the attribute how to get data out of colorBuffer (ARRAY_BUFFER)
-var size = 3;          // 3 components per iteration
-var type = gl.UNSIGNED_BYTE;   // the data is 8bit unsigned bytes
-var normalize = true;  // convert from 0-255 to 0.0-1.0
-var stride = 0;        // 0 = move forward size * sizeof(type) each
-                       // iteration to get the next color
-var offset = 0;        // start at the beginning of the buffer
+// attribute에게 colorBuffer (ARRAY_BUFFER)로부터 데이터를 가져오는 법을 알려줍니다. 
+var size = 3;          // iteration마다 3개의 component
+var type = gl.UNSIGNED_BYTE;   // 데이터는 8bit unsigned bytes
+var normalize = true;  // 0-255 범위에서 0.0-1.0 범위로 변환
+var stride = 0;        // 0 = 각 iteration마다 다음 색상값을 얻기 위해 size * sizeof(type) 만큼 앞으로 이동
+var offset = 0;        // 버퍼의 맨 앞부분부터 시작
 gl.vertexAttribPointer(
     colorAttributeLocation, size, type, normalize, stride, offset);
 </pre>
 <p>
-That '3' in each of those says only to pull 3 values out of the buffer per attribute
-per iteration of the vertex shader.
-This works because in the vertex shader WebGL provides defaults for those
-values you don't supply.  The defaults are 0, 0, 0, 1 where x = 0, y = 0, z = 0
-and w = 1.  This is why in our old 2D vertex shader we had to explicitly
-supply the 1.  We were passing in x and y and we needed a 1 for z but
-because the default for z is 0 we had to explicitly supply a 1.  For 3D
-though, even though we don't supply a 'w' it defaults to 1 which is what
-we need for the matrix math to work.
+위에 써있는 '3'들은 버퍼에서 iteration마다, attribute마다 3개의 값을 가져오라는 뜻입니다. 
+이래도 되는 이유는 WebGL의 정점 쉐이더는 입력하지 않는 값에 대해 기본값을 사용하기 때문입니다.
+기본값은 0, 0, 0, 1로 x = 0, y = 0, z = 0, w = 1입니다.
+그래서 우리의 예전 2D 정점 쉐이더에서는 1을 명시적으로 입력해야 했습니다.
+x와 y값은 전달하고, z에 대해 1을 직접 전달해야 했는데 이는 아무것도 전달하지 않는다면 z의 기본값은 1이기 때문입니다.
+반면 3D에서는 'w'에 대해 아무것도 전달하지 않아도 기본값이 1이기 때문에 우리가 원하는대로 행렬 계산이 이루어집니다.
 </p>
 </div>
 
@@ -827,7 +868,7 @@ we need for the matrix math to work.
         </ul>
   <li>3D</li>
         <ul>
-          <li><a href="/webgl/lessons/ko/webgl-3d-orthographic.html">WebGL2 - Orthographic 3D</a></li>
+          <li><a href="/webgl/lessons/ko/webgl-3d-orthographic.html">3D 직교 투영</a></li>
 <li><a href="/webgl/lessons/ko/webgl-3d-perspective.html">WebGL2 3D 원근 투영</a></li>
 <li><a href="/webgl/lessons/ko/webgl-3d-camera.html">3D - 카메라</a></li>
 <li><a href="/webgl/lessons/ko/webgl-matrix-naming.html">3D - Matrix Naming</a></li>
