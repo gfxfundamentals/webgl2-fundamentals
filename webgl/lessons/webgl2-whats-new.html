@@ -239,24 +239,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 If you&#39;re coming from WebGL1 and you want to know
 how to adjust your code so you can take advantage
 of WebGL2 <a href="webgl1-to-webgl2.html">see this article</a>.</p>
-<p>Here&#39;s the short list in no particular order</p>
-<h2 id="vertex-array-objects-always-available">Vertex Array Objects always available</h2>
+<p>Here&#39;s the short list in no particular order.</p>
+<h2 id="vertex-array-objects-are-always-available">Vertex Array Objects are always available</h2>
 <p>I think this is fairly important even though it
-was optionally available on WebGL1 now that it&#39;s
+was optionally available on WebGL1. Now that it&#39;s
 always available on WebGL2 <a href="webgl1-to-webgl2.html#Vertex-Array-Objects">I think you should probably
 always use them</a>.</p>
-<h2 id="the-size-of-a-texture-is-available-to-shaders-">The size of a texture is available to shaders.</h2>
+<h2 id="the-size-of-a-texture-is-available-to-shaders">The size of a texture is available to shaders</h2>
 <p>In WebGL1 if your shader needed to know the size of
 a texture you had to pass the size in uniform manually.
 In WebGL2 you can call</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec2 size = textureSize(sampler, lod)
-</code></pre><p>To get the size of any lod of a texture</p>
+</code></pre><p>to get the size of any lod of a texture.</p>
 <h2 id="direct-texel-lookup">Direct Texel Lookup</h2>
 <p>It&#39;s often convenient to store large arrays of data in a texture.
 In WebGL 1 you could do that but you could only address textures
 with texture coordinates (0.0 to 1.0). In WebGL2 you can look
 up values from a texture by pixel/texel coordinates directly
-making array access slightly easier</p>
+making array access slightly easier:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 values = texelFetch(sampler, ivec2Position, lod);
 </code></pre><h2 id="lots-of-texture-formats">Lots of texture formats</h2>
 <p>WebGL1 had just a few texture formats. WebGL2 has TONS!</p>
@@ -315,30 +315,30 @@ making array access slightly easier</p>
 <li><code class="notranslate" translate="no">DEPTH_COMPONENT16</code></li>
 </ul>
 <h2 id="3d-textures">3D Textures</h2>
-<p>3D texture are just that. Textures that have 3 dimensions.</p>
+<p>3D textures are just that, textures that have 3 dimensions.</p>
 <h2 id="texture-arrays">Texture arrays</h2>
 <p>A texture array is very similar to a 3D texture except that
 each slice is considered a separate texture. All the slices
-have to be the same size but this is a great way to give
+have to be the same size, but this is a great way to give
 a shader access to hundreds of textures even though it
 only has a relatively small number of texture units. You can
-select the slice in your shader</p>
+select the slice in your shader:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 color = texture(someSampler2DArray, vec3(u, v, slice));
 </code></pre><h2 id="non-power-of-2-texture-support">Non-Power of 2 Texture Support</h2>
 <p>In WebGL1 textures that were not a power of 2 could not have mips.
-In WebGL2 that limit is removed. Non-power of 2 texture work exactly
+In WebGL2 that limit is removed. Non-power of 2 textures work exactly
 the same as power of 2 textures.</p>
-<h2 id="loop-restrictions-in-shaders-removed">Loop restrictions in shaders removed</h2>
+<h2 id="loop-restrictions-in-shaders-are-removed">Loop restrictions in shaders are removed</h2>
 <p>In WebGL1 a loop in a shader had to use a constant integer expression.
-WebGL2 removes that limit (in GLSL 300 es)</p>
+WebGL2 removes that limit (in GLSL 300 es).</p>
 <h2 id="matrix-functions-in-glsl">Matrix functions in GLSL</h2>
-<p>In WebGL1 if needed to get the inverse of a matrix you had to
-pass it in as a uniform. In WebGL2 GLSL 300 es there&#39;s the built in
+<p>In WebGL1 if you needed to get the inverse of a matrix you had to
+pass it in as a uniform. In WebGL2 GLSL 300 es there&#39;s the built-in
 <code class="notranslate" translate="no">inverse</code> function as well as <code class="notranslate" translate="no">transpose</code>.</p>
 <h2 id="common-compressed-textures">Common compressed textures</h2>
 <p>In WebGL1 there are various compressed texture formats
 that are hardware dependent. S3TC was basically desktop only.
-PVTC was iOS only. Etc..</p>
+PVTC was iOS only, etc.</p>
 <p>In WebGL2 these formats are supposed to be supported everywhere</p>
 <ul>
 <li><code class="notranslate" translate="no">COMPRESSED_R11_EAC RED</code></li>
@@ -354,12 +354,12 @@ PVTC was iOS only. Etc..</p>
 </ul>
 <h2 id="uniform-buffer-objects">Uniform Buffer Objects</h2>
 <p>Uniform Buffer Objects let you specify a bunch of uniforms
-from a buffer. The advantages are</p>
+from a buffer. The advantages are:</p>
 <ol>
 <li><p>You can manipulate all the uniforms in the buffer
-outside of WebGL</p>
+outside of WebGL.</p>
 <p>In WebGL1 if you had 16 uniforms that would require
-16 calls to <code class="notranslate" translate="no">gl.uniformXXX</code>. That is relatively slow.
+16 calls to <code class="notranslate" translate="no">gl.uniformXXX</code>, that is relatively slow.
 In WebGL2 if you use
 a Uniform Buffer Object you can set the values in
 a typed array all inside JavaScript which means it&#39;s
@@ -369,7 +369,7 @@ or <code class="notranslate" translate="no">gl.bufferSubData</code> and then tel
 to use that buffer with <code class="notranslate" translate="no">gl.bindBufferRange</code> so only
 2 calls.</p>
 </li>
-<li><p>You can have different sets of uniforms buffer objects</p>
+<li><p>You can have different sets of uniform buffer objects.</p>
 <p>First some terms. A Uniform Block is a collection
 of uniforms defined in a shader. A Uniform Buffer Object
 is a buffer that contains the values a Uniform Block
@@ -377,30 +377,30 @@ will use. You can create as many Uniform Buffer Objects
 as you want and bind one of them to a particular Uniform Block
 when you draw.</p>
 <p>For example, you could have 4 uniform blocks defined
-in a shader.</p>
+in a shader:</p>
 <ul>
 <li><p>A global matrix uniform block that contains
 matrices that are the same for all draw calls like the
 projection matrix, view matrix, etc.</p>
 </li>
 <li><p>A per model uniform block that contains matrices that are
-different per model for example the world matrix and
+different per model. For example, the world matrix and
 normal matrix.</p>
 </li>
 <li><p>A material uniform block that contains the material settings
-like diffuse, ambient, specular, etc..</p>
+like diffuse, ambient, specular, etc.</p>
 </li>
 <li><p>A lighting uniform block that contains the lighting data
-like light color, light position, etc..</p>
+like light color, light position, etc.</p>
 </li>
 </ul>
 <p>Then at runtime you could create one global uniform buffer
 object, one model uniform buffer object per model, one
-light uniform buffer object per light and one uniform buffer
+light uniform buffer object per light, and one uniform buffer
 object per material.</p>
-<p>To draw any particular item assuming all the values are
-already up to date all you have to do is bind your desired
-4 uniform buffer objects</p>
+<p>To draw any particular item, assuming all the values are
+already up to date, all you have to do is bind your desired
+4 uniform buffer objects:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindBufferRange(..., globalBlockIndx, globalMatrixUBO, ...);
 gl.bindBufferRange(..., modelBlockIndx, someModelMatrixUBO, ...);
 gl.bindBufferRange(..., materialBlockIndx, someMaterialSettingsUBO, ...);
@@ -408,7 +408,7 @@ gl.bindBufferRange(..., lightBlockIndx, someLightSettingsUBO, ...);
 </code></pre></li>
 </ol>
 <h2 id="integer-textures-attributes-and-math">Integer textures, attributes and math</h2>
-<p>In WebGL2 you can have integer based textures where as
+<p>In WebGL2 you can have integer based textures whereas
 in WebGL1 all textures represented floating point values
 even if they weren&#39;t represented by floating point values.</p>
 <p>You can also have integer attributes.</p>
@@ -426,32 +426,31 @@ a single texture can be sampled in different ways. Repeating
 or clamped. Filtered or not filtered.</p>
 <h2 id="depth-textures">Depth Textures</h2>
 <p>Depth textures were optional in WebGL1 and a PITA to work around. Now they&#39;re standard.
-Commonly used for computing shadow maps</p>
+They&#39;re commonly used for computing shadow maps.</p>
 <h2 id="standard-derivatives">Standard Derivatives</h2>
-<p>These are now standard. Common uses include computing normals in the shaders instead of passing them in</p>
+<p>These are now standard. Common uses include computing normals in the shaders instead of passing them in.</p>
 <h2 id="instanced-drawing">Instanced Drawing</h2>
-<p>Now Standard, common uses are drawing lots of trees, bushes or grass quickly.</p>
+<p>Now standard, common uses are drawing lots of trees, bushes, or grass quickly.</p>
 <h2 id="unsigned_int-indices">UNSIGNED_INT indices</h2>
-<p>Being able to use 32bit ints for indices removes the size limit of indexed geometry</p>
+<p>Being able to use 32bit ints for indices removes the size limit of indexed geometry.</p>
 <h2 id="setting-gl_fragdepth-">Setting <code class="notranslate" translate="no">gl_FragDepth</code></h2>
 <p>Letting you write your own custom values to the depth buffer / z-buffer.</p>
 <h2 id="blend-equation-min-max">Blend Equation MIN / MAX</h2>
-<p>Being able to take the min or max of 2 colors when blending</p>
+<p>Being able to take the min or max of 2 colors when blending.</p>
 <h2 id="multiple-draw-buffers">Multiple Draw Buffers</h2>
 <p>Being able to draw to multiple buffers at once from a shader. This is commonly used
 for various deferred rendering techniques.</p>
 <h2 id="texture-access-in-vertex-shaders">Texture access in vertex shaders</h2>
 <p>In WebGL1 this was an optional feature. There was a count of how many textures
-you could access in a vertex shader and that count was allowed to be 0. Most
+you could access in a vertex shader, and that count was allowed to be 0. Most
 devices supported them. In WebGL2 that count is required to be at least 16.</p>
 <h2 id="multi-sampled-renderbuffers">Multi-Sampled renderbuffers</h2>
 <p>In WebGL1 the canvas itself could be anti-aliased with the GPU&#39;s built in
-multi-sample system but there was no support for user controlled multi-sampling. In WebGL2
+multi-sample system, but there was no support for user controlled multi-sampling. In WebGL2
 you can now make multi-sampled renderbuffers.</p>
 <h2 id="occlusion-queries">Occlusion Queries</h2>
-<p>Occlusion queries let you ask the GPU to check if it were to render something
-would any pixels actually get drawn.</p>
-<h2 id="floating-point-textures-always-available">Floating point textures always available</h2>
+<p>Occlusion queries let you ask the GPU to check if pixels would actually get drawn if it were to render something.</p>
+<h2 id="floating-point-textures-are-always-available">Floating point textures are always available</h2>
 <p>Floating point textures are used for many special effects
 and calculations. In WebGL1 they were optional. In WebGL2
 they just exist.</p>
