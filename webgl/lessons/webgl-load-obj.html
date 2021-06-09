@@ -599,14 +599,14 @@ first we&#39;ll load our data</p>
 
 </p>
 <p>We also see some messages about unhandled keywords. What are those for?</p>
-<p><code class="notranslate" translate="no">usemat</code> is the most important of these. It specifies that all geometry that
+<p><code class="notranslate" translate="no">usemtl</code> is the most important of these. It specifies that all geometry that
 appears after uses a specific material. For example if you had a model of a car
 you probably want transparent windows and chrome bumpers. The windows are
 <a href="webgl-text-texture.html">transparent</a> and the bumpers are
 <a href="webgl-environment-maps.html">reflective</a> so they need to be drawn differently
-than the body of the car. The <code class="notranslate" translate="no">usemat</code> tag marks this separation of parts.</p>
+than the body of the car. The <code class="notranslate" translate="no">usemtl</code> tag marks this separation of parts.</p>
 <p>Because we&#39;ll need to draw each of these parts separately let&#39;s fix
-the code so that each time we see a <code class="notranslate" translate="no">usemat</code> we&#39;ll start a new set of webgl
+the code so that each time we see a <code class="notranslate" translate="no">usemtl</code> we&#39;ll start a new set of webgl
 data.</p>
 <p>First let&#39;s make some code that starts a new webgl data if we don&#39;t already
 have some</p>
@@ -759,7 +759,7 @@ For now let&#39;s just add it on to our loader so we can reference it later.</p>
 </code></pre>
 <p><code class="notranslate" translate="no">o</code> specifies the following items belong to the named &quot;object&quot;. It&#39;s
 not really clear how to use this. Can we have a file with just <code class="notranslate" translate="no">o</code>
-but no <code class="notranslate" translate="no">usemat</code>? Let&#39;s assume yes.</p>
+but no <code class="notranslate" translate="no">usemtl</code>? Let&#39;s assume yes.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
   ...
   let material = &#39;default&#39;;
@@ -1263,7 +1263,7 @@ to constant white.</p>
 <h2 id="a-bunch-of-notes">A bunch of notes</h2>
 <h3 id="the-loader-above-is-incomplete">The loader above is incomplete</h3>
 <p>You can go <a href="http://paulbourke.net/dataformats/obj/">read more about the .obj format</a>.
-The are tons of features the code above doesn&#39;t support. Also, the code has
+There are tons of features the code above doesn&#39;t support. Also, the code has
 not been tested on very many .obj files so maybe there are lurking bugs. That said, I 
 suspect the majority of .obj files online only use the features shown above so I suspect
 it&#39;s probably a useful example.</p>
