@@ -1,12 +1,12 @@
 Title: WebGL 3D 원근 투영
 Description: WebGL에서 3D 원근 투영을 그리는 방법
-TOC: WebGL2 3D 원근 투영
+TOC: 3D 원근 투영
 
 
-이 글은 몇 가지 WebGL 글에서 이어지는 글입니다. 첫 번째는 [기초로 시작하기](webgl-fundamentals.html)이며 이 전 글은 [3D 기초](webgl-3d-orthographic.html)입니다. 아직 위 글들을 읽지 않았다면 먼저 읽어 보시기 바랍니다.
+이 글은 WebGL 시리즈에서 이어지는 글입니다. 첫 글은 [WebGL2 기초](webgl-fundamentals.html)이며 이 전 글은 [3D 직교 투영](webgl-3d-orthographic.html)입니다. 아직 위 글들을 읽지 않았다면 먼저 읽어 보시기 바랍니다.
 
 지난 번 글에서 3D를 그리는 방법을 알아 보았으나, 원근이 없는 3D였습니다.
-원근이 없는 3D는 "직교 투영"을 활용해서 그린 것이었고, 직교 투영이 활용되는 경우도 있으나 일반적으로 우리가 원하는 "3D"와는 다릅니다.
+원근이 없는 3D는 "직교 투영"을 활용해서 그린 것이었는데 직교 투영이 활용되는 경우도 있으나 일반적으로 우리가 원하는 "3D"는 아닙니다.
 
 이를 위해서는 원근감을 추가해야 합니다. 원근감이란 무엇일까요?
 원근감은 간단하게 말하자면 멀리 있는 것이 작게 보인다는 특징입니다.
@@ -19,10 +19,6 @@ TOC: WebGL2 3D 원근 투영
 이렇게 생각해 보십시오. (10, 15)과 (20, 15)를 잇는 직선이 있다고 하면 길이는 10입니다.
 현재 예제에서 이 직선은 10픽셀 길이로 그려질 것입니다.
 하지만 우리가 Z값으로 이것을 나눈다고 가정해 봅시다. Z가 1이라면,
-
-Think of it this way: If you have a line from (10, 15) to (20,15)
-it's 10 units long. In our current sample it would be drawn 10 pixels
-long. But if we divide by Z then for example if Z is 1
 
 <pre class="webgl_center">
 10 / 1 = 10
@@ -47,10 +43,10 @@ abs(3.333 - 6.666) = 3.333
 </pre>
 
 보시다시피 Z값이 커질수록, 즉 멀리 떨어져 있을수록 더 작게 그려지는 것입니다.
-클립 공간에서 나눈다면 Z값의 크기가 작기 때문에(-1에서 1 사이) 더 좋은 결과가 나타날 것입니다.
+Z값의 크기가 작기 때문에(-1에서 1 사이) 클립 공간에서 Z값을 나눈다면 더 좋은 결과가 나타날 것입니다.
 fudgeFactor를 두어 나누기 전에 Z값에 곱한다면 주어진 거리의 물체가 얼마나 작게 그려질지를 조절할 수 있을겁니다.
 
-한 번 해 봅시다. 먼저 버텍스 쉐이더를 수정하는데, "fudgeFactor"로 곱한 뒤 Z값으로 나누도록 수정합시다.
+한 번 해 봅시다. 먼저 버텍스 쉐이더를 수정하는데, Z값에 "fudgeFactor"를 그 값으로 나누도록 수정합시다.
 
 
 ```
@@ -86,7 +82,7 @@ void main() {
 +    // fudgeFactor를 설정
 +    gl.uniform1f(fudgeLocation, fudgeFactor);
 
-    // geometry 그리기.
+    // geometry 그리기
     gl.drawArrays(gl.TRIANGLES, 0, 16 * 6);
 ```
 
@@ -109,7 +105,7 @@ void main() {
 uniform float u_fudgeFactor;
 ...
 void main() {
-  // position과 행렬을 곱함.
+  // position과 행렬을 곱함
   vec4 position = u_matrix * a_position;
 
   // 나누어질 z값을 조정
@@ -226,7 +222,7 @@ w_out = z_in * fudgeFactor + 1;
 uniform mat4 u_matrix;
 
 void main() {
-  // position과 행렬을 곱함.
+  // position과 행렬을 곱함
   gl_Position = u_matrix * a_position;
   ...
 }
@@ -273,8 +269,8 @@ WebGL이 우리를 대신해 편리하게 Z값으로 나누어 준다는 것을 
 
 <div class="webgl_center"><img src="resources/z-clipping.gif" style="border: 1px solid black;" /></div>
 
-어떻게 된 걸까요? 왜 F가 이상하게 사라져버리는 걸까요? X와 Y를 -1에서 1 사이로 자르는(clip) 것처럼, Z값도 자르기 때문입니다.
-위에서 보이는 것은 Z < -1일 때 입니다.
+어떻게 된 걸까요? 왜 F가 사라져버리는 걸까요? X와 Y를 -1에서 1 사이로 자르는(clip) 것처럼, Z값도 자르기 때문입니다.
+위에서 보이는 것은 Z < -1인 경우입니다.
 
 이를 해결하기 위한 수식을 자세히 설명할 수도 있지만, 2D 투영에서와 동일한 방법으로 [유도할 수 있습니다.](https://stackoverflow.com/a/28301213/128511)
 Z값을 가지고 얼마만큼 더하고, 얼마만큼 조정해서 우리가 원하는 어떤 범위를 -1과 +1 사이에 오도록 재조정 할 수 있습니다.
@@ -312,13 +308,13 @@ X에 대해서는 입력 인자인 `aspect`(종횡비)를 활용하여 계산합
 
 {{{diagram url="../frustum-diagram.html" width="400" height="600" }}}
 
-그 모양은 4개의 면을 가진 뿔처럼 보이며 육면체가 회전하고 있는 그 내부 공간을 "절두체(Frustum)"이라 부릅니다.
+그 모양은 4개의 면을 가진 뿔처럼 보이며 육면체가 회전하고 있는 그 내부 공간을 "절두체(Frustum)"라 부릅니다.
 행렬은 절두체 내부 공간을 클립 공간으로 변환합니다. `zNear`은 앞쪽 절단 공간을, `zFar`은 뒤쪽 절단 공간을 정의합니다. 
 `zNear`를 23으로 설정하면 회전하고 있는 육면체의 앞쪽이 잘리는 것을 볼 수 있습니다.
 `zFar`을 24로 설정하면 육면체의 뒤쪽이 잘리는 것을 볼 수 있습니다.
 
 이제 하나의 문제만 남았습니다. 이 행렬은 관찰자가 0,0,0 위치에 있고, 그 관찰자가 음의 Z 방향을 바라보고 있으며 양의 Y방향이 위쪽이라고 가정합니다.
-지금까지 행렬들은 다른 방식이었습니다.
+지금까지 사용한 행렬은 이런 방식이 아니었습니다.
 
 물체를 보기 위해서는 물체를 절두체 안으로 옮겨야 합니다. F를 옮겨봅시다.
 지금까지는 (45, 150, 0) 위치에 그리고 있었습니다. (-150, 0, -360) 위치로 옮기고 올바른 방향으로 보이도록 회전을 시키겠습니다.
@@ -340,7 +336,7 @@ X에 대해서는 입력 인자인 `aspect`(종횡비)를 활용하여 계산합
    matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
 ```
 
-결과는 아래에 있습니다.
+결과는 아래와 같습니다.
 
 {{{example url="../webgl-3d-perspective-matrix.html" }}}
 
