@@ -410,15 +410,15 @@ And with that we can see our cube is loaded and drawing
 
 We also see some messages about unhandled keywords. What are those for?
 
-`usemat` is the most important of these. It specifies that all geometry that
+`usemtl` is the most important of these. It specifies that all geometry that
 appears after uses a specific material. For example if you had a model of a car
 you probably want transparent windows and chrome bumpers. The windows are
 [transparent](webgl-text-texture.html) and the bumpers are
 [reflective](webgl-environment-maps.html) so they need to be drawn differently
-than the body of the car. The `usemat` tag marks this separation of parts.
+than the body of the car. The `usemtl` tag marks this separation of parts.
 
 Because we'll need to draw each of these parts separately let's fix
-the code so that each time we see a `usemat` we'll start a new set of webgl
+the code so that each time we see a `usemtl` we'll start a new set of webgl
 data.
 
 First let's make some code that starts a new webgl data if we don't already
@@ -590,7 +590,7 @@ function parseOBJ(text) {
 
 `o` specifies the following items belong to the named "object". It's
 not really clear how to use this. Can we have a file with just `o`
-but no `usemat`? Let's assume yes.
+but no `usemtl`? Let's assume yes.
 
 ```js
 function parseOBJ(text) {
@@ -1154,7 +1154,7 @@ As for parsing and using materials [see the next article](webgl-load-obj-w-mtl.h
 ### The loader above is incomplete
 
 You can go [read more about the .obj format](http://paulbourke.net/dataformats/obj/).
-The are tons of features the code above doesn't support. Also, the code has
+There are tons of features the code above doesn't support. Also, the code has
 not been tested on very many .obj files so maybe there are lurking bugs. That said, I 
 suspect the majority of .obj files online only use the features shown above so I suspect
 it's probably a useful example.
