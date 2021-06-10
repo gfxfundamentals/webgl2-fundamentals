@@ -8,8 +8,8 @@ They are entirely new, discarding the old out of date ideas and bringing you
 to a full understanding of what WebGL really is and how it really works.
 
 These articles are specifically about WebGL2.
-If you are interested in WebGL 1.0 please [go here](https://webglfundamentals.org)
-If you are already familar with WebGL1 you might want to look at these articles
+If you are interested in WebGL 1.0 please [go here](https://webglfundamentals.org).
+If you are already familar with WebGL1 you might want to look at these articles.
 
 <ul>
 <li><a href="/webgl/lessons/webgl-getting-webgl2.html">How to use WebGL2</a></li>

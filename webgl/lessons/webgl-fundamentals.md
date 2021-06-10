@@ -44,12 +44,12 @@ a shader can receive data.
    of data it should pull out (3 component 32 bit floating point numbers), what offset
    in the buffer the positions start, and how many bytes to get from one position to the next.
 
-   Buffers are not random access. Instead a vertex shaders is executed a specified number
+   Buffers are not random access. Instead a vertex shader is executed a specified number
    of times. Each time it's executed the next value from each specified buffer is pulled
    out and assigned to an attribute.
 
-   The state of attributes, which buffers to use for each one and how to pull out data
-   from those buffers, is collected into a vertex array object (VAO).
+   The state of attributes, which buffers to use for each one, and how to pull out data
+   from those buffers is collected into a vertex array object (VAO).
 
 2. Uniforms
 

@@ -132,7 +132,7 @@ In WebGL1 there are various compressed texture formats
 that are hardware dependent. S3TC was basically desktop only.
 PVTC was iOS only, etc.
 
-In WebGL2 these formats are supposed to be supported everywhere
+In WebGL2 these formats are supposed to be supported everywhere:
 
 *   `COMPRESSED_R11_EAC RED`
 *   `COMPRESSED_SIGNED_R11_EAC RED`
@@ -240,7 +240,7 @@ These are now standard. Common uses include computing normals in the shaders ins
 
 ## Instanced Drawing
 
-Now standard, common uses are drawing lots of trees, bushes, or grass quickly.
+This is now standard. Common uses include drawing lots of trees, bushes, or grass quickly.
 
 ## UNSIGNED_INT indices
 
@@ -248,15 +248,15 @@ Being able to use 32bit ints for indices removes the size limit of indexed geome
 
 ## Setting `gl_FragDepth`
 
-Letting you write your own custom values to the depth buffer / z-buffer.
+You can write your own custom values to the depth buffer / z-buffer.
 
 ## Blend Equation MIN / MAX
 
-Being able to take the min or max of 2 colors when blending.
+You are now able to take the min or max of 2 colors when blending.
 
 ## Multiple Draw Buffers
 
-Being able to draw to multiple buffers at once from a shader. This is commonly used
+You are now able to draw to multiple buffers at once from a shader. This is commonly used
 for various deferred rendering techniques.
 
 ## Texture access in vertex shaders
