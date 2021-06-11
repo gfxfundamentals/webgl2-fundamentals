@@ -293,11 +293,11 @@ var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&q
 *// Turn on the attribute
 *gl.enableVertexAttribArray(texcoordAttributeLocation);
 *
-*// Tell the attribute how to get data out of colorBuffer (ARRAY_BUFFER)
+*// Tell the attribute how to get data out of texcoordBuffer (ARRAY_BUFFER)
 *var size = 2;          // 2 components per iteration
 *var type = gl.FLOAT;   // the data is 32bit floating point values
 *var normalize = true;  // convert from 0-255 to 0.0-1.0
-*var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next color
+*var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next texcoord
 *var offset = 0;        // start at the beginning of the buffer
 *gl.vertexAttribPointer(
 *    texcoordAttributeLocation, size, type, normalize, stride, offset);
@@ -521,10 +521,10 @@ setting the <code class="notranslate" translate="no">TEXTURE_MIN_FILTER</code> t
 </li>
 <li><p>If you are using mips then they need to be the correct sizes and you have to provide ALL OF THEM
 down to the 1x1 size.</p>
-<p>The easiest way to do that is to call <code class="notranslate" translate="no">gl.generateMipmap</code>. Otherwise if you provide your own mips you need to provide
-all of them or you&#39;ll get an error.</p>
 </li>
 </ol>
+<p>The easiest way to do that is to call <code class="notranslate" translate="no">gl.generateMipmap</code>. Otherwise if you provide your own mips you need to provide
+all of them or you&#39;ll get an error.</p>
 <p><a name="texture-atlas"></a>A common question is &quot;How do I apply a different image to each face of a cube?&quot;. For example let&#39;s say we
 had these 6 images.</p>
 <div class="webgl_table_div_center">
