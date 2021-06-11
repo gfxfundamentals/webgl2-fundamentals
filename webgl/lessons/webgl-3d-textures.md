@@ -67,11 +67,11 @@ We need to setup the texture coordinates
     *// Turn on the attribute
     *gl.enableVertexAttribArray(texcoordAttributeLocation);
     *
-    *// Tell the attribute how to get data out of colorBuffer (ARRAY_BUFFER)
+    *// Tell the attribute how to get data out of texcoordBuffer (ARRAY_BUFFER)
     *var size = 2;          // 2 components per iteration
     *var type = gl.FLOAT;   // the data is 32bit floating point values
     *var normalize = true;  // convert from 0-255 to 0.0-1.0
-    *var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next color
+    *var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next texcoord
     *var offset = 0;        // start at the beginning of the buffer
     *gl.vertexAttribPointer(
     *    texcoordAttributeLocation, size, type, normalize, stride, offset);
@@ -318,8 +318,8 @@ Something to be aware of, WebGL2 requires textures to be "texture complete" othe
 2. If you are using mips then they need to be the correct sizes and you have to provide ALL OF THEM
    down to the 1x1 size.
 
-   The easiest way to do that is to call `gl.generateMipmap`. Otherwise if you provide your own mips you need to provide
-   all of them or you'll get an error.
+The easiest way to do that is to call `gl.generateMipmap`. Otherwise if you provide your own mips you need to provide
+all of them or you'll get an error.
 
 <a name="texture-atlas"></a>A common question is "How do I apply a different image to each face of a cube?". For example let's say we
 had these 6 images.
