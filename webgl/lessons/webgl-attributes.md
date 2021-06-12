@@ -198,7 +198,7 @@ all attributes where as otherwise it would be up to one call to both
 `gl.enableVertexAttribArray`) **per attribute**.
 
 You can see it's arguably a good thing to use vertex array objects. 
-To use them though often requires more organization. For example let's stay you want to 
+To use them though often requires more organization. For example let's say you want to 
 draw a cube with `gl.TRIANGLES` with one shader and then again with `gl.LINES`
 with a different shader. Let's say when you draw with triangles you use
 normals for lighting so you declare attributes in your shader like this:
