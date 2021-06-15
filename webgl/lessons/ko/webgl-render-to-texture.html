@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/ko/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/ko/webgl-render-to-texture.md. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of GFXFundamentals. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,25 +36,78 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL2 Rendering to a Texture" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="How to render to a texture." />
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ko/webgl-render-to-texture.html" />
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL2 Rendering to a Texture" />
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ko/webgl-render-to-texture.html" />
-<meta name="twitter:description" content="How to render to a texture." />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="description" content="텍스처에 렌더링하는 방법">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-render-to-texture_ko.jpg">
+
+<meta property="og:title" content="WebGL2 텍스처에 렌더링하기">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-render-to-texture_ko.jpg">
+<meta property="og:description" content="텍스처에 렌더링하는 방법">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ko/webgl-render-to-texture.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 텍스처에 렌더링하기">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ko/webgl-render-to-texture.html">
+<meta name="twitter:description" content="텍스처에 렌더링하는 방법">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-render-to-texture_ko.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-render-to-texture.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-render-to-texture_ko.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-render-to-texture.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-render-to-texture.html",
+      "inLanguage":"ko",
+      "name":"WebGL2 텍스처에 렌더링하기",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-render-to-texture.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL2 Rendering to a Texture</title>
+<title>WebGL2 텍스처에 렌더링하기</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/ko/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-render-to-texture.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-render-to-texture.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-render-to-texture.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-render-to-texture.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-render-to-texture.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-render-to-texture.html">
+
+
+
+
 </head>
 <body>
 <div class="webgl_navbar">
@@ -177,12 +232,241 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 Rendering to a Texture</h1>
+    <h1>WebGL2 텍스처에 렌더링하기</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>죄송합니다. 이 문서는 아직 자원 봉사자들이 한국어로 번역하지 않았습니다. <a href="https://github.com/greggman/webgl-fundamentals">번역을 도와주세요!</a>! 😄</p>
-<p><a href="/webgl/lessons/webgl-render-to-texture.html">원본보기</a>.</p>
+      <p>이 글은 WebGL2 시리즈에서 이어지는 글입니다.
+가장 첫 글은 <a href="webgl-fundamentals.html">WebGL2 기초</a> 이고 바로 이전 글은 
+<a href="webgl-data-textures.html">텍스처에 데이터를 전달하는 법</a>에 관한 글입니다.
+이 글들을 아직 읽지 않으셨다면 먼저 읽고 오세요.</p>
+<p>지난번 글에서는 자바스크립트에서 텍스처로 데이터를 전달하는 방법을 알아보았습니다.
+이 글에서는 WebGL2를 사용해 텍스처에 렌더링 하는 방법을 알아볼겁니다.
+참고로 이 주제는 <a href="webgl-image-processing-continued.html">이미지 처리</a>에서 이미 
+간략하게 다루긴 했습니다만 여기서는 좀 더 자세히 알아볼겁니다.</p>
+<p>텍스처에 렌더링하는것은 꽤 간단합니다. 우선 특정한 크기의 텍스처를 만듭니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// create to render to
+const targetTextureWidth = 256;
+const targetTextureHeight = 256;
+const targetTexture = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, targetTexture);
+
+{
+  // define size and format of level 0
+  const level = 0;
+  const internalFormat = gl.RGBA;
+  const border = 0;
+  const format = gl.RGBA;
+  const type = gl.UNSIGNED_BYTE;
+  const data = null;
+  gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+                targetTextureWidth, targetTextureHeight, border,
+                format, type, data);
+
+  // set the filtering so we don&#39;t need mips
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+}
+</code></pre><p><code class="notranslate" translate="no">data</code>가 <code class="notranslate" translate="no">null</code>인 것에 주목하세요. 우리는 데이터를 전달할 필요가 없습니다.
+여기서는 단지 WebGL이 텍스처를 할당하기만 하면 됩니다.</p>
+<p>다음으로 프레임버퍼를 만듭니다. <a href="webgl-framebuffers.html">프레임버퍼란 단지 어떤 데이터들의 집합입니다(collection of attachments)</a>.
+여기서 어떤 데이터란 텍스처 또는 렌더버퍼(renderbuffer)입니다.
+텍스처에 대해서는 이미 알아보았고, 렌더버퍼란 텍스처와 아주 유사하지만 텍스처는 
+지원하지 않은 몇몇 포맷과 옵션을 지원한다는 점이 다릅니다.
+또한 텍스처와는 다르게 렌더버퍼는 셰이더의 입력으로 직접 사용할 수 없습니다.</p>
+<p>이제 프레임버를 만들고 우리의 텍스처를 붙여줍시다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Create and bind the framebuffer
+const fb = gl.createFramebuffer();
+gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+
+// attach the texture as the first color attachment
+const attachmentPoint = gl.COLOR_ATTACHMENT0;
+gl.framebufferTexture2D(
+    gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, targetTexture, level);
+</code></pre><p>텍스처나 버퍼와 동일하게, 프레임버퍼를 만들고 나서 <code class="notranslate" translate="no">FRAMEBUFFER</code>라는 
+바인드 포인트에 바인딩 해주어야 합니다. 이렇게 하고나면 프레임버퍼와 관련된 
+다른 모는 함수는 바인드 포인트에 바인딩된 프레임버퍼를 참조하게 됩니다.</p>
+<p>프레임버퍼가 바인딩되면, 우리가  <code class="notranslate" translate="no">gl.clear</code>, <code class="notranslate" translate="no">gl.drawArrays</code>, 
+<code class="notranslate" translate="no">gl.drawElements</code>를 호출할 때마다 WebGL은 캔버스 대신 우리의 텍스처에 렌더링을 수행하게 됩니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawCube(aspect) {
+  // 우리의 프로그램(셰이더 쌍)을 사용할 것입니다.
+  gl.useProgram(program);
+
+  // 사용하고자 하는 attribute/buffer 셋을 바인딩합니다.
+  gl.bindVertexArray(vao);
+
+  // 투영 행렬을 계산합니다.
+  -  var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  var projectionMatrix =
+      m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
+
+  var cameraPosition = [0, 0, 2];
+  var up = [0, 1, 0];
+  var target = [0, 0, 0];
+
+  // look at을 사용해 카메라 행렬을 계산합니다.
+  var cameraMatrix = m4.lookAt(cameraPosition, target, up);
+
+  // 카메라 행렬로부터 뷰 행렬을 만듭니다.
+  var viewMatrix = m4.inverse(cameraMatrix);
+
+  var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
+
+  var matrix = m4.xRotate(viewProjectionMatrix, modelXRotationRadians);
+  matrix = m4.yRotate(matrix, modelYRotationRadians);
+
+  // 행렬을 설정합니다.
+  gl.uniformMatrix4fv(matrixLocation, false, matrix);
+
+  // u_texture에는 0번 텍스처 유닛을 사용하도록 셰이더에 알려줍니다.
+  gl.uniform1i(textureLocation, 0);
+
+  // geometry를 그립니다.
+  var primitiveType = gl.TRIANGLES;
+  var offset = 0;
+  var count = 6 * 6;
+  gl.drawArrays(primitiveType, offset, count);
+}
+</code></pre><p>참고로 투영 행렬을 계산하기 위해 <code class="notranslate" translate="no">aspect</code>를 전달해 주어야 하는데 
+우리의 대상 텍스처가 카메라와는 종횡비가 다르기 때문입니다.</p>
+<p>아래는 호출 방법입니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 장면을 그립니다.
+function drawScene(time) {
+
+  ...
+
+  {
+    // 프레임버퍼를 바인딩하여 우리의 targetTexture에 그리도록 합니다.
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+
+    // 3x2 텍스처를 사용하여 정육면체를 그립니다.
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    // 클립 공간에서 픽셀로 변환하는 법을 알려줍니다.
+    gl.viewport(0, 0, targetTextureWidth, targetTextureHeight);
+
+    // 캔버스와 깊이 버퍼를 지웁니다.
+    gl.clearColor(0, 0, 1, 1);   // 파란색으로 지웁니다.
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    const aspect = targetTextureWidth / targetTextureHeight;
+    drawCube(aspect)
+  }
+
+  {
+    // 캔버스에 그리도록 합니다.
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+    // 방금 전에 렌더링한 텍스처를 적용해 정육면체를 그리도록 할 것입니다.
+    gl.bindTexture(gl.TEXTURE_2D, targetTexture);
+
+    // 클립 공간에서 픽셀로 변환하는 법을 알려줍니다.
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+    // 캔버스와 깊이 버퍼를 지웁니다.
+    gl.clearColor(1, 1, 1, 1);   // 흰 색으로 지웁니다.
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+    drawCube(aspect)
+  }
+
+  requestAnimationFrame(drawScene);
+}
+</code></pre><p>결과는 아래와 같습니다.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-render-to-texture.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-render-to-texture.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+</p>
+<p><code class="notranslate" translate="no">gl.viewport</code>를 호출해서 여러분이 렌더링하려는 크기에 맞추어야 한다는 것을 <strong>반드시 기억하세요</strong>.
+예제의 경우 먼저 텍스처에 렌더링을 하기 때문에 뷰포트를 텍스처의 크기로 설정했습니다.
+두 번째로는 캔버스에 렌더링을 하기 때문에 뷰포트를 캔버스의 크기로 설정했습니다.</p>
+<p>투영 행렬을 계산할 때도 유사한데, 우리가 렌더링하려는 대상의 종횡비에 맞는 값을 사용해야 합니다.
+저도 결과가 이상하거나 렌더링이 되지 않는 경우에 대해 디버깅하느라 수많은 시간을 보낸 적이 있습니다. 
+결국에는 <code class="notranslate" translate="no">gl.viewport</code>를 호출하지 않거나 올바른 종횡비를 설정하지 않은것을 발견하곤 했습니다.
+잊어버리기가 쉽기 때문에 저는 <code class="notranslate" translate="no">gl.bindFramebuffer</code>를 직접 호출하지 않고, 아래와 같은 함수를 만들어서 호출합니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function bindFramebufferAndSetViewport(fb, width, height) {
+   gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+   gl.viewport(0, 0, width, height);
+}
+</code></pre><p>그리고 렌더링 대상을 변경할 때는 이 함수만을 사용합니다. 그러면 잊어버리지 않을 겁니다.</p>
+<p>주의하셔야 할 것중 하나는 우리의 프레임버퍼에는 깊이 버퍼(depth buffer)가 없다는 것입니다. 오직 텍스처만 갖고 있습니다.
+즉 깊이 테스팅을 수행하지 않기 때문에 3D 가 제대로 동작하지 않는다는 것입니다.
+정육면체 3개를 그린다면 결과는 아래와 같아집니다.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-render-to-texture-3-cubes-no-depth-buffer.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-render-to-texture-3-cubes-no-depth-buffer.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+</p>
+<p>가운데 정육면체를 보시면 세로로 놓여진 세 개의 정육면체가 하나는 뒤쪽에, 하나는 중간에, 하나는 앞쪽에 그려지는 것을 보실 수 있습니다.
+하지만 우리는 세 개의 육면체를 모두 같은 깊이에 그렸습니다.
+반면 캔버스에 보이는 세 개의 가로로 놓여진 육면체들은 서로 올바르게 교차하는 것을 보실 수 있습니다.
+왜냐하면 캔버스에는 깊이 버퍼가 있지만, 우리가 사용한 프레임버퍼에는 깊이 버퍼가 없기 떄문입니다.</p>
+<p><img class="webgl_center" src="../resources/cubes-without-depth-buffer.jpg" width="100%" height="100%" /></p>
+<p>깊이 버퍼를 추가하기 위해서는 깊이 텍스처를 만들고 프레임버퍼에 붙여줘야 합니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// create a depth texture
+const depthTexture = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, depthTexture);
+
+// make a depth buffer and the same size as the targetTexture
+{
+  // define size and format of level 0
+  const level = 0;
+  const internalFormat = gl.DEPTH_COMPONENT24;
+  const border = 0;
+  const format = gl.DEPTH_COMPONENT;
+  const type = gl.UNSIGNED_INT;
+  const data = null;
+  gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+                targetTextureWidth, targetTextureHeight, border,
+                format, type, data);
+
+  // set the filtering so we don&#39;t need mips
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+  // attach the depth texture to the framebuffer
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depthTexture, level);
+}
+</code></pre><p>그렇게 하면 결과는 이렇게 됩니다.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-render-to-texture-3-cubes-with-depth-buffer.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-render-to-texture-3-cubes-with-depth-buffer.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+</p>
+<p>이제 프레임버퍼에 깊이 버퍼가 추가되었기 때문에 안쪽의 육면체들도 올바르게 교차하는 것을 보실 수 있습니다.</p>
+<p><img class="webgl_center" src="../resources/cubes-with-depth-buffer.jpg" width="100%" height="100%" /></p>
+<p>WebGL은 특정 조합의 attachment들만 사용할 수 있다는 점에 주의하십시오.
+<a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/#FBO_ATTACHMENTS">명세에 따르면</a> 동작이 보장되어 있는 attachment 조합은:</p>
+<ul>
+<li><code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> = <code class="notranslate" translate="no">RGBA/UNSIGNED_BYTE</code> 텍스처</li>
+<li><code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> = <code class="notranslate" translate="no">RGBA/UNSIGNED_BYTE</code> 텍스처 + <code class="notranslate" translate="no">DEPTH_ATTACHMENT</code> = <code class="notranslate" translate="no">DEPTH_COMPONENT16</code> 렌더버퍼</li>
+<li><code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> = <code class="notranslate" translate="no">RGBA/UNSIGNED_BYTE</code> 텍스처 + <code class="notranslate" translate="no">DEPTH_STENCIL_ATTACHMENT</code> = <code class="notranslate" translate="no">DEPTH_STENCIL</code> 렌더버퍼</li>
+</ul>
+<p>다른 조합에 대해서는 사용자의 시스템/GPU/드라이버/브라우저가 해당 조합을 지원하는지를 확인하셔야만 합니다.
+확인하려면 프레임버퍼를 만들고 attachment를 추가한 뒤에 아래 함수를 호출하세요.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+</code></pre><p>status가 <code class="notranslate" translate="no">FRAMEBUFFER_COMPLETE</code>면 attachment 조합이 사용 가능한 상태입니다.
+그렇지 않으면 사용자에게 당신은 운이 없었다는 것을 알려주거나 다른 방식으로 처리하도록 구현해야 합니다.</p>
+<p>아직 <a href="webgl-less-code-more-fun.html">WebGL을 단순화해서 더 적은 코드로 즐기기</a>를 읽지 않으셨다면 한번 읽어 보세요.</p>
+<div class="webgl_bottombar">
+<h3>캔버스는 사실 텍스처 입니다.</h3>
+<p>
+중요한 건 아니지만 브라우저는 위에 언급한 기술을 사용해 캔버스를 구현하고 있습니다.
+뒤쪽에서 색상 텍스처(color texture), 깊이 버퍼, 프레임버퍼를 만들고 현재 프레임버퍼로 바인딩합니다.
+여러분이 렌더링을 수행하면 그 텍스처로 그려지게 됩니다.
+그리고 그 텍스처는 캔버스를 웹 페이지에 그리는 데 사용됩니다.
+</p>
+</div>
+
+
 
     </div>
     <div class="lesson-sidebar">
@@ -196,7 +480,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>기초</li>
+        <div id="toc">
+          <ul>  <li>기초</li>
         <ul>
           <li><a href="/webgl/lessons/ko/webgl-getting-webgl2.html">WebGL2 사용법</a></li>
 <li><a href="/webgl/lessons/ko/webgl-fundamentals.html">WebGL2 기초</a></li>
@@ -258,7 +543,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </ul>
   <li>Rendering To A Texture</li>
         <ul>
-          <li><a href="/webgl/lessons/ko/webgl-render-to-texture.html">Render to Texture</a></li>
+          <li><a href="/webgl/lessons/ko/webgl-render-to-texture.html">텍스처에 렌더링하기</a></li>
         </ul>
   <li>Shadows</li>
         <ul>
@@ -339,13 +624,47 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://twgljs.org">TWGL, A tiny WebGL helper library</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+    <div>이슈/버그? <a href="https://github.com/greggman/webgl-fundamentals/issues">깃헙에서 이슈만들기</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 텍스처에 렌더링하기';
+            var disqus_title = 'WebGL2 텍스처에 렌더링하기';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: "Thank you <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>for <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 <script>
 (function() {
   if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
