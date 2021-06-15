@@ -31,7 +31,7 @@ to set uniforms, etc... then you should probably to go further back and
 
 So first off there is more than one way to draw shadows.
 Every way has it's tradeoffs. The most common way to draw
-shadows is to use shadow maps
+shadows is to use shadow maps.
 
 Shadow maps work by combining the techniques from all the prerequisite
 articles above.
