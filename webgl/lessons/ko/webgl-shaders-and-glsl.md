@@ -1,26 +1,26 @@
-Title: WebGL2 쉐이더와 GLSL
-Description: 쉐이더란 무엇이며 GLSL는 무엇입니까?
-TOC: WebGL2 쉐이더와 GLSL
+Title: WebGL2 셰이더와 GLSL
+Description: 셰이더란 무엇이며 GLSL는 무엇입니까?
+TOC: WebGL2 셰이더와 GLSL
 
 
 이 글은 [WebGL 기초](webgl-fundamentals.html)에서 이어지는 글입니다. 만약 WebGL의 작동 방식에 대하여 읽지 않았다면 [먼저 읽어 보십시오](webgl-how-it-works.html).
 
-전에 쉐이더와 GLSL에 대하여 이야기 했지만 구체적인 세부 사항은 언급하지 않았습니다. 예제를 보면 명확해질거라 생각했지만, 혹시 모르니 좀 더 명확히 해 봅시다.
+전에 셰이더와 GLSL에 대하여 이야기 했지만 구체적인 세부 사항은 언급하지 않았습니다. 예제를 보면 명확해질거라 생각했지만, 혹시 모르니 좀 더 명확히 해 봅시다.
 
-[작동 방식](webgl-how-it-works.html)에서 언급된 것처럼 WebGL에서는 무언가를 그릴때 마다 2개의 쉐이더가 필요합니다. *버텍스 쉐이더*와 *프래그먼트 쉐이더*입니다. 각 쉐이더는 *함수* 입니다. 버텍스 쉐이더와 프래그먼트 쉐이더는 같이 쉐이더 프로그램(또는 그냥 프로그램)으로 링크됩니다. 일반적인 WebGL 앱에는 많은 쉐이더 프로그램이 있습니다.
+[작동 방식](webgl-how-it-works.html)에서 언급된 것처럼 WebGL에서는 무언가를 그릴때 마다 두개의 셰이더가 필요합니다. *정점 셰이더*와 *프래그먼트 셰이더*입니다. 각 셰이더는 *함수* 입니다. 정점 셰이더와 프래그먼트 셰이더는 같이 셰이더 프로그램(또는 그냥 프로그램)으로 링크됩니다. 일반적인 WebGL 앱에는 많은 셰이더 프로그램이 있습니다.
 
-## 버텍스 쉐이더
+## 정점 셰이더
 
-버텍스 쉐이더의 일은 클립 공간 좌표를 생성하는 것입니다. 항상 다음과 같은 형태를 가집니다.
+정점 셰이더의 일은 클립 공간 좌표를 생성하는 것입니다. 항상 다음과 같은 형태를 가집니다.
 
     #version 300 es
     void main() {
        gl_Position = doMathToMakeClipspaceCoordinates
     }
 
-쉐이더는 버텍스당 한번 호출됩니다. 호출 될 때마다 특수한 전역 변수인 `gl_Position`에 클립 공간 좌표를 할당해야 합니다.
+셰이더는 정점당 한번 호출됩니다. 호출 될 때마다 특수한 전역 변수인 `gl_Position`에 클립 공간 좌표를 할당해야 합니다.
 
-버텍스 쉐이더는 데이터가 필요합니다. 3가지 방법으로 데이터를 받을 수 있습니다.
+정점 셰이더는 데이터가 필요합니다. 3가지 방법으로 데이터를 받을 수 있습니다.
 
 1.  [Attributes](#attributes) (버퍼에서 가져온 데이터)
 2.  [Uniforms](#uniforms) (드로우 콜(draw call) 마다 모든 정점에서 동일하게 유지되는 값)
@@ -28,8 +28,8 @@ TOC: WebGL2 쉐이더와 GLSL
 
 ### Attributes
 
-버텍스 쉐이더에서 데이터를 얻는 가장 일반적인 방법은 버퍼와 *attributes*를 이용하는 것입니다.
-[작동 방식](webgl-how-it-works.html)에서 버퍼와 attributes에 대해서 다뤘습니다.
+정점 셰이더에서 데이터를 얻는 가장 일반적인 방법은 버퍼와 *attribute*를 이용하는 것입니다.
+[작동 방식](webgl-how-it-works.html)에서 버퍼와 attribute에 대해서 다뤘습니다.
 우선 버퍼를 만듭니다.
 
     var buf = gl.createBuffer();
@@ -39,7 +39,7 @@ TOC: WebGL2 쉐이더와 GLSL
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.bufferData(gl.ARRAY_BUFFER, someData, gl.STATIC_DRAW);
 
-그런 다음 생성한 쉐이더 프로그램의 attributes의 위치를 찾아봅니다.
+그런 다음 생성한 셰이더 프로그램의 attributes의 location을 찾아봅니다.
 
     var positionLoc = gl.getAttribLocation(someShaderProgram, "a_position");
 
@@ -57,7 +57,7 @@ TOC: WebGL2 쉐이더와 GLSL
 
     gl.vertexAttribPointer(positionLoc, numComponents, type, false, stride, offset);
 
-[WebGL 기초](webgl-fundamentals.html)에서 쉐이더에서 수식을 쓰지 않고 직접 데이터를 전달할 수 있음을 보았습니다.
+[WebGL 기초](webgl-fundamentals.html)에서 셰이더에서 수식을 쓰지 않고 직접 데이터를 전달할 수 있음을 보았습니다.
 
     #version 300 es
 
@@ -67,14 +67,14 @@ TOC: WebGL2 쉐이더와 GLSL
        gl_Position = a_position;
     }
 
-클립 공간 정점을 버퍼에 넣는다면 작동 할 것입니다.
+클립 공간 위치값을 가진 정점을 버퍼에 넣는다면 제대로 작동 할 것입니다.
 
 Attribute는 `float`, `vec2`, `vec3`, `vec4`, `mat2`, `mat3`, `mat4`,
 `int`, `ivec2`, `ivec3`, `ivec4`, `uint`, `uvec2`, `uvec3`, `uvec4`를 타입으로 사용할 수 있습니다.
 
 ### Uniforms
 
-버텍스 쉐이더의 uniforms은 드로우 콜마다 모든 정점에서 동일하게 유지되는 값입니다. 간단한 예로 오프셋을 위 버텍스 쉐이더에 추가 할수 있습니다.
+정점 셰이더의 uniforms은 드로우 콜마다 모든 정점에서 동일하게 유지되는 값입니다. 간단한 예로 오프셋을 위 정점 셰이더에 추가 할수 있습니다.
 
     #version 300 es
 
@@ -135,10 +135,10 @@ Uniforms은 여러 타입이 될 수 있습니다. 각 타입별로 해당 함�
 
 배열의 경우 모든 배열의 유니폼들을 한꺼번에 설정 할수 있습니다. 예를들어
 
-    // 쉐이더에서
+    // 셰이더에서 아래와 같이 선언
     uniform vec2 u_someVec2[3];
 
-    // 초기화될 때 자바스립트에서
+    // 초기화될 때 자바스립트에서 location을 가져올 때
     var someVec2Loc = gl.getUniformLocation(someProgram, "u_someVec2");
 
     // 렌더링 될 때
@@ -146,7 +146,7 @@ Uniforms은 여러 타입이 될 수 있습니다. 각 타입별로 해당 함�
 
 만약에 배열의 각 요소별로 설정 하기를 원한다면 각자 요소의 위치를 찾아야 합니다.
 
-    // 초기화될 때 자바스립트에서
+    // 초기화될 때 자바스립트에서 location을 가져올 때
     var someVec2Element0Loc = gl.getUniformLocation(someProgram, "u_someVec2[0]");
     var someVec2Element1Loc = gl.getUniformLocation(someProgram, "u_someVec2[1]");
     var someVec2Element2Loc = gl.getUniformLocation(someProgram, "u_someVec2[2]");
@@ -169,13 +169,13 @@ Uniforms은 여러 타입이 될 수 있습니다. 각 타입별로 해당 함�
     var someThingActiveLoc = gl.getUniformLocation(someProgram, "u_someThing.active");
     var someThingSomeVec2Loc = gl.getUniformLocation(someProgram, "u_someThing.someVec2");
 
-### 버텍스 쉐이더에서 텍스처
+### 정점 셰이더에서의 텍스처
 
-[프래그먼트 쉐이더에서 텍스처](#textures-in-fragment-shaders)를 참조 하세요.
+[프래그먼트 셰이더에서의 텍스처](#textures-in-fragment-shaders)를 참조 하세요.
 
-## 프래그먼트 쉐이더
+## 프래그먼트 셰이더
 
-프래그먼트 쉐이더의 역할은 현재 레스터화 되는 픽셀에 색상을 할당하는 것입니다.
+프래그먼트 셰이더의 역할은 현재 래스터화 되는 픽셀에 색상을 할당하는 것입니다.
 항상 다음과 같은 형식을 가집니다.
 
     #version 300 es
@@ -187,21 +187,21 @@ Uniforms은 여러 타입이 될 수 있습니다. 각 타입별로 해당 함�
        outColor = doMathToMakeAColor;
     }
 
-프래그먼트 쉐이더는 픽셀당 한번씩 호출 됩니다. 호출 될 때마다 여러분이 지정한 out 변수를 색으로 설정해야 합니다.
+프래그먼트 셰이더는 픽셀당 한번씩 호출 됩니다. 호출 될 때마다 여러분이 지정한 out 변수를 어떤 색상으로 설정해야 합니다.
 
-프래그먼트 쉐이더는 데이터가 필요합니다. 3가지 방법으로 데이터를 가져올 수 있습니다.
+프래그먼트 셰이더는 데이터가 필요합니다. 3가지 방법으로 데이터를 가져올 수 있습니다.
 
 1.  [Uniforms](#uniforms) (한번의 드로우 콜에서 모든 픽셀에 동일하게 유지되는 데이터)
 2.  [Textures](#textures-in-fragment-shaders) (픽셀/텍셀에서 가져온 데이터)
-3.  [Varyings](#varyings) (버텍스 쉐이더에서 데이터가 전달되고 보간된 데이터)
+3.  [Varyings](#varyings) (정점 셰이더에서 데이터가 전달되고 보간된 데이터)
 
-### 프래그먼트 쉐이더에서의 Uniform
+### 프래그먼트 셰이더에서의 Uniform
 
-[버텍스 쉐이더에서의 uniform](#uniforms)을 참조 해 주세요.
+[정점 셰이더에서의 uniform](#uniforms)을 참조 해 주세요.
 
-### Fragment Shaders에서의 텍스처
+### 프래그먼트 셰이더에서의 텍스처
 
-쉐이더에서 텍스처 값들을 얻으려면 `sampler2D` uniform을 생성하고 GLSL함수 `texture`를 사용하여 값을 추출합니다.
+셰이더에서 텍스처 값들을 얻으려면 `sampler2D` uniform을 생성하고 GLSL함수 `texture`를 사용하여 값을 추출합니다.
 
     precision highp float;
 
@@ -214,7 +214,7 @@ Uniforms은 여러 타입이 될 수 있습니다. 각 타입별로 해당 함�
        outColor = texture(u_texture, texcoord);
     }
 
-[여러가지 설정에 따라서](webgl-3d-textures.html) 텍스처에서 나오는 데이터는 달라집니다. 우리가 해야하는 최소한의 작업은 텍스처를 생성하고 데이터를 넣는야 것입니다. 예를 들어,
+[여러가지 설정에 따라서](webgl-3d-textures.html) 텍스처에서 나오는 데이터는 달라집니다. 우리가 해야하는 최소한의 작업은 텍스처를 생성하고 데이터를 넣는 것입니다. 예를 들어,
 
     var tex = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -235,9 +235,12 @@ Uniforms은 여러 타입이 될 수 있습니다. 각 타입별로 해당 함�
                   format,
                   type,
                   data);
+
+필터링 방법을 설정합니다.
+
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
-그런 다음 쉐이더 프로그램에서 uniform 위치를 찾습니다.
+그런 다음 셰이더 프로그램에서 uniform 위치를 찾습니다.
 
     var someSamplerLoc = gl.getUniformLocation(someProgram, "u_texture");
 
@@ -247,18 +250,18 @@ Uniforms은 여러 타입이 될 수 있습니다. 각 타입별로 해당 함�
     gl.activeTexture(gl.TEXTURE0 + unit);
     gl.bindTexture(gl.TEXTURE_2D, tex);
 
-텍스처를 바인딩 한 유닛을 쉐이더에게 알려줍니다.
+텍스처를 바인딩 한 유닛을 셰이더에게 알려줍니다.
 
     gl.uniform1i(someSamplerLoc, unit);
 
 ### Varyings
 
-varying는 [작동 방법](webgl-how-it-works.html)에서 보았던 버텍스 쉐이더에서 프래그먼트 쉐이더로 값을 전달하는 방법입니다.
+varying는 [작동 방법](webgl-how-it-works.html)에서 보았던 정점 셰이더에서 프래그먼트 셰이더로 값을 전달하는 방법입니다.
 
-varying를 사용하기 위해서는 varying들을 버텍스와 프래그먼트 쉐이더 두곳에서 일치하게 선언을 해야합니다.
-버텍스 쉐이더는 버텍스당 특정 값을 *out* varying에 설정합니다. WebGL은 픽셀을 그릴때 선택 사항으로 해당 값을 보간하고 프래먼트 쉐이더에서 *in*에 상응하는 varying에 전달합니다.
+varying를 사용하기 위해서는 varying들을 정점와 프래그먼트 셰이더 두곳에서 일치하게 선언을 해야합니다.
+정점 셰이더는 각 정점의 특정 값을 *out* varying에 설정합니다. WebGL은 픽셀을 그릴때 선택 사항으로 해당 값들을 보간하고 프래먼트 셰이더의 상응하는 *in* varying에 전달합니다.
 
-버텍스 쉐이더
+정점 셰이더
 
     #version 300 es
 
@@ -273,7 +276,7 @@ varying를 사용하기 위해서는 varying들을 버텍스와 프래그먼트 
     +  v_positionWithOffset = a_position + u_offset;
     }
 
-프래그먼트 쉐이더
+프래그먼트 셰이더
 
     #version 300 es
     precision highp float;
@@ -288,12 +291,12 @@ varying를 사용하기 위해서는 varying들을 버텍스와 프래그먼트 
     +  outColor = color;
     }
 
-위의 예제는 거의 무의미한 예제입니다. 일반적으로 클립 공간 값을 프래그먼트 쉐이더로 직접 복사하여 색상으로는 사용하지 않습니다. 그럼에도 불구하고 잘 작동하고 색상을 만들어 냅니다.
+위의 예제는 거의 무의미한 예제입니다. 일반적으로 클립 공간 값을 프래그먼트 셰이더로 직접 복사하여 색상으로는 사용하지 않습니다. 그럼에도 불구하고 잘 작동하고 색상을 만들어 냅니다.
 
 ## GLSL
 
 GLSL은 [Graphics Library Shader Language](https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf)의 약자입니다.
-이는 쉐이더에 쓰이는 언어입니다. JavaScript에서 흔히 볼 수 없는 어느정도 특별한 고유 기능이 있습니다. 레스터화 그래픽스를 위한 계산 작업에 일반적으로 필요한 수학적 계산을 수행하도록 설계되어 있습니다. 그래서 예를 들어 `vec2`, `vec3`, `vec4`와 같이 두개의 값, 세개의 값, 네개의 값을 각각 표현하는 타입이 있습니다. 비슷하게 `mat2`, `mat3`, `mat4`는 2x2, 3x3, 4x4 행렬을 표현합니다. 스칼라를 `vec`에 곱하는 것도 할 수 있습니다.
+이는 셰이더에 쓰이는 언어입니다. 자바스크립트에서 흔히 볼 수 없는 어느정도 특별한 고유 기능이 있습니다. 래스터화 그래픽스를 위한 계산 작업에 일반적으로 필요한 수학적 계산을 수행할 수 있도록 설계되어 있습니다. 그래서 예를 들어 `vec2`, `vec3`, `vec4`와 같이 두개의 값, 세개의 값, 네개의 값을 각각 표현하는 타입이 있습니다. 비슷하게 `mat2`, `mat3`, `mat4`는 2x2, 3x3, 4x4 행렬을 표현합니다. 스칼라를 `vec`에 곱하는 것도 할 수 있습니다.
 
     vec4 a = vec4(1, 2, 3, 4);
     vec4 b = a * 2.0;
@@ -376,12 +379,12 @@ T의 의미는  `float`, `vec2`, `vec3` 또는 `vec4` 일 수 있습니다. 만�
       mix(v1.z, v2.z, f),
       mix(v1.w, v2.w, f));
 
-[OpenGL ES 3.0 참조 카드](https://www.khronos.org/files/opengles3-quick-reference-card.pdf) 마지막 3 페이지에서 모든 GLSL 함수 목록을 볼 수 있으며 만약에 정말로 딱딱하고 완전한 것들을 원한다면 [GLSL ES 3.00 스펙](https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf)을 보십시오.
+[OpenGL ES 3.0 레퍼런스 카드](https://www.khronos.org/files/opengles3-quick-reference-card.pdf) 마지막 3 페이지에서 모든 GLSL 함수 목록을 볼 수 있으며 만약에 정말로 딱딱하고 완전한 글을 원한다면 [GLSL ES 3.00 스펙](https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf)을 보십시오.
 
 ## 정리
 
-지금까지가 이 전체 게시글 시리즈의 요점입니다. WebGL은 다양한 쉐이더를 생성하고, 데이터를 이 쉐이더들에 제공하고 `gl.drawArrays`, `gl.drawElements`등을 호출하여 WebGL이 각 버텍스마다 현재 버텍스 쉐이더를 호출하여 처리하고 픽셀들을 각 픽셀마다 현재 프래그먼트 쉐이더를 호출하여 랜더링 하는 것에 다름이 없습니다.
+지금까지가 이 전체 게시글 시리즈의 요점입니다. WebGL은 다양한 셰이더를 생성하고, 데이터를 이 셰이더들에 제공하고 `gl.drawArrays`, `gl.drawElements`등을 호출해서, WebGL이 각 정점마다 현재 정점 셰이더를 호출하여 처리하고, 각 픽셀마다 현재 프래그먼트 셰이더를 호출하여 픽셀을 렌더링 하는 것에 다름이 없습니다.
 
-실제로 쉐이더를 생성하는 것은 몇 줄의 코드로 족합니다. 그 코드들은 대부분의 WebGL 프로그램에서 동일하고 한 번 작성하고 나면 [GLSL 쉐이더를 컴파일하고 쉐이더 프로그램에 링크하는 방법](webgl-boilerplate.html)은 신경쓰지 않아도 됩니다.
+실제로 셰이더를 생성하는 것은 몇 줄의 코드로 족합니다. 그 코드들은 대부분의 WebGL 프로그램에서 동일하고 한 번 작성하고 나면 [GLSL 셰이더를 컴파일하고 셰이더 프로그램에 링크하는 방법](webgl-boilerplate.html)은 신경쓰지 않아도 됩니다.
 
 여기서부터 읽기 시작했다면 두 가지 방향으로 갈 수 있습니다. 이미지 처리에 관심이 있다면 [2D 이미지 처리 방법](webgl-image-processing.html)을 보면 됩니다. 만약에 이동, 회전, 크기 변환에 관심이 있다면 [여기서 시작](webgl-2d-translation.html)하시면 됩니다.
