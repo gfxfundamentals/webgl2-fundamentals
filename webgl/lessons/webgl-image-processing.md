@@ -110,11 +110,11 @@ Once it loads we'll draw it.
     +  // Create a texture.
     +  var texture = gl.createTexture();
     +
-    +  // make unit 0 the active texture uint
-    +  // (ie, the unit all other texture commands will affect
+    +  // make unit 0 the active texture unit
+    +  // (i.e, the unit all other texture commands will affect.)
     +  gl.activeTexture(gl.TEXTURE0 + 0);
     +
-    +  // Bind it to texture unit 0' 2D bind point
+    +  // Bind texture to 'texture unit '0' 2D bind point
     +  gl.bindTexture(gl.TEXTURE_2D, texture);
     +
     +  // Set the parameters so we don't need mips and so we're not filtering
@@ -278,7 +278,7 @@ In JavaScript we need to supply a convolution kernel and its weight
          -1, -1, -1
      ];
 
-    // set the kernel and it's weight
+     // set the kernel and it's weight
      gl.uniform1fv(kernelLocation, edgeDetectKernel);
      gl.uniform1f(kernelWeightLocation, computeKernelWeight(edgeDetectKernel));
      ...
@@ -325,7 +325,7 @@ gl.bindTexture(gl.TEXTURE_2D, someTexture);
 </div>
 
 <div class="webgl_bottombar">
-<h3>What's with the a_, u_, and v_ prefixes in from of variables in GLSL?</h3>
+<h3>What's with the a_, u_, and v_ prefixes in front of variables in GLSL?</h3>
 <p>
 That's just a naming convention. They are not required but for me it makes it easier to see at a glance
 where the values are coming from. a_ for attributes which is the data provided by buffers. u_ for uniforms
