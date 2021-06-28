@@ -27,7 +27,7 @@ It creates a new `Image` object, sets the URL to load, and sets a callback to
 be called when the image finishes loading.
 
 ```js
-function loadImage (u rl, callback) {
+function loadImage (url, callback) {
   var image = new Image();
   image.src = url;
   image.onload = callback;
