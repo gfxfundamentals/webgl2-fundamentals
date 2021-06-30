@@ -341,7 +341,6 @@ WebGL은 이미 평균내어 준비된 2x2 크기인 밉맵을 사용할 수 있
 <img class="webgl_center" src="../resources/noodles.jpg" />
 
 그리고 육면체의 각 면마다 서로 다른 텍스처 좌표를 사용합니다.
-and then use a different set of texture coordinates for each face of the cube.
 
         // 왼쪽 위 이미지 사용
         0   , 0  ,
