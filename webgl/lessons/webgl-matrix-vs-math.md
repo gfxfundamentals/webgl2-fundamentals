@@ -42,7 +42,7 @@ And columns go down.
 
 <div class="webgl_center"><img src="resources/spreadsheet-column.png" style="width: 808px; filter: brightness(0.9);" class="nobg"></div>
 
-So, when we make a 3x3 of 4x4 matrix in JavaScript for WebGL we make them like this
+So, when we make a 3x3 or 4x4 matrix in JavaScript for WebGL we make them like this
 
 ```js
 const m3x3 = [
@@ -61,7 +61,7 @@ const m4x4 = [
 
 Clearly following the conventions above the first row of `m3x3` is `0, 1, 2` and the last row of `m4x4` is `12, 13, 14, 15`
 
-As we see in [the first article on matrices](webgl-2d-matrices.html) to make a fairly standard WebGL 3x3 2D translation matrix the translation values `ty` and `ty` go in locations 6 and 7
+As we see in [the first article on matrices](webgl-2d-matrices.html) to make a fairly standard WebGL 3x3 2D translation matrix the translation values `tx` and `ty` go in locations 6 and 7
 
 ```js
 const some3x3TranslationMatrix = [
@@ -148,7 +148,7 @@ struct Vec4 {
 };
 ```
 
-and we could create a matrix4x4 from 4 of them
+and we could create a matrix 4x4 from 4 of them
 
 ```c++
 // C++
@@ -194,9 +194,9 @@ const someTranslationMatrix = [
 ];
 ```
 
-So, with this convention of calling rows "columns" some things are simpler but others can me more confusing if you're a math person.
+So, with this convention of calling rows "columns" some things are simpler but others can be more confusing if you're a math person.
 
-I bring all of this up because these article are written from the POV of a programmer, not a math person. That means like every other single dimensional array that is treated as a 2 dimensional array, rows go across.
+I bring all of this up because these articles are written from the POV of a programmer, not a math person. That means like every other single dimensional array that is treated as a 2 dimensional array, rows go across.
 
 ```js
 const someTranslationMatrix = [
