@@ -270,7 +270,7 @@ shows Lines and columns, lines being another word for row in this case since col
 <p>And columns go down.</p>
 <div class="webgl_center"><img src="resources/spreadsheet-column.png" style="width: 808px; filter: brightness(0.9);" class="nobg"></div>
 
-<p>So, when we make a 3x3 of 4x4 matrix in JavaScript for WebGL we make them like this</p>
+<p>So, when we make a 3x3 or 4x4 matrix in JavaScript for WebGL we make them like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const m3x3 = [
   0, 1, 2,  // row 0
   3, 4, 5,  // row 1
@@ -285,7 +285,7 @@ const m4x4 = [
 ];
 </code></pre>
 <p>Clearly following the conventions above the first row of <code class="notranslate" translate="no">m3x3</code> is <code class="notranslate" translate="no">0, 1, 2</code> and the last row of <code class="notranslate" translate="no">m4x4</code> is <code class="notranslate" translate="no">12, 13, 14, 15</code></p>
-<p>As we see in <a href="webgl-2d-matrices.html">the first article on matrices</a> to make a fairly standard WebGL 3x3 2D translation matrix the translation values <code class="notranslate" translate="no">ty</code> and <code class="notranslate" translate="no">ty</code> go in locations 6 and 7</p>
+<p>As we see in <a href="webgl-2d-matrices.html">the first article on matrices</a> to make a fairly standard WebGL 3x3 2D translation matrix the translation values <code class="notranslate" translate="no">tx</code> and <code class="notranslate" translate="no">ty</code> go in locations 6 and 7</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const some3x3TranslationMatrix = [
    1,  0,  0,
    0,  1,  0,
@@ -346,7 +346,7 @@ struct Vec4 {
   float w;
 };
 </code></pre>
-<p>and we could create a matrix4x4 from 4 of them</p>
+<p>and we could create a matrix 4x4 from 4 of them</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-c++">// C++
 struct Mat4x4 {
   Vec4 x_axis;
@@ -379,8 +379,8 @@ Mat4x4 someTranslationMatrix = {
   tx, ty, tz,  1,
 ];
 </code></pre>
-<p>So, with this convention of calling rows &quot;columns&quot; some things are simpler but others can me more confusing if you&#39;re a math person.</p>
-<p>I bring all of this up because these article are written from the POV of a programmer, not a math person. That means like every other single dimensional array that is treated as a 2 dimensional array, rows go across.</p>
+<p>So, with this convention of calling rows &quot;columns&quot; some things are simpler but others can be more confusing if you&#39;re a math person.</p>
+<p>I bring all of this up because these articles are written from the POV of a programmer, not a math person. That means like every other single dimensional array that is treated as a 2 dimensional array, rows go across.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const someTranslationMatrix = [
    1,  0,  0,  0,  // row 0
    0,  1,  0,  0,  // row 1

@@ -454,11 +454,12 @@ That seems reasonable but what happens if you have multiple monitors? Let's say 
 of 2048 but I have two 1920x1080 monitors. The user opens a browser window with a WebGL page, they then
 stretch that window across both monitors. Your code tries to set the <code class="notranslate" translate="no">canvas.width</code> to
 <code class="notranslate" translate="no">canvas.clientWidth</code> which in this case is 3840. What should happen?
+</p>
 <p>Off the top of my head there are only 3 options</p>
 <ol>
 <li>
  <p>Throw an exception.</p>
- <p>That seems bad. Most web apps won't be checking for it and the app wil crash.
+ <p>That seems bad. Most web apps won't be checking for it and the app will crash.
  If the app had user data in it the user just lost their data</p>
 </li>
 <li>

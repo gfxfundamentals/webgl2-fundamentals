@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/ko/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/ko/webgl-precision-issues.md. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of GFXFundamentals. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,25 +36,78 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL2 Precision Issues" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="Precision Issues in WebGL2" />
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ko/webgl-precision-issues.html" />
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL2 Precision Issues" />
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ko/webgl-precision-issues.html" />
-<meta name="twitter:description" content="Precision Issues in WebGL2" />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="description" content="WebGL2의 정밀도 문제">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-precision-issues_ko.jpg">
+
+<meta property="og:title" content="WebGL2 정밀도 문제">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-precision-issues_ko.jpg">
+<meta property="og:description" content="WebGL2의 정밀도 문제">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ko/webgl-precision-issues.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 정밀도 문제">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ko/webgl-precision-issues.html">
+<meta name="twitter:description" content="WebGL2의 정밀도 문제">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-precision-issues_ko.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-precision-issues.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-precision-issues_ko.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-precision-issues.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-precision-issues.html",
+      "inLanguage":"ko",
+      "name":"WebGL2 정밀도 문제",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-precision-issues.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL2 Precision Issues</title>
+<title>WebGL2 정밀도 문제</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/ko/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-precision-issues.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-precision-issues.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-precision-issues.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-precision-issues.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-precision-issues.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-precision-issues.html">
+
+
+
+
 </head>
 <body>
 <div class="webgl_navbar">
@@ -177,12 +232,205 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 Precision Issues</h1>
+    <h1>WebGL2 정밀도 문제</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>죄송합니다. 이 문서는 아직 자원 봉사자들이 한국어로 번역하지 않았습니다. <a href="https://github.com/greggman/webgl-fundamentals">번역을 도와주세요!</a>! 😄</p>
-<p><a href="/webgl/lessons/webgl-precision-issues.html">원본보기</a>.</p>
+      <p>이 글은 WebGL2의 다양한 정밀도 이슈에 관한 겁니다.</p>
+<h2 id="-lowp-mediump-highp-"><code class="notranslate" translate="no">lowp</code>, <code class="notranslate" translate="no">mediump</code>, <code class="notranslate" translate="no">highp</code></h2>
+<p>이 사이트의 <a href="webgl-fundamentals.html">첫 번째 글</a>에서 우린 vertex shader와 fragment shader를 만들었습니다.
+Fragment shader를 만들 때 지나가는 말로 fragment shader는 기본 정밀도를 가지지 않으므로 한 줄을 추가해서 설정해야 한다고 언급했었는데</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">precision highp float;
+</code></pre>
+<p>도대체 무슨 소리일까요?</p>
+<p><code class="notranslate" translate="no">lowp</code>, <code class="notranslate" translate="no">mediump</code>, <code class="notranslate" translate="no">highp</code>는 정밀도 설정입니다.
+이 경우 정밀도는 값을 저장하는데 얼마나 많은 bit가 사용되는지를 의미하는데요.
+javascript에서 숫자의 경우 64bit를 사용합니다.
+WebGL에서 대부분의 숫자는 32bit에 불과한데요.
+더 적은 bit = 더 빠름, 더 많은 bit = 더 정확하고 더 넓은 범위입니다.</p>
+<p>이걸 잘 설명할 수 있을지 모르겠습니다.
+정밀도 이슈의 다른 예시로 <a href="https://www.google.com/search?q=double+vs+float">double vs float</a>를 찾아볼 수도 있지만 이를 설명하는 한 가지 방법은 byte와 short 또는 javascript의 <code class="notranslate" translate="no">Uint8Array</code> vs <code class="notranslate" translate="no">Uint16Array</code>의 차이와 같다는 겁니다.</p>
+<ul>
+<li><code class="notranslate" translate="no">Uint8Array</code>는 unsigned 8bit integer 배열입니다. 8bit는 0에서 255까지 2<sup>8</sup>개의 값을 포함할 수 있습니다.</li>
+<li><code class="notranslate" translate="no">Uint16Array</code>는 unsigned 16bit integer 배열입니다. 16bit는 0에서 65535까지 2<sup>16</sup>개의 값을 포함할 수 있습니다.</li>
+<li><code class="notranslate" translate="no">Uint32Array</code>는 unsigned 32bit integer 배열입니다. 32bit는 0에서 4294967295까지 2<sup>32</sup>개의 값을 포함할 수 있습니다.</li>
+</ul>
+<p><code class="notranslate" translate="no">lowp</code>, <code class="notranslate" translate="no">mediump</code>, <code class="notranslate" translate="no">highp</code>도 비슷합니다.</p>
+<ul>
+<li><code class="notranslate" translate="no">lowp</code>는 최소 9bit 값입니다. 부동 소수점 값의 범위: -2 ~ +2, 정수 값의 경우 <code class="notranslate" translate="no">Uint8Array</code>나 <code class="notranslate" translate="no">Int8Array</code>와 유사</li>
+<li><code class="notranslate" translate="no">mediump</code>는 최소 16bit 값입니다. 부동 소수점 값의 범위: -2<sup>14</sup> ~ +2<sup>14</sup>, 정수 값의 경우 <code class="notranslate" translate="no">Uint16Array</code>나 <code class="notranslate" translate="no">Int16Array</code>와 유사</li>
+<li><code class="notranslate" translate="no">highp</code>는 최소 16bit 값입니다. 부동 소수점 값의 범위: -2<sup>62</sup> ~ +2<sup>62</sup>, 정수 값의 경우 <code class="notranslate" translate="no">Uint32Array</code>나 <code class="notranslate" translate="no">Int32Array</code>와 유사</li>
+</ul>
+<p>범위 내의 모든 값을 표현할 수 있는 것은 아니라는 점에 유의해야 합니다.
+아마 가장 이해하기 쉬운 건 <code class="notranslate" translate="no">lowp</code>일 겁니다.
+9bit 밖에 없으므로 512개의 고유 값만을 표현할 수 있습니다.
+위에서 범위가 -2에서 +2라고 말했는데 -2와 +2사이에는 무한한 숫자 값들이 있는데요.
+예를 들어 1.9999999와 1.999998는 -2와 +2사이에 있는 2개의 값이죠.
+9bit만으로 <code class="notranslate" translate="no">lowp</code>는 이 두 값을 표현할 수 없습니다.
+그래서 예를 들어, 색상에 대한 계산을 위해 <code class="notranslate" translate="no">lowp</code>를 사용한다면 밴딩이 나타날 수 있는데요.
+실제로 어떤 값이 표현될 수 있는지 알아보지 않아도, 색상이 0에서 1사이인 걸 알고 있습니다.
+<code class="notranslate" translate="no">lowp</code>가 -2에서 +2고 512개의 고유값만 표현할 수 있다면 128개의 값만이 0에서 1사이에 맞는 것 같습니다.
+또한 4/128을 가지고 있고 1/512를 더하려고 한다면, 1/512는 <code class="notranslate" translate="no">lowp</code>로 표현될 수 없기 때문에 사실상 0이므로 아무일도 일어나지 않을 겁니다.</p>
+<p>We could just use <code class="notranslate" translate="no">highp</code> everywhere and ignore this issue completely
+but on devices that do actually use 9 bits for <code class="notranslate" translate="no">lowp</code> and/or 16bits for
+<code class="notranslate" translate="no">mediump</code> they are usually faster than <code class="notranslate" translate="no">highp</code>. Often significantly faster.</p>
+<p>마지막으로, <code class="notranslate" translate="no">Uint8Array</code>나 <code class="notranslate" translate="no">Uint16Array</code>와 같은 값과 달리, <code class="notranslate" translate="no">lowp</code> 또는 <code class="notranslate" translate="no">mediump</code> 값이나 심지어 <code class="notranslate" translate="no">highp</code> 값도 더 높은 정밀도(더 많은 bit)를 사용할 수 있습니다.
+예를 들어 데스크탑 GPU에서 shader에 <code class="notranslate" translate="no">mediump</code>를 넣었다면 아직 내부적으로 32bit를 사용할 가능성이 높은데요.
+This has the problem of making it hard to test your shaders if you use <code class="notranslate" translate="no">lowp</code> or <code class="notranslate" translate="no">mediump</code>.
+실제로 shader가 <code class="notranslate" translate="no">lowp</code>나 <code class="notranslate" translate="no">mediump</code>와 함께 올바르게 작동하는지 보기 위해서는 실제로 <code class="notranslate" translate="no">lowp</code>에 8bit를 쓰고 <code class="notranslate" translate="no">highp</code>에 16bit를 쓰는 기기에서 테스트해야 합니다.</p>
+<p>If you do want to try to use <code class="notranslate" translate="no">mediump</code> for speed here are some of the issues
+that come up.</p>
+<p>A good example is probably the example of <a href="webgl-3d-lighting-point.html">point lights</a>,
+in particular the specular highlight calculation, passes values in world or view space to the fragment shader,
+those values can easily get out of range for a <code class="notranslate" translate="no">mediump</code> value. So, maybe on
+a <code class="notranslate" translate="no">mediump</code> device you could just leave out the specular highlights. For example here
+is the point light shader from <a href="webgl-3d-lighting-point.html">the article on point lights</a>
+modified to for <code class="notranslate" translate="no">mediump</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+
+-precision highp float;
++precision mediump float;
+
+// Passed in and varied from the vertex shader.
+in vec3 v_normal;
+in vec3 v_surfaceToLight;
+in vec3 v_surfaceToView;
+
+uniform vec4 u_color;
+uniform float u_shininess;
+
+// we need to declare an output for the fragment shader
+out vec4 outColor;
+
+void main() {
+  // because v_normal is a varying it&#39;s interpolated
+  // so it will not be a uint vector. Normalizing it
+  // will make it a unit vector again
+  vec3 normal = normalize(v_normal);
+
+  vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
+-  vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+-  vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);
+
+  // compute the light by taking the dot product
+  // of the normal to the light&#39;s reverse direction
+  float light = dot(normal, surfaceToLightDirection);
+-  float specular = 0.0;
+-  if (light &gt; 0.0) {
+-    specular = pow(dot(normal, halfVector), u_shininess);
+-  }
+
+  outColor = u_color;
+
+  // Lets multiply just the color portion (not the alpha)
+  // by the light
+  outColor.rgb *= light;
+
+-  // Just add in the specular
+-  outColor.rgb += specular;
+}
+</code></pre>
+<p>Note: Even that is not really enough. In the vertex shader we have</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">  // compute the vector of the surface to the light
+  // and pass it to the fragment shader
+  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
+</code></pre>
+<p>So let&#39;s say the light is 1000 units away from the surface.
+We then get to the fragment shader and this line</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">  vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
+</code></pre>
+<p>seems innocent enough. Except that the normal way to normalize vector
+is to divide by its length and the normal way to compute a length is</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  float length = sqrt(v.x * v.x + v.y * v.y * v.z * v.z);
+</code></pre><p>If one of those x, y, or z is 1000 then 1000*1000 is 1000000. 1000000
+is out of range for <code class="notranslate" translate="no">mediump</code>.</p>
+<p>One solution here is to normalize in the vertex shader.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // compute the vector of the surface to the light
+  // and pass it to the fragment shader
+-  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
++  v_surfaceToLight = normalize(u_lightWorldPosition - surfaceWorldPosition);
+</code></pre><p>Now the values assigned to <code class="notranslate" translate="no">v_surfaceToLight</code> are between -1 and +1 which
+is in range for <code class="notranslate" translate="no">mediump</code>.</p>
+<p>Note that normalizing in the vertex shader will not actually give the
+same results but they might be close enough that no one will notice
+unless compared side by side.</p>
+<p>Functions like <code class="notranslate" translate="no">normalize</code>, <code class="notranslate" translate="no">length</code>, <code class="notranslate" translate="no">distance</code>, <code class="notranslate" translate="no">dot</code> all have this
+issue that if the values are too large they&#39;re going to go out of range
+for <code class="notranslate" translate="no">mediump</code>.</p>
+<p>But, you actually be to test on a device for which <code class="notranslate" translate="no">mediump</code> is 16 bits.
+On desktop <code class="notranslate" translate="no">mediump</code> is 32bits, the same as <code class="notranslate" translate="no">highp</code> and so any issues
+will not be visible.</p>
+<h2 id="detecting-support-for-16bit-mediump-">Detecting support for 16bit <code class="notranslate" translate="no">mediump</code></h2>
+<p>You call <code class="notranslate" translate="no">gl.getShaderPrecisionFormat</code>,
+you pass in the shader type, <code class="notranslate" translate="no">VERTEX_SHADER</code> or <code class="notranslate" translate="no">FRAGMENT_SHADER</code> and you
+pass in one of <code class="notranslate" translate="no">LOW_FLOAT</code>, <code class="notranslate" translate="no">MEDIUM_FLOAT</code>, <code class="notranslate" translate="no">HIGH_FLOAT</code>,
+<code class="notranslate" translate="no">LOW_INT</code>, <code class="notranslate" translate="no">MEDIUM_INT</code>, <code class="notranslate" translate="no">HIGH_INT</code>, and it
+[returns the precision info].</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-precision-lowp-mediump-highp.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-precision-lowp-mediump-highp.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+</p>
+<p><code class="notranslate" translate="no">gl.getShaderPrecisionFormat</code> returns a object with three values, <code class="notranslate" translate="no">precision</code>, <code class="notranslate" translate="no">rangeMin</code>, and <code class="notranslate" translate="no">rangeMax</code>.</p>
+<p>For <code class="notranslate" translate="no">LOW_FLOAT</code> and <code class="notranslate" translate="no">MEDIUM_FLOAT</code> <code class="notranslate" translate="no">precision</code> will 23 if they are really
+just <code class="notranslate" translate="no">highp</code>. Otherwise they&#39;ll likely be 8 and 15 respectively or
+at least they will be less than 23. For <code class="notranslate" translate="no">LOW_INT</code> and <code class="notranslate" translate="no">MEDIUM_INT</code>
+if they&#39;re the same as <code class="notranslate" translate="no">highp</code> then <code class="notranslate" translate="no">rangeMin</code> will be 31. If they&#39;re
+less than 31 then a <code class="notranslate" translate="no">mediump int</code> is actually more efficient than a
+<code class="notranslate" translate="no">highp int</code> for example.</p>
+<p>My Pixel 2 XL uses 16 bits for <code class="notranslate" translate="no">mediump</code> it also uses 16 bits for <code class="notranslate" translate="no">lowp</code>. I&#39;m not sure I&#39;ve ever used a device that uses 9 bits for <code class="notranslate" translate="no">lowp</code> so I&#39;m not sure what issues commonly come up if any.</p>
+<p>Throughout these articles we&#39;ve specified a default precision
+in the fragment shader. We can also specify the precision of any individual
+variable. For example</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">uniform mediump vec4 color;  // a uniform
+in lowp vec4 normal;         // an attribute or varying input
+out lowp vec4 texcoord;      // a fragment shader output or varying output
+lowp float foo;              // a variable
+</code></pre>
+<h2 id="texture-formats">Texture Formats</h2>
+<p>텍스처는 명세서에서 실제 사용된 정밀도는 요청된 정밀도보다 더 클 수 있다고 말하는 또 다른 것입니다.</p>
+<p>예를 들어 다음과 같이 채널당 4bit씩, 16bit 텍스처를 요청할 수 있는데</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texImage2D(
+  gl.TEXTURE_2D,               // 대상
+  0,                           // mip 레벨
+  gl.RGBA4,                    // 내부 format
+  width,                       // 너비
+  height,                      // 높이
+  0,                           // border
+  gl.RGBA,                     // format
+  gl.UNSIGNED_SHORT_4_4_4_4,   // type
+  null,
+);
+</code></pre><p>하지만 구현은 실제로 더 높은 해상도를 내부적으로 사용할 수 있습니다.
+대부분의 데스크탑이 이걸 수행하고 대부분의 모바일 GPU는 하지 않는다고 알고 있습니다.</p>
+<p>테스트할 수 있는데요.
+먼저 위처럼 채널당 4bit인 텍스처를 요청할 겁니다.
+그런 다음 0대 1의 gradient로 <a href="webgl-render-to-texture.html">렌더링</a>할 겁니다.</p>
+<p>다음으로 해당 텍스처를 캔버스에 렌더링할 건데요.
+텍스처가 내부적으로 채널당 4bit라면 그려진 그래디언트에 16단계의 색상만 있을 겁니다.
+텍스처가 실제로 채널당 8bit라면 256단계의 색상을 보게 될 겁니다.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-precision-textures.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-precision-textures.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+</p>
+<p>제 스마트폰에서 실행하면 텍스처가 채널당 4bit를 사용(또는 다른 채널은 테스트하지 않았으므로 빨간색 한정 4bit)하고 있음을 알 수 있습니다.</p>
+<div class="webgl_center"><img src="../resources/mobile-4-4-4-4-texture-no-dither.png" style="image-rendering: pixelated; width: 600px;"></div>
+
+<p>반면에 데스크탑에서는 4개만 요청했지만 실제로는 채널당 8bit를 사용하는 걸 볼 수 있습니다.</p>
+<div class="webgl_center"><img src="../resources/desktop-4-4-4-4-texture-no-dither.png" style="image-rendering: pixelated; width: 600px;"></div>
+
+<p>한 가지 주목할 점은 기본적으로 WebGL은 결과를 디더링하여 이와 같은 그라데이션을 더 부드럽게 만들 수 있다는 겁니다.
+다음과 같이 디더링을 끌 수 있으며</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.disable(gl.DITHER);
+</code></pre>
+<p>디더링을 끄지 않는다면 스마트폰에서는 이런 게 나타납니다.</p>
+<div class="webgl_center"><img src="../resources/mobile-4-4-4-4-texture-dither.png" style="image-rendering: pixelated; width: 600px;"></div>
+
+<p>당장 생각나는 이게 실제로 일어나는 유일한 방법은 렌더링 대상으로 더 낮은 bit 해상도 format texture를 사용하고 실제로 텍스처가 그렇게 낮은 해상도의 장치에서 테스트하지 않았을 경우입니다.
+데스크탑에서만 테스트했다면 이를 야기하는 이슈가 발생하지 않을 수 있습니다.</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -196,7 +444,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>기초</li>
+        <div id="toc">
+          <ul>  <li>기초</li>
         <ul>
           <li><a href="/webgl/lessons/ko/webgl-getting-webgl2.html">WebGL2 사용법</a></li>
 <li><a href="/webgl/lessons/ko/webgl-fundamentals.html">WebGL2 기초</a></li>
@@ -250,11 +499,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li>Textures</li>
         <ul>
           <li><a href="/webgl/lessons/ko/webgl-3d-textures.html">텍스처</a></li>
-<li><a href="/webgl/lessons/ko/webgl-data-textures.html">Data Textures</a></li>
+<li><a href="/webgl/lessons/ko/webgl-data-textures.html">데이터 텍스처</a></li>
 <li><a href="/webgl/lessons/ko/webgl-2-textures.html">두개 이상의 텍스처 사용하기</a></li>
-<li><a href="/webgl/lessons/ko/webgl-cors-permission.html">Cross Origin Images</a></li>
-<li><a href="/webgl/lessons/ko/webgl-3d-perspective-correct-texturemapping.html">Perspective Correct Texture Mapping</a></li>
-<li><a href="/webgl/lessons/ko/webgl-planar-projection-mapping.html">Planar and Perspective Projection Mapping</a></li>
+<li><a href="/webgl/lessons/ko/webgl-cors-permission.html">Cross Origin Image</a></li>
+<li><a href="/webgl/lessons/ko/webgl-3d-perspective-correct-texturemapping.html">원근 교정 텍스처 매핑</a></li>
+<li><a href="/webgl/lessons/ko/webgl-planar-projection-mapping.html">평면 및 원근 투영 매핑</a></li>
         </ul>
   <li>Rendering To A Texture</li>
         <ul>
@@ -269,7 +518,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <li>2D</li>
         <ul>
           <li><a href="/webgl/lessons/ko/webgl-2d-drawimage.html">2D - DrawImage</a></li>
-<li><a href="/webgl/lessons/ko/webgl-2d-matrix-stack.html">2D - Matrix Stack</a></li>
+<li><a href="/webgl/lessons/ko/webgl-2d-matrix-stack.html">2D - 행렬 스택</a></li>
 <li><a href="/webgl/lessons/ko/webgl-sprites.html">Sprites</a></li>
         </ul>
   <li>3D</li>
@@ -311,18 +560,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <li><a href="/webgl/lessons/ko/webgl-boilerplate.html">Boilerplate</a></li>
 <li><a href="/webgl/lessons/ko/webgl-resizing-the-canvas.html">Canvas 리사이징</a></li>
 <li><a href="/webgl/lessons/ko/webgl-animation.html">애니메이션</a></li>
-<li><a href="/webgl/lessons/ko/webgl-points-lines-triangles.html">Points, Lines, and Triangles</a></li>
+<li><a href="/webgl/lessons/ko/webgl-points-lines-triangles.html">점, 선, 삼각형</a></li>
 <li><a href="/webgl/lessons/ko/webgl-multiple-views.html">Multiple Views, Multiple Canvases</a></li>
 <li><a href="/webgl/lessons/ko/webgl-visualizing-the-camera.html">Visualizing the Camera</a></li>
-<li><a href="/webgl/lessons/ko/webgl-and-alpha.html">WebGL2 and Alpha</a></li>
+<li><a href="/webgl/lessons/ko/webgl-and-alpha.html">WebGL2 Alpha</a></li>
 <li><a href="/webgl/lessons/ko/webgl-2d-vs-3d-library.html">2D vs 3D 라이브러리</a></li>
-<li><a href="/webgl/lessons/ko/webgl-anti-patterns.html">Anti-Patterns</a></li>
-<li><a href="/webgl/lessons/ko/webgl-matrix-vs-math.html">WebGL2 Matrices vs Math Matrices</a></li>
-<li><a href="/webgl/lessons/ko/webgl-precision-issues.html">Precision Issues</a></li>
-<li><a href="/webgl/lessons/ko/webgl-tips.html#screenshot">Taking a screenshot</a></li>
-<li><a href="/webgl/lessons/ko/webgl-tips.html#preservedrawingbuffer">Prevent the Canvas Being Cleared</a></li>
-<li><a href="/webgl/lessons/ko/webgl-tips.html#tabindex">Get Keyboard Input From a Canvas</a></li>
-<li><a href="/webgl/lessons/ko/webgl-tips.html#html-background">Use WebGL2 as Background in HTML</a></li>
+<li><a href="/webgl/lessons/ko/webgl-anti-patterns.html">Anti Pattern</a></li>
+<li><a href="/webgl/lessons/ko/webgl-matrix-vs-math.html">WebGL2 행렬 vs 수학 행렬</a></li>
+<li><a href="/webgl/lessons/ko/webgl-precision-issues.html">정밀도 문제</a></li>
+<li><a href="/webgl/lessons/ko/webgl-tips.html#screenshot">Screenshot 찍기</a></li>
+<li><a href="/webgl/lessons/ko/webgl-tips.html#preservedrawingbuffer">Canvas Clear 방지</a></li>
+<li><a href="/webgl/lessons/ko/webgl-tips.html#tabindex">캔버스 키보드 입력</a></li>
+<li><a href="/webgl/lessons/ko/webgl-tips.html#html-background">WebGL2 배경 제작</a></li>
 <li><a href="/webgl/lessons/ko/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
 <li><a href="/webgl/lessons/ko/webgl-qna.html">Questions and Answers</a></li>
         </ul>
@@ -339,13 +588,47 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://twgljs.org">TWGL, A tiny WebGL helper library</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+    <div>이슈/버그? <a href="https://github.com/greggman/webgl-fundamentals/issues">깃헙에서 이슈만들기</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 정밀도 문제';
+            var disqus_title = 'WebGL2 정밀도 문제';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: "Thank you <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>for <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 <script>
 (function() {
   if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
