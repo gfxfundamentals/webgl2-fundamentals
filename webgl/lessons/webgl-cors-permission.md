@@ -92,15 +92,15 @@ image from the server, if it's not the same domain, the browser will ask for COR
 The string you set `crossOrigin` to is sent to the server. The server can look at that string and decide
 whether or not to give you permission. Most servers that support CORS don't look at the string, they just
 give permission to everyone. This is why setting it to the empty string works. All it means in this case
-is "ask permission" vs say `img.crossOrigin = "bob"` would mean "ask permission for 'bob'.
+is "ask permission" vs say `img.crossOrigin = "bob"` would mean "ask permission for 'bob'".
 
 Why don't we just always see that permission? Because asking for permission takes 2 HTTP requests so it's
 slower than not asking. If we know we're on the same domain or we know we won't use the image for anything
 except img tags and or canvas2d then we don't want to set `crossOrigin` because it
 will make things slower.
 
-We can make a function that checks if the image we're trying to load is on the same origin and if
-so sets the `crossOrigin` attribute.
+We can make a function that checks if the image we're trying to load is on the same origin and if it is not,
+sets the `crossOrigin` attribute.
 
     function requestCORSIfNotSameOrigin(img, url) {
       if ((new URL(url, window.location.href)).origin !== window.location.origin) {
