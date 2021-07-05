@@ -310,13 +310,13 @@ image from the server, if it&#39;s not the same domain, the browser will ask for
 </code></pre><p>The string you set <code class="notranslate" translate="no">crossOrigin</code> to is sent to the server. The server can look at that string and decide
 whether or not to give you permission. Most servers that support CORS don&#39;t look at the string, they just
 give permission to everyone. This is why setting it to the empty string works. All it means in this case
-is &quot;ask permission&quot; vs say <code class="notranslate" translate="no">img.crossOrigin = &quot;bob&quot;</code> would mean &quot;ask permission for &#39;bob&#39;.</p>
+is &quot;ask permission&quot; vs say <code class="notranslate" translate="no">img.crossOrigin = &quot;bob&quot;</code> would mean &quot;ask permission for &#39;bob&#39;&quot;.</p>
 <p>Why don&#39;t we just always see that permission? Because asking for permission takes 2 HTTP requests so it&#39;s
 slower than not asking. If we know we&#39;re on the same domain or we know we won&#39;t use the image for anything
 except img tags and or canvas2d then we don&#39;t want to set <code class="notranslate" translate="no">crossOrigin</code> because it
 will make things slower.</p>
-<p>We can make a function that checks if the image we&#39;re trying to load is on the same origin and if
-so sets the <code class="notranslate" translate="no">crossOrigin</code> attribute.</p>
+<p>We can make a function that checks if the image we&#39;re trying to load is on the same origin and if it is not,
+sets the <code class="notranslate" translate="no">crossOrigin</code> attribute.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function requestCORSIfNotSameOrigin(img, url) {
   if ((new URL(url, window.location.href)).origin !== window.location.origin) {
     img.crossOrigin = &quot;&quot;;
