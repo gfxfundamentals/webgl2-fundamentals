@@ -3,16 +3,16 @@ Description: 텍스처에 데이터 공급하기
 TOC: 데이터 텍스처
 
 
-이 포스트는 WebGL2 관련 시리즈에서 이어집니다.
-첫 번째는 [기초](webgl-fundamentals.html)로 시작했고, 이전에는 [텍스처](webgl-3d-textures.html)에 관한 것이었습니다.
+이 글은 WebGL2 시리즈에서 이어지는 글입니다.
+첫 번째 글은 [WebGL2 기초](webgl-fundamentals.html)였고, 이전 글은 [텍스처](webgl-3d-textures.html)입니다.
 
-지난 포스트에서 텍스처가 작동하는 방법과 이를 적용하는 방법에 대해 살펴봤습니다.
-다운로드된 이미지로 텍스처를 생성했는데요.
-이번 글에서는 이미지 대신 JavaScript에서 직접 데이터를 생성할 겁니다.
+지난 글에서 텍스처가 작동하는 방법과 이를 적용하는 방법에 대해 살펴봤습니다.
+다운로드된 이미지로 텍스처를 생성했는데요,
+이번 글에서는 이미지 대신 자바스크립트에서 직접 데이터를 생성할 겁니다.
 
-Creating data for a texture in JavaScript is mostly straight forward depending
-on the texture format. WebGL2 supports a ton of texture formats though.
-WebGL2 supports all the *un-sized* formats from WebGL1
+자바스크립트로 텍스처로 사용할 데이터를 만드는 것은 텍스처 포맷을 보시면 대부분 명확합니다.
+WebGL2는 아주 많은 텍스처 포맷을 지원합니다.
+WebGL2에서는 WebGL1의 모든 *un-sized* 포맷을 지원합니다.
 
 <div class="webgl_center">
   <table class="tabular-data tabular-data1">
@@ -32,9 +32,9 @@ WebGL2 supports all the *un-sized* formats from WebGL1
   </table>
 </div>
 
-They're called *un-sized* because how they are actually represented internally is undefined in WebGL1.
-It is defined in WebGL2. In addition to those un-sized formats there are a slew of sized formats including
-
+*un-sized*라고 부르는 이유는 WebGL1에서는 이들이 내부적으로 어떻게 표현될지가 정해져 있지 않기 때문입니다.
+WebGL2에서는 정해져 있습니다. 이러한 un-sized포맷 이외에도 다수의 sized포맷들이 있습니다.
+1
 <div class="webgl_center">
   <table class="tabular-data tabular-data2">
     <thead>
@@ -105,7 +105,7 @@ It is defined in WebGL2. In addition to those un-sized formats there are a slew 
   </table>
 </div>
 
-And these depth and stencil formats as well
+아래와 같은 깊이와 스텐실을 위한 포맷도 있습니다.
 
 <div class="webgl_center">
   <table class="tabular-data tabular-data3">
@@ -128,25 +128,22 @@ And these depth and stencil formats as well
   </table>
 </div>
 
-Legend:
+범례:
 
-* a single number like `8` means 8bits that will be normalized from 0 to 1
-* a number preceded by an `s` like `s8` means a signed 8bit number that will be normalized from -1 to 1
-* a number preceded by an `f` like `f16` means a floating point number.
-* a number preceded by in `i` like `i8` means an integer number.
-* a number preceded by in `ui` like `ui8` means an unsigned integer number.
+* `8`과 같은 숫자는 0과 1사이로 정규화되는 8비트를 의미합니다.
+* `s8`과 같이 숫자 앞에 `s`가 붙으면 부호가 있는(signed) 8비트 숫자로 -1에서 1 사이로 정규화됩니다.
+* `f16`과 같이 숫자 앞에 `f`가 붙으면 부동소수점 수를 의미합니다.
+* `i8`과 같이 숫자 앞에 `i`가 붙으면 정수형 수를 의미합니다.
+* `ui8`과 같이 숫자 앞에 `ui`가 붙으면 부호가 없는(unsigned) 정수형 수를 의미합니다.
 
-We won't use this info here but I <span class="tabular-highlight">highlighted</span>
-the half and float texture formats to show unlike WebGL1 they are always available in WebGL2
-but they are not marked as either color renderable and/or texture filterable by default.
-Not being color renderable means they can not be rendered to. [Rendering to a texture is
-covered in another lesson](webgl-render-to-texture.html). Not texture filterable means they
-must be used with `gl.NEAREST` only. Both of those features are available as optional
-extensions in WebGL2.
+여기서 사용할 것은 아니지만 half와 float 텍스처 포맷에 <span class="tabular-highlight">하이라이트</span>를 해 두었습니다. 
+WebGL1과 달리 WebGL2에서는 이러한 포맷이 항상 사용은 가능하지만 기본적으로는 color renderable이나 texture filterable이 아니라는 것을 강조하기 위함입니다.
+color renderable이 아니라는 뜻은 렌더링 대상이 되지 않는다는 뜻입니다. [텍스처에 렌더링하는 법은 다른 글에 설명되어 있습니다](webgl-render-to-texture.html).
+texture filterable이 아니라는 것은 `gl.NEAREST` 옵션으로만 사용해야 한다는 뜻입니다.
+이 기능들은 WebGL2에서는 선택적 확장 기능(optional extension)으로 제공됩니다.
 
-For each of the formats you specify both the *internal format* (the format the GPU will use internally)
-and the *format* and *type* of the data you're supplying to WebGL. Here is a table showing which format
-and type you must supply data for a given internal format
+이러한 포맷들에 대해서 여러분은 *내부(internal) 포맷* (GPU 내부에서 사용할 포맷)과 *포맷* 그리고 데이터의 *타입*을 명시해 주어야 합니다.
+아래 표는 내부 포맷에 대해 어떠한 포맷과 타입을 제공해야 하는지를 나타낸 표 입니다.
 
 <div class="webgl_center">
   <table class="tabular-data tabular-data4">
@@ -226,14 +223,14 @@ and type you must supply data for a given internal format
 </div>
 
 
-Let's create a 3x2 pixel `R8` texture. Because it's an `R8` texture
-there is only 1 value per pixel in the red channel.
+3x2 픽셀 크기의 `R8` 텍스처를 만들어 봅시다.
+`R8` 텍스처리므로 각 픽셀마다 Red 채널에 한 개의 값만 가집니다.
 
 [지난 글](webgl-3d-textures.html)에서 샘플을 가져올 겁니다.
-먼저 큐브의 각 면에 전체 텍스처를 사용하기 위해 텍스처 좌표를 수정합시다.
+먼저 육면체의 각 면에 전체 텍스처를 사용하기 위해 텍스처 좌표를 수정합시다.
 
 ```
-// 큐브의 텍스처 좌표로 버퍼 채우기
+// 육면체의 텍스처 좌표로 버퍼 채우기
 function setTexcoords(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
@@ -248,7 +245,7 @@ function setTexcoords(gl) {
         ...
 ```
 
-그런 다음 텍스처 생성 코드를 수정하는데
+그런 다음 텍스처 생성 코드를 수정합니다.
 
 ```
 // 텍스처 생성
@@ -274,7 +271,7 @@ const data = new Uint8Array([
 gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border,
               format, type, data);
 
-// 필터링을 설정했으므로 mip은 필요없으며 필터링되지 않습니다.
+// 밉맵을 사용하지 않고 필터링을 수행하지 않도록 설정합니다.
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -288,47 +285,50 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
 {{{example url="../webgl-data-texture-3x2-bad.html" }}}
 
-이런! 왜 작동하지 않죠?!?!?
+이런! 왜 작동하지 않는걸까요?!?!?
 
-JavaScript console을 확인하면 이런 오류가 표시됩니다.
+자바스크립트 콘솔을 확인하면 이런 오류가 표시됩니다.
 
 ```
 WebGL: INVALID_OPERATION: texImage2D: ArrayBufferView not big enough for request
 ```
 
-WebGL에는 OpenGL이 처음 만들어졌을 때의 모호한 설정들이 남아있는데요.
-데이터가 어떤 크기일 때 가끔씩 컴퓨터가 더 빨라집니다.
-예를 들어 한 번에 1byte가 아닌 2, 4, 8 byte를 복사하는 것이 더 빠를 수 있습니다.
-WebGL은 기본적으로 한 번에 4byte를 사용하므로 각 데이터 행을 4byte의 배수로 생각합니다.
+WebGL에는 OpenGL이 처음 만들어졌을 때의 모호한 설정들이 남아있습니다.
+컴퓨터는 데이터가 특정 크기일 때 더 빠르게 동작합니다.
+예를 들어 한 번에 1 바이트가 아닌 2, 4, 8 바이트를 복사하는 것이 더 빠를 수 있습니다.
+WebGL은 기본적으로 한 번에 4바이트를 사용하므로 각 데이터 행을 4바이트의 배수로 가정합니다. (마지막 행을 제외하고)
 
-위의 데이터는 행마다 3byte, 총 6byte에 불과하지만, WebGL은 첫 번째 행에 대해 4byte, 두 번째 행에 대해 3byte, 총 7byte를 읽습니다.
+위의 데이터는 행마다 3 바이트로, 총 6 바이트에 불과하지만, WebGL은 첫 번째 행에 대해 4 바이트, 두 번째 행에 대해 3 바이트로, 총 7 바이트를 읽으려 시도합니다. 그래서 오류가 발생하는 것입니다.
 
-다음과 같이 한 번에 1byte를 처리하도록 WebGL에 지시할 수 있습니다.
+다음과 같이 한 번에 1 바이트씩 처리하도록 WebGL에 지시할 수 있습니다.
 
     const alignment = 1;
     gl.pixelStorei(gl.UNPACK_ALIGNMENT, alignment);
 
-1, 2, 4, 8이 alignment에 유효한 값입니다.
+alignment로 사용할 수 있는 값은 1, 2, 4, 8입니다.
 
-WebGL에서 정렬된 데이터와 비정렬 데이터 사이의 속도 차이를 측정할 수 없다고 생각합니다.
-이 문제가 새로운 사용자들에게 영향을 주지 않도록 4가 아닌 1을 기본값으로 하고 싶지만, OpenGL과의 호환성을 유지하기 위해 기본값은 유지되어야 했습니다.
+WebGL에서 정렬된 데이터와 비정렬 데이터 사이의 속도 차이는 측정할 수 없을 정도로 작을 것으로 생각됩니다.
+이 문제가 초보자들을 헷갈리게 만들지 않으려면 4가 아닌 1을 기본값으로 하면 좋겠지만, 
+OpenGL과의 호환성을 유지하기 위해 기본값은 동일해야만 했습니다.
 이렇게 하면 포팅된 앱이 패딩된 행을 제공하는 경우 변경없이 작동될 겁니다.
-동시에 새 앱에서 항상 `1`로 설정한 다음 끝낼 수 있습니다.
+아니면 새 앱에서 항상 alignment를 `1`로 설정하고 신경쓰지 않아도 됩니다.
+
+이렇게 설정해 주었으니 잘 동작할겁니다.
 
 {{{example url="../webgl-data-texture-3x2.html" }}}
 
-이 부분을 다뤘으니 이제 [텍스처 렌더링](webgl-render-to-texture.html)으로 넘어갑시다.
+이제 [텍스처에 렌더링하기](webgl-render-to-texture.html)로 넘어갑시다.
 
 <div class="webgl_bottombar">
-<h3>Pixel vs Texel</h3>
+<h3>픽셀 vs 텍셀(Texel)</h3>
 <p>
-가끔씩 texture의 pixel이 texel로 불리는데요.
-Pixel은 Picture Element의 줄임말입니다.
-Texel은 Texture Element의 줄임말이죠.
+텍스처의 픽셀을 텍셀이라고 부르는 경우가 있습니다.
+픽셀은 Picture Element의 줄임말입니다.
+텍셀은 Texture Element의 줄임말이죠.
 </p>
 <p>
-물론 그래픽 전문가들의 말에 귀 기울일 것이지만, 제가 아는 한 "texel"은 전문 용어의 한 예시입니다.
-개인적으로 저는 별생각 없이 texture element를 언급할 때 일반적으로 "pixel"을 사용합니다 &#x1f607;
+그래픽 전문가들은 뭐라고 하겠지만, 제가 생각에 "텍셀"은 그냥 복잡한 용어일 뿐입니다.
+개인적으로 저는 texture element를 언급할 때 특별히 고민하지 않고 그냥 "픽셀"이라고 합니다. &#x1f607;
 </p>
 </div>
 
