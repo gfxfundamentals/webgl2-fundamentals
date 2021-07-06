@@ -356,7 +356,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 </code></pre>
 <p>To draw we&#39;ll make a function that takes a projection matrix
 and a camera matrix, computes the view matrix from the camera
-matrix and then draws the sphere and the cube</p>
+matrix and then draws the sphere and the plane</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Uniforms for each object.
 const planeUniforms = {
   u_colorMult: [0.5, 0.5, 1, 1],  // lightblue
@@ -982,7 +982,7 @@ derivatives are undefined within non-uniform control flow and for vertex texture
 </p>
 </blockquote>
 <p>In other words, if we are going to use textures we must always access them. We can use the results
-conditionally. For example would could have written this:</p>
+conditionally. For example we could have written this:</p>
 <pre class="prettyprint"><code class="notranslate" translate="no">
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;

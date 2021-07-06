@@ -236,68 +236,69 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>이 포스트는 WebGL 관련 시리즈에서 이어집니다.
-첫 번째는 <a href="webgl-fundamentals.html">기초</a>로 시작했습니다.
+      <p>이 포스트는 WebGL 관련 시리즈의 글입니다.
+<a href="webgl-fundamentals.html">WebGL2 기초</a>부터 시작했습니다.
 이 글은 원근 교정 텍스처 매핑을 다룹니다.
-이걸 이해하기 위해서는 <a href="webgl-3d-perspective.html">perspective projection</a>과 <a href="webgl-3d-textures.html">텍스처</a>에 대해 읽어야 할 겁니다.
-또한 <a href="webgl-how-it-works.html">varying과 그 기능</a>에 대해 알아야 하지만 여기서 간략하게 설명하겠습니다.</p>
-<p>&quot;<a href="webgl-how-it-works.html">동작 원리</a>&quot;에서 varying이 어떻게 작동하는지 다뤘는데요.
-Vertex shader는 varying을 선언하고 어떤 값으로 설정할 수 있습니다.
-Vertex shader가 3번 호출되면 WebGL은 삼각형을 그립니다.
-해당 삼각형을 그리는 동안 모든 픽셀에 대해 fragment shader를 호출하고 해당 픽셀을 어떤 색상으로 만들지 묻습니다.
-삼각형의 정점 3개 사이에서 3개의 값 사이를 보간한 varying을 전달할 겁니다.</p>
+이 내용을 이해하기 위해서는 <a href="webgl-3d-perspective.html">원근 투영</a>과 <a href="webgl-3d-textures.html">텍스처</a>에 대해 먼저 읽어보셔야 할겁니다.
+또한 <a href="webgl-how-it-works.html">varying과 그 기능</a>에 대해 알아야 하지만 이 글에서 간략하게 설명하겠습니다.</p>
+<p>&quot;<a href="webgl-how-it-works.html">동작 원리</a>&quot;에서 varying이 어떻게 작동하는지 말씀드렸습니다.
+정점 셰이더에서는 varying을 선언하고 어떤 값을 설정할 수 있습니다.
+정점 셰이더가 3번 호출되면 WebGL은 삼각형을 그립니다.
+해당 삼각형을 그리는 동안 모든 픽셀에 대해 프래그먼트 셰이더를 호출해서 해당 픽셀을 어떤 색상으로 칠할 것인지를 결정합니다.
+삼각형의 정점 세개 사이에서는 세개의 값이 보간된 varying이 전달됩니다.</p>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 600px; height: 400px;" src="/webgl/lessons/resources/fragment-shader-anim.html"></iframe>
   <div class="webgl_center">v_color는 v0, v1, v2 사이에서 보간</div>
 </div>
 
 </p>
-<p><a href="webgl-fundamentals.html">첫 번째 글</a>로 돌아가보면 우리는 clip space에서 삼각형을 그렸는데요.
-다음과 같이 간단한 vertex shader에 clip space 좌표를 전달했습니다.</p>
+<p><a href="webgl-fundamentals.html">첫 번째 글</a>로 돌아가보면 우리는 클립 공간에서 삼각형을 그렸습니다.
+다음과 같이 간단하게 작성한 정점 셰이더에, 클립 공간 좌표를 전달했습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  #version 300 es
 
-  // an attribute is an input (in) to a vertex shader.
-  // It will receive data from a buffer
+  // attribute (in)은 정점 셰이더의 입력입니다.
+  // 버퍼로부터 데이터를 받습니다.
   in vec4 a_position;
 
-  // 모든 shader는 main 함수를 가짐
+  // 모든 셰이더는 main 함수를 가집니다.
   void main() {
 
-    // gl_Position은 vertex shader가 설정을 담당하는 특수 변수
+    // gl_Position은 정점 셰이더가 값을 
+    //설정해 주어야 하는 특별한 변수입니다.
     gl_Position = a_position;
   }
-</code></pre><p>일정한 색상으로 그리는 간단한 fragment shader가 있습니다.</p>
+</code></pre><p>단색으로 그리는 간단한 프래그먼트 셰이더도 있었습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  #version 300 es
 
-  // fragment shader는 기본 정밀도를 가지고 있지 않으므로 하나를 선택해야 합니다.
-  // highp는 좋은 기본값입니다.
+  // 프래그먼트 셰이더는 기본 정밀도를 가지고 있지 않으므로 하나를 선택해야 합니다.
+  // highp가 기본값으로 좋습니다.
   precision highp float;
 
-  // we need to declare an output for the fragment shader
+  // 프래그먼트 셰이더에서는 출력을 선언해 주어야 합니다.
   out vec4 outColor;
 
   void main() {
-    // Just set the output to a constant reddish-purple
+    // 출력을 붉은 보라색 단색으로 설정합니다.
     outColor = vec4(1, 0, 0.5, 1);
   }
-</code></pre><p>Clip space에 2개의 사각형을 그리도록 만들어봅시다.
+</code></pre><p>클립 공간에 두개의 사각형을 그리도록 만들어봅시다.
 각 정점의 <code class="notranslate" translate="no">X</code>, <code class="notranslate" translate="no">Y</code>, <code class="notranslate" translate="no">Z</code>, <code class="notranslate" translate="no">W</code>인 데이터를 전달할 겁니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var positions = [
-  -.8, -.8, 0, 1,  // 1번째 사각형의 1번째 삼각형
+  -.8, -.8, 0, 1,  // 첫번째 사각형의 첫번째 삼각형
    .8, -.8, 0, 1,
   -.8, -.2, 0, 1,
-  -.8, -.2, 0, 1,  // 1번째 사각형의 2번째 삼각형
+  -.8, -.2, 0, 1,  // 첫번째 사각형의 두번째 삼각형
    .8, -.8, 0, 1,
    .8, -.2, 0, 1,
 
-  -.8,  .2, 0, 1,  // 2번째 사각형의 1번째 삼각형
+  -.8,  .2, 0, 1,  // 두번째 사각형의 첫번째 삼각형
    .8,  .2, 0, 1,
   -.8,  .8, 0, 1,
-  -.8,  .8, 0, 1,  // 2번째 사각형의 2번째 삼각형
+  -.8,  .8, 0, 1,  // 두번째 사각형의 두번째 삼각형
    .8,  .2, 0, 1,
    .8,  .8, 0, 1,
 ];
-</code></pre><p>여기 결과입니다.</p>
+</code></pre><p>아래는 그 결과입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-clipspace-rectangles.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-clipspace-rectangles.html" target="_blank">click here to open in a separate window</a>
@@ -305,7 +306,7 @@ Vertex shader가 3번 호출되면 WebGL은 삼각형을 그립니다.
 
 </p>
 <p>Varying float 하나를 추가해봅시다.
-해당 varying을 vertex shader에서 fragment shader로 전달할 겁니다.</p>
+해당 varying를 정점 셰이더에서 프래그먼트 셰이더로 바로 전달할 겁니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  #version 300 es
 
   in vec4 a_position;
@@ -316,26 +317,26 @@ Vertex shader가 3번 호출되면 WebGL은 삼각형을 그립니다.
   void main() {
     gl_Position = a_position;
 
-+    // Fragment shader로 밝기 전달
++    // 프래그먼트 셰이더로 밝기 전달
 +    v_brightness = a_brightness;
   }
-</code></pre><p>Fragment shader에서는 해당 varying을 사용하여 색상을 설정할 겁니다.</p>
+</code></pre><p>프래그먼트 셰이더에서는 해당 varying을 색상을 설정하는 데 사용할 겁니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  #version 300 es
 
   precision highp float;
 
-+  // Vertex shader에서 전달받아 보간
++  // 정점 셰이더에서 전달되어 보간된 값.
 +  in float v_brightness;
 
-   // we need to declare an output for the fragment shader
+   // 프래그먼트 셰이더에서는 출력을 선언해 주어야 합니다.
    out vec4 outColor;
 
   void main() {
 *    outColor = vec4(v_brightness, 0, 0, 1);  // 빨강
   }
-</code></pre><p>Varying의 데이터를 제공해야 하므로 버퍼를 만들어 데이터를 넣을 겁니다.
-정점 당 하나의 값을 가집니다.
-왼쪽을 0으로 오른쪽은 1로 정점에 대한 밝기 값을 설정합니다.</p>
+</code></pre><p>Varying에 데이터를 제공해야 하므로 버퍼를 만들어 데이터를 넣을 겁니다.
+정점 당 하나의 값입니다.
+왼쪽의 정점은 0으로 오른쪽의 정점은 1로 밝기 값을 설정합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 버퍼를 생성하고 12개의 밝기 값 넣기
   var brightnessBuffer = gl.createBuffer();
 
@@ -343,23 +344,23 @@ Vertex shader가 3번 호출되면 WebGL은 삼각형을 그립니다.
   gl.bindBuffer(gl.ARRAY_BUFFER, brightnessBuffer);
 
   var brightness = [
-    0,  // 1번째 사각형의 1번째 삼각형
+    0,  // 첫번째 사각형의 첫번째 삼각형
     1, 
     0, 
-    0,  // 1번째 사각형의 2번째 삼각형
+    0,  // 첫번째 사각형의 두번째 삼각형
     1, 
     1, 
 
-    0,  // 2번째 사각형의 1번째 삼각형
+    0,  // 두번째 사각형의 첫번째 삼각형
     1, 
     0, 
-    0,  // 2번째 사각형의 2번째 삼각형
+    0,  // 두번째 사각형의 두번째 삼각형
     1, 
     1, 
   ];
 
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(brightness), gl.STATIC_DRAW);
-</code></pre><p>또한 초기화할 때 <code class="notranslate" translate="no">a_brightness</code> attribute의 위치를 찾아야 합니다.</p>
+</code></pre><p>또한 초기화할 때 <code class="notranslate" translate="no">a_brightness</code> attribute의 location을 찾아야 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 정점 데이터가 어디로 가야하는지 탐색
   var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 +  var brightnessAttributeLocation = gl.getAttribLocation(program, &quot;a_brightness&quot;);
@@ -370,40 +371,40 @@ Vertex shader가 3번 호출되면 WebGL은 삼각형을 그립니다.
   // 위치 버퍼 바인딩
   gl.bindBuffer(gl.ARRAY_BUFFER, brightnessBuffer);
 
-  // brightnessBuffer의 데이터를 가져오는 방법을 attribute에 지시 (ARRAY_BUFFER)
-  var size = 1;          // 반복마다 1개의 컴포넌트
-  var type = gl.FLOAT;   // 데이터는 32bit float
+  // brightnessBuffer의 데이터를 가져오는 방법을 attribute에 알려줌 (ARRAY_BUFFER)
+  var size = 1;          // iteration마다 1개의 컴포넌트
+  var type = gl.FLOAT;   // 데이터는 32비트 부동소수점
   var normalize = false; // 데이터 정규화 안 함
-  var stride = 0;        // 0 = 다음 위치를 가져오기 위해 반복마다 size * sizeof(type) 만큼 앞으로 이동
-  var offset = 0;        // 버퍼의 처음부터 시작
+  var stride = 0;        // 0 = 다음 위치를 가져오기 위해 iteration마다 size * sizeof(type) 만큼 앞으로 이동
+  var offset = 0;        // 버퍼의 맨 앞부터 시작
   gl.vertexAttribPointer(
       brightnessAttributeLocation, size, type, normalize, stride, offset);
-</code></pre><p>그리고 이제 렌더링할 때 <code class="notranslate" translate="no">brightness</code>가 0인 왼쪽은 검은색이고 <code class="notranslate" translate="no">brightness</code>가 1인 오른쪽은 빨간색인 사각형 2개를 얻으며, <code class="notranslate" translate="no">brightness</code> 사이의 영역은 삼각형을 가로질러 보간됩니다.</p>
+</code></pre><p>그리고 이제 렌더링하면 <code class="notranslate" translate="no">brightness</code>가 0인 왼쪽은 검은색이고 <code class="notranslate" translate="no">brightness</code>가 1인 오른쪽은 빨간색이며, 그 사이의 삼각형은 <code class="notranslate" translate="no">brightness</code>가 보간된(varying된) 두 개의 직사각형을 볼 수 있습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-clipspace-rectangles-with-varying.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-clipspace-rectangles-with-varying.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p><a href="webgl-3d-perspective.html">Perspective에 대한 글</a>에서 WebGL은 우리가 입력한 <code class="notranslate" translate="no">gl_Position</code>을 가져와 <code class="notranslate" translate="no">gl_Position.w</code>로 나눕니다.</p>
-<p>위의 정점들에는 <code class="notranslate" translate="no">W</code>에 <code class="notranslate" translate="no">1</code>을 제공했지만 WebGL이 <code class="notranslate" translate="no">W</code>로 나누는 걸 알고 있기 때문에 다음과 같이 할 수 있으며 동일한 결과를 얻습니다.</p>
+<p><a href="webgl-3d-perspective.html">원근에 관한 글</a>에서 WebGL이 우리가 입력한 <code class="notranslate" translate="no">gl_Position</code>을 가져와 <code class="notranslate" translate="no">gl_Position.w</code>로 나눈다는 것을 알게 되었습니다.</p>
+<p>위의 정점들에는 <code class="notranslate" translate="no">W</code>에 <code class="notranslate" translate="no">1</code>을 설정했지만 WebGL이 <code class="notranslate" translate="no">W</code>로 나누는 걸 알고 있기 때문에 아래와 같이 해도 동일한 결과를 얻을 겁니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  var mult = 20;
   var positions = [
-      -.8,  .8, 0, 1,  // 1번째 사각형의 1번째 삼각형
+      -.8,  .8, 0, 1,  // 첫번째 사각형의 첫번째 삼각형
        .8,  .8, 0, 1,
       -.8,  .2, 0, 1,
-      -.8,  .2, 0, 1,  // 1번째 사각형의 2번째 삼각형
+      -.8,  .2, 0, 1,  // 첫번째 사각형의 두번째 삼각형
        .8,  .8, 0, 1,
        .8,  .2, 0, 1,
 
-      -.8       , -.2       , 0,    1,  // 2번째 사각형의 1번째 삼각형
+      -.8       , -.2       , 0,    1,  // 두번째 사각형의 첫번째 삼각형
        .8 * mult, -.2 * mult, 0, mult,
       -.8       , -.8       , 0,    1,
-      -.8       , -.8       , 0,    1,  // 2번째 사각형의 2번째 삼각형
+      -.8       , -.8       , 0,    1,  // 두번째 사각형의 두번째 삼각형
        .8 * mult, -.2 * mult, 0, mult,
        .8 * mult, -.8 * mult, 0, mult,
   ];
-</code></pre><p>위에서 두 번째 사각형의 오른쪽에 있는 모든 점에 대해 <code class="notranslate" translate="no">X</code>와 <code class="notranslate" translate="no">Y</code>에 <code class="notranslate" translate="no">mult</code>를 곱한 것을 알 수 있지만, <code class="notranslate" translate="no">W</code>를 <code class="notranslate" translate="no">mult</code>로 설정하는 것도 볼 수 있습니다.
+</code></pre><p>위 코드에서 두 번째 사각형의 오른쪽에 있는 모든 점에 대해 <code class="notranslate" translate="no">X</code>와 <code class="notranslate" translate="no">Y</code>에 <code class="notranslate" translate="no">mult</code>를 곱한 것을 알 수 있지만, <code class="notranslate" translate="no">W</code>를 <code class="notranslate" translate="no">mult</code>로 설정하는 것도 볼 수 있습니다.
 WebGL이 <code class="notranslate" translate="no">W</code>로 나누기 때문에 똑같은 결과를 얻을 수 있겠죠?</p>
 <p>음 여기 결과입니다.</p>
 <p><div class="webgl_example_container">
@@ -412,40 +413,40 @@ WebGL이 <code class="notranslate" translate="no">W</code>로 나누기 때문�
 </div>
 
 </p>
-<p>두 사각형은 이전과 같은 곳에 그려졌습니다.
-이건 <code class="notranslate" translate="no">X * MULT / MULT(W)</code>가 여전히 <code class="notranslate" translate="no">X</code>이고 <code class="notranslate" translate="no">Y</code>에 대해 동일하다는 걸 증명합니다.
+<p>두 사각형은 이전과 동일한 위치에 그려졌다는 것에 주목하십시오.
+이건 <code class="notranslate" translate="no">X * MULT / MULT(W)</code>가 여전히 <code class="notranslate" translate="no">X</code>이고 <code class="notranslate" translate="no">Y</code>도 마찬가지라는 걸 증명합니다.
 하지만 색상이 다릅니다.
 무슨 일이 일어난 걸까요?</p>
 <p>WebGL은 <code class="notranslate" translate="no">W</code>를 사용하여 원근 교정 텍스처 매핑을 구현하거나 varying의 원근 교정 보간을 수행합니다.</p>
-<p>실제로 이걸 더 쉽게 볼 수 있도록 fragment shader를 해킹해봅시다.</p>
+<p>더 쉽게 볼 수 있도록 프래그먼트 셰이더를 건드려봅시다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">outColor = vec4(fract(v_brightness * 10.), 0, 0, 1);  // 빨강
-</code></pre><p><code class="notranslate" translate="no">v_brightness</code>를 10으로 곱하면 값을 0에서 10사이로 만듭니다.
-<code class="notranslate" translate="no">fract</code>는 소수 부분만 유지하므로 0에서 1사이, 0에서 1사이, 0에서 1사이, 10번이 됩니다.</p>
+</code></pre><p><code class="notranslate" translate="no">v_brightness</code>를 10으로 곱하면 값이 0에서 10사이가 됩니다.
+<code class="notranslate" translate="no">fract</code>는 소수 부분만 유지하므로 0에서 1사이, 0에서 1사이, 0에서 1사이값 10번이 됩니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-clipspace-rectangles-with-varying-non-1-w-repeat.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-clipspace-rectangles-with-varying-non-1-w-repeat.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>하나의 값에서 또 다른 값으로 선형 보간하는 것은 이런 공식이 됩니다.</p>
+<p>두 값의 선형 보간 공식은 아래와 같습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> result = (1 - t) * a + t * b
 </code></pre><p>여기서 <code class="notranslate" translate="no">t</code>는 <code class="notranslate" translate="no">a</code>와 <code class="notranslate" translate="no">b</code>사이의 위치를 나타내는 0에서 1사이의 값입니다.
-<code class="notranslate" translate="no">a</code>가 0이고 <code class="notranslate" translate="no">b</code>가 1입니다.</p>
-<p>Varying의 경우 WebGL은 이 공식을 사용합니다.</p>
+0일 때 <code class="notranslate" translate="no">a</code>이고 1일때 <code class="notranslate" translate="no">b</code>입니다.</p>
+<p>그런데 Varying의 경우 WebGL은 아래 공식을 사용합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> result = (1 - t) * a / aW + t * b / bW
           -----------------------------
              (1 - t) / aW + t / bW
 </code></pre><p>여기서 <code class="notranslate" translate="no">aW</code>는 varying이 <code class="notranslate" translate="no">a</code>로 설정된 경우 <code class="notranslate" translate="no">gl_Position.w</code>에 설정된 <code class="notranslate" translate="no">W</code>이며, <code class="notranslate" translate="no">bW</code> varying이 <code class="notranslate" translate="no">b</code>로 설정된 경우 <code class="notranslate" translate="no">gl_Position.w</code>에 설정된 <code class="notranslate" translate="no">W</code>입니다.</p>
 <p>그게 왜 중요할까요?
-음 여기 <a href="webgl-3d-textures.html">텍스처에 대한 글</a>에서 만들었던 간단한 텍스처 큐브가 있습니다.
-UV 좌표를 양쪽에 0에서 1로 조정했고 4x4 픽셀 텍스처를 사용하고 있습니다.</p>
+여기 <a href="webgl-3d-textures.html">텍스처에 관한 글</a>에서 만들었던 간단한 텍스처 맵핑된 육면체가 있습니다.
+모든 면에서 UV 좌표는 0에서 1 사이의 값이고 4x4 픽셀 텍스처를 사용하고 있습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-perspective-correct-cube.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-perspective-correct-cube.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>이제 해당 예제를 가져와 vertex shader를 변경하여 우리가 직접 <code class="notranslate" translate="no">W</code>로 나눠봅시다.
+<p>이제 해당 예제를 가져와 정점 셰이더를 변경하여 우리가 직접 <code class="notranslate" translate="no">W</code>로 나눠봅시다.
 한 줄만 추가하면 됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
@@ -457,18 +458,18 @@ uniform mat4 u_matrix;
 out vec2 v_texcoord;
 
 void main() {
-  // 위치를 행렬로 곱하기
+  // position에 행렬을 곱함
   gl_Position = u_matrix * a_position;
 
-+  // 수동으로 W 나누기
++  // 직접 W로 나누기
 +  gl_Position /= gl_Position.w;
 
-  // fragment shader로 texcoord 전달
+  // 프래그먼트 셰이더로 texcoord 전달
   v_texcoord = a_texcoord;
 }
-</code></pre><p><code class="notranslate" translate="no">W</code>로 나누는 것은 <code class="notranslate" translate="no">gl_Position.w</code>가 결국 1이 됨을 의미합니다.
-<code class="notranslate" translate="no">X</code>, <code class="notranslate" translate="no">Y</code>, <code class="notranslate" translate="no">Z</code>는 WebGL이 자동으로 분할했던 것처럼 나올 겁니다.
-음 여기 결과입니다.</p>
+</code></pre><p><code class="notranslate" translate="no">W</code>로 나누면 <code class="notranslate" translate="no">gl_Position.w</code>는 결국 1이 됩니다.
+<code class="notranslate" translate="no">X</code>, <code class="notranslate" translate="no">Y</code>, <code class="notranslate" translate="no">Z</code>는 WebGL이 나누기를 수행한 것과 동일한 값이 나올 겁니다.
+아래는 그 결과입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-non-perspective-correct-cube.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-non-perspective-correct-cube.html" target="_blank">click here to open in a separate window</a>
@@ -478,12 +479,12 @@ void main() {
 <p>여전히 3D 큐브를 얻게 되지만 텍스처가 뒤틀리고 있습니다.
 이는 이전처럼 <code class="notranslate" translate="no">W</code>를 전달하지 않으면 WebGL이 원근 교정 텍스처 매핑을 할 수 없기 때문입니다.
 좀 더 정확하게는 WebGL이 varying의 원근 교정 보간을 수행할 수 없습니다.</p>
-<p><a href="webgl-3d-perspective.html">Perspective matrix</a>에서 <code class="notranslate" translate="no">Z</code>가 <code class="notranslate" translate="no">W</code>였던 걸 떠올려보면, <code class="notranslate" translate="no">W</code>가 <code class="notranslate" translate="no">1</code>인 경우 WebGL은 선형 보간을 수행합니다.
-실제로 위의 방정식을 가져와 봅시다.</p>
+<p><a href="webgl-3d-perspective.html">원근 투영 행렬</a>에서 <code class="notranslate" translate="no">Z</code>값이 <code class="notranslate" translate="no">W</code>였던 걸 떠올려보면, <code class="notranslate" translate="no">W</code>가 <code class="notranslate" translate="no">1</code>인 경우 WebGL은 그냥 선형 보간을 수행하게 됩니다.
+실제로 위의 수식을 가져와 봅시다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> result = (1 - t) * a / aW + t * b / bW
           -----------------------------
              (1 - t) / aW + t / bW
-</code></pre><p>그리고 모든 <code class="notranslate" translate="no">W</code>를 1로 변경합니다.</p>
+</code></pre><p>그리고 모든 <code class="notranslate" translate="no">W</code>를 1로 변경하면 아래와 같이 됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> result = (1 - t) * a / 1 + t * b / 1
           ---------------------------
              (1 - t) / 1 + t / 1
@@ -496,14 +497,14 @@ void main() {
 즉 분모를 지울 수 있기 때문에 이렇게 남게 됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> result = (1 - t) * a + t * b
 </code></pre><p>이는 위의 선형 보간 방정식과 동일합니다.</p>
-<p>이제 왜 WebGL이 4x4 행렬과 <code class="notranslate" translate="no">X</code>, <code class="notranslate" translate="no">Y</code>, <code class="notranslate" translate="no">Z</code>, <code class="notranslate" translate="no">W</code>가 있는 4개의 벡터를 사용하는지 이해가 되셨으면 좋겠습니다.
-<code class="notranslate" translate="no">X</code>와 <code class="notranslate" translate="no">Y</code>는 <code class="notranslate" translate="no">W</code>로 나누어 clipspace 좌표를 얻습니다.
-<code class="notranslate" translate="no">W</code>로 나누는 <code class="notranslate" translate="no">Z</code>도 clipspace 좌표를 얻으며, <code class="notranslate" translate="no">W</code>는 varying의 보간 중에 계속 사용되고 원근 교정 텍스처 매핑 기능을 제공합니다.</p>
+<p>이제 왜 WebGL이 4x4 행렬과 <code class="notranslate" translate="no">X</code>, <code class="notranslate" translate="no">Y</code>, <code class="notranslate" translate="no">Z</code>, <code class="notranslate" translate="no">W</code> 4개의 값으로 구성된 벡터를 사용하는지 이해가 되셨으면 좋겠습니다.
+<code class="notranslate" translate="no">X</code>와 <code class="notranslate" translate="no">Y</code>는 <code class="notranslate" translate="no">W</code>로 나누어 클립공간 좌표를 얻습니다.
+<code class="notranslate" translate="no">W</code>로 나누는 <code class="notranslate" translate="no">Z</code>도 클립공간의 <code class="notranslate" translate="no">Z</code> 좌표가 됩니다. 하지만 <code class="notranslate" translate="no">W</code>는 varying의 보간에도 사용되어 원근 교정 텍스처 매핑이 가능하도록 합니다.</p>
 <div class="webgl_bottombar">
 <h3>1990년대 중반 게임 콘솔</h3>
 <p>
 PlayStation 1과 같은 시대의 일부 게임 콘솔들은 원근 교정 텍스처 매핑을 하지 않았습니다.
-위 결과를 보면 왜 그렇게 보였는지 알 수 있습니다.
+위 결과를 보면 왜 아래와 같이 보이는지 알 수 있습니다.
 </p>
 <div class="webgl_center"><img src="../resources/ridge-racer-01.png" style="max-width: 500px;" /></div>
 <p></p>
