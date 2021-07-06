@@ -141,7 +141,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
 To draw we'll make a function that takes a projection matrix
 and a camera matrix, computes the view matrix from the camera
-matrix and then draws the sphere and the cube
+matrix and then draws the sphere and the plane
 
 ```js
 // Uniforms for each object.
@@ -815,7 +815,7 @@ derivatives are undefined within non-uniform control flow and for vertex texture
 </p>
 </blockquote>
 <p>In other words, if we are going to use textures we must always access them. We can use the results
-conditionally. For example would could have written this:</p>
+conditionally. For example we could have written this:</p>
 <pre class="prettyprint"><code>
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
