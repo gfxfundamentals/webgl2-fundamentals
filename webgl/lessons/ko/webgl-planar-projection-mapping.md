@@ -24,7 +24,7 @@ TOC: 평면 및 원근 투영 매핑
 <div class="webgl_center"><img src="resources/orthographic-projection.svg" style="width: 400px"></div>
 
 먼저 평면과 구체를 그리는 간단한 장면을 만들어 보겠습니다.
-구 물체 모두 간단한 8x8 체커 보드 텍스처를 사용할 겁니다.
+두 물체 모두 간단한 8x8 체커 보드 텍스처를 사용할 겁니다.
 
 셰이더는 다양한 행렬이 분리되어 있어서 자바스크립트 쪽에서 미리 곱할 필요가 없다는 걸 제외하면 [텍스처에 관한 글](webgl-3d-textures.html)의 셰이더와 유사합니다.
 
@@ -219,7 +219,7 @@ render();
 
 이제 구체와 평면에 텍스처를 평면 투영해봅시다.
 
-먼저 [텍스처를 로드](webgl-3d-textures.html)합니다..
+먼저 [텍스처를 로드](webgl-3d-textures.html)합니다.
 
 ```js
 function loadImageTexture(url) {
@@ -766,7 +766,7 @@ derivatives are undefined within non-uniform control flow and for vertex texture
 <p>
 다시 말해 텍스처를 사용하는 경우 항상 텍스처에 접근할 수 있어야 한다는 것입니다. 
 결과를 조건부로 사용할 수는 있습니다.
-예를 들어 아래와 같이 작성하거나,</p>
+예를 들어 아래와 같이 작성하거나</p>
 <pre class="prettyprint"><code>
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
