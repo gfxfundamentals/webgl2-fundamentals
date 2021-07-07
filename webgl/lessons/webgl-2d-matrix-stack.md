@@ -243,7 +243,7 @@ matrixStack.rotateZ(time);
 +  matrixStack.translate(textureInfo.width / 2, textureInfo.height / -2);
 +  matrixStack.rotateZ(Math.sin(time * 2.3));
 +  matrixStack.scale(0.2, 0.2);
-+  // Now we want the bottom/right corner of the image we're about to draw
++  // Now we want the bottom/left corner of the image we're about to draw
 +  matrixStack.translate(0, -textureInfo.height);
 +
 +  drawImage(
@@ -301,8 +301,8 @@ as moving the origin then the way I think of setting the center of rotation is
 *where would I have to move the origin so that when I call drawImage a certain part
 of the image is **at** the previous origin?*
 
-In other words let's say on a 400x300 canvas I call `matrixStack.translate(220, 150)`.
-At that point the origin is at 220, 150 and all drawing will be relative that point.
+In other words let's say on a 400x300 canvas I call `matrixStack.translate(210, 150)`.
+At that point the origin is at 210, 150 and all drawing will be relative that point.
 If we call `drawImage` with `0, 0` this is where the image will be drawn.
 
 <img class="webgl_center" width="400" src="resources/matrixstack-before.svg" />
