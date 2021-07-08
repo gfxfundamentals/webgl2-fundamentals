@@ -102,7 +102,7 @@ const some4x4TranslationMatrix = [
 ];
 ```
 
-Unfortunately doing it like that has issues. As mentioned in [the article on cameras](webgl-3d-camera.html) each of the columns of a 4x4 matrix often has a meaning
+Unfortunately doing it like that has issues. As mentioned in [the article on cameras](webgl-3d-camera.html) each of the columns of a 4x4 matrix often has a meaning.
 
 The first, second, and third columns are often considered the x, y, and z axis respectively and the last column is the position or translation.
 
