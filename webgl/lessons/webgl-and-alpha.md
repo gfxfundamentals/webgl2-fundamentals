@@ -59,7 +59,6 @@ should have been the default.
     renderScene();
     ..
     // Set the backbuffer's alpha to 1.0 by
-
     // Setting the clear color to 1
     gl.clearColor(1, 1, 1, 1);
 
