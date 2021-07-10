@@ -41,7 +41,7 @@ Here's the boilerplate code for compiling a shader.
       var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
       if (!success) {
         // Something went wrong during compilation; get the error
-        throw "could not compile shader:" + gl.getShaderInfoLog(shader);
+        throw ("could not compile shader:" + gl.getShaderInfoLog(shader));
       }
 
       return shader;
@@ -71,8 +71,8 @@ And the boilerplate code for linking 2 shaders into a program
       // Check if it linked.
       var success = gl.getProgramParameter(program, gl.LINK_STATUS);
       if (!success) {
-          // something went wrong with the link
-          throw ("program failed to link:" + gl.getProgramInfoLog (program));
+          // something went wrong with the link; get the error
+          throw ("program failed to link:" + gl.getProgramInfoLog(program));
       }
 
       return program;
@@ -192,7 +192,7 @@ The actual boilerplate API used in most of these samples is
      *        the second the fragment shader.
      * @param {string[]} [opt_attribs] An array of attribs names.
      *        Locations will be assigned by index if not passed in
-     * @param {number[]} [opt_locations] The locations for the.
+     * @param {number[]} [opt_locations] The locations for the attribs.
      *        A parallel array to opt_attribs letting you assign locations.
      * @param {module:webgl-utils.ErrorCallback} opt_errorCallback callback for errors.
      *        By default it just prints an error to the console
