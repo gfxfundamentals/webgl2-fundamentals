@@ -37,23 +37,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="모든 WebGL program에 필요한 일부 코드">
+<meta name="description" content="모든 WebGL 프로그램의 작성에 필요한 일부 코드">
 <meta name="keywords" content="webgl webgl2 graphics">
 <meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-boilerplate_ko.jpg">
 
-<meta property="og:title" content="WebGL2 Boilerplate">
+<meta property="og:title" content="WebGL2 보일러플레이트(Boilerplate)">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-boilerplate_ko.jpg">
-<meta property="og:description" content="모든 WebGL program에 필요한 일부 코드">
+<meta property="og:description" content="모든 WebGL 프로그램의 작성에 필요한 일부 코드">
 <meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ko/webgl-boilerplate.html">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@greggman">
 <meta name="twitter:creator" content="@greggman">
 <meta name="twitter:domain" content="webgl2fundamentals.org">
-<meta name="twitter:title" content="WebGL2 Boilerplate">
+<meta name="twitter:title" content="WebGL2 보일러플레이트(Boilerplate)">
 <meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ko/webgl-boilerplate.html">
-<meta name="twitter:description" content="모든 WebGL program에 필요한 일부 코드">
+<meta name="twitter:description" content="모든 WebGL 프로그램의 작성에 필요한 일부 코드">
 <meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-boilerplate_ko.jpg">
 
 <script type="application/ld+json">
@@ -78,7 +78,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       "@id":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-boilerplate.html#webpage",
       "url":"https://webgl2fundamentals.org/webgl/lessons/ko/webgl-boilerplate.html",
       "inLanguage":"ko",
-      "name":"WebGL2 Boilerplate",
+      "name":"WebGL2 보일러플레이트(Boilerplate)",
       "keywords":"webgl webgl2 graphics programming",
       "isPartOf":{
         "@id":"https://webgl2fundamentals.org/#website"
@@ -92,7 +92,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </script>
 
 
-<title>WebGL2 Boilerplate</title>
+<title>WebGL2 보일러플레이트(Boilerplate)</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/webgl/lessons/lang.css">
 <link rel="stylesheet" href="/webgl/lessons/ko/lang.css">
@@ -232,80 +232,79 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 Boilerplate</h1>
+    <h1>WebGL2 보일러플레이트(Boilerplate)</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>이건 <a href="webgl-fundamentals.html">WebGL 기초</a>에서 이어지는 글입니다.
-대부분의 WebGL 강의들은 모든걸 한 번에 다루기 때문에 배우기 복잡해 보이기도 하는데요.
-가능한 한 그것을 피하기 위해 더 작게 나눠보려고 합니다.</p>
-<p>WebGL을 복잡해 보이도록 만드는 것들 중 하나는 vertex shader와 fragment shader, 두 가지 작은 함수가 있다는 겁니다.
-이 두 함수는 일반적으로 최대 속도가 나오는 GPU에서 실행되는데요.
-그렇기 때문에 GPU에서 수행할 수 있는 언어, 커스텀 언어로 작성됩니다.
-이 두 함수는 컴파일되고 연결되어야 하는데요.
-해당 처리는 모든 WebGL program에서 99% 동일합니다.</p>
-<p>다음은 shader를 컴파일 하는 boilerplate 코드입니다.</p>
+      <p>이 글은 <a href="webgl-fundamentals.html">WebGL 기초</a>에서 이어지는 글입니다.
+대부분의 WebGL 강의들은 모든걸 한 번에 다루기 때문에 배우기 복잡해 보이기도 합니다.
+가능 가능한 한 그것을 피하기 위해 작은 단위로 나누려고 합니다.</p>
+<p>WebGL을 복잡해 보이도록 만드는 것들 중 하나는 정점 셰이더와 프래그먼트 셰이더의 두 가지 작은 함수가 있다는 겁니다.
+이 두 함수가 GPU에서 실행되기 때문에 빠른 계산이 가능합니다.
+그러한 이유로 GPU가 해석할 수 있는 특수한 언어를 사용해 작성하는 것입니다.
+이 두 함수는 컴파일되고 링크되어야 하는데, 이러한 처리는 모든 WebGL 프로그램에서 99% 동일합니다.</p>
+<p>다음은 셰이더를 컴파일하는 보일러플레이트(boilerplate) 코드입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/**
- * shader 생성 및 컴파일
+ * 셰이더를 생성하고 컴파일합니다.
  *
- * @param {!WebGLRenderingContext} gl은 WebGL Context
- * @param {string} shaderSource는 shader의 GLSL source 코드
- * @param {number} shaderType은 shader의 type, VERTEX_SHADER 또는 FRAGMENT_SHADER
- * @return {!WebGLShader} shader
+ * @param {!WebGLRenderingContext} gl WebGL 컨텍스트
+ * @param {string} shaderSource 셰이더의 GLSL 소스코드
+ * @param {number} shaderType 셰이더의 타입, VERTEX_SHADER 또는 FRAGMENT_SHADER
+ * @return {!WebGLShader} 셰이더
  */
 function compileShader(gl, shaderSource, shaderType) {
-  // shader 객체 생성
+  // 셰이더 객체 생성
   var shader = gl.createShader(shaderType);
 
-  // shader 소스 코드 설정
+  // 셰이더 소스 코드 설정
   gl.shaderSource(shader, shaderSource);
 
-  // shader 컴파일
+  // 셰이더 컴파일
   gl.compileShader(shader);
 
   // 컴파일 여부 확인
   var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
   if (!success) {
-    // 컴파일하는 동안 문제 발생
-    throw &quot;could not compile shader:&quot; + gl.getShaderInfoLog(shader);
+    // 컴파일하는 동안 문제 발생. 오류를 얻어옴
+    throw (&quot;could not compile shader:&quot; + gl.getShaderInfoLog(shader));
   }
 
   return shader;
 }
-</code></pre><p>그리고 program에 두 shader를 연결하는 boilerplate 코드인데</p>
+</code></pre><p>그리고 두 셰이더를 링크하여 프로그램으로 만드는 보일러플레이트 코드는 아래와 같습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/**
- * 두 shader로 program 생성합니다.
+ * 두 셰이더로 프로그램을 생성합니다.
  *
- * @param {!WebGLRenderingContext) gl은 WebGL Context
- * @param {!WebGLShader} vertexShader는 vertex shader
- * @param {!WebGLShader} fragmentShader는 fragment shader
- * @return {!WebGLProgram} program
+ * @param {!WebGLRenderingContext) gl WebGL 컨텍스트
+ * @param {!WebGLShader} vertexShader 정점 셰이더
+ * @param {!WebGLShader} fragmentShader 프래그먼트 셰이더
+ * @return {!WebGLProgram} 프로그램
  */
 function createProgram(gl, vertexShader, fragmentShader) {
-  // program 생성
+  // 프로그램 생성
   var program = gl.createProgram();
 
-  // shader 할당
+  // 셰이더 부착(attach)
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
 
-  // program 연결
+  // 프로그램 링크
   gl.linkProgram(program);
 
-  // 연결 여부 확인
+  // 링크 여부 확인
   var success = gl.getProgramParameter(program, gl.LINK_STATUS);
   if (!success) {
-    // 연결에 문제 발생
+    // 링크하는 동안 문제 발생
     throw (&quot;program failed to link:&quot; + gl.getProgramInfoLog (program));
   }
 
   return program;
 };
-</code></pre><p>물론 오류를 처리하는 방법은 다를 수 있습니다.
-예외를 던지는 것이 오류를 처리하는 최고의 방법은 아니죠.
-그럼에도 불구하고 거의 모든 WebGL program에서 이 코드는 거의 비슷합니다.</p>
-<p>Now that multiline template literals are supported in all modern browsers
-it&#39;s my preferred way of storing shaders. I can just do something like</p>
+</code></pre><p>물론 어떻게 오류를 처리할지는 여러분에게 달려 있습니다.
+예외를 던지는(throw) 것이 오류를 처리하는 최고의 방법인 것은 아닙니다.
+그럼에도 불구하고 거의 모든 WebGL 프로그램에서 이 코드는 거의 비슷합니다.</p>
+<p>아래와 같은 멀티라인 템플릿 리터럴은 대부분의 모던 브라우저에서 지원됩니다.
+이를 통해 셰이더를 저장하는 것이 제가 선호하는 방식입니다. 그냥 아래와 같이 셰이더 코드를 작성합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var vertexShaderSource = `#version 300 es
 
 in vec4 a_position;
@@ -315,21 +314,20 @@ void main() {
    gl_Position = u_matrix * a_position;
 }
 `;
-</code></pre><p>And have an easy to edit shader. Some older browsers like IE won&#39;t like
-this but first of I&#39;m using WebGL so I don&#39;t really care about IE. If I did
-care and had a non WebGL fallback I&#39;d use some build step with something like
-<a href="https://babeljs.io/">Babel</a> to convert the code above into something that IE
-understands.</p>
-<p>저는 shader를 javascript가 아닌 &lt;script&gt; tag에 저장하는 걸 좋아하는데요.
-이 방식은 코드를 수정하기 쉽게 만들주기 때문에 저는 이렇게 코드를 작성합니다.</p>
+</code></pre><p>이렇게 하면 셰이더의 수정이 쉬워집니다.
+IE처럼 오래된 브라우저는 이러한 문법을 좋아하지 않지만 어차피 WebGL을 만들기 때문에 IE는 신경쓰지 않습니다.
+IE 지원과 WebGL 지원 여부까지 고려한다면 <a href="https://babeljs.io/">Babel</a>과 같은 라이브러리를 사용해 
+빌드를 수행해 IE가 이해할 수 있는 코드로 변환할 겁니다.</p>
+<p>전에는 저는 셰이더를 자바스크립트가 아닌 &lt;script&gt; 태그에 저장하는 것을 선호했습니다.
+이 방식도 셰이더 수정이 쉽고, 이런 경우 아래 코드를 사용합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/**
- * 스크립트 태그의 내용으로 shader 생성
+ * 스크립트 태그의 내용으로 셰이더를 생성합니다.
  *
- * @param {!WebGLRenderingContext) gl은 WebGL Context
- * @param {string} scriptId는 script tag의 id
- * @param {string} opt_shaderType는 생성할 shader의 type
- *                 전달되지 않으면 script tag의 type 속성 사용
- * @return {!WebGLShader} shader
+ * @param {!WebGLRenderingContext) gl WebGL 컨텍스트
+ * @param {string} scriptId 스크립트 태그의 id
+ * @param {string} opt_shaderType 생성할 셰이더의 타입.
+ *                 전달되지 않으면 스크립트 태그의 타입 속성을 사용합니다.
+ * @return {!WebGLShader} 셰이더
  */
 function createShaderFromScript(gl, scriptId, opt_shaderType) {
   // id로 스크립트 태그 탐색
@@ -339,10 +337,10 @@ function createShaderFromScript(gl, scriptId, opt_shaderType) {
     throw(&quot;*** Error: unknown script element&quot; + scriptId);
   }
 
-  // script tag의 내용 추출
+  // 스크립트 태그의 컨텐츠 추출
   var shaderSource = shaderScript.text;
 
-  // type을 넘기지 않으면, script tag의 &#39;type&#39; 사용
+  // 타입을 넘기지 않으면, 스크립트 태그의 &#39;type&#39; 사용
   if (!opt_shaderType) {
     if (shaderScript.type == &quot;x-shader/x-vertex&quot;) {
       opt_shaderType = gl.VERTEX_SHADER;
@@ -355,16 +353,16 @@ function createShaderFromScript(gl, scriptId, opt_shaderType) {
 
   return compileShader(gl, shaderSource, opt_shaderType);
 };
-</code></pre><p>이제 shader를 컴파일할 수 있는데</p>
+</code></pre><p>이제 셰이더를 컴파일하려면 아래와 같이 하면 됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var shader = compileShaderFromScript(gl, &quot;someScriptTagId&quot;);
-</code></pre><p>한 걸음 더 나아가서 script tag에서 두 shader를 컴파일하며, program에 첨부하고 연결하는 함수를 만들겁니다.</p>
+</code></pre><p>한 걸음 더 나아가서 스크립트 태그의 두 셰이더를 컴파일하고, 하나의 프로그램에 부착해 링킹을 수행하는 함수를 만들겁니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/**
- * 두 script tag에서 program 생성
+ * 두 개의 스크립트 태그로부터 프로그램을 생성합니다.
  *
- * @param {!WebGLRenderingContext} gl은 WebGL Context
- * @param {string} vertexShaderId The id of the vertex shader script tag.
- * @param {string} fragmentShaderId The id of the fragment shader script tag.
- * @return {!WebGLProgram} Program
+ * @param {!WebGLRenderingContext} gl WebGL 컨텍스트
+ * @param {string} vertexShaderId 정점 셰이더 스크립트 태그의 id
+ * @param {string} fragmentShaderId 프래그먼트 셰이더 스크립트 태그의 id
+ * @return {!WebGLProgram} 프로그램
  */
 function createProgramFromScripts(
     gl, vertexShaderId, fragmentShaderId) {
@@ -372,35 +370,34 @@ function createProgramFromScripts(
   var fragmentShader = createShaderFromScriptTag(gl, fragmentShaderId, gl.FRAGMENT_SHADER);
   return createProgram(gl, vertexShader, fragmentShader);
 }
-</code></pre><p>거의 모든 WebGL program에서 사용하는 다른 코드는 캔버스의 크기를 조정하는 코드입니다.
-<a href="webgl-resizing-the-canvas.html">여기</a>에서 해당 함수가 어떻게 구현됐는지 볼 수 있습니다.</p>
-<p>모든 예제는 이 두 가지 함수를 있고</p>
+</code></pre><p>거의 모든 WebGL 프로그램에서 공통적으로 사용하는 다른 코드는 캔버스의 크기를 조정하는 코드입니다.
+<a href="webgl-resizing-the-canvas.html">여기</a>에서 해당 함수가 어떻게 구현되었는지 볼 수 있습니다.</p>
+<p>모든 예제에서는 아래 라인을 통해 이 두 함수가 포함(include)되었습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;script src=&quot;resources/webgl-utils.js&quot;&gt;&lt;/script&gt;
-</code></pre><p>그리고 이렇게 사용하는데</p>
+</code></pre><p>그리고 아래와 같이 사용합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var program = webglUtils.createProgramFromScripts(gl, [idOfVertexShaderScript, idOfFragmentShaderScript]);
 
 ...
 
 webglUtils.resizeCanvasToMatchDisplaySize(canvas);
-</code></pre><p>특정한 예제의 목적을 방해하기 때문에 여러 줄의 동일한 코드로 어지럽히지 않는 게 가장 좋습니다.</p>
-<p>The actual boilerplate API used in most of these samples is</p>
+</code></pre><p>여러 줄의 동일한 코드로 복잡해시면
+특정 예제가 설명하려는 내용을 전달하는 데 방해가 됩니다.</p>
+<p>대부분의 예제에서 사용된 실제 보일러플레이트 API는 아래와 같습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/**
- * Creates a program from 2 sources.
+ * 2개의 소스로부터 프로그램을 생성합니다.
  *
- * @param {WebGLRenderingContext} gl The WebGLRenderingContext
- *        to use.
- * @param {string[]} shaderSources Array of sources for the
- *        shaders. The first is assumed to be the vertex shader,
- *        the second the fragment shader.
- * @param {string[]} [opt_attribs] An array of attribs names.
- *        Locations will be assigned by index if not passed in
- * @param {number[]} [opt_locations] The locations for the.
- *        A parallel array to opt_attribs letting you assign locations.
- * @param {module:webgl-utils.ErrorCallback} opt_errorCallback callback for errors.
- *        By default it just prints an error to the console
- *        on error. If you want something else pass an callback.
- *        It&#39;s passed an error message.
- * @return {WebGLProgram} The created program.
+ * @param {WebGLRenderingContext} gl 사용할 WebGLRenderingContext
+ * @param {string[]} shaderSources 셰이더 소스코드의 배열.
+ *        배열의 첫 번째 요소는 정점 셰이더이고, 두 번째는 프래그먼트 셰이더로 가정합니다.
+ * @param {string[]} [opt_attribs] attribute 이름의 배열.
+ *        따로 전달되지 않는다면 location은 인덱스로 할당됩니다.
+ * @param {number[]} [opt_locations] attribute location의 배열.
+ *        opt_attribs와 함께 전달되는 location 할당을 위한 배열.
+ * @param {module:webgl-utils.ErrorCallback} opt_errorCallback 에러 콜백.
+ *        기본적으로는 오류를 콘솔에 출력합니다.
+ *        다른 방식의 동작을 원한다면 콜백을 전달할 수 있습니다.
+ *        콜백은 오류 메시지를 전달 받습니다.
+ * @return {WebGLProgram} 생성된 프로그램.
  * @memberOf module:webgl-utils
  */
 function createProgramFromSources(gl,
@@ -408,32 +405,33 @@ function createProgramFromSources(gl,
                                   opt_attribs,
                                   opt_locations,
                                   opt_errorCallback)
-</code></pre><p>where <code class="notranslate" translate="no">shaderSources</code> is an array of strings containing the GLSL source code.
-The first string in the array is the vertex shader source. The second is
-the fragment shader source.</p>
-<p>여기까지가 최소한의 WebGL boilerplate 코드 모음입니다.
-<code class="notranslate" translate="no">webgl-utils.js</code> 코드는 <a href="../../resources/webgl-utils.js">여기</a>에서 찾으실 수 있습니다.
+</code></pre><p><code class="notranslate" translate="no">shaderSources</code>는 GLSL 소스코드인 문자열의 배열입니다.
+배열의 첫 번째 문자열은 정점 셰이더의 소스코드이고 두 번째 인자는 프래그먼트 셰이더의 소스코드 입니다.</p>
+<p>여기까지가 최소한의 WebGL 보일러플레이드 코드입니다.
+<code class="notranslate" translate="no">webgl-utils.js</code> 코드는 <a href="../../resources/webgl-utils.js">여기</a>에서 보실 수 있습니다.
 좀 더 정리된 것을 원하신다면 <a href="https://twgljs.org">TWGL.js</a>를 확인해주세요.</p>
-<p>WebGL을 복잡하게 보이게 만드는 나머지 부분은 shader에 모든 입력을 설정하는 겁니다.
-이건 <a href="webgl-how-it-works.html">작동 원리</a>를 봐주세요.</p>
-<p>또한 <a href="webgl-less-code-more-fun.html">Less Code, More Fun</a>를 읽고 <a href="https://twgljs.org">TWGL</a>를 확인하는 걸 추천합니다.</p>
-<p>참고로 비슷한 이유로 추가하는 몇 가지 script가 더 있습니다.</p>
+<p>WebGL을 복잡하게 보이게 만드는 다른 부분은 셰이더에 입력 데이터를 설정하는 부분입니다.
+<a href="webgl-how-it-works.html">작동 원리</a>를 봐주세요.</p>
+<p>또한 <a href="webgl-less-code-more-fun.html">더 적은 코드로 즐겁게</a>를 읽고 <a href="https://twgljs.org">TWGL</a>를 확인해 보시길 바랍니다.</p>
+<p>참고로 비슷한 목적으로 사용되는 몇 가지 스크립트가 더 있습니다.</p>
 <ul>
 <li><p><a href="../../resources/webgl-lessons-ui.js"><code class="notranslate" translate="no">webgl-lessons-ui.js</code></a></p>
-<p>이건 슬라이더를 드래그할 때 갱신되는 표시 값이 있는 슬라이더를 설정하는 코드를 제공합니다.
-다시 이 코드를 사용해서 모든 파일을 어지럽히고 싶지 않아서 한 곳에 뒀습니다.</p>
+<p>이건 슬라이더를 드래그하면 그 값이 갱신되어 표시되는 슬라이더를 만드는 코드를 제공합니다.
+마찬가지로 이러한 코드가 파일을 복잡하게 만드는 것이 싫어서 한 곳에 모아뒀습니다.</p>
 </li>
 <li><p><a href="../../resources/lessons-helper.js"><code class="notranslate" translate="no">lessons-helper.js</code></a></p>
-<p>이 script는 webgl2fundmentals.org를 제외하고는 필요하지 않습니다.
-live editor 내부에서 사용될 때 화면에 에러 메세지 출력하는 걸 도와줍니다.</p>
+<p>이 스크립트는 webgl2fundmentals.org 이외의 곳에서는 필요하지 않습니다.
+live editor 내부에서 사용되어 화면에 에러 메세지 출력하는 걸 도와줍니다.</p>
 </li>
 <li><p><a href="../../resources/m3.js"><code class="notranslate" translate="no">m3.js</code></a></p>
-<p>이건 2d 수학 함수 묶음입니다.
-행렬 수학에 대한 첫 글을 시작했을 때는 inline으로 만들었지만 너무 복잡해져서 이후에는 일부 예제에 이 script가 포함되고 있습니다.</p>
+<p>2d 수학 함수 묶음입니다.
+행렬 수학에 대한 첫 글을 시작했을 때는 inline으로 만들기 시작했지만 
+결국 너무 길어져서 이후 예제에서는 이 스크립트를 포함하여 사용하고 있습니다.</p>
 </li>
 <li><p><a href="../../resources/m4.js"><code class="notranslate" translate="no">m4.js</code></a></p>
-<p>이건 3d 수학 함수 묶음입니다.
-3d에 대한 첫 글을 시작했을 때는 inline으로 만들었지만 너무 복잡해져서 3d에 대한 두 번째 글 이후부터 이 script가 포함되고 있습니다.</p>
+<p>3d 수학 함수 묶음입니다.
+3d에 대한 첫 글을 시작했을 때는 inline으로 만들기 시작했지만 
+결국 너무 길어져서 3d에 관한 두 번째 글부터는 이 스크립트를 포함하여 사용하고 있습니다.</p>
 </li>
 </ul>
 
@@ -562,13 +560,13 @@ live editor 내부에서 사용될 때 화면에 에러 메세지 출력하는 �
   <li>Misc</li>
         <ul>
           <li><a href="/webgl/lessons/ko/webgl-setup-and-installation.html">설정 및 설치</a></li>
-<li><a href="/webgl/lessons/ko/webgl-boilerplate.html">Boilerplate</a></li>
+<li><a href="/webgl/lessons/ko/webgl-boilerplate.html">보일러플레이트(Boilerplate)</a></li>
 <li><a href="/webgl/lessons/ko/webgl-resizing-the-canvas.html">Canvas 리사이징</a></li>
 <li><a href="/webgl/lessons/ko/webgl-animation.html">애니메이션</a></li>
 <li><a href="/webgl/lessons/ko/webgl-points-lines-triangles.html">점, 선, 삼각형</a></li>
 <li><a href="/webgl/lessons/ko/webgl-multiple-views.html">Multiple Views, Multiple Canvases</a></li>
 <li><a href="/webgl/lessons/ko/webgl-visualizing-the-camera.html">Visualizing the Camera</a></li>
-<li><a href="/webgl/lessons/ko/webgl-and-alpha.html">WebGL2 Alpha</a></li>
+<li><a href="/webgl/lessons/ko/webgl-and-alpha.html">WebGL2 알파(Alpha)</a></li>
 <li><a href="/webgl/lessons/ko/webgl-2d-vs-3d-library.html">2D vs 3D 라이브러리</a></li>
 <li><a href="/webgl/lessons/ko/webgl-anti-patterns.html">안티패턴</a></li>
 <li><a href="/webgl/lessons/ko/webgl-matrix-vs-math.html">WebGL2 행렬 vs 수학에서의 행렬</a></li>
@@ -604,8 +602,8 @@ live editor 내부에서 사용될 때 화면에 에러 메세지 출력하는 �
         <script>
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
-            var disqus_identifier = 'WebGL2 Boilerplate';
-            var disqus_title = 'WebGL2 Boilerplate';
+            var disqus_identifier = 'WebGL2 보일러플레이트(Boilerplate)';
+            var disqus_title = 'WebGL2 보일러플레이트(Boilerplate)';
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
             (function() {

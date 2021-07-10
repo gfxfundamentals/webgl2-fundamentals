@@ -270,7 +270,7 @@ function compileShader(gl, shaderSource, shaderType) {
   var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
   if (!success) {
     // Something went wrong during compilation; get the error
-    throw &quot;could not compile shader:&quot; + gl.getShaderInfoLog(shader);
+    throw (&quot;could not compile shader:&quot; + gl.getShaderInfoLog(shader));
   }
 
   return shader;
@@ -298,8 +298,8 @@ function createProgram(gl, vertexShader, fragmentShader) {
   // Check if it linked.
   var success = gl.getProgramParameter(program, gl.LINK_STATUS);
   if (!success) {
-      // something went wrong with the link
-      throw (&quot;program failed to link:&quot; + gl.getProgramInfoLog (program));
+      // something went wrong with the link; get the error
+      throw (&quot;program failed to link:&quot; + gl.getProgramInfoLog(program));
   }
 
   return program;
@@ -401,7 +401,7 @@ as they just get in the way of what that specific example is about.</p>
  *        the second the fragment shader.
  * @param {string[]} [opt_attribs] An array of attribs names.
  *        Locations will be assigned by index if not passed in
- * @param {number[]} [opt_locations] The locations for the.
+ * @param {number[]} [opt_locations] The locations for the attribs.
  *        A parallel array to opt_attribs letting you assign locations.
  * @param {module:webgl-utils.ErrorCallback} opt_errorCallback callback for errors.
  *        By default it just prints an error to the console
