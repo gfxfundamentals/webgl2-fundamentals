@@ -253,7 +253,7 @@ const positionLoc = gl.getAttribLocation(program, 'a_position');
 
 Now, we need a buffer hold the matrices at will get applied
 to the attribute. Since a buffer is best updated in one
-*chuck* we'll put all of our matrices in the same `Float32Array`
+*chunk* we'll put all of our matrices in the same `Float32Array`
 
 ```js
 // setup matrixes, one per instance
