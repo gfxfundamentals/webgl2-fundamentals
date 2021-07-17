@@ -174,6 +174,8 @@ all of the following are standard features:
 * Blend Equation MIN/MAX ([EXT_blend_minmax](https://www.khronos.org/registry/webgl/extensions/EXT_blend_minmax/))
 * Direct texture LOD access ([EXT_shader_texture_lod](https://www.khronos.org/registry/webgl/extensions/EXT_shader_texture_lod/))
 * Multiple Draw Buffers ([WEBGL_draw_buffers](https://www.khronos.org/registry/webgl/extensions/WEBGL_draw_buffers/))
+* sRGB support to textures and framebuffer objects ([EXT_sRGB](https://www.khronos.org/registry/webgl/extensions/EXT_sRGB/))
+* Any level of a texture can be attached to a framebuffer object ([OES_fbo_render_mipmap](https://www.khronos.org/registry/webgl/extensions/OES_fbo_render_mipmap/))
 * Texture access in vertex shaders
 
 ## Non-Power of 2 Texture Support
