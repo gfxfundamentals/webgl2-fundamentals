@@ -79,7 +79,7 @@ E aqui está esse exemplo
 Observe como eu coloco espaços dentro dos divs especificamente para as partes que eu queria mudar. Estou fazendo o
 pressuposto aqui que é mais rápido do que apenas usar os divs sem extensões e fazer algo como
 
-    timeNode.nodeValue = "Time " + clock.toFixed(2);
+    timeNode.nodeValue = "Time " + now.toFixed(2);
 
 Também estou usando text nodes chamando `node = document.createTextNode()` e depois `node.nodeValue = someMsg`.
 Eu também poderia usar `someElement.innerHTML = someHTML`. Isso seria mais flexível porque você poderia

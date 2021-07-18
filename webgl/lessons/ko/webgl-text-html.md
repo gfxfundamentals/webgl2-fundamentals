@@ -76,7 +76,7 @@ TOC: 텍스트 - HTML
 변경하려는 부분에 대해 div 내부에 span을 어떻게 넣었는지 확인하세요.
 여기에서는 이 방법이 span 없이 div를 사용하는 것보다 빠르다고 가정하고 있습니다.
 
-    timeNode.nodeValue = "Time " + clock.toFixed(2);
+    timeNode.nodeValue = "Time " + now.toFixed(2);
 
 또한 `node = document.createTextNode()`와 이후에 `node.nodeValue = someMsg`를 호출하여 text node를 사용하고 있습니다.
 `someElement.innerHTML = someHTML`도 사용할 수 있는데요.

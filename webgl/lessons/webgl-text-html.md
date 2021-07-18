@@ -79,7 +79,7 @@ And here's that example
 Notice how I put spans inside the divs specifically for the parts I wanted to change. I'm making the
 assumption here that that's faster than just using the divs with no spans and saying something like
 
-    timeNode.nodeValue = "Time " + clock.toFixed(2);
+    timeNode.nodeValue = "Time " + now.toFixed(2);
 
 Also I'm using text nodes by calling `node = document.createTextNode()` and later `node.nodeValue = someMsg`.
 I could also use `someElement.innerHTML = someHTML`. That would be more flexible because you could
