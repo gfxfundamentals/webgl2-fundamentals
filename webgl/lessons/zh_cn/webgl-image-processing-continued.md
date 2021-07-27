@@ -1,6 +1,6 @@
 Title: WebGL2 进一步处理图像
 Description: 怎么用 WebGL 叠加多种图像处理模式
-TOC: WebGL2 进一步处理图像
+TOC: 进一步处理图像
 
 此文上接[WebGL 图像处理](webgl-image-processing.html).
 如果还没有读过我建议你[从那里开始](webgl-image-processing.html).
