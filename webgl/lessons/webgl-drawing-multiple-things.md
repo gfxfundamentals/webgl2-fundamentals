@@ -276,6 +276,123 @@ goes in that list with actually calling the `gl.draw___` functions.
 
 {{{example url="../webgl-multiple-objects-list.html" }}}
 
+In general it's considered *best practice* to not call WebGL redundantly.
+In other words, if some state of WebGL is already set to what you need it to
+be set to then don't set it again. In that vain we could check, if the 
+shader program we need to draw the current object is the same shader program
+as the previous object then there's no need to call `gl.useProgram`. Similarly,
+if we're drawing with the same shape/geometry/vertices there's no need to call
+`gl.bindVertexArray`
+
+So, very simple optimization might look like this
+
+```js
++var lastUsedProgramInfo = null;
++var lastUsedVertexArray = null;
+
+objectsToDraw.forEach(function(object) {
+  var programInfo = object.programInfo;
+  var vertexArray = object.vertexArray;
+
++  if (programInfo !== lastUsedProgramInfo) {
++    lastUsedProgramInfo = programInfo;
+    gl.useProgram(programInfo.program);
++  }
+
+  // Setup all the needed attributes.
++  if (lastUsedVertexArray !== vertexArray) {
++    lastUsedVertexArray = vertexArray;
+    gl.bindVertexArray(vertexArray);
++  }
+
+  // Set the uniforms.
+  twgl.setUniforms(programInfo, object.uniforms);
+
+  // Draw
+  twgl.drawBufferInfo(gl, object.bufferInfo);
+});
+```
+
+This time let's draw a lot more objects. Instead of just 3 like before let's make
+the list of things to draw larger
+
+```js
+// put the shapes in an array so it's easy to pick them at random
+var shapes = [
+  { bufferInfo: sphereBufferInfo, vertexArray: sphereVAO, },
+  { bufferInfo: cubeBufferInfo,   vertexArray: cubeVAO, },
+  { bufferInfo: coneBufferInfo,   vertexArray: coneVAO, },
+];
+
+var objectsToDraw = [];
+var objects = [];
+
+// Make infos for each object for each object.
+var baseHue = rand(360);
+var numObjects = 200;
+for (var ii = 0; ii < numObjects; ++ii) {
+  // pick a shape
+  var shape = shapes[rand(shapes.length) | 0];
+
+  // make an object.
+  var object = {
+    uniforms: {
+      u_colorMult: chroma.hsv(emod(baseHue + rand(120), 360), rand(0.5, 1), rand(0.5, 1)).gl(),
+      u_matrix: m4.identity(),
+    },
+    translation: [rand(-100, 100), rand(-100, 100), rand(-150, -50)],
+    xRotationSpeed: rand(0.8, 1.2),
+    yRotationSpeed: rand(0.8, 1.2),
+  };
+  objects.push(object);
+
+  // Add it to the list of things to draw.
+  objectsToDraw.push({
+    programInfo: programInfo,
+    bufferInfo: shape.bufferInfo,
+    vertexArray: shape.vertexArray,
+    uniforms: object.uniforms,
+  });
+}
+```
+
+At render time
+
+```js
+// Compute the matrices for each object.
+objects.forEach(function(object) {
+  object.uniforms.u_matrix = computeMatrix(
+      viewProjectionMatrix,
+      object.translation,
+      object.xRotationSpeed * time,
+      object.yRotationSpeed * time);
+});
+```
+
+Then draw the objects using the loop above.
+
+{{{example url="../webgl-multiple-objects-list-optimized.html" }}}
+
+> Note: I originally cut the section above from this WebGL2 version of the article
+> [The original WebGL1 version of this article](https://webglfundamentals.org/webgl/lessons/webgl-drawing-multiple-things.html) had a section on optimization. The reason I cut it
+> is with vertex array objects I'm not so sure the optimizations matter that much.
+> In WebGL1 without vertex arrays, drawing a single object will often take
+> 9 to 16 calls to setup the attributes to draw the object. In WebGL2 all of that
+> happens at init time by setting up a vertex array per object and then at render
+> time it's a single call to `gl.bindVertexArray` per object.
+>
+> Further, in general, most WebGL apps aren't pushing the limit of drawing. They also
+> need to run across such an array of machines, from some 8yr old low end Intel
+> integrated graphics GPU up to some top end machine. The optimizations mentioned
+> in the above are unlikely to make the difference between performant
+> and not performant. Rather, to get performance requires reducing the number of
+> draw calls, for example by using [instancing](webgl-instanced-drawing.html) and
+> other similar techniques.
+>
+> The reason I added the section back in is, it was pointed out
+> in a bug report that the last sample (drawing 200 objects). Is
+> referenced in [the article on picking](webgl-picking.html).
+
 ## Drawing Transparent Things and Multiple Lists
 
 In the example above there is just one list to draw. This works because all the objects
@@ -287,7 +404,7 @@ so we want to draw the stuff in front first.
 
 Most 3D engines handle this by having 2 or more lists of objects to draw. One list for opaque things.
 Another list for transparent things. The opaque list is sorted front to back.
-The transparent list is sorted by depth. There might also be separate lists for other
+The transparent list is sorted by back to front. There might also be separate lists for other
 things like overlays or post processing effects.
 
 ## Consider using a library
@@ -313,17 +430,3 @@ arguably be separated from computing matrices. It's common to compute matrices f
 [scene graph and we'll go over that in another article](webgl-scene-graph.html).
 
 Now that we have a framework for drawing multiple objects [lets draw some text](webgl-text-html.html).
-
-<div class="webgl_bottombar">
-<h3>WebGL1 Optimization Removed</h3>
-<p>
-In WebGL 1 we didn't have vertex array objects and so
-<a href="https://webglfundamentals.org/webgl/lessons/webgl-drawing-multiple-things.html">I recommended an optimization</a>.
-Without vertex array objects we had to make 3 WebGL per attribute per model calls every time we switched geometry.
-In the example above that added up to 12 WebGL calls per model and so
-it made sense to try to avoid that by sorting models. In WebGL2 those 12 WebGL calls reduce to just one call
-<code>gl.bindVertexArray(someVertexArray)</code> and, at least in my testing I could not measure a difference
-using my recommended optimizations so I removed that section.
-</p>
-</div>
-
