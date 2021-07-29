@@ -586,23 +586,23 @@ objects.forEach(function(object) {
 
 </p>
 <blockquote>
-<p>Note: I originally cut the section above from this WebGL2 version of the article
+<p>Note: I originally cut the section above from this WebGL2 version of the article.
 <a href="https://webglfundamentals.org/webgl/lessons/webgl-drawing-multiple-things.html">The original WebGL1 version of this article</a> had a section on optimization. The reason I cut it
 is with vertex array objects I&#39;m not so sure the optimizations matter that much.
 In WebGL1 without vertex arrays, drawing a single object will often take
 9 to 16 calls to setup the attributes to draw the object. In WebGL2 all of that
 happens at init time by setting up a vertex array per object and then at render
 time it&#39;s a single call to <code class="notranslate" translate="no">gl.bindVertexArray</code> per object.</p>
-<p>Further, in general, most WebGL apps aren&#39;t pushing the limit of drawing. They also
-need to run across such an array of machines, from some 8yr old low end Intel
+<p>Further, in general, most WebGL apps aren&#39;t pushing the limit of drawing. They
+need to run across an array of machines, from some 8yr old low end Intel
 integrated graphics GPU up to some top end machine. The optimizations mentioned
-in the above are unlikely to make the difference between performant
+in the section above are unlikely to make the difference between performant
 and not performant. Rather, to get performance requires reducing the number of
 draw calls, for example by using <a href="webgl-instanced-drawing.html">instancing</a> and
 other similar techniques.</p>
 <p>The reason I added the section back in is, it was pointed out
-in a bug report that the last sample (drawing 200 objects). Is
-referenced in <a href="webgl-picking.html">the article on picking</a>.</p>
+in a bug report that the last example, drawing 200 objects, is
+referenced in <a href="webgl-picking.html">the article on picking</a>. 😅</p>
 </blockquote>
 <h2 id="drawing-transparent-things-and-multiple-lists">Drawing Transparent Things and Multiple Lists</h2>
 <p>In the example above there is just one list to draw. This works because all the objects
