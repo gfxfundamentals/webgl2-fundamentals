@@ -373,7 +373,7 @@ Then draw the objects using the loop above.
 
 {{{example url="../webgl-multiple-objects-list-optimized.html" }}}
 
-> Note: I originally cut the section above from this WebGL2 version of the article
+> Note: I originally cut the section above from this WebGL2 version of the article.
 > [The original WebGL1 version of this article](https://webglfundamentals.org/webgl/lessons/webgl-drawing-multiple-things.html) had a section on optimization. The reason I cut it
 > is with vertex array objects I'm not so sure the optimizations matter that much.
 > In WebGL1 without vertex arrays, drawing a single object will often take
@@ -381,17 +381,17 @@ Then draw the objects using the loop above.
 > happens at init time by setting up a vertex array per object and then at render
 > time it's a single call to `gl.bindVertexArray` per object.
 >
-> Further, in general, most WebGL apps aren't pushing the limit of drawing. They also
-> need to run across such an array of machines, from some 8yr old low end Intel
+> Further, in general, most WebGL apps aren't pushing the limit of drawing. They
+> need to run across an array of machines, from some 8yr old low end Intel
 > integrated graphics GPU up to some top end machine. The optimizations mentioned
-> in the above are unlikely to make the difference between performant
+> in the section above are unlikely to make the difference between performant
 > and not performant. Rather, to get performance requires reducing the number of
 > draw calls, for example by using [instancing](webgl-instanced-drawing.html) and
 > other similar techniques.
 >
 > The reason I added the section back in is, it was pointed out
-> in a bug report that the last sample (drawing 200 objects). Is
-> referenced in [the article on picking](webgl-picking.html).
+> in a bug report that the last example, drawing 200 objects, is
+> referenced in [the article on picking](webgl-picking.html). 😅
 
 ## Drawing Transparent Things and Multiple Lists
 
