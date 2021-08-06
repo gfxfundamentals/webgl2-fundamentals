@@ -86,7 +86,7 @@ Canvas 2D를 사용하는 또 다른 이유는 다른 것을 그리기 쉽기 �
     // 이전 설정으로 캔버스 복원
     ctx.restore();
 
-여기서 Canvas 2D [행렬 스택](webgl-2d-matrix-stack.html)의 translate 함수을 활용하므로, 화살표를 그릴 때 어떤 추가적인 계산도 필요하지 않습니다.
+여기서 Canvas 2D 행렬 스택의 translate 함수을 활용하므로, 화살표를 그릴 때 어떤 추가적인 계산도 필요하지 않습니다.
 원점에 그리기만 하면 `translate`가 해당 원점을 F의 모서리로 옮겨줍니다.
 
 {{{example url="../webgl-text-html-canvas2d-arrows.html" }}}
