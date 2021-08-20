@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/zh_cn/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/zh_cn/webgl-3d-lighting-point.md. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of GFXFundamentals. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,25 +36,77 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL2 3D - Point Lighting" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="How to implement point lighting in WebGL" />
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-3d-lighting-point.html" />
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL2 3D - Point Lighting" />
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-3d-lighting-point.html" />
-<meta name="twitter:description" content="How to implement point lighting in WebGL" />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="description" content="如何在 WebGL 中实现点光源">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-3d-lighting-point_zh-cn.jpg">
+
+<meta property="og:title" content="WebGL2 三维点光源">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-3d-lighting-point_zh-cn.jpg">
+<meta property="og:description" content="如何在 WebGL 中实现点光源">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-3d-lighting-point.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 三维点光源">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-3d-lighting-point.html">
+<meta name="twitter:description" content="如何在 WebGL 中实现点光源">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-3d-lighting-point_zh-cn.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-3d-lighting-point.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-3d-lighting-point_zh-cn.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-3d-lighting-point.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-3d-lighting-point.html",
+      "inLanguage":"zh-cn",
+      "name":"WebGL2 三维点光源",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-3d-lighting-point.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL2 3D - Point Lighting</title>
+<title>WebGL2 三维点光源</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-3d-lighting-point.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-3d-lighting-point.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-3d-lighting-point.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-3d-lighting-point.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-3d-lighting-point.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-3d-lighting-point.html">
+
+
+
+
 </head>
 <body>
 <div class="webgl_navbar">
@@ -177,12 +231,331 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 3D - Point Lighting</h1>
+    <h1>WebGL2 三维点光源</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>还没有简体中文版翻译哦  (~￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">欢迎翻译</a>! </p>
-<p><a href="/webgl/lessons/webgl-3d-lighting-point.html">英文原版地址</a>.</p>
+      <p>此文上接<a href="webgl-3d-lighting-directional.html">WebGL 三维方向光源</a>，
+如果没看请<a href="webgl-3d-lighting-directional.html">从那里开始</a>。</p>
+<p>上篇中说到方向光统一来自一个方向，在渲染前设置好方向。</p>
+<p>如果代替方向而是从三维空间中选一个点当作光源，
+然后在着色器中根据光源和表面位置计算光照方向的话，就是点光源了。</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example noborder" style="width: 500px; height: 400px;" src="/webgl/lessons/resources/point-lighting.html"></iframe>
+</div>
+
+</p>
+<p>如果旋转上方的表面会发现，每个点都有一个不同的<strong>面到光源</strong>的矢量，
+将这个矢量和法向量点乘后，表面上的每个点都会有一个不同的光照值。</p>
+<p>让我们实现它吧。</p>
+<p>首先需要一个光源位置</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform vec3 u_lightWorldPosition;
+</code></pre><p>然后需要计算表面的世界坐标，我们可以将位置和世界矩阵相乘得到...</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform mat4 u_world;
+
+...
+
+// 计算表面的世界坐标
+vec3 surfaceWorldPosition = (u_world * a_position).xyz;
+</code></pre><p>然后可以计算出一个从表面到光源的矢量，用来模拟之前的方向光，
+只是这次我们为表面上的每个点都计算了一个方向。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v_surfaceToLight = u_lightPosition - surfaceWorldPosition;
+</code></pre><p>这是全部的内容</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+
+in vec4 a_position;
+in vec3 a_normal;
+
++uniform vec3 u_lightWorldPosition;
+
++uniform mat4 u_world;
+uniform mat4 u_worldViewProjection;
+uniform mat4 u_worldInverseTranspose;
+
+out vec3 v_normal;
++out vec3 v_surfaceToLight;
+
+void main() {
+  // 将位置和矩阵相乘
+  gl_Position = u_worldViewProjection * a_position;
+
+  // 重定向法向量并传递给片断着色器
+  v_normal = mat3(u_worldInverseTranspose) * a_normal;
+
++  // 计算表面的世界坐标
++  vec3 surfaceWorldPosition = (u_world * a_position).xyz;
++
++  // 计算表面到光源的方向
++  // 传递给片断着色器
++  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
+}
+</code></pre><p>在片断着色器中需要将表面到光源的方向进行单位化，
+注意，虽然我们可以在顶点着色器中传递单位向量，
+但是 <code class="notranslate" translate="no">varying</code> 会进行插值再传给片断着色器，
+所以片断着色器中的向量基本上不是单位向量了。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+precision highp float;
+
+// 从顶点着色器中传入的值
+in vec3 v_normal;
++in vec3 v_surfaceToLight;
+
+-uniform vec3 u_reverseLightDirection;
+uniform vec4 u_color;
+
+// 定义一个传递到片段着色器的颜色变量
+out vec4 outColor;
+
+void main() {
+  // 由于 v_normal 是可变量，所以经过插值后不再是单位向量，
+  // 单位化后会成为单位向量
+  vec3 normal = normalize(v_normal);
+
+  vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
+
+-  float light = dot(v_normal, u_reverseLightDirection);
++  float light = dot(v_normal, surfaceToLightDirection);
+
+  outColor = u_color;
+
+  // 只将颜色部分（不包含 alpha） 和光照相乘
+  outColor.rgb *= light;
+}
+</code></pre><p>然后需要找到 <code class="notranslate" translate="no">u_world</code> 和 <code class="notranslate" translate="no">u_lightWorldPosition</code> 的位置</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">-  var reverseLightDirectionLocation =
+-      gl.getUniformLocation(program, &quot;u_reverseLightDirection&quot;);
++  var lightWorldPositionLocation =
++      gl.getUniformLocation(program, &quot;u_lightWorldPosition&quot;);
++  var worldLocation =
++      gl.getUniformLocation(program, &quot;u_world&quot;);
+</code></pre><p>设置它们</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 设置矩阵
++  gl.uniformMatrix4fv(
++      worldLocation, false,
++      worldMatrix);
+  gl.uniformMatrix4fv(
+      worldViewProjectionLocation, false,
+      worldViewProjectionMatrix);
+
+  ...
+
+-  // 设置光照方向
+-  gl.uniform3fv(reverseLightDirectionLocation, normalize([0.5, 0.7, 1]));
++  // 设置光源位置
++  gl.uniform3fv(lightWorldPositionLocation, [20, 30, 50]);
+</code></pre><p>这是结果</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-point.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-point.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>现在我们可以加一个叫做镜面高光的东西。</p>
+<p>观察现实世界中的物体，如果物体表面恰好将光线反射到你眼前，
+就会显得非常明亮，像镜子一样。</p>
+<p><img class="webgl_center" src="../resources/specular-highlights.jpg" /></p>
+<p>我们可以通过计算光线是否反射到眼前来模拟这种情况，<strong>点乘</strong>又一次起到了至关重要的作用。</p>
+<p>如何测试呢？如果入射角和反射角恰好与眼睛和和光源的夹角相同，那么光线就会反射到眼前。</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example noborder" style="width: 500px; height: 400px;" src="/webgl/lessons/resources/surface-reflection.html"></iframe>
+</div>
+
+</p>
+<p>如果我们知道了物体表面到光源的方向（刚刚已经计算过了），
+加上物体表面到视区/眼睛/相机的方向，再除以 2 得到 <code class="notranslate" translate="no">halfVector</code> 向量，
+将这个向量和法向量比较，如果方向一致，那么光线就会被反射到眼前。
+那么如何确定方向是否一致呢？用之前的<strong>点乘</strong>就可以了。1 表示相符，
+0 表示垂直，-1 表示相反。</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example noborder" style="width: 500px; height: 400px;" src="/webgl/lessons/resources/specular-lighting.html"></iframe>
+</div>
+
+</p>
+<p>所以首先我们需要传入相机位置，计算表面到相机的方向矢量，
+然后传递到片断着色器。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+
+in vec4 a_position;
+in vec3 a_normal;
+
+uniform vec3 u_lightWorldPosition;
++uniform vec3 u_viewWorldPosition;
+
+uniform mat4 u_world;
+uniform mat4 u_worldViewProjection;
+uniform mat4 u_worldInverseTranspose;
+
+varying vec3 v_normal;
+
+out vec3 v_surfaceToLight;
++out vec3 v_surfaceToView;
+
+void main() {
+  // 将位置和矩阵相乘
+  gl_Position = u_worldViewProjection * a_position;
+
+  // 重定向法向量并传递到片断着色器
+  v_normal = mat3(u_worldInverseTranspose) * a_normal;
+
+  // 计算表面的世界坐标
+  vec3 surfaceWorldPosition = (u_world * a_position).xyz;
+
+  // 计算表面到光源的方向
+  // 然后传递到片断着色器
+  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
+
++  // 计算表面到相机的方向
++  // 然后传递到片断着色器
++  v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition;
+}
+</code></pre><p>然后在片断着色器中计算表面到光源和相机之间的 <code class="notranslate" translate="no">halfVector</code>，
+将它和法向量相乘，查看光线是否直接反射到眼前。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 从顶点着色器中传入的值
+in vec3 v_normal;
+in vec3 v_surfaceToLight;
++in vec3 v_surfaceToView;
+
+uniform vec4 u_color;
+
+out vec4 outColor;
+
+void main() {
+  // 由于 v_normal 是可变量，所以经过插值后不再是单位向量，
+  // 单位化后会成为单位向量
+  vec3 normal = normalize(v_normal);
+
++  vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
++  vec3 surfaceToViewDirection = normalize(v_surfaceToView);
++  vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);
+
+  float light = dot(normal, surfaceToLightDirection);
++  float specular = dot(normal, halfVector);
+
+  outColor = u_color;
+
+  // 只将颜色部分（不包含 alpha） 和光照相乘
+  outColor.rgb *= light;
+
++  // 直接加上高光
++  outColor.rgb += specular;
+}
+</code></pre><p>最后找到 <code class="notranslate" translate="no">u_viewWorldPosition</code> 并设置它</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var lightWorldPositionLocation =
+    gl.getUniformLocation(program, &quot;u_lightWorldPosition&quot;);
++var viewWorldPositionLocation =
++    gl.getUniformLocation(program, &quot;u_viewWorldPosition&quot;);
+
+...
+
+// 计算相机矩阵
+var camera = [100, 150, 200];
+var target = [0, 35, 0];
+var up = [0, 1, 0];
+var cameraMatrix = makeLookAt(camera, target, up);
+
+...
+
++// 设置相机位置
++gl.uniform3fv(viewWorldPositionLocation, camera);
+</code></pre><p>这是结果</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-point-specular.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-point-specular.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p><strong>但，亮瞎了!</strong></p>
+<p>我们可以将点乘结果进行求幂运算来解决太亮的问题，
+它会把高光从线性变换变成指数变换。</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example noborder" style="width: 300px; height: 300px;" src="/webgl/lessons/resources/power-graph.html"></iframe>
+</div>
+
+</p>
+<p>红线越接近顶部，我们加的光照就越多，通过求幂可以将高光的部分向右移动。</p>
+<p>就把它叫做 <code class="notranslate" translate="no">shininess</code> 并加到着色器中。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform vec4 u_color;
++uniform float u_shininess;
+
+...
+
+-  float specular = dot(normal, halfVector);
++  float specular = 0.0;
++  if (light &gt; 0.0) {
++    specular = pow(dot(normal, halfVector), u_shininess);
++  }
+</code></pre><p>点乘结果有可能为负值，将赋值求幂有可能会得到 undefined 的结果，
+所以我们只将点乘结果为正的部分进行计算，其他部分设置为 0.0。</p>
+<p>当然还要找到亮度的位置并设置它</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+var shininessLocation = gl.getUniformLocation(program, &quot;u_shininess&quot;);
+
+...
+
+// 设置亮度
+gl.uniform1f(shininessLocation, shininess);
+</code></pre><p>这是结果</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-point-specular-power.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-point-specular-power.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>最后想说的是光的颜色。</p>
+<p>在此之前我们都是将 <code class="notranslate" translate="no">light</code> 和 F 的颜色直接相乘，
+如果想要有色光也可以为光照提供颜色。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform vec4 u_color;
+uniform float u_shininess;
++uniform vec3 u_lightColor;
++uniform vec3 u_specularColor;
+
+...
+
+  // 只将颜色部分（不包含 alpha） 和光照相乘
+*  outColor.rgb *= light * u_lightColor;
+
+  // 直接和高光相加
+*  outColor.rgb += specular * u_specularColor;
+}
+</code></pre><p>然后</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+  var lightColorLocation =
++      gl.getUniformLocation(program, &quot;u_lightColor&quot;);
++  var specularColorLocation =
++      gl.getUniformLocation(program, &quot;u_specularColor&quot;);
+</code></pre><p>和</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+  // 设置光照颜色
++  gl.uniform3fv(lightColorLocation, normalize([1, 0.6, 0.6]));  // red light
++  // 设置高光颜色
++  gl.uniform3fv(specularColorLocation, normalize([1, 0.6, 0.6]));  // red light
+</code></pre><p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-point-color.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-point-color.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>接下来是 <a href="webgl-3d-lighting-spot.html">聚光灯</a>.</p>
+<div class="webgl_bottombar">
+<h3>为什么 <code class="notranslate" translate="no">pow(negative, power)</code> 是 undefined?</h3>
+<p>它是什么意思?</p>
+<div class="webgl_center"><pre class="glocal-center-content">pow(5, 2)</pre></div>
+<p>你可以当作</p>
+<div class="webgl_center"><pre class="glocal-center-content">5 * 5 = 25</pre></div>
+<p>然后</p>
+<div class="webgl_center"><pre class="glocal-center-content">pow(5, 3)</pre></div>
+<p>可以看作是</p>
+<div class="webgl_center"><pre class="glocal-center-content">5 * 5 * 5 = 125</pre></div>
+<p>那么</p>
+<div class="webgl_center"><pre class="glocal-center-content">pow(-5, 2)</pre></div>
+<p>就是</p>
+<div class="webgl_center"><pre class="glocal-center-content">-5 * -5 = 25</pre></div>
+<p>然后</p>
+<div class="webgl_center"><pre class="glocal-center-content">pow(-5, 3)</pre></div>
+<p>就成为</p>
+<div class="webgl_center"><pre class="glocal-center-content">-5 * -5 * -5 = -125</pre></div>
+<p>你可能知道负数和负数相乘就会变成正数，再乘以负数就会变成负数。</p>
+<p>那么这是什么意思呢?</p>
+<div class="webgl_center"><pre class="glocal-center-content">pow(-5, 2.5)</pre></div>
+<p>你如何决定这是正数还是负数？那是 <a href="https://betterexplained.com/articles/a-visual-intuitive-guide-to-imaginary-numbers/">虚数</a>的领域。</p>
+</div>
 
     </div>
     <div class="lesson-sidebar">
@@ -196,7 +569,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>基础概念</li>
+        <div id="toc">
+          <ul>  <li>基础概念</li>
         <ul>
           <li><a href="/webgl/lessons/zh_cn/webgl-getting-webgl2.html">怎样使用WebGL2</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-fundamentals.html">基本原理</a></li>
@@ -231,9 +605,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </ul>
   <li>光照</li>
         <ul>
-          <li><a href="/webgl/lessons/zh_cn/webgl-3d-lighting-directional.html">Directional Lighting</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-3d-lighting-point.html">Point Lighting</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-3d-lighting-spot.html">Spot Lighting</a></li>
+          <li><a href="/webgl/lessons/zh_cn/webgl-3d-lighting-directional.html">三维方向光源</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-3d-lighting-point.html">点光源</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-3d-lighting-spot.html">聚光灯</a></li>
         </ul>
   <li>组织和重构</li>
         <ul>
@@ -339,13 +713,47 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://twgljs.org">TWGL，一个轻量级WebGL辅助库</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+    <div>有意见或建议? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">在GitHub上提issue</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 三维点光源';
+            var disqus_title = 'WebGL2 三维点光源';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: "感谢 <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>的 <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} 个贡献</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 <script>
 (function() {
   if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
