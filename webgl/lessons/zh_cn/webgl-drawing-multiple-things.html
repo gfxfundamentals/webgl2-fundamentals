@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/zh_cn/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/zh_cn/webgl-drawing-multiple-things.md. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of GFXFundamentals. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,25 +36,77 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL2 - Drawing Multiple Things" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="How to draw multiple different kinds of things in WebGL" />
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-drawing-multiple-things.html" />
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL2 - Drawing Multiple Things" />
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-drawing-multiple-things.html" />
-<meta name="twitter:description" content="How to draw multiple different kinds of things in WebGL" />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="description" content="如何使用 WebGL 绘制多个物体">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-drawing-multiple-things_zh-cn.jpg">
+
+<meta property="og:title" content="WebGL2 - 绘制多个物体">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-drawing-multiple-things_zh-cn.jpg">
+<meta property="og:description" content="如何使用 WebGL 绘制多个物体">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-drawing-multiple-things.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 - 绘制多个物体">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-drawing-multiple-things.html">
+<meta name="twitter:description" content="如何使用 WebGL 绘制多个物体">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-drawing-multiple-things_zh-cn.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-drawing-multiple-things.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-drawing-multiple-things_zh-cn.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-drawing-multiple-things.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-drawing-multiple-things.html",
+      "inLanguage":"zh-cn",
+      "name":"WebGL2 - 绘制多个物体",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-drawing-multiple-things.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL2 - Drawing Multiple Things</title>
+<title>WebGL2 - 绘制多个物体</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-drawing-multiple-things.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-drawing-multiple-things.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-drawing-multiple-things.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-drawing-multiple-things.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-drawing-multiple-things.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-drawing-multiple-things.html">
+
+
+
+
 </head>
 <body>
 <div class="webgl_navbar">
@@ -177,12 +231,381 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 - Drawing Multiple Things</h1>
+    <h1>WebGL2 - 绘制多个物体</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>还没有简体中文版翻译哦  (~￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">欢迎翻译</a>! </p>
-<p><a href="/webgl/lessons/webgl-drawing-multiple-things.html">英文原版地址</a>.</p>
+      <p>此文上接<a href="webgl-fundamentals.html">一系列 WebGL 相关文章</a>，
+如果没读请从那里开始。</p>
+<p>学到 WebGL 的一些基础以后，面临的一个问题可能是如何绘制多个物体。</p>
+<p>这里有一些特别的地方你需要提前了解，WebGL 就像是一个方法，
+但不同于一般的方法直接传递参数，它需要调用一些方法去设置状态，
+最后用某个方法执行绘制，并使用之前设置的状态。你在写代码时可能会用这种形式的方法</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawCircle(centerX, centerY, radius, color) { ... }
+</code></pre><p>或者用这种形式的方法</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var centerX;
+var centerY;
+var radius;
+var color;
+
+function setCenter(x, y) {
+   centerX = x;
+   centerY = y;
+}
+
+function setRadius(r) {
+   radius = r;
+}
+
+function setColor(c) {
+   color = c;
+}
+
+function drawCircle() {
+   ...
+}
+</code></pre><p>WebGL 使用的是后一种形式，例如 <code class="notranslate" translate="no">gl.createBuffer</code>,
+<code class="notranslate" translate="no">gl.bufferData</code>, <code class="notranslate" translate="no">gl.createTexture</code>, 和 <code class="notranslate" translate="no">gl.texImage2D</code>
+方法让你上传缓冲（顶点）或者纹理（颜色等）数据，
+<code class="notranslate" translate="no">gl.createProgram</code>, <code class="notranslate" translate="no">gl.createShader</code>, <code class="notranslate" translate="no">gl.compileProgram</code>, 和
+<code class="notranslate" translate="no">gl.linkProgram</code> 让你创建自己的 GLSL 着色器，
+剩下的所有方法几乎都是设置全局变量或者最终方法 <code class="notranslate" translate="no">gl.drawArrays</code> 或 <code class="notranslate" translate="no">gl.drawElements</code>
+需要的<strong>状态</strong>。</p>
+<p>清楚这个以后，WebGL 应用基本都遵循以下结构</p>
+<p>初始化阶段</p>
+<ul>
+<li>创建所有着色器和程序并寻找参数位置</li>
+<li>创建缓冲并上传顶点数据</li>
+<li>为您要绘制的每个事物创建一个顶点数组<ul>
+<li>为每个属性调用 <code class="notranslate" translate="no">gl.bindBuffer</code>, <code class="notranslate" translate="no">gl.vertexAttribPointer</code>, <code class="notranslate" translate="no">gl.enableVertexAttribArray</code></li>
+<li>绑定索引到 <code class="notranslate" translate="no">gl.ELEMENT_ARRAY_BUFFER</code></li>
+</ul>
+</li>
+<li>创建纹理并上传纹理数据</li>
+</ul>
+<p>渲染阶段</p>
+<ul>
+<li>清空并设置视图和其他全局状态（开启深度检测，剔除等等）</li>
+<li>对于想要绘制的每个物体<ul>
+<li>调用 <code class="notranslate" translate="no">gl.useProgram</code> 使用需要的程序</li>
+<li>为物体绑定顶点数组<ul>
+<li>调用 <code class="notranslate" translate="no">gl.bindVertexArray</code></li>
+</ul>
+</li>
+<li>设置物体的全局变量<ul>
+<li>为每个全局变量调用 <code class="notranslate" translate="no">gl.uniformXXX</code></li>
+<li>调用 <code class="notranslate" translate="no">gl.activeTexture</code> 和 <code class="notranslate" translate="no">gl.bindTexture</code> 设置纹理到纹理单元</li>
+</ul>
+</li>
+<li>调用 <code class="notranslate" translate="no">gl.drawArrays</code> 或 <code class="notranslate" translate="no">gl.drawElements</code></li>
+</ul>
+</li>
+</ul>
+<p>基本上就是这些，详细情况取决于你的实际目的和代码组织情况。</p>
+<p>有的事情例如上传纹理数据（甚至时顶点数据）可能遇到异步，
+你就需要等所有资源下载完成后才能开始。</p>
+<p>让我们来做一个简单的应用，绘制三个物体，一个立方体，一个球体，一个椎体。</p>
+<p>我不会详细介绍如何计算出立方体，球体和椎体数据，
+假设有方法能够返回<a href="webgl-less-code-more-fun.html">上篇文章中的 bufferInfo 对象</a>.</p>
+<p>这是代码，着色器是<a href="webgl-3d-perspective.html">透视示例</a>中的简单的着色器，
+新添加了一个 <code class="notranslate" translate="no">u_colorMult</code> 全局变量和顶点颜色相乘。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+precision highp float;
+
+// 从顶点着色器中传入的值
+in vec4 v_color;
+
++uniform vec4 u_colorMult;
+
+out vec4 outColor;
+
+void main() {
+*   outColor = v_color * u_colorMult;
+}
+</code></pre><p>初始化阶段</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 每个物体需要的全局变量
+var sphereUniforms = {
+  u_colorMult: [0.5, 1, 0.5, 1],
+  u_matrix: m4.identity(),
+};
+var cubeUniforms = {
+  u_colorMult: [1, 0.5, 0.5, 1],
+  u_matrix: m4.identity(),
+};
+var coneUniforms = {
+  u_colorMult: [0.5, 0.5, 1, 1],
+  u_matrix: m4.identity(),
+};
+
+// 每个物体的平移量
+var sphereTranslation = [  0, 0, 0];
+var cubeTranslation   = [-40, 0, 0];
+var coneTranslation   = [ 40, 0, 0];
+</code></pre><p>绘制阶段</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var sphereXRotation =  time;
+var sphereYRotation =  time;
+var cubeXRotation   = -time;
+var cubeYRotation   =  time;
+var coneXRotation   =  time;
+var coneYRotation   = -time;
+
+// ------ 绘制球体 --------
+
+gl.useProgram(programInfo.program);
+
+// 设置所需的属性变量
+gl.bindVertexArray(sphereVAO);
+
+sphereUniforms.u_matrix = computeMatrix(
+    viewProjectionMatrix,
+    sphereTranslation,
+    sphereXRotation,
+    sphereYRotation);
+
+// 设置刚才计算出的全局变量
+twgl.setUniforms(programInfo, sphereUniforms);
+
+twgl.drawBufferInfo(gl, sphereBufferInfo);
+
+// ------ 绘制立方体 --------
+
+// 设置所需的属性变量
+gl.bindVertexArray(cubeVAO);
+
+cubeUniforms.u_matrix = computeMatrix(
+    viewProjectionMatrix,
+    cubeTranslation,
+    cubeXRotation,
+    cubeYRotation);
+
+// 设置刚才计算出的全局变量
+twgl.setUniforms(programInfo, cubeUniforms);
+
+twgl.drawBufferInfo(gl, cubeBufferInfo);
+
+// ------ 绘制椎体 --------
+
+// 设置所需的属性变量
+gl.bindVertexArray(coneVAO);
+
+coneUniforms.u_matrix = computeMatrix(
+    viewProjectionMatrix,
+    coneTranslation,
+    coneXRotation,
+    coneYRotation);
+
+// 设置刚才计算出的全局变量
+twgl.setUniforms(programInfo, coneUniforms);
+
+twgl.drawBufferInfo(gl, coneBufferInfo);
+</code></pre><p>这是结果</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-objects-manual.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-objects-manual.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>需要注意的是，由于我们只有一个程序，所以只调用了一次 <code class="notranslate" translate="no">gl.useProgram</code>，
+如果我们有不同的着色程序，则需要在使用前调用 <code class="notranslate" translate="no">gl.useProgram</code>。</p>
+<p>这还有一个值得简化的地方，将这四个相关的事情组合到一起。</p>
+<ol>
+<li>着色程序（和它的全局变量以及属性 info)</li>
+<li>顶点数组 (包含属性设置)</li>
+<li>绘制物体所需程序的全局变量</li>
+<li>传递给 gl.drawXXX 的计数以及是否调用 gl.drawArrays 或 gl.drawElements</li>
+</ol>
+<p>简单的简化后制作一个序列对象，将四个属性放在其中</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var objectsToDraw = [
+  {
+    programInfo: programInfo,
+    bufferInfo: sphereBufferInfo,
+    vertexArray: sphereVAO,
+    uniforms: sphereUniforms,
+  },
+  {
+    programInfo: programInfo,
+    bufferInfo: cubeBufferInfo,
+    vertexArray: cubeVAO,
+    uniforms: cubeUniforms,
+  },
+  {
+    programInfo: programInfo,
+    bufferInfo: coneBufferInfo,
+    vertexArray: coneVAO,
+    uniforms: coneUniforms,
+  },
+];
+</code></pre><p>绘制的时候仍然需要更新矩阵</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var sphereXRotation =  time;
+var sphereYRotation =  time;
+var cubeXRotation   = -time;
+var cubeYRotation   =  time;
+var coneXRotation   =  time;
+var coneYRotation   = -time;
+
+// 为每个物体计算矩阵
+sphereUniforms.u_matrix = computeMatrix(
+    viewMatrix,
+    projectionMatrix,
+    sphereTranslation,
+    sphereXRotation,
+    sphereYRotation);
+
+cubeUniforms.u_matrix = computeMatrix(
+    viewMatrix,
+    projectionMatrix,
+    cubeTranslation,
+    cubeXRotation,
+    cubeYRotation);
+
+coneUniforms.u_matrix = computeMatrix(
+    viewMatrix,
+    projectionMatrix,
+    coneTranslation,
+    coneXRotation,
+    coneYRotation);
+</code></pre><p>但是绘制代码就会变成一个简单的循环</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// ------ 绘制几何体 --------
+
+objectsToDraw.forEach(function(object) {
+  var programInfo = object.programInfo;
+
+  gl.useProgram(programInfo.program);
+
+  // 设置所需的属性
+  gl.bindVertexArray(object.vertexArray);
+
+  // 设置全局变量
+  twgl.setUniforms(programInfo, object.uniforms);
+
+  // 绘制
+  twgl.drawBufferInfo(gl, bufferInfo);
+});
+</code></pre><p>理论上这就是大多数现有三维引擎的主要渲染循环。
+其他地方的某些代码控制 <code class="notranslate" translate="no">objectsToDraw</code> 列表中的对象，他们需要的选项数量可能更多，但大多数人都将计算列表中的对象和实际调用 <code class="notranslate" translate="no">gl.draw___</code> 函数分开</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-objects-list.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-objects-list.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>一般来说， <em>最好的做法</em> 是不重复调用 WebGL。
+换句话说，如果 WebGL 的某些状态已经设置为您需要设置的状态，则不要再次设置它。在这种情况下，我们可以检查，如果我们需要绘制当前对象的着色器程序与前一个对象的着色器程序相同，则无需调用<code class="notranslate" translate="no">gl.useProgram</code>。同样，如果我们使用相同的形状/几何体/顶点，则无需调用 <code class="notranslate" translate="no">gl.bindVertexArray</code></p>
+<p>所以，简单的优化后可能像这样</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">+var lastUsedProgramInfo = null;
++var lastUsedVertexArray = null;
+
+objectsToDraw.forEach(function(object) {
+  var programInfo = object.programInfo;
+  var vertexArray = object.vertexArray;
+
++  if (programInfo !== lastUsedProgramInfo) {
++    lastUsedProgramInfo = programInfo;
+    gl.useProgram(programInfo.program);
++  }
+
+  // 设置所需的属性
++  if (lastUsedVertexArray !== vertexArray) {
++    lastUsedVertexArray = vertexArray;
+    gl.bindVertexArray(vertexArray);
++  }
+
+  // 设置全局变量
+  twgl.setUniforms(programInfo, object.uniforms);
+
+  // 绘制
+  twgl.drawBufferInfo(gl, object.bufferInfo);
+});
+</code></pre>
+<p>这次我们多绘制一些物体，用包含更多物体的序列代替之前的三个物体。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// 将图形放在数组中以便随机抽取
+var shapes = [
+    { bufferInfo: sphereBufferInfo, vertexArray: sphereVAO },
+    { bufferInfo: cubeBufferInfo, vertexArray: cubeVAO },
+    { bufferInfo: coneBufferInfo, vertexArray: coneVAO }
+]
+
+var objectsToDraw = []
+var objects = []
+
+// 创建每个物体的信息
+var baseHue = rand(360)
+var numObjects = 200
+for (var ii = 0; ii &lt; numObjects; ++ii) {
+    // 选择一个形状
+    var shape = shapes[rand(shapes.length) | 0]
+
+    // 创建一个物体
+    var object = {
+        uniforms: {
+            u_colorMult: chroma
+                .hsv(emod(baseHue + rand(120), 360), rand(0.5, 1), rand(0.5, 1))
+                .gl(),
+            u_matrix: m4.identity()
+        },
+        translation: [rand(-100, 100), rand(-100, 100), rand(-150, -50)],
+        xRotationSpeed: rand(0.8, 1.2),
+        yRotationSpeed: rand(0.8, 1.2)
+    }
+    objects.push(object)
+
+    // 添加到绘制数组中
+    objectsToDraw.push({
+        programInfo: programInfo,
+        bufferInfo: shape.bufferInfo,
+        vertexArray: shape.vertexArray,
+        uniforms: object.uniforms
+    })
+}
+</code></pre>
+<p>渲染时</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// 计算每个物体的矩阵
+objects.forEach(function (object) {
+    object.uniforms.u_matrix = computeMatrix(
+        viewProjectionMatrix,
+        object.translation,
+        object.xRotationSpeed * time,
+        object.yRotationSpeed * time
+    )
+})
+</code></pre>
+<p>然后在上方的循环中绘制所有物体。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-objects-list-optimized.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-objects-list-optimized.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<blockquote>
+<p>注意：我最初从这篇文章的 WebGL2 版本中去除了上面的部分。
+<a href="https://webglfundamentals.org/webgl/lessons/webgl-drawing-multiple-things.html">这篇文章的 WebGL1 版本</a> 有一个关于优化的部分。 去除它的原因是
+我不太确定顶点数组对象的优化有那么重要。
+在 WebGL1 中没有顶点数组，绘制一个物体通常需要 9 到 16 次调用来设置绘制对象的属性。
+在 WebGL2 中，所有这些都发生在初始化时，通过为每个对象设置一个顶点数组，然后在渲染时每个对象调用 gl.bindVertexArray。</p>
+<p>此外，一般来说，大多数 WebGL 应用程序并没有突破绘图的极限。他们需要在一系列机器上运行，从一些 8 年前的低端英特尔集成图形 GPU 到一些高端机器。 上一节中提到的优化不太可能在高性能和非高性能之间产生差异。相反，要获得性能需要减少绘制调用的数量，例如通过使用 <a href="webgl-instanced-drawing.html">实例化</a> 和其他类似技术。</p>
+<p>我重新添加该部分的原因是，
+在最后一个示例的错误报告中，绘制 200 个对象， 在<a href="webgl-picking.html">关于 picking 的文章</a>中被引用了 😅</p>
+</blockquote>
+<h2 id="-">绘制透明物体和多个列表</h2>
+<p>在上面的例子中，只有一个列表要绘制。 因为所有的对象都是不透明的。如果我们要绘制透明对象，则必须从后到前绘制，最远的物体首先绘制。 另一方面，为了速度, 对于不透明的物体我们要从前往后绘制，这是因为 DEPTH_TEST 意味着在其他物体后面的任何像素 GPU 将不执行片段着色器。所以我们要先把前面的东西画出来。</p>
+<p>大多数 3D 引擎通过绘制 2 个或更多对象列表来处理此问题。 一个列表给不透明的物体。
+其他列表是给透明物体的。 不透明列表从前到后排序。透明列表按从后到前排序。可能还有其他内容的单独列表，例如叠加或后期处理效果。</p>
+<h2 id="-">考虑使用库</h2>
+<p>需要特别注意的是着色器和图形往往一一对应，
+例如一个需要法向量的着色器就不能用在没有法向量的几何体上，
+同样的一个需要纹理的着色器在没有纹理时就无法正常运行。</p>
+<p>这就是需要选择一个优质的三维引擎（例如<a href="https://threejs.org">Three.js</a>）的原因之一，
+因为它可以帮你解决这些问题。你创建几何体时只需要告诉 three.js 你想如何渲染，
+它就会在运行时为你创建你需要的着色器。几乎所有的三维引擎，从 Unity3D 到 Unreal
+到 Source 到 Crytek，有些在离线时创建着色器，但是重要的是它们都会<strong>创建</strong>着色器。</p>
+<p>当然，你阅读这些文章的目的是想知道底层原理，自己写所有的东西非常好并且也很有趣，
+但是需要注意的是<a href="webgl-2d-vs-3d-library.html">WebGL 是非常底层的</a>，
+所以如果你想自己做所有的东西的话，要做的东西很多，通常包括着色器生成器，
+因为不同的特性需要不同的着色器。</p>
+<p>你可能注意到我并没有把 <code class="notranslate" translate="no">computeMatrix</code> 放在循环中，
+那是因为渲染理论上应该和矩阵计算分离，通常情况下矩阵计算放在接下来要讲的
+<a href="webgl-scene-graph.html">场景图</a>中。</p>
+<p>现在我们有了绘制多个物体的框架，就可以<a href="webgl-text-html.html">绘制一些文字了</a>。</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -196,7 +619,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>基础概念</li>
+        <div id="toc">
+          <ul>  <li>基础概念</li>
         <ul>
           <li><a href="/webgl/lessons/zh_cn/webgl-getting-webgl2.html">怎样使用WebGL2</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-fundamentals.html">基本原理</a></li>
@@ -237,9 +661,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </ul>
   <li>组织和重构</li>
         <ul>
-          <li><a href="/webgl/lessons/zh_cn/webgl-less-code-more-fun.html">Less Code, More Fun</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-drawing-multiple-things.html">Drawing Multiple Things</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-scene-graph.html">Scene Graphs</a></li>
+          <li><a href="/webgl/lessons/zh_cn/webgl-less-code-more-fun.html">码少趣多</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-drawing-multiple-things.html">绘制多个物体</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-scene-graph.html">场景图</a></li>
         </ul>
   <li>几何</li>
         <ul>
@@ -339,13 +763,47 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://twgljs.org">TWGL，一个轻量级WebGL辅助库</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+    <div>有意见或建议? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">在GitHub上提issue</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 - 绘制多个物体';
+            var disqus_title = 'WebGL2 - 绘制多个物体';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: "感谢 <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>的 <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} 个贡献</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 <script>
 (function() {
   if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
