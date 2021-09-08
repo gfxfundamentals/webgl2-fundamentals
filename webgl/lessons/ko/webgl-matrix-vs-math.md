@@ -134,7 +134,7 @@ const some4x4TranslationMatrix = [
 Z축을 얻어오려면 아래 코드를 사용하면 됩니다.
 
 ```js
-const zAxis = some4x4Matrix.slice(9, 11);
+const zAxis = some4x4Matrix.slice(8, 11);
 ```
 
 C++에 익숙하시다면, OpenGL 자체는 4x4 행렬의 16개의 값이 연속된 메모리에 저장되어 있어야 하므로, C++에서는 `Vec4` 구조체나 클래스를 만들어도 되고,
