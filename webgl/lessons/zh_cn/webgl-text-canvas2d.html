@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/zh_cn/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/zh_cn/webgl-text-canvas2d.md. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of GFXFundamentals. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,25 +36,77 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL2 Text - Canvas 2D" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="How to display text using a 2D canvas that is in sync with WebGL" />
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-text-canvas2d.html" />
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL2 Text - Canvas 2D" />
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-text-canvas2d.html" />
-<meta name="twitter:description" content="How to display text using a 2D canvas that is in sync with WebGL" />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="description" content="如何使用使用二维画布显示与 WebGL 同步的文字">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-text-canvas2d_zh-cn.jpg">
+
+<meta property="og:title" content="WebGL2 文字 - 二维 Canvas">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-text-canvas2d_zh-cn.jpg">
+<meta property="og:description" content="如何使用使用二维画布显示与 WebGL 同步的文字">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-text-canvas2d.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 文字 - 二维 Canvas">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-text-canvas2d.html">
+<meta name="twitter:description" content="如何使用使用二维画布显示与 WebGL 同步的文字">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-text-canvas2d_zh-cn.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-text-canvas2d.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-text-canvas2d_zh-cn.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-text-canvas2d.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-text-canvas2d.html",
+      "inLanguage":"zh-cn",
+      "name":"WebGL2 文字 - 二维 Canvas",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-text-canvas2d.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL2 Text - Canvas 2D</title>
+<title>WebGL2 文字 - 二维 Canvas</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-text-canvas2d.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-text-canvas2d.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-text-canvas2d.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-text-canvas2d.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-text-canvas2d.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-text-canvas2d.html">
+
+
+
+
 </head>
 <body>
 <div class="webgl_navbar">
@@ -177,12 +231,86 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 Text - Canvas 2D</h1>
+    <h1>WebGL2 文字 - 二维 Canvas</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>还没有简体中文版翻译哦  (~￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">欢迎翻译</a>! </p>
-<p><a href="/webgl/lessons/webgl-text-canvas2d.html">英文原版地址</a>.</p>
+      <p>此文上接<a href="webgl-text-html.html">WebGL 文字绘制</a>，如果没读建议从那里开始。</p>
+<p>除了使用 HTML 元素显示文字，还可以使用一个新画布，但是使用的是二维上下文.
+我只是猜测它会比直接使用 HTML 元素要快一些,没有证明过。当然也会少一些灵活性，
+比如不能使用好用的 CSS 样式了，但是也不需要创建并保持 HTML 元素了。</p>
+<p>和其他例子一样我们先创建一个容器，但是这次放两个画布进去。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;div class=&quot;container&quot;&gt;
+  &lt;canvas id=&quot;canvas&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
+  &lt;canvas id=&quot;text&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
+&lt;/div&gt;
+</code></pre><p>接下来设置 CSS 让画布成为覆盖层</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">.container {
+    position: relative;
+}
+
+#text {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 10;
+}
+</code></pre><p>在初始化时找到文字画布并创建一个二维上下文。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 找到画布
+var textCanvas = document.querySelector(&quot;#text&quot;);
+
+// 创建一个二维上下文
+var ctx = textCanvas.getContext(&quot;2d&quot;);
+</code></pre><p>渲染时，像 WebGL 一样，需要每帧都清空二维画布。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawScene() {
+    ...
+
+    // 清空二维画布
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+</code></pre><p>然后只调用 <code class="notranslate" translate="no">fillText</code> 绘制文字</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    ctx.fillText(someMsg, pixelX, pixelY);
+</code></pre><p>这是结果</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-canvas2d.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-canvas2d.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>为什么文字变小了？因为那是二维画布的默认文字大小，如果你想使用其它大小可以
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_text">看看二维画布 API</a>。</p>
+<p>使用二维画布的另一个原因是可以很容易的绘制其他东西，例如添加一个箭头</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 绘制箭头和文字
+
+// 保存画布设置
+ctx.save();
+
+// 将画布原点移动到 F 的正面右上角
+ctx.translate(pixelX, pixelY);
+
+// 绘制箭头
+ctx.beginPath();
+ctx.moveTo(10, 5);
+ctx.lineTo(0, 0);
+ctx.lineTo(5, 10);
+ctx.moveTo(0, 0);
+ctx.lineTo(15, 15);
+ctx.stroke();
+
+// 绘制文字
+ctx.fillText(someMessage, 20, 20);
+
+// 还原画布设置
+ctx.restore();
+</code></pre><p>我们之前讲过使用二维画布的平移方法，
+不需要在绘制箭头的时候做其他运算了。我们只是假设绘制在原点，并且需要把原点移动到 F 的右上角。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-canvas2d-arrows.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-canvas2d-arrows.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>涉及到二维画布的使用，可以<a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">查看二维画布 API</a>
+获得更多信息。接下来我们将<a href="webgl-text-texture.html">用 WebGL 渲染文字</a>.</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -196,7 +324,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>基础概念</li>
+        <div id="toc">
+          <ul>  <li>基础概念</li>
         <ul>
           <li><a href="/webgl/lessons/zh_cn/webgl-getting-webgl2.html">怎样使用WebGL2</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-fundamentals.html">基本原理</a></li>
@@ -283,10 +412,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </ul>
   <li>文字</li>
         <ul>
-          <li><a href="/webgl/lessons/zh_cn/webgl-text-html.html">Text - HTML</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-text-canvas2d.html">Text - Canvas 2D</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-text-texture.html">Text - Using a Texture</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-text-glyphs.html">Text - Using a Glyph Texture</a></li>
+          <li><a href="/webgl/lessons/zh_cn/webgl-text-html.html">文字 - HTML</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-text-canvas2d.html">文字 - 二维 Canvas</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-text-texture.html">文字 - 使用纹理</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-text-glyphs.html">文字 - 使用字形纹理</a></li>
         </ul>
   <li>GPGPU</li>
         <ul>
@@ -339,13 +468,47 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://twgljs.org">TWGL，一个轻量级WebGL辅助库</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+    <div>有意见或建议? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">在GitHub上提issue</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 文字 - 二维 Canvas';
+            var disqus_title = 'WebGL2 文字 - 二维 Canvas';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: "感谢 <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>的 <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} 个贡献</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 <script>
 (function() {
   if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
