@@ -18,9 +18,7 @@ Then it's just up to you to draw something creative.
 
 note some troubles you'll likely run into.
 
-1.  At this point in time (2017/1/3) neither Android Chrome nor iOS Safari support analysing streaming audio data. Instead you have to load the entire song. [Here'a a library that tries to abstract that a little](https://github.com/greggman/audiostreamsource.js)
-
-2. <s>On Mobile</s> you can not automatically play audio. You must start the audio inside an input event based on user input like `'click'` or `'touchstart'`.
+1. You can not automatically play audio. You must start the audio inside an input event based on user input like `'click'` or `'touchstart'`.
 
 3.  As pointed out in the sample you can only analyse audio if the source is either from the same domain OR you ask for CORS permission and the server gives permission. AFAIK only Soundcloud gives permission and it's on a per song basis. It's up to the individual artist's song's settings whether or not audio analysis is allowed for a particular song.
 
@@ -33,6 +31,8 @@ note some troubles you'll likely run into.
         audio.crossOrigin = "anonymous";
 
     That basically says "ask the server for permission for user 'anonymous'". The server can give permission or not. It's up to the server. This includes asking even the server on the same domain which means if you're going to request a song on the same domain you need to either (a) remove the line above or (b) configure your server to give CORS permission. Most servers by default do not give CORS permission so if you add that line, even if the server is the same domain, if it does not give CORS permission then trying to analyse the audio will fail.
+
+    For a soundcloud example, see [here](https://github.com/greggman/soundcloud-audio-reactive-example).
 
 ---
 

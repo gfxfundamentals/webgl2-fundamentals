@@ -300,31 +300,3 @@ undefined. The scissor always clips pixels so turn on the scissor test and set
 the scissor size if you set the viewport smaller than the thing you're drawing
 to and you're drawing LINES or POINTS.
 
-## Safari Bugs
-
-Safari has more WebGL bugs than any other modern browser and Apple seems to
-have zero interest in fixing any of them.
-
-Here's a short list of some bugs unfixed for years
-
-* toDataURL (and just guessing toBlob) returns upside down result if premultipliedAlpha = false (4yrs old)
-[bug](https://bugs.webkit.org/show_bug.cgi?id=156129)
-
-* preserveDrawingBuffer=true wrongly double-buffers on current iOS (4yrs old)
-[bug](https://bugs.webkit.org/show_bug.cgi?id=159608)
-
-* `OES_texture_float` implementation must support non-ArrayBufferView entry points (10yrs old)
-[bug](https://bugs.webkit.org/show_bug.cgi?id=51015)
-
-* readPixels generates INVALID_ENUM for RGBA/UNSIGNED_BYTE (3yrs old)
-[bug](https://bugs.webkit.org/show_bug.cgi?id=170341)
-
-* Changes to a WebGL canvas and to layer transforms are not always synchronized (3yrs old)
-[bug](https://bugs.webkit.org/show_bug.cgi?id=172969)
-
-* PNG textures with zero alpha channel have wrong rgb colors (4yrs old)
-[bug](https://bugs.webkit.org/show_bug.cgi?id=165297)
-
-* Safari doesn't handle common no attribute use case (1yr old)
-[bug](https://bugs.webkit.org/show_bug.cgi?id=197592)
-

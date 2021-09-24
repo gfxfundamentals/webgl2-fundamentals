@@ -47,7 +47,7 @@ Got any recommendations?
 
 Unfortunately I think most answers will be primarily opinion based.
 
-The first question is why support both? If your idea runs fine on WebGL1 then just use WebGL1. If you absolutely must have WebGL2 features then use WebGL2 and realize that many devices don't support WebGL2 and that Safari doesn't yet support WebGL2 (September 2020) <s>and may never support WebGL2</s> though it appears to finally be arriving
+The first question is why support both? If your idea runs fine on WebGL1 then just use WebGL1. If you absolutely must have WebGL2 features then use WebGL2 and realize that many older devices don't support WebGL2.
 
 If you're intent on doing it [twgl](https://twgljs.org) tries to make it easier by [providing a function that copies all the WebGL1 extensions into their WebGL2 API positions](http://twgljs.org/docs/module-twgl.html#.addExtensionsToContext). For like you mentioned, instead of 
 
