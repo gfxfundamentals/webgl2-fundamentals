@@ -249,9 +249,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>Then it&#39;s just up to you to draw something creative.</p>
 <p>note some troubles you&#39;ll likely run into.</p>
 <ol>
-<li><p>At this point in time (2017/1/3) neither Android Chrome nor iOS Safari support analysing streaming audio data. Instead you have to load the entire song. <a href="https://github.com/greggman/audiostreamsource.js">Here&#39;a a library that tries to abstract that a little</a></p>
-</li>
-<li><p><s>On Mobile</s> you can not automatically play audio. You must start the audio inside an input event based on user input like <code class="notranslate" translate="no">&#39;click&#39;</code> or <code class="notranslate" translate="no">&#39;touchstart&#39;</code>.</p>
+<li><p>You can not automatically play audio. You must start the audio inside an input event based on user input like <code class="notranslate" translate="no">&#39;click&#39;</code> or <code class="notranslate" translate="no">&#39;touchstart&#39;</code>.</p>
 </li>
 <li><p>As pointed out in the sample you can only analyse audio if the source is either from the same domain OR you ask for CORS permission and the server gives permission. AFAIK only Soundcloud gives permission and it&#39;s on a per song basis. It&#39;s up to the individual artist&#39;s song&#39;s settings whether or not audio analysis is allowed for a particular song.</p>
 <p>To try to explain this part</p>
@@ -259,6 +257,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>When you add </p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">audio.crossOrigin = &quot;anonymous&quot;;
 </code></pre><p>That basically says &quot;ask the server for permission for user &#39;anonymous&#39;&quot;. The server can give permission or not. It&#39;s up to the server. This includes asking even the server on the same domain which means if you&#39;re going to request a song on the same domain you need to either (a) remove the line above or (b) configure your server to give CORS permission. Most servers by default do not give CORS permission so if you add that line, even if the server is the same domain, if it does not give CORS permission then trying to analyse the audio will fail.</p>
+<p>For a soundcloud example, see <a href="https://github.com/greggman/soundcloud-audio-reactive-example">here</a>.</p>
 </li>
 </ol>
 <hr>
