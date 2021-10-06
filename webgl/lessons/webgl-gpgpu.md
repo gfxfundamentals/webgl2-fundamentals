@@ -186,9 +186,9 @@ And we could keep going. I'm hoping the examples above helps you see that GPGPU 
 is pretty simple conceptually. Let's actually do the above in WebGL.
 
 To understand the following code you will, at a minimum, need to have read
-"[the article on fundamentals](webgl-fundamentals.html)", probably the article on 
-"[How It Works](webgl-how-it-works.html)", the article on [GLSL](webgl-shaders-and-glsl.html)
-and "[the article on textures](webgl-3d-textures.html).
+[the article on fundamentals](webgl-fundamentals.html), probably the article on 
+[How It Works](webgl-how-it-works.html), the article on [GLSL](webgl-shaders-and-glsl.html)
+and [the article on textures](webgl-3d-textures.html).
 
 ```js
 const vs = `#version 300 es
@@ -460,7 +460,7 @@ void main() {
 ```
 
 To use transform feedback we have to tell WebGL which varyings we want written
-and in what order. We do that by calling `gl.transformFeedbacVaryings` before
+and in what order. We do that by calling `gl.transformFeedbackVaryings` before
 linking the shader program. Because of this we are not going to use our helper
 to compile the shaders and link the program this time, just to make it clear
 what we have to do.
@@ -1165,9 +1165,9 @@ the dimension? Because textures have a maximum dimension.
 Ideally we'd just like to look at our data as a 1 dimensional array
 of positions, 1 dimensional array of line points etc. So we could just
 declare a texture to be Nx1. Unfortunately GPUs have a maximum
-dimension and that can be as lowe as 1024 or 2048. If the limit
+dimension and that can be as low as 1024 or 2048. If the limit
 was 1024 and we needed 1025 values in our array we'd have to put the data
-in a texture like say 513x2. By putting the data in a square we won't
+in a texture like say 512x2. By putting the data in a square we won't
 hit the limit until we hit the maximum texture dimension squared.
 For a dimension limit of 1024 that would allow arrays of over 1 million values.
 
@@ -1358,7 +1358,7 @@ void main() {
 ```
 
 We don't have any attributes. We just use `gl_VertexID` like we covered in
-[the on drawing without data](webgl-drawing-without-data.html).
+[the article on drawing without data](webgl-drawing-without-data.html).
 
 Finally drawing closest lines works like this
 
@@ -1446,9 +1446,9 @@ const closestLinePrgLocs = {
 +};
 ```
 
-We need to vertex arrays for all drawing the points and the closest lines.
+We need to vertex arrays for drawing the points and the closest lines.
 
-```
+```js
 const closestLinesVA = makeVertexArray(gl, [
   [pointsBuffer, closestLinePrgLocs.point],
 ]);
@@ -1521,22 +1521,22 @@ gl.drawArrays(gl.POINTS, 0, numPoints);
 Before we run it lets do one more thing. Let's add more points and lines
 
 ```js
-+const points = [
-+  100, 100,
-+  200, 100,
-+];
-+const lines = [
-+   25,  50,
-+   25, 150,
-+   90,  50,
-+   90, 150,
-+  125,  50,
-+  125, 150,
-+  185,  50,
-+  185, 150,
-+  225,  50,
-+  225, 150,
-+];
+-const points = [
+-  100, 100,
+-  200, 100,
+-];
+-const lines = [
+-   25,  50,
+-   25, 150,
+-   90,  50,
+-   90, 150,
+-  125,  50,
+-  125, 150,
+-  185,  50,
+-  185, 150,
+-  225,  50,
+-  225, 150,
+-];
 
 +function createPoints(numPoints, ranges) {
 +  const points = [];
@@ -1693,8 +1693,8 @@ const closestNdxBuffer = makeBuffer(gl, points.length * 4, gl.STATIC_DRAW);
 +]), gl.STATIC_DRAW);
 ```
 
-Similarly we now need 2 texture to hold the line end points, and we'll update
-one from the other and swap. And we need a texture to hold the velocities
+Similarly we now need 2 textures to hold the line end points, and we'll update
+one from the other and swap. And, we need a texture to hold the velocities
 for the line end points as well.
 
 ```js
@@ -2041,7 +2041,7 @@ is happening on the GPU
 * There is overhead to GPGPU.
 
   In the first few examples above we computed some
-  data using WebGL and then read the results. Setting up buffers, textures
+  data using WebGL and then read the results. Setting up buffers and textures,
   setting attributes and uniforms takes time. Enough time that for anything
   under a certain size it would be better to just do it in JavaScript.
   The actual examples multiplying 6 numbers or adding 3 pairs of numbers
@@ -2107,7 +2107,7 @@ is happening on the GPU
   That means if you give them a very complex shader that say takes 5 minutes to
   run they'll potentially freeze your entire machine for 5 minutes.
   Most well made OSes deal with this by having the CPU check how long it's been
-  since the last command they gave to the GPU. If it's been to long (5-6 second)
+  since the last command they gave to the GPU. If it's been too long (5-6 second)
   and the GPU has not responded then their only option is to reset the GPU.
   
   This is one reason why WebGL can *lose the context* and you get an "Aw, rats!"
@@ -2133,9 +2133,9 @@ is happening on the GPU
   use the GLSL functions `floatBitsToInt`, `floatBitsToUint`, `IntBitsToFloat`,
   and `UintBitsToFloat`.
 
-  As an example [the texture based version of the particle example](../webgl-gpgpu-particles.html)
-  need to write to floating point textures. We could fix it so it doesn't require them with by
-  declaring out texture to be type `RG32I` (32 integer textures) but still
+  As an example, [the texture based version of the particle example](../webgl-gpgpu-particles.html)
+  needs to write to floating point textures. We could fix it so it doesn't require them by
+  declaring our texture to be type `RG32I` (32 integer textures) but still
   upload floats.
 
   In the shader we'd need to read the textures as integers and decode them
