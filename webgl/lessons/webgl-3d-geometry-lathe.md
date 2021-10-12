@@ -807,11 +807,11 @@ function getVertIndex(position) {
 </pre>
 <p>It worked! It got rid of the seam. Unfortunately it took several seconds to run and
 made the interface unusable. This is because it's a O^2 solution. If you slide the sliders
-for the most vertices you can generate ~20000 vertices. For an O^2 that's up to 300 million iterations
-that have to happen.
+for the most vertices(distance/divisions) in example above you can generate ~114000 vertices.
+For an O^2 that's up to 12 billion iterations that have to happen.
 </p>
 <p>I searched the net for a easy solution. I didn't find one. I thought about putting all the points
-in an <a href="https://en.wikipedia.org/wiki/Octree">octtree</a> to make finding matching points
+in an <a href="https://en.wikipedia.org/wiki/Octree">octree</a> to make finding matching points
 faster but that seems like a way too much for this article.
 </p>
 <p>It was then I realized if the only issue is the end points maybe I could add a modulo
@@ -824,7 +824,7 @@ And the new code like this
 <pre class="prettyprint">
   const angle = lerp(startAngle, endAngle, u) % (Math.PI * 2);
 </pre>
-<p>Because of the module the <code>angle</code> when <code>endAngle</code> is <code>Math.PI * 2</code> becomes 0
+<p>Because of the modulo the <code>angle</code> when <code>endAngle</code> is <code>Math.PI * 2</code> becomes 0
 and so it's the same as the start. The seam went away. Problem solved!</p>
 <p>Still, even with the change if you set <code>distance</code> to 0.001
 and <code>divisions</code> to 60 it takes nearly a second on my machine to recompute the mesh. While

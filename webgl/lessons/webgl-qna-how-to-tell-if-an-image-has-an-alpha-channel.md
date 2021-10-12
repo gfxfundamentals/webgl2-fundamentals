@@ -62,7 +62,7 @@ It's unlikely to waste space. Most GPUs work best with RGBA values so even if yo
 
 >  No HDR formats supported by the DOM?
 
-That is undefined and browser specific. I know of no HDR image formats supported by any browsers. What image formats a browser supports is up to the browser. For example Firefox and Chrome support animated webp but Safari does not.
+That is undefined and browser specific. I know of no HDR image formats supported by any browsers. What image formats a browser supports is up to the browser.
 
 ---
 

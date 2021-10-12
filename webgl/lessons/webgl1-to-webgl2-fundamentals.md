@@ -83,20 +83,5 @@ all cases.
    I hope this makes it more clear what these functions
    are and where to find them.
 
-## What's next
-
-I'm debating whether or not to change any of the webglfundamentals
-examples to match. It took a couple of weeks of solid work to edit
-all the existing examples and articles. I mostly feel within 12 months
-WebGL1 will be mostly replaced by WebGL2 because all the browsers
-are on auto update. Firefox and Chrome will ship WebGL2 soon, covering
-a large percentage of users on desktop and Android. If Apple and Microsoft
-add WebGL2 support to Safari macOS, Safari iOS, and Edge respectively,
-then probably the majority of people will be covered
-and we can all just move on to WebGL2.
-
-Hopefully I'll find time to add more articles.
-Given the point above, all new articles will be WebGL2 only from now on,
-I think.
 
 
