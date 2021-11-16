@@ -135,7 +135,7 @@ Uniforms can be many types. For each type you have to call the corresponding fun
     gl.uniform4u (ivec4UniformLoc, v0, v1, v2, v4);    // for uvec4
     gl.uniform4uv(ivec4UniformLoc, [v0, v1, v2, v4]);  // for uvec4 or uvec4 array
 
-    // for sampler2D, sampler3D, samplerCube, samplerCubeShader, sampler2DShadow,
+    // for sampler2D, sampler3D, samplerCube, samplerCubeShadow, sampler2DShadow,
     // sampler2DArray, sampler2DArrayShadow
     gl.uniform1i (samplerUniformLoc,   v);
     gl.uniform1iv(samplerUniformLoc, [v]);
