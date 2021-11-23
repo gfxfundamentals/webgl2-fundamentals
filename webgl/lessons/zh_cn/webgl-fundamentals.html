@@ -376,16 +376,17 @@ void main() {
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
 var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 </code></pre><p>然后我们<em>链接</em>这两个着色器成一个<em>程序(program)</em></p>
-<p>   function createProgram(gl, vertexShader, fragmentShader) {
-      var program = gl.createProgram();
-      gl.attachShader(program, vertexShader);
-      gl.attachShader(program, fragmentShader);
-      gl.linkProgram(program);
-      var success = gl.getProgramParameter(program, gl.LINK_STATUS);
-      if (success) {
-        return program;
-      }</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  console.log(gl.getProgramInfoLog(program));
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function createProgram(gl, vertexShader, fragmentShader) {
+  var program = gl.createProgram();
+  gl.attachShader(program, vertexShader);
+  gl.attachShader(program, fragmentShader);
+  gl.linkProgram(program);
+  var success = gl.getProgramParameter(program, gl.LINK_STATUS);
+  if (success) {
+    return program;
+  }
+
+  console.log(gl.getProgramInfoLog(program));
   gl.deleteProgram(program);
 }
 </code></pre><p>并调用它</p>
