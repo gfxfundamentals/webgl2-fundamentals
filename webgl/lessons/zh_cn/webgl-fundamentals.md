@@ -179,7 +179,7 @@ WebGL只关注两件事：剪辑空间坐标(Clip space coordinates)和颜色。
 
 然后我们*链接*这两个着色器成一个*程序(program)*
 
-   function createProgram(gl, vertexShader, fragmentShader) {
+    function createProgram(gl, vertexShader, fragmentShader) {
       var program = gl.createProgram();
       gl.attachShader(program, vertexShader);
       gl.attachShader(program, fragmentShader);
