@@ -179,8 +179,8 @@ or `gl.uniform?u?`的方法名。
 
 片段着色器的任务是给栅格化的像素提供颜色。通常采用下面的形式：
 
-#version 300 es
-precision highp float;
+    #version 300 es
+    precision highp float;
 
     out vec4 outColor;  // you can pick any name
 
