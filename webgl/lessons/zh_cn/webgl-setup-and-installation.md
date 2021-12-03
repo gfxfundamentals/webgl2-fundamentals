@@ -24,7 +24,7 @@ TOC: 设置和安装
 
 {{{image url="resources/servez.gif" }}}
 
-只需选择解压后的文件夹，点击“Start”，然后在地址 [`http://localhost:8080/webgl/`](`http://localhost:8080/webgl/) 中选择例子。
+只需选择解压后的文件夹，点击“Start”，然后在地址 [`http://localhost:8080/webgl/`](http://localhost:8080/webgl/) 中选择例子。
 
 如果你更喜欢使用命令行，另一种方法是使用[node.js](https://nodejs.org)。
 在下载并安装后，打开命令行/控制台/终端窗口。
