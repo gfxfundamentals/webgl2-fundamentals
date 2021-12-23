@@ -36,8 +36,8 @@ WebGL1 기능들만 사용하고 있다면, 2가지 **주요** 변경 사항이 
 
 ## GLSL 300 es로 변경
 
-가장 큰 변경 내용은, 쉐이더 버전을 GLSL 3.00 ES로 업그레이드 해야한다는 것입니다.
-그러기 위해서, 쉐이더의 가장 첫 번째 줄이 다음과 같아야 합니다.
+가장 큰 변경 내용은, 셰이더 버전을 GLSL 3.00 ES로 업그레이드 해야한다는 것입니다.
+그러기 위해서, 셰이더의 가장 첫 번째 줄이 다음과 같아야 합니다.
 
     #version 300 es
 
@@ -72,12 +72,12 @@ WebGL1 기능들만 사용하고 있다면, 2가지 **주요** 변경 사항이 
     ...
     </script>
 
-아니면, 쉐이더를 컴파일하는 함수에서 첫 번째로 나오는 빈 줄을
+아니면, 셰이더를 컴파일하는 함수에서 첫 번째로 나오는 빈 줄을
 모두 없애는 방법도 있습니다.
 
 ### GLSL 100 에서 GLSL 300 es로의 변경 사항
 
-위의 쉐이더의 버전 변경 말고도, 몇 가지 변경 사항들이 있습니다.
+위의 셰이더의 버전 변경 말고도, 몇 가지 변경 사항들이 있습니다.
 
 #### `attribute` -> `in`
 
@@ -95,25 +95,25 @@ GLSL 300 es에서는 아래처럼 되어야합니다.
 
 #### `varying`을 `in` / `out`로
 
-GLSL 100에서는 `varying`을 vertex 쉐이더와 fragment 쉐이더
+GLSL 100에서는 `varying`을 vertex 셰이더와 fragment 셰이더
 두 곳에 모두 선언할 수 있었습니다.
 
     varying vec2 v_texcoord;
     varying vec3 v_normal;
 
-GLSL 300 es의 vertex 쉐이더에서, `varyings`은 아래처럼 되어야합니다.
+GLSL 300 es의 vertex 셰이더에서, `varyings`은 아래처럼 되어야합니다.
 
     out vec2 v_texcoord;
     out vec3 v_normal;
 
-그리고 fragment 쉐이더에서는 이렇게요.
+그리고 fragment 셰이더에서는 이렇게요.
 
     in vec2 v_texcoord;
     in vec3 v_normal;
 
 #### 이제 `gl_FragColor`는 없습니다.
 
-GLSL 100에서는, fragment 쉐이더에서 output을 설정하기 위해 특별한 변수인
+GLSL 100에서는, fragment 셰이더에서 output을 설정하기 위해 특별한 변수인
 `gl_FragColor`를 사용할 수 있었습니다.
 
     gl_FragColor = vec4(1, 0, 0, 1);  // red
@@ -157,7 +157,7 @@ GLSL 300 es에서는, texture function이 어떤 sampler type을 사용하는 �
 WebGL1의 많은 기능들은 optional extension이었습니다. WebGL2에서는 아래 모든 기능들이 제공됩니다:
 
 * Depth Textures ([WEBGL_depth_texture](https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/))
-* Floating Point Textures ([OES_texture_float](https://www.khronos.org/registry/webgl/extensions/OES_texture_float/)/[OES_texture_float_linear](https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/))
+* 부동 소수점 텍스처 ([OES_texture_float](https://www.khronos.org/registry/webgl/extensions/OES_texture_float/)/[OES_texture_float_linear](https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/))
 * Half Floating Point Textures ([OES_texture_half_float](https://www.khronos.org/registry/webgl/extensions/OES_texture_half_float/)/[OES_texture_half_float_linear](https://www.khronos.org/registry/webgl/extensions/OES_texture_half_float_linear/))
 * Vertex Array Objects ([OES_vertex_array_object](https://www.khronos.org/registry/webgl/extensions/OES_vertex_array_object/))
 * Standard Derivatives ([OES_standard_derivatives](https://www.khronos.org/registry/webgl/extensions/OES_standard_derivatives/))
@@ -171,21 +171,21 @@ WebGL1의 많은 기능들은 optional extension이었습니다. WebGL2에서는
 * Any level of a texture can be attached to a framebuffer object ([OES_fbo_render_mipmap](https://www.khronos.org/registry/webgl/extensions/OES_fbo_render_mipmap/))
 * Texture access in vertex shaders
 
-## 2의 제곱수가 아닌 Texture 크기 지원
+## 2의 거듭제곱이 아닌 텍스처 지원
 
-WebGL1의 textures는 2의 제곱 수가 아니면 mipmap을 사용할 수 없었습니다.
-WebGL2에서는 이 제한이 삭제되었습니다. 2의 제곱수가 아닌 텍스처도 2의 제곱수인 텍스처와
-완전히 동일하게 작동합니다.
+WebGL1에서, 2의 거듭제곱이 아닌 텍스처는 밉맵을 가질수 없었습니다.
+WebGL2부터는 이런 제한이 사라졌습니다. 2의 거듭제곱이 아닌 텍스처도
+2의 거듭제곱 텍스처와 정확히 동일하게 작동합니다.
 
 ## Floating Point Framebuffer Attachments
 
 WebGL1에서는 부동 소수점 texture가 렌더링되는 지 확인하려면, `OES_texture_float`
-extension을 활성화하고, floating point texture를 만든 다음에,
+extension을 활성화하고, 부동 소수점 텍스처를 만든 다음에,
 그걸 framebuffer와 attach하고, `gl.FRAMEBUFFER_COMPLETE`가 반환되었는 지 보려면
 `gl.checkFramebufferStatus`를 확인해야 했습니다.
 
 WebGL2에서는, `EXT_color_buffer_float`이 활성화 되어있지 않으면,
-`gl.checkFramebufferStatus`은 floating point texture에 대해서
+`gl.checkFramebufferStatus`은 부동 소수점 텍스처에 대해서
 `gl.FRAMEBUFFER_COMPLETE`를 절대 반환하지 않습니다.
 
 이건 `HALF_FLOAT` framebuffer attachments에도 마찬가지라는 것을 명심하세요.
@@ -197,11 +197,11 @@ WebGL2에서는, `EXT_color_buffer_float`이 활성화 되어있지 않으면,
 > 고정되어 있어서, 스펙이 충분하지 않다고 지적했습니다. `EXT_color_buffer_float`에 값 고정
 > 제한은 사라졌지만, 이미 WebGL이 배포된 지 1년이 넘은 시점이었습니다. 그래서 많은 웹
 > 사이트들은 이 제한을 강제하도록 고쳐야했습니다. WebGL2에서는 위 내용을 모두 반영했으므로,
-> 이제 floating point texture를 framebuffer attachments로 사용하려면 반드시
+> 이제 부동 소수점 텍스처를 framebuffer attachments로 사용하려면 반드시
 > `EXT_color_buffer_float`를 활성화해야합니다.
 >
 > 그리고 제가 아는 바로는, 2017년 3월 현재, 극소수의 모바일 기기들이
-> floating point textures의 렌더링을 지원하고 있습니다.
+> 부동 소수점 텍스처의 렌더링을 지원하고 있습니다.
 
 ## Vertex Array Objects
 
@@ -273,7 +273,7 @@ WebGL1에서는 위의 초기화 루프가 렌더링 시점에 있었을 것입�
 
     만약에 여러 프로그램에서 같은 geometry를 사용하려고 한다면,
     attribute location를 수동으로 할당하는 것을 고려해야합니다.
-    GLSL 300 es에서는 이걸 쉐이더 내부에서 할 수 있습니다.
+    GLSL 300 es에서는 이걸 셰이더 내부에서 할 수 있습니다.
     
     예시:
 
@@ -294,19 +294,19 @@ WebGL1에서는 위의 초기화 루프가 렌더링 시점에 있었을 것입�
         gl.bindAttribLocation(someProgram, 2, "a_normal");
         gl.bindAttribLocation(someProgram, 3, "a_color");
 
-    이건 여러 쉐이더 프로그램과 호환되도록 강제할 수 있다는 의미입니다.
+    이건 여러 셰이더 프로그램과 호환되도록 강제할 수 있다는 의미입니다.
     한 프로그램에서 모든 attribute가 필요하지 않다면, 필요한 attribute만
     같은 location에 할당하면 됩니다.
 
-    이렇게 하지 않으면, 같은 geometry를 쓰는 다른 쉐이더 프로그램마다
+    이렇게 하지 않으면, 같은 geometry를 쓰는 다른 셰이더 프로그램마다
     다른 VAO가 필요하게 되고, VAOs를 쓰지 않고 렌더링 시점에 항상
     attributes를 설정해야하는 WebGL1처럼 해야합니다. 느려지겠죠.
 
     참고: 위의 2가지 방법 중에 저는 `gl.bindAttribLocation`를 권장합니다.
     왜냐하면 이건 코드에 한번 적으면 되지만, `layout(location = ?)`를 쓰는 방법은
-    모든 쉐이더에 적어야하기 때문이죠. 그러므로 DRY 원칙도 지키는
+    모든 셰이더에 적어야하기 때문이죠. 그러므로 DRY 원칙도 지키는
     `gl.bindAttribLocation` 쪽이 더 나아보입니다.
-    쉐이더 생성기를 쓴다면 차이는 없겠지만요.
+    셰이더 생성기를 쓴다면 차이는 없겠지만요.
 
 2.  작업을 마치면, 항상 VAO를 unbind 하기
 
@@ -330,17 +330,17 @@ extension을 사용하는 것처럼 작성하시면 안되고 조금은 수정�
 
 특히, 주의가 필요한 2가지:
 
-1. `OES_texture_float` 그리고 floating point textures.
+1. `OES_texture_float` 그리고 부동 소수점 텍스처
 
-    Floating point textures는 WebGL2의 표준 기능이지만,
+    부동 소수점 텍스처는 WebGL2의 표준 기능이지만,
 
-    * filter floating point textures은 여전히 extension입니다:
+    * 부동 소수점 텍스처 필터링은 여전히 extension입니다:
       `OES_texture_float_linear`.
 
-    * floating point texture을 렌더링하는 것도 extension입니다:
+    * 부동 소수점 텍스처을 렌더링하는 것도 extension입니다:
       `EXT_color_buffer_float`.
 
-    * floating point texture를 생성하는 것이 다릅니다. WebGL2의 새로운 내부 포맷인
+    * 부동 소수점 텍스처를 생성하는 것이 다릅니다. WebGL2의 새로운 내부 포맷인
       `RGBA32F` 나 `R32F` 등을 사용해야 합니다.
       This is different than the WebGL1 `OES_texture_float`
       extension in which the internal format was inferred from the `type` passed to `texImage2D`.
@@ -413,7 +413,7 @@ function getAndApplyExtension(gl, name) {
   return ext;
 }
 </pre>
-<p>이제 이 코드는 WebGL1과 WebGL2 에서 대부분 똑같게 동작할 겁니다. 예시:</p>
+<p>이제 이 코드는 WebGL1과 WebGL2 에서 대부분 똑같이 동작할 겁니다. 예시:</p>
 <pre class="prettyprint">
 if (haveVAOs) {
   var someVAO = gl.createVertexArray();
