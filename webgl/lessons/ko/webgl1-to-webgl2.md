@@ -298,68 +298,63 @@ WebGL1에서는 위의 초기화 루프가 렌더링 시점에 있었을 것입�
     한 프로그램에서 모든 attribute가 필요하지 않다면, 필요한 attribute만
     같은 location에 할당하면 됩니다.
 
-    If you don't do this you'll need different VAOs for
-    different shader programs when using the same geometry OR
-    you'll need to just do the WebGL1 thing and not use
-    VAOs and always setup attributes at render time, which is slow.
+    이렇게 하지 않으면, 같은 geometry를 쓰는 다른 쉐이더 프로그램마다
+    다른 VAO가 필요하게 되고, VAOs를 쓰지 않고 렌더링 시점에 항상
+    attributes를 설정해야하는 WebGL1처럼 해야합니다. 느려지겠죠.
 
-    NOTE: of the 2 methods above I'm leaning toward using
-    `gl.bindAttribLocation` because it's easy to have it in one
-    place in my code whereas the method of using `layout(location = ?)` has
-    to be in all shaders, so in the interest of D.R.Y., `gl.bindAttribLocation`
-    seems better. Maybe if I was using a shader generator then there'd be no difference.
+    참고: 위의 2가지 방법 중에 저는 `gl.bindAttribLocation`를 권장합니다.
+    왜냐하면 이건 코드에 한번 적으면 되지만, `layout(location = ?)`를 쓰는 방법은
+    모든 쉐이더에 적어야하기 때문이죠. 그러므로 DRY 원칙도 지키는
+    `gl.bindAttribLocation` 쪽이 더 나아보입니다.
+    쉐이더 생성기를 쓴다면 차이는 없겠지만요.
 
-2.  Always unbind the VAO when you're done
+2.  작업을 마치면, 항상 VAO를 unbind 하기
 
         gl.bindVertexArray(null);
 
-    This just comes from my own experience. If you look above,
-    the `ELEMENT_ARRAY_BUFFER` state is part of a Vertex Array.
+    이건 제 경험에서 나온 겁니다. 위를 읽으셨다면, `ELEMENT_ARRAY_BUFFER` 상태는
+    Vertex Array의 일부라는 걸 아실겁니다.
 
-    So, I ran into this issue. I created some geometry, then
-    I created a VAO for that geometry and set up the attributes
-    and `ELEMENT_ARRAY_BUFFER`. I then created some more
-    geometry. When that geometry setup its indices, because
-    I still had the previous VAO bound setting up, the indices
-    effected the `ELEMENT_ARRAY_BUFFER` binding for the previous
-    VAO. It took me several hours to debug.
+    그런데 여기서 문제가 생겼습니다. 어떤 geometry를 하나 만들었고,
+    연결할 VAO도 만들었고, attribute들과 `ELEMENT_ARRAY_BUFFER` 도 설정했습니다.
+    그리고 geometry들을 몇 개 더 만들었죠. 그런데 geometry들의 인덱스를 설정할 때,
+    이전의 VAO와 바인딩되어 있어서, 그 인덱스들이 이전의 VAO와 바인딩 된
+    `ELEMENT_ARRAY_BUFFER`로 넘어간 겁니다. 이걸 디버깅하는 데 몇 시간은 썼습니다.
 
-    So, my suggestion is to never leave a VAO bound if you're done
-    with it. Either immediately bind the next VAO you're going
-    to use, or bind `null` if you're done.
+    아무튼, 작업을 마쳤다면 절대로 VAO 바인딩이 된 채로 두지 말라는 제 의견입니다.
+    다음에 쓸 VAO를 바로 바인딩할 예정이건 아니건, 끝났으면 `null`로 바인딩하세요.
 
-As mentioned at the top, many extensions from WebGL1 are standard features
-of WebGL2, so if you were using extensions in WebGL1, you'll need to
-change your code to not use them as extensions in WebGL2. See below.
+위에서 말했듯이, WebGL1의 많은 extension들이 WebGL2의 표준 기능이 되었습니다.
+그래서 WebGL1의 extension을 사용하고 싶으신 경우에는, WebGL2에서는 코드를
+extension을 사용하는 것처럼 작성하시면 안되고 조금은 수정해야합니다. 다음을 봐주세요.
 
-Two that need special care though:
+특히, 주의가 필요한 2가지:
 
-1. `OES_texture_float` and floating point textures.
+1. `OES_texture_float` 그리고 floating point textures.
 
-    Floating point textures are a standard feature of WebGL2 but:
+    Floating point textures는 WebGL2의 표준 기능이지만,
 
-    * Being able to filter floating point textures is still an extension: `OES_texture_float_linear`.
+    * filter floating point textures은 여전히 extension입니다:
+      `OES_texture_float_linear`.
 
-    * Being able to render to a floating point texture is an extension: `EXT_color_buffer_float`.
+    * floating point texture을 렌더링하는 것도 extension입니다:
+      `EXT_color_buffer_float`.
 
-    * Creating a floating point texture is different. You must use one of the new WebGL2 internal
-      formats like `RGBA32F`, `R32F`, etc. This is different than the WebGL1 `OES_texture_float`
+    * floating point texture를 생성하는 것이 다릅니다. WebGL2의 새로운 내부 포맷인
+      `RGBA32F` 나 `R32F` 등을 사용해야 합니다.
+      This is different than the WebGL1 `OES_texture_float`
       extension in which the internal format was inferred from the `type` passed to `texImage2D`.
 
-2. `WEBGL_depth_texture` and depth textures.
+2. `WEBGL_depth_texture` 그리고 depth textures.
 
-    Similar to the previous difference, to create a depth texture in WebGL2 you must use one of
-    WebGL2's internal formats: `DEPTH_COMPONENT16`, `DEPTH_COMPONENT24`,
-    `DEPTH_COMPONENT32F`, `DEPTH24_STENCIL8`, or `DEPTH32F_STENCIL8`, whereas the WebGL1
-    `WEBGL_depth_texture` extension used `DEPTH_COMPONENT` and `DEPTH_STENCIL_COMPONENT`.
+    이것도 마찬가지로, WebGL1의 `WEBGL_depth_texture` extension은 `DEPTH_COMPONENT`과 `DEPTH_STENCIL_COMPONENT`를 사용했지만, WebGL2에서 depth texture를 만들려면 WebGL2의 내부 포맷인 `DEPTH_COMPONENT16`, `DEPTH_COMPONENT24`,
+    `DEPTH_COMPONENT32F`, `DEPTH24_STENCIL8`, `DEPTH32F_STENCIL8` 중에 하나를 써야합니다.
 
-That's my personal short list of things to be aware of when switching
-from WebGL1 to WebGL2. [There's even more stuff you can do in WebGL2, though](webgl2-whats-new.html).
+이건, WebGL1를 WebGL2로 바꾸면서 유의해야할 부분을 제가 개인적으로 정리해본 것입니다. [WebGL2에서 할 수 있는 것들](webgl2-whats-new.html).
 
 <div class="webgl_bottombar">
-<h3>Making WebGL1 extensions look like WebGL2</h3>
-<p>Functions that were on extensions in WebGL1 are now on the main
-context in WebGL2. For example in WebGL</p>
+<h3>WebGL1 extension을 WebGL2처럼 만들기</h3>
+<p>WebGL1의 extension에 있던 함수들은, WebGL2에서는 extension 없이 사용할 수 있습니다. 예를 들면, WebGL1에서는 아래와 같았지만</p>
 <pre class="prettyprint">
 var ext = gl.getExtension("OES_vertex_array_object");
 if (!ext) {
@@ -369,15 +364,15 @@ if (!ext) {
 }
 </pre>
 <p>
-vs in webgl2
+WebGL2 에서는 이렇죠.
 </p>
 <pre class="prettyprint">
 var someVAO = gl.createVertexArray();
 </pre>
-<p>As you can see, if you want your code to run in both WebGL1 and WebGL2, then
-that can present some challenges.</p>
-<p>One workaround would be to copy WebGL1 extensions to the WebGL context at init time.
-That way the rest of your code can stay the same. Example:</p>
+<p>이걸로 알 수 있듯이, 만약 WebGL1과 WebGL2 에서 모두 실행되는 코드를 적고 싶다면,
+좀 어려울 수 있습니다.</p>
+<p>한 가지 해결 방법은, 초기화할 때 WebGL1 extension을 WebGL context에 복사하는 것입니다.
+그렇게 하면 나머지 코드는 그대로입니다. 예시:</p>
 <pre class="prettyprint">
 const gl = someCanvas.getContext("webgl");
 const haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object");
@@ -418,7 +413,7 @@ function getAndApplyExtension(gl, name) {
   return ext;
 }
 </pre>
-<p>Now your code can mostly just work the same on both. Example:</p>
+<p>이제 이 코드는 WebGL1과 WebGL2 에서 대부분 똑같게 동작할 겁니다. 예시:</p>
 <pre class="prettyprint">
 if (haveVAOs) {
   var someVAO = gl.createVertexArray();
@@ -427,7 +422,7 @@ if (haveVAOs) {
   ... do whatever for no VAOs.
 }
 </pre>
-<p>The alternative would be having to do something like this</p>
+<p>아니면 이런식으로 적어야겠죠.</p>
 <pre class="prettyprint">
 if (haveVAOs) {
   if (isWebGL2)
@@ -440,8 +435,6 @@ if (haveVAOs) {
   ... do whatever for no VAOs.
 }
 </pre>
-<p>Note: In the case of Vertex Array Objects in particular I suggest you <a href="https://github.com/greggman/oes-vertex-array-object-polyfill">use a polyfill</a>
-so you'll have them everywhere. VAOs are available on most systems. On those few systems
-where they aren't available, the polyfill will handle it for you, and your code
-can stay simple.</p>
+<p>참고: Vertex Array Objects를 사용하는 경우에는, <a href="https://github.com/greggman/oes-vertex-array-object-polyfill">polyfill</a>을 사용하는 것을 권장합니다. VAO는 대부분의 시스템에서 지원되지만, 지원하지 않는 몇 시스템에서는 polyfill로 해결할 수 있습니다.
+코드의 변경 없이 말이죠.</p>
 </div>
