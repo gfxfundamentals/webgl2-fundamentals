@@ -1,4 +1,4 @@
-Title: WebG2L Smallest Programs
+Title: WebGL2 Smallest Programs
 Description: Smallest Code for Testing
 TOC: Smallest Programs
 
