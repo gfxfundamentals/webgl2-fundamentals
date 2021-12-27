@@ -225,7 +225,7 @@ function setGeometry(gl) {
 
 {{{example url="../webgl-2d-geometry-translate-better.html" }}}
 
-이제 그릴때 WebGL이 거의 모든 것을 하고 있습니다. 하고 있는 모든 작업은 이동(translation)을 설정하고 그리기를 요구하는 것 입니다. 지오메트리(geometry)가 수만개의 포인트를 가지게 되더라도 주요 코드는 유지 될 것입니다.
+이제 그릴 때 WebGL이 거의 모든 것을 하고 있습니다. 하고 있는 모든 작업은 이동(translation)을 설정하고 그리기를 요구하는 것 입니다. 지오메트리(geometry)가 수만개의 포인트를 가지게 되더라도 주요 코드는 유지 될 것입니다.
 
 원하다면 <a target="_blank" href="../webgl-2d-geometry-translate.html">포인트들을 업데이트 하기위해 복잡한 자바스크립트를 사용하는 버전</a>과 비교 할수 있습니다.
 

@@ -34,7 +34,7 @@ WebGL2에서는 WebGL1의 모든 *un-sized* 포맷을 지원합니다.
 
 *un-sized*라고 부르는 이유는 WebGL1에서는 이들이 내부적으로 어떻게 표현될지가 정해져 있지 않기 때문입니다.
 WebGL2에서는 정해져 있습니다. 이러한 un-sized포맷 이외에도 다수의 sized포맷들이 있습니다.
-1
+
 <div class="webgl_center">
   <table class="tabular-data tabular-data2">
     <thead>
