@@ -3,7 +3,7 @@ Description: 2D에서 회전 하는 방법
 TOC: WebGL2 2D 회전
 
 
-이 글은 WebGL 게시글 시리즈에서 이어지는 글입니다. 첫 번쨰는 [기초로 시작](webgl-fundamentals.html)이였으며 바로 전은 [기하학에 대한 이동](webgl-2d-translation.html)이였습니다.
+이 글은 WebGL 게시글 시리즈에서 이어지는 글입니다. 첫 번째는 [기초로 시작](webgl-fundamentals.html)이었으며 바로 전은 [기하학에 대한 이동](webgl-2d-translation.html)이였습니다.
 
 
 I'm going to admit right up front I have no idea if how I explain this
@@ -149,18 +149,18 @@ I'm going to admit right up front I have no idea if how I explain this
       rotation[0] = Math.sin(angleInRadians);
       rotation[1] = Math.cos(angleInRadians);
 
-여기에 각도 설정이 있는 버전이 있습니다. 이동 또는 회전할 슬라이더를 드래그 하십시오.
+아래는 각도를 조정할 수 있는 버전입니다. 원을 움직여서 회전시키거나, 슬라이더를 드래그하여 이동시켜보세요.
 
 {{{example url="../webgl-2d-geometry-rotation-angle.html" }}}
 
-이해가 됐기를 바랍니다. [다음도 간단한 것입니다. 크기](webgl-2d-scale.html).
+이해가 됐기를 바랍니다. [다음은, 더 간단한 "크기 변환"입니다.](webgl-2d-scale.html).
 
 <div class="webgl_bottombar"><h3>라디안(radians)이란 무엇 입니까?</h3>
 <p>
-라디안(Radians)은 원, 회전 및 각도와 함꼐 사용되는 측정 단위 입니다. 마치 우리가 인치, 야드, 미터 등 거리를 측정 할 수 있는 것처럼 라디안으로 각도를 측정 할 수 있습니다.
+라디안(Radians)은 원, 회전 및 각도와 함께 사용되는 측정 단위 입니다. 마치 우리가 인치, 야드, 미터 등 거리를 측정할 수 있는 것처럼 라디안으로 각도를 측정할 수 있습니다.
 </p>
 <p>
-수학에서 미터법 측정이 야드파운드법 측정 보다 쉽다는 것을 알고 있을 것입니다. 인치에서 피트로 이동하려면 12로 나눠야 합니다. 인치에서 야드로 이동하려면 36을 나눠야 합니다.
+수학에서 미터법 측정이 야드파운드법 측정보다 쉽다는 것을 알고 있을 것입니다. 인치에서 피트로 이동하려면 12로 나눠야 합니다. 인치에서 야드로 이동하려면 36을 나눠야 합니다.
  여러분들을 어떨지 모르겠지만 저는 36을 나누는 것은 머릿속에서 잘 계산이 안됩니다. 미터법을 사용하면 훨씬 쉽습니다. 밀리미터에서 센터미터로 이동하려면 10으로 나누면 됩니다. 밀리 미터에서 미터로 갈려면 1000으로 나누면 됩니다. 머리속에서 1000을 계산하는 것은 할 수 있습니다.
 </p>
 <p>

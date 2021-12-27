@@ -3,7 +3,7 @@ Description: 2D에서 크기 변환하는 방법
 TOC: WebGL2 2D 크기 변환
 
 
-이 글은 WebGL 게시글 시리즈에서 이어지는 글입니다. 첫 번째는 [기초로 시작](webgl-fundamentals.html) 하기고 바로 전에는 [지오메트리 회전](webgl-2d-rotation.html)에 대한 글이었습니다.
+이 글은 WebGL 게시글 시리즈에서 이어지는 글입니다. 첫 번째는 [기초로 시작](webgl-fundamentals.html)이었고, 바로 전에는 [지오메트리(geometry) 회전](webgl-2d-rotation.html)에 대한 글이었습니다.
 
 크기 변환은 [이동만큼 쉽습니다](webgl-2d-translation.html).
 
