@@ -88,7 +88,7 @@ WebGL2에서는 픽셀 좌표를 사용하여 텍스처를 읽을수 있는 기�
     +  var size = 2;          // iteration마다 2개의 구성요소 사용
     +  var type = gl.FLOAT;   // 데이터는 32비트 부동소수점
     +  var normalize = false; // 데이터를 정규화하지 않음
-    +  var stride = 0;        // 0 = 반복할때마다 다음 위치를 얻기 위해 size * sizeof(type)씩 앞으로 이동
+    +  var stride = 0;        // 0 = 반복할 때마다 다음 위치를 얻기 위해 size * sizeof(type)씩 앞으로 이동
     +  var offset = 0;        // 버퍼의 맨 앞부터 시작
     +  gl.vertexAttribPointer(
     +      texCoordAttributeLocation, size, type, normalize, stride, offset)

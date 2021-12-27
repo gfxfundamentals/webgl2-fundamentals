@@ -54,7 +54,7 @@ TOC: WebGL2 2D 이동
   }
 ```
 
-아래 예제에서 `translation[0]`와 `translation[1]`를 업데이트하고 변경 될 때 `drawScene`를 호출할 몇 가지 슬라이더들을 첨부 했습니다.
+아래 예제에서 `translation[0]`와 `translation[1]`를 업데이트하고 변경 될때 `drawScene`를 호출할 몇 가지 슬라이더들을 첨부 했습니다.
 
 {{{example url="../webgl-2d-rectangle-translate.html" }}}
 

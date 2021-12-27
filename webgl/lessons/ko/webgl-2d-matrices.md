@@ -23,7 +23,7 @@ TOC: WebGL2 2D 행렬
 <link href="resources/webgl-2d-matrices.css" rel="stylesheet">
 <div class="glocal-center"><table class="glocal-center-content glocal-mat"><tr><td>1.0</td><td>2.0</td><td>3.0</td></tr><tr><td>4.0</td><td>5.0</td><td>6.0</td></tr><tr><td>7.0</td><td>8.0</td><td>9.0</td></tr></table></div>
 
-계산을 하기 위해 행렬의 열 아래로 위치를 곱하고 결과를 더합니다. 위치는 오직 2개의 값 x, y을 가지고 있습니다. 그러나 수학에서는 3개의 값이 필요하므로 1을 3번쨰 값으로 사용할 것입니다.
+계산을 하기 위해 행렬의 열 아래로 위치를 곱하고 결과를 더합니다. 위치는 오직 2개의 값 x, y을 가지고 있습니다. 그러나 수학에서는 3개의 값이 필요하므로 1을 3번째 값으로 사용할 것입니다.
 
 이 경우 결과는 다음과 같습니다.
 
@@ -266,7 +266,7 @@ void main() {
 
 {{{example url="../webgl-2d-geometry-matrix-transform-trs.html" }}}
 
-이와 같은 행렬을 적용 할수 있다는 것은 신체의 팔, 태양 주위의 행성의 위성, 나무의 가지와 같은 계층적 애니메이션에 특히 중요합니다. 계층적 애니메이션의 간단한 예제로 'F'를 5번 그리는데 그릴떄 마다 전 'F'에서 행렬을 시작한다고 해봅시다.
+이와 같은 행렬을 적용 할수 있다는 것은 신체의 팔, 태양 주위의 행성의 위성, 나무의 가지와 같은 계층적 애니메이션에 특히 중요합니다. 계층적 애니메이션의 간단한 예제로 'F'를 5번 그리는데 그릴때 마다 전 'F'에서 행렬을 시작한다고 해봅시다.
 
 ```
     // scene 그리기.
@@ -326,7 +326,7 @@ void main() {
 
 한 가지 더 에를 들어 봅시다. 지금까지 모든 예제에서 우리의 'F'는 왼쪽 상단 모서리로 회전을 합니다. 이것은 우리가 사용하는 수학이 항상 원점을 중심으로 회전하고 'F'의 왼쪽 위 모서리가 원점 (0, 0)에 있기 때문입니다.
 
-이제 행렬로 할 수 있기 떄문에 적용할 변환 순서를 선택 할 수 있으므로 나머지 변환이 적용되기 전에 원점을 효과적으로 이동할 수 있습니다.
+이제 행렬로 할 수 있기 때문에 적용할 변환 순서를 선택 할 수 있으므로 나머지 변환이 적용되기 전에 원점을 효과적으로 이동할 수 있습니다.
 
 ```
     // 'F'의 원점을 한가운데로 이동시키는 행렬을 만듭니다.
@@ -453,11 +453,11 @@ matrix = m3.scale(matrix, scale[0], scale[1]);
 
 {{{example url="../webgl-2d-geometry-matrix-transform-simpler-functions.html" }}}
 
-마지막으로 위에서 순서 문제를 보았습니다. 첫 번쨰 예에서는
+마지막으로 위에서 순서 문제를 보았습니다. 첫 번째 예에서는
 
     translation * rotation * scale
 
-두 번쨰 에제에서는
+두 번째 에제에서는
 
     scale * rotation * translation
 
@@ -467,7 +467,7 @@ matrix = m3.scale(matrix, scale[0], scale[1]);
 
     projectionMat * translationMat * rotationMat * scaleMat * position
 
-많은 사람들이 자연스럽게 발견하는 첫 번쨰 방법은 오른쪽에서 시작하여 왼쪽으로 작업하는 것 입니다.
+많은 사람들이 자연스럽게 발견하는 첫 번째 방법은 오른쪽에서 시작하여 왼쪽으로 작업하는 것 입니다.
 
 먼저 크기 변환 행렬을 위치에 곱하여 scaledPosition를 얻습니다.
 
@@ -485,9 +485,9 @@ matrix = m3.scale(matrix, scale[0], scale[1]);
 
     clipspacePosition = projectioMatrix * translatedRotatedScaledPosition
 
-2번쨰 방법은 왼쪽에서 오른쪽으로 행렬을 읽는 것 입니다. 이 경우 각 행렬은 캔버스가 나타내는 *공간"을 변경합니다. 캔버스는 각 방향에서 클립 공간(-1에서 +1)을 나타내는 것으로에서 시작합니다. 왼쪽에서 오른쪽으로 적용된 각 행렬은 캔버스가 나타내는 공간을 변경합니다.
+2번째 방법은 왼쪽에서 오른쪽으로 행렬을 읽는 것 입니다. 이 경우 각 행렬은 캔버스가 나타내는 *공간"을 변경합니다. 캔버스는 각 방향에서 클립 공간(-1에서 +1)을 나타내는 것으로에서 시작합니다. 왼쪽에서 오른쪽으로 적용된 각 행렬은 캔버스가 나타내는 공간을 변경합니다.
 
-1 단계:  행렬이 없을떄(또는 단위 행렬)
+1 단계:  행렬이 없을때(또는 단위 행렬)
 
 > {{{diagram url="resources/matrix-space-change.html?stage=0" caption="클립 공간" }}}
 >
@@ -500,7 +500,7 @@ matrix = m3.scale(matrix, scale[0], scale[1]);
 >
 > 우리는 이제 픽셀 공간에 있습니다. X = 0 ~ 400, Y = 0 ~ 300, 왼쪽 상단은 0,0 입니다.
 > 이 행렬을 사용하여 전달된 위치는 픽셀 공간에 있어야 합니다.
-> 공간이 Y 위치가 위에서 Y 위치 아래로 뒤집힐떄 할떄 휙 지나가는 것을 볼수 있습니다.
+> Y축의 양의 방향이 위에서 아래로, 공간이 휙 뒤집히는 순간을 볼 수 있습니다.
 
 3 단계:  `matrix = m3.translate(matrix, tx, ty);`
 
@@ -532,9 +532,13 @@ Step 5:  `matrix = m3.scale(matrix, sx, sy);`
 
 <div class="webgl_bottombar">
 <h3><code>clientWidth</code>이랑 <code>clientHeight</code>는 무엇입니까?</h3>
-<p>이 시점까지는 캔버스의 크기를 참조 할 때마다 <code> m3.projection </ code>을 호출했을 때 위의 <code> canvas.width </ code>와 <code> canvas.height </ code> 대신 <code> canvas.clientWidth </ code> 및 <code> canvas.clientHeight </ code>를 사용했습니다.
+<p>이 시점까지는 캔버스의 크기를 참조할 때마다 <code>m3.projection</code>을 호출했을 때
+위의 <code>canvas.width</code>와 <code>canvas.height</code> 대신
+<code>canvas.clientWidth</code> 및 <code>canvas.clientHeight</code>를 사용했습니다.
 왜일까요?</p>
-<p>투영 행렬은 클립 공간(각 차원에서 -1에서 +1)을 가져 와서 다시 픽셀로 변환하는 방법과 관련이 있습니다. 그러나 브라우저에는 두 가지 유형의 픽셀이 있습니다. 하나는 캔버스 자체의 픽셀 수입니다. 예를 들어 이렇게 정의 된 캔버스입니다.</p>
+<p>투영 행렬은 클립 공간(각 차원에서 -1에서 +1)을 가져 와서 다시 픽셀로 변환하는 방법과
+관련이 있습니다. 그러나 브라우저에는 두 가지 유형의 픽셀이 있습니다.
+하나는 캔버스 자체의 픽셀 수입니다. 예를 들어 이렇게 정의 된 캔버스입니다.</p>
 <pre class="prettyprint">
   &lt;canvas width="400" height="300"&gt;&lt;/canvas&gt;
 </pre>
@@ -544,7 +548,8 @@ Step 5:  `matrix = m3.scale(matrix, sx, sy);`
   canvas.width = 400;
   canvas.height = 300;
 </pre>
-<p>둘 다 400 픽셀 x 300 픽셀 높이의 이미지를 포함합니다. 하지만이 크기는 브라우저가 실제로 400x300 픽셀 캔버스를 표시하는 크기와 별개입니다. CSS는 캔버스가 표시되는 크기를 정의합니다.
+<p>둘 다 400 픽셀 x 300 픽셀 높이의 이미지를 포함합니다. 하지만이 크기는 브라우저가 실제로
+400x300 픽셀 캔버스를 표시하는 크기와 별개입니다. CSS는 캔버스가 표시되는 크기를 정의합니다.
 예를 들어 우리가 이렇게 캔버스를 만들었다면.</p>
 <pre class="prettyprint"><!>
   &lt;style&gt;
@@ -557,10 +562,24 @@ Step 5:  `matrix = m3.scale(matrix, sx, sy);`
   &lt;canvas width="400" height="300">&lt;/canvas&gt;
 </pre>
 <p>컨테이너의 크기에 상관없이 캔버스가 표시됩니다. 400x300이 아닙니다.</p>
-<p>다음은 캔버스의 CSS 표시 크기를 100 %로 설정하여 캔버스가 페이지를 채우도록 펼쳐지는 두 가지 예입니다. 첫 번째는 <code> canvas.width </ code>와 <code> canvas.height </ code>를 사용합니다. 새 창에서 열어 창 크기를 조정해보세요. 'F'가 어떻게 맞는 모양을 가지지 않는지 확인해보세요. 왜곡됩니다.</p>
+<p>다음은 캔버스의 CSS 표시 크기를 100%로 설정하여 캔버스가 페이지를 채우도록 펼쳐지는
+두 가지 예입니다. 첫 번째는 <code>canvas.width</code>와 <code>canvas.height</code>를 사용합니다.
+새 창에서 열어 창 크기를 조정해보세요. 'F'가 어떻게 맞는 모양을 가지지 않는지 확인해보세요.
+왜곡됩니다.</p>
 {{{example url="../webgl-canvas-width-height.html" width="500" height="150" }}}
-<p>두 번째 예제에서는 <code> canvas.clientWidth </ code>와 <code> canvas.clientHeight </ code>를 사용합니다. <code> canvas.clientWidth </ code>와<code> canvas.clientHeight </ code>는 브라우저에서 실제로 캔버스가 표시되는 크기를 표시합니다. 이 경우 캔버스는 여전히 400x300 픽셀 밖에 없지만 캔버스가 표시되는 크기에 따라 가로 세로 비율을 정의하면 <code> F </ code>가 항상 올바르게 보입니다.</p>
+<p>두 번째 예제에서는 <code>canvas.clientWidth</code>와 <code>canvas.clientHeight</code>를
+사용합니다. <code>canvas.clientWidth</code>와<code>canvas.clientHeight</code>는 브라우저에서
+실제로 캔버스가 표시되는 크기를 표시합니다. 이 경우 캔버스는 여전히 400x300 픽셀 밖에 없지만
+캔버스가 표시되는 크기에 따라 가로 세로 비율을 정의하면 <code>F</code>가 항상 올바르게 보입니다.</p>
 {{{example url="../webgl-canvas-clientwidth-clientheight.html" width="500" height="150" }}}
-<p>regardless
+<p>대부분의 앱들이 캔버스의 크기를 재조정할 때,
+<code>canvas.width</code>와 <code>canvas.height</code>를
+<code>canvas.clientWidth</code>와 <code>canvas.clientHeight</code>로 맞춥니다.
+왜냐하면 브라우저에 출력되는 각 픽셀이 캔버스의 한 픽셀이 되게끔 하고 싶기 때문입니다.
+하지만, 위에서 살펴보았듯, 이건 유일한 선택 사항이 아닙니다.
+거의 모든 경우에서, <code>canvas.clientHeight</code>와 <code>canvas.clientWidth</code>를
+사용해서 투영 행렬의 화면 비율을 계산하는 것이 기술적으로는 더 정확하다는 뜻입니다.
+이렇게 하면 캔버스의 크기와 브라우저가 그린 캔버스의 크기가 일치하는지에 상관없이
+정확한 비율을 계산할 수 있습니다.
 </p>
 </div>

@@ -1,6 +1,6 @@
-Title: WebGL1에서 WebGL2로
-Description: WebGL1에서 WebGL2로 옮기는 방법
-TOC: WebGL1에서 WebGL2로 옮기기
+Title: WebGL1에서 WebGL2로의 변경
+Description: WebGL1에서 WebGL2로의 변경
+TOC: WebGL1에서 WebGL2로의 변경
 
 
 WebGL2는 WebGL1과 **거의** 100% 하위 호환이 됩니다.
