@@ -122,7 +122,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-    <a href="#toc"></a>
+    <a href="#toc">목차</a>
   </div>
 </div>
 <div class="webgl_header">
@@ -415,7 +415,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 더 실험적인 텍스처 포맷 및 첨부물 조합들은 작동하지 않을 수 있습니다. 이러한 경우 프레임 버퍼를 바인드 한 다음<code class="notranslate" translate="no">gl.checkFramebufferStatus</code>를 호출하고<code class="notranslate" translate="no">gl.FRAMEBUFFER_COMPLETE</code>를 리턴하는지 확인해야합니다. 작동이 한다면 그대로 사용하면 되고 만약 작동하지 않는다면 사용자에게 이를 알릴 필요가 있습니다. 다행히도 WebGL2는 다양한 포맷과 조합을 지원합니다.</p>
 <p>WebGL은 (클립 공간)[webgl-fundamentals.html]에서 픽셀로 변환을 합니다. 이 작업은<code class="notranslate" translate="no">gl.viewport</code> 설정을 기반으로합니다. 프레임 버퍼는 캔버스와 크기가 다르기 때문에 텍스처 또는 캔버스에 랜더링할 것인지에 따라
  뷰표트를 적절히 설정이 필요합니다.</p>
-<p>마지막으로 <a href="webgl-fundamentals.html">원래 예제</a>에서 WebGL은 전통적인 2D에서 왼쪽 상단과 달리 왼쪽 아래를 0.0으로 캔버스를 보여주기 떄문에 렌더링 할떄 Y좌표를 뒤집었습니다. 이는 프레임 버퍼를 할때에는 필요가 없습니다. 프레임 버퍼는 보여지지 않기 떄문에 어느부분이 위인지 아래인지는 상관이 없습니다. 중요한 것은 픽셀 0이고 0은 프레임버퍼의 0에 해당한다는 것입니다. 이 문제를 해결하기 위해 쉐이더 <code class="notranslate" translate="no">u_flipY</code>이라 불리는 하나 이상의 유니폼 입력을 추가하여 뒤집을지 아닌지 설정 할 수 있게 만들었습니다.</p>
+<p>마지막으로 <a href="webgl-fundamentals.html">원래 예제</a>에서 WebGL은 전통적인 2D에서 왼쪽 상단과 달리 왼쪽 아래를 0.0으로 캔버스를 보여주기 때문에 렌더링 할때 Y좌표를 뒤집었습니다. 이는 프레임 버퍼를 할때에는 필요가 없습니다. 프레임 버퍼는 보여지지 않기 때문에 어느부분이 위인지 아래인지는 상관이 없습니다. 중요한 것은 픽셀 0이고 0은 프레임버퍼의 0에 해당한다는 것입니다. 이 문제를 해결하기 위해 쉐이더 <code class="notranslate" translate="no">u_flipY</code>이라 불리는 하나 이상의 유니폼 입력을 추가하여 뒤집을지 아닌지 설정 할 수 있게 만들었습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 +uniform float u_flipY;
 ...
@@ -466,8 +466,8 @@ void main() {
   <li>WebGL2 vs WebGL1</li>
         <ul>
           <li><a href="/webgl/lessons/ko/webgl2-whats-new.html">WebGL2 새로운 기능</a></li>
-<li><a href="/webgl/lessons/ko/webgl1-to-webgl2.html">WebGL1에서 WebGL2로 옮기기</a></li>
-<li><a href="/webgl/lessons/ko/webgl1-to-webgl2-fundamentals.html">Differences from WebGLFundamentals.org to WebGL2Fundamentals.org</a></li>
+<li><a href="/webgl/lessons/ko/webgl1-to-webgl2.html">WebGL1에서 WebGL2로의 변경</a></li>
+<li><a href="/webgl/lessons/ko/webgl1-to-webgl2-fundamentals.html">WebGLFundamentals.org과 WebGL2Fundamentals.org의 차이점</a></li>
         </ul>
   <li>이미지 처리</li>
         <ul>
@@ -602,7 +602,7 @@ void main() {
     </div>
     <div class="lesson-comments">
         
-    <div>이슈/버그? <a href="https://github.com/greggman/webgl-fundamentals/issues">깃헙에서 이슈만들기</a>.</div>
+    <div>이슈나 버그가 있나요? <a href="https://github.com/greggman/webgl-fundamentals/issues">깃헙에서 이슈 만들기</a>.</div>
   
 
         <div id="disqus_thread"></div>
@@ -630,7 +630,7 @@ void main() {
 </body>
 <script>
 const settings = {
-  contribTemplate: "Thank you <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>for <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  contribTemplate: "<a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a>님, <br>당신의 <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} 기여</a>에 감사드립니다.",
   owner: "gfxfundamentals",
   repo: "webgl2-fundamentals",
 };

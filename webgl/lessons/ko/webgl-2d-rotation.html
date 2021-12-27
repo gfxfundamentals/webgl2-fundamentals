@@ -122,7 +122,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-    <a href="#toc"></a>
+    <a href="#toc">목차</a>
   </div>
 </div>
 <div class="webgl_header">
@@ -236,7 +236,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>이 글은 WebGL 게시글 시리즈에서 이어지는 글입니다. 첫 번쨰는 <a href="webgl-fundamentals.html">기초로 시작</a>이였으며 바로 전은 <a href="webgl-2d-translation.html">기하학에 대한 이동</a>이였습니다.</p>
+      <p>이 글은 WebGL 게시글 시리즈에서 이어지는 글입니다. 첫 번째는 <a href="webgl-fundamentals.html">기초로 시작</a>이었으며 바로 전은 <a href="webgl-2d-translation.html">기하학에 대한 이동</a>이였습니다.</p>
 <p>I&#39;m going to admit right up front I have no idea if how I explain this
  will make sense but what the heck, might as well try.</p>
 <p>먼저 &quot;단위 원(unit circle)&quot;라고 불리는 것을 소개 하고자 합니다. 만약 중학교 수학을 기억한다면(잠자면 안됩니다!) 원은 반지름(radius)을 가지고 있습니다. 원의 반지름(radius)은 원의 중심으로 부터 원의 가장자리 까지의 거리입니다. 단위 원은 반지름(radius)이 1인 원 입니다.</p>
@@ -247,7 +247,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 </p>
 <p>파란색 핸들을 원 주위로 드래그하면 X 와 Y의 위치가 변경됩니다. 이는 보여 원위의 그 지점의 위치를 나타냅니다. 상단에서 Y는 1이고 X는 0입니다. 오른쪽에서 X는 1이고 Y는 0입니다.</p>
-<p>초등학교 3학년 수학에서 무언가에 1을 곱하면 같은 값을 유지한다는 것을 기억할 것입니다. 그러므로 123 * 1 = 123. 아주 기본이죠? 단위원에서 반지름이 1.0인 것도 1입니다. 회전할떄도 1입니다. 그러므로 이 단위원으로 무언가를 곱할수 있고 마술이 일어나서 회전하는것 뺴고는 1을 곱하는것과 같습니다.</p>
+<p>초등학교 3학년 수학에서 무언가에 1을 곱하면 같은 값을 유지한다는 것을 기억할 것입니다. 그러므로 123 * 1 = 123. 아주 기본이죠? 단위원에서 반지름이 1.0인 것도 1입니다. 회전할때도 1입니다. 그러므로 이 단위원으로 무언가를 곱할수 있고 마술이 일어나서 회전하는것 뺴고는 1을 곱하는것과 같습니다.</p>
 <p>단위 원에 임의의 점 X와 Y를 정할것이고 <a href="webgl-2d-translation.html">전에 했던 예제</a>에 지오메트리(geometry)에 곱할것입니다.</p>
 <p>여기에 업데이트된 쉐이더가 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
@@ -353,26 +353,26 @@ void main() {
   var c = Math.cos(angleInRadians);
   console.log(&quot;s = &quot; + s + &quot; c = &quot; + c);
 }
-</code></pre><p>자바스크립트 콘솔에 코드를 복사하고 붙혀 넣고 <code class="notranslate" translate="no">printSineAndCosignForAngle(30)</code>을 치면 <code class="notranslate" translate="no">s = 0.49 c = 0.87</code>(주의: 숫자를 반올립 했습니다.)을 볼 수 있습니다.</p>
-<p>이 모든 것들을 함께 사용하면 원하는 각도로 지오메트리(geometry)를 회전 할 수 있습니다. 회전하려는 각도의 사인 및 코사인으로 회전을 설정하면됩니다.</p>
+</code></pre><p>자바스크립트 콘솔에 코드를 복사하고 붙여넣고 <code class="notranslate" translate="no">printSineAndCosineForAnAngle(30)</code>을 실행하면, (반올림해서 적으면) <code class="notranslate" translate="no">s = 0.49 c = 0.87</code>을 볼 수 있습니다.</p>
+<p>이 모든 것들을 함께 사용하면 원하는 각도로 지오메트리(geometry)를 회전시킬 수 있습니다. 회전하려는 각도의 사인 및 코사인으로 회전을 설정하면됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
   var angleInRadians = angleInDegrees * Math.PI / 180;
   rotation[0] = Math.sin(angleInRadians);
   rotation[1] = Math.cos(angleInRadians);
-</code></pre><p>여기에 각도 설정이 있는 버전이 있습니다. 이동 또는 회전할 슬라이더를 드래그 하십시오.</p>
+</code></pre><p>아래는 각도를 조정할 수 있는 버전입니다. 원을 움직여서 회전시키거나, 슬라이더를 드래그하여 이동시켜보세요.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-rotation-angle.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-rotation-angle.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>이해가 됐기를 바랍니다. <a href="webgl-2d-scale.html">다음도 간단한 것입니다. 크기</a>.</p>
+<p>이해가 됐기를 바랍니다. <a href="webgl-2d-scale.html">다음은, 더 간단한 &quot;크기 변환&quot;입니다.</a>.</p>
 <div class="webgl_bottombar"><h3>라디안(radians)이란 무엇 입니까?</h3>
 <p>
-라디안(Radians)은 원, 회전 및 각도와 함꼐 사용되는 측정 단위 입니다. 마치 우리가 인치, 야드, 미터 등 거리를 측정 할 수 있는 것처럼 라디안으로 각도를 측정 할 수 있습니다.
+라디안(Radians)은 원, 회전 및 각도와 함께 사용되는 측정 단위 입니다. 마치 우리가 인치, 야드, 미터 등 거리를 측정할 수 있는 것처럼 라디안으로 각도를 측정할 수 있습니다.
 </p>
 <p>
-수학에서 미터법 측정이 야드파운드법 측정 보다 쉽다는 것을 알고 있을 것입니다. 인치에서 피트로 이동하려면 12로 나눠야 합니다. 인치에서 야드로 이동하려면 36을 나눠야 합니다.
+수학에서 미터법 측정이 야드파운드법 측정보다 쉽다는 것을 알고 있을 것입니다. 인치에서 피트로 이동하려면 12로 나눠야 합니다. 인치에서 야드로 이동하려면 36을 나눠야 합니다.
  여러분들을 어떨지 모르겠지만 저는 36을 나누는 것은 머릿속에서 잘 계산이 안됩니다. 미터법을 사용하면 훨씬 쉽습니다. 밀리미터에서 센터미터로 이동하려면 10으로 나누면 됩니다. 밀리 미터에서 미터로 갈려면 1000으로 나누면 됩니다. 머리속에서 1000을 계산하는 것은 할 수 있습니다.
 </p>
 <p>
@@ -407,8 +407,8 @@ void main() {
   <li>WebGL2 vs WebGL1</li>
         <ul>
           <li><a href="/webgl/lessons/ko/webgl2-whats-new.html">WebGL2 새로운 기능</a></li>
-<li><a href="/webgl/lessons/ko/webgl1-to-webgl2.html">WebGL1에서 WebGL2로 옮기기</a></li>
-<li><a href="/webgl/lessons/ko/webgl1-to-webgl2-fundamentals.html">Differences from WebGLFundamentals.org to WebGL2Fundamentals.org</a></li>
+<li><a href="/webgl/lessons/ko/webgl1-to-webgl2.html">WebGL1에서 WebGL2로의 변경</a></li>
+<li><a href="/webgl/lessons/ko/webgl1-to-webgl2-fundamentals.html">WebGLFundamentals.org과 WebGL2Fundamentals.org의 차이점</a></li>
         </ul>
   <li>이미지 처리</li>
         <ul>
@@ -543,7 +543,7 @@ void main() {
     </div>
     <div class="lesson-comments">
         
-    <div>이슈/버그? <a href="https://github.com/greggman/webgl-fundamentals/issues">깃헙에서 이슈만들기</a>.</div>
+    <div>이슈나 버그가 있나요? <a href="https://github.com/greggman/webgl-fundamentals/issues">깃헙에서 이슈 만들기</a>.</div>
   
 
         <div id="disqus_thread"></div>
@@ -571,7 +571,7 @@ void main() {
 </body>
 <script>
 const settings = {
-  contribTemplate: "Thank you <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>for <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  contribTemplate: "<a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a>님, <br>당신의 <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} 기여</a>에 감사드립니다.",
   owner: "gfxfundamentals",
   repo: "webgl2-fundamentals",
 };

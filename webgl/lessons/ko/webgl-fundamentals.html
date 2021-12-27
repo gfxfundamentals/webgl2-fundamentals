@@ -122,7 +122,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-    <a href="#toc"></a>
+    <a href="#toc">목차</a>
   </div>
 </div>
 <div class="webgl_header">
@@ -526,7 +526,7 @@ gl.drawArrays(primitiveType, offset, count);
 <em>만약 3D로 그리기를 원하다면 3D 좌표를 클립 공간으로 변환하는 셰이더는 여러분이 직접 제공해 주어야만 합니다. WebGL은 단지 래스터화(rasterization) API이기 때문입니다.</em></p>
 <p>왜 삼각형이 화면 가운데에서 시작하여 오른쪽 상단으로 그려지는지 궁금할 것입니다.
 <code class="notranslate" translate="no">x</code>의 클립 공간은 -1에서 +1 사이입니다. 이는 0이 가운고 양수 값은 오른쪽이라는 것을 의미합니다.</p>
-<p>상단에 있는 이유는 클립 공간에서 -1는 하단에 +1은 상단에 있기 떄문입니다. 즉 0은 가운데이고 양수값은 가운데보다 위이기 때문입니다.</p>
+<p>상단에 있는 이유는 클립 공간에서 -1는 하단에 +1은 상단에 있기 때문입니다. 즉 0은 가운데이고 양수값은 가운데보다 위이기 때문입니다.</p>
 <p>2D의 경우 클립 공간보다 픽셀 단위로 작업하는것이 편리하므로 우리가 픽셀 단위로 위치를 입력하면 클립 공간으로 변환해 주도록 셰이더를 변경해 봅시다. 
 아래는 새로운 정점 셰이더입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">-  in vec4 a_position;
@@ -546,7 +546,7 @@ gl.drawArrays(primitiveType, offset, count);
 +
 *    gl_Position = vec4(clipSpace, 0, 1);
   }
-</code></pre><p>변경 사항에 대해 참고하셔야 할 것들이 있습니다. <code class="notranslate" translate="no">x</code>와 <code class="notranslate" translate="no">y</code>값만 사용하기 떄문에 <code class="notranslate" translate="no">a_position</code>을 <code class="notranslate" translate="no">vec2</code>로 변경했습니다. 
+</code></pre><p>변경 사항에 대해 참고하셔야 할 것들이 있습니다. <code class="notranslate" translate="no">x</code>와 <code class="notranslate" translate="no">y</code>값만 사용하기 때문에 <code class="notranslate" translate="no">a_position</code>을 <code class="notranslate" translate="no">vec2</code>로 변경했습니다. 
 <code class="notranslate" translate="no">vec2</code>는 <code class="notranslate" translate="no">vec4</code>와 비슷하지만 <code class="notranslate" translate="no">x</code>와 <code class="notranslate" translate="no">y</code>값만 가지고 있습니다.</p>
 <p>다음으로 <code class="notranslate" translate="no">u_resolution</code>이라 불리는 <code class="notranslate" translate="no">uniform</code>를 추가했습니다. 값을 설정 하기 위해서 먼저 location을 찾아야합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var resolutionUniformLocation = gl.getUniformLocation(program, &quot;u_resolution&quot;);
@@ -704,8 +704,8 @@ WebGL이 어떻게 동작하는지에 대한 다른 설명 방법을 보고 싶�
   <li>WebGL2 vs WebGL1</li>
         <ul>
           <li><a href="/webgl/lessons/ko/webgl2-whats-new.html">WebGL2 새로운 기능</a></li>
-<li><a href="/webgl/lessons/ko/webgl1-to-webgl2.html">WebGL1에서 WebGL2로 옮기기</a></li>
-<li><a href="/webgl/lessons/ko/webgl1-to-webgl2-fundamentals.html">Differences from WebGLFundamentals.org to WebGL2Fundamentals.org</a></li>
+<li><a href="/webgl/lessons/ko/webgl1-to-webgl2.html">WebGL1에서 WebGL2로의 변경</a></li>
+<li><a href="/webgl/lessons/ko/webgl1-to-webgl2-fundamentals.html">WebGLFundamentals.org과 WebGL2Fundamentals.org의 차이점</a></li>
         </ul>
   <li>이미지 처리</li>
         <ul>
@@ -840,7 +840,7 @@ WebGL이 어떻게 동작하는지에 대한 다른 설명 방법을 보고 싶�
     </div>
     <div class="lesson-comments">
         
-    <div>이슈/버그? <a href="https://github.com/greggman/webgl-fundamentals/issues">깃헙에서 이슈만들기</a>.</div>
+    <div>이슈나 버그가 있나요? <a href="https://github.com/greggman/webgl-fundamentals/issues">깃헙에서 이슈 만들기</a>.</div>
   
 
         <div id="disqus_thread"></div>
@@ -868,7 +868,7 @@ WebGL이 어떻게 동작하는지에 대한 다른 설명 방법을 보고 싶�
 </body>
 <script>
 const settings = {
-  contribTemplate: "Thank you <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>for <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  contribTemplate: "<a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a>님, <br>당신의 <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} 기여</a>에 감사드립니다.",
   owner: "gfxfundamentals",
   repo: "webgl2-fundamentals",
 };
