@@ -11,9 +11,9 @@ WebGL 1.0에 관심이 있다면 [여기를](https://webglfundamentals.org) 방�
 
 <ul>
 <li><a href="/webgl/lessons/ko/webgl-getting-webgl2.html">WebGL2 사용법</a></li>
-<li><a href="/webgl/lessons/webgl2-whats-new.html">WebGL2의 새로운 기능</a></li>
-<li><a href="/webgl/lessons/webgl1-to-webgl2.html">WebGL1에서 WebGL2로의 변경</a></li>
-<li><a href="/webgl/lessons/webgl1-to-webgl2-fundamentals.html">WebGLFundamentals.org와 WebGL2Fundamentals.org의 차이점</a></li>
+<li><a href="/webgl/lessons/ko/webgl2-whats-new.html">WebGL2의 새로운 기능</a></li>
+<li><a href="/webgl/lessons/ko/webgl1-to-webgl2.html">WebGL1에서 WebGL2로의 변경</a></li>
+<li><a href="/webgl/lessons/ko/webgl1-to-webgl2-fundamentals.html">WebGLFundamentals.org와 WebGL2Fundamentals.org의 차이점</a></li>
 </ul>
 
 #Table of Contents
