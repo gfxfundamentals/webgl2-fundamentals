@@ -140,9 +140,9 @@ I'm going to admit right up front I have no idea if how I explain this
       console.log("s = " + s + " c = " + c);
     }
 
-자바스크립트 콘솔에 코드를 복사하고 붙혀 넣고 `printSineAndCosignForAngle(30)`을 치면 `s = 0.49 c = 0.87`(주의: 숫자를 반올립 했습니다.)을 볼 수 있습니다.
+자바스크립트 콘솔에 코드를 복사하고 붙여넣고 `printSineAndCosineForAnAngle(30)`을 실행하면, (반올림해서 적으면) `s = 0.49 c = 0.87`을 볼 수 있습니다.
 
-이 모든 것들을 함께 사용하면 원하는 각도로 지오메트리(geometry)를 회전 할 수 있습니다. 회전하려는 각도의 사인 및 코사인으로 회전을 설정하면됩니다.
+이 모든 것들을 함께 사용하면 원하는 각도로 지오메트리(geometry)를 회전시킬 수 있습니다. 회전하려는 각도의 사인 및 코사인으로 회전을 설정하면됩니다.
 
       ...
       var angleInRadians = angleInDegrees * Math.PI / 180;
