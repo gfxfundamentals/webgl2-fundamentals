@@ -457,7 +457,7 @@ matrix = m3.scale(matrix, scale[0], scale[1]);
 
     translation * rotation * scale
 
-두 번째 에제에서는
+두 번째 예제에서는
 
     scale * rotation * translation
 

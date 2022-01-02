@@ -42,7 +42,7 @@ TOC: 텍스처에 렌더링하기
 `data`가 `null`인 것에 주목하세요. 우리는 데이터를 전달할 필요가 없습니다.
 여기서는 단지 WebGL이 텍스처를 할당하기만 하면 됩니다.
 
-다음으로 프레임버퍼를 만듭니다. [프레임버퍼란 단지 어떤 데이터들의 집합입니다(collection of attachments)](webgl-framebuffers.html).
+다음으로 프레임 버퍼를 만듭니다. [프레임 버퍼란 단지 어떤 데이터들의 집합입니다(collection of attachments)](webgl-framebuffers.html).
 여기서 어떤 데이터란 텍스처 또는 렌더버퍼(renderbuffer)입니다.
 텍스처에 대해서는 이미 알아보았고, 렌더버퍼란 텍스처와 아주 유사하지만 텍스처는 
 지원하지 않은 몇몇 포맷과 옵션을 지원한다는 점이 다릅니다.
@@ -59,11 +59,11 @@ TOC: 텍스처에 렌더링하기
     gl.framebufferTexture2D(
         gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, targetTexture, level);
 
-텍스처나 버퍼와 동일하게, 프레임버퍼를 만들고 나서 `FRAMEBUFFER`라는 
-바인드 포인트에 바인딩 해주어야 합니다. 이렇게 하고나면 프레임버퍼와 관련된 
-다른 모는 함수는 바인드 포인트에 바인딩된 프레임버퍼를 참조하게 됩니다.
+텍스처나 버퍼와 동일하게, 프레임 버퍼를 만들고 나서 `FRAMEBUFFER`라는 
+바인드 포인트에 바인딩 해주어야 합니다. 이렇게 하고나면 프레임 버퍼와 관련된 
+다른 모는 함수는 바인드 포인트에 바인딩된 프레임 버퍼를 참조하게 됩니다.
 
-프레임버퍼가 바인딩되면, 우리가  `gl.clear`, `gl.drawArrays`, 
+프레임 버퍼가 바인딩되면, 우리가  `gl.clear`, `gl.drawArrays`, 
 `gl.drawElements`를 호출할 때마다 WebGL은 캔버스 대신 우리의 텍스처에 렌더링을 수행하게 됩니다.
 
 ```
@@ -120,7 +120,7 @@ function drawScene(time) {
   ...
 
   {
-    // 프레임버퍼를 바인딩하여 우리의 targetTexture에 그리도록 합니다.
+    // 프레임 버퍼를 바인딩하여 우리의 targetTexture에 그리도록 합니다.
     gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
 
     // 3x2 텍스처를 사용하여 정육면체를 그립니다.
@@ -179,7 +179,7 @@ function drawScene(time) {
 
 그리고 렌더링 대상을 변경할 때는 이 함수만을 사용합니다. 그러면 잊어버리지 않을 겁니다.
 
-주의하셔야 할 것중 하나는 우리의 프레임버퍼에는 깊이 버퍼(depth buffer)가 없다는 것입니다. 오직 텍스처만 갖고 있습니다.
+주의하셔야 할 것중 하나는 우리의 프레임 버퍼에는 깊이 버퍼(depth buffer)가 없다는 것입니다. 오직 텍스처만 갖고 있습니다.
 즉 깊이 테스팅을 수행하지 않기 때문에 3D 가 제대로 동작하지 않는다는 것입니다.
 정육면체 3개를 그린다면 결과는 아래와 같아집니다.
 
@@ -188,11 +188,11 @@ function drawScene(time) {
 가운데 정육면체를 보시면 세로로 놓여진 세 개의 정육면체가 하나는 뒤쪽에, 하나는 중간에, 하나는 앞쪽에 그려지는 것을 보실 수 있습니다.
 하지만 우리는 세 개의 육면체를 모두 같은 깊이에 그렸습니다.
 반면 캔버스에 보이는 세 개의 가로로 놓여진 육면체들은 서로 올바르게 교차하는 것을 보실 수 있습니다.
-왜냐하면 캔버스에는 깊이 버퍼가 있지만, 우리가 사용한 프레임버퍼에는 깊이 버퍼가 없기 때문입니다.
+왜냐하면 캔버스에는 깊이 버퍼가 있지만, 우리가 사용한 프레임 버퍼에는 깊이 버퍼가 없기 때문입니다.
 
 <img class="webgl_center" src="resources/cubes-without-depth-buffer.jpg" width="100%" height="100%" />
 
-깊이 버퍼를 추가하기 위해서는 깊이 텍스처를 만들고 프레임버퍼에 붙여줘야 합니다.
+깊이 버퍼를 추가하기 위해서는 깊이 텍스처를 만들고 프레임 버퍼에 붙여줘야 합니다.
 
 ```
 // create a depth texture
@@ -227,7 +227,7 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
 
 {{{example url="../webgl-render-to-texture-3-cubes-with-depth-buffer.html" }}}
 
-이제 프레임버퍼에 깊이 버퍼가 추가되었기 때문에 안쪽의 육면체들도 올바르게 교차하는 것을 보실 수 있습니다.
+이제 프레임 버퍼에 깊이 버퍼가 추가되었기 때문에 안쪽의 육면체들도 올바르게 교차하는 것을 보실 수 있습니다.
 
 <img class="webgl_center" src="resources/cubes-with-depth-buffer.jpg" width="100%" height="100%" />
 
@@ -239,7 +239,7 @@ WebGL은 특정 조합의 attachment들만 사용할 수 있다는 점에 주의
 * `COLOR_ATTACHMENT0` = `RGBA/UNSIGNED_BYTE` 텍스처 + `DEPTH_STENCIL_ATTACHMENT` = `DEPTH_STENCIL` 렌더버퍼
 
 다른 조합에 대해서는 사용자의 시스템/GPU/드라이버/브라우저가 해당 조합을 지원하는지를 확인하셔야만 합니다.
-확인하려면 프레임버퍼를 만들고 attachment를 추가한 뒤에 아래 함수를 호출하세요.
+확인하려면 프레임 버퍼를 만들고 attachment를 추가한 뒤에 아래 함수를 호출하세요.
 
     var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
 
@@ -252,7 +252,7 @@ status가 `FRAMEBUFFER_COMPLETE`면 attachment 조합이 사용 가능한 상태
 <h3>캔버스는 사실 텍스처 입니다.</h3>
 <p>
 중요한 건 아니지만 브라우저는 위에 언급한 기술을 사용해 캔버스를 구현하고 있습니다.
-뒤쪽에서 색상 텍스처(color texture), 깊이 버퍼, 프레임버퍼를 만들고 현재 프레임버퍼로 바인딩합니다.
+뒤쪽에서 색상 텍스처(color texture), 깊이 버퍼, 프레임 버퍼를 만들고 현재 프레임 버퍼로 바인딩합니다.
 여러분이 렌더링을 수행하면 그 텍스처로 그려지게 됩니다.
 그리고 그 텍스처는 캔버스를 웹 페이지에 그리는 데 사용됩니다.
 </p>

@@ -64,7 +64,7 @@ TOC: 그림자
 
 먼저 쉐도우 맵을 그려 봅시다. [투영 맵핑에 관한 글](webgl-planar-projection-mapping.html)의 마지막 예제를 가져올건데, 
 텍스처를 로딩하는 대신 [텍스처에 렌더링(render to texture)](webgl-render-to-texture.html)할겁니다.
-따라서 깊이 텍스처를 만들고 이를 프레임버퍼에 `DEPTH_ATTACHMENT`를 사용해 추가해 주빈다.
+따라서 깊이 텍스처를 만들고 이를 프레임 버퍼에 `DEPTH_ATTACHMENT`를 사용해 추가해 주빈다.
 
 ```js
 const depthTexture = gl.createTexture();

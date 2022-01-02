@@ -3,7 +3,7 @@ Description: WebGL의 attribute란 무엇일까요?
 TOC: Attributes
 
 
-이 글은 WebGL에서 attribute 상태(state)가 어떻게 구성되는지에 대한 개념의 이해를 돕기 위해 작성되었습니다. [텍스처 유닛](webgl-texture-units.html) 및 [프레임버퍼](webgl-framebuffers.html)에 대해서도 유사한 글이 있으니 참고 하세요.
+이 글은 WebGL에서 attribute 상태(state)가 어떻게 구성되는지에 대한 개념의 이해를 돕기 위해 작성되었습니다. [텍스처 유닛](webgl-texture-units.html) 및 [프레임 버퍼](webgl-framebuffers.html)에 대해서도 유사한 글이 있으니 참고 하세요.
 
 이 내용을 이해하기 위해서는 먼저 [WebGL 작동 원리](webgl-how-it-works.html)와 [WebGL 셰이더와 GLSL](https://webglfundamentals.org/webgl/lessons/webgl-shaders-and-glsl.html)을 먼저 읽으셔야 합니다.
 
