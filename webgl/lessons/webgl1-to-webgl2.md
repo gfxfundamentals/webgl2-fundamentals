@@ -197,7 +197,7 @@ a floating point texture.
 
 Note that this is also true for `HALF_FLOAT` framebuffer attachments as well.
 
-> If you're curious, this was a *bug* in the WebLG1 spec. What happened is that WebGL1
+> If you're curious, this was a *bug* in the WebGL1 spec. What happened is that WebGL1
 > shipped and `OES_texture_float` was added, and it was just assumed the correct
 > way to use it for rendering was to create a texture, attach it to a framebuffer,
 > and check its status. Later someone pointed out that according to the spec that was
