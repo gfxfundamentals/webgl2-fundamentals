@@ -359,7 +359,7 @@ the data.
 +    gl.STATIC_DRAW);
 ```
 
-We also need to setup the color attribute
+We also need to set up the color attribute
 
 ```js
 // set attribute for color
