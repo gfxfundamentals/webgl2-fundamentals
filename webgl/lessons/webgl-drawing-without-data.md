@@ -566,5 +566,5 @@ So, if either of those issues is a problem for your needs then as a solution you
 with <code>gl.TRIANGLES</code> instead of using <code>gl.POINTS</code>.
  If you do that both problems are solved.
 The maximum size problem goes away as does the inconsistent clipping problem. There are various
-ways to draw lots of quads. One of then is using techniques like the ones in this article.</p>
+ways to draw lots of quads. <a href="https://jsgist.org/?src=6306857bfd65adbdcd54b0051d441935">One of them is using techniques like the ones in this article</a>.</p>
 </div>
