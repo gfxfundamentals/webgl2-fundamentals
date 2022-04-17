@@ -347,12 +347,18 @@ layout(location = 2) in vec3 normal;
 <h2 id="-attribute-state">전체 Attribute State</h2>
 <p>위의 설명 중 빠진 것 중 하나는, 각 attribute는 기본값이 있다는 것입니다. 
 위에서 설명하지 않은 이유는 이를 활용하는 경우가 흔하지 않기 때문입니다.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">attributes: [
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">attributeValues: [
+  [0, 0, 0, 1],
+  [0, 0, 0, 1],
+  ...
+],
+vertexArray: {
+  attributes: [
    { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?,
-     divisor: 0, value: [0, 0, 0, 1], },
+   　divisor: 0, },
    { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?,
-     divisor: 0, value: [0, 0, 0, 1], },
-   ..
+   　divisor: 0, },
+   ...
 </code></pre>
 <p><code class="notranslate" translate="no">gl.vertexAttribXXX</code>들을 사용해 각 attibute의 값을 설정해 줄 수 있습니다.
 이 값들은 <code class="notranslate" translate="no">enable</code>가 false일 때 사용됩니다. <code class="notranslate" translate="no">enable</code>이 true라면 attribute의 데이터는 할당된 버퍼로부터 가져옵니다.</p>
