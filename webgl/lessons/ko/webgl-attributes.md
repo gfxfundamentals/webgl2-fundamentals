@@ -149,12 +149,19 @@ layout(location = 2) in vec3 normal;
 위에서 설명하지 않은 이유는 이를 활용하는 경우가 흔하지 않기 때문입니다.
 
 ```js
-attributes: [
+attributeValues: [
+  [0, 0, 0, 1],
+  [0, 0, 0, 1],
+  ...
+],
+vertexArray: {
+  attributes: [
    { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?,
-     divisor: 0, value: [0, 0, 0, 1], },
+   　divisor: 0, },
    { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?,
-     divisor: 0, value: [0, 0, 0, 1], },
-   ..
+   　divisor: 0, },
+   ...
+
 ```
 
 `gl.vertexAttribXXX`들을 사용해 각 attibute의 값을 설정해 줄 수 있습니다.

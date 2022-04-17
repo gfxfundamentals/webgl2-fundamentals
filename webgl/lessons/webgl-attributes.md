@@ -161,12 +161,18 @@ Missing from the description above is that each attribute also has a default
 value. It is left out above because it is uncommon to use it.
 
 ```js
-attributes: [
+attributeValues: [
+  [0, 0, 0, 1],
+  [0, 0, 0, 1],
+  ...
+],
+vertexArray: {
+  attributes: [
    { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?,
-     divisor: 0, value: [0, 0, 0, 1], },
+   　divisor: 0, },
    { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?,
-     divisor: 0, value: [0, 0, 0, 1], },
-   ..
+   　divisor: 0, },
+   ...
 ```
 You can set each attribute's value with the various `gl.vertexAttribXXX`
 functions. The value is used when `enable` is false. When enable is true data for
