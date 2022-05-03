@@ -1143,7 +1143,7 @@ const parts = obj.geometries.map(({data}) => {
 });
 ```
 
-And we that we're able to load an .OBJ file with vertex colors.
+And with that we're able to load an .OBJ file with vertex colors.
 
 {{{example url="../webgl-load-obj-w-vertex-colors.html"}}}
 
