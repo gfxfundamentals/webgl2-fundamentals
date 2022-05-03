@@ -424,7 +424,7 @@ your own exporter or find a an exporter and format that will provide all the dat
 
 There's going to be a lot of code so let's first try to just get the un-skinned model to display.
 
-Let's try loading a glTF file. [glTF](https://www.khronos.org/gltf/) as it's kind of desgined for WebGL. Searching the net I found [this killer whale blender file](https://www.blendswap.com/blends/view/65255) by [Junskie Pastilan](https://www.blendswap.com/user/pasilan)
+Let's try loading a glTF file. [glTF](https://www.khronos.org/gltf/) as it's kind of designed for WebGL. Searching the net I found [this killer whale blender file](https://www.blendswap.com/blends/view/65255) by [Junskie Pastilan](https://www.blendswap.com/user/pasilan)
 
 <div class="webgl_center"><img src="../resources/models/killer_whale/thumbnail.jpg"></div>
 
