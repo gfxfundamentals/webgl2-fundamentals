@@ -151,7 +151,7 @@ and then compute a matrix that will put the camera there. Based on how matrices 
 First we need to know where we want the camera.  We'll call this the
 `cameraPosition`.  Then we need to know the position of the thing we want
 to look at or aim at.  We'll call it the `target`.  If we subtract the
-`target` from the `cameraPosition` we'll have a vector that points in the
+`cameraPosition` from the `target` we'll have a vector that points in the
 direction we'd need to go from the camera to get to the target.  Let's
 call it `zAxis`.  Since we know the camera points in the -Z direction we
 can subtract the other way `cameraPosition - target`. We normalize the
