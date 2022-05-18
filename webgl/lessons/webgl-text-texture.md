@@ -108,7 +108,7 @@ that make up our F's orientation
     fViewMatrix = m4.scale(fViewMatrix, scale[0], scale[1], scale[2]);
     fViewMatrix = m4.translate(fViewMatrix, -50, -75, 0);
 
-Then finally we we multiply in the projectionMatrix when setting our uniform value.
+Then finally we multiply in the projectionMatrix when setting our uniform value.
 
     fUniforms.u_matrix = m4.multiply(projectionMatrix, fViewMatrix);
 
