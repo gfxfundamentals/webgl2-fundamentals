@@ -238,7 +238,7 @@ was global WebGL state. You can imagine it like this
    }
 
 Calling functions like `gl.vertexAttribPointer`, `gl.enableVertexAttribArray`, and
-`gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ??)` would effect that global state.
+`gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ??)` would affect that global state.
 Before each thing you wanted to draw you needed to setup all the attributes, and if you
 were drawing indexed data you needed to set the `ELEMENT_ARRAY_BUFFER`.
 
