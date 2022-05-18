@@ -318,7 +318,7 @@ fViewMatrix = m4.yRotate(fViewMatrix, rotation[1] + yy * xx * 0.2);
 fViewMatrix = m4.zRotate(fViewMatrix, rotation[2] + now + (yy * 3 + xx) * 0.1);
 fViewMatrix = m4.scale(fViewMatrix, scale[0], scale[1], scale[2]);
 fViewMatrix = m4.translate(fViewMatrix, -50, -75, 0);
-</code></pre><p>Then finally we we multiply in the projectionMatrix when setting our uniform value.</p>
+</code></pre><p>Then finally we multiply in the projectionMatrix when setting our uniform value.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">fUniforms.u_matrix = m4.multiply(projectionMatrix, fViewMatrix);
 </code></pre><p>It&#39;s important to note here that <code class="notranslate" translate="no">projectionMatrix</code> is on the left. This lets us
 multiply in the projectionMatrix as though it was the first matrix. Normally
