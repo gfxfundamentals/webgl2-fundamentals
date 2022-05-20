@@ -65,7 +65,7 @@ framebuffers reference whatever framebuffer is bound there.
 With our framebuffer bound, anytime we call `gl.clear`, `gl.drawArrays`, or `gl.drawElements` WebGL
 would render to our texture instead of the canvas.
 
-Let's take are previous rendering code and make it a function so we can call it twice.
+Let's take our previous rendering code and make it a function so we can call it twice.
 Once to render to the texture and again to render to the canvas.
 
 ```

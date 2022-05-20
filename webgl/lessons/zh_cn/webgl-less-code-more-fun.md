@@ -333,7 +333,7 @@ objects.forEach(function(object) {
        indices:  { numComponents: 3, data: [0, 1, 2, 1, 2, 3],                       },
     };
 
-    var bufferInfo = twgl.createBufferInfoFromTypedArray(gl, arrays);
+    var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
     var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
 
 在渲染时将调用 `gl.drawElements` 代替 `gl.drawArrays`。

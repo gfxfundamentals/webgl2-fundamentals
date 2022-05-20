@@ -340,7 +340,7 @@ objects.forEach(function(object) {
        indices:  { numComponents: 3, data: [0, 1, 2, 1, 2, 3],                       },
     };
 
-    var bufferInfo = twgl.createBufferInfoFromTypedArray(gl, arrays);
+    var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
     var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
 
 렌더링 시점에서 `gl.drawArrays` 대신에 `gl.drawElements`를 호출하면 됩니다.
