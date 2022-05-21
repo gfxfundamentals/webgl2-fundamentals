@@ -339,7 +339,7 @@ with your `indices` so when you bind that VAO you can call
        indices:  { numComponents: 3, data: [0, 1, 2, 1, 2, 3],                       },
     };
 
-    var bufferInfo = twgl.createBufferInfoFromTypedArray(gl, arrays);
+    var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
     var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
 
 and at render time we can call `gl.drawElements` instead of `gl.drawArrays`.

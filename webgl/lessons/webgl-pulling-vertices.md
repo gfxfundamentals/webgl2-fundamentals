@@ -188,7 +188,7 @@ const positionIndexUVIndexBuffer = gl.createBuffer();
 // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
 gl.bindBuffer(gl.ARRAY_BUFFER, positionIndexUVIndexBuffer);
 // Put the position and texcoord indices in the buffer
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positionIndexUVIndex), gl.STATIC_DRAW);
+gl.bufferData(gl.ARRAY_BUFFER, new Uint32Array(positionIndexUVIndex), gl.STATIC_DRAW);
 ```
 
 and setup the attribute
