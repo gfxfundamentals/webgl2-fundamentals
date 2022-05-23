@@ -96,7 +96,7 @@ gl.framebufferRenderbuffer(target, attachmentPoint, renderbufferTarget, renderbu
 // 의사 코드
 gl.drawBuffers(drawBuffers) {
   const framebuffer = this._getFramebufferByTarget(gl.DRAW_FRAMEBUFFER);
-  for (let i = 0; i > maxDrawBuffers; ++i) {
+  for (let i = 0; i < maxDrawBuffers; ++i) {
     framebuffer.drawBuffers[i] = i < drawBuffers.length
         ? drawBuffers[i]
         : gl.NONE

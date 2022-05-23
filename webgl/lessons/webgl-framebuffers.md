@@ -15,8 +15,8 @@ You can think of a Framebuffer object like this
 class Framebuffer {
   constructor() {
     this.attachments = new Map();  // attachments by attachment point
-    this.drawBuffers = [gl.COLOR_ATTACHMENT0, gl.NONE, gl.NONE, gl.NONE, ...];
-    this.readBuffer = gl.COLOR_ATTACHMENT0,
+    this.drawBuffers = [gl.BACK, gl.NONE, gl.NONE, gl.NONE, ...];
+    this.readBuffer = gl.BACK,
   }
 }
 ```
@@ -52,6 +52,9 @@ gl.bindFramebuffer(target, framebuffer) {
   }
 }
 ```
+
+The `DRAW_FRAMEBUFFER` binding is used when drawing to a framebuffer via `gl.clear`, `gl.draw???`, or `gl.blitFramebuffer`.
+The `READ_FRAMEBUFFER` binding is used when reading from a framebuffer via `gl.readPixels` or `gl.blitFramebuffer`.
 
 You can add attachments to a framebuffer via 3 functions, `framebufferTexture2D`,
 `framebufferRenderbuffer`, and `framebufferTextureLayer`.
@@ -96,7 +99,7 @@ imagine is implemented like this
 // pseudo code
 gl.drawBuffers(drawBuffers) {
   const framebuffer = this._getFramebufferByTarget(gl.DRAW_FRAMEBUFFER);
-  for (let i = 0; i > maxDrawBuffers; ++i) {
+  for (let i = 0; i < maxDrawBuffers; ++i) {
     framebuffer.drawBuffers[i] = i < drawBuffers.length
         ? drawBuffers[i]
         : gl.NONE
@@ -104,7 +107,13 @@ gl.drawBuffers(drawBuffers) {
 }
 ```
 
-And you can set the read buffer with `gl.readBuffer`
+The drawBuffers array determines if a particular attachment is rendered to or not.
+The valid values are either `gl.NONE` which means *don't render to this attachment* or,
+`gl.COLOR_ATTACHMENTx` where `x` is the same as the index of the attachment. One other
+value is `gl.BACK` which is only valid when `null` is bound to the current framebuffer
+in which case `gl.BACK` means 'render to the backbuffer (the canvas)'
+
+You can set the read buffer with `gl.readBuffer`
 
 ```js
 // pseudo code
@@ -113,6 +122,8 @@ gl.readBuffer(readBuffer) {
   framebuffer.readBuffer = readBuffer;
 }
 ```
+
+The readBuffer sets which attachment is read when calling `gl.readPixels`.
 
 The important part is a *framebuffer* is just a simple collection of attachments.
 The complications are the restrictions on what those attachments
