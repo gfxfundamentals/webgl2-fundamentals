@@ -244,8 +244,8 @@ used to allow rendering to textures and renderbuffers.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">class Framebuffer {
   constructor() {
     this.attachments = new Map();  // attachments by attachment point
-    this.drawBuffers = [gl.COLOR_ATTACHMENT0, gl.NONE, gl.NONE, gl.NONE, ...];
-    this.readBuffer = gl.COLOR_ATTACHMENT0,
+    this.drawBuffers = [gl.BACK, gl.NONE, gl.NONE, gl.NONE, ...];
+    this.readBuffer = gl.BACK,
   }
 }
 </code></pre><p>And the <code class="notranslate" translate="no">WebGL2RenderingContext</code> (the <code class="notranslate" translate="no">gl</code> object) like this</p>
@@ -274,6 +274,8 @@ gl = {
   }
 }
 </code></pre>
+<p>The <code class="notranslate" translate="no">DRAW_FRAMEBUFFER</code> binding is used when drawing to a framebuffer via <code class="notranslate" translate="no">gl.clear</code>, <code class="notranslate" translate="no">gl.draw???</code>, or <code class="notranslate" translate="no">gl.blitFramebuffer</code>.
+The <code class="notranslate" translate="no">READ_FRAMEBUFFER</code> binding is used when reading from a framebuffer via <code class="notranslate" translate="no">gl.readPixels</code> or <code class="notranslate" translate="no">gl.blitFramebuffer</code>.</p>
 <p>You can add attachments to a framebuffer via 3 functions, <code class="notranslate" translate="no">framebufferTexture2D</code>,
 <code class="notranslate" translate="no">framebufferRenderbuffer</code>, and <code class="notranslate" translate="no">framebufferTextureLayer</code>.</p>
 <p>We can imagine their implementation to be something like</p>
@@ -311,20 +313,26 @@ imagine is implemented like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// pseudo code
 gl.drawBuffers(drawBuffers) {
   const framebuffer = this._getFramebufferByTarget(gl.DRAW_FRAMEBUFFER);
-  for (let i = 0; i &gt; maxDrawBuffers; ++i) {
+  for (let i = 0; i &lt; maxDrawBuffers; ++i) {
     framebuffer.drawBuffers[i] = i &lt; drawBuffers.length
         ? drawBuffers[i]
         : gl.NONE
   }
 }
 </code></pre>
-<p>And you can set the read buffer with <code class="notranslate" translate="no">gl.readBuffer</code></p>
+<p>The drawBuffers array determines if a particular attachment is rendered to or not.
+The valid values are either <code class="notranslate" translate="no">gl.NONE</code> which means <em>don&#39;t render to this attachment</em> or,
+<code class="notranslate" translate="no">gl.COLOR_ATTACHMENTx</code> where <code class="notranslate" translate="no">x</code> is the same as the index of the attachment. One other
+value is <code class="notranslate" translate="no">gl.BACK</code> which is only valid when <code class="notranslate" translate="no">null</code> is bound to the current framebuffer
+in which case <code class="notranslate" translate="no">gl.BACK</code> means &#39;render to the backbuffer (the canvas)&#39;</p>
+<p>You can set the read buffer with <code class="notranslate" translate="no">gl.readBuffer</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// pseudo code
 gl.readBuffer(readBuffer) {
   const framebuffer = this._getFramebufferByTarget(gl.READ_FRAMEBUFFER);
   framebuffer.readBuffer = readBuffer;
 }
 </code></pre>
+<p>The readBuffer sets which attachment is read when calling <code class="notranslate" translate="no">gl.readPixels</code>.</p>
 <p>The important part is a <em>framebuffer</em> is just a simple collection of attachments.
 The complications are the restrictions on what those attachments
 can be and the combinations that work. For example a floating point texture 
