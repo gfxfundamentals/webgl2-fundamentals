@@ -17,7 +17,7 @@ Title: WebGL2 理论基础
 <li><a href="/webgl/lessons/zh_cn/webgl1-to-webgl2-fundamentals.html">WebGLFundamentals.org和WebGL2Fundamentals.org的区别</a></li>
 </ul>
 
-#Table of Contents
+# Table of Contents
 
 {{{include "webgl/lessons/zh_cn/toc.html"}}}
 

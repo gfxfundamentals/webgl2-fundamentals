@@ -18,7 +18,7 @@ If you are already familar with WebGL1 you might want to look at these articles.
 <li><a href="/webgl/lessons/webgl1-to-webgl2-fundamentals.html">Differences from WebGLFundamentals.org to WebGL2Fundamentals.org</a></li>
 </ul>
 
-#Table of Contents
+# Table of Contents
 
 {{{include "webgl/lessons/toc.html"}}}
 

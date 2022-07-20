@@ -19,7 +19,7 @@ in JavaScript as well.
 
 [Functions for 3D math are here](/docs/module-webgl-3d-math.html).
 
-#JSDoc3 Plea
+# JSDoc3 Plea
 
 These docs are generated with [JSDoc3](https://usejsdoc.org/). I find them very confusing to look at
 and in some places frustratingly verbose. If you have any experience with JSDoc3 and know how to
