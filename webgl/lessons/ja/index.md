@@ -17,7 +17,7 @@ WebGL1にすでに精通している方は、以下の記事を参照して下�
 <li><a href="/webgl/lessons/ja/webgl1-to-webgl2-fundamentals.html">WebGLFundamentals.orgとWebGL2Fundamentals.orgの違い</a></li>
 </ul>
 
-#目次
+# 目次
 
 {{{include "webgl/lessons/toc.html"}}}
 

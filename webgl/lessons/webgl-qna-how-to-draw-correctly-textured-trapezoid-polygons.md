@@ -14,78 +14,79 @@ Searching for a solution I see that this problem is common and the reason why is
     My shaders :  (copied from webglfundamentals.com, edited according to https://stackoverflow.com/a/25239021/3666866)
 
     <script id="3d-vertex-shader" type="x-shader/x-vertex">
-  attribute vec4 a_position ;
-  //attribute vec2 a_texcoord ;
-  attribute vec4 a_texcoord ;
-  uniform mat4 u_matrix ;
-  //varying vec2 v_texcoord ;
-  varying vec4 v_texcoord ;
-  void main() {
-   gl_Position = u_matrix * a_position ;
-   v_texcoord = a_texcoord ;
-  }
- </script>
+    attribute vec4 a_position ;
+    //attribute vec2 a_texcoord ;
+    attribute vec4 a_texcoord ;
+    uniform mat4 u_matrix ;
+    //varying vec2 v_texcoord ;
+    varying vec4 v_texcoord ;
+    void main() {
+     gl_Position = u_matrix * a_position ;
+     v_texcoord = a_texcoord ;
+    }
+    </script>
 
- <script id="3d-fragment-shader" type="x-shader/x-fragment">
-  precision mediump float ;
-  //varying vec2 v_texcoord ;
-  varying vec4 v_texcoord ;
-  uniform sampler2D u_texture ;
-  void main() {
-    //gl_FragColor = texture2D(u_texture, v_texcoord) ;
-    gl_FragColor = texture2DProj( u_texture , v_texcoord ) ;
-  }
- </script>
+    <script id="3d-fragment-shader" type="x-shader/x-fragment">
+     precision mediump float ;
+     //varying vec2 v_texcoord ;
+     varying vec4 v_texcoord ;
+     uniform sampler2D u_texture ;
+     void main() {
+       //gl_FragColor = texture2D(u_texture, v_texcoord) ;
+       gl_FragColor = texture2DProj( u_texture , v_texcoord ) ;
+     }
+    </script>
  
  code :
 
- gl_.positionLocation = gl.getAttribLocation( gl_.program, "a_position" );
- gl_.texcoordLocation = gl.getAttribLocation( gl_.program, "a_texcoord" );
- gl.matrixLocation = gl.getUniformLocation( gl_.program, "u_matrix" );
- gl.textureLocation = gl.getUniformLocation( gl_.program, "u_texture" );
- gl_.positionBuffer = gl.createBuffer();
- gl.bindBuffer( gl.ARRAY_BUFFER, gl_.positionBuffer );
- var positions = new Float32Array(
-  [
-  -1.5, -0.5,   0.5,
-   1.5, -0.5,   0.5,
-  -0.5,  0.5,   0.5,
-  -0.5,  0.5,   0.5,
-   1.5, -0.5,   0.5,
-   0.5,  0.5,   0.5,
-  ]);
-  gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
-  
- gl_.texcoordBuffer = gl.createBuffer();
- gl.bindBuffer( gl.ARRAY_BUFFER, gl_.texcoordBuffer );
- gl.bufferData(
-   gl.ARRAY_BUFFER,
-   new Float32Array(
-    [
-    0.25, 0  ,
-    0.5 , 0  ,
-    0.25, 0.5,
-    0.25, 0.5,
-    0.5 , 0  ,
-    0.5 , 0.5,
-   ]),
-   gl.STATIC_DRAW);
+     gl_.positionLocation = gl.getAttribLocation( gl_.program, "a_position" );
+     gl_.texcoordLocation = gl.getAttribLocation( gl_.program, "a_texcoord" );
+     gl.matrixLocation = gl.getUniformLocation( gl_.program, "u_matrix" );
+     gl.textureLocation = gl.getUniformLocation( gl_.program, "u_texture" );
+     gl_.positionBuffer = gl.createBuffer();
+     gl.bindBuffer( gl.ARRAY_BUFFER, gl_.positionBuffer );
+     var positions = new Float32Array(
+      [
+      -1.5, -0.5,   0.5,
+       1.5, -0.5,   0.5,
+      -0.5,  0.5,   0.5,
+      -0.5,  0.5,   0.5,
+       1.5, -0.5,   0.5,
+       0.5,  0.5,   0.5,
+      ]);
+      gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+      
+     gl_.texcoordBuffer = gl.createBuffer();
+     gl.bindBuffer( gl.ARRAY_BUFFER, gl_.texcoordBuffer );
+     gl.bufferData(
+       gl.ARRAY_BUFFER,
+       new Float32Array(
+        [
+        0.25, 0  ,
+        0.5 , 0  ,
+        0.25, 0.5,
+        0.25, 0.5,
+        0.5 , 0  ,
+        0.5 , 0.5,
+       ]),
+       gl.STATIC_DRAW);
 
 
  
  The render code :
- gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
- gl.bindBuffer( gl.ARRAY_BUFFER, positionBuffer );
- gl.vertexAttribPointer(positionLocation,3,gl.FLOAT,false,0,0);
- gl.enableVertexAttribArray( texcoordLocation );
- gl.bindBuffer( gl.ARRAY_BUFFER, texcoordBuffer );
- gl.vertexAttribPointer(texcoordLocation,3,gl.FLOAT,false,0,0);
- let projectionMatrix = m4.perspective( fieldOfViewRadians, aspect, 1, 2000);
- let viewProjectionMatrix = m4.multiply( projectionMatrix, viewMatrix );
- let matrix = m4.xRotate( viewProjectionMatrix, modelXRotationRadians );
- gl.uniformMatrix4fv( matrixLocation , false , viewProjectionMatrix );
- gl.uniform1i( textureLocation , 0 );
- gl.drawArrays(gl.TRIANGLES, 0, 6 * 1 );
+
+     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+     gl.bindBuffer( gl.ARRAY_BUFFER, positionBuffer );
+     gl.vertexAttribPointer(positionLocation,3,gl.FLOAT,false,0,0);
+     gl.enableVertexAttribArray( texcoordLocation );
+     gl.bindBuffer( gl.ARRAY_BUFFER, texcoordBuffer );
+     gl.vertexAttribPointer(texcoordLocation,3,gl.FLOAT,false,0,0);
+     let projectionMatrix = m4.perspective( fieldOfViewRadians, aspect, 1, 2000);
+     let viewProjectionMatrix = m4.multiply( projectionMatrix, viewMatrix );
+     let matrix = m4.xRotate( viewProjectionMatrix, modelXRotationRadians );
+     gl.uniformMatrix4fv( matrixLocation , false , viewProjectionMatrix );
+     gl.uniform1i( textureLocation , 0 );
+     gl.drawArrays(gl.TRIANGLES, 0, 6 * 1 );
 
 Where is the error ?
 
