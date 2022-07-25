@@ -26,13 +26,13 @@ passed to `setRectangle` right? Here's a sample based on our
 +  var width = 100;
 +  var height = 30;
 +  var color = [Math.random(), Math.random(), Math.random(), 1];
-+
+
 +  // Then let's make a function to
 +  // re-draw everything. We can call this
 +  // function after we update the translation.
 
-  // Draw a the scene.
-  function drawScene() {
++  // Draw a the scene.
++  function drawScene() {
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
     // Tell WebGL how to convert from clip space to pixels
@@ -53,7 +53,7 @@ passed to `setRectangle` right? Here's a sample based on our
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
     // Update the position buffer with rectangle positions
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
++    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 *    setRectangle(gl, translation[0], translation[1], width, height);
 
     // Set a the color.
@@ -64,7 +64,7 @@ passed to `setRectangle` right? Here's a sample based on our
     var offset = 0;
     var count = 6;
     gl.drawArrays(primitiveType, offset, count);
-  }
++  }
 ```
 
 In the example below I've attached a couple of sliders that will update
