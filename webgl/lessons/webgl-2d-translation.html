@@ -254,13 +254,13 @@ passed to <code class="notranslate" translate="no">setRectangle</code> right? He
 +  var width = 100;
 +  var height = 30;
 +  var color = [Math.random(), Math.random(), Math.random(), 1];
-+
+
 +  // Then let&#39;s make a function to
 +  // re-draw everything. We can call this
 +  // function after we update the translation.
 
-  // Draw a the scene.
-  function drawScene() {
++  // Draw a the scene.
++  function drawScene() {
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
     // Tell WebGL how to convert from clip space to pixels
@@ -281,7 +281,7 @@ passed to <code class="notranslate" translate="no">setRectangle</code> right? He
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
     // Update the position buffer with rectangle positions
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
++    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 *    setRectangle(gl, translation[0], translation[1], width, height);
 
     // Set a the color.
@@ -292,7 +292,7 @@ passed to <code class="notranslate" translate="no">setRectangle</code> right? He
     var offset = 0;
     var count = 6;
     gl.drawArrays(primitiveType, offset, count);
-  }
++  }
 </code></pre><p>In the example below I&#39;ve attached a couple of sliders that will update
 <code class="notranslate" translate="no">translation[0]</code> and <code class="notranslate" translate="no">translation[1]</code> and call <code class="notranslate" translate="no">drawScene</code> anytime they change.
 Drag the sliders to translate the rectangle.</p>
