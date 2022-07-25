@@ -16,7 +16,7 @@ WebGL 1.0에 관심이 있다면 [여기를](https://webglfundamentals.org) 방�
 <li><a href="/webgl/lessons/ko/webgl1-to-webgl2-fundamentals.html">WebGLFundamentals.org와 WebGL2Fundamentals.org의 차이점</a></li>
 </ul>
 
-#Table of Contents
+# Table of Contents
 
 {{{include "webgl/lessons/ko/toc.html"}}}
 

@@ -12,7 +12,7 @@ Diese Artikel befassen sich speziell mit WebGL2. Wenn du Interesse an WebGL 1.0 
 <li><a href="/webgl/lessons/de/webgl1-to-webgl2-fundamentals.html">Unterschiede zwischen WebGLFundamentals.org und WebGL2Fundamentals.org</a></li>
 </ul>
 
-#Table of Contents
+# Table of Contents
 
 {{{include "webgl/lessons/de/toc.html"}}}
 
