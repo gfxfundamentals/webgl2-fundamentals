@@ -134,7 +134,7 @@ Here's the new shader
 
 // an attribute is an input (in) to a vertex shader.
 // It will receive data from a buffer
-in vec4 a_position;
+in vec2 a_position;
 
 // Used to pass in the resolution of the canvas
 uniform vec2 u_resolution;
