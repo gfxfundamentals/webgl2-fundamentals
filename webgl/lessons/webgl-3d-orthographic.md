@@ -262,7 +262,7 @@ Similarly we'll make our simplified functions
 And we need a 4x4 matrix multiplication function
 
 ```js
-  multiply: multiply(a, b) {
+  multiply: function(a, b) {
     var b00 = b[0 * 4 + 0];
     var b01 = b[0 * 4 + 1];
     var b02 = b[0 * 4 + 2];
