@@ -405,25 +405,16 @@ that goes in front. First the HTML
 
 ```html
 <body>
-  <div id="outer">
-    <canvas id="canvas"></canvas>
-    <div id="content"></div>
-  </div>
+  <canvas id="canvas"></canvas>
+  <div id="content"></div>
 </body>
 ```
 
 Then the CSS
 
 ```css
-html, body {
+body {
   margin: 0;
-  height: 100%;
-}
-#outer {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
 }
 #content {
   margin: 10px;
@@ -542,8 +533,6 @@ with the canvas. If it does we set the viewport and scissor to
 match and then draw that object.
 
 ```js
-const outerElem = document.querySelector('#outer');
-
 function render(time) {
   time *= 0.001;  // convert to seconds
 
@@ -554,7 +543,7 @@ function render(time) {
   gl.enable(gl.SCISSOR_TEST);
 
   // move the canvas to top of the current scroll position
-  gl.canvas.style.transform = `translateY(${outerElem.scrollTop}px)`;
+  gl.canvas.style.transform = `translateY(${window.scrollY}px)`;
 
   for (const {bufferInfo, vao, element, color} of items) {
     const rect = element.getBoundingClientRect();
@@ -613,7 +602,7 @@ One other notable thing about the code is we're moving the canvas
 with this line
 
 ```
-gl.canvas.style.transform = `translateY(${outerElem.scrollTop}px)`;
+gl.canvas.style.transform = `translateY(${window.scrollY}px)`;
 ```
 
 Why? We could instead set the canvas to `position: fixed;` in which case

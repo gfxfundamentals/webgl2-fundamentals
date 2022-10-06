@@ -6,15 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>WebGL2 - Multiple Views Items</title>
 <style>
-html, body {
+body {
   margin: 0;
-  height: 100%;
-}
-#outer {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
 }
 #content {
   margin: 10px;
@@ -43,10 +36,8 @@ html, body {
 </style>
 </head>
 <body>
-  <div id="outer">
-    <canvas id="canvas"></canvas>
-    <div id="content"></div>
-  </div>
+  <canvas id="canvas"></canvas>
+  <div id="content"></div>
 </body>
 <!--
 This sample uses TWGL (Tiny WebGL) to hide the clutter.
@@ -179,7 +170,6 @@ function main() {
   }
 
   const fieldOfViewRadians = degToRad(60);
-  const outerElem = document.querySelector('#outer');
 
   function drawScene(projectionMatrix, cameraMatrix, worldMatrix, bufferInfo, vao) {
     // Clear the canvas AND the depth buffer.
@@ -217,7 +207,7 @@ function main() {
     gl.enable(gl.SCISSOR_TEST);
 
     // move the canvas to top of the current scroll position
-    gl.canvas.style.transform = `translateY(${outerElem.scrollTop}px)`;
+    gl.canvas.style.transform = `translateY(${window.scrollY}px)`;
 
     for (const {bufferInfo, vao, element, color} of items) {
       const rect = element.getBoundingClientRect();
