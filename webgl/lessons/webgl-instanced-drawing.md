@@ -18,8 +18,6 @@ const vertexShaderSource = `#version 300 es
 in vec4 a_position;
 uniform mat4 matrix;
 
-out vec4 v_color;
-
 void main() {
   // Multiply the position by the matrix.
   gl_Position = matrix * a_position;
