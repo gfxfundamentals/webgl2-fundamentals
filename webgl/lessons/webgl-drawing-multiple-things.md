@@ -278,7 +278,7 @@ goes in that list with actually calling the `gl.draw___` functions.
 
 In general it's considered *best practice* to not call WebGL redundantly.
 In other words, if some state of WebGL is already set to what you need it to
-be set to then don't set it again. In that vain we could check, if the 
+be set to then don't set it again. In that vein we could check, if the 
 shader program we need to draw the current object is the same shader program
 as the previous object then there's no need to call `gl.useProgram`. Similarly,
 if we're drawing with the same shape/geometry/vertices there's no need to call
