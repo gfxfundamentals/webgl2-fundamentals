@@ -210,7 +210,7 @@ Uniforms은 여러 타입이 될 수 있습니다. 각 타입별로 해당 함�
     out vec4 outColor;
 
     void main() {
-       vec2 texcoord = vec2(0.5, 0.5)  // 텍스처 정가운데 값을 얻습니다.
+       vec2 texcoord = vec2(0.5, 0.5);  // 텍스처 정가운데 값을 얻습니다.
        outColor = texture(u_texture, texcoord);
     }
 

@@ -211,7 +211,7 @@ or `gl.uniform?u?`的方法名。
     out vec4 outColor;
 
     void main() {
-       vec2 texcoord = vec2(0.5, 0.5)  // get a value from the middle of the texture
+       vec2 texcoord = vec2(0.5, 0.5);  // get a value from the middle of the texture
        outColor = texture(u_texture, texcoord);
     }
 
