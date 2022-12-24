@@ -14,12 +14,12 @@ As you can see, the text behind the WebGL canvas is not visible. When I change s
     opacity: 0.5;
 
 The page will look like this:
-http://i47.tinypic.com/302ys9c.png
+https://imgur.com/BMgHWsZ
 
 Which is almost what I want, but not entirely - the color of text due to the CSS alpha setting is of course not the same black and color of blue shape is not the same blue as in the first picture.
 
 Thanks for any help!
-
+https://imgur.com/hSu5tyM
 
 ## Answer:
 
