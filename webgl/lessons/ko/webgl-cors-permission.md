@@ -55,7 +55,7 @@ WebGL에서는 텍스처로 사용하기 위해 이미지를 다운로드한 다
 
 그런 다음 데이터를 가져옵니다.
 
-    var data = ctx.getImageData(0, 0, width, heigh);
+    var data = ctx.getImageData(0, 0, width, height);
 
 하지만 이미지가 다른 도메인에서 가져와 그린 이미지라면 브라우저는 캔버스를 *오염*되었다고 표시하고 `ctx.getImageData`를 호출할 때 보안 오류를 발생시킵니다.
 

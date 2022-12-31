@@ -58,7 +58,7 @@ possui uma maneira de ver dentro da imagem. Primeiro, você desenha a imagem na 
 
 E então, você obtêm os dados
 
-    var data = ctx.getImageData(0, 0, width, heigh);
+    var data = ctx.getImageData(0, 0, width, height);
 
 Mas, se a imagem que você desenhou veio de um domínio diferente, o navegador marcará o canvas como *tainted* e
 você receberá um erro de segurança ao chamar `ctx.getImageData`
