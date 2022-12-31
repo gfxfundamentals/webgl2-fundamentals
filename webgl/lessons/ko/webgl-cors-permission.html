@@ -280,7 +280,7 @@ function loadImageAndCreateTextureInfo(url) {
 먼저 캔버스에 이미지를 그립니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">ctx.drawImage(someImg, 0, 0);
 </code></pre><p>그런 다음 데이터를 가져옵니다.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var data = ctx.getImageData(0, 0, width, heigh);
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var data = ctx.getImageData(0, 0, width, height);
 </code></pre><p>하지만 이미지가 다른 도메인에서 가져와 그린 이미지라면 브라우저는 캔버스를 <em>오염</em>되었다고 표시하고 <code class="notranslate" translate="no">ctx.getImageData</code>를 호출할 때 보안 오류를 발생시킵니다.</p>
 <p>WebGL은 한 단계 더 나아갑니다.
 WebGL에서 <code class="notranslate" translate="no">gl.readPixels</code>는 <code class="notranslate" translate="no">ctx.getImageData</code>와 동일하니 이를 발지하면 충분하다고 생각하실지 모르겠지만, 

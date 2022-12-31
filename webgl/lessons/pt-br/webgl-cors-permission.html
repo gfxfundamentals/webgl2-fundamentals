@@ -282,7 +282,7 @@ navegador, um script não pode ver os dados dentro da imagem. <a href="https://d
 possui uma maneira de ver dentro da imagem. Primeiro, você desenha a imagem na tela</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">ctx.drawImage(someImg, 0, 0);
 </code></pre><p>E então, você obtêm os dados</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var data = ctx.getImageData(0, 0, width, heigh);
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var data = ctx.getImageData(0, 0, width, height);
 </code></pre><p>Mas, se a imagem que você desenhou veio de um domínio diferente, o navegador marcará o canvas como <em>tainted</em> e
 você receberá um erro de segurança ao chamar <code class="notranslate" translate="no">ctx.getImageData</code></p>
 <p>a WebGL tem que levá-la até mesmo um passo adiante. Na WebGL <code class="notranslate" translate="no">gl.readPixels</code> é uma chamada equivocada para <code class="notranslate" translate="no">ctx.getImageData</code>,
