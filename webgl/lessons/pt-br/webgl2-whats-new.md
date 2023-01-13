@@ -130,7 +130,7 @@ função `inverse`, bem como `transpose`.
 
 Na WebGL1 existem vários formatos de textura comprimida
 que dependem de hardware. O S3TC era basicamente apenas de desktop.
-PVTC era apenas iOS. Etc ..
+PVRTC era apenas iOS. Etc ..
 
 Na WebGL2, esses formatos devem ser suportados em todos os lugares
 
