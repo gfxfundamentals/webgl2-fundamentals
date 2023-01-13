@@ -130,7 +130,7 @@ pass it in as a uniform. In WebGL2 GLSL 300 es there's the built-in
 
 In WebGL1 there are various compressed texture formats
 that are hardware dependent. S3TC was basically desktop only.
-PVTC was iOS only, etc.
+PVRTC was iOS only, etc.
 
 In WebGL2 these formats are supposed to be supported everywhere:
 
