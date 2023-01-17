@@ -316,18 +316,17 @@ WebGL2移除了这个限制(GLSL 300 es)</p>
 <p>WebGL1中，如果需要获得矩阵的逆，你需要将它作为uniform传给着色器。WebGL2 GLSL 300 es里有内置的<code class="notranslate" translate="no">inverse</code> 函数，同样有转置函数<code class="notranslate" translate="no">transpose</code>。</p>
 <h2 id="-">常见的压缩纹理</h2>
 <p>WebGL1中有许多压缩纹理格式是硬件依赖的。S3TC基本上只是桌面支持。PVRTC只有iOS。其他..</p>
-<p>WebGL2中这些格式应该在任何地方得到支持。 </p>
+<p>在WebGL2中，至少支持下面一套压缩纹理格式。</p>
 <ul>
-<li><code class="notranslate" translate="no">COMPRESSED_R11_EAC RED</code></li>
-<li><code class="notranslate" translate="no">COMPRESSED_SIGNED_R11_EAC RED</code></li>
-<li><code class="notranslate" translate="no">COMPRESSED_RG11_EAC RG</code></li>
-<li><code class="notranslate" translate="no">COMPRESSED_SIGNED_RG11_EAC RG</code></li>
-<li><code class="notranslate" translate="no">COMPRESSED_RGB8_ETC2 RGB</code></li>
-<li><code class="notranslate" translate="no">COMPRESSED_SRGB8_ETC2 RGB</code></li>
-<li><code class="notranslate" translate="no">COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2 RGBA</code></li>
-<li><code class="notranslate" translate="no">COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2 RGBA</code></li>
-<li><code class="notranslate" translate="no">COMPRESSED_RGBA8_ETC2_EAC RGBA</code></li>
-<li><code class="notranslate" translate="no">COMPRESSED_SRGB8_ALPHA8_ETC2_EAC</code></li>
+<li>WEBGL_compressed_texture_etc AND/OR</li>
+<li><p>(</p>
+<ul>
+<li>WEBGL_compressed_texture_s3tc AND</li>
+<li>WEBGL_compressed_texture_s3tc_srgb AND</li>
+<li>EXT_texture_compression_rgtc</li>
+</ul>
+<p>)</p>
+</li>
 </ul>
 <h2 id="uniform-">Uniform 缓冲对象</h2>
 <p>Uniform缓冲对象可以让你在缓冲中指定一组uniform。优点是</p>
