@@ -109,18 +109,15 @@ WebGL1中，如果需要获得矩阵的逆，你需要将它作为uniform传给�
 
 WebGL1中有许多压缩纹理格式是硬件依赖的。S3TC基本上只是桌面支持。PVRTC只有iOS。其他..
 
-WebGL2中这些格式应该在任何地方得到支持。 
+在WebGL2中，至少支持下面一套压缩纹理格式。
 
-*   `COMPRESSED_R11_EAC RED`
-*   `COMPRESSED_SIGNED_R11_EAC RED`
-*   `COMPRESSED_RG11_EAC RG`
-*   `COMPRESSED_SIGNED_RG11_EAC RG`
-*   `COMPRESSED_RGB8_ETC2 RGB`
-*   `COMPRESSED_SRGB8_ETC2 RGB`
-*   `COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2 RGBA`
-*   `COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2 RGBA`
-*   `COMPRESSED_RGBA8_ETC2_EAC RGBA`
-*   `COMPRESSED_SRGB8_ALPHA8_ETC2_EAC`
+* WEBGL_compressed_texture_etc AND/OR
+* (
+  * WEBGL_compressed_texture_s3tc AND
+  * WEBGL_compressed_texture_s3tc_srgb AND
+  * EXT_texture_compression_rgtc
+  
+  )
 
 ## Uniform 缓冲对象
 
