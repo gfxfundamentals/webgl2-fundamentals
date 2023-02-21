@@ -194,7 +194,7 @@ I also used similar texture coordinates for the back. And here it is.
 Not a very exciting display but hopefully it demonstrates how to use texture coordinates. If you're making
 geometry in code (cubes, spheres, etc) it's usually pretty easy to compute whatever texture coordinates you
 want. On the other hand if you're getting 3d models from 3d modeling software like Blender, Maya, 3D Studio Max, then
-your artists (or you) will [adjust texture coordinates in those packages using a UV editor](https://docs.blender.org/manual/en/latest/modeling/meshes/editing/uv/unwrapping/index.html).
+your artists (or you) will [adjust texture coordinates in those packages using a UV editor](https://docs.blender.org/manual/en/3.4/modeling/meshes/uv/index.html).
 
 So what happens if we use texture coordinates outside the 0.0 to 1.0 range. By default WebGL repeats
 the texture. 0.0 to 1.0 is one 'copy' of the texture. 1.0 to 2.0 is another copy. even -4.0 to -3.0 is yet
