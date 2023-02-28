@@ -114,8 +114,12 @@ function render(image) {
   // Turn on the attribute
   gl.enableVertexAttribArray(positionAttributeLocation);
 
-  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+  // Bind the position buffer so gl.bufferData that will be called
+  // in setRectangle puts data in the position buffer
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+  // Set a rectangle the same size as the image.
+  setRectangle(gl, 0, 0, image.width, image.height);
 
   // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
   var size = 2;          // 2 components per iteration
@@ -200,13 +204,6 @@ function render(image) {
 
   // Tell the shader to get the texture from texture unit 0
   gl.uniform1i(imageLocation, 0);
-
-  // Bind the position buffer so gl.bufferData that will be called
-  // in setRectangle puts data in the position buffer
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
-  // Set a rectangle the same size as the image.
-  setRectangle(gl, 0, 0, image.width, image.height);
 
   // Draw the rectangle.
   var primitiveType = gl.TRIANGLES;
