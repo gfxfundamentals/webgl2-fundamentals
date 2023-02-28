@@ -56,7 +56,7 @@ passed to `setRectangle` right? Here's a sample based on our
 +    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 *    setRectangle(gl, translation[0], translation[1], width, height);
 
-    // Set a the color.
+    // Set the color.
     gl.uniform4fv(colorLocation, color);
 
     // Draw the rectangle.
