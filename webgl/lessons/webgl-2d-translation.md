@@ -2,7 +2,6 @@ Title: WebGL2 2D Translation
 Description: How to translate in 2D
 TOC: 2D Translation
 
-
 Before we move on to 3D let's stick with 2D for a little while longer.
 Bear with me please. This article might seem exceedingly obvious to
 some but I'll build up to a point in a few articles.
@@ -56,7 +55,7 @@ passed to `setRectangle` right? Here's a sample based on our
 +    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 *    setRectangle(gl, translation[0], translation[1], width, height);
 
-    // Set a the color.
+    // Set the color.
     gl.uniform4fv(colorLocation, color);
 
     // Draw the rectangle.
@@ -260,5 +259,3 @@ above to update all the points</a>.
 
 I hope this example was not too obvious. In the [next article we'll move
 on to rotation](webgl-2d-rotation.html).
-
-
