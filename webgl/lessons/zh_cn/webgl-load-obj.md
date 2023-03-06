@@ -516,7 +516,7 @@ function parseOBJ(text) {
 }
 ```
 
-让我们继续 keywords，根据 [_官方规范_](http://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf)，
+让我们继续 keywords，根据 [_官方规范_](https://web.archive.org/web/20200324065233/http://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf)，
 `matlib` 指定了包含材质信息的独立的一个或多个文件。
 不幸的是，在实际应用中，文件名中可以包含空格，但 .obj 格式中并没有提供转义字符来使用空格或引号。
 理想情况应该使用能解决这些问题的、良好定义的格式，比如 json、xml 或 yaml 等。

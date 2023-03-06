@@ -12,7 +12,7 @@ Wavefront .obj파일은 온라인에서 찾아볼 수 있는 가장 흔한 3D �
 이 코드를 사용하려는 다른 사람들에게 도움이 될 것입니다.
 
 제가 찾은 .OBJ 포맷에 대한 가장 좋은 문서는 [이것입니다.](http://paulbourke.net/dataformats/obj/).
-[이 페이지](https://www.loc.gov/preservation/digital/formats/fdd/fdd000507.shtml)는 [원본 문서](http://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf)를 포함한 다양한 문서에 대항 링크를 제공합니다.
+[이 페이지](https://www.loc.gov/preservation/digital/formats/fdd/fdd000507.shtml)는 [원본 문서](https://web.archive.org/web/20200324065233/http://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf)를 포함한 다양한 문서에 대항 링크를 제공합니다.
 
 간단한 예제를 살펴봅시다. 아래는 블렌더(Blender)의 기본 화면에서 익스포트(export)한 cube.obj 파일입니다.
 
@@ -518,7 +518,7 @@ function parseOBJ(text) {
 }
 ```
 
-키워드에 대해 더 이야기해보자면, [*공식 명세*](http://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf)에 따르면, `matlib`는 머티리얼 정보를 포함하는 별도의 파일(들)을 가리킵니다. 
+키워드에 대해 더 이야기해보자면, [*공식 명세*](https://web.archive.org/web/20200324065233/http://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf)에 따르면, `matlib`는 머티리얼 정보를 포함하는 별도의 파일(들)을 가리킵니다. 
 안타깝게도 실제 상황과는 맞지 않는것이 파일 이름에는 공백이 포함될 수 있고 OBJ 포맷은 공백이나 따옴표(quote) 인자를 처리할 방법이 없습니다. (*역주: 파일 이름에 공백이 포함되어 있으면 머티리얼이 몇 개의 파일 데이터를 가리키는지 파싱을 통해서 처리하기 어렵다는 이야기)
 이상적으로는 json이나 xml, yaml과 같은 잘 정의된 포맷을 사용했으면 이런 문제를 해결할 수 있었겠지만 사실 .OBJ는 이러한 포맷들보다도 더 오래된 포맷입니다.
 
