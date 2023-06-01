@@ -412,7 +412,7 @@ already in clip space there is no work to do. *If you want 3D it's up to you
 to supply shaders that convert from 3D to clip space because WebGL is only
 a rasterization API*.
 
-You might be wondering why does the triangle start in the middle and goes towards the top right.
+You might be wondering why does the triangle start in the middle and go towards the top right.
 Clip space in `x` goes from -1 to +1. That means 0 is in the center and positive values will
 be to the right of that.
 
