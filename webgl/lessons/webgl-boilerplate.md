@@ -101,7 +101,7 @@ care and had a non WebGL fallback I'd use some build step with something like
 [Babel](https://babeljs.io/) to convert the code above into something that IE
 understands.
 
-In the past I liked to to store my shaders in non javascript &lt;script&gt; tags.
+In the past I liked to store my shaders in non javascript &lt;script&gt; tags.
 It also makes them easy to edit so I'd use code like this.
 
     /**
