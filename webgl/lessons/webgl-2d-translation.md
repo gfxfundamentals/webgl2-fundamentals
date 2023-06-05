@@ -257,5 +257,5 @@ If you want you can compare <a target="_blank" href="../webgl-2d-geometry-transl
 the version that uses the complex JavaScript
 above to update all the points</a>.
 
-I hope this example was not too obvious. In the [next article we'll move
+I hope this example was too obvious. In the [next article we'll move
 on to rotation](webgl-2d-rotation.html).
