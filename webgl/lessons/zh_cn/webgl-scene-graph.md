@@ -94,7 +94,7 @@ TOC: 场景图
 
       // 添加到新的父节点上
       if (parent) {
-        parent.children.append(this);
+        parent.children.push(this);
       }
       this.parent = parent;
     };

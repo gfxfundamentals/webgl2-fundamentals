@@ -107,7 +107,7 @@ Let's give it a way to set the parent of a node.
 
       // Add us to our new parent
       if (parent) {
-        parent.children.append(this);
+        parent.children.push(this);
       }
       this.parent = parent;
     };
