@@ -97,7 +97,7 @@ CS 전문가나 그래픽스 전문가가 이 말을 듣는다면 여러가지�
 
       // 새로운 부모 노드의 자식으로 추가
       if (parent) {
-        parent.children.append(this);
+        parent.children.push(this);
       }
       this.parent = parent;
     };
