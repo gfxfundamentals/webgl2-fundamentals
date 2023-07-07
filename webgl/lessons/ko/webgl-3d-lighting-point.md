@@ -173,8 +173,7 @@ halfVector와 표면의 법선이 동일하면 빛이 뷰/눈/카메라로 완�
     uniform mat4 u_worldViewProjection;
     uniform mat4 u_worldInverseTranspose;
 
-    varying vec3 v_normal;
-
+    out vec3 v_normal;
     out vec3 v_surfaceToLight;
     +out vec3 v_surfaceToView;
 
