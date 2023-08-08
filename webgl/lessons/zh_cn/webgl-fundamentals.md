@@ -7,7 +7,7 @@ TOC: 基本原理
 
 WebGL通常被认为是一种3D API。 人们认为“我会使用了WebGL魔法，我就会拥有酷酷的3D技能”。 实际上WebGL仅仅是栅格化(rasterization)引擎。它会基于你的代码来画点，线条和三角形。 而你需要使用点、线、三角形组合来完成复杂的3D任务。
 
-WebGL是在GPU上运行的。在GPU上运行的WebGL代码是以一对函数的形式，分别叫做点着色器(Vetex Shader)和片段着色器(Fragment Shader). 他们是用一种类似C++的强类型语言[GLSL](webgl-shaders-and-glsl.html)编写的。这一对函数组合被叫做程序(Program)。
+WebGL是在GPU上运行的。在GPU上运行的WebGL代码是以一对函数的形式，分别叫做点着色器(Vertex Shader)和片段着色器(Fragment Shader). 他们是用一种类似C++的强类型语言[GLSL](webgl-shaders-and-glsl.html)编写的。这一对函数组合被叫做程序(Program)。
 
 点着色器的任务是计算点的的位置。基于函数输出的位置，WebGL能够栅格化(rasterize)不同种类的基本元素，如[点、线和三角形](webgl-points-lines-triangles.html)。当栅格化这些基本元素的同时，也会调用第二种函数：片段着色器。它的任务就是计算当前正在绘制图形的每个像素的颜色。
 
@@ -15,7 +15,7 @@ WebGL是在GPU上运行的。在GPU上运行的WebGL代码是以一对函数的�
 
 这些函数需要用到的任意数据都必须提供给GPU。 着色器有如下四种方法能够接收数据。
 
-1. 属性(Attributes)，缓冲区(Buffers)和顶点数组(Vetex Arrays)
+1. 属性(Attributes)，缓冲区(Buffers)和顶点数组(Vertex Arrays)
 
    缓存区以二进制数据形式的数组传给GPU。缓存区可以放任意数据，通常有位置，归一化参数，纹理坐标，顶点颜色等等
   
