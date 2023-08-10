@@ -238,12 +238,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p>首先，这些文章是关于WebGL2的。 如果你对WebGL1.0感兴趣，请<a href="https://webglfundamentals.org/">转到这里</a>。 注意WebGL2几乎100%向后兼容<a href="webgl1-to-webgl2.html">WebGL1</a>。 就是说，一旦启用WebGL2，原来WebGL1写的代码还是会如预期的那样执行。
 这个教程遵循如下的路径：</p>
 <p>WebGL通常被认为是一种3D API。 人们认为“我会使用了WebGL魔法，我就会拥有酷酷的3D技能”。 实际上WebGL仅仅是栅格化(rasterization)引擎。它会基于你的代码来画点，线条和三角形。 而你需要使用点、线、三角形组合来完成复杂的3D任务。</p>
-<p>WebGL是在GPU上运行的。在GPU上运行的WebGL代码是以一对函数的形式，分别叫做点着色器(Vetex Shader)和片段着色器(Fragment Shader). 他们是用一种类似C++的强类型语言<a href="webgl-shaders-and-glsl.html">GLSL</a>编写的。这一对函数组合被叫做程序(Program)。</p>
+<p>WebGL是在GPU上运行的。在GPU上运行的WebGL代码是以一对函数的形式，分别叫做点着色器(Vertex Shader)和片段着色器(Fragment Shader). 他们是用一种类似C++的强类型语言<a href="webgl-shaders-and-glsl.html">GLSL</a>编写的。这一对函数组合被叫做程序(Program)。</p>
 <p>点着色器的任务是计算点的的位置。基于函数输出的位置，WebGL能够栅格化(rasterize)不同种类的基本元素，如<a href="webgl-points-lines-triangles.html">点、线和三角形</a>。当栅格化这些基本元素的同时，也会调用第二种函数：片段着色器。它的任务就是计算当前正在绘制图形的每个像素的颜色。</p>
 <p>几乎所有的WebGL API是为这些函数对的运行来<a href="../resources/webgl-state-diagram.html">设置状态</a>。你需要做的是：设置一堆状态，然后调用<code class="notranslate" translate="no">gl.drawArrays</code>和<code class="notranslate" translate="no">gl.drawElements</code>在GPU上运行你的着色器。</p>
 <p>这些函数需要用到的任意数据都必须提供给GPU。 着色器有如下四种方法能够接收数据。</p>
 <ol>
-<li><p>属性(Attributes)，缓冲区(Buffers)和顶点数组(Vetex Arrays)</p>
+<li><p>属性(Attributes)，缓冲区(Buffers)和顶点数组(Vertex Arrays)</p>
 <p>缓存区以二进制数据形式的数组传给GPU。缓存区可以放任意数据，通常有位置，归一化参数，纹理坐标，顶点颜色等等</p>
 <p>属性用来指定数据如何从缓冲区获取并提供给顶点着色器。比如你可能将位置信息以3个32位的浮点数据存在缓存区中， 一个特定的属性包含的信息有：它来自哪个缓存区，它的数据类型(3个32位浮点数据)，在缓存区的起始偏移量，从一个位置到下一个位置有多少个字节等等。</p>
 <p>缓冲区并非随机访问的，而是将顶点着色器执行指定次数。每次执行时，都会从每个指定的缓冲区中提取下一个值并分配给一个属性。</p>
