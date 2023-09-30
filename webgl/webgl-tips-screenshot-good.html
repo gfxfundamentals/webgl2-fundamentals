@@ -216,6 +216,7 @@ function main() {
 
   const elem = document.querySelector('#screenshot');
   elem.addEventListener('click', () => {
+    drawScene();
     canvas.toBlob((blob) => {
       saveBlob(blob, `screencapture-${canvas.width}x${canvas.height}.png`);
     });
