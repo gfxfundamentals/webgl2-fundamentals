@@ -98,8 +98,8 @@ and so would not be a complete unit vector
 
       vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
 
-    -  float light = dot(v_normal, u_reverseLightDirection);
-    +  float light = dot(v_normal, surfaceToLightDirection);
+    -  float light = dot(normal, u_reverseLightDirection);
+    +  float light = dot(normal, surfaceToLightDirection);
 
       outColor = u_color;
 
