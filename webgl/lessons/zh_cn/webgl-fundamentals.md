@@ -109,7 +109,7 @@ WebGL只关注两件事：剪辑空间坐标(Clip space coordinates)和颜色。
 
      <canvas id="c"></canvas>
 
-然后再Javascript中查找到该元素
+然后在Javascript中查找到该元素
 
      var canvas = document.querySelector("#c");
 
@@ -152,7 +152,7 @@ WebGL只关注两件事：剪辑空间坐标(Clip space coordinates)和颜色。
     }
     `;
 
-实际上，大多数3D引擎在运行过程中用不同形式的字符串模板、连接等等产生GLSL着色器。然而，本章实例中没有那么复杂，不需要再运行中实时生成GLSL。
+实际上，大多数3D引擎在运行过程中用不同形式的字符串模板、连接等等产生GLSL着色器。然而，本章实例中没有那么复杂，不需要在运行中实时生成GLSL。
 
 > 注意： `#version 300 es` **必须位于着色器代码的第一行**。 它前面不允许有任何的注释或空行！ `#version 300 es` 的意思是你想要使用WebGL2的着色器语法:GLSL ES 3.00。
 > 如果你没有把它放到第一行，将默认设置为GLSL ES 1.00,即WebGL1.0的语法。相比WebGL2的语法，会少很多特性。
