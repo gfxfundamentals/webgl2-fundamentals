@@ -317,7 +317,7 @@ void main() {
 <p>我们已经写了两个着色器函数，接下来我们开始使用WebGL。</p>
 <p>首先我们需要一个HTML canvas元素</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> &lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;
-</code></pre><p>然后再Javascript中查找到该元素</p>
+</code></pre><p>然后在Javascript中查找到该元素</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> var canvas = document.querySelector(&quot;#c&quot;);
 </code></pre><p>现在我们创建一个WebGL2RenderingContext</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> var gl = canvas.getContext(&quot;webgl2&quot;);
@@ -354,7 +354,7 @@ void main() {
   outColor = vec4(1, 0, 0.5, 1);
 }
 `;
-</code></pre><p>实际上，大多数3D引擎在运行过程中用不同形式的字符串模板、连接等等产生GLSL着色器。然而，本章实例中没有那么复杂，不需要再运行中实时生成GLSL。</p>
+</code></pre><p>实际上，大多数3D引擎在运行过程中用不同形式的字符串模板、连接等等产生GLSL着色器。然而，本章实例中没有那么复杂，不需要在运行中实时生成GLSL。</p>
 <blockquote>
 <p>注意： <code class="notranslate" translate="no">#version 300 es</code> <strong>必须位于着色器代码的第一行</strong>。 它前面不允许有任何的注释或空行！ <code class="notranslate" translate="no">#version 300 es</code> 的意思是你想要使用WebGL2的着色器语法:GLSL ES 3.00。
 如果你没有把它放到第一行，将默认设置为GLSL ES 1.00,即WebGL1.0的语法。相比WebGL2的语法，会少很多特性。</p>
@@ -463,8 +463,8 @@ gl.drawArrays(primitiveType, offset, count);
 </div>
 
 </p>
-<p>从上面例子看出，顶点着色器只是简单地传数据。因为位置数据都在裁剪空间中，所以没有多余个事情做。<em>如果您想显示3D图形，则由您决定提供从3D转换为裁剪空间的着色器，因为WebGL只是一个光栅化API</em></p>
-<p>你可能想知道为什么三角形从中间开始，向右上方移动。因为裁剪空间的x轴从-1到+1. 则意味着0在中间，整数则是右边。</p>
+<p>从上面例子看出，顶点着色器只是简单地传数据。因为位置数据都在裁剪空间中，所以没有多余的事情要做。<em>如果您想显示3D图形，则由您决定提供从3D转换为裁剪空间的着色器，因为WebGL只是一个光栅化API</em></p>
+<p>你可能想知道为什么三角形从中间开始，向右上方移动。因为裁剪空间的x轴从-1到+1. 则意味着0在中间，正数则是右边。</p>
 <p>至于为什么在上面，因为-1时最下面，+1在顶部，也就是说0在中间，正数在中间上面。</p>
 <p>对于2D，你可能更喜欢使用像素而不是裁剪空间坐标。下面我们提供给顶点着色器以像素形式的位置，着色器负责转换成裁剪空间坐标。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">-  in vec4 a_position;
@@ -517,7 +517,7 @@ gl.drawArrays(primitiveType, offset, count);
 </div>
 
 </p>
-<p>你可能注意到这个长方形靠近区域的下面部分。因为WebG把+Y轴当作向上，-Y当作向下。在裁剪空间中，左下角为-1, -1。我们没有改变任何符号，所以当前坐标原点就在左下角。为像原点在左上角的传统坐标空间一样，我们可以反转y坐标轴，如下：</p>
+<p>你可能注意到这个长方形靠近区域的下面部分。因为WebGL把+Y轴当作向上，-Y当作向下。在裁剪空间中，左下角为-1, -1。我们没有改变任何符号，所以当前坐标原点就在左下角。为像原点在左上角的传统坐标空间一样，我们可以反转y坐标轴，如下：</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 </code></pre><p>现在长方形的显示位置就跟我们期望的一样了。</p>
 <p><div class="webgl_example_container">
