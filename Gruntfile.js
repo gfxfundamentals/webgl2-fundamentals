@@ -190,8 +190,13 @@ module.exports = function(grunt) {
     const finish = this.async();
     buildStuff(buildSettings).finally(finish);
   });
+  grunt.registerTask('pagefind', function() {
+    const { execSync } = require('child_process');
+    const stdout = execSync('npx pagefind --site out/'); 
+    grunt.log.oklns(stdout);
+  });
 
-  grunt.registerTask('build', ['clean', 'copy', 'buildlessons']);
+  grunt.registerTask('build', ['clean', 'copy', 'buildlessons', 'pagefind']);
   grunt.registerTask('buildwatch', ['build', 'watch']);
   grunt.registerTask('pre-push', ['eslint']);
 
