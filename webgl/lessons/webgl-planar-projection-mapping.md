@@ -791,21 +791,21 @@ One other thing this type of projection is useful for is
 <h3>Conditional Texture References</h3>
 <p>In the fragment shader above we get read both textures
 in all cases.</p>
-<pre class="prettyprint"><code>
+<pre class="prettyprint"><code>{{#escapehtml}}
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
 
   float projectedAmount = inRange ? 1.0 : 0.0;
   gl_FragColor = mix(texColor, projectedTexColor, projectedAmount);
-</code></pre>
+{{/escapehtml}}</code></pre>
 <p> Why didn't we do something like this?</p>
-<pre class="prettyprint"><code>
+<pre class="prettyprint"><code>{{#escapehtml}}
   if (inRange) {
     gl_FragColor = texture(u_projectedTexture, projectedTexcoord.xy);
   } else {
     gl_FragColor = texture(u_texture, v_texcoord) * u_colorMult;
   }
-</code></pre>
+{{/escapehtml}}</code></pre>
 <p>From the <a href="https://www.khronos.org/registry/OpenGL/specs/es/3.0/GLSL_ES_Specification_3.00.pdf">GLSL ES 3.0 spec Section 8.8</a></p>
 <blockquote>
 <h4>Texture Lookup Functions</h4>
@@ -816,7 +816,7 @@ derivatives are undefined within non-uniform control flow and for vertex texture
 </blockquote>
 <p>In other words, if we are going to use textures we must always access them. We can use the results
 conditionally. For example we could have written this:</p>
-<pre class="prettyprint"><code>
+<pre class="prettyprint"><code>{{#escapehtml}}
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
 
@@ -825,14 +825,14 @@ conditionally. For example we could have written this:</p>
   } else {
     gl_FragColor = texColor;
   }
-</code></pre>
+{{/escapehtml}}</code></pre>
 <p>or this</p>
-<pre class="prettyprint"><code>
+<pre class="prettyprint"><code>{{#escapehtml}}
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
 
   gl_FragColor = inRange ? projectedTexColor : texColor;
-</code></pre>
+{{/escapehtml}}</code></pre>
 <p>But we can't access the textures themselves conditionally. It might work on your GPU but it won't
 work on all GPUs.</p>
 <p>In any case it's important to know.</p>

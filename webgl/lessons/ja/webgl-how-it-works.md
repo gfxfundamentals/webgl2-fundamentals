@@ -333,16 +333,16 @@ trueにした場合、BYTE型 (-128 〜 127) なら-1.0 〜 +1.0 、UNSIGNED_BYT
 これで頂点ごとに1色につき4バイトしか必要なくなり、75%の節約になります。
 </p>
 <p>実際にコーディングしてみましょう。データの取り出し方を指定する部分は以下のコードになります。</p>
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
   var size = 4;
 *  var type = gl.UNSIGNED_BYTE;
 *  var normalize = true;
   var stride = 0;
   var offset = 0;
   gl.vertexAttribPointer(colorLocation, size, type, normalize, stride, offset);
-</pre>
+{{/escapehtml}}</pre>
 <p>バッファを色で塗りつぶす時は次のようにします。</p>
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
 // Fill the buffer with colors for the 2 triangles
 // that make the rectangle.
 function setColors(gl) {
@@ -365,7 +365,7 @@ function setColors(gl) {
           r2, b2, g2, 255]),
       gl.STATIC_DRAW);
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>
 実行結果はこのようになります。
 </p>

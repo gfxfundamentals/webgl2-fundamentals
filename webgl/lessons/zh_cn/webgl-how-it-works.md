@@ -307,16 +307,16 @@ UNSIGNED_BYTE（0至255）变为0.0至+1.0。标准化的SHORT INTEGER也从-1.0
 (其中0代表0.0，255代表1.0)。 现在每种颜色只需要4个字节,每个顶点可节省75％的空间。
 </p>
 <p>让我们更改代码以执行此操作。 当我们告诉WebGL如何提取颜色时，我们将使用如下代码：</p>
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
   var size = 4;
 *  var type = gl.UNSIGNED_BYTE;
 *  var normalize = true;
   var stride = 0;
   var offset = 0;
   gl.vertexAttribPointer(colorLocation, size, type, normalize, stride, offset);
-</pre>
+{{/escapehtml}}</pre>
 <p>当我们用颜色填充缓冲区时，我们将使用如下代码：</p>
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
 // Fill the buffer with colors for the 2 triangles
 // that make the rectangle.
 function setColors(gl) {
@@ -340,7 +340,7 @@ r2, b2, g2, 255]),
 gl.STATIC_DRAW);
 }
 
-</pre>
+{{/escapehtml}}</pre>
 <p>
 下面是实例演示：
 </p>

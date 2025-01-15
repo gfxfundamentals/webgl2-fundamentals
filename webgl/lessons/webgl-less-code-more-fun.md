@@ -440,19 +440,19 @@ Next up, [drawing multiple things](webgl-drawing-multiple-things.html).
 For those of you familiar with JavaScript you might be wondering if you can use the setters
 directly like this.
 </p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 // At initialization time
 var uniformSetters = twgl.createUniformSetters(program);
 
 // At draw time
 uniformSetters.u_ambient([1, 0, 0, 1]); // set the ambient color to red.
-</pre>
+{{/escapehtml}}</pre>
 <p>The reason this is not a good idea is because when you're working with GLSL you might
 modify the shaders from time to time, often to debug. Let's say we were not seeing
 anything on the screen in our program. One of the first things I do when nothing
 is appearing is to simplify my shaders. For example I might change the fragment shader
 to the simplest thing possible</p>
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
 #version 300 es
 precision highp float;
 
@@ -492,7 +492,7 @@ void main() {
       diffuseColor.a);
 *  outColor = vec4(0,1,0,1);  // &lt;!--- just green
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>Notice I just added a line that sets <code>outColor</code> to a constant color.
 Most drivers will see that none of the previous lines in the file actually contribute
 to the result. As such they'll optimize out all of our uniforms. The next time we run the program

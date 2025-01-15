@@ -307,7 +307,7 @@ var someVAO = gl.createVertexArray();
 </pre>
 <p>如你所见，如果你希望代码在WebGL1和WebGL2中都能运行，这会带来一些挑战。</p>
 <p>一种解决方法是在初始时将WebGL1扩展复制到WebGL上下文。这种方法余下的代码可以保持不变。示例：</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 const gl = someCanvas.getContext("webgl");
 const haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object");
 
@@ -346,18 +346,18 @@ function getAndApplyExtension(gl, name) {
   }
   return ext;
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>现在你的代码大部分可以同样工作，像这样</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 if (haveVAOs) {
   var someVAO = gl.createVertexArray();
   ...
 } else {
   ... do whatever for no VAOs.
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>替代方法是像这样做</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 if (haveVAOs) {
   if (isWebGL2)
      someVAO = gl.createVertexArray();
@@ -368,7 +368,7 @@ if (haveVAOs) {
 } else {
   ... do whatever for no VAOs.
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>注意：特别对于顶点数组对象我建议你<a href="https://github.com/greggman/oes-vertex-array-object-polyfill">使用polyfill</a>，
 所以任何时候你都能得到它们。VAO大多数设备都提供。少数设备不提供，polyfill会让你的代码保持简单。</p>
 </div>

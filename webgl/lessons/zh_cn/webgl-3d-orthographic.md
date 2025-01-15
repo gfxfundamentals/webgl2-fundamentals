@@ -580,12 +580,12 @@ gl.enable(gl.DEPTH_TEST)
 <p>
 注意细节的你可能发现，我们定义了这样两个属性
 </p>
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
 in vec4 a_position;
 in vec4 a_color;
-</pre>
+{{/escapehtml}}</pre>
 <p>两个都是 'vec4' 类型，当我们告诉WebGL如何从缓冲中获取数据时使用</p>
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
 // 告诉属性怎么从 positionBuffer (ARRAY_BUFFER) 中读取位置
 var size = 3;          // 每次迭代使用 3 个单位的数据
 var type = gl.FLOAT;   // 单位数据类型是32位的浮点型
@@ -607,7 +607,7 @@ var offset = 0; // 从绑定缓冲的起始处开始
 gl.vertexAttribPointer(
 colorAttributeLocation, size, type, normalize, stride, offset);
 
-</pre>
+{{/escapehtml}}</pre>
 <p>
 这里的 '3' 表示的时每次迭代从缓冲中提取三个值给顶点着色器中的属性。
 能正常运行是因为WebGL会给这些值设定默认值，默认值是0, 0, 0, 1

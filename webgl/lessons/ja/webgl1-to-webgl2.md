@@ -354,7 +354,7 @@ var someVAO = gl.createVertexArray();
 <p>WebGL1とWebGL2の両方で実行したい場合は、いくつかの課題があります。</p>
 <p>1つの回避策は、初期化時にWebGL1の拡張機能をWebGLコンテキストにコピーする事です。そうすると残りのコードをそのままにできます。以下が例です。
 </p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 const gl = someCanvas.getContext("webgl");
 const haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object");
 
@@ -393,18 +393,18 @@ function getAndApplyExtension(gl, name) {
   }
   return ext;
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>コードが両方で同じように動作するようになりました。例:</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 if (haveVAOs) {
   var someVAO = gl.createVertexArray();
   ...
 } else {
   ... do whatever for no VAOs.
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>代替案は次のような事をしなければならないでしょう。</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 if (haveVAOs) {
   if (isWebGL2)
      someVAO = gl.createVertexArray();
@@ -415,7 +415,7 @@ if (haveVAOs) {
 } else {
   ... do whatever for no VAOs.
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>注意点： 特に頂点配列オブジェクトの場合、<a href="https://github.com/greggman/oes-vertex-array-object-polyfill">ポリフィルを使用する</a>事をお勧めします。
 VAOはほとんどのシステムで利用可能です。
 VAOが利用可能ではない場合、ポリフィルが処理しコードがシンプルになります。

@@ -467,7 +467,7 @@ it provides.</p>
 <p>You might have noticed we're using a unit quad for our positions and those positions of
 a unit quad exactly match our texture coordinates. As such we can use the positions
 as the texture coordinates.</p>
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
 #version 300 es
 in vec4 a_position;
 -in vec2 a_texcoord;
@@ -481,7 +481,7 @@ void main() {
    gl_Position = u_matrix * a_position;
 *   v_texcoord = (u_textureMatrix * a_position).xy;
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>We can now remove the code that setup the texture coordinates and it will
 work just the same as before.</p>
 {{{example url="../webgl-2d-drawimage-08.html" }}}

@@ -355,14 +355,14 @@ extension을 사용하는 것처럼 작성하시면 안되고 조금은 수정�
 <div class="webgl_bottombar">
 <h3>WebGL1 extension을 WebGL2처럼 만들기</h3>
 <p>WebGL1의 extension에 있던 함수들은, WebGL2에서는 extension 없이 사용할 수 있습니다. 예를 들면, WebGL1에서는 아래와 같았지만</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 var ext = gl.getExtension("OES_vertex_array_object");
 if (!ext) {
   // tell user they don't have the required extension or work around it
 } else {
   var someVAO = ext.createVertexArrayOES();
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>
 WebGL2 에서는 이렇죠.
 </p>
@@ -373,7 +373,7 @@ var someVAO = gl.createVertexArray();
 좀 어려울 수 있습니다.</p>
 <p>한 가지 해결 방법은, 초기화할 때 WebGL1 extension을 WebGL context에 복사하는 것입니다.
 그렇게 하면 나머지 코드는 그대로입니다. 예시:</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 const gl = someCanvas.getContext("webgl");
 const haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object");
 
@@ -412,18 +412,18 @@ function getAndApplyExtension(gl, name) {
   }
   return ext;
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>이제 이 코드는 WebGL1과 WebGL2 에서 대부분 똑같이 동작할 겁니다. 예시:</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 if (haveVAOs) {
   var someVAO = gl.createVertexArray();
   ...
 } else {
   ... do whatever for no VAOs.
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>아니면 이런식으로 적어야겠죠.</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 if (haveVAOs) {
   if (isWebGL2)
      someVAO = gl.createVertexArray();
@@ -434,7 +434,7 @@ if (haveVAOs) {
 } else {
   ... do whatever for no VAOs.
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>참고: Vertex Array Objects를 사용하는 경우에는, <a href="https://github.com/greggman/oes-vertex-array-object-polyfill">polyfill</a>을 사용하는 것을 권장합니다. VAO는 대부분의 시스템에서 지원되지만, 지원하지 않는 몇 시스템에서는 polyfill로 해결할 수 있습니다.
 코드의 변경 없이 말이죠.</p>
 </div>

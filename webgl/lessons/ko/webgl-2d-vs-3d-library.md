@@ -28,7 +28,7 @@ WebGL(그리고 OpenGL ES 2.0+)도 3D 장면을 그릴 때 사용하긴 하지�
 
 three.js를 사용하는 경우 코드는 아래와 같습니다.
 
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
   // 설정
   renderer = new THREE.WebGLRenderer({canvas: document.querySelector("#canvas")});
   c.appendChild(renderer.domElement);
@@ -64,7 +64,7 @@ three.js를 사용하는 경우 코드는 아래와 같습니다.
   light2 = new THREE.PointLight(0x0040ff, 2, 0);
   light2.position.set(-200, 100, 300);
   scene.add(light2);
-</pre>
+{{/escapehtml}}</pre>
 
 그러면 아래와 같이 표시됩니다.
 
@@ -72,7 +72,7 @@ three.js를 사용하는 경우 코드는 아래와 같습니다.
 
 OpenGL(ES가 아닌)을 사용해 2개의 조명과 육면체를 그리는 유사한 코드입니다.
 
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
   // 설정
   glViewport(0, 0, width, height);
   glMatrixMode(GL_PROJECTION);
@@ -125,7 +125,7 @@ OpenGL(ES가 아닌)을 사용해 2개의 조명과 육면체를 그리는 유�
   */
 
   glEnd();
-</pre>
+{{/escapehtml}}</pre>
 
 이 두 예제를 작성하는데 있어서 거의 3D 수학 지식이 필요하지 않다는 것에 주목하십시오. WebGL과 비교해서요. WebGL로 그리기 위한 코드는 작성하지 않을겁니다.
 코드는 그렇게 길어지지는 않을겁니다. 코드 라인이 얼마나 필요한지가 중요한 것이 아닙니다.

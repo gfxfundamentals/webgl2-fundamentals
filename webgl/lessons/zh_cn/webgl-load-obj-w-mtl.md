@@ -843,7 +843,7 @@ void main () {
 <div class="webgl_bottombar">
 <h3>尽可能避免在着色器中使用条件语句</h3>
 <p>通常的建议是避免在着色器中使用条件语句。比如我们可能写这样的代码</p>
-<pre class="prettyprint"><code>
+<pre class="prettyprint"><code>{{#escapehtml}}
 uniform bool hasDiffuseMap;
 uniform vec4 diffuse;
 uniform sampler2D diffuseMap
@@ -854,7 +854,7 @@ if (hasDiffuseMap) {
 effectiveDiffuse \*= texture2D(diffuseMap, texcoord);
 }
 ...
-</code></pre>
+{{/escapehtml}}</code></pre>
 
 <p>这样的条件语句一般是不鼓励的，因为依赖于 GPU 或者驱动，它们没有很好的性能。</p>
 <p>当没有纹理时我们用一个 1x1 像素的白点纹理，这样就不用考虑条件语句了。</p>

@@ -639,7 +639,7 @@ in vec4 a_position;
 in vec4 a_color;
 </pre>
 <p>둘 다 'vec4'지만, 우리가 버퍼에서 데이터를 가져오는 방법을 WebGL에 알려줄 때에는 아래와 같이 정의하였습니다.</p>
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
 // attribute에게 positionBuffer (ARRAY_BUFFER)로부터 데이터를 가져오는 법을 알려줍니다. 
 var size = 3;          // iteration마다 3 개의 component
 var type = gl.FLOAT;   // 데이터는 32bit floats
@@ -658,7 +658,7 @@ var stride = 0;        // 0 = 각 iteration마다 다음 색상값을 얻기 위
 var offset = 0;        // 버퍼의 맨 앞부분부터 시작
 gl.vertexAttribPointer(
     colorAttributeLocation, size, type, normalize, stride, offset);
-</pre>
+{{/escapehtml}}</pre>
 <p>
 위에 써있는 '3'들은 버퍼에서 iteration마다, attribute마다 3개의 값을 가져오라는 뜻입니다. 
 이래도 되는 이유는 WebGL의 정점 쉐이더는 입력하지 않는 값에 대해 기본값을 사용하기 때문입니다.

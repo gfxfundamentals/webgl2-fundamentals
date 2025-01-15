@@ -439,19 +439,19 @@ objects.forEach(function(object) {
 <p>
 자바스크립트에 익숙하신 분은들 setter를 아래와 같이 직접 호출해서 사용할 수 있는지 궁금하실 겁니다.
 </p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 // 초기화 시점에
 var uniformSetters = twgl.createUniformSetters(program);
 
 // 그리는 시점에
 uniformSetters.u_ambient([1, 0, 0, 1]); // ambient color를 빨간색으로 설정.
-</pre>
+{{/escapehtml}}</pre>
 <p>이렇게 하는것이 좋지 않은 이유는 GLSL 프로그램을 작성할 때 셰이더를 변경하는 경우가 종종 생긴다는 겁니다. 주로 디버깅 목적으로요.
 예를들어 프로그램을 사용했더니 화면에 아무것도 보이지 않는다고 합시다.
 저같은 경우 이렇게 아무것도 나타나지 않을때 때 제일 먼저 하는 작업은 셰이더를 단순화 하는 것입니다.
 예를들어 프래그먼트 셰이더의 출력을 아주 간단하게 바꿔봅니다.
 </p>
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
 #version 300 es
 precision highp float;
 
@@ -491,7 +491,7 @@ void main() {
       diffuseColor.a);
 *  outColor = vec4(0,1,0,1);  // &lt;!--- 단순한 초록색으로
 }
-</pre>
+{{/escapehtml}}</pre>
 <p><code>outColor</code>를 단색으로 설정하는 라인을 추가한 것에 주목하세요.
 대부분의 드라이버는 위쪽 라인의 코드들이 최종 결과에 영향을 주지 않는다는 것을 알아냅니다.
 그래서 모든 uniform들을 최적화합니다. 프로그램을 다시 실행하여 <code>twgl.createUniformSetters</code>를 호출하면 <code>u_ambient</code>를 위한 setter를 생성하지 못하고 위 코드에서 <code>uniformSetters.u_ambient()</code>를 호출하는 부분이 실패하면서 아래와 같은 메시지가 나타납니다.

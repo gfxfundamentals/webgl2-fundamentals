@@ -715,7 +715,7 @@ for (let division = 0; division <= numDivisions; ++division) {
 <p>你可以看到它们在共享处没有被当作相同点，因为它们不是100%的相等。</p>
 <p>起初我想通过提供一个误差范围，检查顶点的距离是否在范围内，如果小于误差范围就认为是同一点。
 就像这样。
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 const epsilon = 0.0001;
 const tempVerts = [];
 function getVertIndex(position) {
@@ -740,7 +740,7 @@ function getVertIndex(position) {
   tempVerts.push(position);
   return tempVerts.length - 1;
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>它成功了，我解决了接缝问题。但是它消耗的时间太长，导致UI交互不稳定。
 这是因为它是一个复杂度为 O^2 的解决方法，如果你滑动滑块在最多的情况下就会创建大约 20000 个点，
 再加上 O^2 的复杂度就是 3 亿次迭代。
@@ -767,17 +767,17 @@ function getVertIndex(position) {
 <div class="webgl_bottombar">
 <h3>使用矩阵运算是不是大材小用了?</h3>
 <p>当我们旋转点的时候使用这样的代码</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 const mat = m4.yRotation(angle);
 ...
 points.forEach((p, ndx) => {
   const tp = m4.transformPoint(mat, [...p, 0]);
   ...
-</pre>
+{{/escapehtml}}</pre>
 <p>使用 4x4 矩阵转换一个任意三维点需要 16 次乘法，12 次加法，和 3 次除法。
 我们可以只使用 <a href="webgl-2d-rotation.html">单位圆形式的旋转运算</a>。
 </p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 const s = Math.sin(angle);
 const c = Math.cos(angle);
 ...
@@ -791,7 +791,7 @@ points.forEach((p, ndx) => {
     x * s + z * c,
   ];
   ...
-</pre>
+{{/escapehtml}}</pre>
 <p>
 这样就只有 4 次乘法和 2 次加法，没有方法调用，应该至少要快 6 倍。
 </p>

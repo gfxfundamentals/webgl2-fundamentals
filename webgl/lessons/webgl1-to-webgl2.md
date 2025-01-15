@@ -390,7 +390,7 @@ var someVAO = gl.createVertexArray();
 that can present some challenges.</p>
 <p>One workaround would be to copy WebGL1 extensions to the WebGL context at init time.
 That way the rest of your code can stay the same. Example:</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 const gl = someCanvas.getContext("webgl");
 const haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object");
 
@@ -429,18 +429,18 @@ function getAndApplyExtension(gl, name) {
   }
   return ext;
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>Now your code can mostly just work the same on both. Example:</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 if (haveVAOs) {
   var someVAO = gl.createVertexArray();
   ...
 } else {
   ... do whatever for no VAOs.
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>The alternative would be having to do something like this</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 if (haveVAOs) {
   if (isWebGL2)
      someVAO = gl.createVertexArray();
@@ -451,7 +451,7 @@ if (haveVAOs) {
 } else {
   ... do whatever for no VAOs.
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>Note: In the case of Vertex Array Objects in particular I suggest you <a href="https://github.com/greggman/oes-vertex-array-object-polyfill">use a polyfill</a>
 so you'll have them everywhere. VAOs are available on most systems. On those few systems
 where they aren't available, the polyfill will handle it for you, and your code

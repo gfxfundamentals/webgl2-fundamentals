@@ -867,7 +867,7 @@ the types of things involved in displaying arbitrary 3D content.
 <h3>Avoid conditionals in shaders where possible</h3>
 <p>The traditional advice is to avoid conditionals in shaders. As an example
 we could have done something like this</p>
-<pre class="prettyprint"><code>
+<pre class="prettyprint"><code>{{#escapehtml}}
 uniform bool hasDiffuseMap;
 uniform vec4 diffuse;
 uniform sampler2D diffuseMap
@@ -878,7 +878,7 @@ uniform sampler2D diffuseMap
     effectiveDiffuse *= texture2D(diffuseMap, texcoord);
   }
 ...
-</code></pre>
+{{/escapehtml}}</code></pre>
 <p>Conditionals like that are generally discouraged because depending on the
 GPU/driver they are often not very performant.</p>
 <p>Either do like we did above and try to make the code have no conditionals. We used

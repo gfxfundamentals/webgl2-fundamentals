@@ -740,21 +740,21 @@ Geometry를 생성하는 것이 올바른 방법인데, 그렇지 않으면 2개
 <div class="webgl_bottombar">
 <h3>조건부 텍스처 참조</h3>
 <p>위의 프래그먼트 셰이더에서는 항상 두 개의 텍스처를 모두 읽게 됩니다.</p>
-<pre class="prettyprint"><code>
+<pre class="prettyprint"><code>{{#escapehtml}}
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
 
   float projectedAmount = inRange ? 1.0 : 0.0;
   gl_FragColor = mix(texColor, projectedTexColor, projectedAmount);
-</code></pre>
+{{/escapehtml}}</code></pre>
 <p>왜 아래와 같이 하지 않았을까요?</p>
-<pre class="prettyprint"><code>
+<pre class="prettyprint"><code>{{#escapehtml}}
   if (inRange) {
     gl_FragColor = texture(u_projectedTexture, projectedTexcoord.xy);
   } else {
     gl_FragColor = texture(u_texture, v_texcoord) * u_colorMult;
   }
-</code></pre>
+{{/escapehtml}}</code></pre>
 <p><a href="https://www.khronos.org/registry/OpenGL/specs/es/3.0/GLSL_ES_Specification_3.00.pdf">GLSL ES 3.0 명세의 Section 8.8</a>에 따르면</p>
 <blockquote>
 <h4>Texture Lookup Functions</h4>
@@ -767,7 +767,7 @@ derivatives are undefined within non-uniform control flow and for vertex texture
 다시 말해 텍스처를 사용하는 경우 항상 텍스처에 접근할 수 있어야 한다는 것입니다. 
 결과를 조건부로 사용할 수는 있습니다.
 예를 들어 아래와 같이 작성하거나</p>
-<pre class="prettyprint"><code>
+<pre class="prettyprint"><code>{{#escapehtml}}
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
 
@@ -776,14 +776,14 @@ derivatives are undefined within non-uniform control flow and for vertex texture
   } else {
     gl_FragColor = texColor;
   }
-</code></pre>
+{{/escapehtml}}</code></pre>
 <p>아래와 같이 작성할 수 있습니다.</p>
-<pre class="prettyprint"><code>
+<pre class="prettyprint"><code>{{#escapehtml}}
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
 
   gl_FragColor = inRange ? projectedTexColor : texColor;
-</code></pre>
+{{/escapehtml}}</code></pre>
 <p>
 하지만 텍스처 접근 자체를 조건부로 만들 수는 없습니다.
 어떤 GPU에서는 작동될 수 있지만 모든 GPU에서 작동이 보장되지는 않습니다.

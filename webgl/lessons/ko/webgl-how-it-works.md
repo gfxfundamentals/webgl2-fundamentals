@@ -278,16 +278,16 @@ attribute의 위치를 알게 되면 두개의 명령문을 실행합니다.
 정규화된 데이터의 가장 일반적인 용도는 색상입니다. 대부분의 경우 색상은 0.0에서 1.0 사이의 값으로 정의됩니다. 빨강, 초록, 파랑 그리고 알파에 대해 완전한 부동소수점을 사용하면 각 정점의 각 색상을 위해 16바이트를 사용하게 됩니다. 복잡한 geometry가 있는 경우 더 많은 바이트가 추가될 수 있습니다. 그 대신 색상들을 0이 0.0으로, 255가 1.0을 표현하는 UNSIGNED_BYTE로 변환 할 수 있습니다. 이제 정점당 색상에 4 바이트만 필요하므로 75%의 메모리 절감 효과가 있습니다.
 </p>
 <p>이를 위해 코드를 변경해 보겠습니다. WebGL에게 우리가 사용할 색상을 가져오는 방법을 알려줄 때, </p>
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
   var size = 4;
 *  var type = gl.UNSIGNED_BYTE;
 *  var normalize = true;
   var stride = 0;
   var offset = 0;
   gl.vertexAttribPointer(colorLocation, size, type, normalize, stride, offset);
-</pre>
+{{/escapehtml}}</pre>
 <p>그 다음 버퍼를 사용할 색상으로 채울때 입니다.</p>
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
 // 사각형을 구성하는 두 개의 삼각형의 색상으로 버퍼를 채움
 function setColors(gl) {
   // 2 개의 랜덤 색상 선택
@@ -309,7 +309,7 @@ function setColors(gl) {
           r2, b2, g2, 255]),
       gl.STATIC_DRAW);
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>
 아래는 결과 예제입니다.
 </p>

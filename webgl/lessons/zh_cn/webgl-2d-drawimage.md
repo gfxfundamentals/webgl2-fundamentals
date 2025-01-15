@@ -448,7 +448,7 @@ WebGL 需要上传`x, y`, `x + width, y`, `x, y + height`, 和
 就是利用它提供的特性去做创意。
 </p>
 <p>你可能会注意到我们使用的位置单位矩形和纹理坐标刚好匹配，所以我们就可以使用位置作为纹理坐标。</p>
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
 #version 300 es
 in vec4 a_position;
 -in vec2 a_texcoord;
@@ -463,7 +463,7 @@ gl_Position = u_matrix \* a_position;
 
 -   v_texcoord = (u_textureMatrix \* a_position).xy;
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>现在移除关于纹理坐标设置的代码，得到的结果和之前是相同的。</p>
 {{{example url="../webgl-2d-drawimage-08.html" }}}
 </div>

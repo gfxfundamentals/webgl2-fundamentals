@@ -467,7 +467,7 @@ WebGL을 창의적으로 사용하기 위한 것이라는 점을 강조하고 �
 혹시 눈치챘을지 모르지만 우리는 위치 좌표에 사용한 단위 사각형은 정확히 텍스쳐 좌표의 단위
 사각형과 크기가 일치합니다. 따라서 우리는 위치좌표를 바로 텍스쳐 좌표로 사용할 수 있습니다.
 </p>
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
 #version 300 es
 in vec4 a_position;
 -in vec2 a_texcoord;
@@ -481,7 +481,7 @@ void main() {
    gl_Position = u_matrix * a_position;
 *   v_texcoord = (u_textureMatrix * a_position).xy;
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>
 이제 텍스쳐 좌표를 설정하는 코드를 삭제해도 됩니다. 삭제하더라도 이전과 완전히 동일하게 동작할 것입니다.
 </p>

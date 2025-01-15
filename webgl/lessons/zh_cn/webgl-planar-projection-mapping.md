@@ -780,24 +780,24 @@ derivatives are undefined within non-uniform control flow and for vertex texture
 </blockquote>
 <p>换句话说，如果我们要使用纹理，那我们就必须确保总是能够访问到它们。
 我们可以在条件语句内使用访问纹理的结果。例如我们可以写成这样：</p>
-<pre class="prettyprint"><code>
+<pre class="prettyprint"><code>{{#escapehtml}}
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
 
 if (inRange) {
-gl_FragColor = projectedTexColor;
+  gl_FragColor = projectedTexColor;
 } else {
-gl_FragColor = texColor;
+  gl_FragColor = texColor;
 }
-</code></pre>
+{{/escapehtml}}</code></pre>
 
 <p>或者这样</p>
-<pre class="prettyprint"><code>
+<pre class="prettyprint"><code>{{#escapehtml}}
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
 
 gl_FragColor = inRange ? projectedTexColor : texColor;
-</code></pre>
+{{/escapehtml}}</code></pre>
 
 <p>但是我们不能在条件语句内访问纹理本身。这样做在你的 GPU 上可能是可行的，
 但并不是在所有的 GPUs 上都能行。</p>

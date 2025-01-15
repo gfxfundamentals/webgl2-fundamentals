@@ -424,16 +424,16 @@ WebGL 会自动设置 `w = 1`。所以这就意味着我们不能轻易推断出
 <p>
 熟悉JavaScript的人可能会想，我能像这样直接使用 setter 么？
 </p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 // 初始化时
 var uniformSetters = twgl.createUniformSetters(program);
 
 // 绘制时
 uniformSetters.u_ambient([1, 0, 0, 1]); // 设置环境光为红色
 
-</pre>
+{{/escapehtml}}</pre>
 <p>这样做不好的原因就是，在使用GLSL的过程中经常会修改，调试。假设屏幕上什么都没有出现，首先我会简化着色器，例如我会尽可能简化片断着色器。</p>
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
 #version 300 es
 precision highp float;
 
@@ -474,7 +474,7 @@ diffuseColor.a);
 
 -   outColor = vec4(0,1,0,1); // &lt;!--- just green
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>注意到我添加了一行，直接将 <code>outColor</code> 设置为固定颜色。
 大多数驱动会发现之前的行没有为结果做贡献，优化后就会把没用的变量移除，
 下次我运行程序调用 <code>twgl.createUniformSetters</code> 就不会为<code>u_ambient</code> 创建 setter，所以 <code>uniformSetters.u_ambient()</code> 就会报错。</p>

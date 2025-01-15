@@ -346,25 +346,25 @@ de WebGL1 para WebGL2. [Há ainda mais coisas que você pode fazer no WebGL2 emb
 <h3>Fazendo as extensões WebGL1 parecer WebGL2</h3>
 <p>As funções que estavam em extensões no WebGL1 estão agora no contexto principal
 no WebGL2. Por exemplo, no WebGL</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 var ext = gl.getExtension("OES_vertex_array_object");
 if (!ext) {
   // Diga ao usuário que ele não têm a extensão necessária ou trabalhar em torno dela
 } else {
   var someVAO = ext.createVertexArrayOES();
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>
 vs em webgl2
 </p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 var someVAO = gl.createVertexArray();
-</pre>
+{{/escapehtml}}</pre>
 <p>Acomo você pode ver se você deseja que seu código seja executado tanto no WebGL1 quanto no WebGL2,
 que pode apresentar alguns desafios.</p>
 <p>Uma solução seria copiar extensões WebGL1 ao contexto WebGL em tempo de inicialização.
 Dessa forma, o resto do seu código pode permanecer o mesmo. Exemplo:</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 var gl = someCanvas.getContext("webgl");
 var haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object"));
 
@@ -389,18 +389,18 @@ function getAndApplyExtension(gl, name) {
       gl[unprefixedKey] = ext[key];
     }
   }
-</pre>
+{{/escapehtml}}</pre>
 <p>Agora, seu código pode funcionar da mesma forma em ambos. Exemplo:</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 if (haveVAOs) {
   var someVAO = gl.createVertexArray();
   ...
 } else {
   ... do whatever for no VAOs.
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>A alternativa seria ter que fazer algo assim</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
 if (haveVAOs) {
   if (isWebGL2)
      someVAO = gl.createVertexArray();
@@ -411,7 +411,7 @@ if (haveVAOs) {
 } else {
   ... do whatever for no VAOs.
 }
-</pre>
+{{/escapehtml}}</pre>
 <p>Nota: No caso dos objetos Vertex Array em particular, sugiro que você <a href="https://github.com/greggman/oes-vertex-array-object-polyfill">use a polyfill</a>
 para que você os tenha em todos os lugares. Os VAOs estão disponíveis na maioria dos sistemas.
 Aqueles poucos sistemas onde eles não estão disponíveis o polyfill irá lidar com você e seu código

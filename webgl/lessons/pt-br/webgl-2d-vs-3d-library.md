@@ -35,7 +35,7 @@ com luzes.
 
 Aqui está o código em three.js para fazer isso
 
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
   // Setup.
   renderer = new THREE.WebGLRenderer({canvas: document.querySelector("#canvas")});
   c.appendChild(renderer.domElement);
@@ -71,7 +71,7 @@ Aqui está o código em three.js para fazer isso
   light2 = new THREE.PointLight(0x0040ff, 2, 0);
   light2.position.set(-200, 100, 300);
   scene.add(light2);
-</pre>
+{{/escapehtml}}</pre>
 
 e aqui é exibido.
 
@@ -79,7 +79,7 @@ e aqui é exibido.
 
 Aqui está o código similar em OpenGL (não ES) para exibir um cubo com 2 luzes.
 
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
   // Setup
   glViewport(0, 0, width, height);
   glMatrixMode(GL_PROJECTION);
@@ -132,7 +132,7 @@ Aqui está o código similar em OpenGL (não ES) para exibir um cubo com 2 luzes
   */
 
   glEnd();
-</pre>
+{{/escapehtml}}</pre>
 
 
 Observe como precisamos quase nenhum conhecimento de matemática para 3D para qualquer um desses

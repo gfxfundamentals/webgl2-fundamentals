@@ -439,22 +439,22 @@ function whereas above I made a <code>node.setParent</code> function. Which way 
 is arguably a matter of style but I'd argue one objectively better reason
 <code>setParent</code> is better than <code>addChild</code> is because it makes code like
 this impossible.</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
     someParent.addChild(someNode);
     ...
     someOtherParent.addChild(someNode);
-</pre>
+{{/escapehtml}}</pre>
 <p>What does that mean? Does <code>someNode</code> get added to both <code>someParent</code> and <code>someOtherParent</code>?
 In most scene graphs that's impossible. Does the second call generate an error?
 <code>ERROR: Already have parent</code>. Does it magically remove <code>someNode</code> from <code>someParent</code> before
 adding it to <code>someOtherParent</code>? If it does it's certainly not clear from the name <code>addChild</code>.
 </p>
 <p><code>setParent</code> on the other hand has no such issue</p>
-<pre class="prettyprint">
+<pre class="prettyprint">{{#escapehtml}}
     someNode.setParent(someParent);
     ...
     someNode.setParent(someOtherParent);
-</pre>
+{{/escapehtml}}</pre>
 <p>
 It's 100% obvious what's happening in this case. Zero ambiguity.
 </p>
