@@ -234,7 +234,7 @@ foram para o estado WebGL global. Você pode imaginar isso assim
           { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
         ],
       },
-   }
+    }
 
 Chamar funções como `gl.vertexAttribPointer`,` gl.enableVertexAttribArray` e
 `gl.bindBuffer (gl.ELEMENT_ARRAY_BUFFER, ??)` afetariam esse estado global.

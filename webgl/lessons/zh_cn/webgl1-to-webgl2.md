@@ -205,7 +205,7 @@ WebGL1中许多特性是可选扩展。在WebGL2中，以下所有的都是标�
           { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
         ],
       },
-   }
+    }
 
 调用像`gl.vertexAttribPointer`，`gl.enableVertexAttribArray`和
 `gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ??)`会影响全局状态。在绘制你想要绘制的事情之前，你需要设置所有属性，如果你绘制索引数据，你需要设置`ELEMENT_ARRAY_BUFFER`。

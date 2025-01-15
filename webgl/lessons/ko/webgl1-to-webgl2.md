@@ -226,7 +226,7 @@ vertex array objects가 없던 WebGL1에서는, attributes에 대한 모든 데�
           { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
         ],
       },
-   }
+    }
 
 `gl.vertexAttribPointer`, `gl.enableVertexAttribArray`, `gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ??)`처럼 함수 호출이 전역 상태에 영향을 주었습니다.
 각각의 원하는 것을 그리기 전에, 모든 attribute들을 초기화해야 했었습니다. 
