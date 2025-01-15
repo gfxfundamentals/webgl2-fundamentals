@@ -526,52 +526,53 @@ de WebGL1 para WebGL2. <a href="webgl2-whats-new.html">Há ainda mais coisas que
 <p>As funções que estavam em extensões no WebGL1 estão agora no contexto principal
 no WebGL2. Por exemplo, no WebGL</p>
 <pre class="prettyprint">
-var ext = gl.getExtension("OES_vertex_array_object");
+var ext &#x3D; gl.getExtension(&quot;OES_vertex_array_object&quot;);
 if (!ext) {
   // Diga ao usuário que ele não têm a extensão necessária ou trabalhar em torno dela
 } else {
-  var someVAO = ext.createVertexArrayOES();
+  var someVAO &#x3D; ext.createVertexArrayOES();
 }
 </pre>
 <p>
 vs em webgl2
 </p>
 <pre class="prettyprint">
-var someVAO = gl.createVertexArray();
+var someVAO &#x3D; gl.createVertexArray();
 </pre>
 <p>Acomo você pode ver se você deseja que seu código seja executado tanto no WebGL1 quanto no WebGL2,
 que pode apresentar alguns desafios.</p>
 <p>Uma solução seria copiar extensões WebGL1 ao contexto WebGL em tempo de inicialização.
 Dessa forma, o resto do seu código pode permanecer o mesmo. Exemplo:</p>
 <pre class="prettyprint">
-var gl = someCanvas.getContext("webgl");
-var haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object"));
-<p>function getAndApplyExtension(gl, name) {
-var ext = gl.getExtension(name);
-if (!ext) {
-return false;
-}
-var suffix = name.split(&quot;<em>&quot;)[0];
-var prefix = suffix = '</em>‘;
-var suffixRE = new RegExp(suffix + ‘$’);
-var prefixRE = new RegExp(’^’ + prefix);
-for (var key in ext) {
-var val = ext[key];
-if (typeof(val) === ‘function’) {
-// remover sufixo (ex: bindVertexArrayOES -&gt; bindVertexArray)
-var unsuffixedKey = key.replace(suffixRE, ‘’);
-if (key.substing)
-gl[unprefixedKey] = ext[key].bind(ext);
-} else {
-var unprefixedKey = key.replace(prefixRE, ‘’);
-gl[unprefixedKey] = ext[key];
-}
-}
-</pre></p>
+var gl &#x3D; someCanvas.getContext(&quot;webgl&quot;);
+var haveVAOs &#x3D; getAndApplyExtension(gl, &quot;OES_vertex_array_object&quot;));
+
+function getAndApplyExtension(gl, name) {
+  var ext &#x3D; gl.getExtension(name);
+  if (!ext) {
+    return false;
+  }
+  var suffix &#x3D; name.split(&quot;_&quot;)[0];
+  var prefix &#x3D; suffix &#x3D; &#x27;_&#x27;;
+  var suffixRE &#x3D; new RegExp(suffix + &#x27;$&#x27;);
+  var prefixRE &#x3D; new RegExp(&#x27;^&#x27; + prefix);
+  for (var key in ext) {
+    var val &#x3D; ext[key];
+    if (typeof(val) &#x3D;&#x3D;&#x3D; &#x27;function&#x27;) {
+      // remover sufixo (ex: bindVertexArrayOES -&gt; bindVertexArray)
+      var unsuffixedKey &#x3D; key.replace(suffixRE, &#x27;&#x27;);
+      if (key.substing)
+      gl[unprefixedKey] &#x3D; ext[key].bind(ext);
+    } else {
+      var unprefixedKey &#x3D; key.replace(prefixRE, &#x27;&#x27;);
+      gl[unprefixedKey] &#x3D; ext[key];
+    }
+  }
+</pre>
 <p>Agora, seu código pode funcionar da mesma forma em ambos. Exemplo:</p>
 <pre class="prettyprint">
 if (haveVAOs) {
-  var someVAO = gl.createVertexArray();
+  var someVAO &#x3D; gl.createVertexArray();
   ...
 } else {
   ... do whatever for no VAOs.
@@ -581,9 +582,9 @@ if (haveVAOs) {
 <pre class="prettyprint">
 if (haveVAOs) {
   if (isWebGL2)
-     someVAO = gl.createVertexArray();
+     someVAO &#x3D; gl.createVertexArray();
   } else {
-     someVAO = vaoExt.createVertexArrayOES();
+     someVAO &#x3D; vaoExt.createVertexArrayOES();
   }
   ...
 } else {

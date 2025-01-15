@@ -1019,13 +1019,14 @@ we could have done something like this</p>
 uniform bool hasDiffuseMap;
 uniform vec4 diffuse;
 uniform sampler2D diffuseMap
-<p>…
-vec4 effectiveDiffuse = diffuse;
-if (hasDiffuseMap) {
-effectiveDiffuse *= texture2D(diffuseMap, texcoord);
-}
-…
-</code></pre></p>
+
+...
+  vec4 effectiveDiffuse &#x3D; diffuse;
+  if (hasDiffuseMap) {
+    effectiveDiffuse *&#x3D; texture2D(diffuseMap, texcoord);
+  }
+...
+</code></pre>
 <p>Conditionals like that are generally discouraged because depending on the
 GPU/driver they are often not very performant.</p>
 <p>Either do like we did above and try to make the code have no conditionals. We used

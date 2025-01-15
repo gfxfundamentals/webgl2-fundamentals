@@ -262,21 +262,21 @@ with lights.</p>
 <p>Here’s the code in three.js to display this</p>
 <pre class="prettyprint showlinemods">
   // Setup.
-  renderer = new THREE.WebGLRenderer({canvas: document.querySelector("#canvas")});
+  renderer &#x3D; new THREE.WebGLRenderer({canvas: document.querySelector(&quot;#canvas&quot;)});
   c.appendChild(renderer.domElement);
 
   // Make and setup a camera.
-  camera = new THREE.PerspectiveCamera(70, 1, 1, 1000);
-  camera.position.z = 400;
+  camera &#x3D; new THREE.PerspectiveCamera(70, 1, 1, 1000);
+  camera.position.z &#x3D; 400;
 
   // Make a scene
-  scene = new THREE.Scene();
+  scene &#x3D; new THREE.Scene();
 
   // Make a cube.
-  var geometry = new THREE.BoxGeometry(200, 200, 200);
+  var geometry &#x3D; new THREE.BoxGeometry(200, 200, 200);
 
   // Make a material
-  var material = new THREE.MeshPhongMaterial({
+  var material &#x3D; new THREE.MeshPhongMaterial({
     ambient: 0x555555,
     color: 0x555555,
     specular: 0xffffff,
@@ -285,15 +285,15 @@ with lights.</p>
   });
 
   // Create a mesh based on the geometry and material
-  mesh = new THREE.Mesh(geometry, material);
+  mesh &#x3D; new THREE.Mesh(geometry, material);
   scene.add(mesh);
 
   // Add 2 lights.
-  light1 = new THREE.PointLight(0xff0040, 2, 0);
+  light1 &#x3D; new THREE.PointLight(0xff0040, 2, 0);
   light1.position.set(200, 100, 300);
   scene.add(light1);
 
-  light2 = new THREE.PointLight(0x0040ff, 2, 0);
+  light2 &#x3D; new THREE.PointLight(0x0040ff, 2, 0);
   light2.position.set(-200, 100, 300);
   scene.add(light2);
 </pre>
@@ -322,10 +322,10 @@ with lights.</p>
   // Setup 2 lights
   glEnable(GL_LIGHT0);
   glEnable(GL_LIGHT1);
-  float light0_position[] = {  200, 100, 300, };
-  float light1_position[] = { -200, 100, 300, };
-  float light0_color[] = { 1, 0, 0.25, 1, };
-  float light1_color[] = { 0, 0.25, 1, 1, };
+  float light0_position[] &#x3D; {  200, 100, 300, };
+  float light1_position[] &#x3D; { -200, 100, 300, };
+  float light0_color[] &#x3D; { 1, 0, 0.25, 1, };
+  float light1_color[] &#x3D; { 0, 0.25, 1, 1, };
   glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_color);
   glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_color);
   glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
@@ -333,12 +333,12 @@ with lights.</p>
 ...
 
   // Draw a cube.
-  static int count = 0;
+  static int count &#x3D; 0;
   ++count;
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
-  double angle = count * 0.1;
+  double angle &#x3D; count * 0.1;
   glTranslatef(0, 0, -400);
   glRotatef(angle, 0, 1, 0);
 

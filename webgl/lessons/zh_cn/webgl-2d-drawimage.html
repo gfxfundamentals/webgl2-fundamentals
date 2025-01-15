@@ -678,16 +678,18 @@ void main() {
 #version 300 es
 in vec4 a_position;
 -in vec2 a_texcoord;
-<p>uniform mat4 u_matrix;
-uniform mat4 u_textureMatrix;</p>
-<p>out vec2 v_texcoord;</p>
-<p>void main() {
-gl_Position = u_matrix * a_position;</p>
-<ul>
-<li>v_texcoord = (u_textureMatrix * a_position).xy;
+
+uniform mat4 u_matrix;
+uniform mat4 u_textureMatrix;
+
+out vec2 v_texcoord;
+
+void main() {
+gl_Position &#x3D; u_matrix \* a_position;
+
+-   v_texcoord &#x3D; (u_textureMatrix \* a_position).xy;
 }
-</pre></li>
-</ul>
+</pre>
 <p>现在移除关于纹理坐标设置的代码，得到的结果和之前是相同的。</p>
 <div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-drawimage-08.html"></iframe>

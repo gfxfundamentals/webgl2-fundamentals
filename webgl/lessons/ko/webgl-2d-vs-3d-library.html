@@ -256,21 +256,21 @@ WebGL(그리고 OpenGL ES 2.0+)도 3D 장면을 그릴 때 사용하긴 하지�
 <p>three.js를 사용하는 경우 코드는 아래와 같습니다.</p>
 <pre class="prettyprint showlinemods">
   // 설정
-  renderer = new THREE.WebGLRenderer({canvas: document.querySelector("#canvas")});
+  renderer &#x3D; new THREE.WebGLRenderer({canvas: document.querySelector(&quot;#canvas&quot;)});
   c.appendChild(renderer.domElement);
 
   // 카메라를 생성하고 설정
-  camera = new THREE.PerspectiveCamera(70, 1, 1, 1000);
-  camera.position.z = 400;
+  camera &#x3D; new THREE.PerspectiveCamera(70, 1, 1, 1000);
+  camera.position.z &#x3D; 400;
 
   // 장면 생성
-  scene = new THREE.Scene();
+  scene &#x3D; new THREE.Scene();
 
   // 육면체 생성
-  var geometry = new THREE.BoxGeometry(200, 200, 200);
+  var geometry &#x3D; new THREE.BoxGeometry(200, 200, 200);
 
   // 머티리얼 생성
-  var material = new THREE.MeshPhongMaterial({
+  var material &#x3D; new THREE.MeshPhongMaterial({
     ambient: 0x555555,
     color: 0x555555,
     specular: 0xffffff,
@@ -279,15 +279,15 @@ WebGL(그리고 OpenGL ES 2.0+)도 3D 장면을 그릴 때 사용하긴 하지�
   });
 
   // geometry와 머티리얼로 메쉬 생성
-  mesh = new THREE.Mesh(geometry, material);
+  mesh &#x3D; new THREE.Mesh(geometry, material);
   scene.add(mesh);
 
   // 2개의 조명 생성
-  light1 = new THREE.PointLight(0xff0040, 2, 0);
+  light1 &#x3D; new THREE.PointLight(0xff0040, 2, 0);
   light1.position.set(200, 100, 300);
   scene.add(light1);
 
-  light2 = new THREE.PointLight(0x0040ff, 2, 0);
+  light2 &#x3D; new THREE.PointLight(0x0040ff, 2, 0);
   light2.position.set(-200, 100, 300);
   scene.add(light2);
 </pre>
@@ -316,10 +316,10 @@ WebGL(그리고 OpenGL ES 2.0+)도 3D 장면을 그릴 때 사용하긴 하지�
   // 조명 2개 정의
   glEnable(GL_LIGHT0);
   glEnable(GL_LIGHT1);
-  float light0_position[] = {  200, 100, 300, };
-  float light1_position[] = { -200, 100, 300, };
-  float light0_color[] = { 1, 0, 0.25, 1, };
-  float light1_color[] = { 0, 0.25, 1, 1, };
+  float light0_position[] &#x3D; {  200, 100, 300, };
+  float light1_position[] &#x3D; { -200, 100, 300, };
+  float light0_color[] &#x3D; { 1, 0, 0.25, 1, };
+  float light1_color[] &#x3D; { 0, 0.25, 1, 1, };
   glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_color);
   glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_color);
   glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
@@ -327,12 +327,12 @@ WebGL(그리고 OpenGL ES 2.0+)도 3D 장면을 그릴 때 사용하긴 하지�
 ...
 
   // 육면체 그리기
-  static int count = 0;
+  static int count &#x3D; 0;
   ++count;
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
-  double angle = count * 0.1;
+  double angle &#x3D; count * 0.1;
   glTranslatef(0, 0, -400);
   glRotatef(angle, 0, 1, 0);
 

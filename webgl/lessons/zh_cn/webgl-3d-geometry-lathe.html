@@ -922,22 +922,22 @@ for (let division = 0; division <= numDivisions; ++division) {
 <p>起初我想通过提供一个误差范围，检查顶点的距离是否在范围内，如果小于误差范围就认为是同一点。
 就像这样。
 <pre class="prettyprint">
-const epsilon = 0.0001;
-const tempVerts = [];
+const epsilon &#x3D; 0.0001;
+const tempVerts &#x3D; [];
 function getVertIndex(position) {
   if (tempVerts.length) {
     // 找到最近的点
-    let closestNdx = 0;
-    let closestDistSq = v2.distanceSq(position, tempVerts[0]);
-    for (let i = 1; i < tempVerts.length; ++i) {
-      let distSq = v2.distanceSq(position, tempVerts[i]);
-      if (distSq < closestDistSq) {
-        closestDistSq = distSq;
-        closestNdx = i;
+    let closestNdx &#x3D; 0;
+    let closestDistSq &#x3D; v2.distanceSq(position, tempVerts[0]);
+    for (let i &#x3D; 1; i &lt; tempVerts.length; ++i) {
+      let distSq &#x3D; v2.distanceSq(position, tempVerts[i]);
+      if (distSq &lt; closestDistSq) {
+        closestDistSq &#x3D; distSq;
+        closestNdx &#x3D; i;
       }
     }
     // 是否在误差范围内
-    if (closestDistSq < epsilon) {
+    if (closestDistSq &lt; epsilon) {
       // 是就返回那个点
       return closestNdx;
     }
@@ -973,24 +973,24 @@ function getVertIndex(position) {
 <h3>使用矩阵运算是不是大材小用了?</h3>
 <p>当我们旋转点的时候使用这样的代码</p>
 <pre class="prettyprint">
-const mat = m4.yRotation(angle);
+const mat &#x3D; m4.yRotation(angle);
 ...
-points.forEach((p, ndx) => {
-  const tp = m4.transformPoint(mat, [...p, 0]);
+points.forEach((p, ndx) &#x3D;&gt; {
+  const tp &#x3D; m4.transformPoint(mat, [...p, 0]);
   ...
 </pre>
 <p>使用 4x4 矩阵转换一个任意三维点需要 16 次乘法，12 次加法，和 3 次除法。
 我们可以只使用 <a href="webgl-2d-rotation.html">单位圆形式的旋转运算</a>。
 </p>
 <pre class="prettyprint">
-const s = Math.sin(angle);
-const c = Math.cos(angle);
+const s &#x3D; Math.sin(angle);
+const c &#x3D; Math.cos(angle);
 ...
-points.forEach((p, ndx) => {
-  const x = p[0];
-  const y = p[1];
-  const z = p[2];
-  const tp = [
+points.forEach((p, ndx) &#x3D;&gt; {
+  const x &#x3D; p[0];
+  const y &#x3D; p[1];
+  const z &#x3D; p[2];
+  const tp &#x3D; [
     x * c - z * s,
     y,
     x * s + z * c,

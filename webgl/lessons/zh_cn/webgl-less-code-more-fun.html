@@ -642,49 +642,55 @@ var attribSetters  = twgl.createAttributeSetters(gl, program);
 </p>
 <pre class="prettyprint">
 // 初始化时
-var uniformSetters = twgl.createUniformSetters(program);
-<p>// 绘制时
-uniformSetters.u_ambient([1, 0, 0, 1]); // 设置环境光为红色</p>
+var uniformSetters &#x3D; twgl.createUniformSetters(program);
+
+// 绘制时
+uniformSetters.u_ambient([1, 0, 0, 1]); // 设置环境光为红色
+
 </pre>
 <p>这样做不好的原因就是，在使用GLSL的过程中经常会修改，调试。假设屏幕上什么都没有出现，首先我会简化着色器，例如我会尽可能简化片断着色器。</p>
 <pre class="prettyprint showlinemods">
 #version 300 es
 precision highp float;
-<p>in vec4 v_position;
+
+in vec4 v_position;
 in vec2 v_texCoord;
 in vec3 v_normal;
 in vec3 v_surfaceToLight;
-in vec3 v_surfaceToView;</p>
-<p>uniform vec4 u_lightColor;
+in vec3 v_surfaceToView;
+
+uniform vec4 u_lightColor;
 uniform vec4 u_ambient;
 uniform sampler2D u_diffuse;
 uniform vec4 u_specular;
 uniform float u_shininess;
-uniform float u_specularFactor;</p>
-<p>out vec4 outColor;</p>
-<p>vec4 lit(float l ,float h, float m) {
+uniform float u_specularFactor;
+
+out vec4 outColor;
+
+vec4 lit(float l ,float h, float m) {
 return vec4(1.0,
 max(l, 0.0),
 (l &gt; 0.0) ? pow(max(0.0, h), m) : 0.0,
 1.0);
-}</p>
-<p>void main() {
-vec4 diffuseColor = texture2D(u<em>diffuse, v_texCoord);
-vec3 a_normal = normalize(v_normal);
-vec3 surfaceToLight = normalize(v_surfaceToLight);
-vec3 surfaceToView = normalize(v_surfaceToView);
-vec3 halfVector = normalize(surfaceToLight + surfaceToView);
-vec4 litR = lit(dot(a_normal, surfaceToLight),
-dot(a_normal, halfVector), u_shininess);
-vec4 outColor = vec4((
-u_lightColor * (diffuseColor _ litR.y + diffuseColor _ u</em>ambient +
-u_specular * litR.z * u_specularFactor)).rgb,
-diffuseColor.a);</p>
-<ul>
-<li>outColor = vec4(0,1,0,1); // &lt;!— just green
 }
-</pre></li>
-</ul>
+
+void main() {
+vec4 diffuseColor &#x3D; texture2D(u*diffuse, v_texCoord);
+vec3 a_normal &#x3D; normalize(v_normal);
+vec3 surfaceToLight &#x3D; normalize(v_surfaceToLight);
+vec3 surfaceToView &#x3D; normalize(v_surfaceToView);
+vec3 halfVector &#x3D; normalize(surfaceToLight + surfaceToView);
+vec4 litR &#x3D; lit(dot(a_normal, surfaceToLight),
+dot(a_normal, halfVector), u_shininess);
+vec4 outColor &#x3D; vec4((
+u_lightColor * (diffuseColor _ litR.y + diffuseColor _ u*ambient +
+u_specular * litR.z \* u_specularFactor)).rgb,
+diffuseColor.a);
+
+-   outColor &#x3D; vec4(0,1,0,1); // &amp;lt;!--- just green
+}
+</pre>
 <p>注意到我添加了一行，直接将 <code class="notranslate" translate="no">outColor</code> 设置为固定颜色。
 大多数驱动会发现之前的行没有为结果做贡献，优化后就会把没用的变量移除，
 下次我运行程序调用 <code class="notranslate" translate="no">twgl.createUniformSetters</code> 就不会为<code class="notranslate" translate="no">u_ambient</code> 创建 setter，所以 <code class="notranslate" translate="no">uniformSetters.u_ambient()</code> 就会报错。</p>

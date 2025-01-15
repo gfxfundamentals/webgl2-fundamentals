@@ -997,13 +997,14 @@ void main () {
 uniform bool hasDiffuseMap;
 uniform vec4 diffuse;
 uniform sampler2D diffuseMap
-<p>…
-vec4 effectiveDiffuse = diffuse;
+
+...
+vec4 effectiveDiffuse &#x3D; diffuse;
 if (hasDiffuseMap) {
-effectiveDiffuse *= texture2D(diffuseMap, texcoord);
+effectiveDiffuse \*&#x3D; texture2D(diffuseMap, texcoord);
 }
-…
-</code></pre></p>
+...
+</code></pre>
 <p>这样的条件语句一般是不鼓励的，因为依赖于 GPU 或者驱动，它们没有很好的性能。</p>
 <p>当没有纹理时我们用一个 1x1 像素的白点纹理，这样就不用考虑条件语句了。</p>
 <p>或者，使用不同的着色器。一个带有该特性，一个没有，根据情况选择使用正确的着色器。</p>

@@ -542,11 +542,11 @@ trueにした場合、BYTE型 (-128 〜 127) なら-1.0 〜 +1.0 、UNSIGNED_BYT
 </p>
 <p>実際にコーディングしてみましょう。データの取り出し方を指定する部分は以下のコードになります。</p>
 <pre class="prettyprint showlinemods">
-  var size = 4;
-*  var type = gl.UNSIGNED_BYTE;
-*  var normalize = true;
-  var stride = 0;
-  var offset = 0;
+  var size &#x3D; 4;
+*  var type &#x3D; gl.UNSIGNED_BYTE;
+*  var normalize &#x3D; true;
+  var stride &#x3D; 0;
+  var offset &#x3D; 0;
   gl.vertexAttribPointer(colorLocation, size, type, normalize, stride, offset);
 </pre>
 <p>バッファを色で塗りつぶす時は次のようにします。</p>
@@ -555,24 +555,25 @@ trueにした場合、BYTE型 (-128 〜 127) なら-1.0 〜 +1.0 、UNSIGNED_BYT
 // that make the rectangle.
 function setColors(gl) {
   // Pick 2 random colors.
-  var r1 = Math.random() * 256; // 0 to 255.99999
-  var b1 = Math.random() * 256; // these values
-  var g1 = Math.random() * 256; // will be truncated
-  var r2 = Math.random() * 256; // when stored in the
-  var b2 = Math.random() * 256; // Uint8Array
-  var g2 = Math.random() * 256;
-<p>gl.bufferData(
-gl.ARRAY_BUFFER,
-new Uint8Array(   // Uint8Array
-[ r1, b1, g1, 255,
-r1, b1, g1, 255,
-r1, b1, g1, 255,
-r2, b2, g2, 255,
-r2, b2, g2, 255,
-r2, b2, g2, 255]),
-gl.STATIC_DRAW);
+  var r1 &#x3D; Math.random() * 256; // 0 to 255.99999
+  var b1 &#x3D; Math.random() * 256; // these values
+  var g1 &#x3D; Math.random() * 256; // will be truncated
+  var r2 &#x3D; Math.random() * 256; // when stored in the
+  var b2 &#x3D; Math.random() * 256; // Uint8Array
+  var g2 &#x3D; Math.random() * 256;
+
+  gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Uint8Array(   // Uint8Array
+        [ r1, b1, g1, 255,
+          r1, b1, g1, 255,
+          r1, b1, g1, 255,
+          r2, b2, g2, 255,
+          r2, b2, g2, 255,
+          r2, b2, g2, 255]),
+      gl.STATIC_DRAW);
 }
-</pre></p>
+</pre>
 <p>
 実行結果はこのようになります。
 </p>

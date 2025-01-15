@@ -517,11 +517,11 @@ UNSIGNED_BYTE（0至255）变为0.0至+1.0。标准化的SHORT INTEGER也从-1.0
 </p>
 <p>让我们更改代码以执行此操作。 当我们告诉WebGL如何提取颜色时，我们将使用如下代码：</p>
 <pre class="prettyprint showlinemods">
-  var size = 4;
-*  var type = gl.UNSIGNED_BYTE;
-*  var normalize = true;
-  var stride = 0;
-  var offset = 0;
+  var size &#x3D; 4;
+*  var type &#x3D; gl.UNSIGNED_BYTE;
+*  var normalize &#x3D; true;
+  var stride &#x3D; 0;
+  var offset &#x3D; 0;
   gl.vertexAttribPointer(colorLocation, size, type, normalize, stride, offset);
 </pre>
 <p>当我们用颜色填充缓冲区时，我们将使用如下代码：</p>
@@ -530,13 +530,14 @@ UNSIGNED_BYTE（0至255）变为0.0至+1.0。标准化的SHORT INTEGER也从-1.0
 // that make the rectangle.
 function setColors(gl) {
   // Pick 2 random colors.
-  var r1 = Math.random() * 256; // 0 to 255.99999
-  var b1 = Math.random() * 256; // these values
-  var g1 = Math.random() * 256; // will be truncated
-  var r2 = Math.random() * 256; // when stored in the
-  var b2 = Math.random() * 256; // Uint8Array
-  var g2 = Math.random() * 256;
-<p>gl.bufferData(
+  var r1 &#x3D; Math.random() * 256; // 0 to 255.99999
+  var b1 &#x3D; Math.random() * 256; // these values
+  var g1 &#x3D; Math.random() * 256; // will be truncated
+  var r2 &#x3D; Math.random() * 256; // when stored in the
+  var b2 &#x3D; Math.random() * 256; // Uint8Array
+  var g2 &#x3D; Math.random() * 256;
+
+gl.bufferData(
 gl.ARRAY_BUFFER,
 new Uint8Array( // Uint8Array
 [ r1, b1, g1, 255,
@@ -546,7 +547,8 @@ r2, b2, g2, 255,
 r2, b2, g2, 255,
 r2, b2, g2, 255]),
 gl.STATIC_DRAW);
-}</p>
+}
+
 </pre>
 <p>
 下面是实例演示：

@@ -748,24 +748,26 @@ in vec4 a_color;
 <p>两个都是 'vec4' 类型，当我们告诉WebGL如何从缓冲中获取数据时使用</p>
 <pre class="prettyprint showlinemods">
 // 告诉属性怎么从 positionBuffer (ARRAY_BUFFER) 中读取位置
-var size = 3;          // 每次迭代使用 3 个单位的数据
-var type = gl.FLOAT;   // 单位数据类型是32位的浮点型
-var normalize = false; // 不需要归一化数据
-var stride = 0;        // 0 = 移动距离 * 单位距离长度sizeof(type)
+var size &#x3D; 3;          // 每次迭代使用 3 个单位的数据
+var type &#x3D; gl.FLOAT;   // 单位数据类型是32位的浮点型
+var normalize &#x3D; false; // 不需要归一化数据
+var stride &#x3D; 0;        // 0 &#x3D; 移动距离 * 单位距离长度sizeof(type)
                        // 每次迭代跳多少距离到下一个数据
-var offset = 0;        // 从绑定缓冲的起始处开始
+var offset &#x3D; 0;        // 从绑定缓冲的起始处开始
 gl.vertexAttribPointer(
     positionAttributeLocation, size, type, normalize, stride, offset);
-<p>…
+
+...
 // 告诉颜色属性怎么从 colorBuffer (ARRAY_BUFFER) 中读取颜色值
-var size = 3; // 每次迭代使用 3 个单位的数据
-var type = gl.UNSIGNED_BYTE; // 单位数据类型是无符号 8 位整数
-var normalize = true; // 标准化数据 (从 0-255 转换到 0.0-1.0)
-var stride = 0; // 0 = 移动距离 * 单位距离长度 sizeof(type)
+var size &#x3D; 3; // 每次迭代使用 3 个单位的数据
+var type &#x3D; gl.UNSIGNED_BYTE; // 单位数据类型是无符号 8 位整数
+var normalize &#x3D; true; // 标准化数据 (从 0-255 转换到 0.0-1.0)
+var stride &#x3D; 0; // 0 &#x3D; 移动距离 \* 单位距离长度 sizeof(type)
 // 每次迭代跳多少距离到下一个数据
-var offset = 0; // 从绑定缓冲的起始处开始
+var offset &#x3D; 0; // 从绑定缓冲的起始处开始
 gl.vertexAttribPointer(
-colorAttributeLocation, size, type, normalize, stride, offset);</p>
+colorAttributeLocation, size, type, normalize, stride, offset);
+
 </pre>
 <p>
 这里的 '3' 表示的时每次迭代从缓冲中提取三个值给顶点着色器中的属性。

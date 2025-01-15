@@ -657,10 +657,11 @@ directly like this.
 </p>
 <pre class="prettyprint">
 // At initialization time
-var uniformSetters = twgl.createUniformSetters(program);
-<p>// At draw time
+var uniformSetters &#x3D; twgl.createUniformSetters(program);
+
+// At draw time
 uniformSetters.u_ambient([1, 0, 0, 1]); // set the ambient color to red.
-</pre></p>
+</pre>
 <p>The reason this is not a good idea is because when you're working with GLSL you might
 modify the shaders from time to time, often to debug. Let's say we were not seeing
 anything on the screen in our program. One of the first things I do when nothing
@@ -669,41 +670,44 @@ to the simplest thing possible</p>
 <pre class="prettyprint showlinemods">
 #version 300 es
 precision highp float;
-<p>in vec4 v_position;
+
+in vec4 v_position;
 in vec2 v_texCoord;
 in vec3 v_normal;
 in vec3 v_surfaceToLight;
-in vec3 v_surfaceToView;</p>
-<p>uniform vec4 u_lightColor;
+in vec3 v_surfaceToView;
+
+uniform vec4 u_lightColor;
 uniform vec4 u_ambient;
 uniform sampler2D u_diffuse;
 uniform vec4 u_specular;
 uniform float u_shininess;
-uniform float u_specularFactor;</p>
-<p>out vec4 outColor;</p>
-<p>vec4 lit(float l ,float h, float m) {
-return vec4(1.0,
-max(l, 0.0),
-(l &gt; 0.0) ? pow(max(0.0, h), m) : 0.0,
-1.0);
-}</p>
-<p>void main() {
-vec4 diffuseColor = texture2D(u_diffuse, v_texCoord);
-vec3 a_normal = normalize(v_normal);
-vec3 surfaceToLight = normalize(v_surfaceToLight);
-vec3 surfaceToView = normalize(v_surfaceToView);
-vec3 halfVector = normalize(surfaceToLight + surfaceToView);
-vec4 litR = lit(dot(a_normal, surfaceToLight),
-dot(a_normal, halfVector), u_shininess);
-vec4 outColor = vec4((
-u_lightColor * (diffuseColor * litR.y + diffuseColor * u_ambient +
-u_specular * litR.z * u_specularFactor)).rgb,
-diffuseColor.a);</p>
-<ul>
-<li>outColor = vec4(0,1,0,1);  // &lt;!— just green
+uniform float u_specularFactor;
+
+out vec4 outColor;
+
+vec4 lit(float l ,float h, float m) {
+  return vec4(1.0,
+              max(l, 0.0),
+              (l &gt; 0.0) ? pow(max(0.0, h), m) : 0.0,
+              1.0);
 }
-</pre></li>
-</ul>
+
+void main() {
+  vec4 diffuseColor &#x3D; texture2D(u_diffuse, v_texCoord);
+  vec3 a_normal &#x3D; normalize(v_normal);
+  vec3 surfaceToLight &#x3D; normalize(v_surfaceToLight);
+  vec3 surfaceToView &#x3D; normalize(v_surfaceToView);
+  vec3 halfVector &#x3D; normalize(surfaceToLight + surfaceToView);
+  vec4 litR &#x3D; lit(dot(a_normal, surfaceToLight),
+                    dot(a_normal, halfVector), u_shininess);
+  vec4 outColor &#x3D; vec4((
+    u_lightColor * (diffuseColor * litR.y + diffuseColor * u_ambient +
+                u_specular * litR.z * u_specularFactor)).rgb,
+      diffuseColor.a);
+*  outColor &#x3D; vec4(0,1,0,1);  // &amp;lt;!--- just green
+}
+</pre>
 <p>Notice I just added a line that sets <code class="notranslate" translate="no">outColor</code> to a constant color.
 Most drivers will see that none of the previous lines in the file actually contribute
 to the result. As such they'll optimize out all of our uniforms. The next time we run the program

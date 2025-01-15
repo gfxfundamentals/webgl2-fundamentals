@@ -542,11 +542,11 @@ extension in which the internal format was inferred from the <code class="notran
 <h3>WebGL1 extension을 WebGL2처럼 만들기</h3>
 <p>WebGL1의 extension에 있던 함수들은, WebGL2에서는 extension 없이 사용할 수 있습니다. 예를 들면, WebGL1에서는 아래와 같았지만</p>
 <pre class="prettyprint">
-var ext = gl.getExtension("OES_vertex_array_object");
+var ext &#x3D; gl.getExtension(&quot;OES_vertex_array_object&quot;);
 if (!ext) {
-  // tell user they don't have the required extension or work around it
+  // tell user they don&#x27;t have the required extension or work around it
 } else {
-  var someVAO = ext.createVertexArrayOES();
+  var someVAO &#x3D; ext.createVertexArrayOES();
 }
 </pre>
 <p>
@@ -560,48 +560,49 @@ var someVAO = gl.createVertexArray();
 <p>한 가지 해결 방법은, 초기화할 때 WebGL1 extension을 WebGL context에 복사하는 것입니다.
 그렇게 하면 나머지 코드는 그대로입니다. 예시:</p>
 <pre class="prettyprint">
-const gl = someCanvas.getContext("webgl");
-const haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object");
-<p>function getAndApplyExtension(gl, name) {
-const ext = gl.getExtension(name);
-if (!ext) {
-return null;
+const gl &#x3D; someCanvas.getContext(&quot;webgl&quot;);
+const haveVAOs &#x3D; getAndApplyExtension(gl, &quot;OES_vertex_array_object&quot;);
+
+function getAndApplyExtension(gl, name) {
+  const ext &#x3D; gl.getExtension(name);
+  if (!ext) {
+    return null;
+  }
+  const fnSuffix &#x3D; name.split(&quot;_&quot;)[0];
+  const enumSuffix &#x3D; &#x27;_&#x27; + fnSuffix;
+  for (const key in ext) {
+    const value &#x3D; ext[key];
+    const isFunc &#x3D; typeof (value) &#x3D;&#x3D;&#x3D; &#x27;function&#x27;;
+    const suffix &#x3D; isFunc ? fnSuffix : enumSuffix;
+    let name &#x3D; key;
+    // examples of where this is not true are WEBGL_compressed_texture_s3tc
+    // and WEBGL_compressed_texture_pvrtc
+    if (key.endsWith(suffix)) {
+      name &#x3D; key.substring(0, key.length - suffix.length);
+    }
+    if (gl[name] !&#x3D;&#x3D; undefined) {
+      if (!isFunc &amp;&amp; gl[name] !&#x3D;&#x3D; value) {
+        console.warn(&quot;conflict:&quot;, name, gl[name], value, key);
+      }
+    } else {
+      if (isFunc) {
+        gl[name] &#x3D; function(origFn) {
+          return function() {
+            return origFn.apply(ext, arguments);
+          };
+        }(value);
+      } else {
+        gl[name] &#x3D; value;
+      }
+    }
+  }
+  return ext;
 }
-const fnSuffix = name.split(&quot;<em>&quot;)[0];
-const enumSuffix = '</em>’ + fnSuffix;
-for (const key in ext) {
-const value = ext[key];
-const isFunc = typeof (value) === ‘function’;
-const suffix = isFunc ? fnSuffix : enumSuffix;
-let name = key;
-// examples of where this is not true are WEBGL_compressed_texture_s3tc
-// and WEBGL_compressed_texture_pvrtc
-if (key.endsWith(suffix)) {
-name = key.substring(0, key.length - suffix.length);
-}
-if (gl[name] !== undefined) {
-if (!isFunc &amp;&amp; gl[name] !== value) {
-console.warn(“conflict:”, name, gl[name], value, key);
-}
-} else {
-if (isFunc) {
-gl[name] = function(origFn) {
-return function() {
-return origFn.apply(ext, arguments);
-};
-}(value);
-} else {
-gl[name] = value;
-}
-}
-}
-return ext;
-}
-</pre></p>
+</pre>
 <p>이제 이 코드는 WebGL1과 WebGL2 에서 대부분 똑같이 동작할 겁니다. 예시:</p>
 <pre class="prettyprint">
 if (haveVAOs) {
-  var someVAO = gl.createVertexArray();
+  var someVAO &#x3D; gl.createVertexArray();
   ...
 } else {
   ... do whatever for no VAOs.
@@ -611,9 +612,9 @@ if (haveVAOs) {
 <pre class="prettyprint">
 if (haveVAOs) {
   if (isWebGL2)
-     someVAO = gl.createVertexArray();
+     someVAO &#x3D; gl.createVertexArray();
   } else {
-     someVAO = vaoExt.createVertexArrayOES();
+     someVAO &#x3D; vaoExt.createVertexArrayOES();
   }
   ...
 } else {
