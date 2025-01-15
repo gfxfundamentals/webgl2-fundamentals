@@ -291,7 +291,8 @@ var textTextures = [
 +  &quot;z&quot;,    // 14,
 ].map(function(name) {
 *  var textCanvas = makeTextCanvas(name, 10, 26);
-</code></pre><p>然后为名字中每个字母渲染一个矩形而不是原来的只用一个矩形。</p>
+</code></pre>
+<p>然后为名字中每个字母渲染一个矩形而不是原来的只用一个矩形。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">//  绘制文字设置
 +// 因为每个字母使用的是相通的属性和程序
 +// 我们只需要设置一次
@@ -309,7 +310,7 @@ textPositions.forEach(function(pos, ndx) {
 +    // 选择一个字母纹理
 +    var tex = textTextures[letterNdx];
 
-    // 使用 &#39;F&#39; 的位置
+    // 使用 'F' 的位置
 
     // 由于 pos 在视图空间，表示它是一个从眼睛位置出发的一个向量
     // 所以沿着向量朝眼睛方向移动一定距离
@@ -334,7 +335,8 @@ textPositions.forEach(function(pos, ndx) {
     gl.drawElements(gl.TRIANGLES, textBufferInfo.numElements, gl.UNSIGNED_SHORT, 0);
   }
 });
-</code></pre><p>查看结果</p>
+</code></pre>
+<p>查看结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-glyphs.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-glyphs.html" target="_blank">点此在新窗口中浏览</a>
@@ -345,7 +347,7 @@ textPositions.forEach(function(pos, ndx) {
 计算了 73 个矩阵并使用了 219 次矩阵乘法运算，一个典型的 UI 可能很容易超过 1000 个字母，
 这种方式就会在每一帧需要进行大量计算。</p>
 <p>为了解决这个问题通常是使用一个包含所有字母的纹理图集，
-我们在<a href="webgl-3d-textures.html#texture-atlas">给立方体 6 各面贴图</a>
+我们在<a href="../webgl-3d-textures.html#texture-atlas">给立方体 6 各面贴图</a>
 的例子中讲到过纹理图集。</p>
 <p>我在网上找到了<a href="https://opengameart.org/content/8x8-font-chomps-wacky-worlds-beta">一个简单的开源字体纹理图集</a>
 <img class="webgl_center" width="256" height="160" style="image-rendering: pixelated;" src="../../resources/8x8-font.png" /></p>
@@ -357,49 +359,50 @@ textPositions.forEach(function(pos, ndx) {
   textureWidth: 64,
   textureHeight: 40,
   glyphInfos: {
-    &#39;a&#39;: { x:  0, y:  0, width: 8, },
-    &#39;b&#39;: { x:  8, y:  0, width: 8, },
-    &#39;c&#39;: { x: 16, y:  0, width: 8, },
-    &#39;d&#39;: { x: 24, y:  0, width: 8, },
-    &#39;e&#39;: { x: 32, y:  0, width: 8, },
-    &#39;f&#39;: { x: 40, y:  0, width: 8, },
-    &#39;g&#39;: { x: 48, y:  0, width: 8, },
-    &#39;h&#39;: { x: 56, y:  0, width: 8, },
-    &#39;i&#39;: { x:  0, y:  8, width: 8, },
-    &#39;j&#39;: { x:  8, y:  8, width: 8, },
-    &#39;k&#39;: { x: 16, y:  8, width: 8, },
-    &#39;l&#39;: { x: 24, y:  8, width: 8, },
-    &#39;m&#39;: { x: 32, y:  8, width: 8, },
-    &#39;n&#39;: { x: 40, y:  8, width: 8, },
-    &#39;o&#39;: { x: 48, y:  8, width: 8, },
-    &#39;p&#39;: { x: 56, y:  8, width: 8, },
-    &#39;q&#39;: { x:  0, y: 16, width: 8, },
-    &#39;r&#39;: { x:  8, y: 16, width: 8, },
-    &#39;s&#39;: { x: 16, y: 16, width: 8, },
-    &#39;t&#39;: { x: 24, y: 16, width: 8, },
-    &#39;u&#39;: { x: 32, y: 16, width: 8, },
-    &#39;v&#39;: { x: 40, y: 16, width: 8, },
-    &#39;w&#39;: { x: 48, y: 16, width: 8, },
-    &#39;x&#39;: { x: 56, y: 16, width: 8, },
-    &#39;y&#39;: { x:  0, y: 24, width: 8, },
-    &#39;z&#39;: { x:  8, y: 24, width: 8, },
-    &#39;0&#39;: { x: 16, y: 24, width: 8, },
-    &#39;1&#39;: { x: 24, y: 24, width: 8, },
-    &#39;2&#39;: { x: 32, y: 24, width: 8, },
-    &#39;3&#39;: { x: 40, y: 24, width: 8, },
-    &#39;4&#39;: { x: 48, y: 24, width: 8, },
-    &#39;5&#39;: { x: 56, y: 24, width: 8, },
-    &#39;6&#39;: { x:  0, y: 32, width: 8, },
-    &#39;7&#39;: { x:  8, y: 32, width: 8, },
-    &#39;8&#39;: { x: 16, y: 32, width: 8, },
-    &#39;9&#39;: { x: 24, y: 32, width: 8, },
-    &#39;-&#39;: { x: 32, y: 32, width: 8, },
-    &#39;*&#39;: { x: 40, y: 32, width: 8, },
-    &#39;!&#39;: { x: 48, y: 32, width: 8, },
-    &#39;?&#39;: { x: 56, y: 32, width: 8, },
+    'a': { x:  0, y:  0, width: 8, },
+    'b': { x:  8, y:  0, width: 8, },
+    'c': { x: 16, y:  0, width: 8, },
+    'd': { x: 24, y:  0, width: 8, },
+    'e': { x: 32, y:  0, width: 8, },
+    'f': { x: 40, y:  0, width: 8, },
+    'g': { x: 48, y:  0, width: 8, },
+    'h': { x: 56, y:  0, width: 8, },
+    'i': { x:  0, y:  8, width: 8, },
+    'j': { x:  8, y:  8, width: 8, },
+    'k': { x: 16, y:  8, width: 8, },
+    'l': { x: 24, y:  8, width: 8, },
+    'm': { x: 32, y:  8, width: 8, },
+    'n': { x: 40, y:  8, width: 8, },
+    'o': { x: 48, y:  8, width: 8, },
+    'p': { x: 56, y:  8, width: 8, },
+    'q': { x:  0, y: 16, width: 8, },
+    'r': { x:  8, y: 16, width: 8, },
+    's': { x: 16, y: 16, width: 8, },
+    't': { x: 24, y: 16, width: 8, },
+    'u': { x: 32, y: 16, width: 8, },
+    'v': { x: 40, y: 16, width: 8, },
+    'w': { x: 48, y: 16, width: 8, },
+    'x': { x: 56, y: 16, width: 8, },
+    'y': { x:  0, y: 24, width: 8, },
+    'z': { x:  8, y: 24, width: 8, },
+    '0': { x: 16, y: 24, width: 8, },
+    '1': { x: 24, y: 24, width: 8, },
+    '2': { x: 32, y: 24, width: 8, },
+    '3': { x: 40, y: 24, width: 8, },
+    '4': { x: 48, y: 24, width: 8, },
+    '5': { x: 56, y: 24, width: 8, },
+    '6': { x:  0, y: 32, width: 8, },
+    '7': { x:  8, y: 32, width: 8, },
+    '8': { x: 16, y: 32, width: 8, },
+    '9': { x: 24, y: 32, width: 8, },
+    '-': { x: 32, y: 32, width: 8, },
+    '*': { x: 40, y: 32, width: 8, },
+    '!': { x: 48, y: 32, width: 8, },
+    '?': { x: 56, y: 32, width: 8, },
   },
 };
-</code></pre><p>然后我们<a href="webgl-3d-textures.html">像之前加载图像一样加载这个纹理</a>。</p>
+</code></pre>
+<p>然后我们<a href="webgl-3d-textures.html">像之前加载图像一样加载这个纹理</a>。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 创建一个纹理
 var glyphTex = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, glyphTex);
@@ -409,7 +412,7 @@ gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
 // 异步加载图像
 var image = new Image();
 image.src = &quot;resources/8x8-font.png&quot;;
-image.addEventListener(&#39;load&#39;, function() {
+image.addEventListener('load', function() {
   // 图像加载完成，将它拷贝到纹理
   gl.bindTexture(gl.TEXTURE_2D, glyphTex);
   gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
@@ -419,7 +422,8 @@ image.addEventListener(&#39;load&#39;, function() {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 });
-</code></pre><p>现在我们有了一个包含字形的纹理，可以在运行时给每个字形创建矩形，这些顶点将使用纹理坐标选择确切的字形。</p>
+</code></pre>
+<p>现在我们有了一个包含字形的纹理，可以在运行时给每个字形创建矩形，这些顶点将使用纹理坐标选择确切的字形。</p>
 <p>给定字符串创建顶点。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function makeVerticesForString(fontInfo, s) {
   var len = s.length;
@@ -488,7 +492,8 @@ image.addEventListener(&#39;load&#39;, function() {
     numVertices: offset / 2,
   };
 }
-</code></pre><p>我们还要手动创建一个 bufferInfo(<a href="webgl-drawing-multiple-things.html">如果你不知道 bufferInfo 是什么可以看看这里</a>)。</p>
+</code></pre>
+<p>我们还要手动创建一个 bufferInfo(<a href="webgl-drawing-multiple-things.html">如果你不知道 bufferInfo 是什么可以看看这里</a>)。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Manually create a bufferInfo
 var textBufferInfo = {
   attribs: {
@@ -497,7 +502,8 @@ var textBufferInfo = {
   },
   numElements: 0,
 };
-</code></pre><p>然后需要在渲染文字时更新缓冲，我们也让文字动态变化</p>
+</code></pre>
+<p>然后需要在渲染文字时更新缓冲，我们也让文字动态变化</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">textPositions.forEach(function(pos, ndx) {
 
   var name = names[ndx];
@@ -511,7 +517,7 @@ var textBufferInfo = {
 +  gl.bindBuffer(gl.ARRAY_BUFFER, textBufferInfo.attribs.a_texcoord.buffer);
 +  gl.bufferData(gl.ARRAY_BUFFER, vertices.arrays.texcoord, gl.DYNAMIC_DRAW);
 
-  // 使用 &#39;F&#39; 的位置
+  // 使用 'F' 的位置
 
   // 由于 pos 在视图空间，表示它是一个从眼睛位置出发的一个向量
   // 所以沿着向量朝眼睛方向移动一定距离
@@ -537,7 +543,8 @@ var textBufferInfo = {
   // 绘制文字
   gl.drawArrays(gl.TRIANGLES, 0, vertices.numVertices);
 });
-</code></pre><p>这是结果</p>
+</code></pre>
+<p>这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-glyphs-texture-atlas.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-glyphs-texture-atlas.html" target="_blank">点此在新窗口中浏览</a>
@@ -546,20 +553,25 @@ var textBufferInfo = {
 </p>
 <p>这就是使用字形纹理图集的基本原理，还有几个明显值得添加或改进的地方。</p>
 <ul>
-<li><p>重用相同的序列</p>
+<li>
+<p>重用相同的序列</p>
 <p>当前 <code class="notranslate" translate="no">makeVerticesForString</code> 在每次调用的时候都创建新的 Float32Arrays。
 这最终可能会导致垃圾回收停顿。重用相同的序列可能会好一些，如果序列不够大可以放大并保持大小不变。</p>
 </li>
-<li><p>添加回车支持</p>
+<li>
+<p>添加回车支持</p>
 <p>检测是否是 <code class="notranslate" translate="no">\n</code> 然后在创建顶点时换行，这样容易制作文字段落。</p>
 </li>
-<li><p>添加各种格式化支持</p>
+<li>
+<p>添加各种格式化支持</p>
 <p>如果你想居中或对齐文字就可以添加这个功能。</p>
 </li>
-<li><p>添加顶点颜色支持</p>
+<li>
+<p>添加顶点颜色支持</p>
 <p>这样就可以对每个字母设置不同的颜色，当然你还需要决定如何改变文字颜色。</p>
 </li>
-<li><p>考虑在运行时用二维画布创建字形纹理图集</p>
+<li>
+<p>考虑在运行时用二维画布创建字形纹理图集</p>
 </li>
 </ul>
 <p>另一个没有讲到的重要的问题是纹理限制了大小但是字体不限，如果你想支持所有 Unicode 编码就需要处理汉语和日语，
@@ -570,7 +582,7 @@ var textBufferInfo = {
 当然如果要替换的字形需要绘制的话，就要在绘制后再替换。</p>
 <p>另一个可以做的事情，尽管我不推荐，是结合这个技术和<a href="webgl-text-texture.html">上篇中的技术</a>，
 可以将字形直接渲染到一个纹理中。</p>
-<p>还有一个在 WebGL 中绘制文字的方式就是使用三维文字，例如所有例子中的 &#39;F&#39; 就是一个三维字母。
+<p>还有一个在 WebGL 中绘制文字的方式就是使用三维文字，例如所有例子中的 ‘F’ 就是一个三维字母。
 你需要为每个字母创建一个，三位字母通常用于标题和电影 logo，其他地方很少用。</p>
 <p>希望这些涵盖了 WebGL 的文字部分。</p>
 

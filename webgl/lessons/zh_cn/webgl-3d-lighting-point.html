@@ -251,17 +251,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>让我们实现它吧。</p>
 <p>首先需要一个光源位置</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform vec3 u_lightWorldPosition;
-</code></pre><p>然后需要计算表面的世界坐标，我们可以将位置和世界矩阵相乘得到...</p>
+</code></pre>
+<p>然后需要计算表面的世界坐标，我们可以将位置和世界矩阵相乘得到…</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform mat4 u_world;
 
 ...
 
 // 计算表面的世界坐标
 vec3 surfaceWorldPosition = (u_world * a_position).xyz;
-</code></pre><p>然后可以计算出一个从表面到光源的矢量，用来模拟之前的方向光，
+</code></pre>
+<p>然后可以计算出一个从表面到光源的矢量，用来模拟之前的方向光，
 只是这次我们为表面上的每个点都计算了一个方向。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v_surfaceToLight = u_lightPosition - surfaceWorldPosition;
-</code></pre><p>这是全部的内容</p>
+</code></pre>
+<p>这是全部的内容</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 in vec4 a_position;
@@ -290,7 +293,8 @@ void main() {
 +  // 传递给片断着色器
 +  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
 }
-</code></pre><p>在片断着色器中需要将表面到光源的方向进行单位化，
+</code></pre>
+<p>在片断着色器中需要将表面到光源的方向进行单位化，
 注意，虽然我们可以在顶点着色器中传递单位向量，
 但是 <code class="notranslate" translate="no">varying</code> 会进行插值再传给片断着色器，
 所以片断着色器中的向量基本上不是单位向量了。</p>
@@ -322,14 +326,16 @@ void main() {
   // 只将颜色部分（不包含 alpha） 和光照相乘
   outColor.rgb *= light;
 }
-</code></pre><p>然后需要找到 <code class="notranslate" translate="no">u_world</code> 和 <code class="notranslate" translate="no">u_lightWorldPosition</code> 的位置</p>
+</code></pre>
+<p>然后需要找到 <code class="notranslate" translate="no">u_world</code> 和 <code class="notranslate" translate="no">u_lightWorldPosition</code> 的位置</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">-  var reverseLightDirectionLocation =
 -      gl.getUniformLocation(program, &quot;u_reverseLightDirection&quot;);
 +  var lightWorldPositionLocation =
 +      gl.getUniformLocation(program, &quot;u_lightWorldPosition&quot;);
 +  var worldLocation =
 +      gl.getUniformLocation(program, &quot;u_world&quot;);
-</code></pre><p>设置它们</p>
+</code></pre>
+<p>设置它们</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 设置矩阵
 +  gl.uniformMatrix4fv(
 +      worldLocation, false,
@@ -344,7 +350,8 @@ void main() {
 -  gl.uniform3fv(reverseLightDirectionLocation, normalize([0.5, 0.7, 1]));
 +  // 设置光源位置
 +  gl.uniform3fv(lightWorldPositionLocation, [20, 30, 50]);
-</code></pre><p>这是结果</p>
+</code></pre>
+<p>这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-point.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-point.html" target="_blank">点此在新窗口中浏览</a>
@@ -354,7 +361,7 @@ void main() {
 <p>现在我们可以加一个叫做镜面高光的东西。</p>
 <p>观察现实世界中的物体，如果物体表面恰好将光线反射到你眼前，
 就会显得非常明亮，像镜子一样。</p>
-<p><img class="webgl_center" src="../resources/specular-highlights.jpg" /></p>
+<img class="webgl_center" src="../resources/specular-highlights.jpg" />
 <p>我们可以通过计算光线是否反射到眼前来模拟这种情况，<strong>点乘</strong>又一次起到了至关重要的作用。</p>
 <p>如何测试呢？如果入射角和反射角恰好与眼睛和和光源的夹角相同，那么光线就会反射到眼前。</p>
 <p><div class="webgl_diagram_container">
@@ -409,7 +416,8 @@ void main() {
 +  // 然后传递到片断着色器
 +  v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition;
 }
-</code></pre><p>然后在片断着色器中计算表面到光源和相机之间的 <code class="notranslate" translate="no">halfVector</code>，
+</code></pre>
+<p>然后在片断着色器中计算表面到光源和相机之间的 <code class="notranslate" translate="no">halfVector</code>，
 将它和法向量相乘，查看光线是否直接反射到眼前。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 从顶点着色器中传入的值
 in vec3 v_normal;
@@ -440,7 +448,8 @@ void main() {
 +  // 直接加上高光
 +  outColor.rgb += specular;
 }
-</code></pre><p>最后找到 <code class="notranslate" translate="no">u_viewWorldPosition</code> 并设置它</p>
+</code></pre>
+<p>最后找到 <code class="notranslate" translate="no">u_viewWorldPosition</code> 并设置它</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var lightWorldPositionLocation =
     gl.getUniformLocation(program, &quot;u_lightWorldPosition&quot;);
 +var viewWorldPositionLocation =
@@ -458,7 +467,8 @@ var cameraMatrix = makeLookAt(camera, target, up);
 
 +// 设置相机位置
 +gl.uniform3fv(viewWorldPositionLocation, camera);
-</code></pre><p>这是结果</p>
+</code></pre>
+<p>这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-point-specular.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-point-specular.html" target="_blank">点此在新窗口中浏览</a>
@@ -485,7 +495,8 @@ var cameraMatrix = makeLookAt(camera, target, up);
 +  if (light &gt; 0.0) {
 +    specular = pow(dot(normal, halfVector), u_shininess);
 +  }
-</code></pre><p>点乘结果有可能为负值，将赋值求幂有可能会得到 undefined 的结果，
+</code></pre>
+<p>点乘结果有可能为负值，将赋值求幂有可能会得到 undefined 的结果，
 所以我们只将点乘结果为正的部分进行计算，其他部分设置为 0.0。</p>
 <p>当然还要找到亮度的位置并设置它</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+var shininessLocation = gl.getUniformLocation(program, &quot;u_shininess&quot;);
@@ -494,7 +505,8 @@ var cameraMatrix = makeLookAt(camera, target, up);
 
 // 设置亮度
 gl.uniform1f(shininessLocation, shininess);
-</code></pre><p>这是结果</p>
+</code></pre>
+<p>这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-point-specular-power.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-point-specular-power.html" target="_blank">点此在新窗口中浏览</a>
@@ -517,17 +529,20 @@ uniform float u_shininess;
   // 直接和高光相加
 *  outColor.rgb += specular * u_specularColor;
 }
-</code></pre><p>然后</p>
+</code></pre>
+<p>然后</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+  var lightColorLocation =
 +      gl.getUniformLocation(program, &quot;u_lightColor&quot;);
 +  var specularColorLocation =
 +      gl.getUniformLocation(program, &quot;u_specularColor&quot;);
-</code></pre><p>和</p>
+</code></pre>
+<p>和</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+  // 设置光照颜色
 +  gl.uniform3fv(lightColorLocation, normalize([1, 0.6, 0.6]));  // red light
 +  // 设置高光颜色
 +  gl.uniform3fv(specularColorLocation, normalize([1, 0.2, 0.2]));  // red light
-</code></pre><p><div class="webgl_example_container">
+</code></pre>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-point-color.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-point-color.html" target="_blank">点此在新窗口中浏览</a>
 </div>

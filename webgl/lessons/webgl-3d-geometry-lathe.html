@@ -236,7 +236,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>This is probably a kind of obscure topic but I found it interesting so I&#39;m writing it up.
+      <p>This is probably a kind of obscure topic but I found it interesting so I’m writing it up.
 It is not something I recommend you actually do. Rather, I think working through
 the topic will help illustrate some things about making 3d models for WebGL.</p>
 <p>Someone asked how to make a bowling pin shape in WebGL. The <em>smart</em> answer is
@@ -247,30 +247,30 @@ the topic will help illustrate some things about making 3d models for WebGL.</p>
 Use it to model a bowling pin, export, read the dat.
 (<a href="https://en.wikipedia.org/wiki/Wavefront_.obj_file">The OBJ format is relatively simple</a>).</p>
 <p>But, that got me thinking, what if they wanted to make a modeling package?</p>
-<p>There&#39;s a few ideas. One is to make a cylinder and try to pinch it in
+<p>There’s a few ideas. One is to make a cylinder and try to pinch it in
 the right places using sin waves applied in certain places. The problem
-with that idea you wouldn&#39;t get a smooth top. A standard cylinder
-is generated as a series of equally spaced rings but you&#39;d need more
+with that idea you wouldn’t get a smooth top. A standard cylinder
+is generated as a series of equally spaced rings but you’d need more
 rings where things are more curvy.</p>
-<p>In a modeling package you&#39;d make a bowling pin by making a 2d silhouette or rather
-a curved line that matches the edge of a 2d silhouette. You&#39;d then
-lathe that into a 3d shape. By <em>lathe</em> I mean you&#39;d spin it around
+<p>In a modeling package you’d make a bowling pin by making a 2d silhouette or rather
+a curved line that matches the edge of a 2d silhouette. You’d then
+lathe that into a 3d shape. By <em>lathe</em> I mean you’d spin it around
 some axis and generate points as you do. This lets you easily make
 any round objects like a bowl, a glass, a baseball bat, bottles,
 light bulbs, etc.</p>
 <p>So, how do we do that? Well first we need some way to make a curve.
-Then we&#39;d need to compute points on that curve. We&#39;d then rotate
+Then we’d need to compute points on that curve. We’d then rotate
 those points around some axis using <a href="webgl-2d-matrices.html">matrix math</a>
 and build triangles from those points.</p>
 <p>The most common kind of curve in computer graphics seems to be
-a bezier curve. If you&#39;ve ever edited a curve in
+a bezier curve. If you’ve ever edited a curve in
 <a href="https://www.adobe.com/products/illustrator.html">Adobe Illustrator</a> or
 <a href="https://inkscape.org/en/">Inkscape</a> or
 <a href="https://affinity.serif.com/en-us/designer/">Affinity Designer</a>
-or similar programs that&#39;s a bezier curve.</p>
+or similar programs that’s a bezier curve.</p>
 <p>A bezier curve or rather a cubic bezier curve is formed by 4 points.
-2 points are the end points. 2 points are the &quot;control points&quot;.</p>
-<p>Here&#39;s 4 points</p>
+2 points are the end points. 2 points are the “control points”.</p>
+<p>Here’s 4 points</p>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=0"></iframe>
 </div>
@@ -312,7 +312,7 @@ and <code class="notranslate" translate="no">Q2 Q3</code>.</p>
 <p>So this is a cubic bezier curve.</p>
 <p>Note that while the interpolation between points above and
 the process of making 3 points from 4, then 2 from 3, and finally 1
-point from 2 works that&#39;s not the normal way. Instead someone plugged
+point from 2 works that’s not the normal way. Instead someone plugged
 in all the math and simplified it to a formula like this</p>
 <div class="webgl_center">
 <pre class="webgl_math">
@@ -323,11 +323,10 @@ P = P1 * invT^3 +
     P4 * t^3
 </pre>
 </div>
-
 <p>Where <code class="notranslate" translate="no">P1</code>, <code class="notranslate" translate="no">P2</code>, <code class="notranslate" translate="no">P3</code>, <code class="notranslate" translate="no">P4</code> are the points like the examples above and <code class="notranslate" translate="no">P</code>
 is the <span style="color: red;">red dot</span>.</p>
 <p>In a 2D vector art program like Adobe Illustrator
-when you make a longer curve it&#39;s actually made from many small 4 point
+when you make a longer curve it’s actually made from many small 4 point
 curves like this. By default most apps lock the control points
 around a shared start/end point and make sure they are always
 opposite relative to the shared point.</p>
@@ -338,7 +337,7 @@ opposite relative to the shared point.</p>
 
 </p>
 <p>Notice the curve made by <code class="notranslate" translate="no">P1,P2,P3,P4</code> is a separate curve from
-the one made by <code class="notranslate" translate="no">P4,P5,P6,P7</code>. It&#39;s just when <code class="notranslate" translate="no">P3</code> and <code class="notranslate" translate="no">P5</code> are on exact
+the one made by <code class="notranslate" translate="no">P4,P5,P6,P7</code>. It’s just when <code class="notranslate" translate="no">P3</code> and <code class="notranslate" translate="no">P5</code> are on exact
 opposite sides of <code class="notranslate" translate="no">P4</code> together they look like one continuous curve.
 Most apps will then usually give you the option to stop locking them
 together so you can get a sharp corner. Un-check the lock checkbox
@@ -354,7 +353,8 @@ a given <code class="notranslate" translate="no">t</code> value like this.</p>
                 v2.mult(points[offset + 2], 3 * invT * t * t),
                 v2.mult(points[offset + 3], t * t  *t));
 }
-</code></pre><p>And we can generate a set of points for the curve like this</p>
+</code></pre>
+<p>And we can generate a set of points for the curve like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function getPointsOnBezierCurve(points, offset, numPoints) {
   const cpoints = [];
   for (let i = 0; i &lt; numPoints; ++i) {
@@ -363,7 +363,8 @@ a given <code class="notranslate" translate="no">t</code> value like this.</p>
   }
   return cpoints;
 }
-</code></pre><p>Note: <code class="notranslate" translate="no">v2.mult</code> and <code class="notranslate" translate="no">v2.add</code> are small JavaScript functions I included
+</code></pre>
+<p>Note: <code class="notranslate" translate="no">v2.mult</code> and <code class="notranslate" translate="no">v2.add</code> are small JavaScript functions I included
 to help do math with points.</p>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=0&showCurve=true&showPoints=true"></iframe>
@@ -371,9 +372,9 @@ to help do math with points.</p>
 
 </p>
 <p>In the diagram above you can choose a number of points. If the curve is sharp
-you&#39;d want more points. If the curve is nearly a straight line though you&#39;d
+you’d want more points. If the curve is nearly a straight line though you’d
 probably want less points. One solution
-is to check how curvy a curve is. If it&#39;s too curvy then split it into
+is to check how curvy a curve is. If it’s too curvy then split it into
 2 curves.</p>
 <p>The splitting part turns out to be easy. If we look at the various
 levels of interpolation again, the points <code class="notranslate" translate="no">P1</code>, <code class="notranslate" translate="no">Q1</code>, <code class="notranslate" translate="no">R1</code>, RED make one
@@ -409,9 +410,10 @@ that for a given curve decides how flat it is.</p>
 
   return ux + uy;
 }
-</code></pre><p>We can use that in our function that gets points for a curve.
-First we&#39;ll check if the curve is too curvy. If so we&#39;ll subdivide,
-if not we&#39;ll add the points in.</p>
+</code></pre>
+<p>We can use that in our function that gets points for a curve.
+First we’ll check if the curve is too curvy. If so we’ll subdivide,
+if not we’ll add the points in.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function getPointsOnBezierCurveWithSplitting(points, offset, tolerance, newPoints) {
   const outPoints = newPoints || [];
   if (flatness(points, offset) &lt; tolerance) {
@@ -446,19 +448,20 @@ if not we&#39;ll add the points in.</p>
   }
   return outPoints;
 }
-</code></pre><p><div class="webgl_diagram_container">
+</code></pre>
+<p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=0&showCurve=true&showTolerance=true"></iframe>
 </div>
 
 </p>
 <p>This algorithm does a good job of making sure we have enough points but
-it doesn&#39;t do such a great job of getting rid of unneeded points.</p>
+it doesn’t do such a great job of getting rid of unneeded points.</p>
 <p>For that we turn to the <a href="https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm">Ramer Douglas Peucker algorithm</a>
 I found on the net.</p>
 <p>In that algorithm we take a list of points.
 We find the furthest point from the line formed by the 2 end points.
 Then we check if that point is further away from the line than some distance.
-If it&#39;s less than than that distance we just keep the 2 end points and discard the rest
+If it’s less than than that distance we just keep the 2 end points and discard the rest
 Otherwise we run the algorithm again, once with the points from the start to the furthest
 point and again from the furthest point to the end point.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function simplifyPoints(points, start, end, epsilon, newPoints) {
@@ -492,11 +495,12 @@ point and again from the furthest point to the end point.</p>
 
   return outPoints;
 }
-</code></pre><p><code class="notranslate" translate="no">v2.distanceToSegmentSq</code> is a function that computes the distance squared from a point
-to a line segment. We use the distance squared because it&#39;s faster to compute than
+</code></pre>
+<p><code class="notranslate" translate="no">v2.distanceToSegmentSq</code> is a function that computes the distance squared from a point
+to a line segment. We use the distance squared because it’s faster to compute than
 the actual distance. Since we only care which point is furthest the distance squared
 will work just as well as the actual distance.</p>
-<p>Here&#39;s that in action. Adjust the distance to see more points added or removed.</p>
+<p>Here’s that in action. Adjust the distance to see more points added or removed.</p>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=0&showCurve=true&showDistance=true"></iframe>
 </div>
@@ -504,11 +508,11 @@ will work just as well as the actual distance.</p>
 </p>
 <p>Back to our bowling pin. We could try to extend the code above into a full editor.
 It would need to be able to add and remove points, lock and unlock control points.
-It would need undo, etc... But there&#39;s an easier way. We can just use any of the
+It would need undo, etc… But there’s an easier way. We can just use any of the
 major editors mentioned above. <a href="https://svg-edit.github.io/svgedit/">I used this online editor</a>.</p>
-<p>Here&#39;s the svg silhouette of a bowling pin I made.</p>
-<p><img class="webgl_center" src="resources/bowling-pin-silhouette.svg" width="50%" height="50%" /></p>
-<p>It&#39;s made from 4 bezier curves. The data for that path looks like this</p>
+<p>Here’s the svg silhouette of a bowling pin I made.</p>
+<img class="webgl_center" src="resources/bowling-pin-silhouette.svg" width="50%" height="50%" />
+<p>It’s made from 4 bezier curves. The data for that path looks like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;path fill=&quot;none&quot; stroke-width=&quot;5&quot; d=&quot;
    m44,434
    c18,-33 19,-66 15,-111
@@ -516,7 +520,8 @@ major editors mentioned above. <a href="https://svg-edit.github.io/svgedit/">I u
    c-2,-28 11,-51 16,-81
    c5,-30 3,-63 -36,-63
 &quot;/&gt;
-</code></pre><p><a href="https://developer.mozilla.org/en/docs/Web/SVG/Tutorial/Paths">Interpreting that data</a> we get these points.</p>
+</code></pre>
+<p><a href="https://developer.mozilla.org/en/docs/Web/SVG/Tutorial/Paths">Interpreting that data</a> we get these points.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">        ___
 44, 371,   |
 62, 338,   | 1st curve
@@ -531,7 +536,8 @@ major editors mentioned above. <a href="https://svg-edit.github.io/svgedit/">I u
 41,  17,            | 4th curve
 39, -16,            |
  0, -16,____________|
-</code></pre><p>Now that we have the data for the curves we need to compute some points
+</code></pre>
+<p>Now that we have the data for the curves we need to compute some points
 on them.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// gets points across all segments
 function getPointsOnBezierCurves(points, tolerance) {
@@ -543,10 +549,11 @@ function getPointsOnBezierCurves(points, tolerance) {
   }
   return newPoints;
 }
-</code></pre><p>We&#39;d call <code class="notranslate" translate="no">simplifyPoints</code> on the result.</p>
+</code></pre>
+<p>We’d call <code class="notranslate" translate="no">simplifyPoints</code> on the result.</p>
 <p>Now we need to spin them around. We decide how many divisions to make, for each division
 you use the <a href="webgl-2d-matrices.html">matrix math</a> to rotate the points around the Y axis.
-Once we&#39;ve made all the points we connect them with triangles using indices.</p>
+Once we’ve made all the points we connect them with triangles using indices.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// rotates around Y axis.
 function lathePoints(points,
                      startAngle,   // angle to start at (ie 0)
@@ -601,9 +608,10 @@ function lathePoints(points,
     indices: indices,
   };
 }
-</code></pre><p>The code above generates positions and texcoords, it then generates indices to make triangles
+</code></pre>
+<p>The code above generates positions and texcoords, it then generates indices to make triangles
 out of those. The <code class="notranslate" translate="no">capStart</code> and <code class="notranslate" translate="no">capEnd</code> specify whether or not generate cap points. Imagine
-we&#39;re making a can. These options would specify whether or not to close the ends.</p>
+we’re making a can. These options would specify whether or not to close the ends.</p>
 <p>Using our <a href="webgl-less-code-more-fun.html">simplified code</a> we can generate WebGL buffers with
 this data like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const tolerance = 0.15;
@@ -620,7 +628,8 @@ const arrays = lathePoints(points, startAngle, endAngle, divisions, capStart, ca
 const extents = getExtents(arrays.position);
 if (!bufferInfo) {
   bufferInfo = webglUtils.createBufferInfoFromArrays(gl, arrays);
-</code></pre><p>Here&#39;s an example</p>
+</code></pre>
+<p>Here’s an example</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lathe-step-01.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lathe-step-01.html" target="_blank">click here to open in a separate window</a>
@@ -628,11 +637,11 @@ if (!bufferInfo) {
 
 </p>
 <p>Play with the sliders to see how they effect the result.</p>
-<p>There&#39;s an issue though. Turn on triangles and you&#39;ll see the texture is not evenly
+<p>There’s an issue though. Turn on triangles and you’ll see the texture is not evenly
 applied. This is because we based the <code class="notranslate" translate="no">v</code> texture coordinate on the index of the
-points on the line. If they were evenly spaced that might work. They&#39;re not though
+points on the line. If they were evenly spaced that might work. They’re not though
 so we need to do something else.</p>
-<p>We can walk the points and compute the total length of the curve and each point&#39;s
+<p>We can walk the points and compute the total length of the curve and each point’s
 distance on that curve. We can then divide by the length and get a better value
 for <code class="notranslate" translate="no">v</code>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// rotates around Y access.
@@ -702,40 +711,41 @@ function lathePoints(points,
     indices: indices,
   };
 }
-</code></pre><p>And here&#39;s the result</p>
+</code></pre>
+<p>And here’s the result</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lathe-step-02.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lathe-step-02.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>Those texture coordinates are still not perfect. We haven&#39;t decided what to do for the caps.
+<p>Those texture coordinates are still not perfect. We haven’t decided what to do for the caps.
 This is yet another reason why you should just use a modeling program. We could come up with
-different ideas about how to compute uv coordinates for the caps but they&#39;d probably not be
+different ideas about how to compute uv coordinates for the caps but they’d probably not be
 all that useful. If you <a href="https://www.google.com/search?q=uv+map+a+barrel">google for UV map a barrel</a>
-you&#39;ll see that getting perfect UV coordinates is not so much a math problem as a data entry problem
+you’ll see that getting perfect UV coordinates is not so much a math problem as a data entry problem
 and you need nice tools to enter that data.</p>
-<p>There&#39;s still one other thing we should do and that&#39;s add normals.</p>
+<p>There’s still one other thing we should do and that’s add normals.</p>
 <p>We could compute a normal for each point on the curve. In fact if you go back to the examples
 on this page you can see the line formed by <code class="notranslate" translate="no">R1</code> and <code class="notranslate" translate="no">R2</code> are a line tangent to the curve.</p>
-<p><img class="webgl_center" src="resources/tangent-to-curve.png" width="50%" /></p>
+<img class="webgl_center" src="resources/tangent-to-curve.png" width="50%" />
 <p>A normal is perpendicular to the tangent so it would be easy to use the tangents
 to generate normals.</p>
 <p>But, lets imagine we wanted to make a candle holder with a silhouette like this</p>
-<p><img class="webgl_center" src="resources/candle-holder.svg" width="50%" /></p>
+<img class="webgl_center" src="resources/candle-holder.svg" width="50%" />
 <p>There are many smooth areas but also many hard corners. How do we decide which normals
 to use? Worse, when we want a sharp edge we need extra vertices. Because vertices
 have both a position and a normal if we need a different normal for something at the
-same position then we need a different vertex. This is why if we&#39;re making a cube
+same position then we need a different vertex. This is why if we’re making a cube
 we actually need at least 24 vertices. Even though a cube only has 8 corners each
 face of the cube needs different normals at those corners.</p>
-<p>When generating a cube it&#39;s easy to just generate the correct normals but for a
-more complex shape there&#39;s no easy way to decide.</p>
+<p>When generating a cube it’s easy to just generate the correct normals but for a
+more complex shape there’s no easy way to decide.</p>
 <p>All modeling programs have various options to generate normals. A common way is for every
 single vertex they average the normals of all the polygons that share that vertex. Except, they
 let the user choose some maximum angle. If the angle between one polygon shared by
 a vertex is greater than that maximum angle then they generate a new vertex.</p>
-<p>Let&#39;s do that.</p>
+<p>Let’s do that.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function generateNormals(arrays, maxAngle) {
   const positions = arrays.position;
   const texcoords = arrays.texcoord;
@@ -779,7 +789,7 @@ a vertex is greater than that maximum angle then they generate a new vertex.</p>
   }
 
   // We need to figure out the shared vertices.
-  // It&#39;s not as simple as looking at the faces (triangles)
+  // It's not as simple as looking at the faces (triangles)
   // because for example if we have a standard cylinder
   //
   //
@@ -788,11 +798,11 @@ a vertex is greater than that maximum angle then they generate a new vertex.</p>
   //    2     5   Looking down a cylinder starting at S
   //    |     |   and going around to E, E and S are not
   //    1     6   the same vertex in the data we have
-  //     \   /    as they don&#39;t share UV coords.
+  //     \   /    as they don't share UV coords.
   //      S/E
   //
   // the vertices at the start and end do not share vertices
-  // since they have different UVs but if you don&#39;t consider
+  // since they have different UVs but if you don't consider
   // them to share vertices they will get the wrong normals
 
   const vertIndices = [];
@@ -802,7 +812,7 @@ a vertex is greater than that maximum angle then they generate a new vertex.</p>
     vertIndices.push(getVertIndex(vert));
   }
 
-  // go through every vertex and record which faces it&#39;s on
+  // go through every vertex and record which faces it's on
   const vertFaces = [];
   getNextIndex.reset();
   for (let i = 0; i &lt; numFaces; ++i) {
@@ -819,7 +829,7 @@ a vertex is greater than that maximum angle then they generate a new vertex.</p>
   }
 
   // now go through every face and compute the normals for each
-  // vertex of the face. Only include faces that aren&#39;t more than
+  // vertex of the face. Only include faces that aren't more than
   // maxAngle different. Add the result to arrays of newPositions,
   // newTexcoords and newNormals, discarding any vertices that
   // are the same.
@@ -917,36 +927,37 @@ function makeIndiceIterator(arrays) {
       ? makeIndexedIndicesFn(arrays)
       : makeUnindexedIndicesFn(arrays);
 }
-</code></pre><p>In the code above first we generate normals for each face (each triangle) from the original points.
-We then generate a set of vertex indices to find points that are the same. That&#39;s because as we rotated
+</code></pre>
+<p>In the code above first we generate normals for each face (each triangle) from the original points.
+We then generate a set of vertex indices to find points that are the same. That’s because as we rotated
 the points the first point and the last point should match up but they have different UV coordinates
 so they are not the same point. To compute the vertex normals we need them to be considered the same
 point.</p>
-<p>Once that&#39;s done, for each vertex, we make a list of all the faces it&#39;s used by.</p>
+<p>Once that’s done, for each vertex, we make a list of all the faces it’s used by.</p>
 <p>Finally we average the normals of all the faces each vertex uses excluding ones that are
 more than <code class="notranslate" translate="no">maxAngle</code> different and generate a new set of vertices.</p>
-<p>Here&#39;s the result</p>
+<p>Here’s the result</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lathe-step-03.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lathe-step-03.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>Notice we get sharp edges where we want them. Make the <code class="notranslate" translate="no">maxAngle</code> bigger and you&#39;ll see those edges
+<p>Notice we get sharp edges where we want them. Make the <code class="notranslate" translate="no">maxAngle</code> bigger and you’ll see those edges
 get smoothed out when the neighboring faces start getting included in the normal calculations.
 Also try adjusting the <code class="notranslate" translate="no">divisions</code> to something like 5 or 6 then adjust the <code class="notranslate" translate="no">maxAngle</code> until the
 edges around are hard but the parts you want smooth are still smooth. You can also set the <code class="notranslate" translate="no">mode</code>
 to <code class="notranslate" translate="no">lit</code> to see what the object would look like with lighting, the reason we needed normals.</p>
-<h2 id="so-what-did-we-learn-">So, what did we learn?</h2>
+<h2 id="so-what-did-we-learn">So, what did we learn?</h2>
 <p>We learned if you want to make 3D data <strong>USE A 3D MODELING PACKAGE!!!</strong> 😝</p>
-<p>To do anything really useful you&#39;d likely need a real <a href="https://www.google.com/search?q=uv+editor">UV editor</a>.
+<p>To do anything really useful you’d likely need a real <a href="https://www.google.com/search?q=uv+editor">UV editor</a>.
 Dealing with the caps as well is something a 3D editor would help with. Instead of using
-a limited set of options when lathing you&#39;d use other features of the editor
+a limited set of options when lathing you’d use other features of the editor
 to add caps and generate easier UVs for the caps. 3d editors also support <a href="https://www.google.com/search?q=extruding+model">extruding faces</a>
 and <a href="https://www.google.com/search?q=extruding+along+a+path">extruding along a path</a> which if you take
 a look it should be pretty obvious how they work based on the lathe example above.</p>
 <h2 id="references">References</h2>
-<p>I wanted to mention I couldn&#39;t have done this without <a href="https://pomax.github.io/bezierinfo/">this awesome page about bezier curves</a>.</p>
+<p>I wanted to mention I couldn’t have done this without <a href="https://pomax.github.io/bezierinfo/">this awesome page about bezier curves</a>.</p>
 <div class="webgl_bottombar">
 <h3>What's this modulo operator doing here?</h3>
 <p>If you look closely at the <code class="notranslate" translate="no">lathePoints</code> function you'll see this modulo
@@ -1027,7 +1038,6 @@ meshes is a generally slow operation. This just one example of why a 3d game can
 but a 3d modeling package often chugs at very slow frame rates.
 </p>
 </div>
-
 <div class="webgl_bottombar">
 <h3>Is matrix math is overkill here?</h3>
 <p>When we lathe the points there is this code to rotate with.</p>
@@ -1071,7 +1081,6 @@ and use something like
 <p>Which way is best is really up to you and your needs. I think I'd choose flexible first
 and only later optimize if something was too slow for whatever I was doing.</p>
 </div>
-
 
     </div>
     <div class="lesson-sidebar">

@@ -241,8 +241,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 기본적으로 GPU가 하는 일은 두가지 입니다. 첫 번째는 정점(vertex)(또는 데이터 스트림)을 처리하여 클립 공간의 정점으로 변환하는 것입니다. 두 번째는 첫 번째 결과를 가지고  픽셀을 그리는 것입니다.</p>
 <p>아래와 같이 호출한다면,</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.drawArrays(gl.TRIANGLES, 0, 9);
-</code></pre><p>여기서 9의미는 &quot;9개 정점 처리&quot;를 의미하므로 9개의 정점들이 처리됩니다.</p>
-<p><img src="../resources/vertex-shader-anim.gif" class="webgl_center" /></p>
+</code></pre>
+<p>여기서 9의미는 &quot;9개 정점 처리&quot;를 의미하므로 9개의 정점들이 처리됩니다.</p>
+<img src="../resources/vertex-shader-anim.gif" class="webgl_center" />
 <p>왼쪽에는 여러분이 제공한 데이터가 있습니다. 정점 셰이더는 <a href="webgl-shaders-and-glsl.html">GLSL</a>로 작성한 함수 입니다. 각 정점마다 한번씩 호출됩니다. 몇가지 수학적 계산을 한 뒤, 현재 정점의 대한 클립 공간 위치를 특수한 변수 <code class="notranslate" translate="no">gl_Position</code>에 저장합니다. GPU는 이 값을 받아서 내부적으로 저장해 둡니다.</p>
 <p>여러분이 <code class="notranslate" translate="no">TRIANGLES</code>를 그린다고 가정한다면, 첫 번째 부분에서 3개의 정점를 생성할 때마다 GPU는 이를 사용하여 삼각형을 만듭니다. 어떤 픽셀들이 삼각형의 3개의 점에 해당하는지 확인하고, 삼각형을 래스터화(rasterize) 합니다. 래스터화는 &quot;픽셀로 그리다&quot;의 다른 표현일 뿐입니다. 각 픽셀마다 프래그먼트 셰이더를 호출하여 당신이 픽셀을 무슨 색상으로 그리기 원하는지를 알아냅니다. 프래그먼트 셰이더는 해당 픽셀에 대해 원하는 색상을 vec4로 출력합니다.</p>
 <p>흥미로운 사실이네요. 그런데 예제에서 볼 수 있듯이 지금까지는 프래그먼트 셰이더가 각 픽셀에 대해 아주 적은 정보만을 가지고 있습니다. 다행히 우리는 더 많은 정보를 전달할 수 있습니다. 정점 셰이더에서 프래그먼트 셰이더로 전달하고자 하는 각 값을 &quot;varying&quot;으로 정의할 수 있습니다.</p>
@@ -258,14 +259,16 @@ function setGeometry(gl) {
           -175,  100]),
       gl.STATIC_DRAW);
 }
-</code></pre><p>그 다음 3개의 정점만 그리면 됩니다.</p>
+</code></pre>
+<p>그 다음 3개의 정점만 그리면 됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 장면 그리기.
 function drawScene() {
   ...
   // geometry 그리기.
 *  gl.drawArrays(gl.TRIANGLES, 0, 3);
 }
-</code></pre><p>정점 셰이더에서는 프래그먼트 셰이더에 데이터를 전달하기 위한 <em>varying</em>을 <code class="notranslate" translate="no">out</code>을 사용해 선언 합니다.</p>
+</code></pre>
+<p>정점 셰이더에서는 프래그먼트 셰이더에 데이터를 전달하기 위한 <em>varying</em>을 <code class="notranslate" translate="no">out</code>을 사용해 선언 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">out vec4 v_color;
 ...
 void main() {
@@ -277,7 +280,8 @@ void main() {
   // 색상 공간은 0.0에서 1.0까지 입니다.
 *  v_color = gl_Position * 0.5 + 0.5;
 }
-</code></pre><p>그런 다음 똑같은 <em>varying</em>을 프레그먼트 셰이더에서 <code class="notranslate" translate="no">in</code>을 사용해 선언합니다.</p>
+</code></pre>
+<p>그런 다음 똑같은 <em>varying</em>을 프레그먼트 셰이더에서 <code class="notranslate" translate="no">in</code>을 사용해 선언합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 precision highp float;
@@ -289,7 +293,8 @@ out vec4 outColor;
 void main() {
 *  outColor = v_color;
 }
-</code></pre><p>WebGL이 정점 셰이더에서 정의된 varying과 동일한 이름과 타입을 갖는 프레그먼트 셰이더의 varying을 연결해 줍니다.</p>
+</code></pre>
+<p>WebGL이 정점 셰이더에서 정의된 varying과 동일한 이름과 타입을 갖는 프레그먼트 셰이더의 varying을 연결해 줍니다.</p>
 <p>아래는 동작하는 예제입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-triangle-with-position-for-color.html"></iframe>
@@ -301,25 +306,27 @@ void main() {
 <p>생각해 보세요. 우리는 오직 세개의 정점만 계산 했습니다. 정점 셰이더는 3번만 호출 되기 때문에 세개의 색상만을 계산했지만 방금 그려진 삼각형은 이보다 더 다양한 색상을 갖고 있습니다. <em>varying</em>이라 불리는 이유가 바로 그것입니다.</p>
 <p>WebGL은 각 정점에 대해 계산한 세개의 값을 받아서, 래스터화 과정에서 그 값들을  보간합니다. 각 픽셀마다 우리가 작성한 프래그먼트 셰이더를 각 픽셀에 해당하는 보간된 값과 함께 호출합니다.</p>
 <p>위 예제에서 보면 우선 세개의 정점으로 시작을 했습니다.</p>
-<p><style>
+<style>
 table.vertex_table {
   border: 1px solid black;
   border-collapse: collapse;
   font-family: monospace;
   font-size: small;
-}</p>
-<p>table.vertex_table th {
+}
+
+table.vertex_table th {
   background-color: #88ccff;
   padding-right: 1em;
   padding-left: 1em;
-}</p>
-<p>table.vertex_table td {
+}
+
+table.vertex_table td {
   border: 1px solid black;
   text-align: right;
   padding-right: 1em;
   padding-left: 1em;
 }
-</style></p>
+</style>
 <div class="hcenter">
 <table class="vertex_table">
 <tr><th colspan="2">정점</th></tr>
@@ -328,7 +335,6 @@ table.vertex_table {
 <tr><td>-175</td><td>100</td></tr>
 </table>
 </div>
-
 <p>정점 셰이더는 이동, 회전, 크기 변환 행렬을 적용하여 클립 공간으로 변환합니다. 이동, 회전, 크기 변환의 기본값은 이동 = 200, 150, 회전 = 0, 크기 = 1,1 이므로 실제로는 이동만 합니다. 주어진 백 버퍼(backbuffer)의 크기가 400x300일때, 정점 셰이더가 행렬을 적용하면 다음과 같은 세개의 클립 공간 정점이 계산됩니다.</p>
 <div class="hcenter">
 <table class="vertex_table">
@@ -338,7 +344,6 @@ table.vertex_table {
 <tr><td>-0.875</td><td>-0.660</td></tr>
 </table>
 </div>
-
 <p>또한 이것들을 색상 공간으로 변환하고 우리가 선언한 v_color <em>varying</em>에 출력합니다.</p>
 <div class="hcenter">
 <table class="vertex_table">
@@ -348,7 +353,6 @@ table.vertex_table {
 <tr><td>0.0625</td><td>0.170</td><td>0.5</td></tr>
 </table>
 </div>
-
 <p>그런 다음 v_color에 작성된 3개의 값이 각 픽셀마다 보간되고 프래그먼트 셰이더에 전달 됩니다.</p>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 600px; height: 400px;" src="/webgl/lessons/resources/fragment-shader-anim.html"></iframe>
@@ -367,7 +371,8 @@ void main() {
   // attribute로부터 varying으로 색상을 복사함.
 *  v_color = a_color;
 }
-</code></pre><p>이제 WebGL이 사용할수 있게 색상값들을 제공 해야합니다.</p>
+</code></pre>
+<p>이제 WebGL이 사용할수 있게 색상값들을 제공 해야합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 정점 데이터가 필요한 위치를 찾습니다.
   var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 +  var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
@@ -414,7 +419,8 @@ void main() {
 +          r2, b2, g2, 1]),
 +      gl.STATIC_DRAW);
 +}
-</code></pre><p>아래는 그 결과입니다.</p>
+</code></pre>
+<p>아래는 그 결과입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-with-2-colors.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle-with-2-colors.html" target="_blank">새 창으로 열기</a>
@@ -436,7 +442,8 @@ function setColors(gl) {
 *          Math.random(), Math.random(), Math.random(), 1]),
       gl.STATIC_DRAW);
 }
-</code></pre><p>이제 보간된 <em>varying</em>을 볼수 있습니다.</p>
+</code></pre>
+<p>이제 보간된 <em>varying</em>을 볼수 있습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-with-random-colors.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle-with-random-colors.html" target="_blank">새 창으로 열기</a>
@@ -444,16 +451,18 @@ function setColors(gl) {
 
 </p>
 <p>그리 흥미롭지는 않았을지 몰라도 하나 이상의 attribute를 사용하는 방법과 정점 셰이더에서 프래그먼트 셰이더로 데이터를 전달하는 방법을 배웠습니다. <a href="webgl-image-processing.html">이미지 처리 예제</a>를 보시면 텍스처 좌표를 전달하기 위해 추가적인 attribute를 사용 하는 예제도 확인하실 수 있습니다.</p>
-<h2 id="-attribute-">버퍼와 attribute 관련한 명령문은 무엇을 하는겁니까?</h2>
+<p>##버퍼와 attribute 관련한 명령문은 무엇을 하는겁니까?</p>
 <p>버퍼는 정점 및 추가적인 정점별 데이터(per-vertex data)를 GPU로 전달하는 방법입니다. <code class="notranslate" translate="no">gl.createBuffer</code>는 버퍼를 생성합니다. <code class="notranslate" translate="no">gl.bindBuffer</code>는 버퍼를 작업 할 버퍼로 설정합니다. <code class="notranslate" translate="no">gl.bufferData</code>는 데이터를 현재 버퍼로 복사합니다.</p>
 <p>데이터가 버퍼에 들어간 후엔, WebGL에게 데이터를 가져오는 방법과 정점 셰이더의 attribute로 제공하는 방법을 알려 주어야 합니다.</p>
 <p>이를 위해 먼저 WebGL에 어떤 위치에 attribute가 할당되어 있는지 물어봅니다. 예를 들어 위의 코드에서는 다음과 같습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 정점 데이터가 어디로 전달되어야 하는지 찾습니다.
 var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
-</code></pre><p>attribute의 위치를 알게 되면 두개의 명령문을 실행합니다.</p>
+</code></pre>
+<p>attribute의 위치를 알게 되면 두개의 명령문을 실행합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.enableVertexAttribArray(location);
-</code></pre><p>이 명령문은 WebGL에게 우리가 버퍼로부터 데이터를 제공 할 것이라는 것을 알려숩니다.</p>
+</code></pre>
+<p>이 명령문은 WebGL에게 우리가 버퍼로부터 데이터를 제공 할 것이라는 것을 알려숩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.vertexAttribPointer(
     location,
     numComponents,
@@ -461,7 +470,8 @@ var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
     normalizeFlag,
     strideToNextPieceOfData,
     offsetIntoBuffer);
-</code></pre><p>그리고 이 명령문은 WebGL에게 gl.bindBuffer로 마지막으로 바인딩된 버퍼에서 데이터를 가져오도록 하는데, 정점당 몇 개의 컴포넌트가 존재하는지(1 - 4), 데이터 타입은 무엇인지 (<code class="notranslate" translate="no">BYTE</code>, <code class="notranslate" translate="no">FLOAT</code>, <code class="notranslate" translate="no">INT</code>, <code class="notranslate" translate="no">UNSIGNED_SHORT</code>, 등등...), 한 데이터에서 다음 데이터로 넘어가는데 몇 바이트를 건너 뛰어야 하는지를 의미하는 stride, 버퍼의 시작 부분에서 데이터가 얼마나 떨어져 있는지를 의미하는 offset을 알려줍니다.</p>
+</code></pre>
+<p>그리고 이 명령문은 WebGL에게 gl.bindBuffer로 마지막으로 바인딩된 버퍼에서 데이터를 가져오도록 하는데, 정점당 몇 개의 컴포넌트가 존재하는지(1 - 4), 데이터 타입은 무엇인지 (<code class="notranslate" translate="no">BYTE</code>, <code class="notranslate" translate="no">FLOAT</code>, <code class="notranslate" translate="no">INT</code>, <code class="notranslate" translate="no">UNSIGNED_SHORT</code>, 등등…), 한 데이터에서 다음 데이터로 넘어가는데 몇 바이트를 건너 뛰어야 하는지를 의미하는 stride, 버퍼의 시작 부분에서 데이터가 얼마나 떨어져 있는지를 의미하는 offset을 알려줍니다.</p>
 <p>컴포넌트의 수는 항상 1에서 4 사이입니다.</p>
 <p>각 데이터마다 1개의 버퍼를 사용하는 경우 stride와 offset 모두 항상 0이됩니다. stride가 0이라는 것은 의미는 &quot;타입과 크기가 일치하는 stride 사용&quot;을 의미합니다. offset이 0이라는 것은 버퍼의 시작 부분에서부터 데이터를 가져온다는 것을 의미합니다. 이 값들을 0이 아닌 다른 값으로 설정하는 것은 복잡하고, 성능면에서 이점이 있긴 하지만 WebGL의 한계치까지 성능을 높이려는 것이 아니라면 그럴만한 가치가 없습니다.</p>
 <p>이제 버퍼와 attribute에 대해서 정리가 되었기를 바랍니다.</p>
@@ -496,29 +506,27 @@ function setColors(gl) {
   var r2 = Math.random() * 256; // 절단이 발생함
   var b2 = Math.random() * 256; 
   var g2 = Math.random() * 256;
-
-  gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Uint8Array(   // Uint8Array
-        [ r1, b1, g1, 255,
-          r1, b1, g1, 255,
-          r1, b1, g1, 255,
-          r2, b2, g2, 255,
-          r2, b2, g2, 255,
-          r2, b2, g2, 255]),
-      gl.STATIC_DRAW);
+<p>gl.bufferData(
+gl.ARRAY_BUFFER,
+new Uint8Array(   // Uint8Array
+[ r1, b1, g1, 255,
+r1, b1, g1, 255,
+r1, b1, g1, 255,
+r2, b2, g2, 255,
+r2, b2, g2, 255,
+r2, b2, g2, 255]),
+gl.STATIC_DRAW);
 }
-</pre>
+</pre></p>
 <p>
 아래는 결과 예제입니다.
 </p>
-
-<div class="webgl_example_container">
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-with-2-byte-colors.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle-with-2-byte-colors.html" target="_blank">새 창으로 열기</a>
 </div>
 
-
+</p>
 </div>
 
     </div>

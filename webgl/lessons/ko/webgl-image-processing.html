@@ -243,7 +243,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>WebGL에서 이미지를 그리려면 텍스처를 사용 해야 합니다. 렌더링 할 때 픽셀 좌표 대신 클립 공간 좌표를 예상하는 것과 마찬가지로 일반적으로 텍스처를 읽을 때 텍스처 좌표를 예상합니다. 텍스쳐 좌표는 텍스처의 크기에 상관없이 0.0에서 1.0의 크기를 가집니다.</p>
 <p>WebGL2에서는 픽셀 좌표를 사용하여 텍스처를 읽을수 있는 기능이 추가 되었습니다.
 어떤 방법이 더 좋은지는 사람마다 다릅니다. 하지만 픽셀 좌표 보단 텍스처 좌표를 사용하는 것이 더 일반적이라고 생각 합니다.</p>
-<p>지금은 하나의 사각형(2개의 삼각형)을 그리기 때문에 WebGL에 직사각형의 각 점이 텍스처의 어느 위치에 해당하는지 알려주어야 합니다. 이 정보를 정점 셰이더에서 프래그먼트 셰이더로 &#39;varying&#39;이라 불리는 특별한 변수를 사용하여 전달합니다. varying은 값이 변하기 때문에 varying이라고 불립니다. 프래그먼트 셰이더를 사용하여 각 픽셀을 그릴때 마다 WebGL은 정점 셰이더에서 제공 한 <a href="webgl-how-it-works.html">값을 보간합니다</a>.</p>
+<p>지금은 하나의 사각형(2개의 삼각형)을 그리기 때문에 WebGL에 직사각형의 각 점이 텍스처의 어느 위치에 해당하는지 알려주어야 합니다. 이 정보를 정점 셰이더에서 프래그먼트 셰이더로 'varying’이라 불리는 특별한 변수를 사용하여 전달합니다. varying은 값이 변하기 때문에 varying이라고 불립니다. 프래그먼트 셰이더를 사용하여 각 픽셀을 그릴때 마다 WebGL은 정점 셰이더에서 제공 한 <a href="webgl-how-it-works.html">값을 보간합니다</a>.</p>
 <p><a href="webgl-fundamentals.html">이전 글의 마지막 부분에서 작성한 정점 셰이더</a>에서부터, 텍스처 좌표로 전달할 attribute를 추가 한 다음 이를 프래그먼트 셰이더로 전달 해야합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 
@@ -259,7 +259,8 @@ void main() {
 +   // GPU가 이 값들을 점 사이에서 보간 할 것입니다.
 +   v_texCoord = a_texCoord;
 }
-</code></pre><p>그런 다음 텍스처에서 색상을 찾기 위한 프래그먼트 셰이더를 작성합니다.</p>
+</code></pre>
+<p>그런 다음 텍스처에서 색상을 찾기 위한 프래그먼트 셰이더를 작성합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
@@ -276,7 +277,8 @@ void main() {
    // 텍스처에서 색상을 찾습니다.
    outColor = texture(u_image, v_texCoord);
 }
-</code></pre><p>마지막으로 이미지를 로드하고 텍스처를 생성한 뒤, 이미지를 텍스처로 복사해야 합니다. 우리는 브라우저를 사용하고 있기 때문에 이미지가 비동기적으로 로딩되고, 이를 위해 텍스처가 로드 될 때까지를 기다리도록 코드를 약간 변경해야 합니다. 일단 로드가 완료되면 그 이후에 그릴 것입니다.</p>
+</code></pre>
+<p>마지막으로 이미지를 로드하고 텍스처를 생성한 뒤, 이미지를 텍스처로 복사해야 합니다. 우리는 브라우저를 사용하고 있기 때문에 이미지가 비동기적으로 로딩되고, 이를 위해 텍스처가 로드 될 때까지를 기다리도록 코드를 약간 변경해야 합니다. 일단 로드가 완료되면 그 이후에 그릴 것입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+function main() {
 +  var image = new Image();
 +  image.src = &quot;https://someimage/on/our/server&quot;;  // 반드시 같은 도메인 이어야 합니다!!!
@@ -365,7 +367,8 @@ function render(image) {
 +  setRectangle(gl, 0, 0, image.width, image.height);
 
 }
-</code></pre><p>여기에 WebGL로 렌더링한 이미지가 있습니다.</p>
+</code></pre>
+<p>여기에 WebGL로 렌더링한 이미지가 있습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image.html" target="_blank">새 창으로 열기</a>
@@ -376,7 +379,8 @@ function render(image) {
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 outColor = texture(u_image, v_texCoord).bgra;
 ...
-</code></pre><p>이제 빨간색과 파란색이 바뀌었습니다.</p>
+</code></pre>
+<p>이제 빨간색과 파란색이 바뀌었습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-red2blue.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-red2blue.html" target="_blank">새 창으로 열기</a>
@@ -410,16 +414,17 @@ void main() {
 +      texture(u_image, v_texCoord + vec2( onePixel.x, 0.0)) +
 +      texture(u_image, v_texCoord + vec2(-onePixel.x, 0.0))) / 3.0;
 }
-</code></pre><p>블러(blur)시키지 않은 위 예제와 비교해 보세요.</p>
+</code></pre>
+<p>블러(blur)시키지 않은 위 예제와 비교해 보세요.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-blend.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-blend.html" target="_blank">새 창으로 열기</a>
 </div>
 
 </p>
-<p>이제 다른 픽셀을 참조하는 방법을 알았으니 컨볼루션 커널(convolution kernel)을 사용하여 몇 가지 일반적인 이미지 처리를 해보겠습니다. 
-여기에서는 3x3 커널을 사용할 것입니다. 
-컨볼루션 커널은 단순히 3x3 행렬이며 여기서 행렬의 각 요소는 렌더링할 픽셀 주위에 있는 8개의 픽셀에 어떤 값을 곱할 것인지를 나타냅니다. 
+<p>이제 다른 픽셀을 참조하는 방법을 알았으니 컨볼루션 커널(convolution kernel)을 사용하여 몇 가지 일반적인 이미지 처리를 해보겠습니다.
+여기에서는 3x3 커널을 사용할 것입니다.
+컨볼루션 커널은 단순히 3x3 행렬이며 여기서 행렬의 각 요소는 렌더링할 픽셀 주위에 있는 8개의 픽셀에 어떤 값을 곱할 것인지를 나타냅니다.
 그 다음 그 결과를 커널 가중치(커널의 모든 값들의 합) 또는 1.0 중 큰 값으로 나눕니다. <a href="https://docs.gimp.org/2.6/en/plug-in-convmatrix.html">여기 꽤 좋은 읽을거리가 있습니다</a>. 그리고 <a href="https://www.codeproject.com/KB/graphics/ImageConvolution.aspx">C++로 직접 작성하려면 어떻게 해야하는지를 실제 코드를 통해 보여주는 다른 읽을거리가 있습니다</a>.</p>
 <p>우리의 경우 셰이더에서 이 작업을 수행할 것이므로 아래와 같이 새로운 프래그먼트 셰이더를 작성합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
@@ -456,7 +461,8 @@ void main() {
       texture(u_image, v_texCoord + onePixel * vec2( 1,  1)) * u_kernel[8] ;
   outColor = vec4((colorSum / u_kernelWeight).rgb, 1);
 }
-</code></pre><p>자바스크립트에서 컨볼루션 커널과 커널의 가중치를 제공해야 합니다.</p>
+</code></pre>
+<p>자바스크립트에서 컨볼루션 커널과 커널의 가중치를 제공해야 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> function computeKernelWeight(kernel) {
    var weight = kernel.reduce(function(prev, curr) {
        return prev + curr;
@@ -478,7 +484,8 @@ void main() {
  gl.uniform1fv(kernelLocation, edgeDetectKernel);
  gl.uniform1f(kernelWeightLocation, computeKernelWeight(edgeDetectKernel));
  ...
-</code></pre><p>그리고 짠... 드랍 다운 리스트를 사용해서 다른 커널을 선택해 보세요.</p>
+</code></pre>
+<p>그리고 짠… 드랍 다운 리스트를 사용해서 다른 커널을 선택해 보세요.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-3x3-convolution.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-3x3-convolution.html" target="_blank">새 창으로 열기</a>
@@ -495,17 +502,13 @@ var u_imageLoc = gl.getUniformLocation(
     program, "u_image");
 gl.uniform1i(u_imageLoc, textureUnitIndex);
 </pre>
-
-다른 텍스쳐들을 다른 유닛에 설정하기 위해 gl.activeTexture를 호출하고 원하는 유닛에 텍스처를 바인딩 하면 됩니다. 예를들어,
-
+<p>다른 텍스쳐들을 다른 유닛에 설정하기 위해 gl.activeTexture를 호출하고 원하는 유닛에 텍스처를 바인딩 하면 됩니다. 예를들어,</p>
 <pre class="prettyprint showlinemods">
 // 텍스처를 텍스쳐 유닛 6에 바인딩 합니다.
 gl.activeTexture(gl.TEXTURE6);
 gl.bindTexture(gl.TEXTURE_2D, someTexture);
 </pre>
-
-아래와 같이 해도 됩니다.
-
+<p>아래와 같이 해도 됩니다.</p>
 <pre class="prettyprint showlinemods">
 var textureUnitIndex = 6; // 텍스쳐 유닛 6 사용.
 // 텍스처를 텍스쳐 유닛 6에 바인드 합니다.
@@ -513,7 +516,6 @@ gl.activeTexture(gl.TEXTURE0 + textureUnitIndex);
 gl.bindTexture(gl.TEXTURE_2D, someTexture);
 </pre>
 </div>
-
 <div class="webgl_bottombar">
 <h3>GLSL 변수에서 a_, u_, v_ 접두어는 무엇입니까?</h3>
 <p>

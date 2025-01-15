@@ -263,7 +263,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     // gl_Position 是着色器需要设置的一个特殊的变量
     gl_Position = a_position;
   }
-</code></pre><p>还有一个简单的片断着色器提供固定的颜色</p>
+</code></pre>
+<p>还有一个简单的片断着色器提供固定的颜色</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  #version 300 es
 
   // 片断着色器没有默认的精度，
@@ -277,7 +278,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     // 设置颜色变量为红紫色
     outColor = vec4(1, 0, 0.5, 1);
   }
-</code></pre><p>让我们在裁剪空间绘制两个矩形，为每个顶点传递<code class="notranslate" translate="no">X</code>, <code class="notranslate" translate="no">Y</code>, <code class="notranslate" translate="no">Z</code>, 和 <code class="notranslate" translate="no">W</code>。</p>
+</code></pre>
+<p>让我们在裁剪空间绘制两个矩形，为每个顶点传递<code class="notranslate" translate="no">X</code>, <code class="notranslate" translate="no">Y</code>, <code class="notranslate" translate="no">Z</code>, 和 <code class="notranslate" translate="no">W</code>。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var positions = [
   -.8, -.8, 0, 1,  // 第一个矩形的第一个三角形
    .8, -.8, 0, 1,
@@ -293,7 +295,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    .8,  .2, 0, 1,
    .8,  .8, 0, 1,
 ];
-</code></pre><p>这是结果</p>
+</code></pre>
+<p>这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-clipspace-rectangles.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-clipspace-rectangles.html" target="_blank">点此在新窗口中浏览</a>
@@ -314,7 +317,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 +    // 直接传递亮度到片断着色器
 +    v_brightness = a_brightness;
   }
-</code></pre><p>在片断着色器中使用可变量设置颜色</p>
+</code></pre>
+<p>在片断着色器中使用可变量设置颜色</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  #version 300 es
 
   precision highp float;
@@ -328,7 +332,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   void main() {
 *    outColor = vec4(v_brightness, 0, 0, 1);  // 红色
   }
-</code></pre><p>我们需要给可变量提供数据，创建一个缓冲放入一些数据，每个顶点一个值，
+</code></pre>
+<p>我们需要给可变量提供数据，创建一个缓冲放入一些数据，每个顶点一个值，
 我们将设置左边亮度为 0，右边亮度为 1。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 创建缓冲并放入 12 个亮度值
   var brightnessBuffer = gl.createBuffer();
@@ -353,11 +358,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   ];
 
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(brightness), gl.STATIC_DRAW);
-</code></pre><p>还需要在初始化阶段找到 <code class="notranslate" translate="no">a_brightness</code> 的位置</p>
+</code></pre>
+<p>还需要在初始化阶段找到 <code class="notranslate" translate="no">a_brightness</code> 的位置</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 找到顶点数据的输入位置
   var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 +  var brightnessAttributeLocation = gl.getAttribLocation(program, &quot;a_brightness&quot;);
-</code></pre><p>然后在渲染阶段设置属性</p>
+</code></pre>
+<p>然后在渲染阶段设置属性</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 启用属性
   gl.enableVertexAttribArray(brightnessAttributeLocation);
 
@@ -372,7 +379,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   var offset = 0;        // 从缓冲的起始处开始
   gl.vertexAttribPointer(
       brightnessAttributeLocation, size, type, normalize, stride, offset);
-</code></pre><p>现在渲染后得到会得到两个矩形，左边 <code class="notranslate" translate="no">brightness</code> 是 0 右边是 1，
+</code></pre>
+<p>现在渲染后得到会得到两个矩形，左边 <code class="notranslate" translate="no">brightness</code> 是 0 右边是 1，
 中间的部分是插值（或可变量）。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-clipspace-rectangles-with-varying.html"></iframe>
@@ -400,7 +408,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
        .8 * mult, -.2 * mult, 0, mult,
        .8 * mult, -.8 * mult, 0, mult,
   ];
-</code></pre><p>如上所示我们将第二个矩形右边的点的 <code class="notranslate" translate="no">X</code> 和 <code class="notranslate" translate="no">Y</code> 都乘以 <code class="notranslate" translate="no">mult</code>，
+</code></pre>
+<p>如上所示我们将第二个矩形右边的点的 <code class="notranslate" translate="no">X</code> 和 <code class="notranslate" translate="no">Y</code> 都乘以 <code class="notranslate" translate="no">mult</code>，
 同时设置 <code class="notranslate" translate="no">W</code> 为 <code class="notranslate" translate="no">mult</code>。由于 WebGL 会除以 <code class="notranslate" translate="no">W</code> 所以我们应该得到相同的结果对么？</p>
 <p>这是结果</p>
 <p><div class="webgl_example_container">
@@ -414,7 +423,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>事实是 WebGL 使用 <code class="notranslate" translate="no">W</code> 实现纹理映射或者可变量插值的透视投影。</p>
 <p>如果将片断着色器改成这样就更容以看出效果</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">outColor = vec4(fract(v_brightness * 10.), 0, 0, 1);  // 红色
-</code></pre><p>将 <code class="notranslate" translate="no">v_brightness</code> 乘以 10 就会是值的范围为 0 到 10，<code class="notranslate" translate="no">fract</code> 会保留小数部分所以结果还是 0 到 1 之间，但是总共是 10 次 0 到 1 了。</p>
+</code></pre>
+<p>将 <code class="notranslate" translate="no">v_brightness</code> 乘以 10 就会是值的范围为 0 到 10，<code class="notranslate" translate="no">fract</code> 会保留小数部分所以结果还是 0 到 1 之间，但是总共是 10 次 0 到 1 了。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-clipspace-rectangles-with-varying-non-1-w-repeat.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-clipspace-rectangles-with-varying-non-1-w-repeat.html" target="_blank">点此在新窗口中浏览</a>
@@ -423,12 +433,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </p>
 <p>线性插值应该是这样的公式</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> result = (1 - t) * a + t * b
-</code></pre><p><code class="notranslate" translate="no">t</code> 的范围是 0 到 1，表示 <code class="notranslate" translate="no">a</code> 到 <code class="notranslate" translate="no">b</code> 之间的位置，0 表示在 <code class="notranslate" translate="no">a</code> 点，1 表示在 <code class="notranslate" translate="no">b</code> 点。</p>
+</code></pre>
+<p><code class="notranslate" translate="no">t</code> 的范围是 0 到 1，表示 <code class="notranslate" translate="no">a</code> 到 <code class="notranslate" translate="no">b</code> 之间的位置，0 表示在 <code class="notranslate" translate="no">a</code> 点，1 表示在 <code class="notranslate" translate="no">b</code> 点。</p>
 <p>可变量经过 WebGL 的插值时使用这个公式</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">          (1 - t) * a / aW + t * b / bW
 result =  -----------------------------
              (1 - t) / aW + t / bW
-</code></pre><p><code class="notranslate" translate="no">aW</code> 表示 <code class="notranslate" translate="no">a</code> 点的 <code class="notranslate" translate="no">W</code> 值，也就是 <code class="notranslate" translate="no">gl_Position.w</code> 的值，而不一定等于缓冲中的值，
+</code></pre>
+<p><code class="notranslate" translate="no">aW</code> 表示 <code class="notranslate" translate="no">a</code> 点的 <code class="notranslate" translate="no">W</code> 值，也就是 <code class="notranslate" translate="no">gl_Position.w</code> 的值，而不一定等于缓冲中的值，
 同理 <code class="notranslate" translate="no">bW</code> 是设置在 <code class="notranslate" translate="no">b</code> 点的 <code class="notranslate" translate="no">gl_Position.w</code>。</p>
 <p>为什么这个很重要？这有一个简单的纹理，使用<a href="webgl-3d-textures.html">纹理文章</a>的例子，
 并调整了 UV，每个面使用整张纹理，是一个 4×4 像素的纹理。</p>
@@ -458,7 +470,8 @@ void main() {
   // 将纹理坐标传到片断着色器
   v_texcoord = a_texcoord;
 }
-</code></pre><p>除以 <code class="notranslate" translate="no">W</code> 意味值 <code class="notranslate" translate="no">gl_Position.w</code> 始终为 1，<code class="notranslate" translate="no">X</code>, <code class="notranslate" translate="no">Y</code>, 和 <code class="notranslate" translate="no">Z</code>
+</code></pre>
+<p>除以 <code class="notranslate" translate="no">W</code> 意味值 <code class="notranslate" translate="no">gl_Position.w</code> 始终为 1，<code class="notranslate" translate="no">X</code>, <code class="notranslate" translate="no">Y</code>, 和 <code class="notranslate" translate="no">Z</code>
 不会有什么影响，因为 WebGL 也会默认做除法，这是结果。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-non-perspective-correct-cube.html"></iframe>
@@ -475,19 +488,23 @@ WebGL 就不能正确的对可变量的插值实现透视。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">          (1 - t) * a / aW + t * b / bW
  result = -----------------------------
              (1 - t) / aW + t / bW
-</code></pre><p>设置所有的 <code class="notranslate" translate="no">W</code> 为 1 就会得到</p>
+</code></pre>
+<p>设置所有的 <code class="notranslate" translate="no">W</code> 为 1 就会得到</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">          (1 - t) * a / 1 + t * b / 1
 result =  ---------------------------
              (1 - t) / 1 + t / 1
-</code></pre><p>除以 1 等于什么也没做，所以简化成这样</p>
+</code></pre>
+<p>除以 1 等于什么也没做，所以简化成这样</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">          (1 - t) * a + t * b
 result =  -------------------
              (1 - t) + t
-</code></pre><p><code class="notranslate" translate="no">(1 - t) + t</code> 当 <code class="notranslate" translate="no">t</code> 从 0 变到 1 跟 <code class="notranslate" translate="no">1</code> 结果是一样的. 例如
+</code></pre>
+<p><code class="notranslate" translate="no">(1 - t) + t</code> 当 <code class="notranslate" translate="no">t</code> 从 0 变到 1 跟 <code class="notranslate" translate="no">1</code> 结果是一样的. 例如
 <code class="notranslate" translate="no">t</code> 等于 <code class="notranslate" translate="no">.7</code> 则 <code class="notranslate" translate="no">(1 - .7) + .7</code> 等于 <code class="notranslate" translate="no">.3 + .7</code> 等于 <code class="notranslate" translate="no">1</code>。
 换句话说，我们可以移除底部，这样我们就剩下</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> result = (1 - t) * a + t * b
-</code></pre><p>就和上方提到的线性插值一样了。</p>
+</code></pre>
+<p>就和上方提到的线性插值一样了。</p>
 <p>现在就清楚为什么 WebGL 要使用 4x4 的矩阵和包含 <code class="notranslate" translate="no">X</code>, <code class="notranslate" translate="no">Y</code>, <code class="notranslate" translate="no">Z</code>, 和 <code class="notranslate" translate="no">W</code> 四个值的向量了吧。
 <code class="notranslate" translate="no">X</code> 和 <code class="notranslate" translate="no">Y</code> 除以 <code class="notranslate" translate="no">W</code> 得到裁剪空间坐标，<code class="notranslate" translate="no">Z</code> 除以 <code class="notranslate" translate="no">W</code> 也得到裁剪空间的 Z 坐标，<code class="notranslate" translate="no">W</code> 同时还为纹理映射的透视纠正提供了帮助。</p>
 <div class="webgl_bottombar">

@@ -242,17 +242,21 @@ matrices in particular <a href="webgl-2d-matrices.html">the article that introdu
 and <a href="webgl-3d-camera.html">the article on cameras</a>.</p>
 <p>In programming generally a row goes from left to right, a column goes up and down.</p>
 <blockquote>
-<h2 id="col-umn">col·umn</h2>
+<h2 id="col·umn">col·umn</h2>
 <p>/ˈkäləm/</p>
 <p><em>noun</em></p>
 <ol>
-<li><p>an upright pillar, typically cylindrical and made of stone or
+<li>
+<p>an upright pillar, typically cylindrical and made of stone or
 concrete, supporting an entablature, arch, or other structure or standing alone as a monument.</p>
-<p><em>synonyms</em>:    pillar, post, pole, upright, vertical, ...</p>
+<p><em>synonyms</em>:	pillar, post, pole, upright, vertical, …</p>
 </li>
-<li><p>a vertical division of a page or text.</p>
+<li>
+<p>a vertical division of a page or text.</p>
 </li>
 </ol>
+</blockquote>
+<blockquote>
 <h2 id="row">row</h2>
 <p>/rō/</p>
 <p><em>noun</em></p>
@@ -263,14 +267,11 @@ concrete, supporting an entablature, arch, or other structure or standing alone 
 <p>We can see examples in our software. For example my text editors
 shows Lines and columns, lines being another word for row in this case since column is already taken</p>
 <div class="webgl_center"><img src="resources/editor-lines-and-columns.gif" class="gman-border-bshadow" style="width: 372px;"></div>
-
 <p>Notice in the bottom left area the status bar shows the line and column.</p>
 <p>In spreadsheet software we see rows go across</p>
 <div class="webgl_center"><img src="resources/spreadsheet-row.png" style="width: 808px; filter: brightness(0.9);" class="nobg"></div>
-
 <p>And columns go down.</p>
 <div class="webgl_center"><img src="resources/spreadsheet-column.png" style="width: 808px; filter: brightness(0.9);" class="nobg"></div>
-
 <p>So, when we make a 3x3 or 4x4 matrix in JavaScript for WebGL we make them like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const m3x3 = [
   0, 1, 2,  // row 0
@@ -301,12 +302,10 @@ const m4x4 = [
   tx, ty, tz,  1,
 ];
 </code></pre>
-<p>But, there&#39;s an issue. Math conventions for matrix math generally do things in columns. A mathematician would write out a 3x3 translation matrix like this</p>
+<p>But, there’s an issue. Math conventions for matrix math generally do things in columns. A mathematician would write out a 3x3 translation matrix like this</p>
 <div class="webgl_center"><img src="resources/3x3-math-translation-matrix.svg" style="width: 120px;"></div>
-
 <p>and a 4x4 translation matrix like this</p>
 <div class="webgl_center"><img src="resources/4x4-math-translation-matrix.svg" style="width: 150px;"></div>
-
 <p>That leaves us with a problem. If we want our matrices to look like
 math matrices we might decide to write a 4x4 matrix like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const some4x4TranslationMatrix = [
@@ -319,7 +318,7 @@ math matrices we might decide to write a 4x4 matrix like this</p>
 <p>Unfortunately doing it like that has issues. As mentioned in <a href="webgl-3d-camera.html">the article on cameras</a> each of the columns of a 4x4 matrix often has a meaning.</p>
 <p>The first, second, and third columns are often considered the x, y, and z axis respectively and the last column is the position or translation.</p>
 <p>One issue is in code it would be no fun to try to get those parts
-separately. Want the Z axis? You&#39;d have to do this</p>
+separately. Want the Z axis? You’d have to do this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const zAxis = [
   some4x4Matrix[2],
   some4x4Matrix[6],
@@ -327,7 +326,7 @@ separately. Want the Z axis? You&#39;d have to do this</p>
 ];
 </code></pre>
 <p>Ugh!</p>
-<p>So, the way WebGL, and OpenGL ES on which WebGL is based, gets around this is it calls rows &quot;columns&quot;.</p>
+<p>So, the way WebGL, and OpenGL ES on which WebGL is based, gets around this is it calls rows “columns”.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const some4x4TranslationMatrix = [
    1,  0,  0,  0,   // this is column 0
    0,  1,  0,  0,   // this is column 1
@@ -362,7 +361,7 @@ struct Mat4x4 {
   Vec4 column[4];
 }
 </code></pre>
-<p>And it would just appear to work. </p>
+<p>And it would just appear to work.</p>
 <p>Unfortunately it looks nothing like the math version when you actually declare one statically in code.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-C++">// C++
 Mat4x4 someTranslationMatrix = {
@@ -372,7 +371,7 @@ Mat4x4 someTranslationMatrix = {
   { tx, ty, tz,  1, },
 };
 </code></pre>
-<p>Or back to JavaScript where we don&#39;t generally have something like C++ structs.</p>
+<p>Or back to JavaScript where we don’t generally have something like C++ structs.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const someTranslationMatrix = [
    1,  0,  0,  0,
    0,  1,  0,  0,
@@ -380,7 +379,7 @@ Mat4x4 someTranslationMatrix = {
   tx, ty, tz,  1,
 ];
 </code></pre>
-<p>So, with this convention of calling rows &quot;columns&quot; some things are simpler but others can be more confusing if you&#39;re a math person.</p>
+<p>So, with this convention of calling rows “columns” some things are simpler but others can be more confusing if you’re a math person.</p>
 <p>I bring all of this up because these articles are written from the POV of a programmer, not a math person. That means like every other single dimensional array that is treated as a 2 dimensional array, rows go across.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const someTranslationMatrix = [
    1,  0,  0,  0,  // row 0
@@ -403,11 +402,11 @@ const dataFor7x8OneChannelImage = [
 ]
 </code></pre>
 <p>and so these articles will refer to them as rows.</p>
-<p>If you&#39;re a math person you might find it confusing. I&#39;m sorry I
-don&#39;t have a solution. I could call what is clearly row 3 a column
+<p>If you’re a math person you might find it confusing. I’m sorry I
+don’t have a solution. I could call what is clearly row 3 a column
 but that would also be confusing since it matches no other programming.</p>
-<p>In any case, hopefully this helps clarify why none of the explanations look like something from a math book. Instead they look like code and use the conventions of code. I hope this helps explain what&#39;s going on
-and it&#39;s not too confusing for those who are used to math conventions.</p>
+<p>In any case, hopefully this helps clarify why none of the explanations look like something from a math book. Instead they look like code and use the conventions of code. I hope this helps explain what’s going on
+and it’s not too confusing for those who are used to math conventions.</p>
 
     </div>
     <div class="lesson-sidebar">

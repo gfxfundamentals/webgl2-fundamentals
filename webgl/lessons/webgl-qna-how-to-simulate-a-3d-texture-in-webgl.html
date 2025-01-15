@@ -236,7 +236,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>So in WebGL, I can store a texture in up to 2 dimensions- and read it in the shader using texture2D(whatever);</p>
 <p>If i wanted to store a 3 dimensional texture so that I can read 3-dimensions worth of data on the shader, how would I do it?</p>
 <p>Here are my ideas- and I am wondering if I am approaching it correctly:</p>
@@ -262,7 +262,8 @@ gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 10, 100, 0,
                   gl.RGBA, gl.FLOAT, data_on_shader);
 
 //other texture stuff
-</code></pre><p>On the shader:</p>
+</code></pre>
+<p>On the shader:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler data_on_shader;
 x= texture.r//
 y = texture.g//
@@ -273,10 +274,11 @@ yfixed = floor(y*10.)/10. + .5;
 zfixed = floor(z*10.)/10. + .5;
 
 float data_received = texture2D(data_on_shader, vec2(xfixed, yfixed*10. + zfixed)).r;
-</code></pre><p>Something to the effect of using row major order within a 2d texture?
+</code></pre>
+<p>Something to the effect of using row major order within a 2d texture?
 Thoughts?</p>
 <p>Thanks in advance!</p>
-<h2 id="answer-">Answer:</h2>
+<h2 id="answer">Answer:</h2>
 <p>You can simulate a 3d texture by storing each plane of the 3d texture in a 2d texture</p>
 <p>Then a function like this will let you use it as a 3d texture</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 sampleAs3DTexture(sampler2D tex, vec3 texCoord, float size) {
@@ -293,7 +295,8 @@ Thoughts?</p>
     float zOffset = mod(texCoord.z * size, 1.0);
     return mix(slice0Color, slice1Color, zOffset);
  }
-</code></pre><p>If your 3d texture was 8x8x8 then you&#39;d make a 2d texture that is 64x8 and put each plane of the 3d texture in your 2d texture. Then, knowing that was originally 8x8x8 you&#39;d pass in <code class="notranslate" translate="no">8.0</code> for the size to <code class="notranslate" translate="no">sampleAs3DTexture</code></p>
+</code></pre>
+<p>If your 3d texture was 8x8x8 then you’d make a 2d texture that is 64x8 and put each plane of the 3d texture in your 2d texture. Then, knowing that was originally 8x8x8 you’d pass in <code class="notranslate" translate="no">8.0</code> for the size to <code class="notranslate" translate="no">sampleAs3DTexture</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">precision mediump float;
 uniform sampler2D u_my3DTexture;
 varying vec3 v_texCoord;
@@ -305,8 +308,9 @@ varying vec3 v_texCoord;
 void main() {
   gl_FragColor = sampleAs3DTexture(u_my3DTexture, v_texCoord, CUBE_SIZE);
 }
-</code></pre><p>Note: the function above assumes you want bilinear filtering between the planes. If you don&#39;t you can simplify the function.</p>
-<p>There&#39;s <a href="http://www.youtube.com/watch?v=rfQ8rKGTVlg#t=26m00s">a video explanation of this code here</a> which is from <a href="http://webglsamples.googlecode.com/hg/color-adjust/color-adjust.html">this sample</a>.</p>
+</code></pre>
+<p>Note: the function above assumes you want bilinear filtering between the planes. If you don’t you can simplify the function.</p>
+<p>There’s <a href="http://www.youtube.com/watch?v=rfQ8rKGTVlg#t=26m00s">a video explanation of this code here</a> which is from <a href="http://webglsamples.googlecode.com/hg/color-adjust/color-adjust.html">this sample</a>.</p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 3.0 by

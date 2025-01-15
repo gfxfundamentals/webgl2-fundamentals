@@ -238,34 +238,34 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <div class="lesson-main">
       <p>This article is about how to use WebGL to let the user pick or select
 things.</p>
-<p>If you&#39;ve read the other articles on this site you have hopefully realized
+<p>If you’ve read the other articles on this site you have hopefully realized
 that WebGL itself is just a rasterization library. It draws triangles,
-lines, and points into the canvas so it has no concept of &quot;objects to be
-selected&quot;. It just outputs pixels via shaders you supply. That means
-any concept of &quot;picking&quot; something has to come from your code. You need
-to define what these things you&#39;re letting the user select are.
-That means while this article can cover general concepts you&#39;ll need to
+lines, and points into the canvas so it has no concept of “objects to be
+selected”. It just outputs pixels via shaders you supply. That means
+any concept of “picking” something has to come from your code. You need
+to define what these things you’re letting the user select are.
+That means while this article can cover general concepts you’ll need to
 decide for yourself how to translate what you see here into usable
 concepts in your own application.</p>
 <h2 id="clicking-on-an-object">Clicking on an Object</h2>
 <p>One of the easiest ways figure out which thing a user clicked on is
-we come up with a numeric id for each object, we can then draw 
+we come up with a numeric id for each object, we can then draw
 all of the objects using their id as their color with no lighting
 and no textures. This will give us an image of the silhouettes of
 each object. The depth buffer will handle sorting for us.
 We can then read the color of the pixel under the
 mouse which will give us the id of the object that was rendered there.</p>
-<p>To implement this technique we&#39;ll need to combine several previous
+<p>To implement this technique we’ll need to combine several previous
 articles. The first is the article on <a href="webgl-drawing-multiple-things.html">drawing multiple objects</a>
-which we&#39;ll use because given it draws multiple things we can try to
+which we’ll use because given it draws multiple things we can try to
 pick them.</p>
 <p>On top of that we generally want to render these ids off screen
-by <a href="webgl-render-to-texture.html">rendering to a texture</a> so we&#39;ll
+by <a href="webgl-render-to-texture.html">rendering to a texture</a> so we’ll
 add in that code as well.</p>
-<p>So, let&#39;s start with the last example from
+<p>So, let’s start with the last example from
 <a href="webgl-drawing-multiple-things.html">the article on drawing multiple things</a>
 that draws 200 things.</p>
-<p>To it let&#39;s add a framebuffer with attached texture and depth buffer from
+<p>To it let’s add a framebuffer with attached texture and depth buffer from
 the last example in <a href="webgl-render-to-texture.html">the article on rendering to a texture</a>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Create a texture to render to
 const targetTexture = gl.createTexture();
@@ -312,7 +312,7 @@ the depth renderbuffer into a function so we can
 call it to resize them to match the size of the
 canvas.</p>
 <p>In our rendering code if the canvas changes size
-we&#39;ll adjust the texture and renderbuffer to match.</p>
+we’ll adjust the texture and renderbuffer to match.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function drawScene(time) {
   time *= 0.0005;
 
@@ -330,9 +330,9 @@ one we can set to a solid color to render with ids.
 So first here is our second shader</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const pickingVS = `#version 300 es
   in vec4 a_position;
-
+  
   uniform mat4 u_matrix;
-
+  
   void main() {
     // Multiply the position by the matrix.
     gl_Position = u_matrix * a_position;
@@ -341,11 +341,11 @@ So first here is our second shader</p>
 
 const pickingFS = `#version 300 es
   precision highp float;
-
+  
   uniform vec4 u_id;
 
   out vec4 outColor;
-
+  
   void main() {
      outColor = u_id;
   }
@@ -366,7 +366,7 @@ const programInfo = twgl.createProgramInfo(gl, [vs, fs], options);
 const pickingProgramInfo = twgl.createProgramInfo(gl, [pickingVS, pickingFS], options);
 </code></pre>
 <p>One difference above from most samples on this site, this is one
-of the few times we&#39;ve needed to draw the same data with 2 different
+of the few times we’ve needed to draw the same data with 2 different
 shaders. Because of that we need the attributes locations to match
 across shaders. We can do that in 2 ways. One way is to set them
 manually in the GLSL</p>
@@ -375,22 +375,22 @@ layout (location = 1) in vec4 a_color;
 </code></pre>
 <p>The other is to call <code class="notranslate" translate="no">gl.bindAttribLocation</code> <strong>before</strong> linking
 a shader program</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.bindAttribLocation(someProgram, 0, &#39;a_position&#39;);
-gl.bindAttribLocation(someProgram, 1, &#39;a_color&#39;);
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.bindAttribLocation(someProgram, 0, 'a_position');
+gl.bindAttribLocation(someProgram, 1, 'a_color');
 gl.linkProgram(someProgram);
 </code></pre>
-<p>This latter style is uncommon but it&#39;s more
+<p>This latter style is uncommon but it’s more
 <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">D.R.Y.</a>.
 Our helper library will call <code class="notranslate" translate="no">gl.bindAttribLocation</code> for us
 if we pass in the attribute names and the location we want
 which is what is happening above.</p>
-<p>This we&#39;ll mean we can guarantee the <code class="notranslate" translate="no">a_position</code> attribute uses
+<p>This we’ll mean we can guarantee the <code class="notranslate" translate="no">a_position</code> attribute uses
 location 0 in both programs so we can use the same vertex array
 with both programs.</p>
 <p>Next we need to be able to render all the objects
 twice. Once with whatever shader we assigned to
 them and again with the shader we just wrote
-so let&#39;s extract the code that currently renders
+so let’s extract the code that currently renders
 all the objects into a function.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function drawObjects(objectsToDraw, overrideProgramInfo) {
   objectsToDraw.forEach(function(object) {
@@ -413,8 +413,8 @@ all the objects into a function.</p>
 </code></pre>
 <p><code class="notranslate" translate="no">drawObjects</code> takes an optional <code class="notranslate" translate="no">overrideProgramInfo</code>
 we can pass in to use our picking shader instead of
-the object&#39;s assigned shader.</p>
-<p>Let&#39;s call it, once to draw into the texture with
+the object’s assigned shader.</p>
+<p>Let’s call it, once to draw into the texture with
 ids and again to draw the scene to the canvas.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Draw the scene.
 function drawScene(time) {
@@ -454,7 +454,7 @@ function drawScene(time) {
   requestAnimationFrame(drawScene);
 }
 </code></pre>
-<p>Our picking shader needs <code class="notranslate" translate="no">u_id</code> set to an id so let&#39;s
+<p>Our picking shader needs <code class="notranslate" translate="no">u_id</code> set to an id so let’s
 add that to our uniform data where we setup our objects.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Make infos for each object for each object.
 const baseHue = rand(0, 360);
@@ -494,13 +494,13 @@ for (let ii = 0; ii &lt; numObjects; ++ii) {
 <p>This will work because our <a href="webgl-less-code-more-fun.html">helper library</a>
 handles applying uniforms for us.</p>
 <p>We had to split ids across R, G, B, and A. Because our
-texture&#39;s format/type is <code class="notranslate" translate="no">gl.RGBA</code>, <code class="notranslate" translate="no">gl.UNSIGNED_BYTE</code>
+texture’s format/type is <code class="notranslate" translate="no">gl.RGBA</code>, <code class="notranslate" translate="no">gl.UNSIGNED_BYTE</code>
 we get 8 bits per channel. 8 bits only represent 256 values
 but by splitting the id across 4 channels we get 32bits total
 which is &gt; 4 billion values.</p>
-<p>We add 1 to the id because we&#39;ll use 0 for meaning
-&quot;nothing under the mouse&quot;.</p>
-<p>Now let&#39;s highlight the object under the mouse.</p>
+<p>We add 1 to the id because we’ll use 0 for meaning
+“nothing under the mouse”.</p>
+<p>Now let’s highlight the object under the mouse.</p>
 <p>First we need some code to get a canvas relative
 mouse position.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// mouseX and mouseY are in CSS display space relative to canvas
@@ -509,7 +509,7 @@ let mouseY = -1;
 
 ...
 
-gl.canvas.addEventListener(&#39;mousemove&#39;, (e) =&gt; {
+gl.canvas.addEventListener('mousemove', (e) =&gt; {
    const rect = canvas.getBoundingClientRect();
    mouseX = e.clientX - rect.left;
    mouseY = e.clientY - rect.top;
@@ -525,7 +525,7 @@ In other words if you had a canvas like this</p>
 <p>then <code class="notranslate" translate="no">mouseX</code> will go from 0 to 33 across the canvas and
 <code class="notranslate" translate="no">mouseY</code> will go from 0 to 44 across the canvas. See <a href="webgl-resizing-the-canvas.html">this</a>
 for more info.</p>
-<p>Now that we have a mouse position let&#39;s add some code
+<p>Now that we have a mouse position let’s add some code
 look up the pixel under the mouse</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const pixelX = mouseX * gl.canvas.width / gl.canvas.clientWidth;
 const pixelY = gl.canvas.height - mouseY * gl.canvas.height / gl.canvas.clientHeight - 1;
@@ -545,14 +545,14 @@ from <code class="notranslate" translate="no">mouseX</code> and <code class="not
 space. In other words, given the example above where <code class="notranslate" translate="no">mouseX</code> went from
 0 to 33 and <code class="notranslate" translate="no">mouseY</code> went from 0 to 44. <code class="notranslate" translate="no">pixelX</code> will go from 0 to 11
 and <code class="notranslate" translate="no">pixelY</code> will go from 0 to 22.</p>
-<p>In our actual code we&#39;re using our utility function <code class="notranslate" translate="no">resizeCanvasToDisplaySize</code>
-and we&#39;re making our texture the same size as the canvas so the display
-size and the canvas size match but at least we&#39;re prepared for the case
+<p>In our actual code we’re using our utility function <code class="notranslate" translate="no">resizeCanvasToDisplaySize</code>
+and we’re making our texture the same size as the canvas so the display
+size and the canvas size match but at least we’re prepared for the case
 where they do not match.</p>
 <p>Now that we have an id, to actually highlight the selected object
-let&#39;s change the color we&#39;re using to render it to the canvas.
+let’s change the color we’re using to render it to the canvas.
 The shader we were using has a <code class="notranslate" translate="no">u_colorMult</code>
-uniform we can use so if an object is under the mouse we&#39;ll look it up,
+uniform we can use so if an object is under the mouse we’ll look it up,
 save off its <code class="notranslate" translate="no">u_colorMult</code> value, replace it with a selection color,
 and restore it.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// mouseX and mouseY are in CSS display space relative to canvas
@@ -586,7 +586,7 @@ function drawScene(time) {
       data);             // typed array to hold result
   const id = data[0] + (data[1] &lt;&lt; 8) + (data[2] &lt;&lt; 16) + (data[3] &lt;&lt; 24);
 
-  // restore the object&#39;s color
+  // restore the object's color
   if (oldPickNdx &gt;= 0) {
     const object = objects[oldPickNdx];
     object.uniforms.u_colorMult = oldPickColor;
@@ -603,6 +603,7 @@ function drawScene(time) {
   }
 
   // ------ Draw the objects to the canvas
+
 </code></pre>
 <p>And with that we should be able to move the mouse over
 the scene and the object under the mouse will flash</p>
@@ -612,15 +613,15 @@ the scene and the object under the mouse will flash</p>
 </div>
 
 </p>
-<p>One optimization we can make, we&#39;re rendering
-the ids to a texture that&#39;s the same size
+<p>One optimization we can make, we’re rendering
+the ids to a texture that’s the same size
 as the canvas. This is conceptually the easiest
 thing to do.</p>
 <p>But, we could instead just render the pixel
 under the mouse. To do this we use a frustum
-who&#39;s math will cover just the space for that
+who’s math will cover just the space for that
 1 pixel.</p>
-<p>Until now, for 3D we&#39;ve been using a function called
+<p>Until now, for 3D we’ve been using a function called
 <code class="notranslate" translate="no">perspective</code> that takes as input a field of view, an aspect, and a
 near and far value for the z-planes and makes a
 perspective projection matrix that converts from the
@@ -670,7 +671,7 @@ const projectionMatrix = m4.frustum(
 </code></pre>
 <p>To use this we need to make some changes. As it now our shader
 just takes <code class="notranslate" translate="no">u_matrix</code> which means in order to draw with a different
-projection matrix we&#39;d need to recompute the matrices for every object
+projection matrix we’d need to recompute the matrices for every object
 twice each frame, once with our normal projection matrix for drawing
 to the canvas and again for this 1 pixel projection matrix.</p>
 <p>We can remove that responsibility from JavaScript by moving that
@@ -700,11 +701,11 @@ void main() {
 
 const pickingVS = `#version 300 es
   in vec4 a_position;
-
+  
 -  uniform mat4 u_matrix;
 +  uniform mat4 u_viewProjection;
 +  uniform mat4 u_world;
-
+  
   void main() {
     // Multiply the position by the matrix.
 -   gl_Position = u_matrix * a_position;
@@ -768,7 +769,7 @@ objects.forEach(function(object) {
       object.yRotationSpeed * time);
 });
 </code></pre>
-<p>We&#39;ll create just a 1x1 pixel texture and depth buffer</p>
+<p>We’ll create just a 1x1 pixel texture and depth buffer</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">setFramebufferAttachmentSizes(1, 1);
 
 ...
@@ -784,15 +785,15 @@ function drawScene(time) {
 -  }
 +  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 </code></pre>
-<p>Then before rendering the off screen ids we&#39;ll set the view projection
+<p>Then before rendering the off screen ids we’ll set the view projection
 using our 1 pixel projection matrix and then when drawing to the canvas
-we&#39;ll use the original projection matrix</p>
+we’ll use the original projection matrix</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">-// Compute the projection matrix
 -const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
 -const projectionMatrix =
 -    m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
 
-// Compute the camera&#39;s matrix using look at.
+// Compute the camera's matrix using look at.
 const cameraPosition = [0, 0, 100];
 const target = [0, 0, 0];
 const up = [0, 1, 0];
@@ -874,7 +875,7 @@ gl.readPixels(
     data);             // typed array to hold result
 const id = data[0] + (data[1] &lt;&lt; 8) + (data[2] &lt;&lt; 16) + (data[3] &lt;&lt; 24);
 
-// restore the object&#39;s color
+// restore the object's color
 if (oldPickNdx &gt;= 0) {
   const object = objects[oldPickNdx];
   object.uniforms.u_colorMult = oldPickColor;
@@ -906,8 +907,8 @@ gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
 drawObjects(objectsToDraw);
 </code></pre>
-<p>And you can see the math works, we&#39;re only drawing a single pixel
-and we&#39;re still figuring out what is under the mouse</p>
+<p>And you can see the math works, we’re only drawing a single pixel
+and we’re still figuring out what is under the mouse</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-picking-w-gpu-1pixel.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-picking-w-gpu-1pixel.html" target="_blank">点此在新窗口中浏览</a>

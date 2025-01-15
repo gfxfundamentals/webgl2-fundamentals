@@ -261,7 +261,7 @@ function loadImageAndCreateTextureInfo(url) {
     texture: tex,
   };
   var img = new Image();
-  img.addEventListener(&#39;load&#39;, function() {
+  img.addEventListener('load', function() {
     textureInfo.width = img.width;
     textureInfo.height = img.height;
 
@@ -273,16 +273,19 @@ function loadImageAndCreateTextureInfo(url) {
 
   return textureInfo;
 }
-</code></pre><p>问题是图像可能含有一些私有信息（例如验证码，签名，一个裸照，...），
+</code></pre>
+<p>问题是图像可能含有一些私有信息（例如验证码，签名，一个裸照，…），
 而一个网页通常含有一些广告之类的信息，这些信息并不是由页面直接控制的，
 所以浏览器需要防止这些信息读取私有图片。</p>
 <p>直接使用 <code class="notranslate" translate="no">&lt;img src=&quot;private.jpg&quot;&gt;</code> 是没什么问题的，因为图像尽管被浏览器显示，
 便签对象并不能获取图像的内部数据。<a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">Canvas2D API</a>
 有一个方式可以读取图像信息，首先需要将图像绘制到画布</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">ctx.drawImage(someImg, 0, 0);
-</code></pre><p>然后就可以获取数据</p>
+</code></pre>
+<p>然后就可以获取数据</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var data = ctx.getImageData(0, 0, width, height);
-</code></pre><p>但是如果绘制的图像来自不同的域名，浏览器就会将画布标记为<strong>被污染</strong>，
+</code></pre>
+<p>但是如果绘制的图像来自不同的域名，浏览器就会将画布标记为<strong>被污染</strong>，
 然后当你调用 <code class="notranslate" translate="no">ctx.getImageData</code> 时就会得到一个安全错误。</p>
 <p>WebGL 则更进一步，在 WebGL 中 <code class="notranslate" translate="no">gl.readPixels</code> 和 <code class="notranslate" translate="no">ctx.getImageData</code> 是相似的，
 所以你可能以为把这个接口封闭就好了，但事实是即使不能直接获取像素值，
@@ -297,16 +300,17 @@ function loadImageAndCreateTextureInfo(url) {
 
 </p>
 <p>我们该怎么办呢？</p>
-<h2 id="-cors">介绍 CORS</h2>
+<h2 id="介绍-cors">介绍 CORS</h2>
 <p>CORS = Cross Origin Resource Sharing（跨域资源共享）。是一种网页向图像服务器请求使用图像许可的方式。</p>
 <p>要实现这个我们需要设置 <code class="notranslate" translate="no">crossOrigin</code> 属性然后浏览器会试图从服务器获取图像，如果不是相同的域名，
 浏览器会请求 CORS 许可。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 +    img.crossOrigin = &quot;&quot;;   // 请求 CORS 许可
     img.src = url;
-</code></pre><p>您设置 <code class="notranslate" translate="no">crossOrigin</code> 的字符串被发送到服务器。服务器可以检查该字符串并决定
+</code></pre>
+<p>您设置 <code class="notranslate" translate="no">crossOrigin</code> 的字符串被发送到服务器。服务器可以检查该字符串并决定
 是否给予您许可。 大多数支持 CORS 的服务器不检查这个字符串，他们只是
-给予所有人许可。 这就是将其设置为空字符串的原因。 在这种情况下，它的意思是“请求许可”，而说<code class="notranslate" translate="no">img.crossOrigin = &quot;bob&quot;</code> 的意思是“请求&#39;bob&#39;的许可”。</p>
+给予所有人许可。 这就是将其设置为空字符串的原因。 在这种情况下，它的意思是“请求许可”，而说<code class="notranslate" translate="no">img.crossOrigin = &quot;bob&quot;</code> 的意思是“请求’bob’的许可”。</p>
 <p>为什么不总是请求许可？ 因为请求许可需要发起 2 个 HTTP 请求，它比不请求要慢。如果我们知道我们在同一个域中或者我们知道除了 img 标签或 canvas2d 之外我们不会将图像用于任何其他内容，那么我们不设置 <code class="notranslate" translate="no">crossOrigin</code>，因为它会使事情变慢。</p>
 <p>我们可以定义一个方法，当图像资源在其他域名下时就设置 <code class="notranslate" translate="no">crossOrigin</code> 属性。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function requestCORSIfNotSameOrigin(img, url) {
@@ -314,11 +318,13 @@ function loadImageAndCreateTextureInfo(url) {
     img.crossOrigin = &quot;&quot;;
   }
 }
-</code></pre><p>然后像这样使用</p>
+</code></pre>
+<p>然后像这样使用</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 +requestCORSIfNotSameOrigin(img, url);
 img.src = url;
-</code></pre><p><div class="webgl_example_container">
+</code></pre>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-cors-permission-good.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-cors-permission-good.html" target="_blank">点此在新窗口中浏览</a>
 </div>

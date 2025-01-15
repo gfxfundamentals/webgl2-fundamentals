@@ -236,18 +236,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I need to handle many objects which share only a few textures. Defining and loading textures one by one manually (as described in <a href="https://stackoverflow.com/questions/11292599/how-to-use-multiple-textures-in-webgl/11300434#11300434">another post on SO</a>) does not feel right... even more so since there&#39;s no <code class="notranslate" translate="no">switch (index) {case:...}</code> statement in WebGL. </p>
-<p>So I wanted to pass the texture to use for a vertex as a vertex attribute, and use this number as an index into some &quot;array of textures&quot; in the fragement shader. But the <a href="http://www.opengl.org/wiki/Sampler_%28GLSL%29">OpenGL wiki on Samplers</a> (not quite the perfect reference for WebGL, but the one I found) says:</p>
+      <h2 id="question">Question:</h2>
+<p>I need to handle many objects which share only a few textures. Defining and loading textures one by one manually (as described in <a href="https://stackoverflow.com/questions/11292599/how-to-use-multiple-textures-in-webgl/11300434#11300434">another post on SO</a>) does not feel right… even more so since there’s no <code class="notranslate" translate="no">switch (index) {case:...}</code> statement in WebGL.</p>
+<p>So I wanted to pass the texture to use for a vertex as a vertex attribute, and use this number as an index into some “array of textures” in the fragement shader. But the <a href="http://www.opengl.org/wiki/Sampler_%28GLSL%29">OpenGL wiki on Samplers</a> (not quite the perfect reference for WebGL, but the one I found) says:</p>
 <blockquote>
 <p>A variable of sampler can only be defined in one of two ways. It can be defined as a function parameter or as a uniform variable.</p>
 <p>uniform sampler2D texture1;</p>
 </blockquote>
-<p>That to me sounds like I can have no array of samplers. I&#39;ve read a few pages on texture units, but until now, that remains a mystery to me. </p>
+<p>That to me sounds like I can have no array of samplers. I’ve read a few pages on texture units, but until now, that remains a mystery to me.</p>
 <p>In the SO post cited above, Toji hinted at a solution, but wanted a separate question - voila!</p>
 <p>Thanks, nobi</p>
-<p>PS: I know the other possibility of using a &quot;texture atlas&quot; - if this is more efficient or less complicated - I&#39;d be happy to hear experiences!</p>
-<h2 id="answer-">Answer:</h2>
+<p>PS: I know the other possibility of using a “texture atlas” - if this is more efficient or less complicated - I’d be happy to hear experiences!</p>
+<h2 id="answer">Answer:</h2>
 <p>You have to index sampler arrays with constant values so you can do something like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#define numTextures 4
 
@@ -269,12 +269,14 @@ vec4 getSampleFromArray(sampler2D textures[4], int ndx, vec2 uv) {
 void main() {
     gl_FragColor = getSampleFromArray(u_textures, int(v_textureIndex), vec2(0.5, 0.5));
 }
-</code></pre><p>You also need to tell it which texture units to use</p>
+</code></pre>
+<p>You also need to tell it which texture units to use</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var textureLoc = gl.getUniformLocation(program, &quot;u_textures&quot;);
 // Tell the shader to use texture units 0 to 3
 gl.uniform1iv(textureLoc, [0, 1, 2, 3]);
-</code></pre><p>The sample above uses a constant texture coord just to keep it simple but of course you can use any texture coordinates.</p>
-<p>Here&#39;s a sample: </p>
+</code></pre>
+<p>The sample above uses a constant texture coord just to keep it simple but of course you can use any texture coordinates.</p>
+<p>Here’s a sample:</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-bind-an-array-of-textures-to-a-webgl-shader-uniform--example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-bind-an-array-of-textures-to-a-webgl-shader-uniform--example-1.html" target="_blank">click here to open in a separate window</a>

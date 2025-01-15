@@ -236,10 +236,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I try to draw multiple icon on screen and I use drawArraysInstancedANGLE  method. 
+      <h2 id="question">Question:</h2>
+<p>I try to draw multiple icon on screen and I use drawArraysInstancedANGLE  method.
 I try to use multiple texture like this but some icons draw diffrent geometry, I can not find what draw like that.</p>
-<p>I use one big icon map texture and fill icon vertex coord array with this func: </p>
+<p>I use one big icon map texture and fill icon vertex coord array with this func:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  FillIconTextCoordBuffer(data, mapW, mapH, i) {
     const ULiconW = data.x / mapW
     const ULiconH = data.y / mapH
@@ -257,7 +257,9 @@ I try to use multiple texture like this but some icons draw diffrent geometry, I
       ULiconW, ULiconH,
       ULiconW, LRiconH]), gl.STATIC_DRAW)
   }
-</code></pre><p>and then my draw func like this: </p>
+
+</code></pre>
+<p>and then my draw func like this:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  gl.uniform1f(P2DRotationForLayer, icon.rotDeg)
   gl.uniform2fv(P2DScaleLocForLayer, icon.__size)
   gl.uniform4fv(P2DOpacityLocForLayer, __iconColor)
@@ -279,7 +281,9 @@ I try to use multiple texture like this but some icons draw diffrent geometry, I
   }
 
   ext.vertexAttribDivisorANGLE(P2DoffsetForLayer, 0)
-</code></pre><p>and my DrawInstances func like this: </p>
+
+</code></pre>
+<p>and my DrawInstances func like this:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">DrawInstances(start, count, j) {
     const {
       gl, ext,
@@ -292,30 +296,34 @@ I try to use multiple texture like this but some icons draw diffrent geometry, I
     gl.bindBuffer(gl.ARRAY_BUFFER, null)
     ext.drawArraysInstancedANGLE(gl.TRIANGLES, start, 6, count)
   }
-</code></pre><p>Actually some icons drawed right I see 2 different icon but there is one type more look like this: </p>
+</code></pre>
+<p>Actually some icons drawed right I see 2 different icon but there is one type more look like this:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">|\
 | \
 |  \
 |  /
 | /
 |/
-</code></pre><p>my icons only two triangle like below, I dont set any shape like above,</p>
+
+</code></pre>
+<p>my icons only two triangle like below, I dont set any shape like above,</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">______
 |\   |
 | \  |
 |  \ |
 |   \|
 ------
-</code></pre><h2 id="answer-">Answer:</h2>
-<p>Here&#39;s a sample drawing multiple sprites from a sprite sheet using instanced drawing.</p>
-<p>Note if it was me I&#39;d use a matrix for each instance <a href="https://webglfundamentals.org/webgl/lessons/webgl-instanced-drawing.html">like this example</a> but I thought the code would be simpler using offset and scale here.</p>
+</code></pre>
+<h2 id="answer">Answer:</h2>
+<p>Here’s a sample drawing multiple sprites from a sprite sheet using instanced drawing.</p>
+<p>Note if it was me I’d use a matrix for each instance <a href="https://webglfundamentals.org/webgl/lessons/webgl-instanced-drawing.html">like this example</a> but I thought the code would be simpler using offset and scale here.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-drawing-textured-sprites-with-instanced-drawing-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-drawing-textured-sprites-with-instanced-drawing-example-1.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>note I&#39;m not skipping instances but if you want to skip instances then you need to set the offset passed to <code class="notranslate" translate="no">gl.vertexAttribPointer</code> for each instanced attribute. For example in the code above if you wanted to draw instances 7 to 29 it would be</p>
+<p>note I’m not skipping instances but if you want to skip instances then you need to set the offset passed to <code class="notranslate" translate="no">gl.vertexAttribPointer</code> for each instanced attribute. For example in the code above if you wanted to draw instances 7 to 29 it would be</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> const numInstancesToSkip = 7;
  const numInstancesToDraw = 29 - 7 + 1;
  const size = 2;  // vec2
@@ -330,9 +338,11 @@ I try to use multiple texture like this but some icons draw diffrent geometry, I
  gl.vertexAttribPointer(uvOffsetLoc, size, gl.FLOAT, false, 0, offset);
  gl.bindBuffer(uvScaleBuffer);
  gl.vertexAttribPointer(uvScaleLoc, size, gl.FLOAT, false, 0, offset);
-</code></pre><p>and to draw would be</p>
+</code></pre>
+<p>and to draw would be</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> ext.drawArraysInstancedANGLE(gl.TRIANGLES, 0, 6, mumInstancesToDraw);
-</code></pre><p>note that <code class="notranslate" translate="no">offset</code> above is the same for each attribute because all the atrributes are the same size (2) and the same type (gl.FLOAT) and they are all in separate buffers so their base offsets are all 0. If they were different sizes or different types or mixed into the same buffer they&#39;d all require different math.</p>
+</code></pre>
+<p>note that <code class="notranslate" translate="no">offset</code> above is the same for each attribute because all the atrributes are the same size (2) and the same type (gl.FLOAT) and they are all in separate buffers so their base offsets are all 0. If they were different sizes or different types or mixed into the same buffer they’d all require different math.</p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 4.0 by

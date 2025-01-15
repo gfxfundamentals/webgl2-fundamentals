@@ -270,7 +270,8 @@ MatrixStack.prototype.restore = function() {
 MatrixStack.prototype.save = function() {
   this.stack.push(this.getCurrentMatrix());
 };
-</code></pre><p>또한 최상단 행렬의 get과 set을 위한 함수가 필요합니다.</p>
+</code></pre>
+<p>또한 최상단 행렬의 get과 set을 위한 함수가 필요합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 현재 행렬(스택의 최상단)의 복사본 get
 MatrixStack.prototype.getCurrentMatrix = function() {
   return this.stack[this.stack.length - 1].slice();
@@ -280,7 +281,8 @@ MatrixStack.prototype.getCurrentMatrix = function() {
 MatrixStack.prototype.setCurrentMatrix = function(m) {
   return this.stack[this.stack.length - 1] = m;
 };
-</code></pre><p>마지막으로 이전의 행렬 함수를 이용하여<code class="notranslate" translate="no">translate</code>, <code class="notranslate" translate="no">rotate</code>, <code class="notranslate" translate="no">scale</code>을 구현해야 합니다.</p>
+</code></pre>
+<p>마지막으로 이전의 행렬 함수를 이용하여<code class="notranslate" translate="no">translate</code>, <code class="notranslate" translate="no">rotate</code>, <code class="notranslate" translate="no">scale</code>을 구현해야 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 현재 행렬을 이동
 MatrixStack.prototype.translate = function(x, y, z) {
   var m = this.getCurrentMatrix();
@@ -298,7 +300,8 @@ MatrixStack.prototype.scale = function(x, y, z) {
   var m = this.getCurrentMatrix();
   this.setCurrentMatrix(m4.scale(m, x, y, z));
 };
-</code></pre><p>3D 행렬 수학 함수를 사용하고 있다는 것에 주의하세요.
+</code></pre>
+<p>3D 행렬 수학 함수를 사용하고 있다는 것에 주의하세요.
 Translation의 <code class="notranslate" translate="no">z</code>에 <code class="notranslate" translate="no">0</code>을 사용하고 scale의 <code class="notranslate" translate="no">z</code>에 <code class="notranslate" translate="no">1</code>을 적용해도 되지만, 저같은 경우 Canvas 2D의 2D 함수 사용에 너무 익숙해서 종종 <code class="notranslate" translate="no">z</code>에 대한 지정을 잊어버려 코드가 제대로 동작하지 않는 경우가 있었습니다. 그러니 <code class="notranslate" translate="no">z</code>값의 입력은 선택적으로 만들어봅시다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 현재 행렬을 이동
 MatrixStack.prototype.translate = function(x, y, z) {
@@ -319,7 +322,8 @@ MatrixStack.prototype.scale = function(x, y, z) {
   var m = this.getCurrentMatrix();
   this.setCurrentMatrix(m4.scale(m, x, y, z));
 };
-</code></pre><p>이전 강의인 <a href="webgl-2d-drawimage.html"><code class="notranslate" translate="no">drawImage</code></a>에 이런 코드들이 있었습니다.</p>
+</code></pre>
+<p>이전 강의인 <a href="webgl-2d-drawimage.html"><code class="notranslate" translate="no">drawImage</code></a>에 이런 코드들이 있었습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 이 행렬은 픽셀 공간에서 클립 공간으로의 변환에 사용됩니다.
 var matrix = m4.orthographic(0, gl.canvas.width, gl.canvas.height, 0, -1, 1);
 
@@ -329,9 +333,11 @@ matrix = m4.translate(matrix, dstX, dstY, 0);
 // 이 행렬은 크기 1짜리 쿼드를 
 // dstWidth, dstHeight 크기로 변환합니다.
 matrix = m4.scale(matrix, dstWidth, dstHeight, 1);
-</code></pre><p>이제는 행렬 스택을 생성하기만 하면 됩니다.</p>
+</code></pre>
+<p>이제는 행렬 스택을 생성하기만 하면 됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var matrixStack = new MatrixStack();
-</code></pre><p>그리고 스택의 최상단 행렬에 곱합니다.</p>
+</code></pre>
+<p>그리고 스택의 최상단 행렬에 곱합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 이 행렬은 픽셀 공간에서 클립 공간으로의 변환에 사용됩니다.
 var matrix = m4.orthographic(0, gl.canvas.width, gl.canvas.height, 0, -1, 1);
 
@@ -345,13 +351,14 @@ matrix = m4.translate(matrix, dstX, dstY, 0);
 // 이 행렬은 크기 1짜리 쿼드를 
 // dstWidth, dstHeight 크기로 변환합니다.
 matrix = m4.scale(matrix, dstWidth, dstHeight, 1);
-</code></pre><p>이제 Canvas 2D API를 사용하는 것과 동일한 방법으로 사용할 수 있습니다.</p>
+</code></pre>
+<p>이제 Canvas 2D API를 사용하는 것과 동일한 방법으로 사용할 수 있습니다.</p>
 <p>행렬 스택을 사용하는 방법에 대해 잘 이해가 안되신다면,
 캔버스의 원점을 이동하고 회전하는 것과 같다고 생각하시면 됩니다.
 예를 들어 기본적으로 2D Canvas에서 원점(0,0)은 왼쪽 상단 모서리입니다.</p>
 <p>만약 원점을 캔버스의 중앙으로 옮기고 0,0에 이미지를 그리면 캔버스의 중앙부터 그려집니다.</p>
 <p><a href="webgl-2d-drawimage.html">이전 예제</a>를 가져와서 이미지 하나를 그려봅시다.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var textureInfo = loadImageAndCreateTextureInfo(&#39;resources/star.jpg&#39;);
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var textureInfo = loadImageAndCreateTextureInfo('resources/star.jpg');
 
 function draw(time) {
   gl.clear(gl.COLOR_BUFFER_BIT);
@@ -368,7 +375,8 @@ function draw(time) {
 
   matrixStack.restore();
 }
-</code></pre><p>결과는 아래와 같습니다.</p>
+</code></pre>
+<p>결과는 아래와 같습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-matrixstack-01.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-matrixstack-01.html" target="_blank">새 창으로 열기</a>
@@ -380,7 +388,8 @@ function draw(time) {
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">matrixStack.translate(gl.canvas.width / 2, gl.canvas.height / 2);
 matrixStack.rotateZ(time);
 +matrixStack.translate(textureInfo.width / -2, textureInfo.height / -2);
-</code></pre><p>이제 캔버스 중앙에 있는 이미지의 중심을 기준으로 회전합니다.</p>
+</code></pre>
+<p>이제 캔버스 중앙에 있는 이미지의 중심을 기준으로 회전합니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-matrixstack-02.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-matrixstack-02.html" target="_blank">새 창으로 열기</a>
@@ -475,7 +484,8 @@ matrixStack.rotateZ(time);
 +
 +}
 +matrixStack.restore();
-</code></pre><p>아래는 그 결과입니다.</p>
+</code></pre>
+<p>아래는 그 결과입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-matrixstack-03.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-matrixstack-03.html" target="_blank">새 창으로 열기</a>
@@ -486,11 +496,11 @@ matrixStack.rotateZ(time);
 <p>400x300 캔버스에서 <code class="notranslate" translate="no">matrixStack.translate(210, 150)</code>를 호출한다고 해봅시다.
 이 시점에서 원점은 <code class="notranslate" translate="no">210, 150</code>이고 모든 그리기는 해당 지점에 상대적이 됩니다.
 <code class="notranslate" translate="no">drawImage</code>를 <code class="notranslate" translate="no">0, 0</code>으로 호출했을 때 이미지가 거기에 그려지게 됩니다.</p>
-<p><img class="webgl_center" width="400" src="../resources/matrixstack-before.svg" /></p>
+<img class="webgl_center" width="400" src="../resources/matrixstack-before.svg" />
 <p>오른쪽 하단이 회전의 중심이 되길 원한다고 가정해봅시다.
 이런 경우 <code class="notranslate" translate="no">drawImage</code>를 호출할 때 회전의 중심이 되고 싶은 지점이 현재 원점이 되려면 어디로 원점을 옮겨야 할까요?
 텍스처의 우측 하단 <code class="notranslate" translate="no">-textureWidth, -textureHeight</code>이므로 이제 <code class="notranslate" translate="no">drawImage</code>를 <code class="notranslate" translate="no">0,0</code>으로 호출하면 텍스처는 아래와 같이 그려지는데 오른쪽 하단이 이전 원점에 위치하게 됩니다.</p>
-<p><img class="webgl_center" width="400" src="../resources/matrixstack-after.svg" /></p>
+<img class="webgl_center" width="400" src="../resources/matrixstack-after.svg" />
 <p>어느 시점이든 이전에 행렬 스택에 했던 작업은 중요하지 않습니다.
 원점을 움직이거나 크기 조정하거나 회전하기 위한 여러 작업을 수행했지만 <code class="notranslate" translate="no">drawImage</code>를 호출하기 전이라면 원점이 어디든 상관없습니다.
 우리는 새로운 텍스처가 그려질 위치에 상대적으로 새로운 원점을 이동시키기만 하면 됩니다.</p>

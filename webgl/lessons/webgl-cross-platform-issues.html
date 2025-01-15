@@ -237,15 +237,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="lesson">
     <div class="lesson-main">
       <p>I probably comes as no shock that not all WebGL programs work on all devices or
-browser. </p>
-<p>Here&#39;s a list of most of the issues you might run into off the top of my head</p>
+browser.</p>
+<p>Here’s a list of most of the issues you might run into off the top of my head</p>
 <h2 id="performance">Performance</h2>
 <p>A top end GPU probably runs 100x faster than a low-end GPU. The only way around
 that that I know of is to either aim low, or else give the user options like
 most Desktop PC apps do where they can choose performance or fidelity.</p>
 <h2 id="memory">Memory</h2>
 <p>Similarly a top end GPU might have 12 to 24 gig of ram where as a low end GPU
-probably has less than 1gig. (I&#39;m old so it&#39;s amazing to me low end = 1gig since
+probably has less than 1gig. (I’m old so it’s amazing to me low end = 1gig since
 I started programming on machines with 16k to 64k of memory 😜)</p>
 <h2 id="device-limits">Device Limits</h2>
 <p>WebGL has various minimum supported features but your local device might support</p>
@@ -254,67 +254,74 @@ I started programming on machines with 16k to 64k of memory 😜)</p>
 </blockquote>
 <p>Examples include:</p>
 <ul>
-<li><p>The max texture size allowed</p>
+<li>
+<p>The max texture size allowed</p>
 <p>2048 or 4096 seems to be reasonable limits. At least as of 2020 it looks like
 <a href="https://web3dsurvey.com/webgl/parameters/MAX_TEXTURE_SIZE">99% of devices support 4096 but only 50% support &gt; 4096</a>.</p>
 <p>Note: the max texture size is the maximum dimension the GPU can process. It
-doesn&#39;t mean that GPU has enough memory for that dimension squared (for a 2D
-texture) or cubed (for a 3D texture). For example some GPUs have a max size of</p>
-<ol>
-<li>But a 3D texture 16384 on each side would require 16 terabytes of
-memory!!!</li>
-</ol>
+doesn’t mean that GPU has enough memory for that dimension squared (for a 2D
+texture) or cubed (for a 3D texture). For example some GPUs have a max size of
+16384. But a 3D texture 16384 on each side would require 16 terabytes of
+memory!!!</p>
 </li>
-<li><p>The maximum number of vertex attributes in a single program</p>
-<p>In WebGL1 the minimum supported is 8. In WebGL2 it&#39;s 16. If you&#39;re using more than that
+<li>
+<p>The maximum number of vertex attributes in a single program</p>
+<p>In WebGL1 the minimum supported is 8. In WebGL2 it’s 16. If you’re using more than that
 then your code will fail on a machine with only the minimum</p>
 </li>
-<li><p>The maximum number of uniform vectors</p>
+<li>
+<p>The maximum number of uniform vectors</p>
 <p>These are specified separately for vertex shaders and fragment shaders.</p>
-<p>In WebGL1 it&#39;s 128 for vertex shaders and 16 for fragment shaders
-In WebGL2 it&#39;s 256 for vertex shaders and 224 for fragment shaders</p>
-<p>Note that uniforms can be &quot;packed&quot; so the number above is how many <code class="notranslate" translate="no">vec4</code>s
+<p>In WebGL1 it’s 128 for vertex shaders and 16 for fragment shaders
+In WebGL2 it’s 256 for vertex shaders and 224 for fragment shaders</p>
+<p>Note that uniforms can be “packed” so the number above is how many <code class="notranslate" translate="no">vec4</code>s
 can be used. Theoretically you could have 4x the number of <code class="notranslate" translate="no">float</code> uniforms.
 but there is an algorithm that fits them in. You can imagine the space as
 an array with 4 columns, one row for each of the maximum uniform vectors above.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">   +-+-+-+-+
-   | | | | |   &lt;- one vec4
-   | | | | |   |
-   | | | | |   |
-   | | | | |   V
-   | | | | |   max uniform vectors rows
-   | | | | |
-   | | | | |  
-   | | | | |
-   ...
-</code></pre><p>First <code class="notranslate" translate="no">vec4</code>s are allocated with a <code class="notranslate" translate="no">mat4</code> being 4 <code class="notranslate" translate="no">vec4</code>s. Then <code class="notranslate" translate="no">vec3</code>s are
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+-+-+-+-+
+| | | | |   &lt;- one vec4
+| | | | |   |
+| | | | |   |
+| | | | |   V
+| | | | |   max uniform vectors rows
+| | | | |
+| | | | |  
+| | | | |
+...
+
+</code></pre>
+<p>First <code class="notranslate" translate="no">vec4</code>s are allocated with a <code class="notranslate" translate="no">mat4</code> being 4 <code class="notranslate" translate="no">vec4</code>s. Then <code class="notranslate" translate="no">vec3</code>s are
 fit in the space left. Then <code class="notranslate" translate="no">vec2</code>s followed by <code class="notranslate" translate="no">float</code>s. So imagine we had 1
 <code class="notranslate" translate="no">mat4</code>, 2 <code class="notranslate" translate="no">vec3</code>s, 2 <code class="notranslate" translate="no">vec2</code>s and 3 <code class="notranslate" translate="no">float</code>s</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">   +-+-+-+-+
-   |m|m|m|m|   &lt;- the mat4 takes 4 rows
-   |m|m|m|m|
-   |m|m|m|m|
-   |m|m|m|m|
-   |3|3|3| |   &lt;- the 2 vec3s take 2 rows
-   |3|3|3| |
-   |2|2|2|2|   &lt;- the 2 vec2s can squeeze into 1 row 
-   |f|f|f| |   &lt;- the 3 floats fit in one row
-   ...
-</code></pre><p>Further, an array of uniforms is always vertical so for example if the maximum
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+-+-+-+-+
+|m|m|m|m|   &lt;- the mat4 takes 4 rows
+|m|m|m|m|
+|m|m|m|m|
+|m|m|m|m|
+|3|3|3| |   &lt;- the 2 vec3s take 2 rows
+|3|3|3| |
+|2|2|2|2|   &lt;- the 2 vec2s can squeeze into 1 row 
+|f|f|f| |   &lt;- the 3 floats fit in one row
+...
+
+</code></pre>
+<p>Further, an array of uniforms is always vertical so for example if the maximum
 allowed uniform vectors is 16 then you can not have a 17 element <code class="notranslate" translate="no">float</code> array
 and in fact if you had a single <code class="notranslate" translate="no">vec4</code> that would take an entire row so there
 are only 15 rows left meaning the largest array you can have would be 15
 elements.</p>
-<p>My advice though is don&#39;t count on perfect packing. Although the spec says the
+<p>My advice though is don’t count on perfect packing. Although the spec says the
 algorithm above is required to pass there are too many combinations to test
-that all drivers pass. Just be aware if you&#39;re getting close the limit.</p>
+that all drivers pass. Just be aware if you’re getting close the limit.</p>
 <p>note: varyings and attributes can not be packed.</p>
 </li>
-<li><p>The maximum varying vectors.</p>
-<p>WebGL1 the minimum is 8. WebGL2 it&#39;s 16.</p>
+<li>
+<p>The maximum varying vectors.</p>
+<p>WebGL1 the minimum is 8. WebGL2 it’s 16.</p>
 <p>If you use more than your code will not work on a machine with only the minimum.</p>
 </li>
-<li><p>The maximum texture units</p>
+<li>
+<p>The maximum texture units</p>
 <p>There are 3 values here.</p>
 <ol>
 <li>How many texture units there are</li>
@@ -331,15 +338,14 @@ that all drivers pass. Just be aware if you&#39;re getting close the limit.</p>
     <tr><td>min texture units a fragment shader can reference</td><td>8</td><td>16</td></tr>
   </tbody>
 </table>
-
-<p>It&#39;s important to note the <strong>0</strong> for a vertex shader in WebGL1. Note that that&#39;s probably not the end of the world.
+<p>It’s important to note the <strong>0</strong> for a vertex shader in WebGL1. Note that that’s probably not the end of the world.
 Apparently <a href="https://web3dsurvey.com/webgl/parameters/MAX_VERTEX_TEXTURE_IMAGE_UNITS">~97% of all devices support at least 4</a>.
 Still, you might want to check so you can either tell the user that your app is not going to work for them or
 you can fallback to some other shaders.</p>
 </li>
 </ul>
 <p>There are other limits as well. To look them up you call <code class="notranslate" translate="no">gl.getParameter</code> with
-the following values. </p>
+the following values.</p>
 <div class="webgl_center">
 <table class="tabular-data">
   <tbody>
@@ -357,10 +363,9 @@ the following values. </p>
   </tbody>
 </table>
 </div>
-
 <p>That is not the entire list. For example the max point size and max line thickness
 but you should basically assume the max line thickness is 1.0 and that POINTS
-are only useful for simple demos where you don&#39;t care about
+are only useful for simple demos where you don’t care about
 <a href="#points-lines-viewport-scissor-behavior">the clipping issues</a>.</p>
 <p>WebGL2 adds several more. A few common ones are</p>
 <div class="webgl_center">
@@ -377,12 +382,11 @@ are only useful for simple demos where you don&#39;t care about
   </tbody>
 </table>
 </div>
-
 <h2 id="depth-buffer-resolution">Depth Buffer resolution</h2>
 <p>A few really old mobile devices use 16bit depth buffers. Otherwise, AFAICT 99%
-of devices use a 24bit depth buffer so you probably don&#39;t have to worry about
+of devices use a 24bit depth buffer so you probably don’t have to worry about
 this.</p>
-<h2 id="readpixels-format-type-combos">readPixels format/type combos</h2>
+<h2 id="readpixels-formattype-combos">readPixels format/type combos</h2>
 <p>Only certain format/type combos are guaranteed to work. Other combos are
 optional. This is covered in <a href="webgl-readpixels.html">this article</a>.</p>
 <h2 id="framebuffer-attachment-combos">framebuffer attachment combos</h2>
@@ -414,13 +418,13 @@ support this.</p>
 ability to attach more than 1 color attachment to a framebuffer is still at
 around 70% for desktop and almost none for smartphones (that seems wrong).
 Basically any device that can run WebGL2 should also support
-<code class="notranslate" translate="no">WEBGL_draw_buffers</code> in WebGL1 but still, it&#39;s apparently still an issue. If you
-are needing to render to multiple textures at once it&#39;s likely your page needs a
+<code class="notranslate" translate="no">WEBGL_draw_buffers</code> in WebGL1 but still, it’s apparently still an issue. If you
+are needing to render to multiple textures at once it’s likely your page needs a
 high end GPU period. Still, you should check if the user device supports it and
 if not provide a friendly explanation.</p>
 <p>For WebGL1 the following 3 extensions seem almost universally supported so while
 you might want to warn the user your page is not going to work if they are
-missing it&#39;s likely that user has an extremely old device that wasn&#39;t going to
+missing it’s likely that user has an extremely old device that wasn’t going to
 run your page well anyway.</p>
 <p>They are, <code class="notranslate" translate="no">ANGLE_instance_arrays</code> (the ability to use <a href="webgl-instanced-drawing.html">instanced drawing</a>),
 <code class="notranslate" translate="no">OES_vertex_array_object</code> (the ability to store all the attribute state in an object so you can swap all
@@ -442,14 +446,19 @@ void main() {
 </code></pre>
 <p>Your code assumes that <code class="notranslate" translate="no">position</code> will be attribute 0 and <code class="notranslate" translate="no">texcoord</code> will be
 attribute 1 but that is not guaranteed. So it runs for you but fails for someone
-else. Often this can be a bug in that you didn&#39;t do this intentionally but
+else. Often this can be a bug in that you didn’t do this intentionally but
 through an error in the code things work when the locations are one way but not
 another.</p>
 <p>There are 3 solutions.</p>
 <ol>
-<li>Always look up the locations.</li>
-<li>Assign locations by calling <code class="notranslate" translate="no">gl.bindAttribLocation</code> before calling <code class="notranslate" translate="no">gl.linkProgram</code></li>
-<li><p>WebGL2 only, set the locations in the shader as in</p>
+<li>
+<p>Always look up the locations.</p>
+</li>
+<li>
+<p>Assign locations by calling <code class="notranslate" translate="no">gl.bindAttribLocation</code> before calling <code class="notranslate" translate="no">gl.linkProgram</code></p>
+</li>
+<li>
+<p>WebGL2 only, set the locations in the shader as in</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
 layout(location = 0) vec4 position;
 latout(location = 1) vec2 texcoord;
@@ -457,7 +466,7 @@ latout(location = 1) vec2 texcoord;
 </code></pre>
 <p>Solution 2 seems the most <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">D.R.Y.</a> where as solution 3
 seems the most <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself#DRY_vs_WET_solutions">W.E.T.</a> unless
-you&#39;re generating your textures at runtime.</p>
+you’re generating your textures at runtime.</p>
 </li>
 </ol>
 <h2 id="glsl-undefined-behavior">GLSL undefined behavior</h2>
@@ -466,8 +475,8 @@ undefined if <code class="notranslate" translate="no">x &lt; 0</code>. There is 
 spot lighting</a>.</p>
 <h2 id="shader-precision-issues">Shader precision issues</h2>
 <p>In 2020 the biggest issue here is if you use <code class="notranslate" translate="no">mediump</code> or <code class="notranslate" translate="no">lowp</code> in your shaders
-then on desktop the GPU will really use <code class="notranslate" translate="no">highp</code> but on mobile they&#39;ll actually be
-<code class="notranslate" translate="no">mediump</code> and or <code class="notranslate" translate="no">lowp</code> and so you won&#39;t notice any issues when developing on desktop.</p>
+then on desktop the GPU will really use <code class="notranslate" translate="no">highp</code> but on mobile they’ll actually be
+<code class="notranslate" translate="no">mediump</code> and or <code class="notranslate" translate="no">lowp</code> and so you won’t notice any issues when developing on desktop.</p>
 <p>See <a href="webgl-precision-issues.html">this article for more details</a>.</p>
 <h2 id="points-lines-viewport-scissor-behavior">Points, Lines, Viewport, Scissor behavior</h2>
 <p><code class="notranslate" translate="no">POINTS</code> and <code class="notranslate" translate="no">LINES</code> in WebGL can have a max size of 1 and in fact for <code class="notranslate" translate="no">LINES</code>
@@ -476,8 +485,8 @@ center is outside the viewport is implementation defined. See the bottom of
 <a href="webgl-drawing-without-data.html#pointissues">this article</a>.</p>
 <p>Similarly, whether or not the viewport clips vertices only or also pixels is
 undefined. The scissor always clips pixels so turn on the scissor test and set
-the scissor size if you set the viewport smaller than the thing you&#39;re drawing
-to and you&#39;re drawing LINES or POINTS.</p>
+the scissor size if you set the viewport smaller than the thing you’re drawing
+to and you’re drawing LINES or POINTS.</p>
 
     </div>
     <div class="lesson-sidebar">

@@ -238,17 +238,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="lesson">
     <div class="lesson-main">
       <p>이 게시글은 WebGL에 대한 글 시리즈에서 이어집니다. 첫번째로 <a href="webgl-fundamentals.html">기초로 시작</a>과 이전에는 <a href="webgl-2d-scale.html">2D 지오메트리 크기 변환에 대하여</a> 입니다.</p>
-<p>지난 3개의 글에서 우리는 <a href="webgl-2d-translation.html">이동 기하학</a>, <a href="webgl-2d-rotation.html">회전 기하학</a>, <a href="webgl-2d-scale.html">크기 기하학</a>를 알아 보았습니다. 이동, 회전, 크기 각각 &#39;변형(transformation)&#39;으로 간주됩니다. 이 변환들은 쉐이더의 변환을 필요로 하고 3가지 변환 각각은 순서에 따라 다릅니다. <a href="webgl-2d-scale.html">이전 예제</a>에서 크기를 조정한 다음 회전을 그 다음 이동을 하였습니다. 순서를 바꿔서 적용하면 다른 결과가 나타납니다.</p>
+<p>지난 3개의 글에서 우리는 <a href="webgl-2d-translation.html">이동 기하학</a>, <a href="webgl-2d-rotation.html">회전 기하학</a>, <a href="webgl-2d-scale.html">크기 기하학</a>를 알아 보았습니다. 이동, 회전, 크기 각각 '변형(transformation)'으로 간주됩니다. 이 변환들은 쉐이더의 변환을 필요로 하고 3가지 변환 각각은 순서에 따라 다릅니다. <a href="webgl-2d-scale.html">이전 예제</a>에서 크기를 조정한 다음 회전을 그 다음 이동을 하였습니다. 순서를 바꿔서 적용하면 다른 결과가 나타납니다.</p>
 <p>예를 들어 여기서 (2, 1) 크기, 30도 회전, (100, 0) 이동이 있습니다.</p>
-<p><img src="../../resources/f-scale-rotation-translation.svg" class="webgl_center" width="400" /></p>
+<img src="../../resources/f-scale-rotation-translation.svg" class="webgl_center" width="400" />
 <p>예를 들어 여기서 (100, 0) 이동, 30도, 회전 (2, 1) 크기가 있습니다.</p>
-<p><img src="../../resources/f-translation-rotation-scale.svg" class="webgl_center" width="400" /></p>
+<img src="../../resources/f-translation-rotation-scale.svg" class="webgl_center" width="400" />
 <p>결과는 완전히 다릅니다. 더 나쁜 것은 두 번째 예제가 필요하다면 새로 원하는 순서로 이동,
- 회전, 크기를 적용하는 다른 쉐이더를 작성해야합니다.</p>
+회전, 크기를 적용하는 다른 쉐이더를 작성해야합니다.</p>
 <p>저보다 똑똑한 사람들이 행렬 수학으로 모든 것을 똑같이 할 수 있다는 것을 알아냈습니다. 2D의 경우 3x3 행렬을 사용합니다. 3x3 행렬은 9개의 상자가 있는 격자와 같습니다.</p>
-<p><link href="../resources/webgl-2d-matrices.css" rel="stylesheet"></p>
+<link href="../resources/webgl-2d-matrices.css" rel="stylesheet">
 <div class="glocal-center"><table class="glocal-center-content glocal-mat"><tr><td>1.0</td><td>2.0</td><td>3.0</td></tr><tr><td>4.0</td><td>5.0</td><td>6.0</td></tr><tr><td>7.0</td><td>8.0</td><td>9.0</td></tr></table></div>
-
 <p>계산을 하기 위해 행렬의 열 아래로 위치를 곱하고 결과를 더합니다. 위치는 오직 2개의 값 x, y을 가지고 있습니다. 그러나 수학에서는 3개의 값이 필요하므로 1을 3번째 값으로 사용할 것입니다.</p>
 <p>이 경우 결과는 다음과 같습니다.</p>
 <div class="glocal-center"><table class="glocal-center-content">
@@ -256,84 +255,70 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <tr><td class="glocal-right">newX&nbsp;=&nbsp;</td><td>x&nbsp;*&nbsp;</td><td class="glocal-border">1.0</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">newY&nbsp;=&nbsp;</td><td>x&nbsp;*&nbsp;</td><td class="glocal-border">2.0</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">extra&nbsp;=&nbsp;</td><td>x&nbsp;*&nbsp;</td><td class="glocal-border">3.0</td><td>&nbsp;+</td></tr>
 <tr><td></td><td>y&nbsp;*&nbsp;</td><td class="glocal-border">4.0</td><td class="glocal-left">&nbsp;+</td><td></td><td>y&nbsp;*&nbsp;</td><td class="glocal-border">5.0</td><td class="glocal-left">&nbsp;+&nbsp;</td><td></td><td>y&nbsp;*&nbsp;</td><td class="glocal-border">6.0</td><td>&nbsp;+</td></tr>
 <tr><td></td><td>1&nbsp;*&nbsp;</td><td>7.0</td><td>&nbsp;</td><td></td><td>1&nbsp;*&nbsp;</td><td>8.0</td><td>&nbsp;&nbsp;</td><td></td><td>1&nbsp;*&nbsp;</td><td>9.0</td><td>&nbsp;</td></tr></table></div>
-
-<p>이것을 보고 &quot;무엇을 하는거지&quot; 라고 생각된다면 이동을 한다고 생각 해 봅시다. 원하는 만큼의 이동 거리를 tx와 ty라고 부를 것입니다. 행렬을 다음과 같이 만들어 봅시다.</p>
+<p>이것을 보고 “무엇을 하는거지” 라고 생각된다면 이동을 한다고 생각 해 봅시다. 원하는 만큼의 이동 거리를 tx와 ty라고 부를 것입니다. 행렬을 다음과 같이 만들어 봅시다.</p>
 <div class="glocal-center"><table class="glocal-center-content glocal-mat"><tr><td>1.0</td><td>0.0</td><td>0.0</td></tr><tr><td>0.0</td><td>1.0</td><td>0.0</td></tr><tr><td>tx</td><td>ty</td><td>1.0</td></tr></table></div>
-
 <p>이제 다음을 봐 봅시다.</p>
 <div class="glocal-center"><table class="glocal-center-content">
 <col/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/>
 <tr><td>newX&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">1.0</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">newY&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">extra&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td>&nbsp;+</td></tr><tr><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td class="glocal-left">&nbsp;+</td><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">1.0</td><td class="glocal-left">&nbsp;+&nbsp;</td><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td>&nbsp;+</td></tr>
 <tr><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>tx</td><td>&nbsp;</td><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>ty</td><td>&nbsp;&nbsp;</td><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>1.0</td><td>&nbsp;</td></tr></table></div>
-
 <p>만약에 대수학을 기억한다면 0을 곱하면 무엇이든지 지울 수 있다는 것을 알 것입니다. 1을 곱하면 아무일도 일어나지 않으므로 다음으로 어떤일이 일어나는지 간단하게 봅시다.</p>
 <div class="glocal-center"><table class="glocal-center-content">
 <col/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/>
 <tr><td>newX&nbsp;=&nbsp;</td><td>x</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">1.0</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">newY&nbsp;=&nbsp;</td><td class="glocal-blk">x</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-blk glocal-left">&nbsp;+</td><td class="glocal-right">extra&nbsp;=&nbsp;</td><td class="glocal-blk">x</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-blk">&nbsp;+</td></tr>
 <tr><td></td><td class="glocal-blk">y</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-blk glocal-left">&nbsp;+</td><td></td><td>y</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">1.0</td><td class="glocal-left">&nbsp;+&nbsp;</td><td></td><td class="glocal-blk">y</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-blk">&nbsp;+</td></tr>
 <tr><td></td><td class="glocal-blk">1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td>tx</td><td>&nbsp;</td><td></td><td class="glocal-blk">1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td>ty</td><td>&nbsp;&nbsp;</td><td></td><td>1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk">1.0</td><td>&nbsp;</td></tr></table></div>
-
 <p>또는 더 간결하게</p>
 <div class="webgl_center"><pre class="webgl_math">
 newX = x + tx;
 newY = y + ty;
 </pre></div>
-
 <p>추가적으로 더 다룰 필요는 없습니다. 놀랍게도 <a href="webgl-2d-translation.html">이동(translation)예제의 이동(translation)코드</a>와 비슷합니다.</p>
 <p>비슷하게 회전도 해봅시다. 회전 글에서 언급한것 처럼 회전하고자 하는 각도의 사인과 코사인만 필요합니다.</p>
 <div class="webgl_center"><pre class="webgl_math">
 s = Math.sin(angleToRotateInRadians);
 c = Math.cos(angleToRotateInRadians);
 </pre></div>
-
 <p>그리고 다음와 같은 행렬을 만듭니다.</p>
 <div class="glocal-center"><table class="glocal-center-content glocal-mat"><tr><td>c</td><td>-s</td><td>0.0</td></tr><tr><td>s</td><td>c</td><td>0.0</td></tr><tr><td>0.0</td><td>0.0</td><td>1.0</td></tr></table></div>
-
 <p>행렬을 적용하면 다음과 같이 나옵니다.</p>
 <div class="glocal-center"><table class="glocal-center-content">
 <col/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/>
 <tr><td>newX&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">c</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">newY&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">-s</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">extra&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td>&nbsp;+</td></tr>
 <tr><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">s</td><td class="glocal-left">&nbsp;+</td><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">c</td><td class="glocal-left">&nbsp;+&nbsp;</td><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td>&nbsp;+</td></tr>
 <tr><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>0.0</td><td>&nbsp;</td><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>0.0</td><td>&nbsp;&nbsp;</td><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>1.0</td><td>&nbsp;</td></tr></table></div>
-
 <p>0과 1로 곱하는 것을 검게 하면 다음과 같이 됩니다.</p>
 <div class="glocal-center"><table class="glocal-center-content">
 <col/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/>
 <tr><td>newX&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">c</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">newY&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">-s</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">extra&nbsp;=&nbsp;</td><td class="glocal-blk">x</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-blk">&nbsp;+</td></tr>
 <tr><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">s</td><td class="glocal-left glocal-blk">&nbsp;+</td><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">c</td><td class="glocal-left glocal-blk">&nbsp;+&nbsp;</td><td></td><td class="glocal-blk">y</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-blk">&nbsp;+</td></tr>
 <tr><td></td><td class="glocal-blk">1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk">0.0</td><td>&nbsp;</td><td></td><td class="glocal-blk">1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk">0.0</td><td>&nbsp;&nbsp;</td><td></td><td>1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk">1.0</td><td>&nbsp;</td></tr></table></div>
-
 <p>또는 더 간결하게</p>
 <pre class="webgl_center">
 newX = x *  c + y * s;
 newY = x * -s + y * c;
 </pre>
-
 <p>이것은 <a href="webgl-2d-rotation.html">회전(rotation)예제</a>에서 본 것과 정확히 같습니다.).</p>
 <p>마지막으로 크기변환(scale) 입니다. 크기 인자를 sx와 sy라고 부를 것입니다.</p>
 <p>그리고 다음과 같이 행렬을 만들 것입니다.</p>
 <div class="glocal-center"><table class="glocal-center-content glocal-mat"><tr><td>sx</td><td>0.0</td><td>0.0</td></tr><tr><td>0.0</td><td>sy</td><td>0.0</td></tr><tr><td>0.0</td><td>0.0</td><td>1.0</td></tr></table></div>
-
 <p>행렬을 적용하면 다음과 같습니다.</p>
 <div class="glocal-center"><table class="glocal-center-content">
 <col/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/>
 <tr><td>newX&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">sx</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">newY&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">extra&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td>&nbsp;+</td></tr>
 <tr><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td class="glocal-left">&nbsp;+</td><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">sy</td><td class="glocal-left">&nbsp;+&nbsp;</td><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td>&nbsp;+</td></tr>
 <tr><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>0.0</td><td>&nbsp;</td><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>0.0</td><td>&nbsp;&nbsp;</td><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>1.0</td><td>&nbsp;</td></tr></table></div>
-
 <p>이는 실제로 다음과 같습니다.</p>
 <div class="glocal-center"><table class="glocal-center-content">
 <col/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/>
 <tr><td>newX&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">sx</td><td class="glocal-left glocal-blk">&nbsp;+</td><td class="glocal-right">newY&nbsp;=&nbsp;</td><td class="glocal-blk">x</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-left glocal-blk">&nbsp;+</td><td class="glocal-right">extra&nbsp;=&nbsp;</td><td class="glocal-blk">x</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-blk">&nbsp;+</td></tr>
 <tr><td></td><td class="glocal-blk">y</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-left glocal-blk">&nbsp;+</td><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">sy</td><td class="glocal-left glocal-blk">&nbsp;+&nbsp;</td><td></td><td class="glocal-blk">y</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-blk">&nbsp;+</td></tr>
 <tr><td></td><td class="glocal-blk">1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk">0.0</td><td>&nbsp;</td><td></td><td class="glocal-blk">1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk">0.0</td><td>&nbsp;&nbsp;</td><td></td><td>1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk">1.0</td><td>&nbsp;</td></tr></table></div>
-
 <p>또는 더 간결하게</p>
 <pre class="webgl_center">
 newX = x * sx;
 newY = y * sy;
 </pre>
-
 <p>이는 <a href="webgl-2d-scale.html">크기 변환 예제</a>와 같습니다.</p>
 <p>아마 아직도 &quot;그래서 요점이 무엇입니까?&quot;라고 생각이 들수 있고 이미 했던 것을 더 많은 일을 해서 하는 것 처럼 보일수 있습니다.</p>
 <p>이제 마법을 할 차례 입니다. 행렬을 모두 곱하고 모든 변환을 한번에 적용 할 수 있다는 것이 밝혀졌습니다. 2개의 행렬을 가지고 곱한다음 결과를 반환하는 <code class="notranslate" translate="no">m3.multiply</code>함수를 가지고 있다고 가정 해 봅시다.</p>
@@ -365,7 +350,8 @@ newY = y * sy;
     ];
   },
 };
-</code></pre><p>이제 쉐이더를 변경해 보겠습니다. 오래된 쉐이더는 다음과 같습니다.</p>
+</code></pre>
+<p>이제 쉐이더를 변경해 보겠습니다. 오래된 쉐이더는 다음과 같습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 in vec2 a_position;
@@ -386,7 +372,8 @@ void main() {
 
   // 이동에 추가
   vec2 position = rotatedPosition + u_translation;
-</code></pre><p>다음 새로운 쉐이더는 더 간단합니다.</p>
+</code></pre>
+<p>다음 새로운 쉐이더는 더 간단합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 in vec2 a_position;
@@ -398,7 +385,8 @@ void main() {
   // 위치에 행렬을 곱하기.
   vec2 position = (u_matrix * vec3(a_position, 1)).xy;
   ...
-</code></pre><p>그다음 여기에 사용 방법이 있습니다.</p>
+</code></pre>
+<p>그다음 여기에 사용 방법이 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // scene 그리기.
   function drawScene() {
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
@@ -441,7 +429,8 @@ void main() {
     var count = 18;
     gl.drawArrays(primitiveType, offset, count);
   }
-</code></pre><p>다음은 새로운 코드를 사용하는 예제입니다. 슬라이더는 동일하고, 이동, 회전 및 크기 조절이 가능합니다. 그러나 셰이더에서 사용되는 방식은 훨씬 간단합니다.</p>
+</code></pre>
+<p>다음은 새로운 코드를 사용하는 예제입니다. 슬라이더는 동일하고, 이동, 회전 및 크기 조절이 가능합니다. 그러나 셰이더에서 사용되는 방식은 훨씬 간단합니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-matrix-transform.html" target="_blank">새 창으로 열기</a>
@@ -454,14 +443,15 @@ void main() {
     var matrix = m3.multiply(scaleMatrix, rotationMatrix);
     matrix = m3.multiply(matrix, translationMatrix);
     ...
-</code></pre><p>여기에 이 버전이 있습니다.</p>
+</code></pre>
+<p>여기에 이 버전이 있습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform-trs.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-matrix-transform-trs.html" target="_blank">새 창으로 열기</a>
 </div>
 
 </p>
-<p>이와 같은 행렬을 적용 할수 있다는 것은 신체의 팔, 태양 주위의 행성의 위성, 나무의 가지와 같은 계층적 애니메이션에 특히 중요합니다. 계층적 애니메이션의 간단한 예제로 &#39;F&#39;를 5번 그리는데 그릴때 마다 전 &#39;F&#39;에서 행렬을 시작한다고 해봅시다.</p>
+<p>이와 같은 행렬을 적용 할수 있다는 것은 신체의 팔, 태양 주위의 행성의 위성, 나무의 가지와 같은 계층적 애니메이션에 특히 중요합니다. 계층적 애니메이션의 간단한 예제로 'F’를 5번 그리는데 그릴때 마다 전 'F’에서 행렬을 시작한다고 해봅시다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    // scene 그리기.
     function drawScene() {
 
@@ -491,12 +481,11 @@ void main() {
         gl.drawArrays(primitiveType, offset, count);
       }
     }
-</code></pre><p>이를 하기 위해 단위 행렬을 만드는 함수인 <code class="notranslate" translate="no">m3.identity</code>를 사용해 봅시다. 단위 행렬은 1.0을 나타내는 행렬이며 이를 곱한다면 아무 일도 일어나지 않습니다. 다음과 같습니다.</p>
+</code></pre>
+<p>이를 하기 위해 단위 행렬을 만드는 함수인 <code class="notranslate" translate="no">m3.identity</code>를 사용해 봅시다. 단위 행렬은 1.0을 나타내는 행렬이며 이를 곱한다면 아무 일도 일어나지 않습니다. 다음과 같습니다.</p>
 <div class="webgl_center">X * 1 = X</div>
-
 <p>다음도 같습니다.</p>
 <div class="webgl_center">matrixX * identity = matrixX</div>
-
 <p>여기에 단위 행렬을 만드는 코드 입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m3 = {
   identity: function () {
@@ -507,16 +496,17 @@ void main() {
     ];
   },
 ...
-</code></pre><p>여기에 5개 F가 있습니다.</p>
+</code></pre>
+<p>여기에 5개 F가 있습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform-hierarchical.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-matrix-transform-hierarchical.html" target="_blank">새 창으로 열기</a>
 </div>
 
 </p>
-<p>한 가지 더 에를 들어 봅시다. 지금까지 모든 예제에서 우리의 &#39;F&#39;는 왼쪽 상단 모서리로 회전을 합니다. 이것은 우리가 사용하는 수학이 항상 원점을 중심으로 회전하고 &#39;F&#39;의 왼쪽 위 모서리가 원점 (0, 0)에 있기 때문입니다.</p>
+<p>한 가지 더 에를 들어 봅시다. 지금까지 모든 예제에서 우리의 'F’는 왼쪽 상단 모서리로 회전을 합니다. 이것은 우리가 사용하는 수학이 항상 원점을 중심으로 회전하고 'F’의 왼쪽 위 모서리가 원점 (0, 0)에 있기 때문입니다.</p>
 <p>이제 행렬로 할 수 있기 때문에 적용할 변환 순서를 선택 할 수 있으므로 나머지 변환이 적용되기 전에 원점을 효과적으로 이동할 수 있습니다.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    // &#39;F&#39;의 원점을 한가운데로 이동시키는 행렬을 만듭니다.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    // 'F'의 원점을 한가운데로 이동시키는 행렬을 만듭니다.
     var moveOriginMatrix = m3.translation(-50, -75);
     ...
 
@@ -524,7 +514,8 @@ void main() {
     var matrix = m3.multiply(translationMatrix, rotationMatrix);
     matrix = m3.multiply(matrix, scaleMatrix);
 +    matrix = m3.multiply(matrix, moveOriginMatrix);
-</code></pre><p>여기에 예제가 있습니다. F 중심으로 회전하고 크기가 조정됩니다.</p>
+</code></pre>
+<p>여기에 예제가 있습니다. F 중심으로 회전하고 크기가 조정됩니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform-center-f.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-matrix-transform-center-f.html" target="_blank">새 창으로 열기</a>
@@ -544,7 +535,8 @@ void main() {
   vec2 clipSpace = zeroToTwo - 1.0;
 
   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
-</code></pre><p>만약 이 단계를 차례대로 살펴보면 첫 단계인 &quot;픽셀을 0.0에서 1.0으로 변환 &quot;은 실제로 크기 변환입니다. 두 번째 단계 역시 크기 변환입니다. 다음은 이동을 하고 마지막으로 Y 축 -1만큼 크기 변환을 합니다. 우리는 실제로 이 모든 것을 하는 행렬을 쉐이더 전달할 수 있습니다. 2개의 크기 변환 행렬을 만들 수 있으며 하나는 1.0/해상도이며 하나는 2.0 크기 변환을 하며 3번째는 -1.0, -1.0만큼 이동하며 4번째로 Y 축 -1만큼 크기 변환하고 이 모든 것을 곱하는 대신에 수학은 간단하기 때문에 해상도에 대한 &#39;투영&#39;(projection) 함수를 만들 것입니다.</p>
+</code></pre>
+<p>만약 이 단계를 차례대로 살펴보면 첫 단계인 &quot;픽셀을 0.0에서 1.0으로 변환 &quot;은 실제로 크기 변환입니다. 두 번째 단계 역시 크기 변환입니다. 다음은 이동을 하고 마지막으로 Y 축 -1만큼 크기 변환을 합니다. 우리는 실제로 이 모든 것을 하는 행렬을 쉐이더 전달할 수 있습니다. 2개의 크기 변환 행렬을 만들 수 있으며 하나는 1.0/해상도이며 하나는 2.0 크기 변환을 하며 3번째는 -1.0, -1.0만큼 이동하며 4번째로 Y 축 -1만큼 크기 변환하고 이 모든 것을 곱하는 대신에 수학은 간단하기 때문에 해상도에 대한 ‘투영’(projection) 함수를 만들 것입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m3 = {
   projection: function (width, height) {
     // 참고: 0축이 맨위에 오도록 Y축을 뒤집습니다.
@@ -555,7 +547,8 @@ void main() {
     ];
   },
   ...
-</code></pre><p>이제 쉐이더를 더 단순화 할 수 있습니다. 여기에 새로운 버텍스 쉐이더가 있습니다.</p>
+</code></pre>
+<p>이제 쉐이더를 더 단순화 할 수 있습니다. 여기에 새로운 버텍스 쉐이더가 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 in vec2 a_position;
@@ -566,7 +559,8 @@ void main() {
   // 위치에 행렬을 곱합니다.
   gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
 }
-</code></pre><p>그리고 JavaScript에서는 투영 행렬을 곱해야합니다.</p>
+</code></pre>
+<p>그리고 JavaScript에서는 투영 행렬을 곱해야합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // scene 그리기.
   function drawScene() {
     ...
@@ -588,7 +582,8 @@ void main() {
     matrix = m3.multiply(matrix, scaleMatrix);
     ...
   }
-</code></pre><p>해상도를 설정하는 코드를 제거 했습니다. 마지막 단계에서는 6-7단계의 다소 복잡한 쉐이더에서 1단계의 매우 간단한 쉐이더가 되었으면 이 모든것이 행렬 계산의 마술입니다.</p>
+</code></pre>
+<p>해상도를 설정하는 코드를 제거 했습니다. 마지막 단계에서는 6-7단계의 다소 복잡한 쉐이더에서 1단계의 매우 간단한 쉐이더가 되었으면 이 모든것이 행렬 계산의 마술입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform-with-projection.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-matrix-transform-with-projection.html" target="_blank">새 창으로 열기</a>
@@ -615,13 +610,15 @@ void main() {
   ...
 
 };
-</code></pre><p>이렇게 하면 위의 행렬 7줄을 다음과 같이 5줄로 바꿀 수 있습니다.</p>
+</code></pre>
+<p>이렇게 하면 위의 행렬 7줄을 다음과 같이 5줄로 바꿀 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 행렬 계산
 var matrix = m3.projection(gl.canvas.clientWidth, gl.canvas.clientHeight);
 matrix = m3.translate(matrix, translation[0], translation[1]);
 matrix = m3.rotate(matrix, rotationInRadians);
 matrix = m3.scale(matrix, scale[0], scale[1]);
-</code></pre><p>여기에 결과가 있습니다.</p>
+</code></pre>
+<p>여기에 결과가 있습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform-simpler-functions.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-matrix-transform-simpler-functions.html" target="_blank">새 창으로 열기</a>
@@ -630,21 +627,28 @@ matrix = m3.scale(matrix, scale[0], scale[1]);
 </p>
 <p>마지막으로 위에서 순서 문제를 보았습니다. 첫 번째 예에서는</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">translation * rotation * scale
-</code></pre><p>두 번째 예제에서는</p>
+</code></pre>
+<p>두 번째 예제에서는</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">scale * rotation * translation
-</code></pre><p>그리고 이들이 어떻게 다른지를 보았습니다.</p>
+</code></pre>
+<p>그리고 이들이 어떻게 다른지를 보았습니다.</p>
 <p>행렬을 보는 두 가지 방법이 있습니다. 표현식을 감안할 때</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">projectionMat * translationMat * rotationMat * scaleMat * position
-</code></pre><p>많은 사람들이 자연스럽게 발견하는 첫 번째 방법은 오른쪽에서 시작하여 왼쪽으로 작업하는 것 입니다.</p>
+</code></pre>
+<p>많은 사람들이 자연스럽게 발견하는 첫 번째 방법은 오른쪽에서 시작하여 왼쪽으로 작업하는 것 입니다.</p>
 <p>먼저 크기 변환 행렬을 위치에 곱하여 scaledPosition를 얻습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">scaledPosition = scaleMat * position
-</code></pre><p>그런 다음 scaledPosition를에 회전 행렬을 곱하여 rotatedScaledPosition를 얻습니다.</p>
+</code></pre>
+<p>그런 다음 scaledPosition를에 회전 행렬을 곱하여 rotatedScaledPosition를 얻습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">rotatedScaledPosition = rotationMat * scaledPosition
-</code></pre><p>그런 다음 rotatedScaledPositon에 이동 행렬을 곱하여 translatedRotatedScaledPosition를 얻습니다.</p>
+</code></pre>
+<p>그런 다음 rotatedScaledPositon에 이동 행렬을 곱하여 translatedRotatedScaledPosition를 얻습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">translatedRotatedScaledPosition = translationMat * rotatedScaledPosition
-</code></pre><p>마지막으로 투영 행렬을 곱하여 클립 공간 위치를 얻습니다.</p>
+</code></pre>
+<p>마지막으로 투영 행렬을 곱하여 클립 공간 위치를 얻습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">clipspacePosition = projectioMatrix * translatedRotatedScaledPosition
-</code></pre><p>2번째 방법은 왼쪽에서 오른쪽으로 행렬을 읽는 것 입니다. 이 경우 각 행렬은 캔버스가 나타내는 *공간&quot;을 변경합니다. 캔버스는 각 방향에서 클립 공간(-1에서 +1)을 나타내는 것으로에서 시작합니다. 왼쪽에서 오른쪽으로 적용된 각 행렬은 캔버스가 나타내는 공간을 변경합니다.</p>
+</code></pre>
+<p>2번째 방법은 왼쪽에서 오른쪽으로 행렬을 읽는 것 입니다. 이 경우 각 행렬은 캔버스가 나타내는 *공간&quot;을 변경합니다. 캔버스는 각 방향에서 클립 공간(-1에서 +1)을 나타내는 것으로에서 시작합니다. 왼쪽에서 오른쪽으로 적용된 각 행렬은 캔버스가 나타내는 공간을 변경합니다.</p>
 <p>1 단계:  행렬이 없을때(또는 단위 행렬)</p>
 <blockquote>
 <p><div class="webgl_diagram_container">

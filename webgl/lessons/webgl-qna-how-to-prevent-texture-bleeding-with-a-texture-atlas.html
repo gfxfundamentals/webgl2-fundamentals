@@ -236,18 +236,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I&#39;ve applied two necessary steps given in this answer <a href="https://gamedev.stackexchange.com/questions/46963/how-to-avoid-texture-bleeding-in-a-texture-atlas">https://gamedev.stackexchange.com/questions/46963/how-to-avoid-texture-bleeding-in-a-texture-atlas</a>, but I still get texture bleeding.</p>
+      <h2 id="question">Question:</h2>
+<p>I’ve applied two necessary steps given in this answer https://gamedev.stackexchange.com/questions/46963/how-to-avoid-texture-bleeding-in-a-texture-atlas, but I still get texture bleeding.</p>
 <p>I have an atlas that has filled with solid colors at bounds: <code class="notranslate" translate="no">x y w h: 0 0 32 32, 0 32 32 32, 0 64 32 32, 0 32 * 3 32 32</code></p>
 <p>I want to display each of these frames using webgl without texture bleeding, only solid colors as is.</p>
-<p>I&#39;ve disabled mipmaping:</p>
+<p>I’ve disabled mipmaping:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 
 //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-</code></pre><p>I&#39;ve applied half pixel correction:</p>
+</code></pre>
+<p>I’ve applied half pixel correction:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  const uvs = (src, frame) =&gt; {
     const tw = src.width,
           th = src.height;
@@ -273,14 +274,16 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       p2[0], p2[1]
     ];
   };
-</code></pre><p>But I still get texture bleeding. At first I tried using pixi.js and I got texture bleeding too, then I tried using vanilla js.</p>
-<p>I&#39;ve fixed this, by changing these lines:</p>
+</code></pre>
+<p>But I still get texture bleeding. At first I tried using pixi.js and I got texture bleeding too, then I tried using vanilla js.</p>
+<p>I’ve fixed this, by changing these lines:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    let frameLeft = frame[0],
         frameRight = frame[0] + frame[2] - 1,
         frameTop = frame[1],
         frameBottom = frame[1] + frame[3] - 1;
-</code></pre><p>As you can see I subtract 1 from right and bottom edges. Previously these indexes are 32 which means beginning of the other frame, It has to be 31 instead. I don&#39;t know if this is the correct solution.</p>
-<h2 id="answer-">Answer:</h2>
+</code></pre>
+<p>As you can see I subtract 1 from right and bottom edges. Previously these indexes are 32 which means beginning of the other frame, It has to be 31 instead. I don’t know if this is the correct solution.</p>
+<h2 id="answer">Answer:</h2>
 <p>Your solution is correct.</p>
 <p>Imagine we have a 4x2 texture with two 2x2 pixel sprites</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+-------+-------+-------+-------+
@@ -292,11 +295,13 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 |   A   |   B   |   C   |   D   |
 |       |       |       |       |
 +-------+-------+-------+-------+
-</code></pre><p>The letters represent the centers of the pixels in the textures. </p>
+</code></pre>
+<p>The letters represent the centers of the pixels in the textures.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">(pixelCoord + 0.5) / textureDimensions
-</code></pre><p>Take the 2x2 sprite at A, B, E, F. If your texture coordinates go anywhere between B and C then you&#39;ll get some of C mixed in if you have texture filtering on.</p>
+</code></pre>
+<p>Take the 2x2 sprite at A, B, E, F. If your texture coordinates go anywhere between B and C then you’ll get some of C mixed in if you have texture filtering on.</p>
 <p>Originally you were computing coords A, A + width where width = 2. That lead you all the way from A to C.  By adding the -1 you get just A to B.</p>
-<p>Unfortunately you have a new issue which is that you&#39;re only displaying half of A and B. You can solve that by padding the sprites. For example make it 6x2 with the pixel bewteen being the edges of the sprite repeated</p>
+<p>Unfortunately you have a new issue which is that you’re only displaying half of A and B. You can solve that by padding the sprites. For example make it 6x2 with the pixel bewteen being the edges of the sprite repeated</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+-------+-------+-------+-------+-------+-------+
 |       |       |       |       |       |       |
 |   E   |   F   |   Fr  |   Gr  |   G   |   H   |
@@ -306,13 +311,15 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 |   A   |   B   |   Br  |   Cr  |   C   |   D   |
 |       |       |       |       |       |       |
 +-------+-------+-------+-------+-------+-------+
-</code></pre><p>Above Br is B repeated, Cr is C repeated. Setting repeat as <code class="notranslate" translate="no">gl.CLAMP_TO_EDGE</code> will repeat A and D for you.  Now you can use the edges.</p>
-<p>Sprite CDGH&#39;s coords are</p>
+</code></pre>
+<p>Above Br is B repeated, Cr is C repeated. Setting repeat as <code class="notranslate" translate="no">gl.CLAMP_TO_EDGE</code> will repeat A and D for you.  Now you can use the edges.</p>
+<p>Sprite CDGH’s coords are</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">p0 = 4 / texWidth
 p1 = 0 / texHeigth
 p2 = (4 + spriteWidth) / texWidth
 p3 = (0 + spriteHeigth) / texHeight
-</code></pre><p>The best way to see the difference is to draw 2 sprites large using both techniques, the unpadded and the padded.</p>
+</code></pre>
+<p>The best way to see the difference is to draw 2 sprites large using both techniques, the unpadded and the padded.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-prevent-texture-bleeding-with-a-texture-atlas-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-prevent-texture-bleeding-with-a-texture-atlas-example-1.html" target="_blank">click here to open in a separate window</a>

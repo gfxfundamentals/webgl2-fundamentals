@@ -236,9 +236,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I&#39;m trying to render a torus using webgl. I&#39;m using a third party library which makes this process easier: I only have to declare the various vertices, their normals and their indexes. Each tuple of 3 indexes draws a triangle and the vertices must follow the right hand rule.</p>
-<p>So far this is what I have: </p>
+      <h2 id="question">Question:</h2>
+<p>I’m trying to render a torus using webgl. I’m using a third party library which makes this process easier: I only have to declare the various vertices, their normals and their indexes. Each tuple of 3 indexes draws a triangle and the vertices must follow the right hand rule.</p>
+<p>So far this is what I have:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> this.vertices = [];
         this.indices = [];
         this.normals = [];
@@ -295,10 +295,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 v2++;
             }
         }
-</code></pre><p>I had the help of this website in order to declare the coordinates of the vertices but I&#39;m having problems with the indexes. </p>
+</code></pre>
+<p>I had the help of this website in order to declare the coordinates of the vertices but I’m having problems with the indexes.</p>
 <p><a href="https://i.stack.imgur.com/9X3xP.png"><img src="https://i.stack.imgur.com/9X3xP.png" alt="example"></a></p>
-<h2 id="answer-">Answer:</h2>
-<p>The code doesn&#39;t make a lot of sense at a glance. You&#39;ve got an inner and outer loop</p>
+<h2 id="answer">Answer:</h2>
+<p>The code doesn’t make a lot of sense at a glance. You’ve got an inner and outer loop</p>
 <p>In the inner loop this code computes a vertex</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">           let x = (this.outerRad + this.inner_rad * cos_slices) * cos_loops;
            let y = (this.outerRad + this.inner_rad * cos_slices) * sin_loops;
@@ -306,15 +307,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
            this.vertices.push(x, y, z);
            this.normals.push(x, y, z);
-</code></pre><p>But nothing about those calculations change inside the inner loop</p>
-<p>The normals can&#39;t be x, y, z (the same as the positions).</p>
+</code></pre>
+<p>But nothing about those calculations change inside the inner loop</p>
+<p>The normals can’t be x, y, z (the same as the positions).</p>
 <p>Also you need to make loops + 1 and slices + 1 vertices. The vertices start vertex of each loop, slice will have the same position but it will not have the same texture coordinate.</p>
 <p>Then as far as your indices go each slice as (loops + 1) vertices so I think the loops in the code are backward.</p>
-<p>If it was me, rather than loop based on the angles I&#39;d loop based on the loops and slices</p>
+<p>If it was me, rather than loop based on the angles I’d loop based on the loops and slices</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">for (slice = 0; slice &lt; this.slices; ++slice) {
   for (loop = 0; loop &lt; this.loops; ++loop) {
     ...
-</code></pre><p>So here&#39;s another version</p>
+</code></pre>
+<p>So here’s another version</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-create-a-torus-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-create-a-torus-example-1.html" target="_blank">click here to open in a separate window</a>

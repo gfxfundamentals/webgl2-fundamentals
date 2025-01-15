@@ -247,12 +247,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ctx.drawImage(image, dstX, dstY, dstWidth, dstHeight);
 ctx.drawImage(image, srcX, srcY, srcWidth, srcHeight,
                      dstX, dstY, dstWidth, dstHeight);
-</code></pre><p>用你现在学到的所有东西如何使用 WebGL 实现这个接口？你想到的办法可能是创建一些顶点，
+</code></pre>
+<p>用你现在学到的所有东西如何使用 WebGL 实现这个接口？你想到的办法可能是创建一些顶点，
 像本站第一篇文章那样。将顶点传送到 GPU 是一个比较耗时的操作（尽管某些情况下比较快）。</p>
 <p>这就是 WebGL 发挥作用的地方，讲究富有创造性地编写着色器和使用它们去解决问题。</p>
 <p>让我们从第一个版本开始</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">ctx.drawImage(image, x, y);
-</code></pre><p>它可以在 <code class="notranslate" translate="no">x, y</code> 位置处绘制一个原始大小的图像，为了实现相似的功能，
+</code></pre>
+<p>它可以在 <code class="notranslate" translate="no">x, y</code> 位置处绘制一个原始大小的图像，为了实现相似的功能，
 WebGL 需要上传<code class="notranslate" translate="no">x, y</code>, <code class="notranslate" translate="no">x + width, y</code>, <code class="notranslate" translate="no">x, y + height</code>, 和
 <code class="notranslate" translate="no">x + width, y + height</code> 对应的顶点，当绘制不同的图像或不同的位置时就创建不同的顶点集合。</p>
 <p>一个更常用的方式是只使用一个单位矩形，我们上传一个长度为 1 个单位的正方形，
@@ -273,7 +275,8 @@ void main() {
    gl_Position = u_matrix * a_position;
    v_texcoord = a_texcoord;
 }
-</code></pre><p>和一个简单的片断着色器</p>
+</code></pre>
+<p>和一个简单的片断着色器</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
@@ -286,7 +289,8 @@ out vec4 outColor;
 void main() {
    outColor = texture(texture, v_texcoord);
 }
-</code></pre><p>然后轮到方法</p>
+</code></pre>
+<p>然后轮到方法</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawImage(tex, texWidth, texHeight, dstX, dstY) {
   gl.useProgram(program);
 
@@ -318,7 +322,8 @@ void main() {
   var count = 6;
   gl.drawArrays(gl.TRIANGLES, offset, count);
 }
-</code></pre><p>我们来加载一些图像用于纹理</p>
+</code></pre>
+<p>我们来加载一些图像用于纹理</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 创建一个纹理信息 { width: w, height: h, texture: tex }
 // 纹理起初为 1x1 像素，当图像加载完成后更新大小
 function loadImageAndCreateTextureInfo(url) {
@@ -334,7 +339,7 @@ function loadImageAndCreateTextureInfo(url) {
     texture: tex,
   };
   var img = new Image();
-  img.addEventListener(&#39;load&#39;, function() {
+  img.addEventListener('load', function() {
     textureInfo.width = img.width;
     textureInfo.height = img.height;
 
@@ -347,11 +352,12 @@ function loadImageAndCreateTextureInfo(url) {
 }
 
 var textureInfos = [
-  loadImageAndCreateTextureInfo(&#39;resources/star.jpg&#39;),
-  loadImageAndCreateTextureInfo(&#39;resources/leaves.jpg&#39;),
-  loadImageAndCreateTextureInfo(&#39;resources/keyboard.jpg&#39;),
+  loadImageAndCreateTextureInfo('resources/star.jpg'),
+  loadImageAndCreateTextureInfo('resources/leaves.jpg'),
+  loadImageAndCreateTextureInfo('resources/keyboard.jpg'),
 ];
-</code></pre><p>绘制到随机位置</p>
+</code></pre>
+<p>绘制到随机位置</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var drawInfos = [];
 var numToDraw = 9;
 var speed = 60;
@@ -417,7 +423,8 @@ function render(time) {
   requestAnimationFrame(render);
 }
 requestAnimationFrame(render);
-</code></pre><p>可以在这里看到运行结果</p>
+</code></pre>
+<p>可以在这里看到运行结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-drawimage-01.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-drawimage-01.html" target="_blank">点此在新窗口中浏览</a>
@@ -426,7 +433,8 @@ requestAnimationFrame(render);
 </p>
 <p>处理 <code class="notranslate" translate="no">drawImage</code> 方法的第二个版本</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">ctx.drawImage(image, dstX, dstY, dstWidth, dstHeight);
-</code></pre><p>没什么特别的地方，只是用 <code class="notranslate" translate="no">dstWidth</code> 和 <code class="notranslate" translate="no">dstHeight</code> 代替了
+</code></pre>
+<p>没什么特别的地方，只是用 <code class="notranslate" translate="no">dstWidth</code> 和 <code class="notranslate" translate="no">dstHeight</code> 代替了
 <code class="notranslate" translate="no">texWidth</code> 和 <code class="notranslate" translate="no">texHeight</code>。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*function drawImage(tex, texWidth, texHeight, dstX, dstY, dstWidth, dstHeight) {
 +  if (dstWidth === undefined) {
@@ -467,7 +475,8 @@ requestAnimationFrame(render);
   var count = 6;
   gl.drawArrays(gl.TRIANGLES, offset, count);
 }
-</code></pre><p>我将代码修改为使用不同的大小</p>
+</code></pre>
+<p>我将代码修改为使用不同的大小</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-drawimage-02.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-drawimage-02.html" target="_blank">点此在新窗口中浏览</a>
@@ -477,7 +486,8 @@ requestAnimationFrame(render);
 <p>这很简单，但是 <code class="notranslate" translate="no">drawImage</code> 的第三个版本呢？</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">ctx.drawImage(image, srcX, srcY, srcWidth, srcHeight,
                      dstX, dstY, dstWidth, dstHeight);t
-</code></pre><p>为了实现选择部分纹理，就需要操控纹理坐标。纹理坐标的工作原理在
+</code></pre>
+<p>为了实现选择部分纹理，就需要操控纹理坐标。纹理坐标的工作原理在
 <a href="webgl-3d-textures.html">这篇文章</a>中讲到，在那篇文章中我们手工创建纹理坐标，
 是一个非常常见的方式，但是我们也可以在运行时创建，然后使用矩阵简单的修改纹理坐标。</p>
 <p>让我们给顶点着色器添加一个纹理坐标矩阵，
@@ -496,10 +506,12 @@ void main() {
    gl_Position = u_matrix * a_position;
 *   v_texcoord = (u_textureMatrix * vec4(a_texcoord, 0, 1)).xy;
 }
-</code></pre><p>现在我们要找到纹理矩阵的位置</p>
+</code></pre>
+<p>现在我们要找到纹理矩阵的位置</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var matrixLocation = gl.getUniformLocation(program, &quot;u_matrix&quot;);
 +var textureMatrixLocation = gl.getUniformLocation(program, &quot;u_textureMatrix&quot;);
-</code></pre><p>在 <code class="notranslate" translate="no">drawImage</code> 方法中需要设置它，用于选择我们需要的部分。
+</code></pre>
+<p>在 <code class="notranslate" translate="no">drawImage</code> 方法中需要设置它，用于选择我们需要的部分。
 我们知道纹理坐标是一个单位矩形所以可以简单的修改，就像对位置的处理一样。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*function drawImage(
 *    tex, texWidth, texHeight,
@@ -555,7 +567,8 @@ void main() {
   // 绘制矩形 (2 个三角形, 6 个顶点)
   gl.drawArrays(gl.TRIANGLES, 0, 6);
 }
-</code></pre><p>我也上传了这个版本的例子，这是结果</p>
+</code></pre>
+<p>我也上传了这个版本的例子，这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-drawimage-03.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-drawimage-03.html" target="_blank">点此在新窗口中浏览</a>
@@ -590,7 +603,8 @@ void main() {
 
   // 设置纹理矩阵
   gl.uniformMatrix4fv(textureMatrixLocation, false, texMatrix);
-</code></pre><p>这是结果</p>
+</code></pre>
+<p>这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-drawimage-05.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-drawimage-05.html" target="_blank">点此在新窗口中浏览</a>
@@ -617,7 +631,8 @@ void main() {
 +   }
    outColor = texture(texture, v_texcoord);
 }
-</code></pre><p>现在边缘消失了</p>
+</code></pre>
+<p>现在边缘消失了</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-drawimage-06.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-drawimage-06.html" target="_blank">点此在新窗口中浏览</a>
@@ -644,7 +659,8 @@ void main() {
    }
    outColor = texture(texture, v_texcoord);
 }
-</code></pre><p><div class="webgl_example_container">
+</code></pre>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-drawimage-07.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-drawimage-07.html" target="_blank">点此在新窗口中浏览</a>
 </div>
@@ -662,18 +678,16 @@ void main() {
 #version 300 es
 in vec4 a_position;
 -in vec2 a_texcoord;
-
-uniform mat4 u_matrix;
-uniform mat4 u_textureMatrix;
-
-out vec2 v_texcoord;
-
-void main() {
-gl_Position = u_matrix \* a_position;
-
--   v_texcoord = (u_textureMatrix \* a_position).xy;
+<p>uniform mat4 u_matrix;
+uniform mat4 u_textureMatrix;</p>
+<p>out vec2 v_texcoord;</p>
+<p>void main() {
+gl_Position = u_matrix * a_position;</p>
+<ul>
+<li>v_texcoord = (u_textureMatrix * a_position).xy;
 }
-</pre>
+</pre></li>
+</ul>
 <p>现在移除关于纹理坐标设置的代码，得到的结果和之前是相同的。</p>
 <div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-drawimage-08.html"></iframe>

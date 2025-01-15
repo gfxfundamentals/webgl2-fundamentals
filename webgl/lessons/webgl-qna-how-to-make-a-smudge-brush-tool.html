@@ -236,17 +236,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I need idea how i can make brush who can color smudge. </p>
+      <h2 id="question">Question:</h2>
+<p>I need idea how i can make brush who can color smudge.</p>
 <p>Example in picture: right side painting with basic brush with two different colors in left also painting but additional use smudge tool, <strong>the result should be something like left side</strong></p>
 <p><img src="http://i.stack.imgur.com/oyaBs.png" alt="enter image description here"></p>
 <p>I need advice how i can try to do it</p>
-<h2 id="answer-">Answer:</h2>
+<h2 id="answer">Answer:</h2>
 <p>Here is one attempt</p>
 <ol>
-<li><p>On mousedown grab a copy of the area under the mouse into a separate canvas</p>
+<li>
+<p>On mousedown grab a copy of the area under the mouse into a separate canvas</p>
 </li>
-<li><p>On mousemove draw that copy one pixel at a time from the previous mouse position to the current mouse position at 50% alpha, grabbing a new copy after each move.</p>
+<li>
+<p>On mousemove draw that copy one pixel at a time from the previous mouse position to the current mouse position at 50% alpha, grabbing a new copy after each move.</p>
 </li>
 </ol>
 <p>In pseudo code</p>
@@ -259,7 +261,8 @@ on mouse move
     draw copy at pos with 50% alpha
     grab new copy of canvas at pos
   prevMousePos = currentMousePos
-</code></pre><p>The brush is feathered by drawing a rgba(0,0,0,0) to rgba(0,0,0,1) radial gradient over it using <code class="notranslate" translate="no">globalCompositeOperation = &#39;destination-out&#39;</code>.  </p>
+</code></pre>
+<p>The brush is feathered by drawing a rgba(0,0,0,0) to rgba(0,0,0,1) radial gradient over it using <code class="notranslate" translate="no">globalCompositeOperation = 'destination-out'</code>.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-make-a-smudge-brush-tool-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-make-a-smudge-brush-tool-example-1.html" target="_blank">click here to open in a separate window</a>

@@ -236,12 +236,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>I am plotting webgl points on a map and at present it works fine. Now I am wanting to add another layer to the map. I am trying to work out the best way to do this. Because of the way my code is written I am sending the gl draw function one long array with the following format:</p>
 <p><code class="notranslate" translate="no">[lat, lng, r, g, b, a, id, lat, lng, r, g, b, a, id, etc...] //where id is used for selecting the marker.</code></p>
 <p>The points are drawn using:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">this.delegate.gl.drawArrays(this.delegate.gl.POINTS, 0, numPoints);
-</code></pre><p>When adding the extra layer I want one layer to show as circles and the other as squares. My idea was to add another element to array which codes whether to draw a circle or a square i.e 0 or 1 so the array stride would now be eight:</p>
+</code></pre>
+<p>When adding the extra layer I want one layer to show as circles and the other as squares. My idea was to add another element to array which codes whether to draw a circle or a square i.e 0 or 1 so the array stride would now be eight:</p>
 <p><code class="notranslate" translate="no">[lat, lng, r, g, b, a, id, code, lat, lng, r, g, b, a, id, code etc...]</code></p>
 <p>The shader code then decides whether to draw a circle or a square. Is this possible? I am unsure how to pass the shape code attribute to the shader to determine which shape to draw.
 Here is the shader code, at present there are two fragment shader programs. One draws circles, one draw squares.</p>
@@ -258,7 +259,7 @@ Here is the shader code, at present there are two fragment shader programs. One 
         v_color = a_color;
       }
     &lt;/script&gt;
-
+    
     &lt;script id=&quot;fshader&quot; type=&quot;x-shader/x-fragment&quot;&gt;
       precision mediump float;
       varying vec4 v_color;
@@ -276,7 +277,7 @@ Here is the shader code, at present there are two fragment shader programs. One 
         else if (dist &gt; 0.0)
         t = dist / border;
         gl_FragColor = mix(vec4(0), v_color, t);
-
+    
       }
     &lt;/script&gt;
       &lt;script id=&quot;fshader-square&quot; type=&quot;x-shader/x-fragment&quot;&gt;
@@ -285,28 +286,33 @@ Here is the shader code, at present there are two fragment shader programs. One 
         void main() {
           gl_FragColor = v_color;  
         }
-
+      
     &lt;/script&gt;
-</code></pre><p>My attribute pointers are setup like this:</p>
+</code></pre>
+<p>My attribute pointers are setup like this:</p>
 <p><code class="notranslate" translate="no">this.gl.vertexAttribPointer(vertLoc, 2, this.gl.FLOAT, false, fsize*7, 0);</code> //vertex</p>
 <p><code class="notranslate" translate="no">this.gl.vertexAttribPointer(colorLoc, 4, this.gl.FLOAT, true, fsize*7, fsize*2);</code> //color</p>
-<h2 id="answer-">Answer:</h2>
-<p>The most common way to draw points with different shapes is to use a texture, that way your designers can make <a href="https://www.google.com/search?q=google+maps+marker&amp;tbm=isch">markers</a> etc.. </p>
-<p>It&#39;s also common not to draw <code class="notranslate" translate="no">POINTS</code> but instead to draw quads made from <code class="notranslate" translate="no">TRIANGLES</code>. Neither Google Maps nor Mapbox use <code class="notranslate" translate="no">POINTS</code> (which you can <a href="https://github.com/greggman/webgl-helpers#spy-on-draw-calls">verify yourself</a>)</p>
+<h2 id="answer">Answer:</h2>
+<p>The most common way to draw points with different shapes is to use a texture, that way your designers can make <a href="https://www.google.com/search?q=google+maps+marker&amp;tbm=isch">markers</a> etc…</p>
+<p>It’s also common not to draw <code class="notranslate" translate="no">POINTS</code> but instead to draw quads made from <code class="notranslate" translate="no">TRIANGLES</code>. Neither Google Maps nor Mapbox use <code class="notranslate" translate="no">POINTS</code> (which you can <a href="https://github.com/greggman/webgl-helpers#spy-on-draw-calls">verify yourself</a>)</p>
 <p><code class="notranslate" translate="no">POINTS</code> have 2 issues</p>
 <ol>
-<li><p>the spec says the largest size you can draw a POINT is implementation dependent and can be just 1 pixel</p>
+<li>
+<p>the spec says the largest size you can draw a POINT is implementation dependent and can be just 1 pixel</p>
 </li>
-<li><p>Whether points immediately disappear when their centers go outside the screen is implementation dependent (that is not part of the spec but it is unfortunately true)</p>
+<li>
+<p>Whether points immediately disappear when their centers go outside the screen is implementation dependent (that is not part of the spec but it is unfortunately true)</p>
 </li>
-<li><p>POINTS can only be aligned squares.</p>
-<p> If the shape you want to draw is tall and thin you need to waste a bunch of texture space and or overdraw drawing a square large enough to hold the tall thin rectangle you wanted to draw. Similarly if you want to rotate the image it&#39;s much easier to do this with triangles than points.</p>
+<li>
+<p>POINTS can only be aligned squares.</p>
+<p>If the shape you want to draw is tall and thin you need to waste a bunch of texture space and or overdraw drawing a square large enough to hold the tall thin rectangle you wanted to draw. Similarly if you want to rotate the image it’s much easier to do this with triangles than points.</p>
 </li>
 </ol>
-<p>As for implemenetations that&#39;s all up to you. Some random ideas</p>
+<p>As for implemenetations that’s all up to you. Some random ideas</p>
 <ul>
-<li><p>Use <code class="notranslate" translate="no">POINTS</code>, add an <code class="notranslate" translate="no">imageId</code> per point. Use <code class="notranslate" translate="no">imageId</code> and <code class="notranslate" translate="no">gl_PointCoord</code> to choose an image from a texture atlas</p>
-<p>  assumes all the images are the same size</p>
+<li>
+<p>Use <code class="notranslate" translate="no">POINTS</code>, add an <code class="notranslate" translate="no">imageId</code> per point. Use <code class="notranslate" translate="no">imageId</code> and <code class="notranslate" translate="no">gl_PointCoord</code> to choose an image from a texture atlas</p>
+<p>assumes all the images are the same size</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform vec2 textureAtlasSize;  // eg 64x32
 uniform vec2 imageSize;         // eg 16x16
 
@@ -315,45 +321,53 @@ vec2 imageCoord = vec2(mod(imageId, imagesAcross), floor(imageId / imagesAcross)
 vec2 uv = (imageCoord + imageSize * gl_PointCoord) / textureAtlasSize;
 
 gl_FragColor = texture2D(textureAtlas, uv);
-</code></pre></li>
+</code></pre>
+</li>
 </ul>
-<p>note that if you make your imageIds a vec2 instead of a float and just pass in the id as a imageCoord then you don&#39;t need the imageCoord math in the shader.</p>
+<p>note that if you make your imageIds a vec2 instead of a float and just pass in the id as a imageCoord then you don’t need the imageCoord math in the shader.</p>
 <ul>
-<li><p>Use <code class="notranslate" translate="no">POINTS</code>, a texture atlas, and vec2 offset, vec2 range for each point</p>
-<p>  now the images don&#39;t need to be the same size but you need to set offset and range appropriately for each point</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  gl_FragColor = texture2D(textureAtlas, offset + range * gl_PointCoord);
-</code></pre></li>
-<li><p>Use <code class="notranslate" translate="no">TRIANGLES</code> and <a href="https://webglfundamentals.org/webgl/lessons/webgl-instanced-drawing.html">instanced drawing</a></p>
+<li>
+<p>Use <code class="notranslate" translate="no">POINTS</code>, a texture atlas, and vec2 offset, vec2 range for each point</p>
+<p>now the images don’t need to be the same size but you need to set offset and range appropriately for each point</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl_FragColor = texture2D(textureAtlas, offset + range * gl_PointCoord);
+</code></pre>
+</li>
+<li>
+<p>Use <code class="notranslate" translate="no">TRIANGLES</code> and <a href="https://webglfundamentals.org/webgl/lessons/webgl-instanced-drawing.html">instanced drawing</a></p>
 <p>This is really no different than above except you create a single 2 triangle quad and use <code class="notranslate" translate="no">drawArrayInstanced</code> or <code class="notranslate" translate="no">drawElementsInstanced</code>. You need to change references to <code class="notranslate" translate="no">gl_PointCoord</code> with your own texture coordinates and you need to compute the points in the vertex shader</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  attribute vec2 reusedPosition;  // the 6 points (1, -1)
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">attribute vec2 reusedPosition;  // the 6 points (1, -1)
 
-  ... all the attributes you had before ...
+... all the attributes you had before ...
 
-  uniform vec2 outputResolution;  // gl.canvas.width, gl.canvas.height
+uniform vec2 outputResolution;  // gl.canvas.width, gl.canvas.height
 
-  varying vec2 ourPointCoord;
+varying vec2 ourPointCoord;
 
-  void main() {
-     ... -- insert code that you had before above this line -- ...
+void main() {
+   ... -- insert code that you had before above this line -- ...
 
-     // now take gl_Position and convert to point
-     float ourPointSize = ???
-     gl_Position.xy += reusedPosition * ourPointSize / outputResolution * gl_Position.w;
+   // now take gl_Position and convert to point
+   float ourPointSize = ???
+   gl_Position.xy += reusedPosition * ourPointSize / outputResolution * gl_Position.w;
 
-     ourPointCoord = reusedPosition * 0.5 + 0.5;
-</code></pre></li>
-<li><p>Use <code class="notranslate" translate="no">TRIANGLES</code> with merged geometry.</p>
+   ourPointCoord = reusedPosition * 0.5 + 0.5;
+</code></pre>
+</li>
+<li>
+<p>Use <code class="notranslate" translate="no">TRIANGLES</code> with merged geometry.</p>
 <p>This just means instead of one vertex per point you need 4 (if indexed) or 6.</p>
 </li>
-<li><p>Use <code class="notranslate" translate="no">TRIANGLES</code> with only an id, put data in textures.</p>
-<p>If updating 4 to 6 vertices to move a point is too much work (hint: it&#39;s probably not). Then you can put your data in a texture and look up the data for each point based on an id. So you put 4 ids per point plus some vertex id in some buffer (ie, ids 0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4, vertex ids 0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3) you can then use those to compute quad coordinates, texture coordinates and uvs to look up per point data in a texture. Advantage, you only have to update one value per point instead of 4 to 6 values per point if you want to move a point.</p>
+<li>
+<p>Use <code class="notranslate" translate="no">TRIANGLES</code> with only an id, put data in textures.</p>
+<p>If updating 4 to 6 vertices to move a point is too much work (hint: it’s probably not). Then you can put your data in a texture and look up the data for each point based on an id. So you put 4 ids per point plus some vertex id in some buffer (ie, ids 0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4, vertex ids 0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3) you can then use those to compute quad coordinates, texture coordinates and uvs to look up per point data in a texture. Advantage, you only have to update one value per point instead of 4 to 6 values per point if you want to move a point.</p>
 </li>
 </ul>
-<p>Note: all of the above assumes you want to draw 1000s of points in a single draw call. If you&#39;re drawing 250 or less points, maybe even 1000-2000 points, drawing them one point per draw call the normal way maybe be just fine. eg</p>
+<p>Note: all of the above assumes you want to draw 1000s of points in a single draw call. If you’re drawing 250 or less points, maybe even 1000-2000 points, drawing them one point per draw call the normal way maybe be just fine. eg</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">for each point
   setup uniforms
   gl.drawXXX
-</code></pre><p>Not points but just as an example the <a href="https://webglsamples.org/aquarium/aquarium.html">WebGL Aquarium</a> is using that loop. It is not using instancing or merging geometry in any way. <a href="https://webglsamples.org/lots-o-images/lots-o-images-draw-elements.html">Here&#39;s another example</a> just drawing 1 quad per draw call</p>
+</code></pre>
+<p>Not points but just as an example the <a href="https://webglsamples.org/aquarium/aquarium.html">WebGL Aquarium</a> is using that loop. It is not using instancing or merging geometry in any way. <a href="https://webglsamples.org/lots-o-images/lots-o-images-draw-elements.html">Here’s another example</a> just drawing 1 quad per draw call</p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 4.0 by

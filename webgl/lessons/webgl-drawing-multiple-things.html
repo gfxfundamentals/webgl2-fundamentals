@@ -237,7 +237,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="lesson">
     <div class="lesson-main">
       <p>This article is a continuation of <a href="webgl-fundamentals.html">previous WebGL articles</a>.
-If you haven&#39;t read them I suggest you start there.</p>
+If you haven’t read them I suggest you start there.</p>
 <p>One of the most common questions after first getting something up in WebGL is how
 do I draw multiple things.</p>
 <p>The first thing to realize is that with few exceptions, WebGL is like having a function
@@ -246,7 +246,8 @@ have a single function that draws stuff and 70+ functions that set up the state 
 that one function. So for example imagine you had a function that draws a circle. You
 could program it like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawCircle(centerX, centerY, radius, color) { ... }
-</code></pre><p>Or you could code it like this</p>
+</code></pre>
+<p>Or you could code it like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var centerX;
 var centerY;
 var radius;
@@ -268,8 +269,9 @@ function setColor(c) {
 function drawCircle() {
    ...
 }
-</code></pre><p>WebGL works this second way. Functions like <code class="notranslate" translate="no">gl.createBuffer</code>, <code class="notranslate" translate="no">gl.bufferData</code>, <code class="notranslate" translate="no">gl.createTexture</code>,
-and <code class="notranslate" translate="no">gl.texImage2D</code> let you upload data to buffers (vertex data) and data to textures (color, etc..).
+</code></pre>
+<p>WebGL works this second way. Functions like <code class="notranslate" translate="no">gl.createBuffer</code>, <code class="notranslate" translate="no">gl.bufferData</code>, <code class="notranslate" translate="no">gl.createTexture</code>,
+and <code class="notranslate" translate="no">gl.texImage2D</code> let you upload data to buffers (vertex data) and data to textures (color, etc…).
 <code class="notranslate" translate="no">gl.createProgram</code>, <code class="notranslate" translate="no">gl.createShader</code>, <code class="notranslate" translate="no">gl.compileShader</code>, and <code class="notranslate" translate="no">gl.linkProgram</code> let you create
 your GLSL shaders. Nearly all the rest of the functions of WebGL are setting up these global
 variables or <em>state</em> that is used when <code class="notranslate" translate="no">gl.drawArrays</code> or <code class="notranslate" translate="no">gl.drawElements</code> is finally called.</p>
@@ -278,7 +280,8 @@ variables or <em>state</em> that is used when <code class="notranslate" translat
 <ul>
 <li>create all shaders and programs and look up locations</li>
 <li>create buffers and upload vertex data</li>
-<li>create a vertex array for each thing you want to draw<ul>
+<li>create a vertex array for each thing you want to draw
+<ul>
 <li>for each attribute call <code class="notranslate" translate="no">gl.bindBuffer</code>, <code class="notranslate" translate="no">gl.vertexAttribPointer</code>, <code class="notranslate" translate="no">gl.enableVertexAttribArray</code></li>
 <li>bind any indices to <code class="notranslate" translate="no">gl.ELEMENT_ARRAY_BUFFER</code></li>
 </ul>
@@ -287,14 +290,17 @@ variables or <em>state</em> that is used when <code class="notranslate" translat
 </ul>
 <p>At Render Time</p>
 <ul>
-<li>clear and set the viewport and other global state (enable depth testing, turn on culling, etc..)</li>
-<li>For each thing you want to draw<ul>
+<li>clear and set the viewport and other global state (enable depth testing, turn on culling, etc…)</li>
+<li>For each thing you want to draw
+<ul>
 <li>call <code class="notranslate" translate="no">gl.useProgram</code> for the program needed to draw.</li>
-<li>bind the vertex array for that thing.<ul>
+<li>bind the vertex array for that thing.
+<ul>
 <li>call <code class="notranslate" translate="no">gl.bindVertexArray</code></li>
 </ul>
 </li>
-<li>setup uniforms for the thing you want to draw<ul>
+<li>setup uniforms for the thing you want to draw
+<ul>
 <li>call <code class="notranslate" translate="no">gl.uniformXXX</code> for each uniform</li>
 <li>call <code class="notranslate" translate="no">gl.activeTexture</code> and <code class="notranslate" translate="no">gl.bindTexture</code> to assign textures to texture units.</li>
 </ul>
@@ -303,15 +309,15 @@ variables or <em>state</em> that is used when <code class="notranslate" translat
 </ul>
 </li>
 </ul>
-<p>That&#39;s basically it. It&#39;s up to you how to organize your code to accomplish that task.</p>
+<p>That’s basically it. It’s up to you how to organize your code to accomplish that task.</p>
 <p>Some things like uploading texture data (and maybe even vertex data) might happen asynchronously because
 you need to wait for them to download over the net.</p>
-<p>Let&#39;s make a simple app to draw 3 things. A cube, a sphere, and a cone.</p>
-<p>I&#39;m not going to go into the details of how to compute cube, sphere, and cone data. Let&#39;s just
+<p>Let’s make a simple app to draw 3 things. A cube, a sphere, and a cone.</p>
+<p>I’m not going to go into the details of how to compute cube, sphere, and cone data. Let’s just
 assume we have functions to create them and they return <a href="webgl-less-code-more-fun.html">bufferInfo objects as described in
 the previous article</a>.</p>
-<p>So here&#39;s the code. Our shader is the same simple shader from our <a href="webgl-3d-perspective.html">perspective example</a>
-except we&#39;ve added a <code class="notranslate" translate="no">u_colorMult</code> to multiply the vertex colors by.</p>
+<p>So here’s the code. Our shader is the same simple shader from our <a href="webgl-3d-perspective.html">perspective example</a>
+except we’ve added a <code class="notranslate" translate="no">u_colorMult</code> to multiply the vertex colors by.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
@@ -325,7 +331,8 @@ out vec4 outColor;
 void main() {
 *   outColor = v_color * u_colorMult;
 }
-</code></pre><p>At init time</p>
+</code></pre>
+<p>At init time</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Our uniforms for each thing we want to draw
 var sphereUniforms = {
   u_colorMult: [0.5, 1, 0.5, 1],
@@ -344,7 +351,8 @@ var coneUniforms = {
 var sphereTranslation = [  0, 0, 0];
 var cubeTranslation   = [-40, 0, 0];
 var coneTranslation   = [ 40, 0, 0];
-</code></pre><p>At draw time</p>
+</code></pre>
+<p>At draw time</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var sphereXRotation =  time;
 var sphereYRotation =  time;
 var cubeXRotation   = -time;
@@ -401,7 +409,8 @@ coneUniforms.u_matrix = computeMatrix(
 twgl.setUniforms(programInfo, coneUniforms);
 
 twgl.drawBufferInfo(gl, coneBufferInfo);
-</code></pre><p>And here&#39;s that</p>
+</code></pre>
+<p>And here’s that</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-objects-manual.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-objects-manual.html" target="_blank">click here to open in a separate window</a>
@@ -409,9 +418,9 @@ twgl.drawBufferInfo(gl, coneBufferInfo);
 
 </p>
 <p>One thing to notice is since we only have a single shader program we only called <code class="notranslate" translate="no">gl.useProgram</code>
-once. If we had different shader programs you&#39;d need to call <code class="notranslate" translate="no">gl.useProgram</code> before um...
+once. If we had different shader programs you’d need to call <code class="notranslate" translate="no">gl.useProgram</code> before um…
 using each program.</p>
-<p>This is another place where it&#39;s a good idea to simplify. There are effectively 4 main things to combine.</p>
+<p>This is another place where it’s a good idea to simplify. There are effectively 4 main things to combine.</p>
 <ol>
 <li>A shader program (and its uniform and attribute info)</li>
 <li>A vertex array (that contains attribute settings)</li>
@@ -440,7 +449,8 @@ put the 4 things together</p>
     uniforms: coneUniforms,
   },
 ];
-</code></pre><p>At draw time we still need to update the matrices</p>
+</code></pre>
+<p>At draw time we still need to update the matrices</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var sphereXRotation =  time;
 var sphereYRotation =  time;
 var cubeXRotation   = -time;
@@ -469,7 +479,8 @@ coneUniforms.u_matrix = computeMatrix(
     coneTranslation,
     coneXRotation,
     coneYRotation);
-</code></pre><p>But the drawing code is now just a simple loop</p>
+</code></pre>
+<p>But the drawing code is now just a simple loop</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// ------ Draw the objects --------
 
 objectsToDraw.forEach(function(object) {
@@ -486,7 +497,8 @@ objectsToDraw.forEach(function(object) {
   // Draw
   twgl.drawBufferInfo(gl, bufferInfo);
 });
-</code></pre><p>And this is arguably the main rendering loop of most 3D engines in existence. Somewhere
+</code></pre>
+<p>And this is arguably the main rendering loop of most 3D engines in existence. Somewhere
 some code or codes decide what goes into the list of <code class="notranslate" translate="no">objectsToDraw</code> and the number
 of options they need might be larger but most of them separate out computing what
 goes in that list with actually calling the <code class="notranslate" translate="no">gl.draw___</code> functions.</p>
@@ -496,12 +508,12 @@ goes in that list with actually calling the <code class="notranslate" translate=
 </div>
 
 </p>
-<p>In general it&#39;s considered <em>best practice</em> to not call WebGL redundantly.
+<p>In general it’s considered <em>best practice</em> to not call WebGL redundantly.
 In other words, if some state of WebGL is already set to what you need it to
-be set to then don&#39;t set it again. In that vein we could check, if the 
+be set to then don’t set it again. In that vein we could check, if the
 shader program we need to draw the current object is the same shader program
-as the previous object then there&#39;s no need to call <code class="notranslate" translate="no">gl.useProgram</code>. Similarly,
-if we&#39;re drawing with the same shape/geometry/vertices there&#39;s no need to call
+as the previous object then there’s no need to call <code class="notranslate" translate="no">gl.useProgram</code>. Similarly,
+if we’re drawing with the same shape/geometry/vertices there’s no need to call
 <code class="notranslate" translate="no">gl.bindVertexArray</code></p>
 <p>So, very simple optimization might look like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">+var lastUsedProgramInfo = null;
@@ -529,9 +541,9 @@ objectsToDraw.forEach(function(object) {
   twgl.drawBufferInfo(gl, object.bufferInfo);
 });
 </code></pre>
-<p>This time let&#39;s draw a lot more objects. Instead of just 3 like before let&#39;s make
+<p>This time let’s draw a lot more objects. Instead of just 3 like before let’s make
 the list of things to draw larger</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// put the shapes in an array so it&#39;s easy to pick them at random
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// put the shapes in an array so it's easy to pick them at random
 var shapes = [
   { bufferInfo: sphereBufferInfo, vertexArray: sphereVAO, },
   { bufferInfo: cubeBufferInfo,   vertexArray: cubeVAO, },
@@ -589,12 +601,12 @@ objects.forEach(function(object) {
 <blockquote>
 <p>Note: I originally cut the section above from this WebGL2 version of the article.
 <a href="https://webglfundamentals.org/webgl/lessons/webgl-drawing-multiple-things.html">The original WebGL1 version of this article</a> had a section on optimization. The reason I cut it
-is with vertex array objects I&#39;m not so sure the optimizations matter that much.
+is with vertex array objects I’m not so sure the optimizations matter that much.
 In WebGL1 without vertex arrays, drawing a single object will often take
 9 to 16 calls to setup the attributes to draw the object. In WebGL2 all of that
 happens at init time by setting up a vertex array per object and then at render
-time it&#39;s a single call to <code class="notranslate" translate="no">gl.bindVertexArray</code> per object.</p>
-<p>Further, in general, most WebGL apps aren&#39;t pushing the limit of drawing. They
+time it’s a single call to <code class="notranslate" translate="no">gl.bindVertexArray</code> per object.</p>
+<p>Further, in general, most WebGL apps aren’t pushing the limit of drawing. They
 need to run across an array of machines, from some 8yr old low end Intel
 integrated graphics GPU up to some top end machine. The optimizations mentioned
 in the section above are unlikely to make the difference between performant
@@ -609,7 +621,7 @@ referenced in <a href="webgl-picking.html">the article on picking</a>. 😅</p>
 <p>In the example above there is just one list to draw. This works because all the objects
 are opaque. If we want to draw transparent objects though they must be drawn back to front
 with the furthest objects getting drawn first. On the other hand, for speed, for opaque
-objects we want to draw front to back, that&#39;s because the DEPTH_TEST means that the GPU
+objects we want to draw front to back, that’s because the DEPTH_TEST means that the GPU
 will not execute our fragment shader for any pixels that would be behind other things.
 so we want to draw the stuff in front first.</p>
 <p>Most 3D engines handle this by having 2 or more lists of objects to draw. One list for opaque things.
@@ -617,22 +629,22 @@ Another list for transparent things. The opaque list is sorted front to back.
 The transparent list is sorted by back to front. There might also be separate lists for other
 things like overlays or post processing effects.</p>
 <h2 id="consider-using-a-library">Consider using a library</h2>
-<p>It&#39;s important to notice that you can&#39;t draw just any geometry with just any shader.
+<p>It’s important to notice that you can’t draw just any geometry with just any shader.
 For example a shader that requires normals will not function with geometry that has no
 normals. Similarly a shader that requires textures will not work without textures.</p>
-<p>This is one of the many reasons it&#39;s great to choose a 3D Library like <a href="https://threejs.org">Three.js</a>
+<p>This is one of the many reasons it’s great to choose a 3D Library like <a href="https://threejs.org">Three.js</a>
 because it handles all of this for you. You create some geometry, you tell three.js how you want it
 rendered and it generates shaders at runtime to handle the things you need. Pretty much all 3D engines
 do this from Unity3D to Unreal to Source to Crytek. Some generate them offline but the important
 thing to realize is they <em>generate</em> shaders.</p>
-<p>Of course the reason you&#39;re reading these articles is you want to know what&#39;s going on deep down.
-That&#39;s great and it&#39;s fun to write everything yourself. It&#39;s just important to be aware
+<p>Of course the reason you’re reading these articles is you want to know what’s going on deep down.
+That’s great and it’s fun to write everything yourself. It’s just important to be aware
 <a href="webgl-2d-vs-3d-library.html">WebGL is super low level</a>
-so there&#39;s a ton of work for you to do if you want to do it yourself and that often includes
+so there’s a ton of work for you to do if you want to do it yourself and that often includes
 writing a shader generator since different features often require different shaders.</p>
-<p>You&#39;ll notice I didn&#39;t put <code class="notranslate" translate="no">computeMatrix</code> inside the loop. That&#39;s because rendering should
-arguably be separated from computing matrices. It&#39;s common to compute matrices from a
-<a href="webgl-scene-graph.html">scene graph and we&#39;ll go over that in another article</a>.</p>
+<p>You’ll notice I didn’t put <code class="notranslate" translate="no">computeMatrix</code> inside the loop. That’s because rendering should
+arguably be separated from computing matrices. It’s common to compute matrices from a
+<a href="webgl-scene-graph.html">scene graph and we’ll go over that in another article</a>.</p>
 <p>Now that we have a framework for drawing multiple objects <a href="webgl-text-html.html">lets draw some text</a>.</p>
 
     </div>

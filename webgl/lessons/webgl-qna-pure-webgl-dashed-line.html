@@ -236,13 +236,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I&#39;m trying to create a dashed line using pure webgl.  I know there is already a question on this, and maybe I&#39;m dumb, but I cannot figure out how to make it work.  I understand the concept, but I do not know how to get the distance along the path in the shader.  A previous answer had the following line:</p>
+      <h2 id="question">Question:</h2>
+<p>I’m trying to create a dashed line using pure webgl.  I know there is already a question on this, and maybe I’m dumb, but I cannot figure out how to make it work.  I understand the concept, but I do not know how to get the distance along the path in the shader.  A previous answer had the following line:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">varying float LengthSoFar; // &lt;-- passed in from the vertex shader
-</code></pre><p>So how would I get <code class="notranslate" translate="no">LengthSoFar</code>?  How can I calculate it in the vertex shader?</p>
-<p>Am I totally missing something?  Can someone give me a working example?  Or at least some good leads?  I&#39;ve been banging my head against the wall on this for days.</p>
-<h2 id="answer-">Answer:</h2>
-<p>I&#39;m assuming it works like this. You have a buffer of positions. You make a corresponding buffer of <code class="notranslate" translate="no">lengthSoFar</code> so,</p>
+</code></pre>
+<p>So how would I get <code class="notranslate" translate="no">LengthSoFar</code>?  How can I calculate it in the vertex shader?</p>
+<p>Am I totally missing something?  Can someone give me a working example?  Or at least some good leads?  I’ve been banging my head against the wall on this for days.</p>
+<h2 id="answer">Answer:</h2>
+<p>I’m assuming it works like this. You have a buffer of positions. You make a corresponding buffer of <code class="notranslate" translate="no">lengthSoFar</code> so,</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function distance(array, ndx1, ndx2) 
 {
   ndx1 *= 3;
@@ -267,8 +268,9 @@ for (var ii = 1; ii &lt; positions.length / 3; ++ii)
 {
   lengthSoFar.push(lengthSoFar[ii - 1] + distance(positions, ii - 1, ii));
 }
-</code></pre><p>Now you can make buffers for both <code class="notranslate" translate="no">positions</code> and <code class="notranslate" translate="no">lengthSoFar</code> and pass <code class="notranslate" translate="no">lengthSoFar</code> as an attribute into your vertex shader and from there pass it as a varying to your fragment shader.</p>
-<p>Unfortunately it won&#39;t work with indexed geometry (the most common type?). In other words it won&#39;t work with <code class="notranslate" translate="no">gl.drawElements</code>, only with <code class="notranslate" translate="no">gl.drawArrays</code>. Also the dashed line would be dashed in 3D not 2D so a line going into the screen (away from the viewer) would look different than a line going across the screen. Of course if you&#39;re drawing 2D then there&#39;s no problem. </p>
+</code></pre>
+<p>Now you can make buffers for both <code class="notranslate" translate="no">positions</code> and <code class="notranslate" translate="no">lengthSoFar</code> and pass <code class="notranslate" translate="no">lengthSoFar</code> as an attribute into your vertex shader and from there pass it as a varying to your fragment shader.</p>
+<p>Unfortunately it won’t work with indexed geometry (the most common type?). In other words it won’t work with <code class="notranslate" translate="no">gl.drawElements</code>, only with <code class="notranslate" translate="no">gl.drawArrays</code>. Also the dashed line would be dashed in 3D not 2D so a line going into the screen (away from the viewer) would look different than a line going across the screen. Of course if you’re drawing 2D then there’s no problem.</p>
 <p>If those limitations are good for you does this answer you question?</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-pure-webgl-dashed-line-example-1.html"></iframe>
@@ -276,8 +278,8 @@ for (var ii = 1; ii &lt; positions.length / 3; ++ii)
 </div>
 
 </p>
-<p>Note: <a href="http://games.greggman.com/game/webgl-how-it-works/">Here&#39;s an article that might help explain how varyings work</a></p>
-<p>Also note you can&#39;t change the thickness of the lines. To do that you need to <a href="https://mattdesl.svbtle.com/drawing-lines-is-hard">draw lines from triangles</a></p>
+<p>Note: <a href="http://games.greggman.com/game/webgl-how-it-works/">Here’s an article that might help explain how varyings work</a></p>
+<p>Also note you can’t change the thickness of the lines. To do that you need to <a href="https://mattdesl.svbtle.com/drawing-lines-is-hard">draw lines from triangles</a></p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 3.0 by

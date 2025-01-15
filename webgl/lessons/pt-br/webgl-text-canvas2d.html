@@ -248,7 +248,8 @@ nós colocamos 2 canvas nele.</p>
   &lt;canvas id=&quot;canvas&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
   &lt;canvas id=&quot;text&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
 &lt;/div&gt;
-</code></pre><p>Em seguida, configure o CSS para que o canvas e o HTML para que eles possam se sobrepor</p>
+</code></pre>
+<p>Em seguida, configure o CSS para que o canvas e o HTML para que eles possam se sobrepor</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">.container {
     position: relative;
 }
@@ -259,21 +260,25 @@ nós colocamos 2 canvas nele.</p>
     top: 0px;
     z-index: 10;
 }
-</code></pre><p>Agora procure o canvas de texto no tempo de inicialização e crie um contexto 2D.</p>
+</code></pre>
+<p>Agora procure o canvas de texto no tempo de inicialização e crie um contexto 2D.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// procura o canvas de texto.
 var textCanvas = document.querySelector(&quot;#text&quot;);
 
 // cria um contexto 2D
 var ctx = textCanvas.getContext(&quot;2d&quot;);
-</code></pre><p>Ao desenhar, assim como na WebGL, precisamos limpar o canvas 2D em cada quadro.</p>
+</code></pre>
+<p>Ao desenhar, assim como na WebGL, precisamos limpar o canvas 2D em cada quadro.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawScene() {
     ...
 
     // Limpa o canvas 2D
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-</code></pre><p>E então, simplesmenta chamamos <code class="notranslate" translate="no">fillText</code> para desenhar o texto</p>
+</code></pre>
+<p>E então, simplesmenta chamamos <code class="notranslate" translate="no">fillText</code> para desenhar o texto</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    ctx.fillText(someMsg, pixelX, pixelY);
-</code></pre><p>E aqui está o exemplo</p>
+</code></pre>
+<p>E aqui está o exemplo</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-canvas2d.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-canvas2d.html" target="_blank">clique aqui para abrir em uma janela separada</a>
@@ -307,7 +312,8 @@ ctx.fillText(someMessage, 20, 20);
 
 // restore the canvas to its old settings.
 ctx.restore();
-</code></pre><p>E aqui estamos nós, tirando proveito da função de translação do Canvas 2D, portanto, não precisamos fazer nenhum
+</code></pre>
+<p>E aqui estamos nós, tirando proveito da função de translação do Canvas 2D, portanto, não precisamos fazer nenhum
 cálculo extra ao desenhar nossa seta. Nós apenas pretendemos desenhar na origem e a translação cuida de mover
 essa origem para o canto do nosso F.</p>
 <p><div class="webgl_example_container">

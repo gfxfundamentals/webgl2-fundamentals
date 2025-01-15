@@ -236,28 +236,29 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>When drawing with <code class="notranslate" translate="no">gl.disableVertexAttribArray(0)</code>, Firefox (just like other browsers, they say) issues this warning:</p>
 <blockquote>
 <p>WebGL warning: drawElementsInstanced: Drawing without vertex attrib 0 array enabled forces the browser to do expensive emulation work when running on desktop OpenGL platforms, for example on Mac. It is preferable to always draw with vertex attrib 0 array enabled, by using bindAttribLocation to bind some always-used attribute to location 0.</p>
 </blockquote>
-<p>I know this. I know it is considered good practices to not disable 0. I do know it&#39;s written everywhere.</p>
-<p>Yet, it&#39;s funny, it&#39;s exactly what I want. In my shader I have a 3D attribute and another 2D one to draw a 2D marker in window coordinates around a 3D point:</p>
+<p>I know this. I know it is considered good practices to not disable 0. I do know it’s written everywhere.</p>
+<p>Yet, it’s funny, it’s exactly what I want. In my shader I have a 3D attribute and another 2D one to draw a 2D marker in window coordinates around a 3D point:</p>
 <p><code class="notranslate" translate="no">gl_Position = doSomething(aPosition) + vec4(aDelta, 0.0, 0.0);</code></p>
-<p>And sometimes I just want <code class="notranslate" translate="no">aDelta</code> constant and <code class="notranslate" translate="no">aPosition</code> varying and sometimes the other way around. I specifically don&#39;t want to link the same program twice (to bind attributes to different locations), or have two different shaders, as the rest of the functionality is shared and either would be a waste.</p>
-<p>I am aware of the performance hit, but it <em>just works</em> that way. Simulation or not, the result is correct and per spec. It&#39;s a simple function that draws just a few vertices at a time. Any other way would be &quot;expensive emulation&quot; on my side. Can I explain this to Firefox, so that it won&#39;t flood my console (this warning alone takes half of all the usual space!) and if I ever distribute this, my users won&#39;t think I&#39;m inept to disregard a warning?</p>
-<h2 id="answer-">Answer:</h2>
+<p>And sometimes I just want <code class="notranslate" translate="no">aDelta</code> constant and <code class="notranslate" translate="no">aPosition</code> varying and sometimes the other way around. I specifically don’t want to link the same program twice (to bind attributes to different locations), or have two different shaders, as the rest of the functionality is shared and either would be a waste.</p>
+<p>I am aware of the performance hit, but it <em>just works</em> that way. Simulation or not, the result is correct and per spec. It’s a simple function that draws just a few vertices at a time. Any other way would be “expensive emulation” on my side. Can I explain this to Firefox, so that it won’t flood my console (this warning alone takes half of all the usual space!) and if I ever distribute this, my users won’t think I’m inept to disregard a warning?</p>
+<h2 id="answer">Answer:</h2>
 <blockquote>
 <p>Can I mute the warning about vertex attrib array 0 being disabled?</p>
 </blockquote>
-<p>It depends on what you&#39;re doing. In general, no, you can&#39;t disable the warning.</p>
-<p>What you can do is <strong>IF</strong> your shader always uses a certain attribute you can make sure that attribute uses location 0. </p>
-<p>For example it&#39;s common that some shaders use position, others use position and normals, others use positions and texcoords, others use positions, texcoords, normals, and vertex colors. Maybe I just have one shader and set texcoords, normal, and vertex colors to a constant if not used but I always use position from a buffer. In that case <strong>BEFORE</strong> linking the program force position to location 0</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> gl.bindAttribLocation(someProgram, 0, &#39;position&#39;);
+<p>It depends on what you’re doing. In general, no, you can’t disable the warning.</p>
+<p>What you can do is <strong>IF</strong> your shader always uses a certain attribute you can make sure that attribute uses location 0.</p>
+<p>For example it’s common that some shaders use position, others use position and normals, others use positions and texcoords, others use positions, texcoords, normals, and vertex colors. Maybe I just have one shader and set texcoords, normal, and vertex colors to a constant if not used but I always use position from a buffer. In that case <strong>BEFORE</strong> linking the program force position to location 0</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> gl.bindAttribLocation(someProgram, 0, 'position');
  gl.linkProgram(someProgram);
-</code></pre><p>If there is no attribute that is never disabled then no, you can not turn off the warning.</p>
+</code></pre>
+<p>If there is no attribute that is never disabled then no, you can not turn off the warning.</p>
 <hr>
-<p>I&#39;m not sure what the right solution is here. I&#39;d mostly prefer no warning or at least have it not appear unless I ask for it like with some option in the debugger &quot;extra WebGL warnings&quot;. I feel like the warning is mostly useless. Sure it&#39;s nice to know that if I&#39;m trying to get maximum perf I shouldn&#39;t do this but like 1000s of other programming optimizations, often I don&#39;t care. You can file a bug/issue/feature request on the browsers if you wish for it to go away.</p>
+<p>I’m not sure what the right solution is here. I’d mostly prefer no warning or at least have it not appear unless I ask for it like with some option in the debugger “extra WebGL warnings”. I feel like the warning is mostly useless. Sure it’s nice to know that if I’m trying to get maximum perf I shouldn’t do this but like 1000s of other programming optimizations, often I don’t care. You can file a bug/issue/feature request on the browsers if you wish for it to go away.</p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 4.0 by

@@ -238,8 +238,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="lesson">
     <div class="lesson-main">
       <p>이 글은 WebGL 게시글 시리즈에서 이어지는 글입니다. 첫 번째는 <a href="webgl-fundamentals.html">기초로 시작</a>이었으며 바로 전은 <a href="webgl-2d-translation.html">기하학에 대한 이동</a>이였습니다.</p>
-<p>I&#39;m going to admit right up front I have no idea if how I explain this
- will make sense but what the heck, might as well try.</p>
+<p>I’m going to admit right up front I have no idea if how I explain this
+will make sense but what the heck, might as well try.</p>
 <p>먼저 &quot;단위 원(unit circle)&quot;라고 불리는 것을 소개 하고자 합니다. 만약 중학교 수학을 기억한다면(잠자면 안됩니다!) 원은 반지름(radius)을 가지고 있습니다. 원의 반지름(radius)은 원의 중심으로 부터 원의 가장자리 까지의 거리입니다. 단위 원은 반지름(radius)이 1인 원 입니다.</p>
 <p>여기에 단위 원이 있습니다.</p>
 <p><div class="webgl_diagram_container">
@@ -269,7 +269,8 @@ void main() {
 * vec2 position = rotatedPosition + u_translation;
 
 ...
-</code></pre><p>그리고 자바스크립트를 업데이트하여 이 두 값을 전달할 수 있게 합니다.</p>
+</code></pre>
+<p>그리고 자바스크립트를 업데이트하여 이 두 값을 전달할 수 있게 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
 
 +  var rotationLocation = gl.getUniformLocation(program, &quot;u_rotation&quot;);
@@ -315,7 +316,8 @@ void main() {
     var count = 18;
     gl.drawArrays(primitiveType, offset, count);
   }
-</code></pre><p>여기에 결과가 있습니다. 회전하기 위해 원의 핸들을 드래그하거나 이동하기 위해 슬라이더를 드래그하십시오.</p>
+</code></pre>
+<p>여기에 결과가 있습니다. 회전하기 위해 원의 핸들을 드래그하거나 이동하기 위해 슬라이더를 드래그하십시오.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-rotation.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-rotation.html" target="_blank">새 창으로 열기</a>
@@ -327,25 +329,22 @@ void main() {
     rotatedX = a_position.x * u_rotation.y + a_position.y * u_rotation.x;
     rotatedY = a_position.y * u_rotation.y - a_position.x * u_rotation.x;
 </pre>
-
 <p>직사각형이 있고 회전하려고 한다고 가정해 보겠습니다. 회전하기 전에 오른쪽 위 구석이 3.0, 9.0에 있습니다. 12 방향에서 시계 방향으로 30도 단위 점을 찍어 봅시다.</p>
-<p><img src="../../resources/rotate-30.png" class="webgl_center invertdark" /></p>
+<img src="../../resources/rotate-30.png" class="webgl_center invertdark" />
 <p>원에서 위치는 0.5와 0.87입니다.</p>
 <pre class="webgl_center">
    3.0 * 0.87 + 9.0 * 0.50 = 7.1
    9.0 * 0.87 - 3.0 * 0.50 = 6.3
 </pre>
-
 <p>이것이 바로 우리가 필요한 것 입니다.</p>
-<p><img src="../../resources/rotation-drawing.svg" width="500" class="webgl_center"/></p>
+<img src="../../resources/rotation-drawing.svg" width="500" class="webgl_center"/>
 <p>시계 방향으로 60도 회전도 똑같습니다.</p>
-<p><img src="../../resources/rotate-60.png" class="webgl_center invertdark" /></p>
+<img src="../../resources/rotate-60.png" class="webgl_center invertdark" />
 <p>원에서 위치는 0.87과 0.5입니다.</p>
 <pre class="webgl_center">
    3.0 * 0.50 + 9.0 * 0.87 = 9.3
    9.0 * 0.50 - 3.0 * 0.87 = 1.9
 </pre>
-
 <p>점을 시계 방향으로 오른쪽으로 돌릴 때 X 값이 커지고 Y 값이 작아지는 것을 볼 수 있습니다. 90도를 지나 가면 X는 다시 작아지고 Y는 점점 커질 것입니다. 이 패턴이 회전으로 제공됩니다.</p>
 <p>단위원의 점에 대한 또 다른 이름이 있습니다. 사인과 코사인이라고 불리는 것입니다. 주어진 각도에 대하여 다음과 같이 사인과 코사인을 찾을 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function printSineAndCosineForAnAngle(angleInDegrees) {
@@ -354,13 +353,15 @@ void main() {
   var c = Math.cos(angleInRadians);
   console.log(&quot;s = &quot; + s + &quot; c = &quot; + c);
 }
-</code></pre><p>자바스크립트 콘솔에 코드를 복사하고 붙여넣고 <code class="notranslate" translate="no">printSineAndCosineForAnAngle(30)</code>을 실행하면, (반올림해서 적으면) <code class="notranslate" translate="no">s = 0.49 c = 0.87</code>을 볼 수 있습니다.</p>
+</code></pre>
+<p>자바스크립트 콘솔에 코드를 복사하고 붙여넣고 <code class="notranslate" translate="no">printSineAndCosineForAnAngle(30)</code>을 실행하면, (반올림해서 적으면) <code class="notranslate" translate="no">s = 0.49 c = 0.87</code>을 볼 수 있습니다.</p>
 <p>이 모든 것들을 함께 사용하면 원하는 각도로 지오메트리(geometry)를 회전시킬 수 있습니다. 회전하려는 각도의 사인 및 코사인으로 회전을 설정하면됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
   var angleInRadians = angleInDegrees * Math.PI / 180;
   rotation[0] = Math.sin(angleInRadians);
   rotation[1] = Math.cos(angleInRadians);
-</code></pre><p>아래는 각도를 조정할 수 있는 버전입니다. 원을 움직여서 회전시키거나, 슬라이더를 드래그하여 이동시켜보세요.</p>
+</code></pre>
+<p>아래는 각도를 조정할 수 있는 버전입니다. 원을 움직여서 회전시키거나, 슬라이더를 드래그하여 이동시켜보세요.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-rotation-angle.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-rotation-angle.html" target="_blank">새 창으로 열기</a>

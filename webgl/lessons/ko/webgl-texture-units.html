@@ -240,7 +240,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p>이 글은 WebGL에서 텍스처 유닛이 어떻게 동작하는지에 대한 개념을 설명하기 위해 쓰여졌습니다.
 <a href="webgl-attributes.html">attribute와 관련해서도 유사한 글이 있습니다</a>.</p>
 <p>이 글을 이해하기 위해 우선 <a href="webgl-how-it-works.html">WebGL 동작 원리</a>와 [WebGL 셰이더와 GLSL] (webgl-shaders-and-glsl.html) 및 <a href="webgl-3d-textures.html">WebGL 텍스처</a>를 읽으시는 것이 좋습니다.</p>
-<h2 id="-">텍스처 유닛</h2>
+<h2 id="텍스처-유닛">텍스처 유닛</h2>
 <p>WebGL에는 텍스처라는 것이 있습니다. 텍스처란 셰이더에 넘길 수 있는 2D 배열 데이터입니다.
 셰이더에서는 아래와 같이 <em>유니폼 샘플러</em>를 선언합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">uniform sampler2D someTexture;
@@ -263,7 +263,7 @@ WebGL이 자바스크립트로 쓰여졌다면 아래와 같은 전역 상태(st
   ];
 }
 </code></pre>
-<p><code class="notranslate" translate="no">textureUnits</code>가 배열인 것을 보실 수 있을겁니다. 
+<p><code class="notranslate" translate="no">textureUnits</code>가 배열인 것을 보실 수 있을겁니다.
 여러분은 텍스처 유닛 배열 중 하나의 <em>바인드 포인트</em>에 텍스처를 할당하게 됩니다.
 <code class="notranslate" translate="no">ourTexture</code>를 텍스처 유닛 5에 할당해 봅시다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// 초기화 시점에
@@ -309,7 +309,7 @@ gl.texParameteri = function(target, pname, value) {
 </code></pre>
 <p>위 예제 의사 코드(pseudo code)에서 볼 수 있는것처럼 <code class="notranslate" translate="no">gl.activeTexture</code>는 텍스처 유닛의 배열의 인덱스르 WebGL의 내부 전역 변수에 설정합니다.
 이후 모든 다른 텍스처 관련 함수들은 첫 번째 인자로 <code class="notranslate" translate="no">target</code>을 인자로 받는데, 이는 현재 텍스처 유닛 바인드 포인트의 참조입니다.</p>
-<h2 id="-">텍스처 유닛의 최대값</h2>
+<h2 id="텍스처-유닛의-최대값">텍스처 유닛의 최대값</h2>
 <p>WebGL은 최소 32개의 텍스처 유닛을 지원하게 구현하도록 되어 있습니다.
 몇 개를 지원하는지 아래 코드를 사용해 알 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const maxTextureUnits = gl.getParameter(gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS);

@@ -241,13 +241,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 This article continues from <a href="webgl-cube-maps.html">the article on cube maps</a>.
 This article also uses concepts covered in <a href="webgl-3d-lighting-directional.html">the article on lighting</a>.
 If you have not read those articles already you might want to read them first.</p>
-<p>An <em>environment map</em> represents the environment of the objects you&#39;re drawing.
-If the you&#39;re drawing an outdoor scene it would represent the outdoors. If
-you&#39;re drawing people on a stage it would represent the venue. If you&#39;re drawing
+<p>An <em>environment map</em> represents the environment of the objects you’re drawing.
+If the you’re drawing an outdoor scene it would represent the outdoors. If
+you’re drawing people on a stage it would represent the venue. If you’re drawing
 an outer space scene it would be the stars. We can implement an environment map
 with a cube map if we have 6 images that show the environment from a point in
 space in the 6 directions of the cubemap.</p>
-<p>Here&#39;s an environment map from the lobby of the Computer History Museum in Mountain View, California.</p>
+<p>Here’s an environment map from the lobby of the Computer History Museum in Mountain View, California.</p>
 <div class="webgl_center">
   <img src="../resources/images/computer-history-museum/pos-x.jpg" style="width: 128px" class="border">
   <img src="../resources/images/computer-history-museum/neg-x.jpg" style="width: 128px" class="border">
@@ -258,8 +258,7 @@ space in the 6 directions of the cubemap.</p>
   <img src="../resources/images/computer-history-museum/pos-z.jpg" style="width: 128px" class="border">
   <img src="../resources/images/computer-history-museum/neg-z.jpg" style="width: 128px" class="border">
 </div>
-
-<p>Based on <a href="webgl-cube-maps.html">the code in the previous article</a> let&#39;s load those 6 images instead of the images we generated</p>
+<p>Based on <a href="webgl-cube-maps.html">the code in the previous article</a> let’s load those 6 images instead of the images we generated</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Create a texture.
 var texture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
@@ -267,27 +266,27 @@ gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
 const faceInfos = [
   {
     target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
-    url: &#39;resources/images/computer-history-museum/pos-x.jpg&#39;,
+    url: 'resources/images/computer-history-museum/pos-x.jpg',
   },
   {
     target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
-    url: &#39;resources/images/computer-history-museum/neg-x.jpg&#39;,
+    url: 'resources/images/computer-history-museum/neg-x.jpg',
   },
   {
     target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
-    url: &#39;resources/images/computer-history-museum/pos-y.jpg&#39;,
+    url: 'resources/images/computer-history-museum/pos-y.jpg',
   },
   {
     target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-    url: &#39;resources/images/computer-history-museum/neg-y.jpg&#39;,
+    url: 'resources/images/computer-history-museum/neg-y.jpg',
   },
   {
     target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
-    url: &#39;resources/images/computer-history-museum/pos-z.jpg&#39;,
+    url: 'resources/images/computer-history-museum/pos-z.jpg',
   },
   {
     target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
-    url: &#39;resources/images/computer-history-museum/neg-z.jpg&#39;,
+    url: 'resources/images/computer-history-museum/neg-z.jpg',
   },
 ];
 faceInfos.forEach((faceInfo) =&gt; {
@@ -301,13 +300,13 @@ faceInfos.forEach((faceInfo) =&gt; {
   const format = gl.RGBA;
   const type = gl.UNSIGNED_BYTE;
 
-  // setup each face so it&#39;s immediately renderable
+  // setup each face so it's immediately renderable
   gl.texImage2D(target, level, internalFormat, width, height, 0, format, type, null);
 
   // Asynchronously load an image
   const image = new Image();
   image.src = url;
-  image.addEventListener(&#39;load&#39;, function() {
+  image.addEventListener('load', function() {
     // Now that the image has loaded upload it to the texture.
     gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
     gl.texImage2D(target, level, internalFormat, format, type, image);
@@ -319,8 +318,8 @@ gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LI
 </code></pre>
 <p>Note that for every face we initialize it with a 512x512 blank image by passing
 <code class="notranslate" translate="no">null</code> to <code class="notranslate" translate="no">texImage2D</code>. Cubemaps must have all 6 faces, all 6 faces must be the
-same size and be square. If they are not the texture will not render. But, we&#39;re
-loading 6 images. We&#39;d like to start rendering immediately so we allocate all 6
+same size and be square. If they are not the texture will not render. But, we’re
+loading 6 images. We’d like to start rendering immediately so we allocate all 6
 faces then start loading the images. As each image arrives we upload it to the
 correct face then generate the mipmap again. This means we can start rendering
 immediately and as the images are download the faces of the cubemap will get
@@ -335,51 +334,40 @@ color from the cubemap.</p>
 <p>The formula to reflect is</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">reflectionDir = eyeToSurfaceDir –
     2 ∗ dot(surfaceNormal, eyeToSurfaceDir) ∗ surfaceNormal
-</code></pre><p>Thinking about what we can see it&#39;s true. Recall from the <a href="webgl-3d-lighting-directional.html">lighting articles</a>
+</code></pre>
+<p>Thinking about what we can see it’s true. Recall from the <a href="webgl-3d-lighting-directional.html">lighting articles</a>
 that a dot product of 2 vectors returns the cosine of the angle between the 2
-vectors. Adding vectors gives us a new vector so let&#39;s take the example of an eye
+vectors. Adding vectors gives us a new vector so let’s take the example of an eye
 looking directly perpendicular to a flat surface.</p>
 <div class="webgl_center"><img src="resources/reflect-180-01.svg" style="width: 400px"></div>
-
-<p>Let&#39;s visualize the formula above. First off recall the dot product of 2 vectors
+<p>Let’s visualize the formula above. First off recall the dot product of 2 vectors
 pointing in exactly opposite directions is -1 so visually</p>
 <div class="webgl_center"><img src="resources/reflect-180-02.svg" style="width: 400px"></div>
-
 <p>Plugging in that dot product with the <span style="color:black; font-weight:bold;">eyeToSurfaceDir</span>
 and <span style="color:green;">normal</span> in the reflection formula gives us this</p>
 <div class="webgl_center"><img src="resources/reflect-180-03.svg" style="width: 400px"></div>
-
 <p>Which multiplying -2 by -1 makes it positive 2.</p>
 <div class="webgl_center"><img src="resources/reflect-180-04.svg" style="width: 400px"></div>
-
 <p>So adding the vectors by connecting them up gives us the <span style="color: red">reflected vector</span></p>
 <div class="webgl_center"><img src="resources/reflect-180-05.svg" style="width: 400px"></div>
-
 <p>We can see above given 2 normals, one completely cancels out the direction from
 the eye and the second one points the reflection directly back towards the eye.
-Which if we put back in the original diagram is exactly what we&#39;d expect</p>
+Which if we put back in the original diagram is exactly what we’d expect</p>
 <div class="webgl_center"><img src="resources/reflect-180-06.svg" style="width: 400px"></div>
-
-<p>Let&#39;s rotate the surface 45 degrees to the right.</p>
+<p>Let’s rotate the surface 45 degrees to the right.</p>
 <div class="webgl_center"><img src="resources/reflect-45-01.svg" style="width: 400px"></div>
-
 <p>The dot product of 2 vectors 135 degrees apart is -0.707</p>
 <div class="webgl_center"><img src="resources/reflect-45-02.svg" style="width: 400px"></div>
-
 <p>So plugging everything into the formula</p>
 <div class="webgl_center"><img src="resources/reflect-45-03.svg" style="width: 400px"></div>
-
 <p>Again multiplying 2 negatives gives us a positive but the <span style="color: green">vector</span> is now about 30% shorter.</p>
 <div class="webgl_center"><img src="resources/reflect-45-04.svg" style="width: 400px"></div>
-
 <p>Adding up the vectors gives us the <span style="color: red">reflected vector</span></p>
 <div class="webgl_center"><img src="resources/reflect-45-05.svg" style="width: 400px"></div>
-
 <p>Which if we put back in the original diagram seems correct.</p>
 <div class="webgl_center"><img src="resources/reflect-45-06.svg" style="width: 400px"></div>
-
 <p>We use that  <span style="color: red">reflected direction</span> to look at the cubemap to color the surface of the object.</p>
-<p>Here&#39;s a diagram where you can set the rotation of the surface and see the
+<p>Here’s a diagram where you can set the rotation of the surface and see the
 various parts of the equation. You can also see the reflection vectors point to
 the different faces of the cubemap and effect the color of the surface.</p>
 <p><div class="webgl_diagram_container">
@@ -388,8 +376,8 @@ the different faces of the cubemap and effect the color of the surface.</p>
 
 </p>
 <p>Now that we know how reflection works and that we can use it to look up values
-from the cubemap let&#39;s change the shaders to do that.</p>
-<p>First in the vertex shader we&#39;ll compute the world position and world oriented
+from the cubemap let’s change the shaders to do that.</p>
+<p>First in the vertex shader we’ll compute the world position and world oriented
 normal of the vertices and pass those to the fragment shader as varyings. This
 is similar to what we did in <a href="webgl-3d-lighting-spot.html">the article on spotlights</a>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
@@ -415,7 +403,7 @@ void main() {
   v_worldNormal = mat3(u_world) * a_normal;
 }
 </code></pre>
-<p>Then in the fragment shader we normalize the <code class="notranslate" translate="no">worldNormal</code> since it&#39;s being
+<p>Then in the fragment shader we normalize the <code class="notranslate" translate="no">worldNormal</code> since it’s being
 interpolated across the surface between vertices. We pass in the world position
 of the camera and by subtracting that from the world position of the surface we
 get the <code class="notranslate" translate="no">eyeToSurfaceDir</code>.</p>
@@ -449,7 +437,7 @@ void main() {
 </code></pre>
 <p>We also need real normals for this example. We need real normals so the faces of
 the cube appear flat. In the previous example just to see the cubemap work we
-repurposed the cube&#39;s positions but in this case we need actual normals for a
+repurposed the cube’s positions but in this case we need actual normals for a
 cube like we covered in <a href="webgl-3d-lighting-directional.html">the article on lighting</a></p>
 <p>At init time</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Create a buffer to put normals in
@@ -485,7 +473,7 @@ gl.uniformMatrix4fv(projectionLocation, false, projectionMatrix);
 var cameraPosition = [0, 0, 2];
 var target = [0, 0, 0];
 var up = [0, 1, 0];
-// Compute the camera&#39;s matrix using look at.
+// Compute the camera's matrix using look at.
 var cameraMatrix = m4.lookAt(cameraPosition, target, up);
 
 // Make a view matrix from the camera matrix.
@@ -510,7 +498,7 @@ gl.uniform1i(textureLocation, 0);
 </div>
 
 </p>
-<p>Next let&#39;s show <a href="webgl-skybox.html">how to use a cubemap for a skybox</a>.</p>
+<p>Next let’s show <a href="webgl-skybox.html">how to use a cubemap for a skybox</a>.</p>
 
     </div>
     <div class="lesson-sidebar">

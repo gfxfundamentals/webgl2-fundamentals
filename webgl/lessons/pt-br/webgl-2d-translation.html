@@ -242,7 +242,7 @@ alguns, mas vou construir até um certo ponto em alguns artigos.</p>
 <p>Este artigo é uma continuação de uma série que começa com os
 <a href="webgl-fundamentals.html">Fundamentos da WebGL2</a>. Se você não os leu,
 sugiro que você leia pelo menos o primeiro, então volte aqui.</p>
-<p>A translação é um nome de matemática extravagante que basicamente significa &quot;mover&quot;
+<p>A translação é um nome de matemática extravagante que basicamente significa “mover”
 algo. Suponho que a mudança de uma frase do inglês para o japonês também
 se ajuste, mas neste caso estamos falando sobre a geometria em movimento. Usando
 o código de exemplo que fizemos <a href="webgl-fundamentals.html">no primeiro post</a>
@@ -294,7 +294,8 @@ passados para <code class="notranslate" translate="no">setRectangle</code> certo
     var count = 6;
     gl.drawArrays(primitiveType, offset, count);
   }
-</code></pre><p>No exemplo abaixo, anexei um par de controladores que atualizarão
+</code></pre>
+<p>No exemplo abaixo, anexei um par de controladores que atualizarão
 <code class="notranslate" translate="no">translation[0]</code> e <code class="notranslate" translate="no">translation[1]</code> e chama <code class="notranslate" translate="no">drawScene</code> sempre que mudarem.
 Arraste os controladores para transladar o retângulo.</p>
 <p><div class="webgl_example_container">
@@ -305,11 +306,11 @@ Arraste os controladores para transladar o retângulo.</p>
 </p>
 <p>Por enquanto, tudo bem. Mas agora imagine que queríamos fazer o mesmo com uma
 forma mais complicada.</p>
-<p>Digamos que queríamos desenhar um &#39;F&#39; que consiste em 6 triângulos como este.</p>
-<p><img src="../../resources/polygon-f.svg" width="200" height="270" class="webgl_center"></p>
+<p>Digamos que queríamos desenhar um ‘F’ que consiste em 6 triângulos como este.</p>
+<img src="../../resources/polygon-f.svg" width="200" height="270" class="webgl_center">
 <p>Bem, seguindo nosso código atual, teríamos que mudar o <code class="notranslate" translate="no">setRectangle</code>
 para algo mais parecido com isso.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Preencha o atual buffer ARRAY_BUFFER com os valores que definem uma letra &#39;F&#39;.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Preencha o atual buffer ARRAY_BUFFER com os valores que definem uma letra 'F'.
 function setGeometry(gl, x, y) {
   var width = 100;
   var height = 150;
@@ -342,7 +343,8 @@ function setGeometry(gl, x, y) {
           x + width * 2 / 3, y + thickness * 3]),
       gl.STATIC_DRAW);
 }
-</code></pre><p>Você pode ver que não vai se dimensionar bem. Se quisermos
+</code></pre>
+<p>Você pode ver que não vai se dimensionar bem. Se quisermos
 desenhar uma geometria muito complexa com centenas ou milhares de linhas,
 teríamos que escrever um código bastante complexo. Além disso, cada vez que
 desenhamos, o JavaScript tem que atualizar todos os pontos.</p>
@@ -377,10 +379,11 @@ void main() {
 
   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 }
-</code></pre><p>e vamos reestruturar o código um pouco. Por um lado, só precisa definir
+</code></pre>
+<p>e vamos reestruturar o código um pouco. Por um lado, só precisa definir
 a geometria uma vez.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Preencha o atual buffer ARRAY_BUFFER
-// com os valores que definem uma letra &#39;F&#39;.
+// com os valores que definem uma letra 'F'.
 function setGeometry(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
@@ -410,7 +413,8 @@ function setGeometry(gl) {
           67, 90]),
       gl.STATIC_DRAW);
 }
-</code></pre><p>Então precisamos atualizar <code class="notranslate" translate="no">u_translation</code> antes de desenhar com a
+</code></pre>
+<p>Então precisamos atualizar <code class="notranslate" translate="no">u_translation</code> antes de desenhar com a
 translação que desejamos.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
 
@@ -453,7 +457,8 @@ translação que desejamos.</p>
 *    var count = 18;
     gl.drawArrays(primitiveType, offset, count);
   }
-</code></pre><p>Observe que <code class="notranslate" translate="no">setGeometry</code> é chamado apenas uma vez. Já não está dentro do <code class="notranslate" translate="no">drawScene</code>.</p>
+</code></pre>
+<p>Observe que <code class="notranslate" translate="no">setGeometry</code> é chamado apenas uma vez. Já não está dentro do <code class="notranslate" translate="no">drawScene</code>.</p>
 <p>E aqui esse exemplo. Mais uma vez, arraste os controles deslizantes para atualizar a tradução.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-translate-better.html"></iframe>

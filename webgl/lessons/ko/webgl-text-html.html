@@ -255,7 +255,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     &lt;div&gt;Angle: &lt;span id=&quot;angle&quot;&gt;&lt;/span&gt;&lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</code></pre><p>다음으로 캔버스와 HTML을 겹치게 하기 위한 CSS를 설정합니다.</p>
+</code></pre>
+<p>다음으로 캔버스와 HTML을 겹치게 하기 위한 CSS를 설정합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">.container {
     position: relative;
 }
@@ -264,7 +265,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     left: 10px;
     top: 10px;
 }
-</code></pre><p>이제 초기화할 때 해당 요소들을 탐색해, 변경하려는 영역을 만들거나 찾습니다.</p>
+</code></pre>
+<p>이제 초기화할 때 해당 요소들을 탐색해, 변경하려는 영역을 만들거나 찾습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 영향을 주고 싶은 요소 탐색
 var timeElement = document.querySelector(&quot;#time&quot;);
 var angleElement = document.querySelector(&quot;#angle&quot;);
@@ -276,7 +278,8 @@ var angleNode = document.createTextNode(&quot;&quot;);
 // 놓아야 할 곳에 해당 text node를 추가
 timeElement.appendChild(timeNode);
 angleElement.appendChild(angleNode);
-</code></pre><p>마지막으로 렌더링할 때 node를 업데이트합니다.</p>
+</code></pre>
+<p>마지막으로 렌더링할 때 node를 업데이트합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawScene(time) {
     var now = time * 0.001;  // 초 단위로 변환
 
@@ -291,7 +294,8 @@ angleElement.appendChild(angleNode);
     // node 설정
     angleNode.nodeValue = angle.toFixed(0);  // 소수점 없음
     timeNode.nodeValue = now.toFixed(2);     // 소수점 이하 2자리
-</code></pre><p>그리고 여기 해당 예제입니다.</p>
+</code></pre>
+<p>그리고 여기 해당 예제입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-overlay.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-overlay.html" target="_blank">새 창으로 열기</a>
@@ -301,7 +305,8 @@ angleElement.appendChild(angleNode);
 <p>변경하려는 부분에 대해 div 내부에 span을 어떻게 넣었는지 확인하세요.
 여기에서는 이 방법이 span 없이 div를 사용하는 것보다 빠르다고 가정하고 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">timeNode.nodeValue = &quot;Time &quot; + now.toFixed(2);
-</code></pre><p>또한 <code class="notranslate" translate="no">node = document.createTextNode()</code>와 이후에 <code class="notranslate" translate="no">node.nodeValue = someMsg</code>를 호출하여 text node를 사용하고 있습니다.
+</code></pre>
+<p>또한 <code class="notranslate" translate="no">node = document.createTextNode()</code>와 이후에 <code class="notranslate" translate="no">node.nodeValue = someMsg</code>를 호출하여 text node를 사용하고 있습니다.
 <code class="notranslate" translate="no">someElement.innerHTML = someHTML</code>도 사용할 수 있는데요.
 임의의 HTML 문자열을 삽입할 수 있기 때문에 더 유연하지만, 설정할 때마다 브라우저가 node를 생성하고 파괴해야 하기 때문에 약간 느릴 수 있습니다.
 뭐가 더 좋을지는 여러분이 선택하시면 됩니다.</p>
@@ -328,7 +333,8 @@ HTML을 사용하면 이 모든 기능을 자유롭게 사용할 수 있습니�
   &lt;canvas id=&quot;canvas&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
   &lt;div id=&quot;divcontainer&quot;&gt;&lt;/div&gt;
 &lt;/div&gt;
-</code></pre><p>그리고 CSS를 설정할 겁니다.</p>
+</code></pre>
+<p>그리고 CSS를 설정할 겁니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">.container {
     position: relative;
     overflow: none;
@@ -347,7 +353,8 @@ HTML을 사용하면 이 모든 기능을 자유롭게 사용할 수 있습니�
 .floating-div {
     position: absolute;
 }
-</code></pre><p><code class="notranslate" translate="no">position: absolute;</code> 부분은 <code class="notranslate" translate="no">#divcontainer</code>가 <code class="notranslate" translate="no">position: relative</code>나 <code class="notranslate" translate="no">position: absolute</code>인 첫 번째 조상을 기준으로 절대적인 위치를 가지도록 합니다.
+</code></pre>
+<p><code class="notranslate" translate="no">position: absolute;</code> 부분은 <code class="notranslate" translate="no">#divcontainer</code>가 <code class="notranslate" translate="no">position: relative</code>나 <code class="notranslate" translate="no">position: absolute</code>인 첫 번째 조상을 기준으로 절대적인 위치를 가지도록 합니다.
 이 경우에는 캔버스와 <code class="notranslate" translate="no">#divcontainer</code>가 있는 컨테이너가 됩니다.</p>
 <p><code class="notranslate" translate="no">left: 0px; top: 0px</code>는 <code class="notranslate" translate="no">#divcontainer</code>가 정렬되도록 만듭니다.
 <code class="notranslate" translate="no">z-index: 10</code>는 컨테이너가 캔버스 위에 떠있도록 만들죠.
@@ -369,11 +376,13 @@ div.appendChild(textNode);
 
 // divcontainer에 추가
 divContainerElement.appendChild(div);
-</code></pre><p>이제 style을 설정하여 div의 위치를 조정할 수 있습니다.</p>
+</code></pre>
+<p>이제 style을 설정하여 div의 위치를 조정할 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">div.style.left = Math.floor(x) + &quot;px&quot;;
 div.style.top  = Math.floor(y) + &quot;px&quot;;
 textNode.nodeValue = now.toFixed(2);
-</code></pre><p>다음은 div를 기준으로 튕기는 예제입니다.</p>
+</code></pre>
+<p>다음은 div를 기준으로 튕기는 예제입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-bouncing-div.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-bouncing-div.html" target="_blank">새 창으로 열기</a>
@@ -391,7 +400,7 @@ Clip space(-1 ~ +1)를 pixel로 곱하고 이를 사용하여 div를 배치할 �
 
 // F를 3D로 그리기 위해 행렬 계산
 
-// &#39;F&#39;의 local space에서 한 점 선택
+// 'F'의 local space에서 한 점 선택
 // X  Y  Z  W
 var point = [100, 0, 0, 1];  // 앞면 오른쪽 상단 모서리
 
@@ -410,7 +419,8 @@ var pixelY = (clipspace[1] * -0.5 + 0.5) * gl.canvas.height;
 div.style.left = Math.floor(pixelX) + &quot;px&quot;;
 div.style.top  = Math.floor(pixelY) + &quot;px&quot;;
 textNode.nodeValue = now.toFixed(2);
-</code></pre><p>그리고 짜잔, div의 왼쪽 상단 모서리가 F의 오른쪽 상단 모서리 앞면에 완벽하게 정렬되었습니다.</p>
+</code></pre>
+<p>그리고 짜잔, div의 왼쪽 상단 모서리가 F의 오른쪽 상단 모서리 앞면에 완벽하게 정렬되었습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-div.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-div.html" target="_blank">새 창으로 열기</a>

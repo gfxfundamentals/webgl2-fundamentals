@@ -246,7 +246,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 텍스처 2      -&gt; [Edge Detect] -&gt; 텍스처 1
 텍스처 1      -&gt; [Blur]        -&gt; 텍스처 2
 텍스처 2      -&gt; [Normal]      -&gt; 캔버스</pre></blockquote>
-
 <p>이렇게 하려면 프레임 버퍼(Framebuffer)를 만들어야합니다. 사실 WebGL이나 OpenGL에서 프레임 버퍼는 좋은 이름이 아닙니다. WebGL/OpenGL 프레임 버퍼는 실제로 첨부 목록일뿐 실제로 다른 종류 버퍼가 아닙니다. 그러나 텍스처를 프레임 버퍼에 첨부하여 해당 텍스처로 렌더링할 수 있습니다.</p>
 <p>우선 <a href="webgl-image-processing.html">오래된 텍스처 생성 코드</a>를 함수로 바꿔봅시다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  function createAndSetupTexture(gl) {
@@ -276,7 +275,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 srcFormat,
                 srcType,
                 image);
-</code></pre><p>이제 함수를 사용하여 2개의 텍스처를 만들고 두개의 프레임 버퍼에 첨부해 봅시다.</p>
+</code></pre>
+<p>이제 함수를 사용하여 2개의 텍스처를 만들고 두개의 프레임 버퍼에 첨부해 봅시다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 2개의 텍스처를 만들고 프레임 버퍼에 첨부합니다.
   var textures = [];
   var framebuffers = [];
@@ -305,7 +305,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     gl.framebufferTexture2D(
         gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, texture, mipLevel);
   }
-</code></pre><p>이제 커널 집합을 만든 다음 이를 적용할 목록을 만들어 보겠습니다.</p>
+</code></pre>
+<p>이제 커널 집합을 만든 다음 이를 적용할 목록을 만들어 보겠습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 몇가지 컨밴션 커널들 정의
   var kernels = {
     normal: [
@@ -337,7 +338,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     &quot;gaussianBlur&quot;,
     &quot;unsharpen&quot;
   ];
-</code></pre><p>그리고 마지막으로 하나씩 적용하고, 렌더링할 텍스처를 주고 받습니다.</p>
+</code></pre>
+<p>그리고 마지막으로 하나씩 적용하고, 렌더링할 텍스처를 주고 받습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  function drawEffects() {
     // 사용할 프로그램(쉐이더 쌍) 전달
     gl.useProgram(program);
@@ -403,7 +405,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     var count = 6;
     gl.drawArrays(primitiveType, offset, count);
   }
-</code></pre><p>여기에 약간 더 유연한 UI 버전이 있습니다. 효과를 끄고 켜서 확인하거나 효과를 드래그하여 재정렬하면 어떻게 되는지 확인하세요.</p>
+</code></pre>
+<p>여기에 약간 더 유연한 UI 버전이 있습니다. 효과를 끄고 켜서 확인하거나 효과를 드래그하여 재정렬하면 어떻게 되는지 확인하세요.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-processing.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-processing.html" target="_blank">새 창으로 열기</a>
@@ -415,7 +418,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>또한 프레임 버퍼는 무엇을 첨부 하냐에 따라서 작동하지 않을 수 있습니다. 항상 작동 해야하는 첨부물의 타입과 조합 목록이 있습니다. 여기서 사용된 <code class="notranslate" translate="no">RGBA</code>/<code class="notranslate" translate="no">UNSIGNED_BYTE</code> 텍스처는 <code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> 첨부 포인터에 할당되어 항상 작동한다고 가정합니다.
 더 실험적인 텍스처 포맷 및 첨부물 조합들은 작동하지 않을 수 있습니다. 이러한 경우 프레임 버퍼를 바인드 한 다음 <code class="notranslate" translate="no">gl.checkFramebufferStatus</code>를 호출하고 <code class="notranslate" translate="no">gl.FRAMEBUFFER_COMPLETE</code>를 리턴하는지 확인해야합니다. 작동이 한다면 그대로 사용하면 되고 만약 작동하지 않는다면 사용자에게 이를 알릴 필요가 있습니다. 다행히도 WebGL2는 다양한 포맷과 조합을 지원합니다.</p>
 <p>WebGL은 <a href="webgl-fundamentals.html">클립 공간</a>에서 픽셀로 변환을 합니다. 이 작업은 <code class="notranslate" translate="no">gl.viewport</code> 설정을 기반으로합니다. 프레임 버퍼는 캔버스와 크기가 다르기 때문에 텍스처 또는 캔버스에 렌더링할 것인지에 따라
- 뷰표트를 적절히 설정이 필요합니다.</p>
+뷰표트를 적절히 설정이 필요합니다.</p>
 <p>마지막으로 <a href="webgl-fundamentals.html">원래 예제</a>에서 WebGL은 전통적인 2D에서 왼쪽 상단과 달리 왼쪽 아래를 0.0으로 캔버스를 보여주기 때문에 렌더링 할 때 Y좌표를 뒤집었습니다. 이는 프레임 버퍼에서는 필요가 없습니다. 프레임 버퍼는 보여지지 않기 때문에 어느 부분이 위인지 아래인지는 상관이 없습니다. 중요한 것은 픽셀 0이고 0은 프레임 버퍼의 0에 해당한다는 것입니다. 이 문제를 해결하기 위해 쉐이더 <code class="notranslate" translate="no">u_flipY</code>이라 불리는 하나 이상의 유니폼 입력을 추가하여 뒤집을지 말지 설정할 수 있게 만들었습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 +uniform float u_flipY;
@@ -426,7 +429,8 @@ void main() {
 +   gl_Position = vec4(clipSpace * vec2(1, u_flipY), 0, 1);
   ...
 }
-</code></pre><p>그리고 렌더링 할 때 설정할 수 있습니다.</p>
+</code></pre>
+<p>그리고 렌더링 할 때 설정할 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
 +  var flipYLocation = gl.getUniformLocation(program, &quot;u_flipY&quot;);
 
@@ -439,7 +443,8 @@ void main() {
 
 +  // 뒤집는다
 +  gl.uniform1f(flipYLocation, -1);
-</code></pre><p>이 예제에서는 간단하게 단일 GLSL 프로그램을 사용해서 다양한 효과들을 적용 할 수 있도록 했습니다. 만약에 이미지 처리에 전념하고 싶다면 많은 더 GLSL프로그램이 필요할 것입니다. 색조, 채도 및 휘도 조정를 위한 프로그램이 있고, 밝기와 대비를 위한 프로그램, 반전용, 또 다른 레벨을 조정하는용 등이 있습니다. GLSL 프로그램을 전환하고 특정 프로그램에 대한 매개 변수를 업데이트하려면 코드를 변경해야합니다. 이 글에서 이 예제를 작성하는것을 고려해 보았지만 여러 GLSL프로그램은 각자 매개변수가 필요하고 아마도 거대한 스파게티 난장판이 되지 않도록 중요한 부분에 리팩토링이 필요로 할 것이기 때문에 연습으로 남겨두는게 좋은 방법이라고 생각되어 남겨 두었습니다.</p>
+</code></pre>
+<p>이 예제에서는 간단하게 단일 GLSL 프로그램을 사용해서 다양한 효과들을 적용 할 수 있도록 했습니다. 만약에 이미지 처리에 전념하고 싶다면 많은 더 GLSL프로그램이 필요할 것입니다. 색조, 채도 및 휘도 조정를 위한 프로그램이 있고, 밝기와 대비를 위한 프로그램, 반전용, 또 다른 레벨을 조정하는용 등이 있습니다. GLSL 프로그램을 전환하고 특정 프로그램에 대한 매개 변수를 업데이트하려면 코드를 변경해야합니다. 이 글에서 이 예제를 작성하는것을 고려해 보았지만 여러 GLSL프로그램은 각자 매개변수가 필요하고 아마도 거대한 스파게티 난장판이 되지 않도록 중요한 부분에 리팩토링이 필요로 할 것이기 때문에 연습으로 남겨두는게 좋은 방법이라고 생각되어 남겨 두었습니다.</p>
 <p>위에 본 예제와 전에 본 예제를 통해 WebGL에 더 가까워지고 2D로 시작하면서 WebGL을 좀더 쉽게 사용할 수 있기를 바랍니다. 만약에 시간이 된다면 3D의 작동 방법에 대한 <a href="webgl-2d-translation.html">몇 가지 글들</a>과 <a href="webgl-how-it-works.html">WebGL이 실제로 수행하는 작업</a>에 대한 더 자세한 글을 을 작성하려고 합니다.
 다음 단계는 <a href="webgl-2-textures.html">2개 이상의 텍스처 사용법</a>를 배우는 것입니다.</p>
 

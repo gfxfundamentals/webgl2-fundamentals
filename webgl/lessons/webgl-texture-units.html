@@ -247,7 +247,7 @@ In the shader you declare a <em>uniform sampler</em> like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">uniform sampler2D someTexture;
 </code></pre>
 <p>But how does the shader know which texture to use for <code class="notranslate" translate="no">someTexture</code>?</p>
-<p>That&#39;s where texture units come in. Texture units are a <strong>global array</strong> of
+<p>That’s where texture units come in. Texture units are a <strong>global array</strong> of
 references to textures. You can imagine if WebGL was written in JavaScript
 it would have some global state that looks like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const gl = {
@@ -266,7 +266,7 @@ it would have some global state that looks like this</p>
 }
 </code></pre>
 <p>You can see above <code class="notranslate" translate="no">textureUnits</code> is an array. You assign a texture to one of the <em>bind points</em> in that array
-of texture units. Let&#39;s assign <code class="notranslate" translate="no">ourTexture</code> to texture unit 5.</p>
+of texture units. Let’s assign <code class="notranslate" translate="no">ourTexture</code> to texture unit 5.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// at init time
 const ourTexture = gl.createTexture();
 // insert code it init texture here.
@@ -278,10 +278,10 @@ const indexOfTextureUnit = 5;
 gl.activeTexture(gl.TEXTURE0 + indexOfTextureUnit);
 gl.bindTexture(gl.TEXTURE_2D, ourTexture);
 </code></pre>
-<p>You then tell the shader which texture unit you bound the texture to by calling </p>
+<p>You then tell the shader which texture unit you bound the texture to by calling</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.uniform1i(someTextureUniformLocation, indexOfTextureUnit);
 </code></pre>
-<p>If <code class="notranslate" translate="no">activeTexture</code> and <code class="notranslate" translate="no">bindTexture</code> WebGL functions were implemented in JavaScript they&#39;d look
+<p>If <code class="notranslate" translate="no">activeTexture</code> and <code class="notranslate" translate="no">bindTexture</code> WebGL functions were implemented in JavaScript they’d look
 something like:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// PSEUDO CODE!!!
 gl.activeTexture = function(unit) {
@@ -325,7 +325,7 @@ on how many units each can use. You can query the limits for each with</p>
 const maxFragmentShaderTextureUnits = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
 </code></pre>
 <p>Each are required to support at least 16 texture units.</p>
-<p>Let&#39;s say </p>
+<p>Let’s say</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">maxTextureUnits = 32
 maxVertexShaderTextureUnits = 16
 maxFragmentShaderTextureUnits = 32

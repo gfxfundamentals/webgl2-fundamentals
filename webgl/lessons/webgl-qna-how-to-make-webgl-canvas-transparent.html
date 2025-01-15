@@ -236,39 +236,41 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>Is it possible to have <strong>WebGL canvas</strong> with transparent background?
 I want to have contents of web page visible through the canvas.</p>
-<p>This is what I have now: <a href="http://i50.tinypic.com/2vvq7h2.png">http://i50.tinypic.com/2vvq7h2.png</a></p>
+<p>This is what I have now: http://i50.tinypic.com/2vvq7h2.png</p>
 <p>As you can see, the text behind the WebGL canvas is not visible. When I change style of Canvas element in CSS and add</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">opacity: 0.5;
-</code></pre><p>The page will look like this:
-<a href="https://imgur.com/BMgHWsZ">https://imgur.com/BMgHWsZ</a></p>
+</code></pre>
+<p>The page will look like this:
+https://imgur.com/BMgHWsZ</p>
 <p>Which is almost what I want, but not entirely - the color of text due to the CSS alpha setting is of course not the same black and color of blue shape is not the same blue as in the first picture.</p>
 <p>Thanks for any help!
-<a href="https://imgur.com/hSu5tyM">https://imgur.com/hSu5tyM</a></p>
-<h2 id="answer-">Answer:</h2>
-<p>WebGL defaults to being transparent. Here&#39;s a sample</p>
+https://imgur.com/hSu5tyM</p>
+<h2 id="answer">Answer:</h2>
+<p>WebGL defaults to being transparent. Here’s a sample</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-make-webgl-canvas-transparent-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-make-webgl-canvas-transparent-example-1.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>Note that the browser assumes the pixels in the canvas represent PRE-MULTIPLIED-ALPHA values. That means for example if you changed the clear color to (1, 0, 0, 0.5) you&#39;d get something you don&#39;t see anywhere else in HTML.</p>
-<p>What I mean by that is Pre-multiplied alpha means the RGB parts are such that they&#39;ve already been multiplied by the alpha value. So if you started 1,0,0 for RGB and your alpha is 0.5. Then if you multiply the RGB by alpha you&#39;d get 0.5, 0, 0 for the RGB. That&#39;s what the browser expects by default.</p>
-<p>If the pixels in WebGL are 1,0,0,0.5 that makes no sense to the browser and you&#39;ll get strange effects.  </p>
-<p>See for example </p>
+<p>Note that the browser assumes the pixels in the canvas represent PRE-MULTIPLIED-ALPHA values. That means for example if you changed the clear color to (1, 0, 0, 0.5) you’d get something you don’t see anywhere else in HTML.</p>
+<p>What I mean by that is Pre-multiplied alpha means the RGB parts are such that they’ve already been multiplied by the alpha value. So if you started 1,0,0 for RGB and your alpha is 0.5. Then if you multiply the RGB by alpha you’d get 0.5, 0, 0 for the RGB. That’s what the browser expects by default.</p>
+<p>If the pixels in WebGL are 1,0,0,0.5 that makes no sense to the browser and you’ll get strange effects.</p>
+<p>See for example</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-make-webgl-canvas-transparent-example-2.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-make-webgl-canvas-transparent-example-2.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>Notice the black text has become red even though you&#39;d think an alpha of 0.5 = 50% of the black text and 50% of the red WebGL canvas. That&#39;s because the red has not been pre-multiplied.</p>
+<p>Notice the black text has become red even though you’d think an alpha of 0.5 = 50% of the black text and 50% of the red WebGL canvas. That’s because the red has not been pre-multiplied.</p>
 <p>You can solve this by making sure the values you create in WebGL represent pre-multiplied values., or you can tell the browser that your WebGL pixels are not pre-multiplied when you create the webgl context with</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const gl = canvas.getContext(&quot;webgl&quot;, { premultipliedAlpha: false });
-</code></pre><p>Now the 1,0,0,0.5 pixels work again. Example: </p>
+</code></pre>
+<p>Now the 1,0,0,0.5 pixels work again. Example:</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-make-webgl-canvas-transparent-example-3.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-make-webgl-canvas-transparent-example-3.html" target="_blank">click here to open in a separate window</a>

@@ -236,16 +236,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>I am trying to measure the time it takes for an image in webgl to load.</p>
-<p>I was thinking about using gl.finish() to get a timestamp before and after the image has loaded and subtracting the two to get an accurate measurement, however I couldn&#39;t find a good example for this kind of usage.</p>
+<p>I was thinking about using gl.finish() to get a timestamp before and after the image has loaded and subtracting the two to get an accurate measurement, however I couldn’t find a good example for this kind of usage.</p>
 <p>Is this sort of thing possible, and if so can someone provide a sample code?</p>
-<h2 id="answer-">Answer:</h2>
+<h2 id="answer">Answer:</h2>
 <p>No it is not.</p>
-<p>In fact in Chrome <code class="notranslate" translate="no">gl.finish</code> is just a <code class="notranslate" translate="no">gl.flush</code>. <a href="https://chromium.googlesource.com/chromium/blink/+/master/Source/modules/webgl/WebGLRenderingContextBase.cpp">See the code</a> and search for &quot;::finish&quot;. </p>
+<p>In fact in Chrome <code class="notranslate" translate="no">gl.finish</code> is just a <code class="notranslate" translate="no">gl.flush</code>. <a href="https://chromium.googlesource.com/chromium/blink/+/master/Source/modules/webgl/WebGLRenderingContextBase.cpp">See the code</a> and search for “::finish”.</p>
 <p>Because Chrome is multi-process and actually implements security in depth the actual GL calls are issued in another process from your JavaScript so even if Chrome did call <code class="notranslate" translate="no">gl.finish</code> it would happen in another process and from the POV of JavaScript would not be accurate for timing in any way shape or form. Firefox is apparently in the process of doing something similar for similar reasons.</p>
-<p>Even outside of Chrome, every driver handles <code class="notranslate" translate="no">gl.finish</code> differently. Using <code class="notranslate" translate="no">gl.finish</code> for timing is not useful information because it&#39;s not representative of actual speed since it includes stalling the GPU pipeline. In other words, timing with <code class="notranslate" translate="no">gl.finish</code> includes lots of overhead that wouldn&#39;t happen in real use and so is not an accurate measurement of how fast something would execute normal circumstances.</p>
-<p>There are GL extensions on some GPUs to get timing info. Unfortunately they (a) are not available in WebGL and (b) will not likely ever be as they are not portable as they can&#39;t really work on tiled GPUs like those found in many mobile phones.</p>
+<p>Even outside of Chrome, every driver handles <code class="notranslate" translate="no">gl.finish</code> differently. Using <code class="notranslate" translate="no">gl.finish</code> for timing is not useful information because it’s not representative of actual speed since it includes stalling the GPU pipeline. In other words, timing with <code class="notranslate" translate="no">gl.finish</code> includes lots of overhead that wouldn’t happen in real use and so is not an accurate measurement of how fast something would execute normal circumstances.</p>
+<p>There are GL extensions on some GPUs to get timing info. Unfortunately they (a) are not available in WebGL and (b) will not likely ever be as they are not portable as they can’t really work on tiled GPUs like those found in many mobile phones.</p>
 <p>Instead of asking how to time GL calls what specifically are you trying to achieve by timing them? Maybe people can suggest a solution to that.</p>
 <div class="so">
   <div>The question and quoted portions thereof are 

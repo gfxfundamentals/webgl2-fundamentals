@@ -236,12 +236,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I&#39;m trying to write a program that does some basic gravity physics simulations on particles. I initially wrote the program using the standard Javascript graphics (with a 2d context), and I could get around 25 fps w/10000 particles that way. I rewrote the tool in WebGL because I was under the assumption that I could get better results that way. I am also using the glMatrix library for vector math. However, with this implementation I&#39;m getting only about 15fps with 10000 particles. </p>
-<p>I&#39;m currently an EECS undergrad and I have had a reasonable amount of experience programming, but never with graphics, and I have little clue as to how to optimize Javascript code.
-There is a lot I don&#39;t understand about how WebGL and Javascript work. What key components affect performance when using these technologies? Is there a more efficient data structure to use to manage my particles (I&#39;m just using a simple array)? What explanation could there be for the performance drop using WebGL? Delays between the GPU and Javascript maybe?</p>
-<p>Any suggestions, explanations, or help in general would be greatly appreciated. </p>
-<p>I&#39;ll try to include only the critical areas of my code for reference.</p>
+      <h2 id="question">Question:</h2>
+<p>I’m trying to write a program that does some basic gravity physics simulations on particles. I initially wrote the program using the standard Javascript graphics (with a 2d context), and I could get around 25 fps w/10000 particles that way. I rewrote the tool in WebGL because I was under the assumption that I could get better results that way. I am also using the glMatrix library for vector math. However, with this implementation I’m getting only about 15fps with 10000 particles.</p>
+<p>I’m currently an EECS undergrad and I have had a reasonable amount of experience programming, but never with graphics, and I have little clue as to how to optimize Javascript code.
+There is a lot I don’t understand about how WebGL and Javascript work. What key components affect performance when using these technologies? Is there a more efficient data structure to use to manage my particles (I’m just using a simple array)? What explanation could there be for the performance drop using WebGL? Delays between the GPU and Javascript maybe?</p>
+<p>Any suggestions, explanations, or help in general would be greatly appreciated.</p>
+<p>I’ll try to include only the critical areas of my code for reference.</p>
 <p>Here is my setup code:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl = null;
 try {
@@ -263,8 +263,8 @@ if(gl){
 
         initShaders();
 
-        // Here&#39;s where we call the routine that builds all the objects
-        // we&#39;ll be drawing.
+        // Here's where we call the routine that builds all the objects
+        // we'll be drawing.
 
         initBuffers();
     }else{
@@ -280,7 +280,8 @@ if(gl){
     gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesBuffer);
     gl.vertexAttribPointer(vertexPositionAttribute, 2, gl.FLOAT, false, 0, 0);
     requestAnimationFrame(drawFrame,canvas);
-</code></pre><p>The draw loop: </p>
+</code></pre>
+<p>The draw loop:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawFrame(){
     // Clear the canvas before we start drawing on it.
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -295,7 +296,8 @@ if(gl){
     }
     window.requestAnimationFrame(drawFrame, canvas);
 }
-</code></pre><p>Here is the class that Square inherits from:</p>
+</code></pre>
+<p>Here is the class that Square inherits from:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function PhysicsObject(startX,startY,size,mass){
     /* Class instances */
     this.posVec = vec2.fromValues(startX,startY);
@@ -322,7 +324,8 @@ if(gl){
         vec2.add(this.posVec,this.posVec,this.velVec);
     };
 }
-</code></pre><p>These are the shaders I&#39;m using:</p>
+</code></pre>
+<p>These are the shaders I’m using:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> &lt;script id=&quot;shader-fs&quot; type=&quot;x-shader/x-fragment&quot;&gt;
         void main(void) {
         gl_FragColor = vec4(0.7, 0.8, 1.0, 1.0);
@@ -353,12 +356,13 @@ if(gl){
         gl_Position = vec4(clipSpace*vec2(1,-1), 0, 1);
         }
     &lt;/script&gt;
-</code></pre><p>I apologize for this being long-winded. Again, any suggestions or nudges in the right direction would be huge. </p>
-<h2 id="answer-">Answer:</h2>
-<p>It depends on what you are trying to do. When you say &quot;gravity&quot; to you mean some kind of physical simulation with collisions or do you just mean <code class="notranslate" translate="no">velocity += acceleration; position += velocity</code>?</p>
+</code></pre>
+<p>I apologize for this being long-winded. Again, any suggestions or nudges in the right direction would be huge.</p>
+<h2 id="answer">Answer:</h2>
+<p>It depends on what you are trying to do. When you say “gravity” to you mean some kind of physical simulation with collisions or do you just mean <code class="notranslate" translate="no">velocity += acceleration; position += velocity</code>?</p>
 <p>If the latter then you can do all the math in the shader. Example is here</p>
-<p><a href="https://www.khronos.org/registry/webgl/sdk/demos/google/particles/index.html">https://www.khronos.org/registry/webgl/sdk/demos/google/particles/index.html</a></p>
-<p>These particles are done entirely in the shader. The only input after setup is <code class="notranslate" translate="no">time</code>. Each &quot;particle&quot; consists of 4 vertices. Each vertex contains </p>
+<p>https://www.khronos.org/registry/webgl/sdk/demos/google/particles/index.html</p>
+<p>These particles are done entirely in the shader. The only input after setup is <code class="notranslate" translate="no">time</code>. Each “particle” consists of 4 vertices. Each vertex contains</p>
 <ul>
 <li>local_position (for a unit quad)</li>
 <li>texture_coord</li>
@@ -372,27 +376,33 @@ if(gl){
 <li>orientation (quaterion)</li>
 <li>color multiplier</li>
 </ul>
-<p>Given time you can compute the particles&#39;s local time (time since it starts)</p>
+<p>Given time you can compute the particles’s local time (time since it starts)</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> local_time = time - starting_time;
-</code></pre><p>Then you can compute a position with</p>
+</code></pre>
+<p>Then you can compute a position with</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> base_position = start_position + 
                  velocity * local_time + 
                  acceleration * local_time * local_time;
-</code></pre><p>That&#39;s acceleration * time^2. You then add the local_position to that base_position to get the position needed to render the quad.</p>
+</code></pre>
+<p>That’s acceleration * time^2. You then add the local_position to that base_position to get the position needed to render the quad.</p>
 <p>You can also compute a 0 to 1 lerp over the lifetime of the particle</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> lerp = local_time / lifetime;
-</code></pre><p>This gives you a value you can use to lerp all the other values</p>
+</code></pre>
+<p>This gives you a value you can use to lerp all the other values</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> size = mix(start_size, end_size, lerp);
-</code></pre><p>If the particle a size of 0 if it&#39;s outside the it&#39;s lifetime</p>
+</code></pre>
+<p>If the particle a size of 0 if it’s outside the it’s lifetime</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> if (lerp &lt; 0.0 || lerp &gt; 1.0) {
    size = 0.0;
  }
-</code></pre><p>This will make the GPU not draw anything.</p>
+</code></pre>
+<p>This will make the GPU not draw anything.</p>
 <p>Using a ramp texture (a 1xN pixel texture) you can easily have the particle change colors over time.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> color = texture2D(rampTexture, vec4(lerp, 0.5));
-</code></pre><p>etc...</p>
-<p>If you <a href="https://www.khronos.org/registry/webgl/sdk/demos/google/resources/o3djs/particles.js">follow through the shaders</a> you&#39;ll see other things similarly handled including spinning the particle (something that would be harder with point sprites), animating across a texture for frames, doing both 2D and 3D oriented particles. 2D particles are fine for smoke, exhaust, fire, explosions. 3D particles are good for ripples, possibly tire tracks, and can be combined with 2D particles for ground puffs to hide some of the z-issues of 2D only particles. etc..</p>
-<p>There are also examples of one shots (explosions, puffs) as well as trails. Press &#39;P&#39; for a puff. Hold &#39;T&#39; to see a trail.</p>
+</code></pre>
+<p>etc…</p>
+<p>If you <a href="https://www.khronos.org/registry/webgl/sdk/demos/google/resources/o3djs/particles.js">follow through the shaders</a> you’ll see other things similarly handled including spinning the particle (something that would be harder with point sprites), animating across a texture for frames, doing both 2D and 3D oriented particles. 2D particles are fine for smoke, exhaust, fire, explosions. 3D particles are good for ripples, possibly tire tracks, and can be combined with 2D particles for ground puffs to hide some of the z-issues of 2D only particles. etc…</p>
+<p>There are also examples of one shots (explosions, puffs) as well as trails. Press ‘P’ for a puff. Hold ‘T’ to see a trail.</p>
 <p>AFAIK these are pretty efficient particles in that JavaScript is doing almost nothing.</p>
 <div class="so">
   <div>The question and quoted portions thereof are 

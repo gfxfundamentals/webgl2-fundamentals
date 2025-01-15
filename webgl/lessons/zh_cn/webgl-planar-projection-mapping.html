@@ -240,11 +240,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>本文还假设你已经读了 <a href="webgl-3d-perspective.html">透视的文章</a>、<a href="webgl-3d-camera.html">相机的文章</a>、<a href="webgl-3d-textures.html">纹理的文章</a> 和 <a href="webgl-visualizing-the-camera.html">可视化相机的文章</a>，如果你还没有读过，那你应该首先从那里开始阅读。</p>
 <p>投影映射是“投影”一张图像的过程，就像一个电影放映机对准一个屏幕，然后将电影投影到屏幕上。电影放映机投影的是一个透视的平面。屏幕离放映机越远，则图像就会越大。如果你将屏幕旋转使其不与电影放映机垂直，那么结果将会是一个梯形或者是任意的四边形。</p>
 <div class="webgl_center"><img src="../resources/perspective-projection.svg" style="width: 400px"></div>
-
 <p>当然，投影映射并不只能投影到平面。还有圆柱型的投影映射、球形的投影映射，等等。</p>
 <p>我们先来介绍下平面的投影映射。在这种情况下，你需要将电影放映机想象成和屏幕一样大，这样即使屏幕离电影放映机很远，电影的图像也不会变得很大，它会保持原来的尺寸。</p>
 <div class="webgl_center"><img src="../resources/orthographic-projection.svg" style="width: 400px"></div>
-
 <p>首先，让我们创建一个场景，该场景会绘制一个平面和一个球体。我们将用一个简单的 8x8 棋盘纹理对它们进行贴图。</p>
 <p>这些着色器和 <a href="webgl-3d-textures.html">纹理文章</a> 中的那些着色器是类似的，只是各个矩阵是分开的，这样我们就不需要在 JavaScript 中把它们乘在一起了。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
@@ -445,7 +443,7 @@ render()
     // 异步加载一张图片
     const image = new Image()
     image.src = url
-    image.addEventListener(&#39;load&#39;, function () {
+    image.addEventListener('load', function () {
         // 现在图片加载完了，把它拷贝到纹理中
         gl.bindTexture(gl.TEXTURE_2D, texture)
         gl.texImage2D(
@@ -463,7 +461,7 @@ render()
     return texture
 }
 
-const imageTexture = loadImageTexture(&#39;resources/f-texture.png&#39;)
+const imageTexture = loadImageTexture('resources/f-texture.png')
 </code></pre>
 <p>回想一下 <a href="webgl-visualizing-the-camera.html">可视化相机的文章</a>。我们创建了一个 -1 到 +1 的立方体，然后把它绘制出来表示相机的视椎体。我们的矩阵使得视椎体内的空间表示的是世界空间中一些锥体形状的区域，这些区域从世界空间中被转换到了 -1 到 +1 的裁剪空间。我们可以在这里做类似的事。</p>
 <p>让我们来试试吧。首先，在我们的片段着色器中，我们会在 0.0 到 1.0 之间的纹理坐标上绘制投影的纹理。而在这个范围外的纹理坐标，我们将会使用棋盘纹理。</p>
@@ -925,11 +923,9 @@ const textureProjectionMatrix = settings.perspective
 <pre class="prettyprint"><code class="notranslate" translate="no">
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
-
-float projectedAmount = inRange ? 1.0 : 0.0;
+<p>float projectedAmount = inRange ? 1.0 : 0.0;
 gl_FragColor = mix(texColor, projectedTexColor, projectedAmount);
-</code></pre>
-
+</code></pre></p>
 <p> 为什么我们不像下面这样做呢？</p>
 <pre class="prettyprint"><code class="notranslate" translate="no">
   if (inRange) {
@@ -951,22 +947,18 @@ derivatives are undefined within non-uniform control flow and for vertex texture
 <pre class="prettyprint"><code class="notranslate" translate="no">
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
-
-if (inRange) {
+<p>if (inRange) {
 gl_FragColor = projectedTexColor;
 } else {
 gl_FragColor = texColor;
 }
-</code></pre>
-
+</code></pre></p>
 <p>或者这样</p>
 <pre class="prettyprint"><code class="notranslate" translate="no">
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
-
-gl_FragColor = inRange ? projectedTexColor : texColor;
-</code></pre>
-
+<p>gl_FragColor = inRange ? projectedTexColor : texColor;
+</code></pre></p>
 <p>但是我们不能在条件语句内访问纹理本身。这样做在你的 GPU 上可能是可行的，
 但并不是在所有的 GPUs 上都能行。</p>
 <p>无论如何，重要的是你要知道有这么个东西</p>

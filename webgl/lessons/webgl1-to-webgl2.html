@@ -240,95 +240,112 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 If you only use WebGL1 features then then there are
 only 2 <strong>major</strong> differences.</p>
 <ol>
-<li><p>You use <code class="notranslate" translate="no">&quot;webgl2&quot;</code> instead of <code class="notranslate" translate="no">&quot;webgl&quot;</code> when calling <code class="notranslate" translate="no">getContext</code>.</p>
+<li>
+<p>You use <code class="notranslate" translate="no">&quot;webgl2&quot;</code> instead of <code class="notranslate" translate="no">&quot;webgl&quot;</code> when calling <code class="notranslate" translate="no">getContext</code>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var gl = someCanvas.getContext(&quot;webgl2&quot;);
-</code></pre><p>Note: there is no &quot;experimental-webgl2&quot;. The browser vendors got
+</code></pre>
+<p>Note: there is no “experimental-webgl2”. The browser vendors got
 together and decided not to continue prefixing things because websites
 get dependent on the prefix.</p>
 </li>
-<li><p>Many extensions are a standard part of WebGL2 and so not available
+<li>
+<p>Many extensions are a standard part of WebGL2 and so not available
 as extensions.</p>
 <p>For example Vertex Array Objects <code class="notranslate" translate="no">OES_vertex_array_object</code> is a
-standard feature of WebGL2. So for example in WebGL1 you&#39;d do this</p>
+standard feature of WebGL2. So for example in WebGL1 you’d do this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var ext = gl.getExtension(&quot;OES_vertex_array_object&quot;);
 if (!ext) {
-  // tell user they don&#39;t have the required extension or work around it
+  // tell user they don't have the required extension or work around it
 } else {
   var someVAO = ext.createVertexArrayOES();
 }
-</code></pre><p>In WebGL2 you&#39;d do this</p>
+</code></pre>
+<p>In WebGL2 you’d do this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var someVAO = gl.createVertexArray();
-</code></pre><p>Because it just exists.</p>
+</code></pre>
+<p>Because it just exists.</p>
 </li>
 </ol>
-<p>That being said, to take advantage of most WebGL2 features you&#39;ll need to make
+<p>That being said, to take advantage of most WebGL2 features you’ll need to make
 some changes.</p>
 <h2 id="switch-to-glsl-300-es">Switch to GLSL 300 es</h2>
 <p>The biggest change is you should upgrade your shaders to GLSL 3.00 ES. To do
 that the first line of your shaders needs to be</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
-</code></pre><p><strong>NOTE: THIS HAS TO BE THE FIRST LINE! No comments and no blank lines before it are allowed.</strong></p>
+</code></pre>
+<p><strong>NOTE: THIS HAS TO BE THE FIRST LINE! No comments and no blank lines before it are allowed.</strong></p>
 <p>In other words, this is bad</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// BAD!!!!                +---There&#39;s a new line here!
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// BAD!!!!                +---There's a new line here!
 // BAD!!!!                V
 var vertexShaderSource = `
 #version 300 es
 ..
 `;
-</code></pre><p>This is bad, too</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;!-- BAD!!                   V&lt;- there&#39;s a new line here
+</code></pre>
+<p>This is bad, too</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;!-- BAD!!                   V&lt;- there's a new line here
 &lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;
 #version 300 es
 ...
 &lt;/script&gt;
-</code></pre><p>This is good</p>
+</code></pre>
+<p>This is good</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var vertexShaderSource = `#version 300 es
 ...
 `;
-</code></pre><p>This is good, too</p>
+</code></pre>
+<p>This is good, too</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;#version 300 es
 ...
 &lt;/script&gt;
-</code></pre><p>Or you could make your shader compiling functions strip
+</code></pre>
+<p>Or you could make your shader compiling functions strip
 the first blank lines.</p>
 <h3 id="changes-in-glsl-300-es-from-glsl-100">Changes in GLSL 300 es from GLSL 100</h3>
-<p>There are several changes you&#39;ll need to make to your shaders
+<p>There are several changes you’ll need to make to your shaders
 on top of adding the version string above.</p>
-<h4 id="-attribute-in-"><code class="notranslate" translate="no">attribute</code> -&gt; <code class="notranslate" translate="no">in</code></h4>
+<h4 id="attribute---in"><code class="notranslate" translate="no">attribute</code> -&gt; <code class="notranslate" translate="no">in</code></h4>
 <p>In GLSL 100 you might have</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">attribute vec4 a_position;
 attribute vec2 a_texcoord;
 attribute vec3 a_normal;
-</code></pre><p>In GLSL 300 es that becomes</p>
+</code></pre>
+<p>In GLSL 300 es that becomes</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">in vec4 a_position;
 in vec2 a_texcoord;
 in vec3 a_normal;
-</code></pre><h4 id="-varying-to-in-out-"><code class="notranslate" translate="no">varying</code> to <code class="notranslate" translate="no">in</code> / <code class="notranslate" translate="no">out</code></h4>
+</code></pre>
+<h4 id="varying-to-in--out"><code class="notranslate" translate="no">varying</code> to <code class="notranslate" translate="no">in</code> / <code class="notranslate" translate="no">out</code></h4>
 <p>In GLSL 100 you might declare a varying in both the vertex
 and fragment shaders like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">varying vec2 v_texcoord;
 varying vec3 v_normal;
-</code></pre><p>In GLSL 300 es in the vertex shader the varyings become</p>
+</code></pre>
+<p>In GLSL 300 es in the vertex shader the varyings become</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">out vec2 v_texcoord;
 out vec3 v_normal;
-</code></pre><p>And in the fragment shader they become</p>
+</code></pre>
+<p>And in the fragment shader they become</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">in vec2 v_texcoord;
 in vec3 v_normal;
-</code></pre><h4 id="no-more-gl_fragcolor-">No more <code class="notranslate" translate="no">gl_FragColor</code></h4>
+</code></pre>
+<h4 id="no-more-gl_fragcolor">No more <code class="notranslate" translate="no">gl_FragColor</code></h4>
 <p>In GLSL 100 your fragment shader would set the special
 variable <code class="notranslate" translate="no">gl_FragColor</code> to set the output of the shader.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl_FragColor = vec4(1, 0, 0, 1);  // red
-</code></pre><p>In GLSL 300 es you declare your own output variable and
+</code></pre>
+<p>In GLSL 300 es you declare your own output variable and
 then set it.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">out vec4 myOutputColor;
 
 void main() {
    myOutputColor = vec4(1, 0, 0, 1);  // red
 }
-</code></pre><p>Note: You can pick any name you want but names can <strong>not</strong> start with
-<code class="notranslate" translate="no">gl_</code> so you can&#39;t just make <code class="notranslate" translate="no">out vec4 gl_FragColor</code>.</p>
-<h4 id="-texture2d-texture-etc-"><code class="notranslate" translate="no">texture2D</code> -&gt; <code class="notranslate" translate="no">texture</code> etc.</h4>
-<p>In GLSL 100 you&#39;d get a color from a texture like this</p>
+</code></pre>
+<p>Note: You can pick any name you want but names can <strong>not</strong> start with
+<code class="notranslate" translate="no">gl_</code> so you can’t just make <code class="notranslate" translate="no">out vec4 gl_FragColor</code>.</p>
+<h4 id="texture2d---texture-etc"><code class="notranslate" translate="no">texture2D</code> -&gt; <code class="notranslate" translate="no">texture</code> etc.</h4>
+<p>In GLSL 100 you’d get a color from a texture like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler2D u_some2DTexture;
 uniform samplerCube u_someCubeTexture;
 
@@ -336,8 +353,9 @@ uniform samplerCube u_someCubeTexture;
 
 vec4 color1 = texture2D(u_some2DTexture, ...);
 vec4 color2 = textureCube(u_someCubeTexture, ...);
-</code></pre><p>In GLSL 300 es the texture functions automatically know
-what to do based on the sampler type. So now, it&#39;s just
+</code></pre>
+<p>In GLSL 300 es the texture functions automatically know
+what to do based on the sampler type. So now, it’s just
 <code class="notranslate" translate="no">texture</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler2D u_some2DTexture;
 uniform samplerCube u_someCubeTexture;
@@ -346,7 +364,8 @@ uniform samplerCube u_someCubeTexture;
 
 vec4 color1 = texture(u_some2DTexture, ...);
 vec4 color2 = texture(u_someCubeTexture, ...);
-</code></pre><h2 id="features-you-can-take-for-granted">Features you can take for granted</h2>
+</code></pre>
+<h2 id="features-you-can-take-for-granted">Features you can take for granted</h2>
 <p>In WebGL1 many features were optional extensions. In WebGL2
 all of the following are standard features:</p>
 <ul>
@@ -372,14 +391,14 @@ the same as power of 2 textures.</p>
 <h2 id="floating-point-framebuffer-attachments">Floating Point Framebuffer Attachments</h2>
 <p>In WebGL1 to check for support for rendering to a floating point texture
 you would first check for and enable the <code class="notranslate" translate="no">OES_texture_float</code> extension, then
-you&#39;d create a floating point texture, attach it to a framebuffer, and call
+you’d create a floating point texture, attach it to a framebuffer, and call
 <code class="notranslate" translate="no">gl.checkFramebufferStatus</code> to see if it returned <code class="notranslate" translate="no">gl.FRAMEBUFFER_COMPLETE</code>.</p>
 <p>In WebGL2 you need to check for and enable <code class="notranslate" translate="no">EXT_color_buffer_float</code> or else
 <code class="notranslate" translate="no">gl.checkFramebufferStatus</code> will never return <code class="notranslate" translate="no">gl.FRAMEBUFFER_COMPLETE</code> for
 a floating point texture.</p>
 <p>Note that this is also true for <code class="notranslate" translate="no">HALF_FLOAT</code> framebuffer attachments as well.</p>
 <blockquote>
-<p>If you&#39;re curious, this was a <em>bug</em> in the WebGL1 spec. What happened is that WebGL1
+<p>If you’re curious, this was a <em>bug</em> in the WebGL1 spec. What happened is that WebGL1
 shipped and <code class="notranslate" translate="no">OES_texture_float</code> was added, and it was just assumed the correct
 way to use it for rendering was to create a texture, attach it to a framebuffer,
 and check its status. Later someone pointed out that according to the spec that was
@@ -395,7 +414,7 @@ floating point textures.</p>
 <h2 id="vertex-array-objects">Vertex Array Objects</h2>
 <p>Of all the features above the one feature I personally think you should
 always ALWAYS use is vertex array objects. Everything else really
-depends on what you&#39;re trying to do but vertex array objects in particular
+depends on what you’re trying to do but vertex array objects in particular
 seem like a basic feature that should always be used.</p>
 <p>In WebGL1 without vertex array objects all the data about attributes
 was global WebGL state. You can imagine it like this</p>
@@ -413,7 +432,8 @@ was global WebGL state. You can imagine it like this</p>
       { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
     ],
   },
-</code></pre><p>   }</p>
+}
+</code></pre>
 <p>Calling functions like <code class="notranslate" translate="no">gl.vertexAttribPointer</code>, <code class="notranslate" translate="no">gl.enableVertexAttribArray</code>, and
 <code class="notranslate" translate="no">gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ??)</code> would affect that global state.
 Before each thing you wanted to draw you needed to setup all the attributes, and if you
@@ -421,11 +441,14 @@ were drawing indexed data you needed to set the <code class="notranslate" transl
 <p>With Vertex Array Objects that entire <code class="notranslate" translate="no">attributeState</code> above becomes a <em>Vertex Array</em>.</p>
 <p>In other words</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var someVAO = gl.createVertexArray();
-</code></pre><p>Makes a new instance of the thing above called <code class="notranslate" translate="no">attributeState</code>.</p>
+</code></pre>
+<p>Makes a new instance of the thing above called <code class="notranslate" translate="no">attributeState</code>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(someVAO);
-</code></pre><p>This is equivalent to</p>
+</code></pre>
+<p>This is equivalent to</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">glState.attributeState = someVAO;
-</code></pre><p>What that means is that you should setup all of your attributes at init time now.</p>
+</code></pre>
+<p>What that means is that you should setup all of your attributes at init time now.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// at init time
 for each model / geometry / ...
   var vao = gl.createVertexArray()
@@ -437,15 +460,18 @@ for each model / geometry / ...
   if indexed geometry
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
   gl.bindVertexArray(null);
-</code></pre><p>Then at render time to use a particular geometry all you need to do
+</code></pre>
+<p>Then at render time to use a particular geometry all you need to do
 is</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(vaoForGeometry);
-</code></pre><p>In WebGL1 the init loop above would have appeared at render time.
+</code></pre>
+<p>In WebGL1 the init loop above would have appeared at render time.
 This is a HUGE speed up!</p>
 <p>There are a few caveats though:</p>
 <ol>
-<li><p>attribute locations are program dependent.</p>
-<p>If you&#39;re going to use the same geometry with multiple
+<li>
+<p>attribute locations are program dependent.</p>
+<p>If you’re going to use the same geometry with multiple
 programs, consider manually assigning attribute locations.
 In GLSL 300 es you can do this in the shader.</p>
 <p>For example:</p>
@@ -453,7 +479,8 @@ In GLSL 300 es you can do this in the shader.</p>
 layout(location = 1) in vec2 a_texcoord;
 layout(location = 2) in vec3 a_normal;
 layout(location = 3) in vec4 a_color;
-</code></pre><p>Sets the locations of the 4 attributes.</p>
+</code></pre>
+<p>Sets the locations of the 4 attributes.</p>
 <p>You can also still do it the WebGL1 way by calling
 <code class="notranslate" translate="no">gl.bindAttribLocation</code> before calling <code class="notranslate" translate="no">gl.linkProgram</code>.</p>
 <p>For example:</p>
@@ -461,23 +488,26 @@ layout(location = 3) in vec4 a_color;
 gl.bindAttribLocation(someProgram, 1, &quot;a_texcoord&quot;);
 gl.bindAttribLocation(someProgram, 2, &quot;a_normal&quot;);
 gl.bindAttribLocation(someProgram, 3, &quot;a_color&quot;);
-</code></pre><p>This means you can force them to be compatible across multiple shader
-programs. If one program doesn&#39;t need all attributes,
+</code></pre>
+<p>This means you can force them to be compatible across multiple shader
+programs. If one program doesn’t need all attributes,
 the attributes they do need will still be assigned to
 the same locations.</p>
-<p>If you don&#39;t do this you&#39;ll need different VAOs for
+<p>If you don’t do this you’ll need different VAOs for
 different shader programs when using the same geometry OR
-you&#39;ll need to just do the WebGL1 thing and not use
+you’ll need to just do the WebGL1 thing and not use
 VAOs and always setup attributes at render time, which is slow.</p>
-<p>NOTE: of the 2 methods above I&#39;m leaning toward using
-<code class="notranslate" translate="no">gl.bindAttribLocation</code> because it&#39;s easy to have it in one
+<p>NOTE: of the 2 methods above I’m leaning toward using
+<code class="notranslate" translate="no">gl.bindAttribLocation</code> because it’s easy to have it in one
 place in my code whereas the method of using <code class="notranslate" translate="no">layout(location = ?)</code> has
 to be in all shaders, so in the interest of D.R.Y., <code class="notranslate" translate="no">gl.bindAttribLocation</code>
-seems better. Maybe if I was using a shader generator then there&#39;d be no difference.</p>
+seems better. Maybe if I was using a shader generator then there’d be no difference.</p>
 </li>
-<li><p>Always unbind the VAO when you&#39;re done</p>
+<li>
+<p>Always unbind the VAO when you’re done</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(null);
-</code></pre><p>This just comes from my own experience. If you look above,
+</code></pre>
+<p>This just comes from my own experience. If you look above,
 the <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code> state is part of a Vertex Array.</p>
 <p>So, I ran into this issue. I created some geometry, then
 I created a VAO for that geometry and set up the attributes
@@ -486,38 +516,43 @@ geometry. When that geometry setup its indices, because
 I still had the previous VAO bound setting up, the indices
 effected the <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code> binding for the previous
 VAO. It took me several hours to debug.</p>
-<p>So, my suggestion is to never leave a VAO bound if you&#39;re done
-with it. Either immediately bind the next VAO you&#39;re going
-to use, or bind <code class="notranslate" translate="no">null</code> if you&#39;re done.</p>
+<p>So, my suggestion is to never leave a VAO bound if you’re done
+with it. Either immediately bind the next VAO you’re going
+to use, or bind <code class="notranslate" translate="no">null</code> if you’re done.</p>
 </li>
 </ol>
 <p>As mentioned at the top, many extensions from WebGL1 are standard features
-of WebGL2, so if you were using extensions in WebGL1, you&#39;ll need to
+of WebGL2, so if you were using extensions in WebGL1, you’ll need to
 change your code to not use them as extensions in WebGL2. See below.</p>
 <p>Two that need special care though:</p>
 <ol>
-<li><p><code class="notranslate" translate="no">OES_texture_float</code> and floating point textures.</p>
-<p> Floating point textures are a standard feature of WebGL2 but:</p>
+<li>
+<p><code class="notranslate" translate="no">OES_texture_float</code> and floating point textures.</p>
+<p>Floating point textures are a standard feature of WebGL2 but:</p>
 <ul>
-<li><p>Being able to filter floating point textures is still an extension: <code class="notranslate" translate="no">OES_texture_float_linear</code>.</p>
+<li>
+<p>Being able to filter floating point textures is still an extension: <code class="notranslate" translate="no">OES_texture_float_linear</code>.</p>
 </li>
-<li><p>Being able to render to a floating point texture is an extension: <code class="notranslate" translate="no">EXT_color_buffer_float</code>.</p>
+<li>
+<p>Being able to render to a floating point texture is an extension: <code class="notranslate" translate="no">EXT_color_buffer_float</code>.</p>
 </li>
-<li><p>Creating a floating point texture is different. You must use one of the new WebGL2 internal
+<li>
+<p>Creating a floating point texture is different. You must use one of the new WebGL2 internal
 formats like <code class="notranslate" translate="no">RGBA32F</code>, <code class="notranslate" translate="no">R32F</code>, etc. This is different than the WebGL1 <code class="notranslate" translate="no">OES_texture_float</code>
 extension in which the internal format was inferred from the <code class="notranslate" translate="no">type</code> passed to <code class="notranslate" translate="no">texImage2D</code>.</p>
 </li>
 </ul>
 </li>
-<li><p><code class="notranslate" translate="no">WEBGL_depth_texture</code> and depth textures.</p>
-<p> Similar to the previous difference, to create a depth texture in WebGL2 you must use one of
- WebGL2&#39;s internal formats: <code class="notranslate" translate="no">DEPTH_COMPONENT16</code>, <code class="notranslate" translate="no">DEPTH_COMPONENT24</code>,
- <code class="notranslate" translate="no">DEPTH_COMPONENT32F</code>, <code class="notranslate" translate="no">DEPTH24_STENCIL8</code>, or <code class="notranslate" translate="no">DEPTH32F_STENCIL8</code>, whereas the WebGL1
- <code class="notranslate" translate="no">WEBGL_depth_texture</code> extension used <code class="notranslate" translate="no">DEPTH_COMPONENT</code> and <code class="notranslate" translate="no">DEPTH_STENCIL_COMPONENT</code>.</p>
+<li>
+<p><code class="notranslate" translate="no">WEBGL_depth_texture</code> and depth textures.</p>
+<p>Similar to the previous difference, to create a depth texture in WebGL2 you must use one of
+WebGL2’s internal formats: <code class="notranslate" translate="no">DEPTH_COMPONENT16</code>, <code class="notranslate" translate="no">DEPTH_COMPONENT24</code>,
+<code class="notranslate" translate="no">DEPTH_COMPONENT32F</code>, <code class="notranslate" translate="no">DEPTH24_STENCIL8</code>, or <code class="notranslate" translate="no">DEPTH32F_STENCIL8</code>, whereas the WebGL1
+<code class="notranslate" translate="no">WEBGL_depth_texture</code> extension used <code class="notranslate" translate="no">DEPTH_COMPONENT</code> and <code class="notranslate" translate="no">DEPTH_STENCIL_COMPONENT</code>.</p>
 </li>
 </ol>
-<p>That&#39;s my personal short list of things to be aware of when switching
-from WebGL1 to WebGL2. <a href="webgl2-whats-new.html">There&#39;s even more stuff you can do in WebGL2, though</a>.</p>
+<p>That’s my personal short list of things to be aware of when switching
+from WebGL1 to WebGL2. <a href="webgl2-whats-new.html">There’s even more stuff you can do in WebGL2, though</a>.</p>
 <div class="webgl_bottombar">
 <h3>Making WebGL1 extensions look like WebGL2</h3>
 <p>Functions that were on extensions in WebGL1 are now on the main
@@ -543,43 +578,42 @@ That way the rest of your code can stay the same. Example:</p>
 <pre class="prettyprint">
 const gl = someCanvas.getContext("webgl");
 const haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object");
-
-function getAndApplyExtension(gl, name) {
-  const ext = gl.getExtension(name);
-  if (!ext) {
-    return null;
-  }
-  const fnSuffix = name.split("_")[0];
-  const enumSuffix = '_' + fnSuffix;
-  for (const key in ext) {
-    const value = ext[key];
-    const isFunc = typeof (value) === 'function';
-    const suffix = isFunc ? fnSuffix : enumSuffix;
-    let name = key;
-    // examples of where this is not true are WEBGL_compressed_texture_s3tc
-    // and WEBGL_compressed_texture_pvrtc
-    if (key.endsWith(suffix)) {
-      name = key.substring(0, key.length - suffix.length);
-    }
-    if (gl[name] !== undefined) {
-      if (!isFunc && gl[name] !== value) {
-        console.warn("conflict:", name, gl[name], value, key);
-      }
-    } else {
-      if (isFunc) {
-        gl[name] = function(origFn) {
-          return function() {
-            return origFn.apply(ext, arguments);
-          };
-        }(value);
-      } else {
-        gl[name] = value;
-      }
-    }
-  }
-  return ext;
+<p>function getAndApplyExtension(gl, name) {
+const ext = gl.getExtension(name);
+if (!ext) {
+return null;
 }
-</pre>
+const fnSuffix = name.split(&quot;<em>&quot;)[0];
+const enumSuffix = '</em>’ + fnSuffix;
+for (const key in ext) {
+const value = ext[key];
+const isFunc = typeof (value) === ‘function’;
+const suffix = isFunc ? fnSuffix : enumSuffix;
+let name = key;
+// examples of where this is not true are WEBGL_compressed_texture_s3tc
+// and WEBGL_compressed_texture_pvrtc
+if (key.endsWith(suffix)) {
+name = key.substring(0, key.length - suffix.length);
+}
+if (gl[name] !== undefined) {
+if (!isFunc &amp;&amp; gl[name] !== value) {
+console.warn(“conflict:”, name, gl[name], value, key);
+}
+} else {
+if (isFunc) {
+gl[name] = function(origFn) {
+return function() {
+return origFn.apply(ext, arguments);
+};
+}(value);
+} else {
+gl[name] = value;
+}
+}
+}
+return ext;
+}
+</pre></p>
 <p>Now your code can mostly just work the same on both. Example:</p>
 <pre class="prettyprint">
 if (haveVAOs) {

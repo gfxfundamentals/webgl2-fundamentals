@@ -244,7 +244,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 不过 <a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000507.shtml">这里</a>
 链接了很多其它相关文档，包括 <a href="http://www.cs.utah.edu/~/boulos/cs3505/obj_spec.pdf">原始文档</a>。</p>
 <p>让我们看一个简单的例子。下面是从 blender 默认场景中导出的 cube.obj：</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-txt"># Blender v2.80 (sub 75) OBJ File: &#39;&#39;
+<pre class="prettyprint notranslate" translate="no"><code class="lang-txt"># Blender v2.80 (sub 75) OBJ File: ''
 # www.blender.org
 mtllib cube.mtl
 o Cube
@@ -298,12 +298,13 @@ f 6/18/6 5/19/6 1/20/6 2/11/6
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">async function main() {
   ...
 
-  const response = await fetch(&#39;resources/models/cube/cube.obj&#39;);
+  const response = await fetch('resources/models/cube/cube.obj');
   const text = await response.text();
 </code></pre>
 <p>接着，我们可以一行一行地解析，每行都是下面的形式:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">keyword data data data data ...
-</code></pre><p>每行的开头是 keyword，data 由空格隔开。以 <code class="notranslate" translate="no">#</code> 开头的行是注释。</p>
+</code></pre>
+<p>每行的开头是 keyword，data 由空格隔开。以 <code class="notranslate" translate="no">#</code> 开头的行是注释。</p>
 <p>接着，用代码来解析每一行，跳过空白行和注释，然后根据 keyword 调用对应的函数。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">+function parseOBJ(text) {
 +
@@ -311,10 +312,10 @@ f 6/18/6 5/19/6 1/20/6 2/11/6
 +  };
 +
 +  const keywordRE = /(\w*)(?: )*(.*)/;
-+  const lines = text.split(&#39;\n&#39;);
++  const lines = text.split('\n');
 +  for (let lineNo = 0; lineNo &lt; lines.length; ++lineNo) {
 +    const line = lines[lineNo].trim();
-+    if (line === &#39;&#39; || line.startsWith(&#39;#&#39;)) {
++    if (line === '' || line.startsWith('#')) {
 +      continue;
 +    }
 +    const parts = line.split(/\s+/);
@@ -326,7 +327,7 @@ f 6/18/6 5/19/6 1/20/6 2/11/6
 +    const parts = line.split(/\s+/).slice(1);
 +    const handler = keywords[keyword];
 +    if (!handler) {
-+      console.warn(&#39;unhandled keyword:&#39;, keyword, &#39;at line&#39;, lineNo + 1);
++      console.warn('unhandled keyword:', keyword, 'at line', lineNo + 1);
 +      continue;
 +    }
 +    handler(parts, unparsedArgs);
@@ -356,7 +357,7 @@ WebGL 只能绘制三角形，所以需要将数据转换成三角形。
 但暂时让我们假设面是凹的。</p>
 <p>通常在 WebGL 中，我们不单独说明顶点、纹理座标和法线，“webgl 顶点”代表了包含了代表该顶点的顶点座标、纹理座标、法线的数据集合。
 例如，要绘制一个立方体，WebGL 需要 36 个顶点，每个面是两个三角形，每个三角形是 3 个顶点。
-6 个面 <em> 每个面 2 个三角形 </em> 每个三角形 3 个顶点 = 36 个顶点。
+6 个面 _ 每个面 2 个三角形 _ 每个三角形 3 个顶点 = 36 个顶点。
 尽管一个立方体只有 8 个不重复的顶点和 6 条不重复的法线。
 所以，我们需要读取面的顶点索引来生成包含了顶点位置、纹理座标、法线的“webgl 顶点”。
 <a href="webgl-pulling-vertices.html">*</a></p>
@@ -382,7 +383,7 @@ WebGL 只能绘制三角形，所以需要将数据转换成三角形。
 +  ];
 +
 +  function addVertex(vert) {
-+    const ptn = vert.split(&#39;/&#39;);
++    const ptn = vert.split('/');
 +    ptn.forEach((objIndexStr, i) =&gt; {
 +      if (!objIndexStr) {
 +        return;
@@ -484,7 +485,7 @@ const fs = `#version 300 es
   //   // 编译、链接着色器，查找属性和全局变量位置
   const meshProgramInfo = twgl.createProgramInfo(gl, [vs, fs]);
 
-  const response = await fetch(&#39;resources/models/cube/cube.obj&#39;);
+  const response = await fetch('resources/models/cube/cube.obj');
   const text = await response.text();
   const data = parseOBJ(text);
 
@@ -601,7 +602,7 @@ const fs = `#version 300 es
 
 +  const geometries = [];
 +  let geometry;
-+  let material = &#39;default&#39;;
++  let material = 'default';
 +
 +  function newGeometry() {
 +    // 如果有存在的几何体并且不是空的，销毁
@@ -663,6 +664,7 @@ const fs = `#version 300 es
   };
 
   ...
+
 </code></pre>
 <p><code class="notranslate" translate="no">usemtl</code> 不是必要的，如果在文件中没有 <code class="notranslate" translate="no">usemtl</code>，我们想要有默认的几何体。
 所以在 <code class="notranslate" translate="no">f</code> 函数中我们调用了 <code class="notranslate" translate="no">setGeometry</code> 来创建。</p>
@@ -717,12 +719,12 @@ const fs = `#version 300 es
 +  };
 }
 </code></pre>
-<p><code class="notranslate" translate="no">o</code> 指定表明了接下来的条目属于命名为 &quot;object&quot; 的对象。但我们并不清楚如何使用它。
+<p><code class="notranslate" translate="no">o</code> 指定表明了接下来的条目属于命名为 “object” 的对象。但我们并不清楚如何使用它。
 文件中能只包含 <code class="notranslate" translate="no">o</code> 而没有 <code class="notranslate" translate="no">usemtl</code> 吗？先假设可以。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
   ...
-  let material = &#39;default&#39;;
-+  let object = &#39;default&#39;;
+  let material = 'default';
++  let object = 'default';
 
   ...
 
@@ -781,7 +783,7 @@ Objects 可以存在于多个 group 中。
 因为它会出现在我们接下来的文件中，所以我们先添加支持代码，尽管现在并不使用。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
   ...
-+  let groups = [&#39;default&#39;];
++  let groups = ['default'];
   ...
   function setGeometry() {
     if (!geometry) {
@@ -820,8 +822,8 @@ Objects 可以存在于多个 group 中。
 </code></pre>
 <p>现在我们创建了多个几何体的集合，我们需要改变我们的初始化代码来为每一个几何体创建 <code class="notranslate" translate="no">WebGLBuffers</code>。
 同时我们也会创建一个随机的颜色，这样就能方便地分辨不同的部分。</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-  const response = await fetch(&#39;resources/models/cube/cube.obj&#39;);
-+  const response = await fetch(&#39;resources/models/cube/chair.obj&#39;);
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-  const response = await fetch('resources/models/cube/cube.obj');
++  const response = await fetch('resources/models/cube/chair.obj');
   const text = await response.text();
 -  const data = parseOBJ(text);
 +  const obj = parseOBJ(text);
@@ -855,7 +857,6 @@ Objects 可以存在于多个 group 中。
 <p>我们从加载一个立方体换成了我在 <a href="https://sketchfab.com">Sketchfab</a> 发现的，
 由 <a href="https://sketchfab.com/haytonm">haytonm</a> 创建的 <a href="http://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a> <a href="https://sketchfab.com/3d-models/chair-aa2acddb218646a59ece132bf95aa558">椅子</a>。</p>
 <div class="webgl_center"><img src="../../resources/models/chair/chair.jpg" style="width: 452px;"></div>
-
 <p>要渲染，我们只需要循环绘制每个部分</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render(time) {
   ...
@@ -967,12 +968,13 @@ Objects 可以存在于多个 group 中。
 它们将额外的值放在了每个顶点位置的后面，</p>
 <p>标准</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v &lt;x&gt; &lt;y&gt; &lt;z&gt;
-</code></pre><p>非标准</p>
+</code></pre>
+<p>非标准</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v &lt;x&gt; &lt;y&gt; &lt;z&gt; &lt;red&gt; &lt;green&gt; &lt;blue&gt;
-</code></pre><p>不清楚后面是否有可选的 alpha 值。</p>
+</code></pre>
+<p>不清楚后面是否有可选的 alpha 值。</p>
 <p>我查了一下，找到了由 <a href="https://sketchfab.com/homkahom0">Oleaf</a> 创建的 <a href="https://sketchfab.com/3d-models/book-vertex-chameleon-study-51b0b3bdcd844a9e951a9ede6f192da8">Book - Vertex chameleon study</a> by <a href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC</a> 使用了顶点颜色。</p>
 <div class="webgl_center"><img src="../../resources/models/book-vertex-chameleon-study/book.png" style="width: 446px;"></div>
-
 <p>让我们看看能不能添加代码来支持显示顶点颜色。</p>
 <p>我们需要在有顶点位置、法线和纹理坐标的地方添加一些代码</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
@@ -1044,7 +1046,7 @@ Objects 可以存在于多个 group 中。
 </code></pre>
 <p>然后当我们读取到 <code class="notranslate" translate="no">f</code> 面的时候，调用 <code class="notranslate" translate="no">addVertex</code>，我们需要获取顶点的颜色</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  function addVertex(vert) {
-    const ptn = vert.split(&#39;/&#39;);
+    const ptn = vert.split('/');
     ptn.forEach((objIndexStr, i) =&gt; {
       if (!objIndexStr) {
         return;
@@ -1193,26 +1195,26 @@ gl.vertexAttrib4fv(someAttributeLocation, value) // 使用给定的值
 
 </p>
 <p>至于解析和使用材质，<a href="webgl-load-obj-w-mtl.html">看下一篇</a>。</p>
-<h2 id="-">一些注意点</h2>
-<h3 id="-">这个加载器是不完整的</h3>
+<h2 id="一些注意点">一些注意点</h2>
+<h3 id="这个加载器是不完整的">这个加载器是不完整的</h3>
 <p>你可以 <a href="http://paulbourke.net/dataformats/obj/">阅读更多关于 .obj 格式</a>。
 有大量的功能上面的代码是不支持的。
 同时，代码也没有经过大量 .obj 文件的测试，所以可能有很多未知的 bug。
 也就是说，我假设了大多数在线的 .obj 文件只使用了上面提到的功能，所以这部分代码说不定是一个有用的例子。</p>
-<h3 id="-">这个加载器没有进行错误检查</h3>
+<h3 id="这个加载器没有进行错误检查">这个加载器没有进行错误检查</h3>
 <p>例如： <code class="notranslate" translate="no">vt</code> 可以有 3 个值而不仅仅是 2 个。3 个值是给 3D 纹理使用的，不普遍所以我没有处理。
 如果你确实想要用它解析 3D 纹理座标，你需要修改着色器来处理 3D 纹理，
 修改生成 <code class="notranslate" translate="no">WebGLBuffers</code> (调用 <code class="notranslate" translate="no">createBufferInfoFromArrays</code>)的代码，告诉它每个 UV 座标有 3 个组成部分。</p>
-<h3 id="-">假设数据是一致的</h3>
+<h3 id="假设数据是一致的">假设数据是一致的</h3>
 <p>我不知道是否会出现同一个文件中一些 <code class="notranslate" translate="no">f</code> 有 3 个条目而另一些只有 2 个条目会。如果有可能，上面的代码没有处理这种情况。</p>
 <p>这段代码同样假设了所有顶点座标都有 x、y、z。如果出现有些顶点座标有 x、y、z，有些顶点座标只有 x、y，而有些则有 x、y、z、r、g、b，我们需要重构代码。</p>
-<h3 id="-">可以将所有数据放进一个缓冲里</h3>
+<h3 id="可以将所有数据放进一个缓冲里">可以将所有数据放进一个缓冲里</h3>
 <p>上面的代码将顶点位置、纹理座标、法线放进了不同的缓冲。
-你也可以将它们交错的放进一个缓冲中：pos, uv, nrm, pos, uv, nrm, ...
+你也可以将它们交错的放进一个缓冲中：pos, uv, nrm, pos, uv, nrm, …
 这样的话就需要改变设置属性的方式。</p>
 <p>更进一步，你甚至可以将所有部分的所有数据放进同一个缓冲里，而不是每个部分、每个类型的数据一个缓冲。</p>
 <p>我不考虑这些因为我觉得它们没有那么重要，同时它们也会使得代码变得复杂。</p>
-<h3 id="-">可以重建顶点的索引</h3>
+<h3 id="可以重建顶点的索引">可以重建顶点的索引</h3>
 <p>上面的代码将顶点展开放进了三个数组中。我们可以重建顶点的索引。
 尤其当我们将所有顶点数据放进一个共享的缓冲中，或至少每个类型有一个单独的共享缓冲时，
 对于每个 <code class="notranslate" translate="no">f</code> 面，可以将索引转换到一个正数（负数变换到正确的正数），那么对于每个顶点，
@@ -1221,7 +1223,7 @@ gl.vertexAttrib4fv(someAttributeLocation, value) // 使用给定的值
 const webglIndices = [];
 
 function addVertex(vert) {
-  const ptn = vert.split(&#39;/&#39;);
+  const ptn = vert.split('/');
   // 首先将所有索引转换成正数
   const indices = ptn.forEach((objIndexStr, i) =&gt; {
     if (!objIndexStr) {
@@ -1231,7 +1233,7 @@ function addVertex(vert) {
     return objIndex + (objIndex &gt;= 0 ? 0 : objVertexData[i].length);
   });
   // 现在检查已存在的顶点位置、纹理座标、法线组合
-  const id = indices.join(&#39;,&#39;);
+  const id = indices.join(',');
   let vertIndex = idToIndexMap[id];
   if (!vertIndex) {
     // 没有,添加它
@@ -1247,32 +1249,37 @@ function addVertex(vert) {
 }
 </code></pre>
 <p>或者，如果你觉得重要你可以收到重排索引。</p>
-<h3 id="-">这段代码没有处理只有顶点座标，或只有顶点座标和纹理座标的情况</h3>
+<h3 id="这段代码没有处理只有顶点座标，或只有顶点座标和纹理座标的情况">这段代码没有处理只有顶点座标，或只有顶点座标和纹理座标的情况</h3>
 <p>这段代码假设法线存在。就像我们在 <a href="webgl-3d-geometry-lathe.html">三维几何加工</a> 里做的，
 如果法线不存在，我们可以生成它，考虑到如果我们需要 smoothing group。
 或者我们也可以不使用也不计算法线的不同着色器。</p>
-<h3 id="-obj-">你不应该使用 .OBJ 文件</h3>
+<h3 id="你不应该使用-obj-文件">你不应该使用 .OBJ 文件</h3>
 <p>老实说，我认为你不应该使用 .OBJ 文件。我写这篇文章是作为一个例子。
 如果你可以从一个文件中获取顶点数据，你可以为任意格式的文件写导入器。</p>
 <p>.OBJ 文件的问题包括：</p>
 <ul>
-<li><p>不支持光线或视角</p>
+<li>
+<p>不支持光线或视角</p>
 <p>如果你加载大量部件（比如景观中的树、灌木、石头），你不需要视角或光线，这可能没问题。
 但文件如果提供选项让你能够原样导入作者创建的整个场景会更好。</p>
 </li>
-<li><p>没有层级，没有场景图</p>
+<li>
+<p>没有层级，没有场景图</p>
 <p>如果你想要导入一辆车，你会希望车轮能够转向，并能够绕着中心点旋转。
 这对 .OBJ 文件来说是不可能的，因为 .OBJ 不包含 [场景图][webgl-scene-graph.html]。
 更好的文件格式包含这些数据，如果你想要能够旋转的部件、滑动窗户、开门、移动角色的腿等，这会很有用。</p>
 </li>
-<li><p>不支持动画或蒙皮</p>
+<li>
+<p>不支持动画或蒙皮</p>
 <p>相比于其它的，我们更想要 <a href="webgl-skinning.html">蒙皮</a>，但 .obj 并没有蒙皮或者动画相关内容。
 如果你不需要这些，可能没什么问题。但我更偏向一种能包含更多内容的格式。</p>
 </li>
-<li><p>.OBJ 不支持更多现代的材质</p>
+<li>
+<p>.OBJ 不支持更多现代的材质</p>
 <p>材质一般来说针对于特定的引擎，但至少对于一些基于物理的材质渲染各引擎是共通的。据我所知，.OBJ 文件并不支持。</p>
 </li>
-<li><p>.OBJ 需要解析</p>
+<li>
+<p>.OBJ 需要解析</p>
 <p>除非你在写一个通用的查看器让用户上传 .OBJ 文件，通常最佳的做法是使用一个不太需要解析的文件格式。
 .GLTF 是一种为 WebGL 设计的文件格式。它使用 JSON，你可以轻松地加载。
 对于二进制数据，它使用能直接加载进 GPU 的格式，一般不需要将数字解析进数组。</p>

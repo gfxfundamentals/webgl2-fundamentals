@@ -241,7 +241,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>换句话说你从这样的基本公式开始</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">outColor = mix(originalColor, fogColor, fogAmount);
 </code></pre>
-<p>其中<code class="notranslate" translate="no">fogAmount</code>是0到1之间的值。<code class="notranslate" translate="no">mix</code>函数混合前2个值。当<code class="notranslate" translate="no">fogAmount</code>为0时，<code class="notranslate" translate="no">mix</code>返回<code class="notranslate" translate="no">originalColor</code>。当<code class="notranslate" translate="no">fogAmount</code>为1时，<code class="notranslate" translate="no">mix</code> 返回<code class="notranslate" translate="no">fogColor</code>。在0到1之间时，你会获得两个颜色按百分比混合的颜色值。你可以像这样自己实现<code class="notranslate" translate="no">mix</code> </p>
+<p>其中<code class="notranslate" translate="no">fogAmount</code>是0到1之间的值。<code class="notranslate" translate="no">mix</code>函数混合前2个值。当<code class="notranslate" translate="no">fogAmount</code>为0时，<code class="notranslate" translate="no">mix</code>返回<code class="notranslate" translate="no">originalColor</code>。当<code class="notranslate" translate="no">fogAmount</code>为1时，<code class="notranslate" translate="no">mix</code> 返回<code class="notranslate" translate="no">fogColor</code>。在0到1之间时，你会获得两个颜色按百分比混合的颜色值。你可以像这样自己实现<code class="notranslate" translate="no">mix</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">outColor = originalColor + (fogColor - originalColor) * fogAmount;
 </code></pre>
 <p>让我们来写一个这样的着色器。我们会使用<a href="webgl-3d-textures.html">纹理</a>文章中的纹理立方体。</p>
@@ -452,11 +452,9 @@ for (let i = 0; i &lt;= numCubes; ++i) {
 </code></pre>
 <p>得到</p>
 <div class="webgl_center"><img src="../resources/fog-background-color-mismatch.png"></div>
-
 <p>所以请记住，你需要设置背景颜色匹配雾色。</p>
 <p>使用深度很简单但是有一个问题。假设围绕相机有一圈物体。我们根据到相机z平面的距离计算雾量。这意味着你转动相机，当它在视图空间中的z值趋近于0，物体会越来越不受雾的影响。</p>
 <div class="webgl_center"><img src="../resources/fog-depth.svg" style="width: 600px;"></div>
-
 <p>在这个例子中你会看到问题</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-fog-depth-based-issue.html"></iframe>
@@ -467,7 +465,6 @@ for (let i = 0; i &lt;= numCubes; ++i) {
 <p>上面有8个立方体在相机为中心的圆环上。相机在它的位置旋转。这意味着立方体总是距相机相同的距离，但是距离Z平面不同的距离。所以我们的雾量计算方法会导致边缘附近的立方体会从雾中出来。</p>
 <p>修复方法是用计算到相机的距离代替，这对于所有的立方体都是相同的。</p>
 <div class="webgl_center"><img src="../resources/fog-distance.svg" style="width: 600px;"></div>
-
 <p>为此，我们只需将视图空间中的顶点位置从顶点着色器传递到片断着色器</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
 in vec4 a_position;
@@ -522,7 +519,8 @@ void main() {
 
   outColor = mix(color, u_fogColor, fogAmount);  
 }
-</code></pre><p>现在，当相机转动时，立方体不再从雾中出来</p>
+</code></pre>
+<p>现在，当相机转动时，立方体不再从雾中出来</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-fog-distance-based.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-fog-distance-based.html" target="_blank">点此在新窗口中浏览</a>

@@ -243,9 +243,9 @@ GPUには2つの基本的な動作があります。
 2つ目は1つ目の処理結果を元にピクセルを描画します。</p>
 <p>以下のコードでは</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.drawArrays(gl.TRIANGLES, 0, 9);
-</code></pre><p>第3引数は9つの頂点を処理するという意味でGPUに対する命令です。</p>
+</code></pre>
+<p>第3引数は9つの頂点を処理するという意味でGPUに対する命令です。</p>
 <div class="webgl_center"><img src="../resources/vertex-shader-anim.gif" /></div>
-
 <p>図の左列は「元となる頂点情報」であなたが用意したデータです。
 図の中央は「頂点シェーダー」で<a href="webgl-shaders-and-glsl.html">GLSL</a>で書いた関数です。
 「頂点シェーダー」は元となる頂点1つにつき1回呼び出されます。
@@ -272,14 +272,16 @@ function setGeometry(gl) {
           -175,  100]),
       gl.STATIC_DRAW);
 }
-</code></pre><p>頂点数が3つになったので、シェーダーの呼び出し部分のcountも3にします。</p>
+</code></pre>
+<p>頂点数が3つになったので、シェーダーの呼び出し部分のcountも3にします。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Draw the scene.
 function drawScene() {
   ...
   // Draw the geometry.
 *  gl.drawArrays(gl.TRIANGLES, 0, 3);
 }
-</code></pre><p>頂点シェーダーでは、フラグメントシェーダーにデータを渡すために <em>varying</em> のv_colorを <code class="notranslate" translate="no">out</code> で定義します。</p>
+</code></pre>
+<p>頂点シェーダーでは、フラグメントシェーダーにデータを渡すために <em>varying</em> のv_colorを <code class="notranslate" translate="no">out</code> で定義します。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">out vec4 v_color;
 ...
 void main() {
@@ -291,7 +293,8 @@ void main() {
   // Color space goes from 0.0 to 1.0
 *  v_color = gl_Position * 0.5 + 0.5;
 }
-</code></pre><p>フラグメントシェーダーでも同じ <em>varying</em> のv_colorを <code class="notranslate" translate="no">in</code> で定義します。</p>
+</code></pre>
+<p>フラグメントシェーダーでも同じ <em>varying</em> のv_colorを <code class="notranslate" translate="no">in</code> で定義します。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 precision highp float;
@@ -303,7 +306,8 @@ out vec4 outColor;
 void main() {
 *  outColor = v_color;
 }
-</code></pre><p>頂点シェーダーのvaryingをフラグメントシェーダーの同名・同型のvaryingに接続します。</p>
+</code></pre>
+<p>頂点シェーダーのvaryingをフラグメントシェーダーの同名・同型のvaryingに接続します。</p>
 <p>以下が動くサンプルコードです。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-triangle-with-position-for-color.html"></iframe>
@@ -321,25 +325,27 @@ void main() {
 <p>各頂点に対して計算した3つの値を取り三角形を描画する時、頂点に対して計算した値の間を補間します。
 各ピクセルでは、補間された値を持つフラグメントシェーダーを呼び出します。</p>
 <p>上記の例では3つの頂点を使っていました。</p>
-<p><style>
+<style>
 table.vertex_table {
   border: 1px solid black;
   border-collapse: collapse;
   font-family: monospace;
   font-size: small;
-}</p>
-<p>table.vertex_table th {
+}
+
+table.vertex_table th {
   background-color: #88ccff;
   padding-right: 1em;
   padding-left: 1em;
-}</p>
-<p>table.vertex_table td {
+}
+
+table.vertex_table td {
   border: 1px solid black;
   text-align: right;
   padding-right: 1em;
   padding-left: 1em;
 }
-</style></p>
+</style>
 <div class="hcenter">
 <table class="vertex_table">
 <tr><th colspan="2">頂点</th></tr>
@@ -348,7 +354,6 @@ table.vertex_table {
 <tr><td>-175</td><td>100</td></tr>
 </table>
 </div>
-
 <p>頂点シェーダーに行列を適用し、移動・回転・拡大縮小してクリップ空間への変換を行います。
 移動・回転・拡大縮小のデフォルト値は、移動 = 200, 150、回転 = 0、拡大縮小＝1, 1 なので移動しただけです。
 バックバッファが 400 x 300 である事を考えると、頂点シェーダーは行列を適用し次の3つのクリップ空間座標に変換して、gl_Positionに書き込みます。</p>
@@ -360,7 +365,6 @@ table.vertex_table {
 <tr><td>-0.875</td><td>-0.660</td></tr>
 </table>
 </div>
-
 <p>さらにクリップ空間座標を色空間座標に変換して、その値を <em>varying</em> のv_colorに書き込みます。</p>
 <div class="hcenter">
 <table class="vertex_table">
@@ -370,7 +374,6 @@ table.vertex_table {
 <tr><td>0.0625</td><td>0.170</td><td>0.5</td></tr>
 </table>
 </div>
-
 <p>v_colorに書き込まれたこれら3つの値が補間され、各ピクセルのフラグメントシェーダーに渡されます。</p>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 600px; height: 400px;" src="/webgl/lessons/resources/fragment-shader-anim.html"></iframe>
@@ -392,7 +395,8 @@ void main() {
   // Copy the color from the attribute to the varying.
 *  v_color = a_color;
 }
-</code></pre><p>使いたい色のデータをWebGLに伝えます。</p>
+</code></pre>
+<p>使いたい色のデータをWebGLに伝えます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // look up where the vertex data needs to go.
   var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 +  var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
@@ -440,7 +444,8 @@ void main() {
 +          r2, b2, g2, 1]),
 +      gl.STATIC_DRAW);
 +}
-</code></pre><p>そして、その結果がこちらです。</p>
+</code></pre>
+<p>そして、その結果がこちらです。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-with-2-colors.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle-with-2-colors.html" target="_blank">ここをクリックすると別ウィンドウで開きます</a>
@@ -466,7 +471,8 @@ function setColors(gl) {
 *          Math.random(), Math.random(), Math.random(), 1]),
       gl.STATIC_DRAW);
 }
-</code></pre><p>これで <em>varying</em> で色が補間されてグラデーションとして見えるようなりました。</p>
+</code></pre>
+<p>これで <em>varying</em> で色が補間されてグラデーションとして見えるようなりました。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-with-random-colors.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle-with-random-colors.html" target="_blank">ここをクリックすると別ウィンドウで開きます</a>
@@ -475,7 +481,7 @@ function setColors(gl) {
 </p>
 <p>あまり面白い結果ではなかったかもしれないが、複数の属性を使用して頂点シェーダーからフラグメントシェーダーにデータを渡す事ができるようになりました。
 <a href="webgl-image-processing.html">2D画像を処理する方法</a>では、属性にテクスチャ座標を渡しているので興味があればチェックして見て下さい。</p>
-<h2 id="-">バッファや属性のコマンドは何をしているのか？</h2>
+<h2 id="バッファや属性のコマンドは何をしているのか？">バッファや属性のコマンドは何をしているのか？</h2>
 <p>バッファは、GPUが頂点データや各頂点と1対1で結びついたデータを取り組むための仕組みです。
 <code class="notranslate" translate="no">gl.createBuffer</code> でバッファを作成します。
 <code class="notranslate" translate="no">gl.bindBuffer</code> は操作対象のバッファを設定します。
@@ -486,10 +492,12 @@ function setColors(gl) {
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// look up where the vertex data needs to go.
 var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
-</code></pre><p>の部分でロケーション確認をしています。
+</code></pre>
+<p>の部分でロケーション確認をしています。
 属性のロケーションが分かったら、2つのコマンドを発行します。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.enableVertexAttribArray(location);
-</code></pre><p>このコマンドは、データはバッファから渡す事をWebGLに伝えます。</p>
+</code></pre>
+<p>このコマンドは、データはバッファから渡す事をWebGLに伝えます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.vertexAttribPointer(
     location,
     numComponents,
@@ -497,7 +505,8 @@ var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
     normalizeFlag,
     strideToNextPieceOfData,
     offsetIntoBuffer);
-</code></pre><p>このコマンドは、最後にgl.bindBufferでバインドされたバッファからデータを取得するようにWebGLに指定します。
+</code></pre>
+<p>このコマンドは、最後にgl.bindBufferでバインドされたバッファからデータを取得するようにWebGLに指定します。
 numComponents = 頂点あたりのコンポーネント数 (1 〜 4)、
 typeOfData = データの型 (<code class="notranslate" translate="no">BYTE</code>, <code class="notranslate" translate="no">FLOAT</code>, <code class="notranslate" translate="no">INT</code>, <code class="notranslate" translate="no">UNSIGNED_SHORT</code> など)、
 strideToNextPieceOfData = 次のデータまで何バイトあるかストライド、
@@ -552,32 +561,28 @@ function setColors(gl) {
   var r2 = Math.random() * 256; // when stored in the
   var b2 = Math.random() * 256; // Uint8Array
   var g2 = Math.random() * 256;
-
-  gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Uint8Array(   // Uint8Array
-        [ r1, b1, g1, 255,
-          r1, b1, g1, 255,
-          r1, b1, g1, 255,
-          r2, b2, g2, 255,
-          r2, b2, g2, 255,
-          r2, b2, g2, 255]),
-      gl.STATIC_DRAW);
+<p>gl.bufferData(
+gl.ARRAY_BUFFER,
+new Uint8Array(   // Uint8Array
+[ r1, b1, g1, 255,
+r1, b1, g1, 255,
+r1, b1, g1, 255,
+r2, b2, g2, 255,
+r2, b2, g2, 255,
+r2, b2, g2, 255]),
+gl.STATIC_DRAW);
 }
-</pre>
+</pre></p>
 <p>
 実行結果はこのようになります。
 </p>
-
-<div class="webgl_example_container">
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-with-2-byte-colors.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle-with-2-byte-colors.html" target="_blank">ここをクリックすると別ウィンドウで開きます</a>
 </div>
 
-
+</p>
 </div>
-
-
 
     </div>
     <div class="lesson-sidebar">

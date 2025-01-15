@@ -245,7 +245,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 이를 위해서는 실제로 WebGL에서 텍스트를 그려야 합니다.</p>
 <p>가장 간단한 방법은 그 안에 텍스트가 포함된 텍스처를 만드는 겁니다.
 예를 들어 포토샵이나 기타 페인트 프로그램에 들어가 텍스트로 채워진 이미지를 그릴 수 있습니다.</p>
-<p><img class="webgl_center" src="../resources/my-awesme-text.png" /></p>
+<img class="webgl_center" src="../resources/my-awesme-text.png" />
 <p>그런 다음 plane geometry를 만들고 표시하는데요.
 이게 실제로 제가 작업했던 일부 게임들이 텍스트를 표시하는 방식입니다.
 예를 들어 Locoroco는 약 270개의 문자열만 있었습니다.
@@ -268,27 +268,30 @@ function makeTextCanvas(text, width, height) {
   textCtx.fillText(text, width / 2, height / 2);
   return textCtx.canvas;
 }
-</code></pre><p>이제 WebGL에서 &#39;F&#39;와 텍스트, 두 가지를 그려야 하는데, <a href="webgl-drawing-multiple-things.html">이전 글</a>에서 설명한 몇 가지 도우미 함수를 사용하도록 전환하겠습니다.
+</code></pre>
+<p>이제 WebGL에서 'F’와 텍스트, 두 가지를 그려야 하는데, <a href="webgl-drawing-multiple-things.html">이전 글</a>에서 설명한 몇 가지 도우미 함수를 사용하도록 전환하겠습니다.
 <code class="notranslate" translate="no">programInfo</code>, <code class="notranslate" translate="no">bufferInfo</code> 등이 무엇인지 모르겠다면 해당 글을 봐주세요.</p>
-<p>그럼 &#39;F&#39;와 단위 사각형을 만들어봅시다.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Create data for &#39;F&#39;
+<p>그럼 'F’와 단위 사각형을 만들어봅시다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Create data for 'F'
 var fBufferInfo = primitives.create3DFBufferInfo(gl);
 var fVAO = webglUtils.createVAOFromBufferInfo(
     gl, fProgramInfo, fBufferInfo);
 
-// Create a unit quad for the &#39;text&#39;
+// Create a unit quad for the 'text'
 var textBufferInfo = primitives.createXYQuadBufferInfo(gl, 1);
 var textVAO = webglUtils.createVAOFromBufferInfo(
     gl, textProgramInfo, textBufferInfo);
-</code></pre><p>The XY quad is a quad (square) that&#39;s 1 unit big. This one is centered at the origin. Being 1 unit
-it&#39;s extents are -0.5, -0.5 and 0.5, 0.5</p>
+</code></pre>
+<p>The XY quad is a quad (square) that’s 1 unit big. This one is centered at the origin. Being 1 unit
+it’s extents are -0.5, -0.5 and 0.5, 0.5</p>
 <p>다음으로 2개의 shader를 생성합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// GLSL program 설정
 var fProgramInfo = webglUtils.createProgramInfo(
     gl, [fVertexShaderSource, fFragmentShaderSource]);
 var textProgramInfo = webglUtils.createProgramInfo(
     gl, [textVertexShaderSource, textFragmentShaderSource]);
-</code></pre><p>그리고 텍스트 텍스처를 생성합니다.
+</code></pre>
+<p>그리고 텍스트 텍스처를 생성합니다.
 We generate mips since the text will get small.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 텍스트 텍스처 생성
 var textCanvas = makeTextCanvas(&quot;Hello!&quot;, 100, 26);
@@ -300,7 +303,8 @@ gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textCanvas);
 gl.generateMipmap(gl.TEXTURE_2D);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-</code></pre><p>&#39;F&#39;와 텍스트의 uniform을 설정합니다.</p>
+</code></pre>
+<p>'F’와 텍스트의 uniform을 설정합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var fUniforms = {
   u_matrix: m4.identity(),
 };
@@ -309,9 +313,10 @@ var textUniforms = {
   u_matrix: m4.identity(),
   u_texture: textTex,
 };
-</code></pre><p>Now when we compute the matrices for the F we start with the viewMatrix instead
+</code></pre>
+<p>Now when we compute the matrices for the F we start with the viewMatrix instead
 of the viewProjectionMatrix like other samples. We multiply that by the parts
-that make up our F&#39;s orientation</p>
+that make up our F’s orientation</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var fViewMatrix = m4.translate(viewMatrix,
     translation[0] + xx * spread, translation[1] + yy * spread, translation[2]);
 fViewMatrix = m4.xRotate(fViewMatrix, rotation[0]);
@@ -319,13 +324,15 @@ fViewMatrix = m4.yRotate(fViewMatrix, rotation[1] + yy * xx * 0.2);
 fViewMatrix = m4.zRotate(fViewMatrix, rotation[2] + now + (yy * 3 + xx) * 0.1);
 fViewMatrix = m4.scale(fViewMatrix, scale[0], scale[1], scale[2]);
 fViewMatrix = m4.translate(fViewMatrix, -50, -75, 0);
-</code></pre><p>Then finally we we multiply in the projectionMatrix when setting our uniform value.</p>
+</code></pre>
+<p>Then finally we we multiply in the projectionMatrix when setting our uniform value.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">fUniforms.u_matrix = m4.multiply(projectionMatrix, fViewMatrix);
-</code></pre><p>It&#39;s important to note here that <code class="notranslate" translate="no">projectionMatrix</code> is on the left. This lets us
+</code></pre>
+<p>It’s important to note here that <code class="notranslate" translate="no">projectionMatrix</code> is on the left. This lets us
 multiply in the projectionMatrix as though it was the first matrix. Normally
 we multiply on the right.</p>
 <p>F를 그리면 이렇게 나옵니다.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// &#39;F&#39;를 그리도록 설정
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 'F'를 그리도록 설정
 gl.useProgram(fProgramInfo.program);
 
 // setup the attributes and buffers for the F
@@ -336,15 +343,17 @@ fUniforms.u_matrix = m4.multiply(projectionMatrix, fViewMatrix);
 webglUtils.setUniforms(fProgramInfo, fUniforms);
 
 webglUtils.drawBufferInfo(gl, fBufferInfo);
-</code></pre><p>For the text we start with the projectionMatrix and then get only the position
+</code></pre>
+<p>For the text we start with the projectionMatrix and then get only the position
 from the fViewMatrix we saved before. This will get us a space in front the view.
 We also need to scale our unit quad to match the dimensions of the texture.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 텍스트에 &#39;F&#39;의 view position만 사용
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 텍스트에 'F'의 view position만 사용
 var textMatrix = m4.translate(projectionMatrix,
     fViewMatrix[12], fViewMatrix[13], fViewMatrix[14]);
 // F를 필요한 크기로 조정
 textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
-</code></pre><p>그런 다음 텍스트를 렌더링합니다.</p>
+</code></pre>
+<p>그런 다음 텍스트를 렌더링합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 텍스트를 그리도록 설정
 gl.useProgram(textProgramInfo.program);
 
@@ -355,7 +364,8 @@ webglUtils.setUniforms(textProgramInfo, textUniforms);
 
 // 텍스트 그리기
 webglUtils.drawBufferInfo(gl, textBufferInfo);
-</code></pre><p>그리고 여기 결과입니다.</p>
+</code></pre>
+<p>그리고 여기 결과입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture.html" target="_blank">새 창으로 열기</a>
@@ -368,10 +378,12 @@ webglUtils.drawBufferInfo(gl, textBufferInfo);
 이 대신에 픽셀을 섞을 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.enable(gl.BLEND);
 gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-</code></pre><p>이는 source pixel(fragment shader의 색상)을 가져와 blend 함수를 이용해 dest pixel(캔버스의 색상)과 결합합니다.
+</code></pre>
+<p>이는 source pixel(fragment shader의 색상)을 가져와 blend 함수를 이용해 dest pixel(캔버스의 색상)과 결합합니다.
 Blend 함수에서 source는 <code class="notranslate" translate="no">SRC_ALPHA</code>로, dest는 <code class="notranslate" translate="no">ONE_MINUS_SRC_ALPHA</code>로 설정했습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">result = dest * (1 - src_alpha) + src * src_alpha
-</code></pre><p>다음은 dest가 녹색(<code class="notranslate" translate="no">0,1,0,1</code>)이고 source가 빨간색(<code class="notranslate" translate="no">1,0,0,1</code>)인 예시입니다.</p>
+</code></pre>
+<p>다음은 dest가 녹색(<code class="notranslate" translate="no">0,1,0,1</code>)이고 source가 빨간색(<code class="notranslate" translate="no">1,0,0,1</code>)인 예시입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">src = [1, 0, 0, 1]
 dst = [0, 1, 0, 1]
 src_alpha = src[3]
@@ -379,7 +391,8 @@ src_alpha = src[3]
 result = dst * (1 - src_alpha) + src * src_alpha
 result = dst * 0 + src * 1
 result = src
-</code></pre><p>다음은 투명한 검정색(<code class="notranslate" translate="no">0,0,0,0</code>)인 텍스처 부분입니다.</p>
+</code></pre>
+<p>다음은 투명한 검정색(<code class="notranslate" translate="no">0,0,0,0</code>)인 텍스처 부분입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">src = [0, 0, 0, 0]
 dst = [0, 1, 0, 1]
 src_alpha = src[3]
@@ -387,7 +400,8 @@ src_alpha = src[3]
 result = dst * (1 - src_alpha) + src * src_alpha
 result = dst * 1 + src * 0
 result = dst
-</code></pre><p>여기 블렌딩을 활성화한 결과입니다.</p>
+</code></pre>
+<p>여기 블렌딩을 활성화한 결과입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-enable-blend.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-enable-blend.html" target="_blank">새 창으로 열기</a>
@@ -396,7 +410,7 @@ result = dst
 </p>
 <p>이게 더 낫지만 아직 완벽하진 않습니다.
 가까이서 보면 가끔씩 이런 문제를 볼 수 있는데요.</p>
-<p><img class="webgl_center" src="../resources/text-zbuffer-issue.png" /></p>
+<img class="webgl_center" src="../resources/text-zbuffer-issue.png" />
 <p>무슨 일이 일어난 걸까요?
 현재 F를 그린 다음 텍스트를 그리고, 다음 F와 텍스트 그리기를 반복하고 있는데요.
 <a href="webgl-3d-orthographic.html">Depth buffer</a>가 있기 때문에, F의 텍스트를 그릴 때 블렌딩으로 일부 픽셀이 배경색을 유지하더라도, depth buffer는 여전히 갱신됩니다.
@@ -407,19 +421,23 @@ result = dst
 <p>먼저 불투명한 것(F)과 투명한 것(텍스트)을 분리해봅시다.
 우선 텍스트 위치를 저장할 배열을 선언할 겁니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var textPositions = [];
-</code></pre><p>그리고 F의 렌더링 루프에서 이 위치들을 저장할 겁니다.</p>
+</code></pre>
+<p>그리고 F의 렌더링 루프에서 이 위치들을 저장할 겁니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// remember the position for the text
 textPositions.push([fViewMatrix[12], fViewMatrix[13], fViewMatrix[14]]);
-</code></pre><p>&#39;F&#39;를 그리기 전에 블렌딩을 비활성화하고 depth buffer 작성을 켜겠습니다.</p>
+</code></pre>
+<p>'F’를 그리기 전에 블렌딩을 비활성화하고 depth buffer 작성을 켜겠습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.disable(gl.BLEND);
 gl.depthMask(true);
-</code></pre><p>텍스트 그리기의 경우 블렌딩을 활성화하고 depth buffer 작성을 끌겁니다.</p>
+</code></pre>
+<p>텍스트 그리기의 경우 블렌딩을 활성화하고 depth buffer 작성을 끌겁니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.enable(gl.BLEND);
 gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 gl.depthMask(false);
-</code></pre><p>그런 다음 저장해둔 모든 위치에 텍스트를 그립니다.</p>
+</code></pre>
+<p>그런 다음 저장해둔 모든 위치에 텍스트를 그립니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">textPositions.forEach(function(pos) {
-  // use just the view position of the &#39;F&#39; for the text
+  // use just the view position of the 'F' for the text
   var textMatrix = m4.translate(projectionMatrix,
       pos[0], pos[1], pos[2]);
   // scale the F to the size we need it.
@@ -436,7 +454,8 @@ gl.depthMask(false);
   // 텍스트 그리기
   webglUtils.drawBufferInfo(gl, textBufferInfo);
 });
-</code></pre><p>그리고 이제 대부분 작동합니다.</p>
+</code></pre>
+<p>그리고 이제 대부분 작동합니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-separate-opaque-from-transparent.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-separate-opaque-from-transparent.html" target="_blank">새 창으로 열기</a>
@@ -445,12 +464,12 @@ gl.depthMask(false);
 </p>
 <p>참고로 위에서 언급한 것처럼 정렬하지 않았는데요.
 이 경우에는 대부분 불투명 텍스트를 그리기 때문에 아마 정렬해도 눈에 띄는 차이는 없을 것이므로 다른 글을 위해 남겨두겠습니다.</p>
-<p>또 다른 문제는 텍스트가 &#39;F&#39;와 교차한다는 겁니다.
+<p>또 다른 문제는 텍스트가 'F’와 교차한다는 겁니다.
 만약 MMO를 만들고 있고 각 플레이어의 텍스트가 항상 나타나도록 하고 싶다면 머리 위에 있도록 할 수 있는데요.
 항상 플레이어 위에 있기에 충분한 단위의 수만큼 +Y로 이동시킵니다.</p>
 <p>카메라 앞쪽으로 이동시킬 수도 있는데요.
 그냥 여기에서 해봅시다.
-&#39;pos&#39;는 view space에 있기 때문에 눈(view space의 0,0,0)에 상대적입니다.
+'pos’는 view space에 있기 때문에 눈(view space의 0,0,0)에 상대적입니다.
 따라서 정규화하면 눈에서 해당 지점을 가리키는 단위 벡터를 얻은 다음, 텍스트를 눈에서 멀어지거나 가까워지도록 특정 단위의 수만큼 이동하기 위해 일정량을 곱할 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+// pos가 view space에 있기 때문에 눈에서 특정 위치까지의 벡터를 의미합니다.
 +// 따라서 벡터를 따라 눈을 향해 약간의 거리를 다시 이동합니다.
@@ -464,9 +483,10 @@ var textMatrix = m4.translate(projectionMatrix,
 *    viewX, viewY, viewZ);
 // scale the F to the size we need it.
 textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
-// because pos is in view space that means it&#39;s a vector from the eye to
+// because pos is in view space that means it's a vector from the eye to
 // some position. So translate along that vector back toward the eye some distance
-</code></pre><p>여기 그 결과입니다.</p>
+</code></pre>
+<p>여기 그 결과입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-moved-toward-view.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-moved-toward-view.html" target="_blank">새 창으로 열기</a>
@@ -474,17 +494,19 @@ textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
 
 </p>
 <p>아직 글자의 가장자리에 문제가 있음을 알 수 있는데요.</p>
-<p><img class="webgl_center" src="../resources/text-gray-outline.png" /></p>
+<img class="webgl_center" src="../resources/text-gray-outline.png" />
 <p>여기서 문제는 Canvas 2D API가 미리 곱한 알파 값만 나타낸다는 겁니다.
 캔버스의 컨텐츠를 텍스처에 업로드할 때 WebGL은 값을 미리 곱하지 않으려고 하지만 미리 곱한 알파는 손실되었기 때문에 이를 완벽히 수행할 수 없습니다.</p>
 <p>이를 고치기 위해 미리 곱하지 말라고 WebGL에 지시해봅시다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-</code></pre><p>이는 미리 곱한 알파 값을 <code class="notranslate" translate="no">gl.texImage2D</code>와 <code class="notranslate" translate="no">gl.texSubImage2D</code>에 제공하라고 WebGL에 지시합니다.
+</code></pre>
+<p>이는 미리 곱한 알파 값을 <code class="notranslate" translate="no">gl.texImage2D</code>와 <code class="notranslate" translate="no">gl.texSubImage2D</code>에 제공하라고 WebGL에 지시합니다.
 <code class="notranslate" translate="no">gl.texImage2D</code>에 전달된 데이터가 이미 Canvas 2D 데이터처럼 미리 곱해졌다면 WebGL은 그냥 전달만 합니다.</p>
 <p>또한 블렌딩 함수를 수정해야 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">-gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 +gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-</code></pre><p>이전에는 src color에 알파를 곱했습니다.
+</code></pre>
+<p>이전에는 src color에 알파를 곱했습니다.
 이게 <code class="notranslate" translate="no">SRC_ALPHA</code>가 의미하는 것입니다.
 하지만 이제 텍스처의 데이터에 이미 알파가 곱해졌는데요.
 이것이 사전 곱셈이 의미하는 바입니다.
@@ -515,7 +537,8 @@ var textMatrix = m4.translate(projectionMatrix, viewX, viewY, viewZ);
 // 필요한 크기로 F의 크기를 조정
 textMatrix = m4.scale(textMatrix, textWidth * scale, textHeight * scale, 1);
 ...
-</code></pre><p><div class="webgl_example_container">
+</code></pre>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-consistent-scale.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-consistent-scale.html" target="_blank">새 창으로 열기</a>
 </div>
@@ -558,18 +581,22 @@ var textTextures = [
     height: textHeight,
   };
 });
-</code></pre><p>그런 다음 렌더링할 때 텍스처를 선택합니다.</p>
+</code></pre>
+<p>그런 다음 렌더링할 때 텍스처를 선택합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*textPositions.forEach(function(pos, ndx) {
 
   +// 텍스처 선택
   +var tex = textTextures[ndx];
-</code></pre><p>Use that textures size in our matrix calculations</p>
+</code></pre>
+<p>Use that textures size in our matrix calculations</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  var textMatrix = m4.translate(projectionMatrix, viewX, viewY, viewZ);
   // 원하는 크기로 F의 크기를 조정
   *textMatrix = m4.scale(textMatrix, tex.width * scale, tex.height * scale, 1);
-</code></pre><p>그리고 그리기 전에 텍스처에 대한 uniform을 설정합니다.</p>
+</code></pre>
+<p>그리고 그리기 전에 텍스처에 대한 uniform을 설정합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  textUniforms.u_texture = tex.texture;
-</code></pre><p><div class="webgl_example_container">
+</code></pre>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-different-text.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-different-text.html" target="_blank">새 창으로 열기</a>
 </div>
@@ -590,9 +617,11 @@ out vec4 outColor;
 void main() {
 *   outColor = texture2D(u_texture, v_texcoord) * u_color;
 }
-</code></pre><p>그리고 캔버스에 텍스트를 그릴 때 흰색을 사용합니다.</p>
+</code></pre>
+<p>그리고 캔버스에 텍스트를 그릴 때 흰색을 사용합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">textCtx.fillStyle = &quot;white&quot;;
-</code></pre><p>그런 다음 몇 가지 색상을 만들 겁니다.</p>
+</code></pre>
+<p>그런 다음 몇 가지 색상을 만들 겁니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 각 F마다 하나의 색상
 var colors = [
   [0.0, 0.0, 0.0, 1], // 0
@@ -612,10 +641,12 @@ var colors = [
   [0.5, 5.0, 5.0, 1], // 14,
   [0.0, 5.0, 5.0, 1], // 15,
 ];
-</code></pre><p>그릴 때 색상을 선택합니다.</p>
+</code></pre>
+<p>그릴 때 색상을 선택합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// uniform 색상 설정
 textUniforms.u_color = colors[ndx];
-</code></pre><p>다음은 여러 색상을 적용한 예제입니다.</p>
+</code></pre>
+<p>다음은 여러 색상을 적용한 예제입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-different-colors.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-different-colors.html" target="_blank">새 창으로 열기</a>
@@ -661,7 +692,6 @@ HTML 컨텐츠와 적용한 다양한 스타일로 텍스처를 생성하고, �
 이는 굉장히 멋지지만 설명할 수 있는 것은 여기까지입니다.
 </li>
 </div>
-
 
     </div>
     <div class="lesson-sidebar">

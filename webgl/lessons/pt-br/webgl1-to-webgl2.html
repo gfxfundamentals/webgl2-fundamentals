@@ -240,13 +240,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Se você usar apenas os recursos da WebGL1, então há
 apenas 2 diferenças.</p>
 <ol>
-<li><p>Você usa <code class="notranslate" translate="no">&quot; webgl2 &quot;</code> em vez de <code class="notranslate" translate="no">&quot; webgl &quot;</code> ao chamar <code class="notranslate" translate="no">getContext</code></p>
+<li>
+<p>Você usa <code class="notranslate" translate="no">&quot; webgl2 &quot;</code> em vez de <code class="notranslate" translate="no">&quot; webgl &quot;</code> ao chamar <code class="notranslate" translate="no">getContext</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var gl = someCanvas.getContext(&quot;webgl2&quot;);
-</code></pre><p>Nota: não há &quot;experimental-webgl2&quot;. Os fornecedores do navegador se
+</code></pre>
+<p>Nota: não há “experimental-webgl2”. Os fornecedores do navegador se
 reuniram e decidiram não mais prefixar coisas porque os sites
 dependem do prefixo.</p>
 </li>
-<li><p>Muitas extensões são uma parte padrão da WebGL2 e, portanto, não estão disponíveis
+<li>
+<p>Muitas extensões são uma parte padrão da WebGL2 e, portanto, não estão disponíveis
 como extensões</p>
 <p>Por exemplo, objeto Vertex Array <code class="notranslate" translate="no">OES_vertex_array_object</code> é uma
 característica padrão da WebGL2. Então, por exemplo, na WebGL1 você faria isso</p>
@@ -256,9 +259,11 @@ if (!ext) {
 } else {
   var someVAO = ext.createVertexArrayOES();
 }
-</code></pre><p>Na WebGL2 você faria isso</p>
+</code></pre>
+<p>Na WebGL2 você faria isso</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var someVAO = gl.createVertexArray();
-</code></pre><p>Porque ele só existe.</p>
+</code></pre>
+<p>Porque ele só existe.</p>
 </li>
 </ol>
 <p>Caso contrário, todas as suas coisas WebGL1 devem funcionar.</p>
@@ -268,7 +273,8 @@ algumas mudanças.</p>
 <p>A maior mudança é que você deve atualizar seus shaders para GLSL 3,00 ES. Para
 fazer isso, a primeira linha de seus shaders precisa ser</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
-</code></pre><p><strong>NOTA: ESTA TEM QUE SER A PRIMEIRA LINHA! Sem comentários, sem linhas em branco antes de permitir.</strong></p>
+</code></pre>
+<p><strong>NOTA: ESTA TEM QUE SER A PRIMEIRA LINHA! Sem comentários, sem linhas em branco antes de permitir.</strong></p>
 <p>Em outras palavras, isso é ruim</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// RUIM!!!!                +---Há uma nova linha aqui!
 // RUIM!!!!                V
@@ -276,59 +282,70 @@ var vertexShaderSource = `
 #version 300 es
 ..
 `;
-</code></pre><p>Isso também é ruim</p>
+</code></pre>
+<p>Isso também é ruim</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;!-- RUIM!!                   V&lt;- há uma nova linha aqui!
 &lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;
 #version 300 es
 ...
 &lt;/script&gt;
-</code></pre><p>Isso é bom</p>
+</code></pre>
+<p>Isso é bom</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var vertexShaderSource = `#version 300 es
 ...
 `;
-</code></pre><p>Isso também é bom</p>
+</code></pre>
+<p>Isso também é bom</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;#version 300 es
 ...
 &lt;/script&gt;
-</code></pre><p>Ou você poderia fazer com que suas funções de compilação de shader tirem
+</code></pre>
+<p>Ou você poderia fazer com que suas funções de compilação de shader tirem
 as primeiras linhas em branco.</p>
-<h3 id="mudan-as-em-glsl-300-es-de-glsl-100">Mudanças em GLSL 300 es de GLSL 100</h3>
+<h3 id="mudanças-em-glsl-300-es-de-glsl-100">Mudanças em GLSL 300 es de GLSL 100</h3>
 <p>Há várias mudanças que você precisa para fazer o seus shaders
 de cima para adicionar a cadeia de versão anterior</p>
-<h4 id="-attribute-in-"><code class="notranslate" translate="no">attribute</code> -&gt; <code class="notranslate" translate="no">in</code></h4>
+<h4 id="attribute---in"><code class="notranslate" translate="no">attribute</code> -&gt; <code class="notranslate" translate="no">in</code></h4>
 <p>No GLSL 100 você pode ter</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">attribute vec4 a_position;
 attribute vec2 a_texcoord;
 attribute vec3 a_normal;
-</code></pre><p>Em GLSL 300 es se torna</p>
+</code></pre>
+<p>Em GLSL 300 es se torna</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">in vec4 a_position;
 in vec2 a_texcoord;
 in vec3 a_normal;
-</code></pre><h4 id="-varying-to-in-out-"><code class="notranslate" translate="no">varying</code> to <code class="notranslate" translate="no">in</code> / <code class="notranslate" translate="no">out</code></h4>
+</code></pre>
+<h4 id="varying-to-in--out"><code class="notranslate" translate="no">varying</code> to <code class="notranslate" translate="no">in</code> / <code class="notranslate" translate="no">out</code></h4>
 <p>No GLSL 100, você pode declarar uma variação tanto no vertex
 como nos fragmentos shaders como esse</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">varying vec2 v_texcoord;
 varying vec3 v_normal;
-</code></pre><p>Em GLSL 300 es no vertex shader as variações se tornam</p>
+</code></pre>
+<p>Em GLSL 300 es no vertex shader as variações se tornam</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">out vec2 v_texcoord;
 out vec3 v_normal;
-</code></pre><p>E no fragmento shader eles se tornam</p>
+</code></pre>
+<p>E no fragmento shader eles se tornam</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">in vec2 v_texcoord;
 in vec3 v_normal;
-</code></pre><h4 id="n-o-mais-gl_fragcolor-">Não mais <code class="notranslate" translate="no">gl_FragColor</code></h4>
+</code></pre>
+<h4 id="não-mais-gl_fragcolor">Não mais <code class="notranslate" translate="no">gl_FragColor</code></h4>
 <p>No GLSL 100, seu fragmento shader configuraria a variável
 especial <code class="notranslate" translate="no">gl_FragColor</code> para definir a saída do shader.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl_FragColor = vec4(1, 0, 0, 1);  // red
-</code></pre><p>Em GLSL 300 es, você declara sua própria variável de saída e
+</code></pre>
+<p>Em GLSL 300 es, você declara sua própria variável de saída e
 depois configura-a.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">out vec4 myOutputColor;
 
 void main() {
    myOutputColor = vec4(1, 0, 0, 1);  // red
 }
-</code></pre><p>Nota: Você pode escolher qualquer nome que desejar, mas os nomes <strong>não</strong> podem começar
+</code></pre>
+<p>Nota: Você pode escolher qualquer nome que desejar, mas os nomes <strong>não</strong> podem começar
 com <code class="notranslate" translate="no">gl_</code>, então você não pode simplesmente fazer <code class="notranslate" translate="no">out vec4 gl_FragColor</code></p>
-<h4 id="-texture2d-texture-etc-"><code class="notranslate" translate="no">texture2D</code> -&gt; <code class="notranslate" translate="no">texture</code> etc.</h4>
+<h4 id="texture2d---texture-etc"><code class="notranslate" translate="no">texture2D</code> -&gt; <code class="notranslate" translate="no">texture</code> etc.</h4>
 <p>No GLSL 100 você obtém uma cor de uma textura como essa</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler2D u_some2DTexture;
 uniform samplerCube u_someCubeTexture;
@@ -337,7 +354,8 @@ uniform samplerCube u_someCubeTexture;
 
 vec4 color1 = texture2D(u_some2DTexture, ...);
 vec4 color2 = textureCube(u_someCubeTexture, ...);
-</code></pre><p>No GLSL 300es, as funções de textura sabem automaticamente o
+</code></pre>
+<p>No GLSL 300es, as funções de textura sabem automaticamente o
 que fazer com base no tipo de amostrador, então agora é apenas
 <code class="notranslate" translate="no">texture</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler2D u_some2DTexture;
@@ -347,7 +365,8 @@ uniform samplerCube u_someCubeTexture;
 
 vec4 color1 = texture(u_some2DTexture, ...);
 vec4 color2 = texture(u_someCubeTexture, ...);
-</code></pre><h2 id="caracter-sticas-que-voc-pode-dar-como-certo">Características que você pode dar como certo</h2>
+</code></pre>
+<h2 id="características-que-você-pode-dar-como-certo">Características que você pode dar como certo</h2>
 <p>No WebGL1, muitos recursos eram extensões opcionais. No WebGL2,
 todos os itens seguintes são características padrão</p>
 <ul>
@@ -369,7 +388,7 @@ No WebGL2, esse limite é removido. Non-power de 2 texturas funciona exatamente
 como a potência de 2 texturas.</p>
 <h2 id="anexos-do-framebuffer-do-ponto-flutuante">Anexos do Framebuffer do ponto flutuante</h2>
 <p>No WebGL1 para verificar se há suporte para a renderização para uma textura
-de ponto flutuante, primeiro você verificaria e ativaria a extensão <code class="notranslate" translate="no">OES_texture_float</code>, 
+de ponto flutuante, primeiro você verificaria e ativaria a extensão <code class="notranslate" translate="no">OES_texture_float</code>,
 então você criaria uma textura de ponto flutuante, ligaria-a a um framebuffer e chamaria
 <code class="notranslate" translate="no">gl.checkFramebufferStatus</code> veja se ele retornou  <code class="notranslate" translate="no">gl.FRAMEBUFFER_COMPLETE</code>.</p>
 <p>No WebGL2 você precisa verificar e ativar <code class="notranslate" translate="no">EXT_color_buffer_float</code> ou então
@@ -377,7 +396,7 @@ então você criaria uma textura de ponto flutuante, ligaria-a a um framebuffer 
 uma textura de ponto flutuante.</p>
 <p>Observe que isso também é verdadeiro para os anexos framebuffer <code class="notranslate" translate="no">HALF_FLOAT</code>.</p>
 <blockquote>
-<p>Se você tem curiosidade, esse foi um erro na especificação WebLG1. O que aconteceu foi o envio 
+<p>Se você tem curiosidade, esse foi um erro na especificação WebLG1. O que aconteceu foi o envio
 da WebGL1 e o <code class="notranslate" translate="no">OES_texture_float</code> foi adicionado e apenas assumiu que a maneira correta
 de usá-lo para renderizar era criar uma textura, anexá-la um framebuffer
 e verificar seu status. Mais tarde, alguém apontou de acordo com a especificação que
@@ -411,19 +430,23 @@ foram para o estado WebGL global. Você pode imaginar isso assim</p>
       { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
     ],
   },
-</code></pre><p>   }</p>
-<p>Chamar funções como <code class="notranslate" translate="no">gl.vertexAttribPointer</code>,<code class="notranslate" translate="no">gl.enableVertexAttribArray</code> e
+}
+</code></pre>
+<p>Chamar funções como <code class="notranslate" translate="no">gl.vertexAttribPointer</code>,<code class="notranslate" translate="no"> gl.enableVertexAttribArray</code> e
 <code class="notranslate" translate="no">gl.bindBuffer (gl.ELEMENT_ARRAY_BUFFER, ??)</code> afetariam esse estado global.
 Antes de cada coisa que você queria desenhar, você precisava configurar todos os atributos e, se você
 estivesse desenhando dados indexados, você precisava configurar o <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code>.</p>
 <p>Com objeto Vertex Array, todo o <code class="notranslate" translate="no">attributeState</code> acima se torna um <em>Vertex Array</em>.</p>
 <p>Em outras palavras</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var someVAO = gl.createVertexArray();
-</code></pre><p>Faz uma nova instância da coisa acima chamada <code class="notranslate" translate="no">attributeState</code>.</p>
+</code></pre>
+<p>Faz uma nova instância da coisa acima chamada <code class="notranslate" translate="no">attributeState</code>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(someVAO);
-</code></pre><p>É equivalente a</p>
+</code></pre>
+<p>É equivalente a</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">glState.attributeState = someVAO;
-</code></pre><p>O que isto significa é que você deve configurar todos os seus atributos em tempo de inicialização agora.</p>
+</code></pre>
+<p>O que isto significa é que você deve configurar todos os seus atributos em tempo de inicialização agora.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// no tempo inicial
 for each model / geometry / ...
   var vao = gl.createVertexArray()
@@ -435,14 +458,17 @@ for each model / geometry / ...
   if indexed geometry
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
   gl.bindVertexArray(null);
-</code></pre><p>Então no tempo de renderização para usar uma geometria particular, tudo o que você precisa fazer 
+</code></pre>
+<p>Então no tempo de renderização para usar uma geometria particular, tudo o que você precisa fazer
 é</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(vaoForGeometry);
-</code></pre><p>No WebGL1, o objeto de loop de inicialização teria aparecido no tempo de renderização.
+</code></pre>
+<p>No WebGL1, o objeto de loop de inicialização teria aparecido no tempo de renderização.
 Esta é uma grande velocidade!</p>
 <p>Há algumas advertências:</p>
 <ol>
-<li><p>Os locais de atributo dependem do programa.</p>
+<li>
+<p>Os locais de atributo dependem do programa.</p>
 <p>Se você estiver usando a mesma geometria com vários programas,
 considere atribuir manualmente locais de atributo.
 No GLSL 300 es você pode fazer isso no shader</p>
@@ -451,7 +477,8 @@ No GLSL 300 es você pode fazer isso no shader</p>
 layout(location = 1) in vec2 a_texcoord;
 layout(location = 2) in vec3 a_normal;
 layout(location = 3) in vec4 a_color;
-</code></pre><p>Define os locais dos 4 atributos.</p>
+</code></pre>
+<p>Define os locais dos 4 atributos.</p>
 <p>Você ainda pode fazer o modo WebGL1 chamando
 <code class="notranslate" translate="no">gl.bindAttribLocation</code> antes de chamar <code class="notranslate" translate="no">gl.linkProgram</code>.</p>
 <p>Por example:</p>
@@ -459,7 +486,8 @@ layout(location = 3) in vec4 a_color;
 gl.bindAttribLocation(someProgram, 1, &quot;a_texcoord&quot;);
 gl.bindAttribLocation(someProgram, 2, &quot;a_normal&quot;);
 gl.bindAttribLocation(someProgram, 3, &quot;a_color&quot;);
-</code></pre><p>Isso significa que você pode forçá-los a serem compatíveis em vários programas de
+</code></pre>
+<p>Isso significa que você pode forçá-los a serem compatíveis em vários programas de
 shader. Se um programa não precisa de todos os atributos,
 os atributos que eles precisam ainda serão atribuídos
 aos mesmos locais</p>
@@ -467,15 +495,17 @@ aos mesmos locais</p>
 para diferentes programas de shader ao usar a mesma geometria OR,
 você precisará apenas fazer a WebGL1 e não usar
 VAOs e sempre configurar atributos no tempo de renderização, o que é lento.</p>
-<p>NOTA: dos 2 métodos acima, eu me inclino para usar o 
+<p>NOTA: dos 2 métodos acima, eu me inclino para usar o
 <code class="notranslate" translate="no">gl.bindAttribLocation</code>  porque é fácil tê-lo em um lugar no meu código onde,
 o método de usar layout <code class="notranslate" translate="no">layout(location = ?)</code> deve
 estar em todos os shaders, então, no interesse de DRY <code class="notranslate" translate="no">gl.bindAttribLocation</code>
 parece melhor. Talvez, se eu estivesse usando um gerador de shader, não haveria diferença.</p>
 </li>
-<li><p>Sempre desvincular o VAO quando terminar</p>
+<li>
+<p>Sempre desvincular o VAO quando terminar</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(null);
-</code></pre><p>Isso só vem da minha própria experiência. Se você olhar acima, o
+</code></pre>
+<p>Isso só vem da minha própria experiência. Se você olhar acima, o
 estado <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code> faz parte de uma Vertex Array.</p>
 <p>Então, encontrei esse problema. Eu criei uma geometria, então
 criei um VAO para essa geometria e configurei os atributos
@@ -516,29 +546,28 @@ Dessa forma, o resto do seu código pode permanecer o mesmo. Exemplo:</p>
 <pre class="prettyprint">
 var gl = someCanvas.getContext("webgl");
 var haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object"));
-
-function getAndApplyExtension(gl, name) {
-  var ext = gl.getExtension(name);
-  if (!ext) {
-    return false;
-  }
-  var suffix = name.split("_")[0];
-  var prefix = suffix = '_';
-  var suffixRE = new RegExp(suffix + '$');
-  var prefixRE = new RegExp('^' + prefix);
-  for (var key in ext) {
-    var val = ext[key];
-    if (typeof(val) === 'function') {
-      // remover sufixo (ex: bindVertexArrayOES -> bindVertexArray)
-      var unsuffixedKey = key.replace(suffixRE, '');
-      if (key.substing)
-      gl[unprefixedKey] = ext[key].bind(ext);
-    } else {
-      var unprefixedKey = key.replace(prefixRE, '');
-      gl[unprefixedKey] = ext[key];
-    }
-  }
-</pre>
+<p>function getAndApplyExtension(gl, name) {
+var ext = gl.getExtension(name);
+if (!ext) {
+return false;
+}
+var suffix = name.split(&quot;<em>&quot;)[0];
+var prefix = suffix = '</em>‘;
+var suffixRE = new RegExp(suffix + ‘$’);
+var prefixRE = new RegExp(’^’ + prefix);
+for (var key in ext) {
+var val = ext[key];
+if (typeof(val) === ‘function’) {
+// remover sufixo (ex: bindVertexArrayOES -&gt; bindVertexArray)
+var unsuffixedKey = key.replace(suffixRE, ‘’);
+if (key.substing)
+gl[unprefixedKey] = ext[key].bind(ext);
+} else {
+var unprefixedKey = key.replace(prefixRE, ‘’);
+gl[unprefixedKey] = ext[key];
+}
+}
+</pre></p>
 <p>Agora, seu código pode funcionar da mesma forma em ambos. Exemplo:</p>
 <pre class="prettyprint">
 if (haveVAOs) {

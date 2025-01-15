@@ -276,9 +276,9 @@ void main() {
     fragmentShaderSource
 ])
 
-const positionLoc = gl.getAttribLocation(program, &#39;a_position&#39;)
-const colorLoc = gl.getUniformLocation(program, &#39;color&#39;)
-const matrixLoc = gl.getUniformLocation(program, &#39;matrix&#39;)
+const positionLoc = gl.getAttribLocation(program, 'a_position')
+const colorLoc = gl.getUniformLocation(program, 'color')
+const matrixLoc = gl.getUniformLocation(program, 'matrix')
 </code></pre>
 <p>并制作一个顶点数组对象来保存属性状态</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// 创建顶点数组对象（属性状态）
@@ -437,11 +437,11 @@ void main() {
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const program = webglUtils.createProgramFromSources(gl,
     [vertexShaderSource, fragmentShaderSource]);
 
-const positionLoc = gl.getAttribLocation(program, &#39;a_position&#39;);
--const colorLoc = gl.getUniformLocation(program, &#39;color&#39;);
--const matrixLoc = gl.getUniformLocation(program, &#39;matrix&#39;);
-+const colorLoc = gl.getAttribLocation(program, &#39;color&#39;);
-+const matrixLoc = gl.getAttribLocation(program, &#39;matrix&#39;);
+const positionLoc = gl.getAttribLocation(program, 'a_position');
+-const colorLoc = gl.getUniformLocation(program, 'color');
+-const matrixLoc = gl.getUniformLocation(program, 'matrix');
++const colorLoc = gl.getAttribLocation(program, 'color');
++const matrixLoc = gl.getAttribLocation(program, 'matrix');
 </code></pre>
 <p>现在，我们需要一个缓冲区来储存所有一会我们要提供给 attribute 的矩阵。
 因为缓冲区最好在一个<em>chunk</em>中更新，所以我们把所有的矩阵放在一个
@@ -606,11 +606,11 @@ void main() {
 `
 </code></pre>
 <p>然后在初始化的时候找到他们的位置</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const positionLoc = gl.getAttribLocation(program, &#39;a_position&#39;);
-const colorLoc = gl.getAttribLocation(program, &#39;color&#39;);
-const matrixLoc = gl.getAttribLocation(program, &#39;matrix&#39;);
-+const projectionLoc = gl.getUniformLocation(program, &#39;projection&#39;);
-+const viewLoc = gl.getUniformLocation(program, &#39;view&#39;);
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const positionLoc = gl.getAttribLocation(program, 'a_position');
+const colorLoc = gl.getAttribLocation(program, 'color');
+const matrixLoc = gl.getAttribLocation(program, 'matrix');
++const projectionLoc = gl.getUniformLocation(program, 'projection');
++const viewLoc = gl.getUniformLocation(program, 'view');
 </code></pre>
 <p>然后再渲染的时候设置它们。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.useProgram(program);

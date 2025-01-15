@@ -236,8 +236,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I&#39;m learning WebGL, and I would like to make a program, where there are colored, and textured objects also. I tried to modify a bit the fragment shader: If the object don&#39;t have texture, then it will be colored.</p>
+      <h2 id="question">Question:</h2>
+<p>I’m learning WebGL, and I would like to make a program, where there are colored, and textured objects also. I tried to modify a bit the fragment shader: If the object don’t have texture, then it will be colored.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">precision mediump float;
 
 varying vec4 vColor;
@@ -250,9 +250,9 @@ void main(void) {
    gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
 }
 </code></pre>
-<p>It doesn&#39;t works. I get an error: Could not initialize shaders.</p>
-<h2 id="answer-">Answer:</h2>
-<p>This may or may not make sense but whether you have a texture or not requires different shaders. To get around this many people use a single pixel white texture when they don&#39;t want textures. That way they only need 1 shader to cover both cases. The shader might look something like this</p>
+<p>It doesn’t works. I get an error: Could not initialize shaders.</p>
+<h2 id="answer">Answer:</h2>
+<p>This may or may not make sense but whether you have a texture or not requires different shaders. To get around this many people use a single pixel white texture when they don’t want textures. That way they only need 1 shader to cover both cases. The shader might look something like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">uniform vec4 u_color;
 uniform sampler2D u_texture;
 

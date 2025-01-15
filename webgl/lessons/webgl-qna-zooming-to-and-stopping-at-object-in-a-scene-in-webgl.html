@@ -236,13 +236,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>We&#39;ve created a WebGl application which displays a scene containing multiple objects.  The entire scene can be rotated in multiple directions.  The application requires the user to be able to zoom up to but NOT thru the object.  I know this functionality can be implemented using webgl frameworks such as Three.js and SceneJs.  Unfortunately, our application is not leveraging a framework.  Is there a way to implement the zoom functionality described here using webgl only? Note: I don&#39;t believe object picking will work for us since the user is not required to select any object in the scene.   Thanks for your help.</p>
-<h2 id="answer-">Answer:</h2>
+      <h2 id="question">Question:</h2>
+<p>We’ve created a WebGl application which displays a scene containing multiple objects.  The entire scene can be rotated in multiple directions.  The application requires the user to be able to zoom up to but NOT thru the object.  I know this functionality can be implemented using webgl frameworks such as Three.js and SceneJs.  Unfortunately, our application is not leveraging a framework.  Is there a way to implement the zoom functionality described here using webgl only? Note: I don’t believe object picking will work for us since the user is not required to select any object in the scene.   Thanks for your help.</p>
+<h2 id="answer">Answer:</h2>
 <p>Off the top of my head.</p>
-<p>First off you need to know the size of each object in world space. For example if one object is 10 units big and another is 100 units big you probably want to be a different distance from the 100 unit object as the 10 unit object. By world space I also mean if you&#39;re scaling the 10 unit object by 9 then in world space it would be 90 units big and again you&#39;d want to get a different distance away then if it was 10 units</p>
-<p>You generally compute the size of an object in local space by computing the extents of its vertices. Just go through all the vertices and keep track of the min and max values in x, y, and z.  Whether you want to take the biggest value from the object&#39;s origin or compute an actual center point is up to you.</p>
-<p>So, given the size we can compute how far away you need to be to see the entire object. For the standard perspective matrix you can just work backward. If you know your object is 10 units big then you need to fit 10 units in your frustum. You&#39;d probably actually pick something like 14 units (say size * 1.4) so there&#39;s some space around the object.</p>
+<p>First off you need to know the size of each object in world space. For example if one object is 10 units big and another is 100 units big you probably want to be a different distance from the 100 unit object as the 10 unit object. By world space I also mean if you’re scaling the 10 unit object by 9 then in world space it would be 90 units big and again you’d want to get a different distance away then if it was 10 units</p>
+<p>You generally compute the size of an object in local space by computing the extents of its vertices. Just go through all the vertices and keep track of the min and max values in x, y, and z.  Whether you want to take the biggest value from the object’s origin or compute an actual center point is up to you.</p>
+<p>So, given the size we can compute how far away you need to be to see the entire object. For the standard perspective matrix you can just work backward. If you know your object is 10 units big then you need to fit 10 units in your frustum. You’d probably actually pick something like 14 units (say size * 1.4) so there’s some space around the object.</p>
 <p><img src="http://i.stack.imgur.com/0axue.png" alt="enter image description here"></p>
 <p>We know <code class="notranslate" translate="no">halfFovy</code>, <code class="notranslate" translate="no">halfSizeToFitOnScreen</code>, we need to compute <code class="notranslate" translate="no">distance</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">sohcahtoa
@@ -250,18 +250,23 @@ tangent = opposite / adjacent
 opposite = halfsizeToFitOnScreen
 adjacent = distance
 tangent  = Math.tan(halfFovY)
-</code></pre><p>Therefore</p>
+</code></pre>
+<p>Therefore</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">tangent = sizeToFitOnScreen / distance
 tangent * distance = sizeToFitOnScreen
 distance = sizeToFitOnScreen / tangent
 distance = sizeToFitOnScreen / Math.tan(halfFovY)
-</code></pre><p>So now we know the camera needs to be <code class="notranslate" translate="no">distance</code> away from the object. There&#39;s an entire sphere that&#39;s <code class="notranslate" translate="no">distance</code> away from the object. Where you pick on that sphere is up to you. Assuming you go from where the camera currently is you can compute the direction from the object to the camera</p>
+</code></pre>
+<p>So now we know the camera needs to be <code class="notranslate" translate="no">distance</code> away from the object. There’s an entire sphere that’s <code class="notranslate" translate="no">distance</code> away from the object. Where you pick on that sphere is up to you. Assuming you go from where the camera currently is you can compute the direction from the object to the camera</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">direction = normalize(cameraPos - objectPos)
-</code></pre><p>Now you can compute a point <code class="notranslate" translate="no">distance</code> away in that direction.</p>
+</code></pre>
+<p>Now you can compute a point <code class="notranslate" translate="no">distance</code> away in that direction.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">desiredCameraPosition = direction * distance
-</code></pre><p>Now either put the camera there using some lookAt function</p>
+</code></pre>
+<p>Now either put the camera there using some lookAt function</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">matrix = lookAt(desiredCameraPosition, objectPosition, up)
-</code></pre><p>Or lerp between where the camera currently is to it&#39;s new desired position</p>
+</code></pre>
+<p>Or lerp between where the camera currently is to it’s new desired position</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl-example-1.html" target="_blank">click here to open in a separate window</a>

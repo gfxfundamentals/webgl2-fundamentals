@@ -243,9 +243,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 이 글에서는 <a href="webgl-3d-lighting-directional.html">조명 효과</a>에서 다루었던 개념이 사용됩니다.
 위 글들을 아직 읽지 않으셨으면 먼저 읽으시는 것이 좋습니다.</p>
 <p><em>환경맵</em>이란 우리가 그리는 물체 주변의 환경을 표현합니다.
-야외를 그리려고 한다면 야외 환경을 나타냅니다. 
+야외를 그리려고 한다면 야외 환경을 나타냅니다.
 무대 위의 사람을 그리려고 한다면 그 공연장을 나타냅니다.
-우주를 그리려고 한다면 별들이 될 겁니다. 
+우주를 그리려고 한다면 별들이 될 겁니다.
 환경을 표현하는 6장의 이미지가 있다면 큐브맵의 6방향을 사용해 환경맵을 구현할 수 있습니다.</p>
 <p>아래는 캘리포니아 마운틴 뷰에 있는 컴퓨터 박물관의 로비 사진입니다.</p>
 <div class="webgl_center">
@@ -258,7 +258,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <img src="../../resources/images/computer-history-museum/pos-z.jpg" style="width: 128px" class="border">
   <img src="../../resources/images/computer-history-museum/neg-z.jpg" style="width: 128px" class="border">
 </div>
-
 <p><a href="webgl-cube-maps.html">이전 글의 코드</a>를 기반으로 이미지를 생성하는 대신 6장의 이미지를 로드해 봅시다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// 텍스처를 생성합니다.
 var texture = gl.createTexture();
@@ -267,27 +266,27 @@ gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
 const faceInfos = [
   {
     target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
-    url: &#39;resources/images/computer-history-museum/pos-x.jpg&#39;,
+    url: 'resources/images/computer-history-museum/pos-x.jpg',
   },
   {
     target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
-    url: &#39;resources/images/computer-history-museum/neg-x.jpg&#39;,
+    url: 'resources/images/computer-history-museum/neg-x.jpg',
   },
   {
     target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
-    url: &#39;resources/images/computer-history-museum/pos-y.jpg&#39;,
+    url: 'resources/images/computer-history-museum/pos-y.jpg',
   },
   {
     target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-    url: &#39;resources/images/computer-history-museum/neg-y.jpg&#39;,
+    url: 'resources/images/computer-history-museum/neg-y.jpg',
   },
   {
     target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
-    url: &#39;resources/images/computer-history-museum/pos-z.jpg&#39;,
+    url: 'resources/images/computer-history-museum/pos-z.jpg',
   },
   {
     target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
-    url: &#39;resources/images/computer-history-museum/neg-z.jpg&#39;,
+    url: 'resources/images/computer-history-museum/neg-z.jpg',
   },
 ];
 faceInfos.forEach((faceInfo) =&gt; {
@@ -307,7 +306,7 @@ faceInfos.forEach((faceInfo) =&gt; {
   // 이미지를 비동기 로드합니다.
   const image = new Image();
   image.src = url;
-  image.addEventListener(&#39;load&#39;, function() {
+  image.addEventListener('load', function() {
     // 이제 이미지가 로드되었으니 텍스처로 업로드합니다.
     gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
     gl.texImage2D(target, level, internalFormat, format, type, image);
@@ -330,46 +329,35 @@ gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LI
 <p>반사에 대한 수식은 아래와 같습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">reflectionDir = eyeToSurfaceDir –
     2 ∗ dot(surfaceNormal, eyeToSurfaceDir) ∗ surfaceNormal
-</code></pre><p>위 수식이 맞다는 사실은 조금 생각해 보면 알 수 있습니다.
+</code></pre>
+<p>위 수식이 맞다는 사실은 조금 생각해 보면 알 수 있습니다.
 <a href="webgl-3d-lighting-directional.html">조명 효과</a> 글에서 두 벡터의 내적은 사이각의 코사인값이라는 것을 배웠습니다.
 두 벡터를 더한 것은 벡터이므로 아래와 같이 평면을 수직으로 내려다보는 상황을 생각해 봅시다.</p>
 <div class="webgl_center"><img src="../resources/reflect-180-01.svg" style="width: 400px"></div>
-
 <p>위 수식을 가시화해 봅시다. 먼저 두 벡터의 방향이 반대일 때 내적값은 -1이므로 이를 그려보면 아래와 같습니다.</p>
 <div class="webgl_center"><img src="../resources/reflect-180-02.svg" style="width: 400px"></div>
-
 <p>이 내적값을 반사 수식에서 <span style="color:black; font-weight:bold;">eyeToSurfaceDir</span>
 와 <span style="color:green;">normal</span>에 대해 적용해 보면 아래와 같이 됩니다.</p>
 <div class="webgl_center"><img src="../resources/reflect-180-03.svg" style="width: 400px"></div>
-
 <p>-2와 -1을 곱했으므로 2가 됩니다.</p>
 <div class="webgl_center"><img src="../resources/reflect-180-04.svg" style="width: 400px"></div>
-
 <p>따라서 이를 적용해 벡터를 더해보면 아래와 같은 <span style="color: red">반사 벡터</span>가 얻어집니다.</p>
 <div class="webgl_center"><img src="../resources/reflect-180-05.svg" style="width: 400px"></div>
-
 <p>위 그림을 보면 2개의 법선으로부터, 시야에서 평면을 향하는 벡터는 더해서 0이 되고, 나머지 하나는 시야로 향하는 반사 벡터가 되는 것을 볼 수 있습니다.
 다시 원래 다이어그램에 그려보면 우리가 원하는 결과인 것을 알 수 있습니다.</p>
 <div class="webgl_center"><img src="../resources/reflect-180-06.svg" style="width: 400px"></div>
-
 <p>이번엔 평면을 오른쪽으로 45도 기울여봅시다.</p>
 <div class="webgl_center"><img src="../resources/reflect-45-01.svg" style="width: 400px"></div>
-
 <p>사이각이 135도인 벡터들의 내적은 -0.707입니다.</p>
 <div class="webgl_center"><img src="../resources/reflect-45-02.svg" style="width: 400px"></div>
-
 <p>수식에 넣어보면 아래와 같이 됩니다.</p>
 <div class="webgl_center"><img src="../resources/reflect-45-03.svg" style="width: 400px"></div>
-
 <p>음수 두 개를 더하면 양수가 되는데 이전과는 다르게 <span style="color: green">벡터</span>가 30% 정도 더 짧아졌습니다.</p>
 <div class="webgl_center"><img src="../resources/reflect-45-04.svg" style="width: 400px"></div>
-
 <p>벡터들을 더하면 <span style="color: red">반사 벡터</span>가 됩니다.</p>
 <div class="webgl_center"><img src="../resources/reflect-45-05.svg" style="width: 400px"></div>
-
 <p>다이어그램에 표시해 보면 올바른 결과라는 것을 볼 수 있습니다.</p>
 <div class="webgl_center"><img src="../resources/reflect-45-06.svg" style="width: 400px"></div>
-
 <p><span style="color: red">반사 방향</span>을 이용해 물체의 표면에 해당하는 큐브맵의 색상을 샘플링할 수 있습니다.</p>
 <p>아래는 표면의 회전각을 바꾸어가면서 수식의 각 부분의 값을 볼 수 있는 다이어그램입니다.
 또한 반사 벡터가 큐브맵의 어떤 면을 가리키는지와 그에 따른 색상 변화 효과를 볼 수 있습니다.</p>
@@ -434,7 +422,7 @@ void main() {
 }
 </code></pre>
 <p>이 예제에서는 실제 법선도 필요합니다. 실제 법선을 활용해 육면체의 각 면이 평평하게 보이도록 할겁니다.
-이전 예제에서는 큐브맵이 동작하는 것을 보기 위해 간단히 정점의 위치로 법선을 계산했지만 이번에는 
+이전 예제에서는 큐브맵이 동작하는 것을 보기 위해 간단히 정점의 위치로 법선을 계산했지만 이번에는
 <a href="webgl-3d-lighting-directional.html">조명 효과 관련 글</a>에서처럼 육면체의 실제 법선값이 필요합니다.</p>
 <p>초기화 시점에,</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// 법선을 입력하기 위한 버퍼를 생성합니다.

@@ -284,7 +284,7 @@ gl.disableVertexAttribArray = function(location) {
 };
 </code></pre>
 <p>다시말해, location은 attribute의 인덱스를 직접 참조하는 값입니다.</p>
-<p>비슷하게, <code class="notranslate" translate="no">gl.vertexAttribPointer</code>는 attribute의 나머지 값들을 세팅하기 위해 사용됩니다. 
+<p>비슷하게, <code class="notranslate" translate="no">gl.vertexAttribPointer</code>는 attribute의 나머지 값들을 세팅하기 위해 사용됩니다.
 아래와 같은 방식으로 구현될 수 있을겁니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// pseudo code
 gl.vertexAttribPointer = function(location, size, type, normalize, stride, offset) {
@@ -324,18 +324,18 @@ void main() {
   ...
 }
 </code></pre>
-<p><code class="notranslate" translate="no">gl.linkProgram(someProgram)</code>를 호출해서 정점 셰이더와 프래그먼트 셰이더를 링크하면 
+<p><code class="notranslate" translate="no">gl.linkProgram(someProgram)</code>를 호출해서 정점 셰이더와 프래그먼트 셰이더를 링크하면
 WebGL (드라이버/GPU/브라우저)은 어떤 인덱스/location을 각 attibute에 대해 사용할지를 결정합니다. 추후에 보여드릴 코드처럼 직접 location을 할당해 주지 않는 한, WebGL에서 각 attribute에 대해 어떤 인덱스를 고를지 알 수 없습니다.
 그러니 position, texcoord, normal에 대해 어떤 attibute를 사용하기로 결정했는지 물어봐야겠죠?
 <code class="notranslate" translate="no">gl.getAttribLocation</code>를 호출해서 물어볼 수 있습니다.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const positionLoc = gl.getAttribLocation(program, &#39;position&#39;);
-const texcoordLoc = gl.getAttribLocation(program, &#39;texcoord&#39;);
-const normalLoc = gl.getAttribLocation(program, &#39;normal&#39;);
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const positionLoc = gl.getAttribLocation(program, 'position');
+const texcoordLoc = gl.getAttribLocation(program, 'texcoord');
+const normalLoc = gl.getAttribLocation(program, 'normal');
 </code></pre>
-<p><code class="notranslate" translate="no">positionLoc</code> = <code class="notranslate" translate="no">5</code>라고 가정해봅시다. 그 말은 정점 셰이더가 실행될 때(여러분이 <code class="notranslate" translate="no">gl.drawArrays</code> 또는 <code class="notranslate" translate="no">gl.drawElements</code>를 호출했을 때) 정점 셰이더는 여러분이 attribute 5에 대해 올바른 type, size, offset, stride, buffer 등등을 설정했다고 가정한다는 것입니다.</p>
+<p><code class="notranslate" translate="no">positionLoc</code> = <code class="notranslate" translate="no">5</code>라고 가정해봅시다. 그 말은 정점 셰이더가 실행될 때(여러분이 <code class="notranslate" translate="no">gl.drawArrays</code> 또는 <code class="notranslate" translate="no"> gl.drawElements</code>를 호출했을 때) 정점 셰이더는 여러분이 attribute 5에 대해 올바른 type, size, offset, stride, buffer 등등을 설정했다고 가정한다는 것입니다.</p>
 <p>프로그램을 링크하기 <em>전에</em> <code class="notranslate" translate="no">gl.bindAttribLocation(program, location, nameOfAttribute)</code>를 호출해서 location을 직접 선택할 수 있습니다. 예를들어:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// `gl.linkProgram`에게 `position`에 대해 attribute 7번을 사용하도록 명시
-gl.bindAttribLocation(program, 7, &#39;position&#39;);
+gl.bindAttribLocation(program, 7, 'position');
 </code></pre>
 <p>GLSL ES 3.00 셰이더를 사용한다면 셰이더 내에서 직접적으로 어떤 location을 사용할지 아래와 같이 명시해 줄 수도 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">layout(location = 0) in vec4 position;
@@ -345,8 +345,8 @@ layout(location = 2) in vec3 normal;
 ...
 </code></pre>
 <p><code class="notranslate" translate="no">bindAttribLocation</code>을 사용하는 것이 훨씬 <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">D.R.Y.</a>한 것 같긴 하지만, 여러분이 원하는대로 하시면 됩니다.</p>
-<h2 id="-attribute-state">전체 Attribute State</h2>
-<p>위의 설명 중 빠진 것 중 하나는, 각 attribute는 기본값이 있다는 것입니다. 
+<h2 id="전체-attribute-state">전체 Attribute State</h2>
+<p>위의 설명 중 빠진 것 중 하나는, 각 attribute는 기본값이 있다는 것입니다.
 위에서 설명하지 않은 이유는 이를 활용하는 경우가 흔하지 않기 때문입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">attributeValues: [
   [0, 0, 0, 1],
@@ -360,11 +360,12 @@ vertexArray: {
    { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?,
    　divisor: 0, },
    ...
+
 </code></pre>
 <p><code class="notranslate" translate="no">gl.vertexAttribXXX</code>들을 사용해 각 attibute의 값을 설정해 줄 수 있습니다.
 이 값들은 <code class="notranslate" translate="no">enable</code>가 false일 때 사용됩니다. <code class="notranslate" translate="no">enable</code>이 true라면 attribute의 데이터는 할당된 버퍼로부터 가져옵니다.</p>
 <p><a id="vaos"></a></p>
-<h2 id="vertex-array-objects-vao-s">Vertex Array Objects (VAO)s</h2>
+<h2 id="vertex-array-objects-vaos">Vertex Array Objects (VAO)s</h2>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vao = gl.createVertexArray();
 </code></pre>
 <p>이 코드는 위쪽 <em>의사 코드</em>의 <code class="notranslate" translate="no">gl.vertexArray</code>에 할당될 객체를 만듭니다.
@@ -377,7 +378,7 @@ gl.bindVertexArray = function(vao) {
 <p>이 코드는 현재 VAO에 있는 모든 attribute와 <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code>를 설정해서 여러분이 특정 형상을 화면에 그리고 싶을 때 <code class="notranslate" translate="no">gl.bindVertexArray</code>만을 호출해서 모든 attibute를 설정할 수 있게 합니다.
 그렇지 않으면 <strong>각 attibute마다</strong> <code class="notranslate" translate="no">gl.bindBuffer</code>, <code class="notranslate" translate="no">gl.vertexAttribPointer</code> (추가적으로 <code class="notranslate" translate="no">gl.enableVertexAttribArray</code>까지)를 호출해야 합니다.</p>
 <p>보시다시피 vertex array object를 사용하는 것이 훨씬 좋습니다.
-하지만 그러려면 코드가 좀 더 구조화가 필요합니다. 
+하지만 그러려면 코드가 좀 더 구조화가 필요합니다.
 예를 들어 한 셰이더를 통해 <code class="notranslate" translate="no">gl.TRIANGLES</code>로 정육면체를 그리고 다른 셰이더로 <code class="notranslate" translate="no">gl.LINES</code>로 한번 더 그리고 싶다고 해봅시다.
 삼각형들을 그릴 때는 조명 효과를 위해 법선을 사용하기 때문에 셰이더에서 attribute를 아래와 같이 선언했다고 해 봅시다:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
@@ -400,20 +401,22 @@ in vec4 a_position;
 예를 들어 조명 효과 셰이더에서는 location이 아래와 같이 되었다고 해 봅시다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">a_position location = 1
 a_normal location = 0
-</code></pre><p>그리고 단일 색상 셰이더에 대해서는 아래와 같다고 합시다.</p>
+</code></pre>
+<p>그리고 단일 색상 셰이더에 대해서는 아래와 같다고 합시다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">a_position location = 0
-</code></pre><p>셰이더를 바꾸면 attribute 설정이 달라져야 하는것이 자명합니다.
+</code></pre>
+<p>셰이더를 바꾸면 attribute 설정이 달라져야 하는것이 자명합니다.
 한 셰이더에서는 <code class="notranslate" translate="no">a_position</code>의 데이터가 attribute 0에 들어와야 하고, 다른 셰이더에서는 attribute 1에 들어와야 합니다.</p>
 <p>attribute를 다시 설정하는 추가적인 작업이 필요합니다. vertex array object를 사용하는 이유는 그 작업을 하지 않기 위해서였는데도 말입니다.
 이 문제를 해결하기 위해서 셰이더 프로그램을 링크하기 전에 location을 바인딩해 줄겁니다.</p>
 <p>WebGL에 아래와 같이 알려줍니다.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.bindAttribLocation(solidProgram, 0, &#39;a_position&#39;);
-gl.bindAttribLocation(lightingProgram, 0, &#39;a_position&#39;);
-gl.bindAttribLocation(lightingProgram, 1, &#39;a_normal&#39;);
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.bindAttribLocation(solidProgram, 0, 'a_position');
+gl.bindAttribLocation(lightingProgram, 0, 'a_position');
+gl.bindAttribLocation(lightingProgram, 1, 'a_normal');
 </code></pre>
 <p><strong>gl.linkProgram을 호출하기 전에요</strong>. 이렇게 하면 WebGL에게 셰이더를 링크하기 전에 어떤 location을 할당할지를 알려줄 수 있습니다.
 이렇게 하면 두 셰이더에 대해서 동일한 VAO를 사용할 수 있습니다.</p>
-<h2 id="attribute-">Attribute 상한</h2>
+<h2 id="attribute-상한">Attribute 상한</h2>
 <p>WebGL2 명세에서는 최소 16개의 attibute를 지원하도록 되어 있지만 특정 컴퓨터/브라우저/구현/드라이버는 더 많은 attribute를 지원할 수 있습니다.
 얼마나 많은 attribute를 지원하는지 아래 코드를 호출하여 확인할 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const maxAttributes = gl.getParameter(gl.MAX_VERTEX_ATTRIBS);

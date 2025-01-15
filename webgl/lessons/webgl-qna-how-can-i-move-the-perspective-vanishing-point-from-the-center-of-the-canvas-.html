@@ -236,10 +236,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>I have a simple object that draws a 3d gizmo at 0, 0, 0. If the camera is centered on 0, 0, 0, then it draws the gizmo at the center of the screen.</p>
 <p><a href="https://i.stack.imgur.com/zAnbh.png"><img src="https://i.stack.imgur.com/zAnbh.png" alt="enter image description here"></a></p>
-<p>I would like to &quot;lift&quot; this gizmo and render it at the bottom right of the screen in screen coordinates, without rotating it. Basically, I want the gizmo to show the rotation of the center of the screen without blocking the view and without having to focus on a specific point. So I want to do away with the model matrix, or something.</p>
+<p>I would like to “lift” this gizmo and render it at the bottom right of the screen in screen coordinates, without rotating it. Basically, I want the gizmo to show the rotation of the center of the screen without blocking the view and without having to focus on a specific point. So I want to do away with the model matrix, or something.</p>
 <p>I got the following to work by translating the projection matrix:</p>
 <p><a href="https://i.stack.imgur.com/K23pW.png"><img src="https://i.stack.imgur.com/K23pW.png" alt="enter image description here"></a></p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">this.gl.uniformMatrix4fv(this.modelMatrixUniform, false, modelMatrix);
@@ -249,19 +249,21 @@ const bottomRightMat = mat4.create();
 mat4.translate(bottomRightMat, projectionMatrix, [5, -3, 0]);
 this.gl.uniformMatrix4fv(this.projectionMatrixUniform, false, bottomRightMat);
 this.gl.drawElements(this.gl.LINES, this.indexBuffer.getLength(), this.gl.UNSIGNED_SHORT, 0);
-</code></pre><p>But the gizmo has been rotated into its new position. The red line should still point down and to the left, since that&#39;s the direction of the positive X axis at the center of the screen. Also, the numbers 5 and 3 are arbitrary, and I don&#39;t think they would work at different zooms or camera locations.</p>
+</code></pre>
+<p>But the gizmo has been rotated into its new position. The red line should still point down and to the left, since that’s the direction of the positive X axis at the center of the screen. Also, the numbers 5 and 3 are arbitrary, and I don’t think they would work at different zooms or camera locations.</p>
 <p>Is there a way to specify a matrix transform that takes the center of the screen and translates it in screen space?</p>
-<h2 id="answer-">Answer:</h2>
+<h2 id="answer">Answer:</h2>
 <p>One way would be to change the viewport when rendering that object.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// size of area in bottom right
 const miniWidth = 150;
 const miniHeight = 100;
 gl.viewport(gl.canvas.width - miniWidth, gl.canvas.height - miniHeight, miniWidth, miniHeight);
 
-// now draw. you&#39;ll need to zoom in, like set the camera closer
+// now draw. you'll need to zoom in, like set the camera closer
 // or move the object closer or add a scale matrix after the projection
 // matrix as in projection * scale * view * ...
-</code></pre><p>you&#39;ll need a projection matrix that matches the aspect ratio of the new viewport and you&#39;ll either need to scale the object, put the camera closer, or add a 2D scale between the projection and view matrices.
+</code></pre>
+<p>you’ll need a projection matrix that matches the aspect ratio of the new viewport and you’ll either need to scale the object, put the camera closer, or add a 2D scale between the projection and view matrices.
 Remember to put the viewport back to the full canvas to render the rest of the scene.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-can-i-move-the-perspective-vanishing-point-from-the-center-of-the-canvas--example-1.html"></iframe>
@@ -301,13 +303,15 @@ Remember to put the viewport back to the full canvas to render the rest of the s
         far);
   return m;
 }
-</code></pre><p>So to draw your gizmo set call something like</p>
+</code></pre>
+<p>So to draw your gizmo set call something like</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  const gizmoCenterX = -gl.canvas.clientWidth  / 2 + 50;
   const gizmoCenterY =  gl.canvas.clientHeight / 2 - 50;
   const offsetProjection = perspectiveWithCenter(
       fov, gl.canvas.clientWidth, gl.canvas.clientHeight, zNear, zFar,
       gizmoCenterX, gizmoCenterY);
-</code></pre><p><div class="webgl_example_container">
+</code></pre>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-can-i-move-the-perspective-vanishing-point-from-the-center-of-the-canvas--example-2.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-can-i-move-the-perspective-vanishing-point-from-the-center-of-the-canvas--example-2.html" target="_blank">click here to open in a separate window</a>
 </div>

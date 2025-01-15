@@ -266,7 +266,8 @@ gl.bindTexture(gl.TEXTURE_2D, targetTexture);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 }
-</code></pre><p>注意 <code class="notranslate" translate="no">data</code> 是 <code class="notranslate" translate="no">null</code>，我们不需要提供数据，只需要让 WebGL 分配一个纹理。</p>
+</code></pre>
+<p>注意 <code class="notranslate" translate="no">data</code> 是 <code class="notranslate" translate="no">null</code>，我们不需要提供数据，只需要让 WebGL 分配一个纹理。</p>
 <p>接下来创建一个帧缓冲（framebuffer），<a href="webgl-framebuffers.html">帧缓冲只是一个附件集</a>， 附件是纹理或者 renderbuffers， 我们之前讲过纹理，Renderbuffers 和纹理很像但是支持纹理不支持的格式和可选项，同时，
 不能像纹理那样直接将 renderbuffer 提供给着色器。</p>
 <p>让我们来创建一个帧缓冲并和纹理绑定</p>
@@ -278,7 +279,8 @@ gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
 const attachmentPoint = gl.COLOR_ATTACHMENT0;
 gl.framebufferTexture2D(
     gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, targetTexture, level);
-</code></pre><p>与纹理和缓冲相似，在创建完帧缓冲后我们需要将它绑定到 <code class="notranslate" translate="no">FRAMEBUFFER</code> 绑定点，
+</code></pre>
+<p>与纹理和缓冲相似，在创建完帧缓冲后我们需要将它绑定到 <code class="notranslate" translate="no">FRAMEBUFFER</code> 绑定点，
 那样所有的方法都会作用到绑定的帧缓冲，无论是哪个帧缓冲。</p>
 <p>绑定帧缓冲后，每次调用 <code class="notranslate" translate="no">gl.clear</code>, <code class="notranslate" translate="no">gl.drawArrays</code>, 或 <code class="notranslate" translate="no">gl.drawElements</code>
 WebGL 都会渲染到纹理上而不是画布上。</p>
@@ -322,7 +324,8 @@ WebGL 都会渲染到纹理上而不是画布上。</p>
   var count = 6 * 6;
   gl.drawArrays(primitiveType, offset, count);
 }
-</code></pre><p>注意到我们需要传入 <code class="notranslate" translate="no">aspect</code> 计算投影矩阵，因为目标纹理的比例和相机不同。</p>
+</code></pre>
+<p>注意到我们需要传入 <code class="notranslate" translate="no">aspect</code> 计算投影矩阵，因为目标纹理的比例和相机不同。</p>
 <p>然后这样调用</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 绘制场景
 function drawScene(time) {
@@ -367,7 +370,8 @@ function drawScene(time) {
 
   requestAnimationFrame(drawScene);
 }
-</code></pre><p>这是结果</p>
+</code></pre>
+<p>这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-render-to-texture.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-render-to-texture.html" target="_blank">点此在新窗口中浏览</a>
@@ -384,7 +388,8 @@ function drawScene(time) {
    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
    gl.viewport(0, 0, width, height);
 }
-</code></pre><p>然后使用这个方法改变渲染对象，就不容易忘记了。</p>
+</code></pre>
+<p>然后使用这个方法改变渲染对象，就不容易忘记了。</p>
 <p>还有一个需要注意的事情是我们的帧缓冲没有深度缓冲，只有纹理。这意味着没有深度检测，
 所以三维就不能正常体现，如果我们绘制三个立方体就会看到这样。</p>
 <p><div class="webgl_example_container">
@@ -396,7 +401,7 @@ function drawScene(time) {
 <p>如果仔细看中间的立方体，会看到 3 个垂直绘制的立方体，一个在后面，一个在中间另一个在前面，
 但是我们绘制的三个立方体是相同深度的，观察画布上水平方向的 3 个立方体就会发现他们是正确相交的。
 那是因为在帧缓冲中没有深度缓冲，但是画布有。</p>
-<p><img class="webgl_center" src="../resources/cubes-without-depth-buffer.jpg" width="100%" height="100%" /></p>
+<img class="webgl_center" src="../resources/cubes-without-depth-buffer.jpg" width="100%" height="100%" />
 <p>想要添加深度缓冲就需要创建一个深度纹理，然后附加到帧缓冲中</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 创建一个深度纹理
 const depthTexture = gl.createTexture();
@@ -424,7 +429,8 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
   // 将深度纹理附加到缓冲帧
   gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depthTexture, level);
 }
-</code></pre><p>有了这个以后的结果。</p>
+</code></pre>
+<p>有了这个以后的结果。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-render-to-texture-3-cubes-with-depth-buffer.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-render-to-texture-3-cubes-with-depth-buffer.html" target="_blank">点此在新窗口中浏览</a>
@@ -432,7 +438,7 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
 
 </p>
 <p>现在帧缓冲附加了深度缓冲以后内部的立方体也能正确相交了。</p>
-<p><img class="webgl_center" src="../resources/cubes-with-depth-buffer.jpg" width="100%" height="100%" /></p>
+<img class="webgl_center" src="../resources/cubes-with-depth-buffer.jpg" width="100%" height="100%" />
 <p>需要特别注意的是 WebGL 只允许一些附件组合形式。
 <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/#FBO_ATTACHMENTS">根据规范</a>
 一定能正确运行的附件组合是：</p>
@@ -444,7 +450,8 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
 <p>对于其他的组合就需要检查用户系统/gpu/驱动/浏览器的支持情况。
 要检查的话需要创建帧缓冲，附加附件，然后调用</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-</code></pre><p>如果状态是 <code class="notranslate" translate="no">FRAMEBUFFER_COMPLETE</code> 那这种组合就能使用，反之不能使用。
+</code></pre>
+<p>如果状态是 <code class="notranslate" translate="no">FRAMEBUFFER_COMPLETE</code> 那这种组合就能使用，反之不能使用。
 你就需要告诉用户他们不走运或者撤销一些方法。</p>
 <p>如果你还没有看过 <a href="webgl-less-code-more-fun.html">简化 WebGL 代码</a>的话，
 可以看一下。</p>

@@ -239,7 +239,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <div class="lesson-main">
       <p>이 글은 <a href="webgl-3d-camera.html">WebGL 3D 카메라</a>에서 이어지는 글입니다.
 이전 글을 아직 읽지 않았다면 <a href="webgl-3d-camera.html">먼저 읽어 보시길 권장합니다.</a></p>
-<p>조명 효과를 구현하는 방법은 매우 많습니다. 아마 가장 간단한 것은 <em>방향성 조명 효과(directional lighting)</em>일겁니다.</p>
+<p>조명 효과를 구현하는 방법은 매우 많습니다. 아마 가장 간단한 것은 *방향성 조명 효과(directional lighting)*일겁니다.</p>
 <p>방향성 조명 효과에서는 빛이 한 방향으로부터 일정하게 들어온다고 가정합니다.
 맑은 날의 태양광은 대개 방향성 조명으로 간주됩니다.
 태양은 매우 멀리 있기 때문에 그 광선들이 물체의 표면에 모두 평행하게 도달한다고 생각할 수 있습니다.</p>
@@ -264,8 +264,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </p>
 <p>그리고 색상을 저 내적값에 곱하게 되면 짜잔! 조명 효과가 나타납니다.</p>
 <p>문제는, 3D 물체의 표면이 어디를 바라보고 있는지를 어떻게 알 수 있는가입니다.</p>
-<h2 id="-normal-">법선(Normal)에 대한 소개</h2>
-<p>왜 <em>법선(normal)</em>이라고 불리는지는 모르겠지만, 적어도 3D 그래픽스 분야에서 법선이란 표면이 바라보는 방향을 나타내는 단위 벡터(unit vector)입니다.</p>
+<h2 id="법선normal에-대한-소개">법선(Normal)에 대한 소개</h2>
+<p>왜 *법선(normal)*이라고 불리는지는 모르겠지만, 적어도 3D 그래픽스 분야에서 법선이란 표면이 바라보는 방향을 나타내는 단위 벡터(unit vector)입니다.</p>
 <p>아래는 정육면체와 구의 법선입니다.</p>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/normals.html"></iframe>
@@ -276,8 +276,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>정육면체는 각 모서리에 3개의 법선들이 있다는 것에 주목하십시오.
 이는 정육면체의 각 면이 바라보는 방향을 표현하기 위해서는 서로다른 3개의 법선이 필요하기 때문입니다.</p>
 <p>위의 그림에서 법선은 방향에 따라 양의 x방향이면 <span style="color: red;">빨간색</span>으로,
-위를 바라보고 있으면 <span style="color: green;">초록색</span> 으로, 양의 z방향이면 
-<span style="color: blue;">파란색</span>으로 색상이 표현되어 있습니다. </p>
+위를 바라보고 있으면 <span style="color: green;">초록색</span> 으로, 양의 z방향이면
+<span style="color: blue;">파란색</span>으로 색상이 표현되어 있습니다.</p>
 <p>그럼, <a href="webgl-3d-camera.html">이전 예제</a>에서 사용했던 우리의 <code class="notranslate" translate="no">F</code>에 법선을 추가해서 조명 효과를 줄 수 있도록 해봅시다.
 <code class="notranslate" translate="no">F</code>가 각이 져있고, 각 면이 x,y,z 방향과 정렬되어 있으므로 어렵지 않습니다.
 앞을 바라보고 있는 경우에는 법선이 <code class="notranslate" translate="no">0, 0, 1</code>입니다. 반대 방향을 바라보고 있으면 <code class="notranslate" translate="no">0, 0, -1</code>입니다.
@@ -415,7 +415,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   ]);
   gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
 }
-</code></pre><p>그리고 설정을 해줍시다. 하는김에 정점 색생을 없애서 조명 효과를 좀 더 잘 보이도록 해줍시다.</p>
+</code></pre>
+<p>그리고 설정을 해줍시다. 하는김에 정점 색생을 없애서 조명 효과를 좀 더 잘 보이도록 해줍시다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 정점 데이터들이 전달되어야 할 위치 찾기
 var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 -var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
@@ -428,7 +429,7 @@ var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 -gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 -gl.enableVertexAttribArray(colorLocation);
 -
--// We&#39;ll supply RGB as bytes.
+-// We'll supply RGB as bytes.
 -gl.vertexAttribPointer(colorLocation, 3, gl.UNSIGNED_BYTE, true, 0, 0);
 -
 -// Set Colors.
@@ -442,7 +443,8 @@ gl.vertexAttribPointer(normalLocation, 3, gl.FLOAT, false, 0, 0);
 
 // 버퍼 설정
 setNormals(gl);
-</code></pre><p>이제 셰이더에서 이 값들을 사용하도록 해야 합니다.</p>
+</code></pre>
+<p>이제 셰이더에서 이 값들을 사용하도록 해야 합니다.</p>
 <p>먼저 정점 셰이더에서는 법선을 프래그먼트 셰이더로 단지 전달만 해 줍니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
@@ -472,7 +474,8 @@ void main() {
 +  // 법선을 프래그먼트 셰이더로 넘겨줍니다.
 +  v_normal = a_normal;
 }
-</code></pre><p>프래그먼트 셰이더에서는 빛의 방향과 법선을 내적하는 수학 계산을 할 겁니다.</p>
+</code></pre>
+<p>프래그먼트 셰이더에서는 빛의 방향과 법선을 내적하는 수학 계산을 할 겁니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 precision highp float;
@@ -504,13 +507,16 @@ void main() {
 +  // 알파를 제회한 색상값 부분을 light값과 곱해줍니다.
 +  outColor.rgb *= light;
 }
-</code></pre><p>이제 <code class="notranslate" translate="no">u_color</code>와 <code class="notranslate" translate="no">u_reverseLightDirection</code>의 위치를 찾아야 합니다.</p>
+</code></pre>
+<p>이제 <code class="notranslate" translate="no">u_color</code>와 <code class="notranslate" translate="no">u_reverseLightDirection</code>의 위치를 찾아야 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // uniform 찾기
   var matrixLocation = gl.getUniformLocation(program, &quot;u_matrix&quot;);
 +  var colorLocation = gl.getUniformLocation(program, &quot;u_color&quot;);
 +  var reverseLightDirectionLocation =
 +      gl.getUniformLocation(program, &quot;u_reverseLightDirection&quot;);
-</code></pre><p>그리고 값들을 설정해 주어야 합니다.</p>
+
+</code></pre>
+<p>그리고 값들을 설정해 주어야 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 행렬값 설정
   gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
@@ -519,7 +525,8 @@ void main() {
 +
 +  // 조명 방향 설정
 +  gl.uniform3fv(reverseLightDirectionLocation, normalize([0.5, 0.7, 1]));
-</code></pre><p><code class="notranslate" translate="no">normalize</code>는 전에도 봤듯이 입력한 값을 단위 벡터로 변환합니다.
+</code></pre>
+<p><code class="notranslate" translate="no">normalize</code>는 전에도 봤듯이 입력한 값을 단위 벡터로 변환합니다.
 여기서 예제로 사용한 값은 <code class="notranslate" translate="no">x = 0.5</code>인데 <code class="notranslate" translate="no">x</code>가 양의 값이라는 것은 빛이 오른쪽에서 왼쪽을 향한다는 뜻입니다.
 <code class="notranslate" translate="no">y = 0.7</code>인데 <code class="notranslate" translate="no">y</code>가 양의 값이라는 것은 빛이 위쪽에서 아래쪽을 향한다는 뜻입니다.
 <code class="notranslate" translate="no">z = 1</code>인데 <code class="notranslate" translate="no">z</code>가 양의 값이라는 것은 빛이 정면에서 장면(scene)쪽을 향한다는 뜻입니다.
@@ -535,10 +542,10 @@ void main() {
 F가 돌아가면 빛을 향하는 방향이 밝아지는 것이 우리가 원하는 효과입니다.</p>
 <p>이를 수정하기 위해서는 물체의 방향이 변하면 법선의 방향도 변하도록 해야 합니다.
 위치값에 대해 그렇게 했던 것처럼 법선에도 어떤 행렬을 곱해줄 수 있습니다.
-<code class="notranslate" translate="no">월드</code> 행렬을 곱해주는 것이 가장 당연해 보입니다. 
+<code class="notranslate" translate="no">월드</code> 행렬을 곱해주는 것이 가장 당연해 보입니다.
 우리는 현재 <code class="notranslate" translate="no">u_matrix</code>라 이름지은 곳에 하나의 행렬만 전달하고 있습니다.
 이제 2개의 행렬을 전달하도록 수정해 봅시다.
-하나는 <code class="notranslate" translate="no">u_world</code>라고 이름지은 월드 행렬이고 다른 하나는 <code class="notranslate" translate="no">u_worldViewProjection</code>로, 
+하나는 <code class="notranslate" translate="no">u_world</code>라고 이름지은 월드 행렬이고 다른 하나는 <code class="notranslate" translate="no">u_worldViewProjection</code>로,
 지금 우리가 <code class="notranslate" translate="no">u_matrix</code>에 전달하고 있는 행렬입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
@@ -559,7 +566,8 @@ void main() {
 *  // 법선의 방향을 바꾸어 프래그먼트 셰이더로 전달합니다.
 *  v_normal = mat3(u_world) * a_normal;
 }
-</code></pre><p><code class="notranslate" translate="no">a_normal</code>에 <code class="notranslate" translate="no">mat3(u_world)</code>를 곱하는 것에 주의하십시오.
+</code></pre>
+<p><code class="notranslate" translate="no">a_normal</code>에 <code class="notranslate" translate="no">mat3(u_world)</code>를 곱하는 것에 주의하십시오.
 법선은 방향 벡터이기 때문에 이동(translation)은 필요 없습니다.
 자세와 관련된 부분은 행렬의 위쪽 3x3 부분 뿐입니다.</p>
 <p>이제 해당 uniform들을 찾아야 합니다.</p>
@@ -568,7 +576,8 @@ void main() {
 *  var worldViewProjectionLocation =
 *      gl.getUniformLocation(program, &quot;u_worldViewProjection&quot;);
 +  var worldLocation = gl.getUniformLocation(program, &quot;u_world&quot;);
-</code></pre><p>그리고 해당 값들을 바꾸는 부분의 코드를 수정해야 합니다.</p>
+</code></pre>
+<p>그리고 해당 값들을 바꾸는 부분의 코드를 수정해야 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*var worldMatrix = m4.yRotation(fRotationRadians);
 *var worldViewProjectionMatrix = m4.multiply(viewProjectionMatrix,
                                              worldMatrix);
@@ -578,7 +587,8 @@ void main() {
 *    worldViewProjectionLocation, false,
 *    worldViewProjectionMatrix);
 *gl.uniformMatrix4fv(worldLocation, false, worldMatrix);
-</code></pre><p>아래는 그 결과입니다.</p>
+</code></pre>
+<p>아래는 그 결과입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-directional-world.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-directional-world.html" target="_blank">새 창으로 열기</a>
@@ -596,7 +606,7 @@ void main() {
 </div>
 
 </p>
-<p>저는 원리는 이해하려고 노력하지 않았지만, 어쨋든 해결 방법은 월드 행렬의 역행렬을 구한 뒤 
+<p>저는 원리는 이해하려고 노력하지 않았지만, 어쨋든 해결 방법은 월드 행렬의 역행렬을 구한 뒤
 전치(행과 열을 바꾸기)한 행렬을 대신 사용하는 것입니다.
 그러면 올바른 결과가 도출됩니다.</p>
 <p>위 다이어그램에서 <span style="color: #F0F;">보라색</span> 구는 크기가 변하지 않습니다.
@@ -635,11 +645,13 @@ void main() {
   // 법선의 방향을 바꾸어 프래그먼트 셰이더로 전달합니다.
 *  v_normal = mat3(u_worldInverseTranspose) * a_normal;
 }
-</code></pre><p>그리고 위치를 찾아야 합니다.</p>
+</code></pre>
+<p>그리고 위치를 찾아야 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">-  var worldLocation = gl.getUniformLocation(program, &quot;u_world&quot;);
 +  var worldInverseTransposeLocation =
 +      gl.getUniformLocation(program, &quot;u_worldInverseTranspose&quot;);
-</code></pre><p>또, 값을 계산하고 전달해야 합니다.</p>
+</code></pre>
+<p>또, 값을 계산하고 전달해야 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var worldMatrix = m4.yRotation(fRotationRadians);
 var worldViewProjectionMatrix = m4.multiply(viewProjectionMatrix, worldMatrix);
 +var worldInverseMatrix = m4.inverse(worldMatrix);
@@ -653,7 +665,8 @@ gl.uniformMatrix4fv(
 +gl.uniformMatrix4fv(
 +    worldInverseTransposeLocation, false,
 +    worldInverseTransposeMatrix);
-</code></pre><p>아래는 행렬의 전치를 위한 코드입니다.</p>
+</code></pre>
+<p>아래는 행렬의 전치를 위한 코드입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m4 = {
   transpose: function(m) {
     return [
@@ -664,7 +677,8 @@ gl.uniformMatrix4fv(
     ];
   },
   ...
-</code></pre><p>우리는 크기를 변환하고 있지 않으므로 효과가 미미하여 변화를 알아차리기는 어렵지만,
+</code></pre>
+<p>우리는 크기를 변환하고 있지 않으므로 효과가 미미하여 변화를 알아차리기는 어렵지만,
 어쨋든 이제 준비가 되었습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-directional-worldinversetranspose.html"></iframe>

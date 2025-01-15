@@ -268,12 +268,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     67   |   1.17  |     .39
     90   |   1.57  |    0.0
    180   |   3.14  |   -1.0
-</code></pre><p>我们可以只需判断</p>
+</code></pre>
+<p>我们可以只需判断</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">dotFromDirection = dot(surfaceToLight, -lightDirection)
 if (dotFromDirection &gt;= limitInDotSpace) {
    // 使用光照
 }
-</code></pre><p>让我们来实现它。</p>
+</code></pre>
+<p>让我们来实现它。</p>
 <p>首先修改<a href="webgl-3d-lighting-point.html">上文</a>的片断着色器。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
 precision highp float;
@@ -363,10 +365,11 @@ gl.uniform1f(limitLocation, Math.cos(limit))
        return 0;
    }
 }
-</code></pre><p>让我们使用 <code class="notranslate" translate="no">step</code> 避免这种情况</p>
+</code></pre>
+<p>让我们使用 <code class="notranslate" translate="no">step</code> 避免这种情况</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">  float dotFromDirection = dot(surfaceToLightDirection,
                                -u_lightDirection);
-  // inLight will be 1 if we&#39;re inside the spotlight and 0 if not
+  // inLight will be 1 if we're inside the spotlight and 0 if not
   float inLight = step(u_limit, dotFromDirection);
   float light = inLight * dot(normal, surfaceToLightDirection);
   float specular = inLight * pow(dot(normal, halfVector), u_shininess);
@@ -397,6 +400,7 @@ gl.uniform1f(limitLocation, Math.cos(limit))
 +  float inLight = clamp((dotFromDirection - u_outerLimit) / limitRange, 0.0, 1.0);
   float light = inLight * dot(normal, surfaceToLightDirection);
   float specular = inLight * pow(dot(normal, halfVector), u_shininess);
+
 </code></pre>
 <p>这样就行了</p>
 <p><div class="webgl_example_container">
@@ -413,7 +417,8 @@ gl.uniform1f(limitLocation, Math.cos(limit))
 <p>GLSL 也有一个函数可以稍微做一些简化，叫做 <code class="notranslate" translate="no">smoothstep</code>，和 <code class="notranslate" translate="no">step</code> 相似返回一个 0 到 1
 之间的值，但是它获取最大和最小边界值，返回该值在边界范围映射到 0 到 1 之间的插值。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> smoothstep(lowerBound, upperBound, value)
-</code></pre><p>让我们来实现它</p>
+</code></pre>
+<p>让我们来实现它</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">  float dotFromDirection = dot(surfaceToLightDirection,
                                -u_lightDirection);
 -  float limitRange = u_innerLimit - u_outerLimit;
@@ -432,7 +437,7 @@ gl.uniform1f(limitLocation, Math.cos(limit))
 <p>不同之处是 <code class="notranslate" translate="no">smoothstep</code> 使用 Hermite 插值而不是线型插值，
 也就是说 <code class="notranslate" translate="no">lowerBound</code> 和 <code class="notranslate" translate="no">upperBound</code> 之间的值插值后像下方右图所示，
 线型插值是左图。</p>
-<p><img class="webgl_center invertdark" src="../resources/linear-vs-hermite.png" /></p>
+<img class="webgl_center invertdark" src="../resources/linear-vs-hermite.png" />
 <p>如果你觉得没什么关系的话，使用什么取决于你自己。</p>
 <p>还有一件事就是注意当 <code class="notranslate" translate="no">lowerBound</code> 大于或等于 <code class="notranslate" translate="no">upperBound</code> 时 <code class="notranslate" translate="no">smoothstep</code>
 方法会产生 undefined。它们值相等和志强的情况一样，多出的问题是 <code class="notranslate" translate="no">lowerBound</code> 大于
@@ -446,55 +451,33 @@ GLSL 中的一些函数在某些情况下会出现 undefined，对一个负值�
 你应该注意这些情况，否则你的着色器会在不同的设备上得到不同的结果。<a href="https://www.khronos.org/registry/OpenGL/specs/es/3.0/GLSL_ES_Specification_3.00.pdf">规范第 8 节</a>列出了所有内置函数，它们的用法，是否会出现 undefined 情况。</p>
 <p>这是会出现undefined情况的列表。注意 <code class="notranslate" translate="no">genType</code> 表示 <code class="notranslate" translate="no">float</code>, <code class="notranslate" translate="no">vec2</code>, <code class="notranslate" translate="no">vec3</code>, 或 <code class="notranslate" translate="no">vec4</code>。</p>
   <pre class="prettyprint"><code class="notranslate" translate="no">genType asin (genType x)</code></pre><p>反正弦函数，返回角度 x 的反正弦值，返回值在 [−π/2, π/2] 之间，如果 ∣x∣ > 1 导致undefined。</p>
-
 <pre class="prettyprint"><code class="notranslate" translate="no">genType acos (genType x)</code></pre><p>反余弦函数。返回角度 x 的反余弦值，返回值范围为[0, π]，
-
-如果 ∣x∣ > 1 导致 undefined。</p>
-
+<p>如果 ∣x∣ &gt; 1 导致 undefined。</p></p>
 <pre class="prettyprint"><code class="notranslate" translate="no">genType atan (genType y, genType x)</code></pre><p>反正切函数。返回一个正切为 y/x 的角度，
-
-x 和 y 的符号决定象限，返回值范围为[−π,π]，如果 x 和 y 都是 0 导致 undefined。</p>
-
+<p>x 和 y 的符号决定象限，返回值范围为[−π,π]，如果 x 和 y 都是 0 导致 undefined。</p></p>
 <pre class="prettyprint"><code class="notranslate" translate="no">genType acosh (genType x)</code></pre><p>反双曲余弦函数; 返回cosh函数的非负倒数. 如果 x < 1 导致 undefined。</p>
-
 <pre class="prettyprint"><code class="notranslate" translate="no">genType atanh (genType x)</code></pre><p>反双曲正切函数; 返回tanh函数的倒数。
-
-如果 ∣x∣≥1 返回 undefined。</p>
-
+<p>如果 ∣x∣≥1 返回 undefined。</p></p>
 <pre class="prettyprint"><code class="notranslate" translate="no">genType pow (genType x, genType y)</code></pre><p>返回 x 的 y 次幂, 例如, x<sup>y</sup>。
-
-如果 x < 0 导致 undefined，如果 x = 0 并且 y <= 0 导致 undefined。</p>
-
+<p>如果 x &lt; 0 导致 undefined，如果 x = 0 并且 y &lt;= 0 导致 undefined。</p></p>
 <pre class="prettyprint"><code class="notranslate" translate="no">genType log (genType x)</code></pre><p>返回 x 的自然对数, 例如, 返回 y 值满足 x = e<sup>y</sup>。
-
-如果 x <= 0 导致 undefinded。</p>
-
+<p>如果 x &lt;= 0 导致 undefinded。</p></p>
 <pre class="prettyprint"><code class="notranslate" translate="no">genType log2 (genType x)</code></pre><p>返回以 2 为底 x 的对数。例如，返回 y 满足 x=2<sup>y</sup>。
-
-如果 x <= 0 导致 undefinded。</p>
-
+<p>如果 x &lt;= 0 导致 undefinded。</p></p>
 <pre class="prettyprint"><code class="notranslate" translate="no">genType sqrt (genType x)</code></pre><p>返回 √x .
-
-如果 x < 0 导致 undefinded。</p>
-
+<p>如果 x &lt; 0 导致 undefinded。</p></p>
 <pre class="prettyprint"><code class="notranslate" translate="no">genType inversesqrt (genType x)</code></pre><p>
-
-返回 1/√x.
-如果 x <= 0 导致 undefinded。</p>
-
+<p>返回 1/√x.
+如果 x &lt;= 0 导致 undefinded。</p></p>
 <pre class="prettyprint"><code class="notranslate" translate="no">genType clamp (genType x, genType minVal, genType maxVal)
 genType clamp (genType x, float minVal, float maxVal)</code></pre><p>
-
-返回 min (max (x, minVal), maxVal).
-如果 minVal > maxVal 导致 undefined。</p>
-
+<p>返回 min (max (x, minVal), maxVal).
+如果 minVal &gt; maxVal 导致 undefined。</p></p>
 <pre class="prettyprint"><code class="notranslate" translate="no">genType smoothstep (genType edge0, genType edge1, genType x)
 genType smoothstep (float edge0, float edge1, genType x)</code></pre><p>
-
-如果 x <= edge0 返回 0.0，如果 x >= edge1 返回 1.0，
-当 edge0 < x < edge1 使用 Hermite 插值到 0 到 1 之间。
-当你希望在阈值范围内平滑插值时这个函数就很有用。相当于：
-
+<p>如果 x &lt;= edge0 返回 0.0，如果 x &gt;= edge1 返回 1.0，
+当 edge0 &lt; x &lt; edge1 使用 Hermite 插值到 0 到 1 之间。
+当你希望在阈值范围内平滑插值时这个函数就很有用。相当于：</p>
 </p>
 <pre class="prettyprint">
  genType t;
@@ -502,13 +485,10 @@ genType smoothstep (float edge0, float edge1, genType x)</code></pre><p>
  return t * t * (3 – 2 * t);
 </pre>
 <p>如果 edge0 >= edge1 导致undefined。</p>
-
 <pre class="prettyprint"><code class="notranslate" translate="no">mat2 inverse(mat2 m)
 mat3 inverse(mat3 m)
 mat4 inverse(mat4 m)</code></pre><p>
-
-返回一个 m 的逆矩阵。 输入未修改的矩阵 m, 如果 m 是单数的或条件不佳（几乎是单数的），则返回矩阵中的值是 undefined。</p>
-
+<p>返回一个 m 的逆矩阵。 输入未修改的矩阵 m, 如果 m 是单数的或条件不佳（几乎是单数的），则返回矩阵中的值是 undefined。</p></p>
 </div>
 
     </div>

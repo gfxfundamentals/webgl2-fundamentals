@@ -249,7 +249,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 해당 문제를 복잡하게 하는 것은 성능 상의 이유로, GPU가 <a href="webgl-3d-orthographic.html">depth buffer test</a>를 사용하여 테스트가 실패할 픽셀의 그리기를 건너뛸 수 있기 때문에, 멀리 있는 것보다 가까이 있는 것을 먼저 그리려는 겁니다.
 따라서 이상적으로는 depth buffer test를 키고 마지막에 skybox를 그려야 겠지만, 실제로 박스를 쓰는 경우 카메라가 다른 방향에서 보기 때문에, 박스의 모서리가 측면보다 멀리 떨어져 문제가 발생합니다.</p>
 <div class="webgl_center"><img src="../resources/skybox-issues.svg" style="width: 500px"></div>
-
 <p>위에서 볼 수 있듯이 큐브의 가장 먼 지점이 절두체 내부에 있는지 확인해야 하지만, 그것 때문에 큐브의 일부 모서리가 덮고 싶지 않은 객체를 덮을 수 있습니다.</p>
 <p>일반적인 해결책은 depth test를 끄고 skybox를 먼저 그리는 거지만, 장면에서 나중에 다룰 픽셀을 그리지 않는 depth buffer test는 이점이 없습니다.</p>
 <p>큐브를 사용하는 대신에 캔버스 전체를 덮고 <a href="webgl-cube-maps.html">cubemap</a>을 사용하는 쿼드를 그려봅시다.
@@ -449,27 +448,27 @@ twgl.drawBufferInfo(gl, quadBufferInfo);
 -const faceInfos = [
 -  {
 -    target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
--    url: &#39;resources/images/computer-history-museum/pos-x.jpg&#39;,
+-    url: 'resources/images/computer-history-museum/pos-x.jpg',
 -  },
 -  {
 -    target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
--    url: &#39;resources/images/computer-history-museum/neg-x.jpg&#39;,
+-    url: 'resources/images/computer-history-museum/neg-x.jpg',
 -  },
 -  {
 -    target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
--    url: &#39;resources/images/computer-history-museum/pos-y.jpg&#39;,
+-    url: 'resources/images/computer-history-museum/pos-y.jpg',
 -  },
 -  {
 -    target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
--    url: &#39;resources/images/computer-history-museum/neg-y.jpg&#39;,
+-    url: 'resources/images/computer-history-museum/neg-y.jpg',
 -  },
 -  {
 -    target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
--    url: &#39;resources/images/computer-history-museum/pos-z.jpg&#39;,
+-    url: 'resources/images/computer-history-museum/pos-z.jpg',
 -  },
 -  {
 -    target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
--    url: &#39;resources/images/computer-history-museum/neg-z.jpg&#39;,
+-    url: 'resources/images/computer-history-museum/neg-z.jpg',
 -  },
 -];
 -faceInfos.forEach((faceInfo) =&gt; {
@@ -483,13 +482,13 @@ twgl.drawBufferInfo(gl, quadBufferInfo);
 -  const format = gl.RGBA;
 -  const type = gl.UNSIGNED_BYTE;
 -
--  // setup each face so it&#39;s immediately renderable
+-  // setup each face so it's immediately renderable
 -  gl.texImage2D(target, level, internalFormat, width, height, 0, format, type, null);
 -
 -  // Asynchronously load an image
 -  const image = new Image();
 -  image.src = url;
--  image.addEventListener(&#39;load&#39;, function() {
+-  image.addEventListener('load', function() {
 -    // Now that the image has loaded make copy it to the texture.
 -    gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
 -    gl.texImage2D(target, level, internalFormat, format, type, image);
@@ -501,12 +500,12 @@ twgl.drawBufferInfo(gl, quadBufferInfo);
 +const texture = twgl.createTexture(gl, {
 +  target: gl.TEXTURE_CUBE_MAP,
 +  src: [
-+    &#39;resources/images/computer-history-museum/pos-x.jpg&#39;,
-+    &#39;resources/images/computer-history-museum/neg-x.jpg&#39;,
-+    &#39;resources/images/computer-history-museum/pos-y.jpg&#39;,
-+    &#39;resources/images/computer-history-museum/neg-y.jpg&#39;,
-+    &#39;resources/images/computer-history-museum/pos-z.jpg&#39;,
-+    &#39;resources/images/computer-history-museum/neg-z.jpg&#39;,
++    'resources/images/computer-history-museum/pos-x.jpg',
++    'resources/images/computer-history-museum/neg-x.jpg',
++    'resources/images/computer-history-museum/pos-y.jpg',
++    'resources/images/computer-history-museum/neg-y.jpg',
++    'resources/images/computer-history-museum/pos-z.jpg',
++    'resources/images/computer-history-museum/neg-z.jpg',
 +  ],
 +  min: gl.LINEAR_MIPMAP_LINEAR,
 +});

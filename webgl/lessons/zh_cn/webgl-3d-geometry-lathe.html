@@ -306,7 +306,6 @@ P = P1 * invT^3 +
     P4 * t^3
 </pre>
 </div>
-
 <p>其中 <code class="notranslate" translate="no">P1</code>, <code class="notranslate" translate="no">P2</code>, <code class="notranslate" translate="no">P3</code>, <code class="notranslate" translate="no">P4</code> 就像上例中的四个点，
 <code class="notranslate" translate="no">P</code> 就是那个 <span style="color: red;">红点</span>。</p>
 <p>在二维美术应用例如 Adobe Illustrator 中，
@@ -332,7 +331,8 @@ P = P1 * invT^3 +
                 v2.mult(points[offset + 2], 3 * invT * t * t),
                 v2.mult(points[offset + 3], t * t  *t));
 }
-</code></pre><p>然后可以计算一系列点。</p>
+</code></pre>
+<p>然后可以计算一系列点。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function getPointsOnBezierCurve(points, offset, numPoints) {
   const points = [];
   for (let i = 0; i &lt; numPoints; ++i) {
@@ -341,7 +341,8 @@ P = P1 * invT^3 +
   }
   return points;
 }
-</code></pre><p>注意： <code class="notranslate" translate="no">v2.mult</code> 和 <code class="notranslate" translate="no">v2.add</code> 是我加入的二维点运算辅助方法。</p>
+</code></pre>
+<p>注意： <code class="notranslate" translate="no">v2.mult</code> 和 <code class="notranslate" translate="no">v2.add</code> 是我加入的二维点运算辅助方法。</p>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=0&showCurve=true&showPoints=true"></iframe>
 </div>
@@ -382,7 +383,8 @@ P = P1 * invT^3 +
 
   return ux + uy;
 }
-</code></pre><p>我们可以用它获取曲线上的点，首先检查曲线是否太锐利，如果是就拆分，
+</code></pre>
+<p>我们可以用它获取曲线上的点，首先检查曲线是否太锐利，如果是就拆分，
 不是就将点加入列表。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function getPointsOnBezierCurveWithSplitting(points, offset, tolerance, newPoints) {
   const outPoints = newPoints || [];
@@ -418,7 +420,8 @@ P = P1 * invT^3 +
   }
   return outPoints;
 }
-</code></pre><p><div class="webgl_diagram_container">
+</code></pre>
+<p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=0&showCurve=true&showTolerance=true"></iframe>
 </div>
 
@@ -459,7 +462,8 @@ P = P1 * invT^3 +
 
   return outPoints;
 }
-</code></pre><p><code class="notranslate" translate="no">v2.distanceToSegmentSq</code> 是计算点到线段距离平方的一个方法，
+</code></pre>
+<p><code class="notranslate" translate="no">v2.distanceToSegmentSq</code> 是计算点到线段距离平方的一个方法，
 使用距离平方的原因是比使用实际距离要快一些，因为我们值管线最远距离所以和实际距离的效果相同。</p>
 <p>这是结果，调整距离查看添加或删除的点。</p>
 <p><div class="webgl_diagram_container">
@@ -470,7 +474,7 @@ P = P1 * invT^3 +
 <p>回到保龄球瓶，我们可以将上方的代码整理一下，需要添加和移除点，锁定和解锁控制点，
 撤销等等。但是这有一个简单的方式，我们可以使用一个上方提到的编辑器，<a href="https://svg-edit.github.io/svgedit/">我使用这个在线编辑器</a>。</p>
 <p>这是我做的保龄球的半边轮廓的 svg。</p>
-<p><img class="webgl_center" src="../resources/bowling-pin-silhouette.svg" width="50%" height="50%" /></p>
+<img class="webgl_center" src="../resources/bowling-pin-silhouette.svg" width="50%" height="50%" />
 <p>由 4 个曲线制成，路径的数据像这样</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;path fill=&quot;none&quot; stroke-width=&quot;5&quot; d=&quot;
    m44,434
@@ -479,7 +483,8 @@ P = P1 * invT^3 +
    c-2,-28 11,-51 16,-81
    c5,-30 3,-63 -36,-63
 &quot;/&gt;
-</code></pre><p><a href="https://developer.mozilla.org/en/docs/Web/SVG/Tutorial/Paths">解译这些数据</a> 得到这些点。</p>
+</code></pre>
+<p><a href="https://developer.mozilla.org/en/docs/Web/SVG/Tutorial/Paths">解译这些数据</a> 得到这些点。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">        ___
 44, 371,   |
 62, 338,   | 第一个曲线
@@ -494,7 +499,8 @@ P = P1 * invT^3 +
 41,  17,            | 第四个曲线
 39, -16,            |
  0, -16,____________|
-</code></pre><p>现在有了曲线数据，需要计算出曲线上的点。</p>
+</code></pre>
+<p>现在有了曲线数据，需要计算出曲线上的点。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 获取所有片段的点
 function getPointsOnBezierCurves(points, tolerance) {
   const newPoints = [];
@@ -505,7 +511,8 @@ function getPointsOnBezierCurves(points, tolerance) {
   }
   return newPoints;
 }
-</code></pre><p>调用 <code class="notranslate" translate="no">simplifyPoints</code> 处理结果。</p>
+</code></pre>
+<p>调用 <code class="notranslate" translate="no">simplifyPoints</code> 处理结果。</p>
 <p>现在要旋转它们了，需要决定分多少个部分，对于每个部分都用<a href="webgl-2d-matrices.html">矩阵运算</a>
 绕 Y 轴转动一定角度获得，一旦获得所有点就用索引连接它们。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 绕 Y 轴旋转
@@ -562,7 +569,8 @@ function lathePoints(points,
     indices: indices,
   };
 }
-</code></pre><p>上方的代码创建了位置点和纹理坐标，然后创建索引生成三角网。
+</code></pre>
+<p>上方的代码创建了位置点和纹理坐标，然后创建索引生成三角网。
 <code class="notranslate" translate="no">capStart</code> 和 <code class="notranslate" translate="no">capEnd</code> 确定是都生成闭合点，假设我们在做一个罐头，
 这些选项指明是否需要闭合顶面和底面。</p>
 <p>使用我们的 <a href="webgl-less-code-more-fun.html">简化代码</a> 就可以用哪些数据生成这样的
@@ -581,7 +589,8 @@ const arrays = lathePoints(points, startAngle, endAngle, divisions, capStart, ca
 const extents = getExtents(arrays.position);
 if (!bufferInfo) {
   bufferInfo = webglUtils.createBufferInfoFromArrays(gl, arrays);
-</code></pre><p>这是结果</p>
+</code></pre>
+<p>这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lathe-step-01.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lathe-step-01.html" target="_blank">点此在新窗口中浏览</a>
@@ -659,7 +668,8 @@ function lathePoints(points,
     indices: indices,
   };
 }
-</code></pre><p>这是结果</p>
+</code></pre>
+<p>这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lathe-step-02.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lathe-step-02.html" target="_blank">点此在新窗口中浏览</a>
@@ -673,10 +683,10 @@ function lathePoints(points,
 <p>还有一个事情要做，就是添加法向量。</p>
 <p>我们可以计算每一个曲线点的法向量，事实上如果你会看这节中的例子，你会发现 <code class="notranslate" translate="no">R1</code> 和 <code class="notranslate" translate="no">R2</code>
 构成的线段切曲线于红点处。</p>
-<p><img class="webgl_center" src="../resources/tangent-to-curve.png" width="50%" /></p>
+<img class="webgl_center" src="../resources/tangent-to-curve.png" width="50%" />
 <p>法向量和切线垂直所以从切线很容易求出法向量。</p>
 <p>但是，假设我们想要做一个烛台，有这样一个框架。</p>
-<p><img class="webgl_center" src="../resources/candle-holder.svg" width="50%" /></p>
+<img class="webgl_center" src="../resources/candle-holder.svg" width="50%" />
 <p>这有很多平滑区域也有很多锐利角，如何决定使用法向量的方向呢？当需要锐利边缘时就要使用多余的顶点，
 因为一个顶点有一个位置和一个法向量，如果需要多个法向量就需要不同的顶点，这也是制作立方体需要至少 24
 个顶点的原因，虽然立方体只有 8 个顶点，但每个面在那个顶点处都需要不同的法向量。</p>
@@ -864,7 +874,8 @@ function makeIndiceIterator(arrays) {
       ? makeIndexedIndicesFn(arrays)
       : makeUnindexedIndicesFn(arrays);
 }
-</code></pre><p>上方的代码首先通过原始顶点计算每个面（三角形）的法向量，
+</code></pre>
+<p>上方的代码首先通过原始顶点计算每个面（三角形）的法向量，
 然后创建一个顶点索引集寻找相同的顶点，那是因为我们旋转后的起始和终止点应该是同一个点，
 但 UV 坐标不同所以要单独处理，计算顶点法向量时要将它们看作相同点。</p>
 <p>这些做完之后，对于每个顶点，生成了一个包含它的面的集合。</p>
@@ -879,7 +890,7 @@ function makeIndiceIterator(arrays) {
 <p>注意到在期望的位置得到了锐利的边缘，调大 <code class="notranslate" translate="no">maxAngle</code> 的值就会将相邻的面加入计算，得到平滑的边缘。
 试试调整 <code class="notranslate" translate="no">divisions</code> 为 5 或者 6 然后调整 <code class="notranslate" translate="no">maxAngle</code> 的值让该平滑的地方平滑，该锐利的地方锐利，
 你也可以设置 <code class="notranslate" translate="no">mode</code> 为 <code class="notranslate" translate="no">lit</code> 查看光照效果，这是我们需要法向量的原因。</p>
-<h2 id="-">那么，我们学到了什么呢？</h2>
+<h2 id="那么，我们学到了什么呢？">那么，我们学到了什么呢？</h2>
 <p>我们学到了如果想做三维模型就<strong>用三维建模库</strong>😝</p>
 <p>你可能需要以个 <a href="https://www.google.com/search?q=uv+editor">UV 编辑器</a>，
 帮助完成封闭问题也是三维编辑器提供的功能。代替使用有限的组合处理闭合处问题，
@@ -887,7 +898,7 @@ function makeIndiceIterator(arrays) {
 <a href="https://www.google.com/search?q=extruding+model">拉伸面</a>和
 <a href="https://www.google.com/search?q=extruding+along+a+path">沿路径拉伸</a>，
 你看了之后就会发现它们基于上方的加工方式。</p>
-<h2 id="-">参考</h2>
+<h2 id="参考">参考</h2>
 <p>如果没有<a href="https://pomax.github.io/bezierinfo/">这篇出色的贝塞尔曲线文章</a>
 我就不可能完成这些内容。</p>
 <div class="webgl_bottombar">
@@ -958,7 +969,6 @@ function getVertIndex(position) {
 60fps 运行，但是三维建模工具通常都是很低的帧率。
 </p>
 </div>
-
 <div class="webgl_bottombar">
 <h3>使用矩阵运算是不是大材小用了?</h3>
 <p>当我们旋转点的时候使用这样的代码</p>

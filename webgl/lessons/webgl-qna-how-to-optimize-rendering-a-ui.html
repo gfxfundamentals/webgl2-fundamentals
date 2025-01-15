@@ -236,10 +236,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I&#39;m just getting started with webgl. I followed a simple beginners tutorial on youtube. Now, I&#39;m trying to create a simple 2D game. </p>
-<p>In that game, I want to render a simple inventory with images. When I do this, my fps drops down to 2 after 10 seconds. If I remove the code for the inventory rendering, it stays at 60. </p>
-<p>I know that my problem is on line 82 in <code class="notranslate" translate="no">game/js/engine/inventory/inventory.js</code>. There, I render 35 images with a sprite class that I made watching the tutorial. I think because I watched a simple tutorial in which the code that is rendering the image isn&#39;t optimized and probably isn&#39;t the best way to do it. The sprite class is located in <code class="notranslate" translate="no">game/js/engine/material.js:127</code>. In the sprite class, I setup simple variables that can be parsed to my vertex and fragment shader.</p>
+      <h2 id="question">Question:</h2>
+<p>I’m just getting started with webgl. I followed a simple beginners tutorial on youtube. Now, I’m trying to create a simple 2D game.</p>
+<p>In that game, I want to render a simple inventory with images. When I do this, my fps drops down to 2 after 10 seconds. If I remove the code for the inventory rendering, it stays at 60.</p>
+<p>I know that my problem is on line 82 in <code class="notranslate" translate="no">game/js/engine/inventory/inventory.js</code>. There, I render 35 images with a sprite class that I made watching the tutorial. I think because I watched a simple tutorial in which the code that is rendering the image isn’t optimized and probably isn’t the best way to do it. The sprite class is located in <code class="notranslate" translate="no">game/js/engine/material.js:127</code>. In the sprite class, I setup simple variables that can be parsed to my vertex and fragment shader.</p>
 <h2 id="sprite-setup">Sprite setup</h2>
 <p>In the setup method I setup all the parameters for my image.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.useProgram(this.material.program);
@@ -266,7 +266,8 @@ gl.bindBuffer(gl.ARRAY_BUFFER, this.geo_buff);
 gl.bufferData(gl.ARRAY_BUFFER, Sprite.createRectArray(0, 0, this.size.x, this.size.y), gl.STATIC_DRAW);
 
 gl.useProgram(null);
-</code></pre><h2 id="sprite-render">Sprite render</h2>
+</code></pre>
+<h2 id="sprite-render">Sprite render</h2>
 <p>In the render method, I first bind the texture. Then, I bind a tex coord buffer, a geo buffer and some offsets for my world. Finally, I draw arrays.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">let frame_x = Math.floor(frames.x) * this.uv_x;
 let frame_y = Math.floor(frames.y) * this.uv_y;
@@ -293,30 +294,36 @@ this.material.set(&quot;u_object&quot;, oMat.getFloatArray());
 
 gl.drawArrays(gl.TRIANGLE_STRIP, 0, 6);
 gl.useProgram(null);
-</code></pre><p>Github: <a href="https://github.com/DJ1TJOO/2DGame/">https://github.com/DJ1TJOO/2DGame/</a></p>
+</code></pre>
+<p>Github: <a href="https://github.com/DJ1TJOO/2DGame/">https://github.com/DJ1TJOO/2DGame/</a></p>
 <p>Does someone have an idea on how I can fixe/optimize it?
 Or maybe there is a better way to render an inventory?</p>
 <p>If you find any other way to improve my webgl or javascript, please tell me.</p>
-<h2 id="answer-">Answer:</h2>
+<h2 id="answer">Answer:</h2>
 <blockquote>
-<p> is a better way to render an inventory?</p>
+<p>is a better way to render an inventory?</p>
 </blockquote>
 <p>There are a few ways to optimize off the top of my head.</p>
 <ol>
-<li><p>It might be faster to just use HTML for your inventory</p>
+<li>
+<p>It might be faster to just use HTML for your inventory</p>
 <p>Seriously: You also gain easy international font rendering, styling,
-responsiveness with CSS, etc...  Plenty of games do this.</p>
+responsiveness with CSS, etc…  Plenty of games do this.</p>
 </li>
-<li><p>It&#39;s generally faster to use a texture atlas (a single texture with lots of different images), then generate vertices into a vertex buffer for all the parts of your inventory. Then draw all of it with a single draw call. This is how for example <a href="https://github.com/ocornut/imgui">Dear ImGUI</a> works to make <a href="https://github.com/ocornut/imgui/issues/3075">all of these amazing GUIs</a>. It doesn&#39;t draw anything itself, it just generates a vertex buffer with positions and texture coordinates for a texture atlas.</p>
+<li>
+<p>It’s generally faster to use a texture atlas (a single texture with lots of different images), then generate vertices into a vertex buffer for all the parts of your inventory. Then draw all of it with a single draw call. This is how for example <a href="https://github.com/ocornut/imgui">Dear ImGUI</a> works to make <a href="https://github.com/ocornut/imgui/issues/3075">all of these amazing GUIs</a>. It doesn’t draw anything itself, it just generates a vertex buffer with positions and texture coordinates for a texture atlas.</p>
 </li>
-<li><p>Do #2 except instead of generating the entire vertex buffer every frame just update the parts that change. </p>
-<p>So for example let&#39;s say your inventory says</p>
+<li>
+<p>Do #2 except instead of generating the entire vertex buffer every frame just update the parts that change.</p>
+<p>So for example let’s say your inventory says</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> [gold  ] 123
  [silver] 54
  [copper] 2394
-</code></pre><p>Let&#39;s assume you always draw <code class="notranslate" translate="no">[gold  ]</code>, <code class="notranslate" translate="no">[silver]</code> and <code class="notranslate" translate="no">[copper]</code> but only the numbers change. You could generate vertex buffers that contain all the positions for each letter as a sprite and then say 6 character place holders for each value. You only have to update the numbers when they change by remembering where they are in the vertex buffers. For any digit you don&#39;t want to draw you can just move its vertices offscreen.</p>
+</code></pre>
+<p>Let’s assume you always draw <code class="notranslate" translate="no">[gold  ]</code>, <code class="notranslate" translate="no">[silver]</code> and <code class="notranslate" translate="no">[copper]</code> but only the numbers change. You could generate vertex buffers that contain all the positions for each letter as a sprite and then say 6 character place holders for each value. You only have to update the numbers when they change by remembering where they are in the vertex buffers. For any digit you don’t want to draw you can just move its vertices offscreen.</p>
 </li>
-<li><p>Draw the inventory in to a texture (or parts of it). Then draw the texture on the screen. Only update the parts of the texture that change.</p>
+<li>
+<p>Draw the inventory in to a texture (or parts of it). Then draw the texture on the screen. Only update the parts of the texture that change.</p>
 <p>This is basically <a href="https://www.html5rocks.com/en/tutorials/speed/layers/">what the browser itself does</a>. Based on various CSS settings the parts of the page are divided into textures. When some HTML or CSS changes only those textures in which something changed are re-rendered and then all the textures are drawn to re-composite the page.</p>
 </li>
 </ol>

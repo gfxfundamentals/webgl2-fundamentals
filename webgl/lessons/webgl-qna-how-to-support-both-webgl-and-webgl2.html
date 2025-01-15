@@ -236,17 +236,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>I have a certain library that uses WebGL1 to render things.
 It heavily uses float textures and instanced rendering.</p>
 <p>Nowadays it seems like support for WebGL1 is pretty weird, with some devices supporting for example WebGL2, where these extensions are core, but not supporting WebGL1, or supporting it, but not the extensions.</p>
-<p>At the same time, support for WebGL2 isn&#39;t amazing. Maybe one day it will be, but for not it isn&#39;t.</p>
+<p>At the same time, support for WebGL2 isn’t amazing. Maybe one day it will be, but for not it isn’t.</p>
 <p>I started looking at what it will take to support both versions.</p>
 <p>For shaders, I think I can mostly get away with <code class="notranslate" translate="no">#define</code>ing things. For example, <code class="notranslate" translate="no">#define texture2D texture</code> and other similar things.</p>
 <p>When it comes to extensions, it becomes more problematic, since the extension objects no longer exist.
 As an experiment, I tried copying the extension properties into the context object, e.g. <code class="notranslate" translate="no">gl.drawArraysInstanced = (...args) =&gt; ext.drawArraysInstancedANGLE(...args)</code>.</p>
-<p>When it comes to textures, not much needs to be changed, perhaps add something like <code class="notranslate" translate="no">gl.RGBA8 = gl.RGBA</code> when running in WebGL1, thus it will &quot;just work&quot; when running in WebGL2.</p>
-<p>So then comes the question...did anyone try this?
+<p>When it comes to textures, not much needs to be changed, perhaps add something like <code class="notranslate" translate="no">gl.RGBA8 = gl.RGBA</code> when running in WebGL1, thus it will “just work” when running in WebGL2.</p>
+<p>So then comes the question…did anyone try this?
 I am worried about it hurting performance, especially the extra indirection for function calls.
 It will also make reading the code less obvious if the assumption is that it can run in WebGL1. After all, no WebGL1 context has <code class="notranslate" translate="no">drawArraysInstanced</code>, or <code class="notranslate" translate="no">RGBA8</code>. This also bothers Typescript typing and other minor things.</p>
 <p>The other option is to have branches all over the code. Two versions of shaders (or <code class="notranslate" translate="no">#ifdef</code> trickery), lots of brancing for every place where texture formats are needed, and every place where instancing is done.
@@ -262,30 +262,36 @@ Having something like what follows all over the place is pretty ugly:</p>
   gl.vertexAttribDivisor(m2, 1);
   gl.vertexAttribDivisor(m3, 1);
 }
-</code></pre><p>Finally, maybe there&#39;s a third way I didn&#39;t think about.</p>
+</code></pre>
+<p>Finally, maybe there’s a third way I didn’t think about.</p>
 <p>Got any recommendations?</p>
-<h2 id="answer-">Answer:</h2>
+<h2 id="answer">Answer:</h2>
 <p>Unfortunately I think most answers will be primarily opinion based.</p>
-<p>The first question is why support both? If your idea runs fine on WebGL1 then just use WebGL1. If you absolutely must have WebGL2 features then use WebGL2 and realize that many older devices don&#39;t support WebGL2.</p>
-<p>If you&#39;re intent on doing it <a href="https://twgljs.org">twgl</a> tries to make it easier by <a href="http://twgljs.org/docs/module-twgl.html#.addExtensionsToContext">providing a function that copies all the WebGL1 extensions into their WebGL2 API positions</a>. For like you mentioned, instead of </p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">ext = gl.getExtension(&#39;ANGLE_instanced_arrays&#39;);
+<p>The first question is why support both? If your idea runs fine on WebGL1 then just use WebGL1. If you absolutely must have WebGL2 features then use WebGL2 and realize that many older devices don’t support WebGL2.</p>
+<p>If you’re intent on doing it <a href="https://twgljs.org">twgl</a> tries to make it easier by <a href="http://twgljs.org/docs/module-twgl.html#.addExtensionsToContext">providing a function that copies all the WebGL1 extensions into their WebGL2 API positions</a>. For like you mentioned, instead of</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">ext = gl.getExtension('ANGLE_instanced_arrays');
 ext.drawArraysInstancedANGLE(...)
-</code></pre><p>You instead do</p>
+</code></pre>
+<p>You instead do</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">twgl.addExtensionsToContext(gl);
 gl.drawArraysInstanced(...);
-</code></pre><p>I don&#39;t believe there will be any noticeable perf difference. Especially since those functions are only called a few hundred times a frame the wrapping is not going to be the bottleneck in your code.</p>
-<p>The point though is not really to support WebGL1 and WebGL2 at the same time. Rather it&#39;s just to make it so the way you write code is the same for both APIs.</p>
+</code></pre>
+<p>I don’t believe there will be any noticeable perf difference. Especially since those functions are only called a few hundred times a frame the wrapping is not going to be the bottleneck in your code.</p>
+<p>The point though is not really to support WebGL1 and WebGL2 at the same time. Rather it’s just to make it so the way you write code is the same for both APIs.</p>
 <p>Still, there are real differences in the 2 APIs. For example to use a FLOAT RGBA texture in WebGL1 you use</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texImage2D(target, level, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, ...)
-</code></pre><p>In WebGL2 it&#39;s</p>
+</code></pre>
+<p>In WebGL2 it’s</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texImage2D(target, level, gl.RGBA32F, width, height, 0, gl.RGBA, gl.FLOAT, ...)
-</code></pre><p>WebGL2 will fail if you try to call it the same as WebGL1 in this case. <a href="https://webgl2fundamentals.org/webgl/lessons/webgl1-to-webgl2.html">There are other differences</a> as well.</p>
+</code></pre>
+<p>WebGL2 will fail if you try to call it the same as WebGL1 in this case. <a href="https://webgl2fundamentals.org/webgl/lessons/webgl1-to-webgl2.html">There are other differences</a> as well.</p>
 <p>Will work just fine in WebGL1 and WebGL2. The spec specifically says that combination results in RGBA8 on WebGL2.</p>
-<p>Note though that your example of needing RGBA8 is not true. </p>
+<p>Note though that your example of needing RGBA8 is not true.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texImage2D(target, level, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, ...)
-</code></pre><p>The biggest difference though is there is no reason to use WebGL2 if you can get by with WebGL1. Or, visa versa, if you need WebGL2 then you probably can not easily fall back to WebGL1</p>
-<p>For example you mentioned using defines for shaders but what are you going to do about features in WebGL2 that aren&#39;t in WebGL1. Features like <code class="notranslate" translate="no">textureFetch</code> or the mod <code class="notranslate" translate="no">%</code> operator, or integer attributes, etc.... If you need those features you mostly need to write a WebGL2 only shader. If you don&#39;t need those features then there was really no point in using WebGL2 in the first place.</p>
-<p>Of course if you really want to go for it maybe you want to make a fancier renderer if the user has WebGL2 and fall back to a simpler one if WebGL1. </p>
+</code></pre>
+<p>The biggest difference though is there is no reason to use WebGL2 if you can get by with WebGL1. Or, visa versa, if you need WebGL2 then you probably can not easily fall back to WebGL1</p>
+<p>For example you mentioned using defines for shaders but what are you going to do about features in WebGL2 that aren’t in WebGL1. Features like <code class="notranslate" translate="no">textureFetch</code> or the mod <code class="notranslate" translate="no">%</code> operator, or integer attributes, etc… If you need those features you mostly need to write a WebGL2 only shader. If you don’t need those features then there was really no point in using WebGL2 in the first place.</p>
+<p>Of course if you really want to go for it maybe you want to make a fancier renderer if the user has WebGL2 and fall back to a simpler one if WebGL1.</p>
 <p>TD;LR IMO Pick one or the other</p>
 <div class="so">
   <div>The question and quoted portions thereof are 

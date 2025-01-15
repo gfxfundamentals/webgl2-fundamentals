@@ -272,7 +272,8 @@ function compileShader(gl, shaderSource, shaderType) {
 
   return shader;
 }
-</code></pre><p>그리고 두 셰이더를 링크하여 프로그램으로 만드는 보일러플레이트 코드는 아래와 같습니다.</p>
+</code></pre>
+<p>그리고 두 셰이더를 링크하여 프로그램으로 만드는 보일러플레이트 코드는 아래와 같습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/**
  * 두 셰이더로 프로그램을 생성합니다.
  *
@@ -301,7 +302,8 @@ function createProgram(gl, vertexShader, fragmentShader) {
 
   return program;
 };
-</code></pre><p>물론 어떻게 오류를 처리할지는 여러분에게 달려 있습니다.
+</code></pre>
+<p>물론 어떻게 오류를 처리할지는 여러분에게 달려 있습니다.
 예외를 던지는(throw) 것이 오류를 처리하는 최고의 방법인 것은 아닙니다.
 그럼에도 불구하고 거의 모든 WebGL 프로그램에서 이 코드는 거의 비슷합니다.</p>
 <p>아래와 같은 멀티라인 템플릿 리터럴은 대부분의 모던 브라우저에서 지원됩니다.
@@ -315,9 +317,10 @@ void main() {
    gl_Position = u_matrix * a_position;
 }
 `;
-</code></pre><p>이렇게 하면 셰이더의 수정이 쉬워집니다.
+</code></pre>
+<p>이렇게 하면 셰이더의 수정이 쉬워집니다.
 IE처럼 오래된 브라우저는 이러한 문법을 좋아하지 않지만 어차피 WebGL을 만들기 때문에 IE는 신경쓰지 않습니다.
-IE 지원과 WebGL 지원 여부까지 고려한다면 <a href="https://babeljs.io/">Babel</a>과 같은 라이브러리를 사용해 
+IE 지원과 WebGL 지원 여부까지 고려한다면 <a href="https://babeljs.io/">Babel</a>과 같은 라이브러리를 사용해
 빌드를 수행해 IE가 이해할 수 있는 코드로 변환할 겁니다.</p>
 <p>전에는 저는 셰이더를 자바스크립트가 아닌 &lt;script&gt; 태그에 저장하는 것을 선호했습니다.
 이 방식도 셰이더 수정이 쉽고, 이런 경우 아래 코드를 사용합니다.</p>
@@ -333,7 +336,7 @@ IE 지원과 WebGL 지원 여부까지 고려한다면 <a href="https://babeljs.
 function createShaderFromScript(gl, scriptId, opt_shaderType) {
   // id로 스크립트 태그 탐색
   var shaderScript = document.getElementById(scriptId);
-
+    
   if (!shaderScript) {
     throw(&quot;*** Error: unknown script element&quot; + scriptId);
   }
@@ -341,7 +344,7 @@ function createShaderFromScript(gl, scriptId, opt_shaderType) {
   // 스크립트 태그의 컨텐츠 추출
   var shaderSource = shaderScript.text;
 
-  // 타입을 넘기지 않으면, 스크립트 태그의 &#39;type&#39; 사용
+  // 타입을 넘기지 않으면, 스크립트 태그의 'type' 사용
   if (!opt_shaderType) {
     if (shaderScript.type == &quot;x-shader/x-vertex&quot;) {
       opt_shaderType = gl.VERTEX_SHADER;
@@ -354,9 +357,11 @@ function createShaderFromScript(gl, scriptId, opt_shaderType) {
 
   return compileShader(gl, shaderSource, opt_shaderType);
 };
-</code></pre><p>이제 셰이더를 컴파일하려면 아래와 같이 하면 됩니다.</p>
+</code></pre>
+<p>이제 셰이더를 컴파일하려면 아래와 같이 하면 됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var shader = compileShaderFromScript(gl, &quot;someScriptTagId&quot;);
-</code></pre><p>한 걸음 더 나아가서 스크립트 태그의 두 셰이더를 컴파일하고, 하나의 프로그램에 부착해 링킹을 수행하는 함수를 만들겁니다.</p>
+</code></pre>
+<p>한 걸음 더 나아가서 스크립트 태그의 두 셰이더를 컴파일하고, 하나의 프로그램에 부착해 링킹을 수행하는 함수를 만들겁니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/**
  * 두 개의 스크립트 태그로부터 프로그램을 생성합니다.
  *
@@ -371,17 +376,20 @@ function createProgramFromScripts(
   var fragmentShader = createShaderFromScriptTag(gl, fragmentShaderId, gl.FRAGMENT_SHADER);
   return createProgram(gl, vertexShader, fragmentShader);
 }
-</code></pre><p>거의 모든 WebGL 프로그램에서 공통적으로 사용하는 다른 코드는 캔버스의 크기를 조정하는 코드입니다.
+</code></pre>
+<p>거의 모든 WebGL 프로그램에서 공통적으로 사용하는 다른 코드는 캔버스의 크기를 조정하는 코드입니다.
 <a href="webgl-resizing-the-canvas.html">여기</a>에서 해당 함수가 어떻게 구현되었는지 볼 수 있습니다.</p>
 <p>모든 예제에서는 아래 라인을 통해 이 두 함수가 포함(include)되었습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;script src=&quot;resources/webgl-utils.js&quot;&gt;&lt;/script&gt;
-</code></pre><p>그리고 아래와 같이 사용합니다.</p>
+</code></pre>
+<p>그리고 아래와 같이 사용합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var program = webglUtils.createProgramFromScripts(gl, [idOfVertexShaderScript, idOfFragmentShaderScript]);
 
 ...
 
 webglUtils.resizeCanvasToMatchDisplaySize(canvas);
-</code></pre><p>여러 줄의 동일한 코드로 복잡해시면
+</code></pre>
+<p>여러 줄의 동일한 코드로 복잡해시면
 특정 예제가 설명하려는 내용을 전달하는 데 방해가 됩니다.</p>
 <p>대부분의 예제에서 사용된 실제 보일러플레이트 API는 아래와 같습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/**
@@ -406,7 +414,8 @@ function createProgramFromSources(gl,
                                   opt_attribs,
                                   opt_locations,
                                   opt_errorCallback)
-</code></pre><p><code class="notranslate" translate="no">shaderSources</code>는 GLSL 소스코드인 문자열의 배열입니다.
+</code></pre>
+<p><code class="notranslate" translate="no">shaderSources</code>는 GLSL 소스코드인 문자열의 배열입니다.
 배열의 첫 번째 문자열은 정점 셰이더의 소스코드이고 두 번째 인자는 프래그먼트 셰이더의 소스코드 입니다.</p>
 <p>여기까지가 최소한의 WebGL 보일러플레이드 코드입니다.
 <code class="notranslate" translate="no">webgl-utils.js</code> 코드는 <a href="../../resources/webgl-utils.js">여기</a>에서 보실 수 있습니다.
@@ -416,22 +425,26 @@ function createProgramFromSources(gl,
 <p>또한 <a href="webgl-less-code-more-fun.html">더 적은 코드로 즐겁게</a>를 읽고 <a href="https://twgljs.org">TWGL</a>를 확인해 보시길 바랍니다.</p>
 <p>참고로 비슷한 목적으로 사용되는 몇 가지 스크립트가 더 있습니다.</p>
 <ul>
-<li><p><a href="../../resources/webgl-lessons-ui.js"><code class="notranslate" translate="no">webgl-lessons-ui.js</code></a></p>
+<li>
+<p><a href="../../resources/webgl-lessons-ui.js"><code class="notranslate" translate="no">webgl-lessons-ui.js</code></a></p>
 <p>이건 슬라이더를 드래그하면 그 값이 갱신되어 표시되는 슬라이더를 만드는 코드를 제공합니다.
 마찬가지로 이러한 코드가 파일을 복잡하게 만드는 것이 싫어서 한 곳에 모아뒀습니다.</p>
 </li>
-<li><p><a href="../../resources/lessons-helper.js"><code class="notranslate" translate="no">lessons-helper.js</code></a></p>
+<li>
+<p><a href="../../resources/lessons-helper.js"><code class="notranslate" translate="no">lessons-helper.js</code></a></p>
 <p>이 스크립트는 webgl2fundmentals.org 이외의 곳에서는 필요하지 않습니다.
 live editor 내부에서 사용되어 화면에 에러 메세지 출력하는 걸 도와줍니다.</p>
 </li>
-<li><p><a href="../../resources/m3.js"><code class="notranslate" translate="no">m3.js</code></a></p>
+<li>
+<p><a href="../../resources/m3.js"><code class="notranslate" translate="no">m3.js</code></a></p>
 <p>2d 수학 함수 묶음입니다.
-행렬 수학에 대한 첫 글을 시작했을 때는 inline으로 만들기 시작했지만 
+행렬 수학에 대한 첫 글을 시작했을 때는 inline으로 만들기 시작했지만
 결국 너무 길어져서 이후 예제에서는 이 스크립트를 포함하여 사용하고 있습니다.</p>
 </li>
-<li><p><a href="../../resources/m4.js"><code class="notranslate" translate="no">m4.js</code></a></p>
+<li>
+<p><a href="../../resources/m4.js"><code class="notranslate" translate="no">m4.js</code></a></p>
 <p>3d 수학 함수 묶음입니다.
-3d에 대한 첫 글을 시작했을 때는 inline으로 만들기 시작했지만 
+3d에 대한 첫 글을 시작했을 때는 inline으로 만들기 시작했지만
 결국 너무 길어져서 3d에 관한 두 번째 글부터는 이 스크립트를 포함하여 사용하고 있습니다.</p>
 </li>
 </ul>

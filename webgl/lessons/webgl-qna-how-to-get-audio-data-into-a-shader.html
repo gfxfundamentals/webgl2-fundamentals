@@ -236,21 +236,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>How can i add Audio Visualization support to this class, i would like to add an Audio() object as an input to a GLSL Fragment Shader. An Example of this is <a href="https://www.shadertoy.com/view/Mlj3WV">https://www.shadertoy.com/view/Mlj3WV</a>. I know this sort of thing can be done in Canvas 2d with waveform Analysis, but this opengl method is far more smooth.</p>
+      <h2 id="question">Question:</h2>
+<p>How can i add Audio Visualization support to this class, i would like to add an Audio() object as an input to a GLSL Fragment Shader. An Example of this is https://www.shadertoy.com/view/Mlj3WV. I know this sort of thing can be done in Canvas 2d with waveform Analysis, but this opengl method is far more smooth.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/* Code from https://raw.githubusercontent.com/webciter/GLSLFragmentShader/1.0.0/GLSLFragmentShader.js */
 
 /* render function */
 
 /* set the uniform variables for the shader */
- gl.uniform1f( currentProgram.uniformsCache[ &#39;time&#39; ], parameters.time / 1000 );
-gl.uniform2f( currentProgram.uniformsCache[ &#39;mouse&#39; ], parameters.mouseX, parameters.mouseY );
+ gl.uniform1f( currentProgram.uniformsCache[ 'time' ], parameters.time / 1000 );
+gl.uniform2f( currentProgram.uniformsCache[ 'mouse' ], parameters.mouseX, parameters.mouseY );
 
 /* i would like something like this */
-gl.uniform2f( currentProgram.uniformsCache[ &#39;fft&#39; ], waveformData );
-</code></pre><p>The shader at ShaderToy Example accepts a float as fft, but this just updates the entire row of bars and not individual bar values. I would like real time manipulation of all bars.</p>
-<p>Iv searched MDN but don&#39;t understand how to incorporate this, iv also looked at the source code of shadertoy.com but can&#39;t figure out how they have achieved this.</p>
-<h2 id="answer-">Answer:</h2>
+gl.uniform2f( currentProgram.uniformsCache[ 'fft' ], waveformData );
+
+
+</code></pre>
+<p>The shader at ShaderToy Example accepts a float as fft, but this just updates the entire row of bars and not individual bar values. I would like real time manipulation of all bars.</p>
+<p>Iv searched MDN but don’t understand how to incorporate this, iv also looked at the source code of shadertoy.com but can’t figure out how they have achieved this.</p>
+<h2 id="answer">Answer:</h2>
 <p>Shadertoy does not provide FFT as a float. It provides FFT data as a texture</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-get-audio-data-into-a-shader-example-1.html"></iframe>

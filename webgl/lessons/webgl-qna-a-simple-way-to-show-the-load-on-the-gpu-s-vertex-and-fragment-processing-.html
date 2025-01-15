@@ -236,12 +236,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I would like to be able to tell if I am CPU bound vs GPU vertex bound or GPU fragment bound.  I was hoping I could find a profiler that provides this information but I can&#39;t seem to find anything.  Does anyone know of a profiler that can do this?</p>
-<h2 id="answer-">Answer:</h2>
-<p>Even without a profiler you can tell some of this very easily. Shrink your canvas (or FBO you&#39;re rendering into) to 1x1 pixels. If your app speeds up tremendously you were probably GPU fragment bound. If it barely speeds up you were probably CPU or GPU Vertex bound.</p>
+      <h2 id="question">Question:</h2>
+<p>I would like to be able to tell if I am CPU bound vs GPU vertex bound or GPU fragment bound.  I was hoping I could find a profiler that provides this information but I can’t seem to find anything.  Does anyone know of a profiler that can do this?</p>
+<h2 id="answer">Answer:</h2>
+<p>Even without a profiler you can tell some of this very easily. Shrink your canvas (or FBO you’re rendering into) to 1x1 pixels. If your app speeds up tremendously you were probably GPU fragment bound. If it barely speeds up you were probably CPU or GPU Vertex bound.</p>
 <p>As for CPU, vs GPU Vertex Bound change the count in your calls to drawArrays and drawElements to 0. If it still runs slow you were CPU bound. If it runs fast you were GPU Vertex bound.</p>
-<p>Otherwise, On Chrome I think if you pass in &#39;--in-process-gpu&#39; I believe you can run PIX on Windows and or the OpenGL Profiler on OSX and profile the entire browser though I haven&#39;t done it in a while.</p>
+<p>Otherwise, On Chrome I think if you pass in ‘–in-process-gpu’ I believe you can run PIX on Windows and or the OpenGL Profiler on OSX and profile the entire browser though I haven’t done it in a while.</p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 3.0 by

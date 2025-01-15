@@ -240,32 +240,38 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p>WebGL2는 WebGL1과 <strong>거의</strong> 100% 하위 호환이 됩니다.
 WebGL1 기능들만 사용하고 있다면, 2가지 <strong>주요</strong> 변경 사항이 있습니다.</p>
 <ol>
-<li><p><code class="notranslate" translate="no">getContext</code>를 호출할 때, <code class="notranslate" translate="no">&quot;webgl&quot;</code> 대신 <code class="notranslate" translate="no">&quot;webgl2&quot;</code> 를 사용해야 합니다.</p>
+<li>
+<p><code class="notranslate" translate="no">getContext</code>를 호출할 때, <code class="notranslate" translate="no">&quot;webgl&quot;</code> 대신 <code class="notranslate" translate="no">&quot;webgl2&quot;</code> 를 사용해야 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var gl = someCanvas.getContext(&quot;webgl2&quot;);
-</code></pre><p>주의: &quot;experimental-webgl2&quot;는 없습니다. 웹 사이트들이 접두사에 의존하게
+</code></pre>
+<p>주의: &quot;experimental-webgl2&quot;는 없습니다. 웹 사이트들이 접두사에 의존하게
 되면서, 더 이상 브라우저에서 지원하지 않기로 하였습니다.</p>
 </li>
-<li><p>많은 extension들이 WebGL2의 표준 기능이 되었습니다. 그래서 이제 extensions로
+<li>
+<p>많은 extension들이 WebGL2의 표준 기능이 되었습니다. 그래서 이제 extensions로
 사용할 수 없습니다.</p>
 <p>예시로, Vertex Array Objects <code class="notranslate" translate="no">OES_vertex_array_object</code>는 WebGL2의 표준 기능
 중 하나입니다. 그래서 WebGL1 에서는 아래처럼 사용했지만,</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var ext = gl.getExtension(&quot;OES_vertex_array_object&quot;);
 if (!ext) {
-  // tell user they don&#39;t have the required extension or work around it
+  // tell user they don't have the required extension or work around it
 } else {
   var someVAO = ext.createVertexArrayOES();
 }
-</code></pre><p>WebGL2에서는 이렇습니다.</p>
+</code></pre>
+<p>WebGL2에서는 이렇습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var someVAO = gl.createVertexArray();
-</code></pre><p>그냥 사용하면 됩니다.</p>
+</code></pre>
+<p>그냥 사용하면 됩니다.</p>
 </li>
 </ol>
 <p>언급한대로, 대부분의 WebGL2 기능들의 장점을 얻기 위해서는 몇 가지 변경이 필요합니다.</p>
-<h2 id="glsl-300-es-">GLSL 300 es로 변경</h2>
+<h2 id="glsl-300-es로-변경">GLSL 300 es로 변경</h2>
 <p>가장 큰 변경 내용은, 셰이더 버전을 GLSL 3.00 ES로 업그레이드 해야한다는 것입니다.
 그러기 위해서, 셰이더의 가장 첫 번째 줄이 다음과 같아야 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
-</code></pre><p><strong>주의: 반드시 첫 번째 줄이어야 합니다! 주석이나 빈 줄이 있으면 안됩니다.</strong></p>
+</code></pre>
+<p><strong>주의: 반드시 첫 번째 줄이어야 합니다! 주석이나 빈 줄이 있으면 안됩니다.</strong></p>
 <p>즉, 다음과 같으면 안 됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// BAD!!!!                +---여기 아래에 개행 문자(새로운 줄)이 있습니다.
 // BAD!!!!                V
@@ -273,57 +279,68 @@ var vertexShaderSource = `
 #version 300 es
 ..
 `;
-</code></pre><p>이것도 안 됩니다.</p>
+</code></pre>
+<p>이것도 안 됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;!-- BAD!!                   V&lt;- 여기 아래에 개행 문자(새로운 줄)이 있습니다.
 &lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;
 #version 300 es
 ...
 &lt;/script&gt;
-</code></pre><p>아래는 좋은 예시입니다.</p>
+</code></pre>
+<p>아래는 좋은 예시입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var vertexShaderSource = `#version 300 es
 ...
 `;
-</code></pre><p>이것도 좋은 예시입니다.</p>
+</code></pre>
+<p>이것도 좋은 예시입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;#version 300 es
 ...
 &lt;/script&gt;
-</code></pre><p>아니면, 셰이더를 컴파일하는 함수에서 첫 번째로 나오는 빈 줄을
+</code></pre>
+<p>아니면, 셰이더를 컴파일하는 함수에서 첫 번째로 나오는 빈 줄을
 모두 없애는 방법도 있습니다.</p>
-<h3 id="glsl-100-glsl-300-es-">GLSL 100 에서 GLSL 300 es로의 변경 사항</h3>
+<h3 id="glsl-100-에서-glsl-300-es로의-변경-사항">GLSL 100 에서 GLSL 300 es로의 변경 사항</h3>
 <p>위의 셰이더의 버전 변경 말고도, 몇 가지 변경 사항들이 있습니다.</p>
-<h4 id="-attribute-in-"><code class="notranslate" translate="no">attribute</code> -&gt; <code class="notranslate" translate="no">in</code></h4>
+<h4 id="attribute---in"><code class="notranslate" translate="no">attribute</code> -&gt; <code class="notranslate" translate="no">in</code></h4>
 <p>GLSL 100에서는 이렇게 적었지만</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">attribute vec4 a_position;
 attribute vec2 a_texcoord;
 attribute vec3 a_normal;
-</code></pre><p>GLSL 300 es에서는 아래처럼 되어야합니다.</p>
+</code></pre>
+<p>GLSL 300 es에서는 아래처럼 되어야합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">in vec4 a_position;
 in vec2 a_texcoord;
 in vec3 a_normal;
-</code></pre><h4 id="-varying-in-out-"><code class="notranslate" translate="no">varying</code>을 <code class="notranslate" translate="no">in</code> / <code class="notranslate" translate="no">out</code>로</h4>
+</code></pre>
+<h4 id="varying을-in--out로"><code class="notranslate" translate="no">varying</code>을 <code class="notranslate" translate="no">in</code> / <code class="notranslate" translate="no">out</code>로</h4>
 <p>GLSL 100에서는 <code class="notranslate" translate="no">varying</code>을 vertex 셰이더와 fragment 셰이더
 두 곳에 모두 선언할 수 있었습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">varying vec2 v_texcoord;
 varying vec3 v_normal;
-</code></pre><p>GLSL 300 es의 vertex 셰이더에서, <code class="notranslate" translate="no">varyings</code>은 아래처럼 되어야합니다.</p>
+</code></pre>
+<p>GLSL 300 es의 vertex 셰이더에서, <code class="notranslate" translate="no">varyings</code>은 아래처럼 되어야합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">out vec2 v_texcoord;
 out vec3 v_normal;
-</code></pre><p>그리고 fragment 셰이더에서는 이렇게요.</p>
+</code></pre>
+<p>그리고 fragment 셰이더에서는 이렇게요.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">in vec2 v_texcoord;
 in vec3 v_normal;
-</code></pre><h4 id="-gl_fragcolor-">이제 <code class="notranslate" translate="no">gl_FragColor</code>는 없습니다.</h4>
+</code></pre>
+<h4 id="이제-gl_fragcolor는-없습니다">이제 <code class="notranslate" translate="no">gl_FragColor</code>는 없습니다.</h4>
 <p>GLSL 100에서는, fragment 셰이더에서 output을 설정하기 위해 특별한 변수인
 <code class="notranslate" translate="no">gl_FragColor</code>를 사용할 수 있었습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl_FragColor = vec4(1, 0, 0, 1);  // red
-</code></pre><p>GLSL 300 es에서는, output 변수를 직접 선언해서 값을 대입합니다.</p>
+</code></pre>
+<p>GLSL 300 es에서는, output 변수를 직접 선언해서 값을 대입합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">out vec4 myOutputColor;
 
 void main() {
    myOutputColor = vec4(1, 0, 0, 1);  // red
 }
-</code></pre><p>주의: 아무 이름이나 사용할 수 있지만, <code class="notranslate" translate="no">gl_</code>로 시작할 수 <strong>없습니다.</strong>
+</code></pre>
+<p>주의: 아무 이름이나 사용할 수 있지만, <code class="notranslate" translate="no">gl_</code>로 시작할 수 <strong>없습니다.</strong>
 <code class="notranslate" translate="no">out vec4 gl_FragColor</code>로 적을 수 없다는 뜻입니다.</p>
-<h4 id="-texture2d-texture-etc-"><code class="notranslate" translate="no">texture2D</code> -&gt; <code class="notranslate" translate="no">texture</code> etc.</h4>
+<h4 id="texture2d---texture-etc"><code class="notranslate" translate="no">texture2D</code> -&gt; <code class="notranslate" translate="no">texture</code> etc.</h4>
 <p>GLSL 100에서는, texture에서 색상을 얻을 때 아래처럼 했지만,</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler2D u_some2DTexture;
 uniform samplerCube u_someCubeTexture;
@@ -332,7 +349,8 @@ uniform samplerCube u_someCubeTexture;
 
 vec4 color1 = texture2D(u_some2DTexture, ...);
 vec4 color2 = textureCube(u_someCubeTexture, ...);
-</code></pre><p>GLSL 300 es에서는, texture function이 어떤 sampler type을 사용하는 지
+</code></pre>
+<p>GLSL 300 es에서는, texture function이 어떤 sampler type을 사용하는 지
 알고 있으므로, 이제는 그냥 <code class="notranslate" translate="no">texture</code>를 사용하면 됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler2D u_some2DTexture;
 uniform samplerCube u_someCubeTexture;
@@ -341,7 +359,8 @@ uniform samplerCube u_someCubeTexture;
 
 vec4 color1 = texture(u_some2DTexture, ...);
 vec4 color2 = texture(u_someCubeTexture, ...);
-</code></pre><h2 id="-">당연하게 생각해도 되는 기능들</h2>
+</code></pre>
+<h2 id="당연하게-생각해도-되는-기능들">당연하게 생각해도 되는 기능들</h2>
 <p>WebGL1의 많은 기능들은 optional extension이었습니다. WebGL2에서는 아래 모든 기능들이 제공됩니다:</p>
 <ul>
 <li>Depth Textures (<a href="https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/">WEBGL_depth_texture</a>)</li>
@@ -359,7 +378,7 @@ vec4 color2 = texture(u_someCubeTexture, ...);
 <li>Any level of a texture can be attached to a framebuffer object (<a href="https://www.khronos.org/registry/webgl/extensions/OES_fbo_render_mipmap/">OES_fbo_render_mipmap</a>)</li>
 <li>Texture access in vertex shaders</li>
 </ul>
-<h2 id="2-">2의 거듭제곱이 아닌 텍스처 지원</h2>
+<h2 id="2의-거듭제곱이-아닌-텍스처-지원">2의 거듭제곱이 아닌 텍스처 지원</h2>
 <p>WebGL1에서, 2의 거듭제곱이 아닌 텍스처는 밉맵을 가질수 없었습니다.
 WebGL2부터는 이런 제한이 사라졌습니다. 2의 거듭제곱이 아닌 텍스처도
 2의 거듭제곱 텍스처와 정확히 동일하게 작동합니다.</p>
@@ -405,18 +424,22 @@ vertex array objects 일 겁니다. 나머지 기능들은 여러분이 무언�
       { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
     ],
   },
-</code></pre><p>   }</p>
+}
+</code></pre>
 <p><code class="notranslate" translate="no">gl.vertexAttribPointer</code>, <code class="notranslate" translate="no">gl.enableVertexAttribArray</code>, <code class="notranslate" translate="no">gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ??)</code>처럼 함수 호출이 전역 상태에 영향을 주었습니다.
-각각의 원하는 것을 그리기 전에, 모든 attribute들을 초기화해야 했었습니다. 
+각각의 원하는 것을 그리기 전에, 모든 attribute들을 초기화해야 했었습니다.
 인덱스 데이터를 그리려면, <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code>를 지정해야 했죠.</p>
 <p>Vertex Array Objects를 사용하면, 위의 모든 <code class="notranslate" translate="no">attributeState</code>가 <em>Vertex Array</em>가 됩니다.</p>
 <p>다시 말하자면,</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var someVAO = gl.createVertexArray();
-</code></pre><p>위처럼 생성한 새로운 인스턴스를 <code class="notranslate" translate="no">attributeState</code>라고 부릅니다.</p>
+</code></pre>
+<p>위처럼 생성한 새로운 인스턴스를 <code class="notranslate" translate="no">attributeState</code>라고 부릅니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(someVAO);
-</code></pre><p>이건 아래와 같습니다.</p>
+</code></pre>
+<p>이건 아래와 같습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">glState.attributeState = someVAO;
-</code></pre><p>즉, 초기화 시점에 모든 attribute들을 설정해야 한다는 의미입니다.</p>
+</code></pre>
+<p>즉, 초기화 시점에 모든 attribute들을 설정해야 한다는 의미입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 초기화 시점
 for each model / geometry / ...
   var vao = gl.createVertexArray()
@@ -428,13 +451,16 @@ for each model / geometry / ...
   if indexed geometry
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
   gl.bindVertexArray(null);
-</code></pre><p>그리고 렌더링 시점에 특정 geometry을 사용하기 위해서 해야하는 건 이것뿐입니다.</p>
+</code></pre>
+<p>그리고 렌더링 시점에 특정 geometry을 사용하기 위해서 해야하는 건 이것뿐입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(vaoForGeometry);
-</code></pre><p>WebGL1에서는 위의 초기화 루프가 렌더링 시점에 있었을 것입니다.
+</code></pre>
+<p>WebGL1에서는 위의 초기화 루프가 렌더링 시점에 있었을 것입니다.
 이건 엄청나게 빨라진 거죠!</p>
 <p>몇 가지 주의 사항이 있습니다:</p>
 <ol>
-<li><p>attribute location은 프로그램에 종속됩니다.</p>
+<li>
+<p>attribute location은 프로그램에 종속됩니다.</p>
 <p>만약에 여러 프로그램에서 같은 geometry를 사용하려고 한다면,
 attribute location를 수동으로 할당하는 것을 고려해야합니다.
 GLSL 300 es에서는 이걸 셰이더 내부에서 할 수 있습니다.</p>
@@ -443,15 +469,17 @@ GLSL 300 es에서는 이걸 셰이더 내부에서 할 수 있습니다.</p>
 layout(location = 1) in vec2 a_texcoord;
 layout(location = 2) in vec3 a_normal;
 layout(location = 3) in vec4 a_color;
-</code></pre><p>4개의 attributes의 locations를 지정합니다.</p>
-<p>WebGL1처럼 <code class="notranslate" translate="no">gl.linkProgram</code>을 호출하기 전에 
+</code></pre>
+<p>4개의 attributes의 locations를 지정합니다.</p>
+<p>WebGL1처럼 <code class="notranslate" translate="no">gl.linkProgram</code>을 호출하기 전에
 <code class="notranslate" translate="no">gl.bindAttribLocation</code>를 호출하여 사용할 수 있습니다.</p>
 <p>예시:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindAttribLocation(someProgram, 0, &quot;a_position&quot;);
 gl.bindAttribLocation(someProgram, 1, &quot;a_texcoord&quot;);
 gl.bindAttribLocation(someProgram, 2, &quot;a_normal&quot;);
 gl.bindAttribLocation(someProgram, 3, &quot;a_color&quot;);
-</code></pre><p>이건 여러 셰이더 프로그램과 호환되도록 강제할 수 있다는 의미입니다.
+</code></pre>
+<p>이건 여러 셰이더 프로그램과 호환되도록 강제할 수 있다는 의미입니다.
 한 프로그램에서 모든 attribute가 필요하지 않다면, 필요한 attribute만
 같은 location에 할당하면 됩니다.</p>
 <p>이렇게 하지 않으면, 같은 geometry를 쓰는 다른 셰이더 프로그램마다
@@ -463,9 +491,11 @@ attributes를 설정해야하는 WebGL1처럼 해야합니다. 느려지겠죠.<
 <code class="notranslate" translate="no">gl.bindAttribLocation</code> 쪽이 더 나아보입니다.
 셰이더 생성기를 쓴다면 차이는 없겠지만요.</p>
 </li>
-<li><p>작업을 마치면, 항상 VAO를 unbind 하기</p>
+<li>
+<p>작업을 마치면, 항상 VAO를 unbind 하기</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(null);
-</code></pre><p>이건 제 경험에서 나온 겁니다. 위를 읽으셨다면, <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code> 상태는
+</code></pre>
+<p>이건 제 경험에서 나온 겁니다. 위를 읽으셨다면, <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code> 상태는
 Vertex Array의 일부라는 걸 아실겁니다.</p>
 <p>그런데 여기서 문제가 생겼습니다. 어떤 geometry를 하나 만들었고,
 연결할 VAO도 만들었고, attribute들과 <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code> 도 설정했습니다.
@@ -481,25 +511,30 @@ Vertex Array의 일부라는 걸 아실겁니다.</p>
 extension을 사용하는 것처럼 작성하시면 안되고 조금은 수정해야합니다. 다음을 봐주세요.</p>
 <p>특히, 주의가 필요한 2가지:</p>
 <ol>
-<li><p><code class="notranslate" translate="no">OES_texture_float</code> 그리고 부동 소수점 텍스처</p>
-<p> 부동 소수점 텍스처는 WebGL2의 표준 기능이지만,</p>
+<li>
+<p><code class="notranslate" translate="no">OES_texture_float</code> 그리고 부동 소수점 텍스처</p>
+<p>부동 소수점 텍스처는 WebGL2의 표준 기능이지만,</p>
 <ul>
-<li><p>부동 소수점 텍스처 필터링은 여전히 extension입니다:
+<li>
+<p>부동 소수점 텍스처 필터링은 여전히 extension입니다:
 <code class="notranslate" translate="no">OES_texture_float_linear</code>.</p>
 </li>
-<li><p>부동 소수점 텍스처을 렌더링하는 것도 extension입니다:
+<li>
+<p>부동 소수점 텍스처을 렌더링하는 것도 extension입니다:
 <code class="notranslate" translate="no">EXT_color_buffer_float</code>.</p>
 </li>
-<li><p>부동 소수점 텍스처를 생성하는 것이 다릅니다. WebGL2의 새로운 내부 포맷인
+<li>
+<p>부동 소수점 텍스처를 생성하는 것이 다릅니다. WebGL2의 새로운 내부 포맷인
 <code class="notranslate" translate="no">RGBA32F</code> 나 <code class="notranslate" translate="no">R32F</code> 등을 사용해야 합니다.
 This is different than the WebGL1 <code class="notranslate" translate="no">OES_texture_float</code>
 extension in which the internal format was inferred from the <code class="notranslate" translate="no">type</code> passed to <code class="notranslate" translate="no">texImage2D</code>.</p>
 </li>
 </ul>
 </li>
-<li><p><code class="notranslate" translate="no">WEBGL_depth_texture</code> 그리고 depth textures.</p>
-<p> 이것도 마찬가지로, WebGL1의 <code class="notranslate" translate="no">WEBGL_depth_texture</code> extension은 <code class="notranslate" translate="no">DEPTH_COMPONENT</code>과 <code class="notranslate" translate="no">DEPTH_STENCIL_COMPONENT</code>를 사용했지만, WebGL2에서 depth texture를 만들려면 WebGL2의 내부 포맷인 <code class="notranslate" translate="no">DEPTH_COMPONENT16</code>, <code class="notranslate" translate="no">DEPTH_COMPONENT24</code>,
- <code class="notranslate" translate="no">DEPTH_COMPONENT32F</code>, <code class="notranslate" translate="no">DEPTH24_STENCIL8</code>, <code class="notranslate" translate="no">DEPTH32F_STENCIL8</code> 중에 하나를 써야합니다.</p>
+<li>
+<p><code class="notranslate" translate="no">WEBGL_depth_texture</code> 그리고 depth textures.</p>
+<p>이것도 마찬가지로, WebGL1의 <code class="notranslate" translate="no">WEBGL_depth_texture</code> extension은 <code class="notranslate" translate="no">DEPTH_COMPONENT</code>과 <code class="notranslate" translate="no">DEPTH_STENCIL_COMPONENT</code>를 사용했지만, WebGL2에서 depth texture를 만들려면 WebGL2의 내부 포맷인 <code class="notranslate" translate="no">DEPTH_COMPONENT16</code>, <code class="notranslate" translate="no">DEPTH_COMPONENT24</code>,
+<code class="notranslate" translate="no">DEPTH_COMPONENT32F</code>, <code class="notranslate" translate="no">DEPTH24_STENCIL8</code>, <code class="notranslate" translate="no">DEPTH32F_STENCIL8</code> 중에 하나를 써야합니다.</p>
 </li>
 </ol>
 <p>이건, WebGL1를 WebGL2로 바꾸면서 유의해야할 부분을 제가 개인적으로 정리해본 것입니다. <a href="webgl2-whats-new.html">WebGL2에서 할 수 있는 것들</a>.</p>
@@ -527,43 +562,42 @@ var someVAO = gl.createVertexArray();
 <pre class="prettyprint">
 const gl = someCanvas.getContext("webgl");
 const haveVAOs = getAndApplyExtension(gl, "OES_vertex_array_object");
-
-function getAndApplyExtension(gl, name) {
-  const ext = gl.getExtension(name);
-  if (!ext) {
-    return null;
-  }
-  const fnSuffix = name.split("_")[0];
-  const enumSuffix = '_' + fnSuffix;
-  for (const key in ext) {
-    const value = ext[key];
-    const isFunc = typeof (value) === 'function';
-    const suffix = isFunc ? fnSuffix : enumSuffix;
-    let name = key;
-    // examples of where this is not true are WEBGL_compressed_texture_s3tc
-    // and WEBGL_compressed_texture_pvrtc
-    if (key.endsWith(suffix)) {
-      name = key.substring(0, key.length - suffix.length);
-    }
-    if (gl[name] !== undefined) {
-      if (!isFunc && gl[name] !== value) {
-        console.warn("conflict:", name, gl[name], value, key);
-      }
-    } else {
-      if (isFunc) {
-        gl[name] = function(origFn) {
-          return function() {
-            return origFn.apply(ext, arguments);
-          };
-        }(value);
-      } else {
-        gl[name] = value;
-      }
-    }
-  }
-  return ext;
+<p>function getAndApplyExtension(gl, name) {
+const ext = gl.getExtension(name);
+if (!ext) {
+return null;
 }
-</pre>
+const fnSuffix = name.split(&quot;<em>&quot;)[0];
+const enumSuffix = '</em>’ + fnSuffix;
+for (const key in ext) {
+const value = ext[key];
+const isFunc = typeof (value) === ‘function’;
+const suffix = isFunc ? fnSuffix : enumSuffix;
+let name = key;
+// examples of where this is not true are WEBGL_compressed_texture_s3tc
+// and WEBGL_compressed_texture_pvrtc
+if (key.endsWith(suffix)) {
+name = key.substring(0, key.length - suffix.length);
+}
+if (gl[name] !== undefined) {
+if (!isFunc &amp;&amp; gl[name] !== value) {
+console.warn(“conflict:”, name, gl[name], value, key);
+}
+} else {
+if (isFunc) {
+gl[name] = function(origFn) {
+return function() {
+return origFn.apply(ext, arguments);
+};
+}(value);
+} else {
+gl[name] = value;
+}
+}
+}
+return ext;
+}
+</pre></p>
 <p>이제 이 코드는 WebGL1과 WebGL2 에서 대부분 똑같이 동작할 겁니다. 예시:</p>
 <pre class="prettyprint">
 if (haveVAOs) {

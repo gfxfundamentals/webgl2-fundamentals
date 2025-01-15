@@ -239,17 +239,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p>This post is a continuation of a series of posts about WebGL.
 The first <a href="webgl-fundamentals.html">started with fundamentals</a> and
 the previous was <a href="webgl-2d-matrices.html">about 2D matrices</a>.
-If you haven&#39;t read those please view them first.</p>
+If you haven’t read those please view them first.</p>
 <p>In the last post we went over how 2D matrices worked. We talked
 about how translation, rotation, scaling, and even projecting from
 pixels into clip space can all be done by 1 matrix and some magic
 matrix math. To do 3D is only a small step from there.</p>
 <p>In our previous 2D examples we had 2D points (x, y) that we multiplied by
 a 3x3 matrix. To do 3D we need 3D points (x, y, z) and a 4x4 matrix.</p>
-<p>Let&#39;s take our last example and change it to 3D. We&#39;ll use an F again
-but this time a 3D &#39;F&#39;.</p>
+<p>Let’s take our last example and change it to 3D. We’ll use an F again
+but this time a 3D ‘F’.</p>
 <p>The first thing we need to do is change the vertex shader to handle 3D.
-Here&#39;s the old vertex shader.</p>
+Here’s the old vertex shader.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">#version 300 es
 
 // an attribute is an input (in) to a vertex shader.
@@ -265,7 +265,7 @@ void main() {
   gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
 }
 </code></pre>
-<p>And here&#39;s the new one</p>
+<p>And here’s the new one</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">// an attribute is an input (in) to a vertex shader.
 // It will receive data from a buffer
 *in vec4 a_position;
@@ -289,7 +289,7 @@ to be 1 but we can take advantage of the fact that for attributes
   // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
 *  var size = 3;          // 3 components per iteration
   var type = gl.FLOAT;   // the data is 32bit floats
-  var normalize = false; // don&#39;t normalize the data
+  var normalize = false; // don't normalize the data
   var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
   var offset = 0;        // start at the beginning of the buffer
   gl.vertexAttribPointer(
@@ -298,7 +298,7 @@ to be 1 but we can take advantage of the fact that for attributes
   ...
 
   // Fill the current ARRAY_BUFFER buffer
-  // with the values that define a letter &#39;F&#39;.
+  // with the values that define a letter 'F'.
   function setGeometry(gl) {
     gl.bufferData(
         gl.ARRAY_BUFFER,
@@ -420,29 +420,25 @@ to be 1 but we can take advantage of the fact that for attributes
 were effectively only rotating around the Z axis.  Now though to do 3D we
 also want to be able to rotate around the X axis and Y axis as well.  You
 can see from looking at them they are all very similar.  If we were to
-work them out you&#39;d see them simplify just like before</p>
+work them out you’d see them simplify just like before</p>
 <p>Z rotation</p>
 <div class="webgl_center">
 <div>newX = x *  c + y * s;</div>
 <div>newY = x * -s + y * c;</div>
 </div>
-
 <p>Y rotation</p>
 <div class="webgl_center">
 <div>newX = x *  c + z * s;</div>
 <div>newZ = x * -s + z * c;</div>
 </div>
-
 <p>X rotation</p>
 <div class="webgl_center">
 <div>newY = y *  c + z * s;</div>
 <div>newZ = y * -s + z * c;</div>
 </div>
-
 <p>which gives you these rotations.</p>
 <iframe class="external_diagram" src="resources/axis-diagram.html" style="width: 540px; height: 240px;"></iframe>
-
-<p>Similarly we&#39;ll make our simplified functions</p>
+<p>Similarly we’ll make our simplified functions</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  translate: function(m, tx, ty, tz) {
     return m4.multiply(m, m4.translation(tx, ty, tz));
   },
@@ -518,7 +514,7 @@ work them out you&#39;d see them simplify just like before</p>
     ];
   },
 </code></pre>
-<p>We also need to update the projection function. Here&#39;s the old one</p>
+<p>We also need to update the projection function. Here’s the old one</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  projection: function (width, height) {
     // Note: This matrix flips the Y axis so 0 is at the top.
     return [
@@ -530,7 +526,7 @@ work them out you&#39;d see them simplify just like before</p>
 }
 </code></pre>
 <p>which converted from pixels to clip space. For our first attempt at
-expanding it to 3D let&#39;s try</p>
+expanding it to 3D let’s try</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  projection: function(width, height, depth) {
     // Note: This matrix flips the Y axis so 0 is at the top.
     return [
@@ -542,8 +538,8 @@ expanding it to 3D let&#39;s try</p>
   },
 </code></pre>
 <p>Just like we needed to convert from pixels to clip space for X and Y, for
-Z we need to do the same thing.  In this case I&#39;m making the Z axis pixel
-units as well.  I&#39;ll pass in some value similar to <code class="notranslate" translate="no">width</code> for the <code class="notranslate" translate="no">depth</code>
+Z we need to do the same thing.  In this case I’m making the Z axis pixel
+units as well.  I’ll pass in some value similar to <code class="notranslate" translate="no">width</code> for the <code class="notranslate" translate="no">depth</code>
 so our space will be 0 to <code class="notranslate" translate="no">width</code> pixels wide, 0 to <code class="notranslate" translate="no">height</code> pixels tall, but
 for <code class="notranslate" translate="no">depth</code> it will be <code class="notranslate" translate="no">-depth / 2</code> to <code class="notranslate" translate="no">+depth / 2</code>.</p>
 <p>Finally we need to update the code that computes the matrix.</p>
@@ -558,7 +554,7 @@ for <code class="notranslate" translate="no">depth</code> it will be <code class
   // Set the matrix.
 *  gl.uniformMatrix4fv(matrixLocation, false, matrix);
 </code></pre>
-<p>And here&#39;s that sample.</p>
+<p>And here’s that sample.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-step1.html" target="_blank">click here to open in a separate window</a>
@@ -566,12 +562,12 @@ for <code class="notranslate" translate="no">depth</code> it will be <code class
 
 </p>
 <p>The first problem we have is that our geometry is a flat F which makes it
-hard to see any 3D.  To fix that let&#39;s expand the geometry to 3D.  Our
+hard to see any 3D.  To fix that let’s expand the geometry to 3D.  Our
 current F is made of 3 rectangles, 2 triangles each.  To make it 3D will
 require a total of 16 rectangles.  the 3 rectangles on the front, 3 on the
 back, 1 on the left, 4 on the right, 2 on the tops, 3 on the bottoms.</p>
-<p><img class="webgl_center noinvertdark" width="300" src="resources/3df.svg" /></p>
-<p>That&#39;s quite a few to list out here.
+<img class="webgl_center noinvertdark" width="300" src="resources/3df.svg" />
+<p>That’s quite a few to list out here.
 16 rectangles with 2 triangles per rectangle and 3 vertices per triangle is 96
 vertices.  If you want to see all of them view the source of the sample.</p>
 <p>We have to draw more vertices so</p>
@@ -581,18 +577,18 @@ vertices.  If you want to see all of them view the source of the sample.</p>
 *    var count = 16 * 6;
     gl.drawArrays(primitiveType, offset, count);
 </code></pre>
-<p>And here&#39;s that version</p>
+<p>And here’s that version</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step2.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-step2.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>Moving the sliders it&#39;s pretty hard to tell that it&#39;s 3D.  Let&#39;s try
+<p>Moving the sliders it’s pretty hard to tell that it’s 3D.  Let’s try
 coloring each rectangle a different color.  To do this we will add another
 attribute to our vertex shader and a varying to pass it from the vertex
 shader to the fragment shader.</p>
-<p>Here&#39;s the new vertex shader</p>
+<p>Here’s the new vertex shader</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
 
 // an attribute is an input (in) to a vertex shader.
@@ -658,7 +654,7 @@ buffer and attribute to give it the colors.</p>
 
   ...
 
-// Fill the buffer with colors for the &#39;F&#39;.
+// Fill the buffer with colors for the 'F'.
 
 function setColors(gl) {
   gl.bufferData(
@@ -687,39 +683,39 @@ function setColors(gl) {
 </div>
 
 </p>
-<p>Uh oh, what&#39;s that mess?  Well, it turns out all the various parts of
-that 3D &#39;F&#39;, front, back, sides, etc get drawn in the order they appear in
-our geometry data.  That doesn&#39;t give us quite the desired results as sometimes
+<p>Uh oh, what’s that mess?  Well, it turns out all the various parts of
+that 3D ‘F’, front, back, sides, etc get drawn in the order they appear in
+our geometry data.  That doesn’t give us quite the desired results as sometimes
 the ones in the back get drawn after the ones in the front.</p>
-<p><img class="webgl_center" style="background-color: transparent;" width="163" height="190" src="resources/polygon-drawing-order.gif" /></p>
+<img class="webgl_center" style="background-color: transparent;" width="163" height="190" src="resources/polygon-drawing-order.gif" />
 <p>The <span style="background: rgb(200, 70, 120); color: white; padding: 0.25em">reddish part</span> is
-the <strong>front</strong> of the &#39;F&#39;  but because it&#39;s the first part of our data
+the <strong>front</strong> of the ‘F’  but because it’s the first part of our data
 it is drawn first and then the other triangles behind it get drawn
 after covering it up. For example the  <span style="background: rgb(80, 70, 200); color: white; padding: 0.25em">purple part</span>
-is actually the back of the &#39;F&#39;. It gets drawn 2nd because it comes 2nd in our data.</p>
+is actually the back of the ‘F’. It gets drawn 2nd because it comes 2nd in our data.</p>
 <p>Triangles in WebGL have the concept of front facing and back facing.  By default a
 front facing triangle has its vertices go in a counter clockwise direction.  A
 back facing triangle has its vertices go in a clockwise direction.</p>
-<p><img src="resources/triangle-winding.svg" class="webgl_center" width="400" /></p>
+<img src="resources/triangle-winding.svg" class="webgl_center" width="400" />
 <p>WebGL has the ability to draw only forward facing or back facing
 triangles.  We can turn that feature on with</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  gl.enable(gl.CULL_FACE);
 </code></pre>
 <p>Well put that in our <code class="notranslate" translate="no">drawScene</code> function. With that
-feature turned on, WebGL defaults to &quot;culling&quot; back facing triangles.
-&quot;Culling&quot; in this case is a fancy word for &quot;not drawing&quot;.</p>
+feature turned on, WebGL defaults to “culling” back facing triangles.
+“Culling” in this case is a fancy word for “not drawing”.</p>
 <p>Note that as far as WebGL is concerned, whether or not a triangle is
 considered to be going clockwise or counter clockwise depends on the
 vertices of that triangle in clip space.  In other words, WebGL figures out
-whether a triangle is front or back AFTER you&#39;ve applied math to the
+whether a triangle is front or back AFTER you’ve applied math to the
 vertices in the vertex shader.  That means for example a clockwise
 triangle that is scaled in X by -1 becomes a counter clockwise triangle or
 a clockwise triangle rotated 180 degrees becomes a counter clockwise
 triangle.  Because we had CULL_FACE disabled we can see both
-clockwise(front) and counter clockwise(back) triangles.  Now that we&#39;ve
+clockwise(front) and counter clockwise(back) triangles.  Now that we’ve
 turned it on, any time a front facing triangle flips around either because
-of scaling or rotation or for whatever reason, WebGL won&#39;t draw it.
-That&#39;s a good thing since as your turn something around in 3D you
+of scaling or rotation or for whatever reason, WebGL won’t draw it.
+That’s a good thing since as your turn something around in 3D you
 generally want whichever triangles are facing you to be considered front
 facing.</p>
 <p>With CULL_FACE turned on this is what we get</p>
@@ -730,25 +726,27 @@ facing.</p>
 
 </p>
 <p>Hey!  Where did all the triangles go?  It turns out, many of them are
-facing the wrong way.  Rotate it and you&#39;ll see them appear when you look
-at the other side.  Fortunately it&#39;s easy to fix.  We just look at which
+facing the wrong way.  Rotate it and you’ll see them appear when you look
+at the other side.  Fortunately it’s easy to fix.  We just look at which
 ones are backward and exchange 2 of their vertices.  For example if one
 backward triangle is</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">           1,   2,   3,
           40,  50,  60,
          700, 800, 900,
-</code></pre><p>we just swap the last 2 vertices to make it forward.</p>
+</code></pre>
+<p>we just swap the last 2 vertices to make it forward.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">           1,   2,   3,
 *         700, 800, 900,
 *          40,  50,  60,
-</code></pre><p>Going through and fixing all the backward triangles gets us to this</p>
+</code></pre>
+<p>Going through and fixing all the backward triangles gets us to this</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step5.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-step5.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>That&#39;s closer but there&#39;s still one more problem.  Even with all the
+<p>That’s closer but there’s still one more problem.  Even with all the
 triangles facing in the correct direction and with the back facing ones
 being culled we still have places where triangles that should be in the back
 are being drawn over triangles that should be in front.</p>
@@ -760,11 +758,11 @@ based on the values we return from the vertex shader for Z.  Just like we
 had to convert to clip space for X and Y, Z is also in clip space or (-1
 to +1).  That value is then converted into a depth space value (0 to +1).
 Before WebGL draws a color pixel it will check the corresponding depth
-pixel.  If the depth value for the pixel it&#39;s about to draw is greater
+pixel.  If the depth value for the pixel it’s about to draw is greater
 than the value of the corresponding depth pixel then WebGL does not draw
 the new color pixel.  Otherwise it draws both the new color pixel with the
 color from your fragment shader AND it draws the depth pixel with the new
-depth value.  This means, pixels that are behind other pixels won&#39;t get
+depth value.  This means, pixels that are behind other pixels won’t get
 drawn.</p>
 <p>We can turn on this feature nearly as simply as we turned on culling with</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  gl.enable(gl.DEPTH_TEST);
@@ -789,7 +787,7 @@ drawn.</p>
 </p>
 <p>which is 3D!</p>
 <p>One minor thing. In most 3d math libraries there is no <code class="notranslate" translate="no">projection</code> function to
-do our conversions from clip space to pixel space. Rather there&#39;s usually a function
+do our conversions from clip space to pixel space. Rather there’s usually a function
 called <code class="notranslate" translate="no">ortho</code> or <code class="notranslate" translate="no">orthographic</code> that looks like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m4 = {
   orthographic: function(left, right, bottom, top, near, far) {
@@ -804,10 +802,11 @@ called <code class="notranslate" translate="no">ortho</code> or <code class="not
       1,
     ];
   }
-</code></pre><p>Unlike our simplified <code class="notranslate" translate="no">projection</code> function above which only had width, height, and depth
+</code></pre>
+<p>Unlike our simplified <code class="notranslate" translate="no">projection</code> function above which only had width, height, and depth
 parameters this more common orthographic projection function we can pass in left, right,
 bottom, top, near, and far which gives as more flexibility. To use it the same as
-our original projection function we&#39;d call it with</p>
+our original projection function we’d call it with</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var left = 0;
 var right = gl.canvas.clientWidth;
 var bottom = gl.canvas.clientHeight;
@@ -815,7 +814,8 @@ var top = 0;
 var near = 400;
 var far = -400;
 m4.orthographic(left, right, bottom, top, near, far);
-</code></pre><p>In the next post I&#39;ll go over <a href="webgl-3d-perspective.html">how to make it have perspective</a>.</p>
+</code></pre>
+<p>In the next post I’ll go over <a href="webgl-3d-perspective.html">how to make it have perspective</a>.</p>
 <div class="webgl_bottombar">
 <h3>Why is the attribute vec4 but gl.vertexAttribPointer size 3</h3>
 <p>
@@ -836,18 +836,17 @@ var stride = 0;        // 0 = move forward size * sizeof(type) each
 var offset = 0;        // start at the beginning of the buffer
 gl.vertexAttribPointer(
     positionAttributeLocation, size, type, normalize, stride, offset);
-
-...
+<p>…
 // Tell the attribute how to get data out of colorBuffer (ARRAY_BUFFER)
 var size = 3;          // 3 components per iteration
 var type = gl.UNSIGNED_BYTE;   // the data is 8bit unsigned bytes
 var normalize = true;  // convert from 0-255 to 0.0-1.0
 var stride = 0;        // 0 = move forward size * sizeof(type) each
-                       // iteration to get the next color
+// iteration to get the next color
 var offset = 0;        // start at the beginning of the buffer
 gl.vertexAttribPointer(
-    colorAttributeLocation, size, type, normalize, stride, offset);
-</pre>
+colorAttributeLocation, size, type, normalize, stride, offset);
+</pre></p>
 <p>
 That '3' in each of those says only to pull 3 values out of the buffer per attribute
 per iteration of the vertex shader.

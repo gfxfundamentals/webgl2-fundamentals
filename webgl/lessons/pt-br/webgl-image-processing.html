@@ -244,13 +244,13 @@ WebGL espera coordenadas de clipspace ao renderizar em vez de pixels,
 a WebGL geralmente espera coordenadas de textura ao ler uma textura.
 As coordenadas da textura variam de 0,0 a 1,0 independentemente das dimensões da textura.</p>
 <p>A WebGL2 adiciona a capacidade de ler uma textura usando coordenadas de pixels também.
-Qual caminho é melhor depende de você. Sinto que é mais comum usar as 
+Qual caminho é melhor depende de você. Sinto que é mais comum usar as
 coordenadas de textura do que as coordenadas de pixels.</p>
 <p>Uma vez que estamos apenas desenhando um único retângulo (bem, 2 triângulos),
 precisamos dizer a WebGL qual lugar na textura em que cada ponto do
 retângulo corresponde. Vamos passar esta informação do vertex
 para o fragmento shader usando um tipo especial de variável chamado
-de &#39;varying&#39;. É chamado de varying porque isso varia. <a href="webgl-how-it-works.html">WebGL irá
+de ‘varying’. É chamado de varying porque isso varia. <a href="webgl-how-it-works.html">WebGL irá
 interpolar os valores</a> que fornecemos no
 vertex shader pois desenha cada pixel usando o fragmento shader.</p>
 <p>Usando <a href="webgl-fundamentals.html">o vertex shader do final da publicação anterior</a>
@@ -270,7 +270,8 @@ void main() {
 +   // O GPU irá interpolar esse valor entre pontos
 +   v_texCoord = a_texCoord;
 }
-</code></pre><p>Então, fornecemos um fragmento shader para procurar cores da textura.</p>
+</code></pre>
+<p>Então, fornecemos um fragmento shader para procurar cores da textura.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
@@ -287,7 +288,8 @@ void main() {
    // Procure uma cor da textura.
    outColor = texture(u_image, v_texCoord);
 }
-</code></pre><p>Finalmente, precisamos carregar uma imagem, criar uma textura e copiar a imagem
+</code></pre>
+<p>Finalmente, precisamos carregar uma imagem, criar uma textura e copiar a imagem
 para a textura. Como estamos em imagens de um navegador, carregamos de forma assíncrona,
 então devemos reorganizar nosso código um pouco para aguardar o carregamento da textura.
 Uma vez que carregada, vamos desenhá-la.</p>
@@ -337,7 +339,7 @@ function render(image) {
 +  // (ie, the unit all other texture commands will affect
 +  gl.activeTexture(gl.TEXTURE0 + 0);
 +
-+  // Vincule a unidade de textura 0&#39; ponto de ligação 2D
++  // Vincule a unidade de textura 0' ponto de ligação 2D
 +  gl.bindTexture(gl.TEXTURE_2D, texture);
 +
 +  // Defina os parâmetros para que não precisemos de mips e por isso não estamos filtrando
@@ -379,19 +381,21 @@ function render(image) {
 +  setRectangle(gl, 0, 0, image.width, image.height);
 
 }
-</code></pre><p>E aqui está a imagem renderizada na WebGL.</p>
+</code></pre>
+<p>E aqui está a imagem renderizada na WebGL.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image.html" target="_blank">clique aqui para abrir em uma janela separada</a>
 </div>
 
 </p>
-<p>Não muito emocionante, então vamos manipular essa imagem. Que tal simplesmente 
+<p>Não muito emocionante, então vamos manipular essa imagem. Que tal simplesmente
 trocar vermelho e azul?</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 outColor = texture(u_image, v_texCoord).bgra;
 ...
-</code></pre><p>E agora vermelho e azul foram trocados.</p>
+</code></pre>
+<p>E agora vermelho e azul foram trocados.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-red2blue.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-red2blue.html" target="_blank">clique aqui para abrir em uma janela separada</a>
@@ -401,7 +405,7 @@ outColor = texture(u_image, v_texCoord).bgra;
 <p>E se quisermos processar imagens que realmente olhem para outros
 pixels? Uma vez que a WebGL faz referência a texturas em coordenadas de textura que
 variam de 0,0 a 1,0, podemos calcular o quanto move 1 pixel
- com o simples math <code class="notranslate" translate="no">onePixel = 1.0 / textureSize</code>.</p>
+com o simples math <code class="notranslate" translate="no">onePixel = 1.0 / textureSize</code>.</p>
 <p>Aqui está um fragmento que mede os pixels esquerdos e direitos de
 cada pixel na textura.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
@@ -428,7 +432,8 @@ void main() {
 +      texture(u_image, v_texCoord + vec2( onePixel.x, 0.0)) +
 +      texture(u_image, v_texCoord + vec2(-onePixel.x, 0.0))) / 3.0;
 }
-</code></pre><p>Compare com a imagem não borrada acima.</p>
+</code></pre>
+<p>Compare com a imagem não borrada acima.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-blend.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-blend.html" target="_blank">clique aqui para abrir em uma janela separada</a>
@@ -478,7 +483,8 @@ void main() {
       texture(u_image, v_texCoord + onePixel * vec2( 1,  1)) * u_kernel[8] ;
   outColor = vec4((colorSum / u_kernelWeight).rgb, 1);
 }
-</code></pre><p>Em JavaScript, precisamos fornecer um convolution kernel e seu peso</p>
+</code></pre>
+<p>Em JavaScript, precisamos fornecer um convolution kernel e seu peso</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> function computeKernelWeight(kernel) {
    var weight = kernel.reduce(function(prev, curr) {
        return prev + curr;
@@ -500,7 +506,8 @@ void main() {
  gl.uniform1fv(kernelLocation, edgeDetectKernel);
  gl.uniform1f(kernelWeightLocation, computeKernelWeight(edgeDetectKernel));
  ...
-</code></pre><p>Aí está... Use a lista suspensa para selecionar diferentes kernels.</p>
+</code></pre>
+<p>Aí está… Use a lista suspensa para selecionar diferentes kernels.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-3x3-convolution.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-3x3-convolution.html" target="_blank">clique aqui para abrir em uma janela separada</a>
@@ -516,25 +523,20 @@ com unidades de texturas. Embora a máquina do usuário possa suportar, todas as
 são necessárias suportar pelo menos 16 unidades de textura. Qual unidade de textura cada referência
 uniforme de amostras é definida procurando a localização dessa amostra uniforme e, em seguida, ajuste o
 índice da unidade de textura que você deseja que ela faça referência.
-
-Por exemplo:
+<p>Por exemplo:</p>
 <pre class="prettyprint showlinemods">
 var textureUnitIndex = 6; // use a unidade de textura 6.
 var u_imageLoc = gl.getUniformLocation(
     program, "u_image");
 gl.uniform1i(u_imageLoc, textureUnitIndex);
 </pre>
-
-Para definir texturas em diferentes unidades, chame gl.activeTexture e, em seguida, vincule a textura desejada nessa unidade. Exemplo
-
+<p>Para definir texturas em diferentes unidades, chame gl.activeTexture e, em seguida, vincule a textura desejada nessa unidade. Exemplo</p>
 <pre class="prettyprint showlinemods">
 // Vincule someTexture à unidade de textura 6.
 gl.activeTexture(gl.TEXTURE6);
 gl.bindTexture(gl.TEXTURE_2D, someTexture);
 </pre>
-
-Isso também funciona
-
+<p>Isso também funciona</p>
 <pre class="prettyprint showlinemods">
 var textureUnitIndex = 6; // use a unidade de textura 6.
 // Vincule someTexture à unidade de textura 6.
@@ -542,7 +544,6 @@ gl.activeTexture(gl.TEXTURE0 + textureUnitIndex);
 gl.bindTexture(gl.TEXTURE_2D, someTexture);
 </pre>
 </div>
-
 <div class="webgl_bottombar">
 <h3>O que são os prefixos a_, u_ e v_ de variáveis no GLSL?</h3>
 <p>
@@ -553,8 +554,6 @@ fragmento shader e interpolados (ou variados) entre os vértices para cada pixel
 Veja <a href="webgl-how-it-works.html">Como funciona</a> para mais detalhes.
 </p>
 </div>
-
-
 
     </div>
     <div class="lesson-sidebar">

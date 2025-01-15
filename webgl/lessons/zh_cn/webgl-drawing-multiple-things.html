@@ -243,7 +243,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 但不同于一般的方法直接传递参数，它需要调用一些方法去设置状态，
 最后用某个方法执行绘制，并使用之前设置的状态。你在写代码时可能会用这种形式的方法</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawCircle(centerX, centerY, radius, color) { ... }
-</code></pre><p>或者用这种形式的方法</p>
+</code></pre>
+<p>或者用这种形式的方法</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var centerX;
 var centerY;
 var radius;
@@ -265,7 +266,8 @@ function setColor(c) {
 function drawCircle() {
    ...
 }
-</code></pre><p>WebGL 使用的是后一种形式，例如 <code class="notranslate" translate="no">gl.createBuffer</code>,
+</code></pre>
+<p>WebGL 使用的是后一种形式，例如 <code class="notranslate" translate="no">gl.createBuffer</code>,
 <code class="notranslate" translate="no">gl.bufferData</code>, <code class="notranslate" translate="no">gl.createTexture</code>, 和 <code class="notranslate" translate="no">gl.texImage2D</code>
 方法让你上传缓冲（顶点）或者纹理（颜色等）数据，
 <code class="notranslate" translate="no">gl.createProgram</code>, <code class="notranslate" translate="no">gl.createShader</code>, <code class="notranslate" translate="no">gl.compileProgram</code>, 和
@@ -277,7 +279,8 @@ function drawCircle() {
 <ul>
 <li>创建所有着色器和程序并寻找参数位置</li>
 <li>创建缓冲并上传顶点数据</li>
-<li>为您要绘制的每个事物创建一个顶点数组<ul>
+<li>为您要绘制的每个事物创建一个顶点数组
+<ul>
 <li>为每个属性调用 <code class="notranslate" translate="no">gl.bindBuffer</code>, <code class="notranslate" translate="no">gl.vertexAttribPointer</code>, <code class="notranslate" translate="no">gl.enableVertexAttribArray</code></li>
 <li>绑定索引到 <code class="notranslate" translate="no">gl.ELEMENT_ARRAY_BUFFER</code></li>
 </ul>
@@ -287,13 +290,16 @@ function drawCircle() {
 <p>渲染阶段</p>
 <ul>
 <li>清空并设置视图和其他全局状态（开启深度检测，剔除等等）</li>
-<li>对于想要绘制的每个物体<ul>
+<li>对于想要绘制的每个物体
+<ul>
 <li>调用 <code class="notranslate" translate="no">gl.useProgram</code> 使用需要的程序</li>
-<li>为物体绑定顶点数组<ul>
+<li>为物体绑定顶点数组
+<ul>
 <li>调用 <code class="notranslate" translate="no">gl.bindVertexArray</code></li>
 </ul>
 </li>
-<li>设置物体的全局变量<ul>
+<li>设置物体的全局变量
+<ul>
 <li>为每个全局变量调用 <code class="notranslate" translate="no">gl.uniformXXX</code></li>
 <li>调用 <code class="notranslate" translate="no">gl.activeTexture</code> 和 <code class="notranslate" translate="no">gl.bindTexture</code> 设置纹理到纹理单元</li>
 </ul>
@@ -323,7 +329,8 @@ out vec4 outColor;
 void main() {
 *   outColor = v_color * u_colorMult;
 }
-</code></pre><p>初始化阶段</p>
+</code></pre>
+<p>初始化阶段</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 每个物体需要的全局变量
 var sphereUniforms = {
   u_colorMult: [0.5, 1, 0.5, 1],
@@ -342,7 +349,8 @@ var coneUniforms = {
 var sphereTranslation = [  0, 0, 0];
 var cubeTranslation   = [-40, 0, 0];
 var coneTranslation   = [ 40, 0, 0];
-</code></pre><p>绘制阶段</p>
+</code></pre>
+<p>绘制阶段</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var sphereXRotation =  time;
 var sphereYRotation =  time;
 var cubeXRotation   = -time;
@@ -399,7 +407,8 @@ coneUniforms.u_matrix = computeMatrix(
 twgl.setUniforms(programInfo, coneUniforms);
 
 twgl.drawBufferInfo(gl, coneBufferInfo);
-</code></pre><p>这是结果</p>
+</code></pre>
+<p>这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-objects-manual.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-objects-manual.html" target="_blank">点此在新窗口中浏览</a>
@@ -436,7 +445,8 @@ twgl.drawBufferInfo(gl, coneBufferInfo);
     uniforms: coneUniforms,
   },
 ];
-</code></pre><p>绘制的时候仍然需要更新矩阵</p>
+</code></pre>
+<p>绘制的时候仍然需要更新矩阵</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var sphereXRotation =  time;
 var sphereYRotation =  time;
 var cubeXRotation   = -time;
@@ -465,7 +475,8 @@ coneUniforms.u_matrix = computeMatrix(
     coneTranslation,
     coneXRotation,
     coneYRotation);
-</code></pre><p>但是绘制代码就会变成一个简单的循环</p>
+</code></pre>
+<p>但是绘制代码就会变成一个简单的循环</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// ------ 绘制几何体 --------
 
 objectsToDraw.forEach(function(object) {
@@ -482,7 +493,8 @@ objectsToDraw.forEach(function(object) {
   // 绘制
   twgl.drawBufferInfo(gl, bufferInfo);
 });
-</code></pre><p>理论上这就是大多数现有三维引擎的主要渲染循环。
+</code></pre>
+<p>理论上这就是大多数现有三维引擎的主要渲染循环。
 其他地方的某些代码控制 <code class="notranslate" translate="no">objectsToDraw</code> 列表中的对象，他们需要的选项数量可能更多，但大多数人都将计算列表中的对象和实际调用 <code class="notranslate" translate="no">gl.draw___</code> 函数分开</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-objects-list.html"></iframe>
@@ -587,11 +599,11 @@ objects.forEach(function (object) {
 <p>我重新添加该部分的原因是，
 在最后一个示例的错误报告中，绘制 200 个对象， 在<a href="webgl-picking.html">关于 picking 的文章</a>中被引用了 😅</p>
 </blockquote>
-<h2 id="-">绘制透明物体和多个列表</h2>
+<h2 id="绘制透明物体和多个列表">绘制透明物体和多个列表</h2>
 <p>在上面的例子中，只有一个列表要绘制。 因为所有的对象都是不透明的。如果我们要绘制透明对象，则必须从后到前绘制，最远的物体首先绘制。 另一方面，为了速度, 对于不透明的物体我们要从前往后绘制，这是因为 DEPTH_TEST 意味着在其他物体后面的任何像素 GPU 将不执行片段着色器。所以我们要先把前面的东西画出来。</p>
 <p>大多数 3D 引擎通过绘制 2 个或更多对象列表来处理此问题。 一个列表给不透明的物体。
 其他列表是给透明物体的。 不透明列表从前到后排序。透明列表按从后到前排序。可能还有其他内容的单独列表，例如叠加或后期处理效果。</p>
-<h2 id="-">考虑使用库</h2>
+<h2 id="考虑使用库">考虑使用库</h2>
 <p>需要特别注意的是着色器和图形往往一一对应，
 例如一个需要法向量的着色器就不能用在没有法向量的几何体上，
 同样的一个需要纹理的着色器在没有纹理时就无法正常运行。</p>

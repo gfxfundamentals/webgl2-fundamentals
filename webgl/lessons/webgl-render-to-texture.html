@@ -239,11 +239,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p>This post is a continuation of a series of posts about WebGL2.
 The first <a href="webgl-fundamentals.html">started with fundamentals</a> and
 the previous was about <a href="webgl-data-textures.html">supplying data to textures</a>.
-If you haven&#39;t read those please view them first.</p>
+If you haven’t read those please view them first.</p>
 <p>In the last post we went over how to supply data from JavaScript to textures.
-In this article we&#39;ll render to textures using WebGL2. Note this topic
+In this article we’ll render to textures using WebGL2. Note this topic
 was covered tersely under <a href="webgl-image-processing-continued.html">image processing</a> but
-let&#39;s cover it in more detail.</p>
+let’s cover it in more detail.</p>
 <p>Rendering to a texture is pretty simple. We create a texture of a certain size</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// create to render to
 const targetTextureWidth = 256;
@@ -263,18 +263,19 @@ gl.bindTexture(gl.TEXTURE_2D, targetTexture);
                 targetTextureWidth, targetTextureHeight, border,
                 format, type, data);
 
-  // set the filtering so we don&#39;t need mips
+  // set the filtering so we don't need mips
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 }
-</code></pre><p>Notice how <code class="notranslate" translate="no">data</code> is <code class="notranslate" translate="no">null</code>. We don&#39;t need to supply any data. We just need WebGL to
+</code></pre>
+<p>Notice how <code class="notranslate" translate="no">data</code> is <code class="notranslate" translate="no">null</code>. We don’t need to supply any data. We just need WebGL to
 allocate the texture.</p>
 <p>Next we create a framebufffer. <a href="webgl-framebuffers.html">A framebuffer is just a collection of attachments</a>. Attachments
-are either textures or renderbuffers. We&#39;ve gone over textures before. Renderbuffers are very similar
-to textures but they support formats and options that textures don&#39;t support. Also, unlike a texture
-you can&#39;t directly use a renderbuffer as input to a shader.</p>
-<p>Let&#39;s create a framebuffer and attach our texture</p>
+are either textures or renderbuffers. We’ve gone over textures before. Renderbuffers are very similar
+to textures but they support formats and options that textures don’t support. Also, unlike a texture
+you can’t directly use a renderbuffer as input to a shader.</p>
+<p>Let’s create a framebuffer and attach our texture</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Create and bind the framebuffer
 const fb = gl.createFramebuffer();
 gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
@@ -283,12 +284,13 @@ gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
 const attachmentPoint = gl.COLOR_ATTACHMENT0;
 gl.framebufferTexture2D(
     gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, targetTexture, level);
-</code></pre><p>Just like textures and buffers, after we create the framebuffer we need to
+</code></pre>
+<p>Just like textures and buffers, after we create the framebuffer we need to
 bind it to the <code class="notranslate" translate="no">FRAMEBUFFER</code> bind point. After that all functions related to
 framebuffers reference whatever framebuffer is bound there.</p>
 <p>With our framebuffer bound, anytime we call <code class="notranslate" translate="no">gl.clear</code>, <code class="notranslate" translate="no">gl.drawArrays</code>, or <code class="notranslate" translate="no">gl.drawElements</code> WebGL
 would render to our texture instead of the canvas.</p>
-<p>Let&#39;s take our previous rendering code and make it a function so we can call it twice.
+<p>Let’s take our previous rendering code and make it a function so we can call it twice.
 Once to render to the texture and again to render to the canvas.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawCube(aspect) {
   // Tell it to use our program (pair of shaders)
@@ -306,7 +308,7 @@ Once to render to the texture and again to render to the canvas.</p>
   var up = [0, 1, 0];
   var target = [0, 0, 0];
 
-  // Compute the camera&#39;s matrix using look at.
+  // Compute the camera's matrix using look at.
   var cameraMatrix = m4.lookAt(cameraPosition, target, up);
 
   // Make a view matrix from the camera matrix.
@@ -329,9 +331,10 @@ Once to render to the texture and again to render to the canvas.</p>
   var count = 6 * 6;
   gl.drawArrays(primitiveType, offset, count);
 }
-</code></pre><p>Note that we need to pass in the <code class="notranslate" translate="no">aspect</code> for computing our projection matrix
+</code></pre>
+<p>Note that we need to pass in the <code class="notranslate" translate="no">aspect</code> for computing our projection matrix
 because our target texture has a different aspect than the camera.</p>
-<p>Here&#39;s how we call it</p>
+<p>Here’s how we call it</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Draw the scene.
 function drawScene(time) {
 
@@ -375,42 +378,44 @@ function drawScene(time) {
 
   requestAnimationFrame(drawScene);
 }
-</code></pre><p>And here&#39;s the result</p>
+</code></pre>
+<p>And here’s the result</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-render-to-texture.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-render-to-texture.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>It&#39;s <strong>EXTREMELY IMPORTANT</strong> to remember to call <code class="notranslate" translate="no">gl.viewport</code> and set it to
-the size of the thing your rendering to. In this case the first time we&#39;re
+<p>It’s <strong>EXTREMELY IMPORTANT</strong> to remember to call <code class="notranslate" translate="no">gl.viewport</code> and set it to
+the size of the thing your rendering to. In this case the first time we’re
 rendering to the texture so we set the viewport to cover the texture. The 2nd
-time we&#39;re rendering to the canvas so we set the viewport to cover the canvas.</p>
+time we’re rendering to the canvas so we set the viewport to cover the canvas.</p>
 <p>Similarly when we compute a projection matrix
-we need to use the correct aspect for thing we&#39;re rendering to. I have lost countless
+we need to use the correct aspect for thing we’re rendering to. I have lost countless
 hours of debugging wondering why something is rendering funny or not rendering
 at all only to finally discover that I forgot one or both calling <code class="notranslate" translate="no">gl.viewport</code>
-and computing the correct aspect. It&#39;s so easy to forget that I now try to never call
+and computing the correct aspect. It’s so easy to forget that I now try to never call
 <code class="notranslate" translate="no">gl.bindFramebuffer</code> in my own code directly. Instead I make a function that does both
 something like</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function bindFramebufferAndSetViewport(fb, width, height) {
    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
    gl.viewport(0, 0, width, height);
 }
-</code></pre><p>And then I only use that function to change what I&#39;m rendering to. That way I won&#39;t forget.</p>
-<p>One thing to notice is we don&#39;t have a depth buffer on our framebuffer. We only have a texture.
-This means there is no depth testing and 3D won&#39;t work. If we draw 3 cubes we can see this.</p>
+</code></pre>
+<p>And then I only use that function to change what I’m rendering to. That way I won’t forget.</p>
+<p>One thing to notice is we don’t have a depth buffer on our framebuffer. We only have a texture.
+This means there is no depth testing and 3D won’t work. If we draw 3 cubes we can see this.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-render-to-texture-3-cubes-no-depth-buffer.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-render-to-texture-3-cubes-no-depth-buffer.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>If you look at the center cube you&#39;ll see the 3 vertical cubes draw on it one is in back, one is in the middle
-and another is in front but we&#39;re drawing all 3 at the same depth. Looking that the 3 horizontal cubes
-draw on the canvas you&#39;ll notice they correctly intersect each other. That&#39;s because our framebuffer
+<p>If you look at the center cube you’ll see the 3 vertical cubes draw on it one is in back, one is in the middle
+and another is in front but we’re drawing all 3 at the same depth. Looking that the 3 horizontal cubes
+draw on the canvas you’ll notice they correctly intersect each other. That’s because our framebuffer
 has no depth buffer but our canvas does.</p>
-<p><img class="webgl_center" src="resources/cubes-without-depth-buffer.jpg" width="100%" height="100%" /></p>
+<img class="webgl_center" src="resources/cubes-without-depth-buffer.jpg" width="100%" height="100%" />
 <p>To add a depth buffer we create a depth texture and attach it to our framebuffer.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// create a depth texture
 const depthTexture = gl.createTexture();
@@ -429,7 +434,7 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
                 targetTextureWidth, targetTextureHeight, border,
                 format, type, data);
 
-  // set the filtering so we don&#39;t need mips
+  // set the filtering so we don't need mips
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -438,7 +443,8 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
   // attach the depth texture to the framebuffer
   gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depthTexture, level);
 }
-</code></pre><p>And with that this is the result.</p>
+</code></pre>
+<p>And with that this is the result.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-render-to-texture-3-cubes-with-depth-buffer.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-render-to-texture-3-cubes-with-depth-buffer.html" target="_blank">click here to open in a separate window</a>
@@ -446,8 +452,8 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
 
 </p>
 <p>Now that we have a depth buffer attached to our framebuffer the inner cubes correctly intersect.</p>
-<p><img class="webgl_center" src="resources/cubes-with-depth-buffer.jpg" width="100%" height="100%" /></p>
-<p>It&#39;s important to note WebGL only promises certain combinations of attachments work.
+<img class="webgl_center" src="resources/cubes-with-depth-buffer.jpg" width="100%" height="100%" />
+<p>It’s important to note WebGL only promises certain combinations of attachments work.
 <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/#FBO_ATTACHMENTS">According to the spec</a>
 the only guaranteed combinations of attachments are:</p>
 <ul>
@@ -455,13 +461,14 @@ the only guaranteed combinations of attachments are:</p>
 <li><code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> = <code class="notranslate" translate="no">RGBA/UNSIGNED_BYTE</code> texture + <code class="notranslate" translate="no">DEPTH_ATTACHMENT</code> = <code class="notranslate" translate="no">DEPTH_COMPONENT16</code> renderbuffer</li>
 <li><code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> = <code class="notranslate" translate="no">RGBA/UNSIGNED_BYTE</code> texture + <code class="notranslate" translate="no">DEPTH_STENCIL_ATTACHMENT</code> = <code class="notranslate" translate="no">DEPTH_STENCIL</code> renderbuffer</li>
 </ul>
-<p>For any other combinations you must check if the user&#39;s system/gpu/driver/browser supports that combination.
+<p>For any other combinations you must check if the user’s system/gpu/driver/browser supports that combination.
 To check you make your framebuffer, create and attach the attachments, then call</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-</code></pre><p>If the status is <code class="notranslate" translate="no">FRAMEBUFFER_COMPLETE</code> then that combination of attachments works for that user.
-Otherwise it does not work and you&#39;ll have to do something else like tell the user they are out of luck
+</code></pre>
+<p>If the status is <code class="notranslate" translate="no">FRAMEBUFFER_COMPLETE</code> then that combination of attachments works for that user.
+Otherwise it does not work and you’ll have to do something else like tell the user they are out of luck
 or fallback to some other method.</p>
-<p>If you haven&#39;t yet check out <a href="webgl-less-code-more-fun.html">simplifying WebGL with less code more fun</a>.</p>
+<p>If you haven’t yet check out <a href="webgl-less-code-more-fun.html">simplifying WebGL with less code more fun</a>.</p>
 <div class="webgl_bottombar">
 <h3>The Canvas itself is actually a texture</h3>
 <p>
@@ -471,8 +478,6 @@ bind it as the current framebuffer. You do your rendering which draws into that 
 They then use that texture to render your canvas into the web page.
 </p>
 </div>
-
-
 
     </div>
     <div class="lesson-sidebar">

@@ -242,9 +242,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 这只是一个练习。如果你使用该程序并遇到问题，下面的链接可能会对你有帮助。</p>
 <p>我们加载了我在 <a href="https://sketchfab.com">Sketchfab</a> 上找到的，由 <a href="https://sketchfab.com/haytonm">haytonm</a> 创建的 <a href="http://creativecommons.org/licenses/by/4.0">CC-BY 4.0</a> <a href="https://sketchfab.com/3d-models/chair-aa2acddb218646a59ece132bf95aa558">椅子</a>。</p>
 <div class="webgl_center"><img src="../../resources/models/chair/chair.jpg" style="width: 452px;"></div>
-
 <p>它有一个相应的 .mtl 文件，看起来是这样：</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"># Blender MTL File: &#39;None&#39;
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"># Blender MTL File: 'None'
 # Material Count: 11
 
 newmtl D1blinn1SG
@@ -278,7 +277,8 @@ d 1.000000
 illum 2
 
 ... 更多类似的 8 个材质
-</code></pre><p>查看 <a href="http://paulbourke.net/dataformats/mtl/">对 .mtl 文件格式的描述</a>，
+</code></pre>
+<p>查看 <a href="http://paulbourke.net/dataformats/mtl/">对 .mtl 文件格式的描述</a>，
 我们可以看到以关键词 <code class="notranslate" translate="no">newmtl</code> 和给定名字开头的新材质，下面是该材质的所有设置。
 每行都以关键词开始，这和 .obj 文件类似，所以我们可以用类似的方法来开始解析。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseMTL(text) {
@@ -293,10 +293,10 @@ illum 2
     }
 
     const keywordRE = /(\w*)(?: )*(.*)/
-    const lines = text.split(&#39;\n&#39;)
+    const lines = text.split('\n')
     for (let lineNo = 0; lineNo &lt; lines.length; ++lineNo) {
         const line = lines[lineNo].trim()
-        if (line === &#39;&#39; || line.startsWith(&#39;#&#39;)) {
+        if (line === '' || line.startsWith('#')) {
             continue
         }
         const m = keywordRE.exec(line)
@@ -307,7 +307,7 @@ illum 2
         const parts = line.split(/\s+/).slice(1)
         const handler = keywords[keyword]
         if (!handler) {
-            console.warn(&#39;unhandled keyword:&#39;, keyword)
+            console.warn('unhandled keyword:', keyword)
             continue
         }
         handler(parts, unparsedArgs)
@@ -358,11 +358,13 @@ illum 2
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 伪代码 - 手动指定 .obj 文件和 .mtl 文件的路径
 const obj = downloadAndParseObj(pathToOBJFile);
 const materials = downloadAndParseMtl(pathToMTLFile);
-</code></pre><p>或者这样:</p>
+</code></pre>
+<p>或者这样:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 伪代码 - 根据 .OBJ 文件推测 .MTL 文件的的路径
 const obj = downloadAndParseObj(pathToOBJFile);
 const materials = downloadAndParseMtl(pathToOBJFile, obj);
-</code></pre><p>我选择后者，但是我也不确定是好是坏。
+</code></pre>
+<p>我选择后者，但是我也不确定是好是坏。
 根据文档，一个 .obj 文件可以包含多个 .mtl 文件的引用。
 我从没见过这样的例子，但我想文档的作者是这么做的。</p>
 <p>并且，我也没有见过 .mtl 文件与 .obj 文件命名不同的。
@@ -372,8 +374,8 @@ const materials = downloadAndParseMtl(pathToOBJFile, obj);
 <p>从 <a href="webgl-load-obj.html">上一篇文章</a> 的代码开始,
 我们将 .OBJ 文件的 URL 提取出来，然后构建 .OBJ 相关的 .MTL 文件的 URL。
 最后，我们将它们全部加载，连接起来（因为它们都是文本文件），然后传给解析器。</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-const response = await fetch(&#39;resources/models/chair/chair.obj&#39;);
-+const objHref = &#39;resources/models/chair/chair.obj&#39;;
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-const response = await fetch('resources/models/chair/chair.obj');
++const objHref = 'resources/models/chair/chair.obj';
 +const response = await fetch(objHref);
 const text = await response.text();
 const obj = parseOBJ(text);
@@ -383,7 +385,7 @@ const obj = parseOBJ(text);
 +  const response = await fetch(matHref);
 +  return await response.text();
 +}));
-+const materials = parseMTL(matTexts.join(&#39;\n&#39;));
++const materials = parseMTL(matTexts.join('\n'));
 </code></pre>
 <p>现在，我们来使用材质。
 首先，当我们在设置每个部分的时候，我们需要使用从 .OBJ 文件中提取出来的材质名称，
@@ -512,9 +514,8 @@ void main () {
 <p>让我们来加载 .MTL 文件中引用纹理的 .OBJ 文件。</p>
 <p>我发现了由 <a href="https://www.blendswap.com/user/ahedov">ahedov</a> 创建的的 <a href="https://www.blendswap.com/blends/view/69174">CC-BY-NC 3.0 风车 3D 模型</a>。</p>
 <div class="webgl_center"><img src="../../resources/models/windmill/windmill-obj.jpg"></div>
-
 <p>它的 .MTL 文件看起来是这样的：</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"># Blender MTL File: &#39;windmill_001.blend&#39;
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"># Blender MTL File: 'windmill_001.blend'
 # Material Count: 2
 
 newmtl Material
@@ -541,7 +542,8 @@ illum 1
 map_Kd windmill_001_base_COL.jpg
 map_Bump windmill_001_base_NOR.jpg
 map_Ns windmill_001_base_SPEC.jpg
-</code></pre><p>我们可以看到 <code class="notranslate" translate="no">map_Kd</code>，<code class="notranslate" translate="no">map_Bump</code> 和 <code class="notranslate" translate="no">map_Ns</code> 都指定了图片文件。
+</code></pre>
+<p>我们可以看到 <code class="notranslate" translate="no">map_Kd</code>，<code class="notranslate" translate="no">map_Bump</code> 和 <code class="notranslate" translate="no">map_Ns</code> 都指定了图片文件。
 让我们把它们加入到我们的 .MTL 解析器。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">+function parseMapArgs(unparsedArgs) {
 +  // TODO: 处理可选项
@@ -582,7 +584,7 @@ function parseMTL(text) {
 // 为材质加载纹理
 for (const material of Object.values(materials)) {
     Object.entries(material)
-        .filter(([key]) =&gt; key.endsWith(&#39;Map&#39;))
+        .filter(([key]) =&gt; key.endsWith('Map'))
         .forEach(([key, filename]) =&gt; {
             let texture = textures[filename]
             if (!texture) {
@@ -635,7 +637,8 @@ const parts = obj.geometries.map(({material, data}) =&gt; {
     vao,
   };
 });
-</code></pre><p>要使用纹理，我们要修改着色器。我们一个一个来处理。我们先来使用漫反射贴图。</p>
+</code></pre>
+<p>要使用纹理，我们要修改着色器。我们一个一个来处理。我们先来使用漫反射贴图。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
 in vec4 a_position;
 in vec3 a_normal;
@@ -716,7 +719,6 @@ void main () {
 <p>回头看 .MTL 文件，我们看到 <code class="notranslate" translate="no">map_Ks</code> 基本是黑白的纹理，它指定了特定表面的光泽度，
 或者也可以说是多少镜面反射的效果。</p>
 <div class="webgl_center"><img src="../../resources/models/windmill/windmill_001_base_SPEC.jpg" style="width: 512px;"></div>
-
 <p>为了使用它，只需要更新着色器，因为我们已经加载了全部的纹理。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const fs = `#version 300 es
 precision highp float;
@@ -794,9 +796,12 @@ Object.values(materials).forEach((m) =&gt; {
 如果你检查 .mtl 文件，你会发现光泽度 <code class="notranslate" translate="no">Ns</code> 被设置成了 0.0，也就是几乎不反光。
 但同时，所有材质的 <code class="notranslate" translate="no">illum</code> 被设置成了 1。根据文档，照度模型为 1 意味着：</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">颜色 = KaIa + Kd { SUM j=1..ls, (N * Lj)Ij }
-</code></pre><p>更通俗的说：</p>
+</code></pre>
+<p>更通俗的说：</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">颜色 = 环境色 * 环境光 + 漫反射色 * 光照计算和
-</code></pre><p>你可以看到并没有用到镜面反射，但文件里却有镜面贴图！¯_(ツ)_/¯
+
+</code></pre>
+<p>你可以看到并没有用到镜面反射，但文件里却有镜面贴图！¯_(ツ)_/¯
 镜面高光需要照度模型为 2 或以上。
 这是我的一些关于 .OBJ/.MTL 文件的经验，你总是需要对材质做一些手动调整。
 如何解决这些问题取决于你。你可以编辑 .MTL 文件，或者添加代码。
@@ -805,9 +810,8 @@ Object.values(materials).forEach((m) =&gt; {
 这又是一个可以看出 .OBJ/.MTL 文件古老的地方。
 引用的只是法线贴图，并不是凹凸贴图。</p>
 <div class="webgl_center"><img src="../../resources/models/windmill/windmill_001_base_NOR.jpg" style="width: 512px;"></div>
-
 <p>.MTL 文件中并没有选项指定将凹凸贴图用作法线贴图。
-我们可以启发性的假设文件名中有个 &#39;nor&#39; 呢？
+我们可以启发性的假设文件名中有个 ‘nor’ 呢？
 或者我们可以假设 2020 及以后，所有 <code class="notranslate" translate="no">map_Bump</code> 引用的文件都是法线贴图，
 因为我不确定在过去的几年中看到过 .OBJ 文件中引用的确实是凹凸贴图。
 我们先沿着这个假设做把。</p>
@@ -856,6 +860,7 @@ const defaultMaterial = {
   opacity: 1,
 };
 ...
+
 </code></pre>
 <p>然后我们需要将 <a href="webgl-3d-lighting-normal-mapping.html">关于法线贴图的文章</a> 中对着色器的修改合并：</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
@@ -992,15 +997,13 @@ void main () {
 uniform bool hasDiffuseMap;
 uniform vec4 diffuse;
 uniform sampler2D diffuseMap
-
-...
+<p>…
 vec4 effectiveDiffuse = diffuse;
 if (hasDiffuseMap) {
-effectiveDiffuse \*= texture2D(diffuseMap, texcoord);
+effectiveDiffuse *= texture2D(diffuseMap, texcoord);
 }
-...
-</code></pre>
-
+…
+</code></pre></p>
 <p>这样的条件语句一般是不鼓励的，因为依赖于 GPU 或者驱动，它们没有很好的性能。</p>
 <p>当没有纹理时我们用一个 1x1 像素的白点纹理，这样就不用考虑条件语句了。</p>
 <p>或者，使用不同的着色器。一个带有该特性，一个没有，根据情况选择使用正确的着色器。</p>

@@ -236,14 +236,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>Im trying to write a shader that support both color and texture.<br>For some reason I can make it work.<br>No errors threw and each of them work perfect separately,</p>
+      <h2 id="question">Question:</h2>
+<p>Im trying to write a shader that support both color and texture.<br>
+For some reason I can make it work.<br>
+No errors threw and each of them work perfect separately,</p>
 <p>get location:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">shaderProgram.useTextureUniform = gl.getUniformLocation(shaderProgram, &quot;uUseTexture&quot;);
-</code></pre><p>when drawing I change the value like this:</p>
+</code></pre>
+<p>when drawing I change the value like this:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var uUseTexture=false;
 gl.uniform1f(shaderProgram.useTextureUniform, uUseTexture);
-</code></pre><p>And the GLSL itself:</p>
+</code></pre>
+<p>And the GLSL itself:</p>
 <p>fragment:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">precision mediump float;
 uniform sampler2D uSampler;
@@ -261,74 +265,85 @@ void main(void) {
      gl_FragColor = texColor; 
     }
 }
-</code></pre><p>vertex:</p>
+</code></pre>
+<p>vertex:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">attribute vec3 aVertexPosition;
 attribute vec3 aVertexNormal;
 attribute vec2 aTextureCoord;
 attribute vec4 aVertexColor;
-
+ 
 uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 uniform mat3 uNMatrix;
 
 varying vec2 vTextureCoord;
 varying vec4 vColor;
-
-
+ 
+ 
 void main(void) {
   vec4 mvPosition = uMVMatrix * vec4(aVertexPosition, 1.0);
   gl_Position = uPMatrix * mvPosition;
   vTextureCoord = aTextureCoord;
   vColor = aVertexColor;
 }
-</code></pre><h2 id="answer-">Answer:</h2>
+</code></pre>
+<h2 id="answer">Answer:</h2>
 <p>Before I tell you how to make your shader work you arguably should not do it that way. You should either</p>
 <ol>
-<li><p>Make 2 shaders</p>
+<li>
+<p>Make 2 shaders</p>
 <p>Make one shader that uses a texture and a different shader that uses vertex colors. This is what nearly all professional game engines would do.</p>
 </li>
-<li><p>Make a shader that multiplies both colors and set one to white</p>
+<li>
+<p>Make a shader that multiplies both colors and set one to white</p>
 <p>If you have</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl_FragColor = vertexColor * textureColor;
-</code></pre><p>Then if <code class="notranslate" translate="no">textureColor</code> is <code class="notranslate" translate="no">1,1,1,1</code> that means you&#39;re multiplying by 1 
+</code></pre>
+<p>Then if <code class="notranslate" translate="no">textureColor</code> is <code class="notranslate" translate="no">1,1,1,1</code> that means you’re multiplying by 1
 and so the result is just <code class="notranslate" translate="no">vertexColor</code>. Similarly if <code class="notranslate" translate="no">vertexColor</code>
-is <code class="notranslate" translate="no">1,1,1,1</code> then you&#39;re multiplying by 1 and so the result is just
+is <code class="notranslate" translate="no">1,1,1,1</code> then you’re multiplying by 1 and so the result is just
 <code class="notranslate" translate="no">textureColor</code></p>
 <p>You can get a white texture by making just a single pixel white texture</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var tex = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, tex);
 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA,
               gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255, 255]));
-</code></pre><p>Then anytime you just want vertex colors bind that texture to a texture
+</code></pre>
+<p>Then anytime you just want vertex colors bind that texture to a texture
 unit and tell the sampler which unit it you put it in</p>
 <p>You might also want to turn off texture coordinates</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.disableVertexAttribArray(texcoordLocation);
-</code></pre><p>When you want just texture color then you can do this</p>
+</code></pre>
+<p>When you want just texture color then you can do this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// turn off the attribute
 gl.disableVertexAttribArray(aVertexColorLocation);
 
-// set the attribute&#39;s constant value
+// set the attribute's constant value
 gl.vertexAttrib4f(aVertexColorLocation, 1, 1, 1, 1);
-</code></pre><p>This method has the added benefit that you can also use both texture colors and vertex colors together to modify the texture color or to tint the texture color. Many game engines would do this as well specifically to take advantage of that ability to blend the colors.</p>
+</code></pre>
+<p>This method has the added benefit that you can also use both texture colors and vertex colors together to modify the texture color or to tint the texture color. Many game engines would do this as well specifically to take advantage of that ability to blend the colors.</p>
 </li>
-<li><p>Pauli mentions another option which is to use mix</p>
+<li>
+<p>Pauli mentions another option which is to use mix</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform float u_mixAmount;
+
+gl_FragColor = mix(textureColor, vertexColor, u_mixAmount);
+</code></pre>
+<p>This would also work as you can set <code class="notranslate" translate="no">u_mixAmount</code> to 0.0 when you want
+<code class="notranslate" translate="no">textureColor</code> and to 1.0 when you want <code class="notranslate" translate="no">vertexColor</code> but unlike your
+boolean example you can also fade between the 2 colors with values
+between 0.0 and 1.0.  For example 0.3 is 30% of <code class="notranslate" translate="no">vertexColor</code> and 70%
+of <code class="notranslate" translate="no">textureColor</code></p>
 </li>
 </ol>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    uniform float u_mixAmount;
-
-    gl_FragColor = mix(textureColor, vertexColor, u_mixAmount);
-
-This would also work as you can set `u_mixAmount` to 0.0 when you want
-`textureColor` and to 1.0 when you want `vertexColor` but unlike your
-boolean example you can also fade between the 2 colors with values
-between 0.0 and 1.0.  For example 0.3 is 30% of `vertexColor` and 70%
-of `textureColor`
-</code></pre><p>A few other things</p>
+<p>A few other things</p>
 <p>This line</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 texColor = vec4(textureColor.rgb, textureColor.a);
-</code></pre><p>Is no different than</p>
+</code></pre>
+<p>Is no different than</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 texColor = textureColor;
-</code></pre><p>Just trying your shader it seems to work as is which suggests the issue is not your shader but some other part of your code.</p>
+</code></pre>
+<p>Just trying your shader it seems to work as is which suggests the issue is not your shader but some other part of your code.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-glsl-shader-to-support-coloring-and-texturing-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-glsl-shader-to-support-coloring-and-texturing-example-1.html" target="_blank">click here to open in a separate window</a>

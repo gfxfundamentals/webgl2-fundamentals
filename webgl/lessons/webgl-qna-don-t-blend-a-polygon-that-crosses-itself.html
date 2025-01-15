@@ -236,8 +236,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I&#39;m drawing two polylines (which are lines in the sample) in webgl with enabled blending. </p>
+      <h2 id="question">Question:</h2>
+<p>I’m drawing two polylines (which are lines in the sample) in webgl with enabled blending.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.uniform4f(colorUniformLocation, 0, 0, 0, 0.3);
 
 gl.enable(gl.BLEND);
@@ -248,11 +248,12 @@ gl.drawArrays(gl.LINE_STRIP, 0, 2);
 
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0, -1, 0, 1,0, -1, 0, 1]), gl.STATIC_DRAW);
 gl.drawArrays(gl.LINE_STRIP, 0, 4);
-</code></pre><p><a href="https://codepen.io/smatushonok/pen/vYBqEYq?editors=0011">Here</a> is the codepen sample. </p>
-<p>The left line are crossed with itself and it seems like it blends with itself, so as result it becomes darker. </p>
-<p>I would like the blend to work between those polylines, but don&#39;t want a polyline to blend with itself. Is there a way to do it?</p>
-<h2 id="answer-">Answer:</h2>
-<p>One way would be to use the stencil test. You&#39;d set webgl so that the stencil stores a certain value when a pixel is drawn and you&#39;d set the stencil test so it fails if it sees that value.</p>
+</code></pre>
+<p><a href="https://codepen.io/smatushonok/pen/vYBqEYq?editors=0011">Here</a> is the codepen sample.</p>
+<p>The left line are crossed with itself and it seems like it blends with itself, so as result it becomes darker.</p>
+<p>I would like the blend to work between those polylines, but don’t want a polyline to blend with itself. Is there a way to do it?</p>
+<h2 id="answer">Answer:</h2>
+<p>One way would be to use the stencil test. You’d set webgl so that the stencil stores a certain value when a pixel is drawn and you’d set the stencil test so it fails if it sees that value.</p>
 <p>First an example that draws 2 sets of 2 overlapping triangles with blending on. The pairs will get darker where they overlap</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-don-t-blend-a-polygon-that-crosses-itself-example-1.html"></iframe>
@@ -262,31 +263,36 @@ gl.drawArrays(gl.LINE_STRIP, 0, 4);
 </p>
 <p>Then the same example with the stencil test on</p>
 <p>First we need to ask for a stencil buffer</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  const gl = someCanvas.getContext(&#39;webgl2&#39;, {stencil: true});
-</code></pre><p>Then we turn on the stencil test</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  const gl = someCanvas.getContext('webgl2', {stencil: true});
+</code></pre>
+<p>Then we turn on the stencil test</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  gl.enable(gl.STENCIL_TEST);
-</code></pre><p>Set up the test so it only draws if the stencil buffer is zero</p>
+</code></pre>
+<p>Set up the test so it only draws if the stencil buffer is zero</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  gl.stencilFunc(
      gl.EQUAL,   // the test
      0,          // reference value
      0xFF,       // mask
   );
-</code></pre><p>And set the operation so we increment the stencil when we draw so they will no longer be zero and therefore fail the test</p>
+</code></pre>
+<p>And set the operation so we increment the stencil when we draw so they will no longer be zero and therefore fail the test</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  gl.stencilOp(
      gl.KEEP,  // what to do if the stencil test fails
      gl.KEEP,  // what to do if the depth test fails
      gl.INCR,  // what to do if both tests pass
   );
-</code></pre><p>Between the first draw and the second we clear the stencil buffer</p>
+</code></pre>
+<p>Between the first draw and the second we clear the stencil buffer</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.clear(gl.STENCIL_BUFFER_BIT);
-</code></pre><p>Example</p>
+</code></pre>
+<p>Example</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-don-t-blend-a-polygon-that-crosses-itself-example-2.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-don-t-blend-a-polygon-that-crosses-itself-example-2.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>Another solution you could also use the depth test if you&#39;re drawing 2D stuff. The default depth test only draws if the depth is <code class="notranslate" translate="no">gl.LESS</code> than the current depth so just turning the depth test on and setting a different depth between draws would also work if the depth of the triangles is the same. You could compute a different depth value for each thing you draw, you&#39;d need to look up the bit resolution of the depth buffer. Or, you could use <code class="notranslate" translate="no">gl.polygonOffset</code></p>
+<p>Another solution you could also use the depth test if you’re drawing 2D stuff. The default depth test only draws if the depth is <code class="notranslate" translate="no">gl.LESS</code> than the current depth so just turning the depth test on and setting a different depth between draws would also work if the depth of the triangles is the same. You could compute a different depth value for each thing you draw, you’d need to look up the bit resolution of the depth buffer. Or, you could use <code class="notranslate" translate="no">gl.polygonOffset</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.enable(gl.DEPTH_TEST);
 gl.enable(gl.POLYGON_OFFSET_FILL); 
 
@@ -296,7 +302,8 @@ for (let i = 0; i &lt; numThingsToDraw; ++i) {
   gl.polygonOffset(0, -i);  // each thing 1 depth unit less
   draw2DThing(things[i]);
 }
-</code></pre><p>example</p>
+</code></pre>
+<p>example</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-don-t-blend-a-polygon-that-crosses-itself-example-3.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-don-t-blend-a-polygon-that-crosses-itself-example-3.html" target="_blank">click here to open in a separate window</a>

@@ -236,10 +236,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>I got the error message: <code class="notranslate" translate="no">Error: WebGL warning: drawElements: Tex image TEXTURE_2D level 0 is incurring lazy initialization.</code> on WebGL and I want to know what is actually means.</p>
 <p>How is lazy initialization even a problem in a single-thread application anyway? I understand it as when you initialize a variable inside a getter?</p>
-<p>I tried looking for my error message didn&#39;t really find any good info on it.</p>
+<p>I tried looking for my error message didn’t really find any good info on it.</p>
 <p>This is my code for handling textures:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">            const images = await Promise.all(model.maps.map(map =&gt; new Promise((resolve, reject) =&gt; {
                 const image = new Image();
@@ -265,25 +265,27 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     resolve(null);
                 };
             })));
-</code></pre><p>The relevant part of my draw function is basically:</p>
+</code></pre>
+<p>The relevant part of my draw function is basically:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindTexture(gl.TEXTURE_2D, textures[material.textureIndex]);
 gl.activeTexture(gl.TEXTURE0);
 gl.drawElements(gl.TRIANGLES, material.faceCount * 3, gl.UNSIGNED_SHORT, drawnCount);
-</code></pre><p>With that said, if I use the 6 argument syntax: <code class="notranslate" translate="no">gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.FLOAT, image);</code> then this error message no longer shows and I manage to render correctly.</p>
-<h2 id="answer-">Answer:</h2>
-<p>It&#39;s not an error. It&#39;s a warning.</p>
+</code></pre>
+<p>With that said, if I use the 6 argument syntax: <code class="notranslate" translate="no"> gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.FLOAT, image);</code> then this error message no longer shows and I manage to render correctly.</p>
+<h2 id="answer">Answer:</h2>
+<p>It’s not an error. It’s a warning.</p>
 <blockquote>
-<p>Error: WebGL <strong>warning</strong> ...</p>
+<p>Error: WebGL <strong>warning</strong> …</p>
 </blockquote>
-<p>It&#39;s super confusing it says &quot;Error&quot; in front but even if it only said &quot;warning&quot; I&#39;ve argued for a long time it&#39;s bad warning.</p>
-<p>The warning is that WebGL needed to do some non-trivial work. </p>
-<p>When you make a texture and you don&#39;t pass it any data, you passed <code class="notranslate" translate="no">null</code> as the last parameter to <code class="notranslate" translate="no">texImage2D</code>, it means at some point WebGL has to clear the texture. Let&#39;s say that texture is 2048x2048 RGBA/UNSIGNED_BYTE. Effectively WebGL has to allocate 16meg of ram (2048x2048x4), clear that 16meg of ram to 0, and call <code class="notranslate" translate="no">gl.texSubImage2D</code> to put zeros in the texture just before the texture is actually used. If they didn&#39;t do this the texture would have random data in it, data that might be secrets, passwords, previous graphics memory like photos, or whatever.</p>
+<p>It’s super confusing it says “Error” in front but even if it only said “warning” I’ve argued for a long time it’s bad warning.</p>
+<p>The warning is that WebGL needed to do some non-trivial work.</p>
+<p>When you make a texture and you don’t pass it any data, you passed <code class="notranslate" translate="no">null</code> as the last parameter to <code class="notranslate" translate="no">texImage2D</code>, it means at some point WebGL has to clear the texture. Let’s say that texture is 2048x2048 RGBA/UNSIGNED_BYTE. Effectively WebGL has to allocate 16meg of ram (2048x2048x4), clear that 16meg of ram to 0, and call <code class="notranslate" translate="no">gl.texSubImage2D</code> to put zeros in the texture just before the texture is actually used. If they didn’t do this the texture would have random data in it, data that might be secrets, passwords, previous graphics memory like photos, or whatever.</p>
 <p>So, the warning is telling you some non-trivial work happened.</p>
-<p>The problem with this warning is the workaround to stop the warning is worse than the warning itself. The workaround is for you to clear the texture yourself. To do that you&#39;d need to allocate 16meg in JavaScript as in <code class="notranslate" translate="no">new Uint8Array(2048 * 2048 * 4)</code>. That means JavaScript is allocating 16meg, it also clears that 16 meg. It also allocates a <code class="notranslate" translate="no">Uint8Array</code> object to track that 16meg. That <code class="notranslate" translate="no">Uint8Array</code> object is a complex JavaScript object, likely a collection of multiple objects composited together, for example an <code class="notranslate" translate="no">ArrayBuffer</code> object is also allocated. The objects both have prototype chains and the ability to have properties and methods and getters and setters added to them. That <code class="notranslate" translate="no">Uint8Array</code> and <code class="notranslate" translate="no">ArrayBuffer</code> also have to be tracked so they can be garbage collected later meaning there is overhead in them even existing. Worse, if the browser is multi-process which Chrome is and I believe Firefox is working toward, then that 16meg allocated in JavaScript has to copied to the GPU process which means first the GPU process needs to allocate 16meg of ram as well, the data has to copied from the process running the webpage to the GPU process so it can be passed to the graphics driver. Even way more work.</p>
+<p>The problem with this warning is the workaround to stop the warning is worse than the warning itself. The workaround is for you to clear the texture yourself. To do that you’d need to allocate 16meg in JavaScript as in <code class="notranslate" translate="no">new Uint8Array(2048 * 2048 * 4)</code>. That means JavaScript is allocating 16meg, it also clears that 16 meg. It also allocates a <code class="notranslate" translate="no">Uint8Array</code> object to track that 16meg. That <code class="notranslate" translate="no">Uint8Array</code> object is a complex JavaScript object, likely a collection of multiple objects composited together, for example an <code class="notranslate" translate="no">ArrayBuffer</code> object is also allocated. The objects both have prototype chains and the ability to have properties and methods and getters and setters added to them. That <code class="notranslate" translate="no">Uint8Array</code> and <code class="notranslate" translate="no">ArrayBuffer</code> also have to be tracked so they can be garbage collected later meaning there is overhead in them even existing. Worse, if the browser is multi-process which Chrome is and I believe Firefox is working toward, then that 16meg allocated in JavaScript has to copied to the GPU process which means first the GPU process needs to allocate 16meg of ram as well, the data has to copied from the process running the webpage to the GPU process so it can be passed to the graphics driver. Even way more work.</p>
 <p>So in other words, getting Firefox to shut up about its warning actually makes your code much slower and use much more memory then if firefox just silently cleared the texture on its own. Hence why I say that warning should not exist</p>
-<p>Firefox&#39;s developers have the POV that anytime WebGL does something heavy they want to give you a warning. Given the cure makes your code more heavy I disagree with their POV. Chrome does not give this warning. It also confuses developers as they think they&#39;re doing something wrong. They&#39;re not doing anything wrong.</p>
-<p><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1478216">https://bugzilla.mozilla.org/show_bug.cgi?id=1478216</a></p>
-<p>As for things not rendering, in the code you posted you&#39;ve put nothing in the texture so of course the texture is 0,0,0,0. </p>
+<p>Firefox’s developers have the POV that anytime WebGL does something heavy they want to give you a warning. Given the cure makes your code more heavy I disagree with their POV. Chrome does not give this warning. It also confuses developers as they think they’re doing something wrong. They’re not doing anything wrong.</p>
+<p>https://bugzilla.mozilla.org/show_bug.cgi?id=1478216</p>
+<p>As for things not rendering, in the code you posted you’ve put nothing in the texture so of course the texture is 0,0,0,0.</p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 4.0 by

@@ -236,9 +236,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>In this code , I am not able to understand why the rotation is not in circular locus. This may be basic logic behind this but i can&#39;t understand why this so random locus.</p>
-<p>I am rotating camera in orbital motion but it is not following it. </p>
+      <h2 id="question">Question:</h2>
+<p>In this code , I am not able to understand why the rotation is not in circular locus. This may be basic logic behind this but i can’t understand why this so random locus.</p>
+<p>I am rotating camera in orbital motion but it is not following it.</p>
 <p>In my knowledge, i created a orbital motion camera and inverse of that is view matrix. So, view matrix will transform the world space for this result.Is there any fault in my thinking process ?</p>
 <!-- begin snippet: js hide: false console: true babel: false -->
 <!-- language: lang-js -->
@@ -294,9 +294,9 @@ function init(gl) {
 
     const program = webglUtils.createProgramFromSources(gl, [vertexShader, fragShader]);
 
-    const apositionLoc = gl.getAttribLocation(program, &#39;a_position&#39;);
-    const acolorLoc = gl.getAttribLocation(program, &#39;a_color&#39;);
-    const umatrixLoc = gl.getUniformLocation(program, &#39;u_matrix&#39;);
+    const apositionLoc = gl.getAttribLocation(program, 'a_position');
+    const acolorLoc = gl.getAttribLocation(program, 'a_color');
+    const umatrixLoc = gl.getUniformLocation(program, 'u_matrix');
 
     let vao = gl.createVertexArray();
     gl.bindVertexArray(vao);
@@ -369,7 +369,7 @@ function init(gl) {
         cameraAngleDegree += increment;
 
         cameraAngle =degreeToRadian(cameraAngleDegree);
-
+        
         let camera = m4.yRotation(cameraAngle);
         camera = m4.translate(camera, 0, 100, 300);
 
@@ -687,7 +687,8 @@ function setColor(gl) {
 }
 
 main();
-</code></pre><!-- language: lang-html -->
+</code></pre>
+<!-- language: lang-html -->
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 
@@ -721,7 +722,7 @@ main();
     &lt;/div&gt;
     &lt;!--
 for most samples webgl-utils only provides shader compiling/linking and
-canvas resizing because why clutter the examples with code that&#39;s the same in every sample.
+canvas resizing because why clutter the examples with code that's the same in every sample.
 See https://webglfundamentals.org/webgl/lessons/webgl-boilerplate.html
 and https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
 for webgl-utils, m3, m4, and webgl-lessons-ui.
@@ -735,8 +736,9 @@ for webgl-utils, m3, m4, and webgl-lessons-ui.
 &lt;/body&gt;
 
 &lt;/html&gt;
-</code></pre><!-- end snippet -->
-<h2 id="answer-">Answer:</h2>
+</code></pre>
+<!-- end snippet -->
+<h2 id="answer">Answer:</h2>
 <p>If I understand your question, the problem you see is it looks like the camera is getting closer to and further from the Fs</p>
 <p>The issue is the vertex data for the Fs are built so the top left front corner is at 0,0,0, from that they go +X 100 units (so 100 units wide), +Y 150 units (so 100 units tall), and +Z 30 units so 30 units deep</p>
 <p>So then, when you draw them around a 100 unit circle their origin is the part you are positioning and you get this</p>
@@ -747,12 +749,13 @@ for webgl-utils, m3, m4, and webgl-lessons-ui.
 
             var x = Math.cos(angle) * radius - 50;
             var z = Math.sin(angle) * radius - 15;
-</code></pre><p>Which gives you this situation</p>
+</code></pre>
+<p>Which gives you this situation</p>
 <p><a href="https://i.stack.imgur.com/CejYi.png"><img src="https://i.stack.imgur.com/CejYi.png" alt="enter image description here"></a></p>
 <p>The local origin of each F is no longer on the circle.</p>
 <p>You could also fix it by centering the F vertex data, go through all the vertices and subtract 50 from X and 15 from Z. That would give you this situation</p>
 <p><a href="https://i.stack.imgur.com/MiQ6Z.png"><img src="https://i.stack.imgur.com/MiQ6Z.png" alt="enter image description here"></a></p>
-<p>Now the origin of each F is centered and it&#39;s local origin is on the circle.</p>
+<p>Now the origin of each F is centered and it’s local origin is on the circle.</p>
 <p>Yet another way to fix it would be to compute the extents of the group of Fs, compute the center of the extents, move the center of the camera orbit there which would be this situation</p>
 <p><a href="https://i.stack.imgur.com/oysVQ.png"><img src="https://i.stack.imgur.com/oysVQ.png" alt="enter image description here"></a></p>
 <div class="so">

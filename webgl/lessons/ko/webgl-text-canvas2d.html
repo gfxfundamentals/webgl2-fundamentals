@@ -249,7 +249,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   &lt;canvas id=&quot;canvas&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
   &lt;canvas id=&quot;text&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
 &lt;/div&gt;
-</code></pre><p>다음으로 캔버스와 HTML이 겹치도록 CSS를 설정합니다.</p>
+</code></pre>
+<p>다음으로 캔버스와 HTML이 겹치도록 CSS를 설정합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">.container {
     position: relative;
 }
@@ -260,21 +261,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     top: 0px;
     z-index: 10;
 }
-</code></pre><p>이제 초기화할 때 텍스트 캔버스를 찾고 2D Context를 생성합니다.</p>
+</code></pre>
+<p>이제 초기화할 때 텍스트 캔버스를 찾고 2D Context를 생성합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 텍스트 캔버스 탐색
 var textCanvas = document.querySelector(&quot;#text&quot;);
 
 // 2D Context 만들기
 var ctx = textCanvas.getContext(&quot;2d&quot;);
-</code></pre><p>그릴 때, WebGL처럼, 프레임마다 2D Canvas를 지워야 합니다.</p>
+</code></pre>
+<p>그릴 때, WebGL처럼, 프레임마다 2D Canvas를 지워야 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawScene() {
     ...
 
     // 2D Canvas 지우기
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-</code></pre><p>그런 다음 <code class="notranslate" translate="no">fillText</code>를 호출하여 텍스트를 그립니다.</p>
+</code></pre>
+<p>그런 다음 <code class="notranslate" translate="no">fillText</code>를 호출하여 텍스트를 그립니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    ctx.fillText(someMsg, pixelX, pixelY);
-</code></pre><p>그리고 여기 해당 예제입니다.</p>
+</code></pre>
+<p>그리고 여기 해당 예제입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-canvas2d.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-canvas2d.html" target="_blank">새 창으로 열기</a>
@@ -308,7 +313,8 @@ ctx.fillText(someMessage, 20, 20);
 
 // 이전 설정으로 캔버스 복원
 ctx.restore();
-</code></pre><p>여기서 Canvas 2D 행렬 스택의 translate 함수을 활용하므로, 화살표를 그릴 때 어떤 추가적인 계산도 필요하지 않습니다.
+</code></pre>
+<p>여기서 Canvas 2D 행렬 스택의 translate 함수을 활용하므로, 화살표를 그릴 때 어떤 추가적인 계산도 필요하지 않습니다.
 원점에 그리기만 하면 <code class="notranslate" translate="no">translate</code>가 해당 원점을 F의 모서리로 옮겨줍니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-canvas2d-arrows.html"></iframe>

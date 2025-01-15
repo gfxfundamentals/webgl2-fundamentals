@@ -243,7 +243,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>许多3D游戏用一个立方体实现它，使它非常大，给它赋予天空的材质。</p>
 <p>这有效但有问题。一个问题是你有一个立方体你需要看向许多方向，无论相机看向什么方向，你希望最远的所有物体都能被绘制，但是你不希望立方体的角在裁剪面之外。深入解释这个问题，出于性能考虑你希望在远的物体之前先绘制近的物体，因为GPU使用<a href="webgl-3d-orthographic.html">深度缓冲检测</a>，会不绘制无法通过测试的像素。所以理想情况下你需要在深度检测的情况下最后绘制天空盒，但是如果你真的用了一个盒子，当相机朝不同的方向看时，盒子的角会比侧面更远这会引起问题。</p>
 <div class="webgl_center"><img src="../resources/skybox-issues.svg" style="width: 500px"></div>
-
 <p>你可以看到上图，我们需要确保立方体最远点在视锥体内，但是由于这个原因，立方体的某些边缘可能最终覆盖了我们不想掩盖的物体。</p>
 <p>典型的解决方案是关闭深度检测并首先绘制天空盒，但是我们也不能利用深度检测不会绘制场景中会被覆盖的物体的特性了。</p>
 <p>代替使用立方体，我们仅仅绘制一个覆盖整个画布的矩形，并使用<a href="webgl-cube-maps.html">立方体贴图</a>。通常我们使用视图投影矩阵在三维空间中投影矩形。在这里，我们会做相反的事情。我们会反过来使用视图投影矩阵的逆来获取相机看向矩形每一个像素的方向。这会是看向立方体贴图的方向。</p>
@@ -261,7 +260,8 @@ function setGeometry(gl) {
     ]);
   gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
 }
-</code></pre><p>因为已经是裁剪空间中的坐标，矩形会铺满画布。由于每个顶点只有2个值，我们需要更改设置属性的代码。</p>
+</code></pre>
+<p>因为已经是裁剪空间中的坐标，矩形会铺满画布。由于每个顶点只有2个值，我们需要更改设置属性的代码。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 告诉位置属性怎么从位置缓冲positionBuffer (ARRAY_BUFFER)中取数据
 -var size = 3;          // 每次迭代提取3个单位数据
 +var size = 2;          // 每次迭代提取2个单位数据
@@ -271,7 +271,8 @@ var stride = 0;        // 0 = 移动单位数量 * 每个单位占用内存sizeo
 var offset = 0;        // 从缓冲起始位置开始读取
 gl.vertexAttribPointer(
     positionLocation, size, type, normalize, stride, offset)
-</code></pre><p>接下来对于顶点着色器，我们直接将<code class="notranslate" translate="no">gl_Position</code>设置为四边形顶点。不需要任何矩阵变换因为位置已经在裁剪空间中，被设定为覆盖整个画布。我们设置 <code class="notranslate" translate="no">gl_Position.z</code>为1 确保像素有最远的深度。接下来我们传递位置给片断着色器。</p>
+</code></pre>
+<p>接下来对于顶点着色器，我们直接将<code class="notranslate" translate="no">gl_Position</code>设置为四边形顶点。不需要任何矩阵变换因为位置已经在裁剪空间中，被设定为覆盖整个画布。我们设置 <code class="notranslate" translate="no">gl_Position.z</code>为1 确保像素有最远的深度。接下来我们传递位置给片断着色器。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 in vec4 a_position;
 out vec4 v_position;
@@ -280,7 +281,8 @@ void main() {
   gl_Position = a_position;
   gl_Position.z = 1;
 }
-</code></pre><p>在片断着色器中我们将position和视图投影矩阵的逆相乘，除以w转换4D到3D。</p>
+</code></pre>
+<p>在片断着色器中我们将position和视图投影矩阵的逆相乘，除以w转换4D到3D。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
@@ -296,11 +298,13 @@ void main() {
   vec4 t = u_viewDirectionProjectionInverse * v_position;
   outColor = texture(u_skybox, normalize(t.xyz / t.w));
 }
-</code></pre><p>最后我们需要获取全局属性位置</p>
+</code></pre>
+<p>最后我们需要获取全局属性位置</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var skyboxLocation = gl.getUniformLocation(program, &quot;u_skybox&quot;);
 var viewDirectionProjectionInverseLocation = 
     gl.getUniformLocation(program, &quot;u_viewDirectionProjectionInverse&quot;);
-</code></pre><p>设置他们</p>
+</code></pre>
+<p>设置他们</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 计算投影矩阵
 var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
 var projectionMatrix =
@@ -333,7 +337,8 @@ gl.uniformMatrix4fv(
 
 // 告诉着色器对于u_skybox使用纹理单元0
 gl.uniform1i(skyboxLocation, 0);
-</code></pre><p>注意上边我们围绕原点旋转相机并计算相机位置<code class="notranslate" translate="no">cameraPosition</code>。 然后，在转换相机矩阵<code class="notranslate" translate="no">cameraMatrix</code>到视图矩阵<code class="notranslate" translate="no">viewMatrix</code>之后，我们将表示移动的部分清零因为我们只关心相机看向哪里，而非它在哪里。</p>
+</code></pre>
+<p>注意上边我们围绕原点旋转相机并计算相机位置<code class="notranslate" translate="no">cameraPosition</code>。 然后，在转换相机矩阵<code class="notranslate" translate="no">cameraMatrix</code>到视图矩阵<code class="notranslate" translate="no">viewMatrix</code>之后，我们将表示移动的部分清零因为我们只关心相机看向哪里，而非它在哪里。</p>
 <p>给结果乘以投影矩阵，求逆矩阵，之后设置矩阵。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-skybox.html"></iframe>
@@ -347,20 +352,24 @@ gl.uniform1i(skyboxLocation, 0);
 var envmapFragmentShaderSource = `...
 var skyboxVertexShaderSource = `...
 var skyboxFragmentShaderSource = `...
-</code></pre><p>然后编译着色器，找到所有的属性和全局变量的位置</p>
+</code></pre>
+<p>然后编译着色器，找到所有的属性和全局变量的位置</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 使用twgl来编译着色器并链接到程序 
   const envmapProgramInfo = twgl.createProgramInfo(
       gl, [envmapVertexShaderSource, envmapFragmentShaderSource]);
   const skyboxProgramInfo = twgl.createProgramInfo(
       gl, [skyboxVertexShaderSource, skyboxFragmentShaderSource]);
-</code></pre><p>用顶点数据设置缓冲。twgl已经有有提供这些数据的函数，所以我们可以直接使用 </p>
+</code></pre>
+<p>用顶点数据设置缓冲。twgl已经有有提供这些数据的函数，所以我们可以直接使用</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 创建缓冲并填充顶点数据
 const cubeBufferInfo = twgl.primitives.createCubeBufferInfo(gl, 1);
 const quadBufferInfo = twgl.primitives.createXYQuadBufferInfo(gl);
-</code></pre><p>对每一个创建顶点数组对象</p>
+</code></pre>
+<p>对每一个创建顶点数组对象</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const cubeVAO = twgl.createVAOFromBufferInfo(gl, envmapProgramInfo, cubeBufferInfo);
 const quadVAO = twgl.createVAOFromBufferInfo(gl, skyboxProgramInfo, quadBufferInfo);
-</code></pre><p>在渲染阶段我们计算了所有矩阵</p>
+</code></pre>
+<p>在渲染阶段我们计算了所有矩阵</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 相机在以原点为圆心直径2个单位的圆上看向原点 
 var cameraPosition = [Math.cos(time * .1) * 2, 0, Math.sin(time * .1) * 2];
 var target = [0, 0, 0];
@@ -384,7 +393,8 @@ var viewDirectionProjectionMatrix = m4.multiply(
     projectionMatrix, viewDirectionMatrix);
 var viewDirectionProjectionInverseMatrix = 
     m4.inverse(viewDirectionProjectionMatrix);
-</code></pre><p>然后先绘制立方体</p>
+</code></pre>
+<p>然后先绘制立方体</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 绘制立方体
 gl.useProgram(envmapProgramInfo.program);
 gl.bindVertexArray(cubeVAO);
@@ -396,7 +406,8 @@ twgl.setUniforms(envmapProgramInfo, {
   u_worldCameraPosition: cameraPosition,
 });
 twgl.drawBufferInfo(gl, cubeBufferInfo);
-</code></pre><p>之后天空盒</p>
+</code></pre>
+<p>之后天空盒</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 绘制天空盒
 gl.useProgram(skyboxProgramInfo.program);
 gl.bindVertexArray(quadVAO);
@@ -405,7 +416,8 @@ twgl.setUniforms(skyboxProgramInfo, {
   u_skybox: texture,
 });
 twgl.drawBufferInfo(gl, quadBufferInfo);
-</code></pre><p>结果</p>
+</code></pre>
+<p>结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-skybox-plus-environment-map.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-skybox-plus-environment-map.html" target="_blank">点此在新窗口中浏览</a>

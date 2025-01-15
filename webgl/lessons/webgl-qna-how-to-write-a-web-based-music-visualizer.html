@@ -236,10 +236,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I&#39;m trying to find the best approach to build a music visualizer to run in a browser over the web. Unity is an option, but I&#39;ll need to build a custom audio import/analysis plugin to get the end user&#39;s sound output. Quartz does what I need but only runs on Mac/Safari. WebGL seems not ready. Raphael is mainly 2D, and there&#39;s still the issue of getting the user&#39;s sound... any ideas? Has anyone done this before?</p>
-<h2 id="answer-">Answer:</h2>
-<p>Making something audio reactive is pretty simple. <a href="https://www.vertexshaderart.com">Here&#39;s an open source site with lots audio reactive examples</a>.</p>
+      <h2 id="question">Question:</h2>
+<p>I’m trying to find the best approach to build a music visualizer to run in a browser over the web. Unity is an option, but I’ll need to build a custom audio import/analysis plugin to get the end user’s sound output. Quartz does what I need but only runs on Mac/Safari. WebGL seems not ready. Raphael is mainly 2D, and there’s still the issue of getting the user’s sound… any ideas? Has anyone done this before?</p>
+<h2 id="answer">Answer:</h2>
+<p>Making something audio reactive is pretty simple. <a href="https://www.vertexshaderart.com">Here’s an open source site with lots audio reactive examples</a>.</p>
 <p>As for how to do it you basically use the <a href="">Web Audio API</a> to stream the music and use its AnalyserNode to get audio data out.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-write-a-web-based-music-visualizer-example-1.html"></iframe>
@@ -247,17 +247,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </div>
 
 </p>
-<p>Then it&#39;s just up to you to draw something creative.</p>
-<p>note some troubles you&#39;ll likely run into.</p>
+<p>Then it’s just up to you to draw something creative.</p>
+<p>note some troubles you’ll likely run into.</p>
 <ol>
-<li><p>You can not automatically play audio. You must start the audio inside an input event based on user input like <code class="notranslate" translate="no">&#39;click&#39;</code> or <code class="notranslate" translate="no">&#39;touchstart&#39;</code>.</p>
+<li>
+<p>You can not automatically play audio. You must start the audio inside an input event based on user input like <code class="notranslate" translate="no">'click'</code> or <code class="notranslate" translate="no">'touchstart'</code>.</p>
 </li>
-<li><p>As pointed out in the sample you can only analyse audio if the source is either from the same domain OR you ask for CORS permission and the server gives permission. AFAIK only Soundcloud gives permission and it&#39;s on a per song basis. It&#39;s up to the individual artist&#39;s song&#39;s settings whether or not audio analysis is allowed for a particular song.</p>
+<li>
+<p>As pointed out in the sample you can only analyse audio if the source is either from the same domain OR you ask for CORS permission and the server gives permission. AFAIK only Soundcloud gives permission and it’s on a per song basis. It’s up to the individual artist’s song’s settings whether or not audio analysis is allowed for a particular song.</p>
 <p>To try to explain this part</p>
 <p>The default is you have permission to access all data from the same domain but no permission from other domains.</p>
-<p>When you add </p>
+<p>When you add</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">audio.crossOrigin = &quot;anonymous&quot;;
-</code></pre><p>That basically says &quot;ask the server for permission for user &#39;anonymous&#39;&quot;. The server can give permission or not. It&#39;s up to the server. This includes asking even the server on the same domain which means if you&#39;re going to request a song on the same domain you need to either (a) remove the line above or (b) configure your server to give CORS permission. Most servers by default do not give CORS permission so if you add that line, even if the server is the same domain, if it does not give CORS permission then trying to analyse the audio will fail.</p>
+</code></pre>
+<p>That basically says “ask the server for permission for user ‘anonymous’”. The server can give permission or not. It’s up to the server. This includes asking even the server on the same domain which means if you’re going to request a song on the same domain you need to either (a) remove the line above or (b) configure your server to give CORS permission. Most servers by default do not give CORS permission so if you add that line, even if the server is the same domain, if it does not give CORS permission then trying to analyse the audio will fail.</p>
 <p>For a soundcloud example, see <a href="https://github.com/greggman/soundcloud-audio-reactive-example">here</a>.</p>
 </li>
 </ol>

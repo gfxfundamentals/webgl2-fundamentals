@@ -236,37 +236,37 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>This article assumes you&#39;ve read the article on
+      <p>This article assumes you’ve read the article on
 <a href="webgl-less-code-more-fun.html">less code more fun</a>
 as it uses the library mentioned there so as to
-unclutter the example. If you don&#39;t understand
+unclutter the example. If you don’t understand
 what buffers, vertex arrays, and attributes are or when
 a function named <code class="notranslate" translate="no">twgl.setUniforms</code> what it means
-to set uniforms, etc... then you should probably to go further back and
+to set uniforms, etc… then you should probably to go further back and
 <a href="webgl-fundamentals.html">read the fundamentals</a>.</p>
-<p>Let&#39;s say you wanted to draw multiple views of the
+<p>Let’s say you wanted to draw multiple views of the
 same scene, how could we do this? One way would
 be to <a href="webgl-render-to-texture.html">render to textures</a>
 and then draw those textures to the canvas. That is
 certainly a valid way to do it and there are times it
 might be the right thing to do. But, it requires that
 we allocate textures, render stuff to them, then render
-those textures on the canvas. That means we&#39;re effectively
+those textures on the canvas. That means we’re effectively
 double rendering. That might be appropriate, for example
 in a racing game when we want to render the view in a rear
-view mirror we&#39;d render what&#39;s behind the car to a texture
+view mirror we’d render what’s behind the car to a texture
 then use that texture to draw the rear view mirror.</p>
 <p>Another way is to set the viewport and turn on the scissor test.
-This is great for situation where our views don&#39;t overlap. Even
+This is great for situation where our views don’t overlap. Even
 better there is no double rendering like the solution above.</p>
-<p>In the <a href="webgl-fundamentals.html">very first article</a> it&#39;s mentioned
+<p>In the <a href="webgl-fundamentals.html">very first article</a> it’s mentioned
 that we set how WebGL converts from clip space to pixel space by calling</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.viewport(left, bottom, width, height);
 </code></pre>
 <p>The most common thing is to set to those to <code class="notranslate" translate="no">0</code>, <code class="notranslate" translate="no">0</code>, <code class="notranslate" translate="no">gl.canvas.width</code>, and <code class="notranslate" translate="no">gl.canvas.height</code>
 respectively to cover the entire canvas.</p>
-<p>Instead we can set them to a portion of the canvas and they&#39;ll make it
-so we only draw to that portion of the canvas. 
+<p>Instead we can set them to a portion of the canvas and they’ll make it
+so we only draw to that portion of the canvas.
 WebGL clips vertices in clip space.
 As we mentioned before we set <code class="notranslate" translate="no">gl_Position</code> in our vertex shader to values that go from -1 to +1 in x, y, z.
 WebGL clips the triangles and lines we pass to that range. After the clipping happens then
@@ -280,9 +280,9 @@ the <code class="notranslate" translate="no">gl.viewport</code> settings are app
 </code></pre>
 <p>Then a clip space value of x = -1 corresponds to pixel x = 10 and a clip space
 value of +1 corresponds to a pixel x = 40 (a left of 10 plus a width of 30)
-(Actually that&#39;s a slight over simplification, <a href="#pixel-coords">see below</a>)</p>
+(Actually that’s a slight over simplification, <a href="#pixel-coords">see below</a>)</p>
 <p>So, after clipping if we draw a triangle it would appear to fit inside the viewport.</p>
-<p>Let&#39;s draw our &#39;F&#39; from <a href="webgl-3d-perspective.html">previous articles</a>.</p>
+<p>Let’s draw our ‘F’ from <a href="webgl-3d-perspective.html">previous articles</a>.</p>
 <p>The vertex and fragment shaders are the same as the ones used in the articles on
 <a href="webgl-3d-orthographic.html">orthographic</a> and <a href="webgl-3d-perspective.html">perspective</a>
 projection.</p>
@@ -317,7 +317,7 @@ void main() {
 }
 </code></pre>
 <p>Then at init time we need to create the program and
-the buffers and vertex array for the &#39;F&#39;</p>
+the buffers and vertex array for the ‘F’</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// setup GLSL programs
 // compiles shaders, links program, looks up locations
 const programInfo = twgl.createProgramInfo(gl, [vs, fs]);
@@ -326,11 +326,11 @@ const programInfo = twgl.createProgramInfo(gl, [vs, fs]);
 // normal with a_normal etc..
 twgl.setAttributePrefix(&quot;a_&quot;);
 
-// create buffers and fill with data for a 3D &#39;F&#39;
+// create buffers and fill with data for a 3D 'F'
 const bufferInfo = twgl.primitives.create3DFBufferInfo(gl);
 const vao = twgl.createVAOFromBufferInfo(gl, programInfo, bufferInfo);
 </code></pre>
-<p>And to draw let&#39;s make a function we can pass a projection matrix,
+<p>And to draw let’s make a function we can pass a projection matrix,
 a camera matrix, and a world matrix</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function drawScene(projectionMatrix, cameraMatrix, worldMatrix) {
   // Make a view matrix from the camera matrix.
@@ -355,7 +355,7 @@ a camera matrix, and a world matrix</p>
   twgl.drawBufferInfo(gl, bufferInfo);
 }
 </code></pre>
-<p>and then let&#39;s call that function to draw the F.</p>
+<p>and then let’s call that function to draw the F.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function degToRad(d) {
   return d * Math.PI / 180;
 }
@@ -381,7 +381,7 @@ function render() {
   const perspectiveProjectionMatrix =
       m4.perspective(fieldOfViewRadians, aspect, near, far);
 
-  // Compute the camera&#39;s matrix using look at.
+  // Compute the camera's matrix using look at.
   const cameraPosition = [0, 0, -75];
   const target = [0, 0, 0];
   const up = [0, 1, 0];
@@ -390,23 +390,23 @@ function render() {
   // rotate the F in world space
   let worldMatrix = m4.yRotation(degToRad(settings.rotation));
   worldMatrix = m4.xRotate(worldMatrix, degToRad(settings.rotation));
-  // center the &#39;F&#39; around its origin
+  // center the 'F' around its origin
   worldMatrix = m4.translate(worldMatrix, -35, -75, -5);
 
   drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
 }
 render();
 </code></pre>
-<p>This is basically the same as the final example from 
+<p>This is basically the same as the final example from
 <a href="webgl-3d-perspective.html">the article on perspective</a>
-except we&#39;re using <a href="webgl-less-code-more-fun.html">our library</a> to keep the code simpler.</p>
+except we’re using <a href="webgl-less-code-more-fun.html">our library</a> to keep the code simpler.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-views-one-view.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-views-one-view.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>Now let&#39;s make it draw 2 views of the &#39;F&#39; side by side
+<p>Now let’s make it draw 2 views of the ‘F’ side by side
 by using <code class="notranslate" translate="no">gl.viewport</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render() {
   twgl.resizeCanvasToDisplaySize(gl.canvas);
@@ -416,7 +416,7 @@ by using <code class="notranslate" translate="no">gl.viewport</code></p>
   gl.enable(gl.CULL_FACE);
   gl.enable(gl.DEPTH_TEST);
 
-  // we&#39;re going to split the view in 2
+  // we're going to split the view in 2
 -  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
 +  const effectiveWidth = gl.canvas.clientWidth / 2;
 +  const aspect = effectiveWidth / gl.canvas.clientHeight;
@@ -437,7 +437,7 @@ by using <code class="notranslate" translate="no">gl.viewport</code></p>
 +       -75,                       // near
 +       2000);                     // far
 
-  // Compute the camera&#39;s matrix using look at.
+  // Compute the camera's matrix using look at.
   const cameraPosition = [0, 0, -75];
   const target = [0, 0, 0];
   const up = [0, 1, 0];
@@ -445,7 +445,7 @@ by using <code class="notranslate" translate="no">gl.viewport</code></p>
 
   let worldMatrix = m4.yRotation(degToRad(settings.rotation));
   worldMatrix = m4.xRotate(worldMatrix, degToRad(settings.rotation));
-  // center the &#39;F&#39; around its origin
+  // center the 'F' around its origin
   worldMatrix = m4.translate(worldMatrix, -35, -75, -5);
 
 +  const {width, height} = gl.canvas;
@@ -465,7 +465,7 @@ by using <code class="notranslate" translate="no">gl.viewport</code></p>
 </code></pre>
 <p>You can see above first we set the viewport to cover the left
 half of the canvas, draw, then we set it to cover the right half and
-draw. Otherwise we&#39;re drawing the same thing on both sides except
+draw. Otherwise we’re drawing the same thing on both sides except
 we change the projection matrix.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-views.html"></iframe>
@@ -473,7 +473,7 @@ we change the projection matrix.</p>
 </div>
 
 </p>
-<p>Let&#39;s clear both sides to different colors</p>
+<p>Let’s clear both sides to different colors</p>
 <p>First, in <code class="notranslate" translate="no">drawScene</code> lets call <code class="notranslate" translate="no">gl.clear</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  function drawScene(projectionMatrix, cameraMatrix, worldMatrix) {
 +    // Clear the canvas AND the depth buffer.
@@ -481,7 +481,7 @@ we change the projection matrix.</p>
 
     ...
 </code></pre>
-<p>Then let&#39;s set clear colors before calling <code class="notranslate" translate="no">drawScene</code></p>
+<p>Then let’s set clear colors before calling <code class="notranslate" translate="no">drawScene</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  const {width, height} = gl.canvas;
   const leftWidth = width / 2 | 0;
 
@@ -511,7 +511,7 @@ The scissor test lets use define a rectangle. Anything
 outside that rectangle will not be affected if the scissor
 test is enabled.</p>
 <p>The scissor test is off by default. We can enable it
-by calling </p>
+by calling</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.enable(gl.SCISSOR_TEST);
 </code></pre>
 <p>Like the viewport it defaults to the initial size of the canvas
@@ -524,7 +524,7 @@ but we can set with same parameters as the viewport by calling
    40,   // height
 );
 </code></pre>
-<p>So let&#39;s add those in</p>
+<p>So let’s add those in</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render() {
   twgl.resizeCanvasToDisplaySize(gl.canvas);
 
@@ -560,37 +560,37 @@ but we can set with same parameters as the viewport by calling
 </div>
 
 </p>
-<p>Of course you&#39;re not limited to drawing the same scene
+<p>Of course you’re not limited to drawing the same scene
 You can draw whatever you want in each view.</p>
 <h2 id="drawing-multiple-canvases">Drawing Multiple Canvases</h2>
 <p>This is a good solution for simulating multiple canvases.
-Let&#39;s say you wanted to make character selection screen
+Let’s say you wanted to make character selection screen
 for a game an you want to show 3D models of each head in a list so the
 user can select one.
-Or let&#39;s say you wanted to make an e-commerce site and show
+Or let’s say you wanted to make an e-commerce site and show
 3d models of each product down the page at the same time.</p>
 <p>The most obvious way to do this would be to put a <code class="notranslate" translate="no">&lt;canvas&gt;</code>
-each place you want to show an item. Unfortunately you&#39;d run into a
+each place you want to show an item. Unfortunately you’d run into a
 bunch of issues.</p>
 <p>First, Each canvas would require a different WebGL context
-WebGL contexts can not share resources so you&#39;d have
+WebGL contexts can not share resources so you’d have
 to compile shaders for each canvas, load textures for
 each canvas, upload geometry for each canvas.</p>
 <p>Another issue is most browsers have a limit on how many simultaneous canvases
-they support. For many it&#39;s as low as 8. That means as soon
+they support. For many it’s as low as 8. That means as soon
 as you create a webgl context on the 9th canvas the first
 canvas will lose its context.</p>
 <p>We can work around these issues by making just 1 large canvas
-that covers the entire window. We&#39;ll then put a placeholder
+that covers the entire window. We’ll then put a placeholder
 <code class="notranslate" translate="no">&lt;div&gt;</code> each place we want to draw an item. We can use
 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect"><code class="notranslate" translate="no">element.getBoundingClientRect</code></a>
 to find out where to set the viewport and scissor to
 draw in that area.</p>
-<p>This will solve both problems mentioned above. We&#39;ll only
-have one webgl context so we can share resources and we won&#39;t
+<p>This will solve both problems mentioned above. We’ll only
+have one webgl context so we can share resources and we won’t
 run into the context limit.</p>
-<p>Let&#39;s make an example.</p>
-<p>First let&#39;s make a canvas that goes in the background with some content
+<p>Let’s make an example.</p>
+<p>First let’s make a canvas that goes in the background with some content
 that goes in front. First the HTML</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-html">&lt;body&gt;
   &lt;canvas id=&quot;canvas&quot;&gt;&lt;/canvas&gt;
@@ -613,7 +613,7 @@ that goes in front. First the HTML</p>
   display: block;
 }
 </code></pre>
-<p>Now let&#39;s make a few things to draw.</p>
+<p>Now let’s make a few things to draw.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// create buffers and fill with data for various things.
 const bufferInfosAndVAOs = [
   twgl.primitives.createCubeBufferInfo(
@@ -643,7 +643,7 @@ const bufferInfosAndVAOs = [
   };
 });
 </code></pre>
-<p>Now let&#39;s make 100 html items. For each one we&#39;ll create a container div
+<p>Now let’s make 100 html items. For each one we’ll create a container div
 and inside will be a view and a label. The view is just an empty div
 where we want to draw the item.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function createElem(type, parent, className) {
@@ -667,13 +667,13 @@ function rand(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-const contentElem = document.querySelector(&#39;#content&#39;);
+const contentElem = document.querySelector('#content');
 const items = [];
 const numItems = 100;
 for (let i = 0; i &lt; numItems; ++i) {
-  const outerElem = createElem(&#39;div&#39;, contentElem, &#39;item&#39;);
-  const viewElem = createElem(&#39;div&#39;, outerElem, &#39;view&#39;);
-  const labelElem = createElem(&#39;div&#39;, outerElem, &#39;label&#39;);
+  const outerElem = createElem('div', contentElem, 'item');
+  const viewElem = createElem('div', outerElem, 'view');
+  const labelElem = createElem('div', outerElem, 'label');
   labelElem.textContent = `Item ${i + 1}`;
   const {bufferInfo, vao} = randArrayElement(bufferInfosAndVAOs);
   const color = [rand(1), rand(1), rand(1), 1];
@@ -685,7 +685,7 @@ for (let i = 0; i &lt; numItems; ++i) {
   });
 }
 </code></pre>
-<p>Let&#39;s style these items as follows</p>
+<p>Let’s style these items as follows</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-css">.item {
   display: inline-block;
   margin: 1em;
@@ -722,7 +722,7 @@ match and then draw that object.</p>
     const rect = element.getBoundingClientRect();
     if (rect.bottom &lt; 0 || rect.top  &gt; gl.canvas.clientHeight ||
         rect.right  &lt; 0 || rect.left &gt; gl.canvas.clientWidth) {
-      continue;  // it&#39;s off screen
+      continue;  // it's off screen
     }
 
     const width  = rect.right - rect.left;
@@ -742,7 +742,7 @@ match and then draw that object.</p>
     const perspectiveProjectionMatrix =
         m4.perspective(fieldOfViewRadians, aspect, near, far);
 
-    // Compute the camera&#39;s matrix using look at.
+    // Compute the camera's matrix using look at.
     const cameraPosition = [0, 0, -2];
     const target = [0, 0, 0];
     const up = [0, 1, 0];
@@ -772,29 +772,32 @@ the code would get much more complicated.</p>
 <p>Of course you could draw whole 3D scenes or whatever for each item.
 As long as you set the viewport and scissor correctly and then set up
 your projection matrix to match the aspect of the area it should work.</p>
-<p>One other notable thing about the code is we&#39;re moving the canvas
+<p>One other notable thing about the code is we’re moving the canvas
 with this line</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.canvas.style.transform = `translateY(${window.scrollY}px)`;
-</code></pre><p>Why? We could instead set the canvas to <code class="notranslate" translate="no">position: fixed;</code> in which case
+</code></pre>
+<p>Why? We could instead set the canvas to <code class="notranslate" translate="no">position: fixed;</code> in which case
 it would not scroll with the page. The difference would be subtle.
 The browser tries to scroll the page as smooth as possible. That might be
 faster than we can draw our objects. Because of this we have 2 options.</p>
 <ol>
-<li><p>Use a fixed position canvas</p>
-<p>In this case if we can&#39;t update fast enough the HTML in front of the canvas will scroll but the canvas itself
-won&#39;t so for a few moments they will be out of sync</p>
-<p><img src="resources/multi-view-skew.gif" style="border: 1px solid black; width: 266px;" class="webgl_center"></p>
+<li>
+<p>Use a fixed position canvas</p>
+<p>In this case if we can’t update fast enough the HTML in front of the canvas will scroll but the canvas itself
+won’t so for a few moments they will be out of sync</p>
+<img src="resources/multi-view-skew.gif" style="border: 1px solid black; width: 266px;" class="webgl_center">
 </li>
-<li><p>Move the canvas under the content</p>
-<p>In this case if we can&#39;t update fast enough the canvas will scroll in sync
+<li>
+<p>Move the canvas under the content</p>
+<p>In this case if we can’t update fast enough the canvas will scroll in sync
 with the HTML but new areas where we want stuff drawn will be blank until we get
 a chance to draw.</p>
-<p><img src="resources/multi-view-fixed.gif" style="border: 1px solid black; width: 266px;" class="webgl_center"></p>
+<img src="resources/multi-view-fixed.gif" style="border: 1px solid black; width: 266px;" class="webgl_center">
 <p>This is the solution used above</p>
 </li>
 </ol>
 <p>Hopefully this article gave you some ideas how to draw multiple views.
-We&#39;ll use these techniques in a few future articles where
+We’ll use these techniques in a few future articles where
 being able to see multiple views is useful for understanding.</p>
 <div class="webgl_bottombar" id="pixel-coords">
 <h3>Pixel Coordinates</h3>

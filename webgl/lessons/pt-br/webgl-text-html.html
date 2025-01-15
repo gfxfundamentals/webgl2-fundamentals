@@ -239,7 +239,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p>Este artigo é uma continuação de artigos anteriores da WebGL.
 Se você não os leu, sugiro <a href="webgl-3d-perspective.html">que comece por lá</a>
 e então, volte para este artigo.</p>
-<p>Uma pergunta comum é &quot;como eu desenho texto na WebGL&quot;. A primeira coisa a se perguntar é,
+<p>Uma pergunta comum é “como eu desenho texto na WebGL”. A primeira coisa a se perguntar é,
 qual é o seu propósito ao desenhar o texto. Você está em um navegador, o navegador
 exibe texto. Portanto, sua primeira resposta deve ser usar HTML para exibir texto.</p>
 <p>Vamos primeiro fazer o exemplo mais fácil: você só quer desenhar algum texto sobre
@@ -255,7 +255,8 @@ sobreposto dentro do container.</p>
     &lt;div&gt;Angle: &lt;span id=&quot;angle&quot;&gt;&lt;/span&gt;&lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</code></pre><p>Em seguida, configure o CSS para que a tela e o HTML se sobrepõem</p>
+</code></pre>
+<p>Em seguida, configure o CSS para que a tela e o HTML se sobrepõem</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">.container {
     position: relative;
 }
@@ -264,7 +265,8 @@ sobreposto dentro do container.</p>
     left: 10px;
     top: 10px;
 }
-</code></pre><p>Agora, procure esses elementos no tempo de inicialização e crie ou procure as áreas que deseja
+</code></pre>
+<p>Agora, procure esses elementos no tempo de inicialização e crie ou procure as áreas que deseja
 realizar a mudança.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// look up the elements we want to affect
 var timeElement = document.querySelector(&quot;#time&quot;);
@@ -278,7 +280,8 @@ var angleNode = document.createTextNode(&quot;&quot;);
 // Add those text nodes where they need to go
 timeElement.appendChild(timeNode);
 angleElement.appendChild(angleNode);
-</code></pre><p>Finalmente atualize os nós ao renderizar</p>
+</code></pre>
+<p>Finalmente atualize os nós ao renderizar</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawScene(time) {
     var now = time * 0.001;  // convert to seconds
 
@@ -293,7 +296,8 @@ angleElement.appendChild(angleNode);
     // set the nodes
     angleNode.nodeValue = angle.toFixed(0);  // no decimal place
     timeNode.nodeValue = now.toFixed(2);   // 2 decimal places
-</code></pre><p>E aqui está esse exemplo</p>
+</code></pre>
+<p>E aqui está esse exemplo</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-overlay.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-overlay.html" target="_blank">clique aqui para abrir em uma janela separada</a>
@@ -303,7 +307,8 @@ angleElement.appendChild(angleNode);
 <p>Observe como eu coloco espaços dentro dos divs especificamente para as partes que eu queria mudar. Estou fazendo o
 pressuposto aqui que é mais rápido do que apenas usar os divs sem extensões e fazer algo como</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">timeNode.nodeValue = &quot;Time &quot; + now.toFixed(2);
-</code></pre><p>Também estou usando text nodes chamando <code class="notranslate" translate="no">node = document.createTextNode()</code> e depois <code class="notranslate" translate="no">node.nodeValue = someMsg</code>.
+</code></pre>
+<p>Também estou usando text nodes chamando <code class="notranslate" translate="no">node = document.createTextNode()</code> e depois <code class="notranslate" translate="no">node.nodeValue = someMsg</code>.
 Eu também poderia usar <code class="notranslate" translate="no">someElement.innerHTML = someHTML</code>. Isso seria mais flexível porque você poderia
 inserir string HTML arbitrárias, embora possa ser um pouco mais lento, já que o navegador precisa criar
 e destruir os nós cada vez que você os configura. Bom, você decide o que é melhor.</p>
@@ -327,7 +332,8 @@ Nós também podemos fazer isso em HTML.</p>
   &lt;canvas id=&quot;canvas&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
   &lt;div id=&quot;divcontainer&quot;&gt;&lt;/div&gt;
 &lt;/div&gt;
-</code></pre><p>E vamos configurar o CSS</p>
+</code></pre>
+<p>E vamos configurar o CSS</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">.container {
     position: relative;
     overflow: none;
@@ -347,7 +353,8 @@ Nós também podemos fazer isso em HTML.</p>
 .floating-div {
     position: absolute;
 }
-</code></pre><p>A parte <code class="notranslate" translate="no">position: absolute;</code> faz com que o <code class="notranslate" translate="no">#divcontainer</code> seja posicionado em termos absolutos, relativo
+</code></pre>
+<p>A parte <code class="notranslate" translate="no">position: absolute;</code> faz com que o <code class="notranslate" translate="no">#divcontainer</code> seja posicionado em termos absolutos, relativo
 ao primeiro nó pai com outro estilo <code class="notranslate" translate="no">position: relative</code> ou <code class="notranslate" translate="no">position: absolute</code>. Nesse caso
 esse é o recipiente que tanto o canvas como o <code class="notranslate" translate="no">#divcontainer</code> estão dentro.</p>
 <p>O <code class="notranslate" translate="no">left: 0px; topo: 0px</code> faz com que o <code class="notranslate" translate="no">#divcontainer</code> se alinhe com tudo. O <code class="notranslate" translate="no">z-index: 10</code> o faz
@@ -369,11 +376,13 @@ div.appendChild(textNode);
 
 // add it to the divcontainer
 divContainerElement.appendChild(div);
-</code></pre><p>Agora podemos posicionar a div através da configuração do seu estilo.</p>
+</code></pre>
+<p>Agora podemos posicionar a div através da configuração do seu estilo.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">div.style.left = Math.floor(x) + &quot;px&quot;;
 div.style.top  = Math.floor(y) + &quot;px&quot;;
 textNode.nodeValue = now.toFixed(2);
-</code></pre><p>Aqui está um exemplo em que nos limitamos ao div.</p>
+</code></pre>
+<p>Aqui está um exemplo em que nos limitamos ao div.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-bouncing-div.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-bouncing-div.html" target="_blank">clique aqui para abrir em uma janela separada</a>
@@ -394,7 +403,7 @@ para posicionar a div.</p>
 // We just got through computing a matrix to draw our
 // F in 3D.
 
-// choose a point in the local space of the &#39;F&#39;.
+// choose a point in the local space of the 'F'.
 //             X  Y  Z  W
 var point = [100, 0, 0, 1];  // this is the front top right corner
 
@@ -414,7 +423,8 @@ var pixelY = (clipspace[1] * -0.5 + 0.5) * gl.canvas.height;
 div.style.left = Math.floor(pixelX) + &quot;px&quot;;
 div.style.top  = Math.floor(pixelY) + &quot;px&quot;;
 textNode.nodeValue = now.toFixed(2);
-</code></pre><p>E voila, o canto superior esquerdo da nossa div está perfeitamente alinhado
+</code></pre>
+<p>E voila, o canto superior esquerdo da nossa div está perfeitamente alinhado
 com o canto superior direito do F.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-div.html"></iframe>

@@ -236,10 +236,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>I need to draw parts of a texture on trapezoids polygons. (old school fake-3D race game, the road is made of these trapezoids and I want to apply a texture on them.)</p>
 <p>But the texture appears wrong, like if each of the two triangles forming a trapezoid are half of a parrallelogram instead, they have each a different horizontal skewing, not a global perspective transformation.</p>
-<p>Searching for a solution I see that this problem is common and the reason why is that the two triangles are not equal and the shader is 2D. From what I found, and especially this answer : <a href="https://stackoverflow.com/a/25239021/3666866">https://stackoverflow.com/a/25239021/3666866</a> , I tried to fix my shader. But it did not change anything...</p>
+<p>Searching for a solution I see that this problem is common and the reason why is that the two triangles are not equal and the shader is 2D. From what I found, and especially this answer : https://stackoverflow.com/a/25239021/3666866 , I tried to fix my shader. But it did not change anything…</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">My shaders :  (copied from webglfundamentals.com, edited according to https://stackoverflow.com/a/25239021/3666866)
 
 &lt;script id=&quot;3d-vertex-shader&quot; type=&quot;x-shader/x-vertex&quot;&gt;
@@ -265,7 +265,8 @@ void main() {
    gl_FragColor = texture2DProj( u_texture , v_texcoord ) ;
  }
 &lt;/script&gt;
-</code></pre><p> code :</p>
+</code></pre>
+<p>code :</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> gl_.positionLocation = gl.getAttribLocation( gl_.program, &quot;a_position&quot; );
  gl_.texcoordLocation = gl.getAttribLocation( gl_.program, &quot;a_texcoord&quot; );
  gl.matrixLocation = gl.getUniformLocation( gl_.program, &quot;u_matrix&quot; );
@@ -282,7 +283,7 @@ void main() {
    0.5,  0.5,   0.5,
   ]);
   gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
-
+  
  gl_.texcoordBuffer = gl.createBuffer();
  gl.bindBuffer( gl.ARRAY_BUFFER, gl_.texcoordBuffer );
  gl.bufferData(
@@ -297,7 +298,8 @@ void main() {
     0.5 , 0.5,
    ]),
    gl.STATIC_DRAW);
-</code></pre><p> The render code :</p>
+</code></pre>
+<p>The render code :</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
  gl.bindBuffer( gl.ARRAY_BUFFER, positionBuffer );
  gl.vertexAttribPointer(positionLocation,3,gl.FLOAT,false,0,0);
@@ -310,19 +312,22 @@ void main() {
  gl.uniformMatrix4fv( matrixLocation , false , viewProjectionMatrix );
  gl.uniform1i( textureLocation , 0 );
  gl.drawArrays(gl.TRIANGLES, 0, 6 * 1 );
-</code></pre><p>Where is the error ?</p>
-<h2 id="answer-">Answer:</h2>
+</code></pre>
+<p>Where is the error ?</p>
+<h2 id="answer">Answer:</h2>
 <p>Looking at the examples you linked to you need to provide 3D texture coordinates. So instead of UVs like</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> 0, 0,
  0, 1,
  1, 0,
  1, 1,
-</code></pre><p>They need to each be multiplied by the absolute value of the X coordinate of the trapizoid&#39;s points and then that absolute value of X needs to be the 3rd coordinate</p>
+</code></pre>
+<p>They need to each be multiplied by the absolute value of the X coordinate of the trapizoid’s points and then that absolute value of X needs to be the 3rd coordinate</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> 0 * X0, 0 * X0, X0,
  0 * X1, 1 * X1, X1,
  1 * X2, 0 * X2, X2,
  1 * X3, 1 * X3, X3,
-</code></pre><p>This ends up with the same texture coordinates because <code class="notranslate" translate="no">texture2DProj</code> divides the <code class="notranslate" translate="no">xy</code> of each coordinate by <code class="notranslate" translate="no">z</code> but it changes how the texture coordinate is interpolated.</p>
+</code></pre>
+<p>This ends up with the same texture coordinates because <code class="notranslate" translate="no">texture2DProj</code> divides the <code class="notranslate" translate="no">xy</code> of each coordinate by <code class="notranslate" translate="no">z</code> but it changes how the texture coordinate is interpolated.</p>
 <p>You can provide that those texture coordinates by supplying them manually and putting them in a buffer or you can do it by calculating them in the vertex shader</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">attribute vec4 position;
 attribute vec2 texcoord;
@@ -335,7 +340,8 @@ void main() {
   gl_Position = u_matrix * position;
   v_texcoord = vec3(texcoord.xy, 1) * abs(position.x);
 }
-</code></pre><p>example</p>
+</code></pre>
+<p>example</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-draw-correctly-textured-trapezoid-polygons-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-draw-correctly-textured-trapezoid-polygons-example-1.html" target="_blank">click here to open in a separate window</a>

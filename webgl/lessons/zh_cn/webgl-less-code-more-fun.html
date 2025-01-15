@@ -269,7 +269,8 @@ void main() {
   v_surfaceToView = (u_viewInverse[3] - (u_world * a_position)).xyz;
   gl_Position = v_position;
 }
-</code></pre><p>片断着色器：</p>
+</code></pre>
+<p>片断着色器：</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
@@ -308,7 +309,8 @@ void main() {
                 u_specular * litR.z * u_specularFactor)).rgb,
     diffuseColor.a);
 }
-</code></pre><p>你要在代码中像这样找到所有要设置的变量。</p>
+</code></pre>
+<p>你要在代码中像这样找到所有要设置的变量。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 初始化时
 var u_worldViewProjectionLoc   = gl.getUniformLocation(program, &quot;u_worldViewProjection&quot;);
 var u_lightWorldPosLoc         = gl.getUniformLocation(program, &quot;u_lightWorldPos&quot;);
@@ -374,7 +376,8 @@ gl.uniform1f(u_shininessLoc, shininess);
 gl.uniform1f(u_specularFactorLoc, specularFactor);
 
 gl.drawArrays(...);
-</code></pre><p>需要写很多代码。</p>
+</code></pre>
+<p>需要写很多代码。</p>
 <p>这有很多方式简化这个过程，
 首先可以一次获取 WebGL 中需要的所有属性和全局变量的位置，
 然后在一个方法中设置它们，我们可以传递一个 JavaScript 对象给这个方法。
@@ -417,7 +420,8 @@ gl.bindAttribArray(vao);
 twgl.setUniforms(uniformSetters, uniforms);
 
 gl.drawArrays(...);
-</code></pre><p>这样看起来就简单，清晰，代码量少一些了。</p>
+</code></pre>
+<p>这样看起来就简单，清晰，代码量少一些了。</p>
 <p>如果需要你也可以将全局变量设置为多个 JavaScript 对象，例如</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 初始化时
 var uniformSetters = twgl.createUniformSetters(gl, program);
@@ -489,7 +493,8 @@ objects.forEach(function(object) {
   twgl.setUniforms(uniformSetters, objects.materialUniforms);
   gl.drawArrays(...);
 });
-</code></pre><p>这是使用这个辅助方法的一个例子</p>
+</code></pre>
+<p>这是使用这个辅助方法的一个例子</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-less-code-more-fun.html" target="_blank">点此在新窗口中浏览</a>
@@ -515,7 +520,8 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texcoords), gl.STATIC_DRAW);
 var normalBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
-</code></pre><p>看起来像是这种简化形式。</p>
+</code></pre>
+<p>看起来像是这种简化形式。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 一个三角形
 var arrays = {
    position: { numComponents: 3, data: [0, -10, 0, 10, 10, 0, -10, 10, 0], },
@@ -525,7 +531,8 @@ var arrays = {
 
 var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
 var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
-</code></pre><p>代码少多了！</p>
+</code></pre>
+<p>代码少多了！</p>
 <p>这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-triangle.html"></iframe>
@@ -544,12 +551,14 @@ var arrays = {
 
 var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
 var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
-</code></pre><p>在渲染时将调用 <code class="notranslate" translate="no">gl.drawElements</code> 代替 <code class="notranslate" translate="no">gl.drawArrays</code>。</p>
+</code></pre>
+<p>在渲染时将调用 <code class="notranslate" translate="no">gl.drawElements</code> 代替 <code class="notranslate" translate="no">gl.drawArrays</code>。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 
 // 绘制几何体
 gl.drawElements(gl.TRIANGLES, bufferInfo.numElements, gl.UNSIGNED_SHORT, 0);
-</code></pre><p>这是结果</p>
+</code></pre>
+<p>这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-quad.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-less-code-more-fun-quad.html" target="_blank">点此在新窗口中浏览</a>
@@ -566,7 +575,8 @@ var arrays = {
    normal:   [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
    indices:  [0, 1, 2, 1, 2, 3],
 };
-</code></pre><p>对应版本</p>
+</code></pre>
+<p>对应版本</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-quad-guess.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-less-code-more-fun-quad-guess.html" target="_blank">点此在新窗口中浏览</a>
@@ -586,15 +596,18 @@ WebGL 会自动设置 <code class="notranslate" translate="no">w = 1</code>。�
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var program = twgl.createProgramFromSources(gl, [vs, fs]);
 var uniformSetters = twgl.createUniformSetters(gl, program);
 var attribSetters  = twgl.createAttributeSetters(gl, program);
-</code></pre><p>可以简化成这样</p>
+</code></pre>
+<p>可以简化成这样</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var programInfo = twgl.createProgramInfo(gl, [&quot;vertexshader&quot;, &quot;fragmentshader&quot;]);
-</code></pre><p>返回类似这样的对象</p>
+</code></pre>
+<p>返回类似这样的对象</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">programInfo = {
    program: WebGLProgram,  // 刚编译的程序
    uniformSetters: ...,    // createUniformSetters 返回的 setter,
    attribSetters: ...,     // createAttribSetters 返回的 setter,
 }
-</code></pre><p>这是一个简单的简化，但是如果在多程序的代码中，就可以保持程序和对应的 setter 一致。</p>
+</code></pre>
+<p>这是一个简单的简化，但是如果在多程序的代码中，就可以保持程序和对应的 setter 一致。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-quad-programinfo.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-less-code-more-fun-quad-programinfo.html" target="_blank">点此在新窗口中浏览</a>
@@ -606,7 +619,8 @@ var attribSetters  = twgl.createAttributeSetters(gl, program);
 如果有就调用 <code class="notranslate" translate="no">gl.drawElements</code>， 没有就调用 <code class="notranslate" translate="no">gl.drawArrays</code>。
 所以有一个方法 <code class="notranslate" translate="no">twgl.drawBufferInfo</code> 做这个事，像这样使用</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">twgl.drawBufferInfo(gl, bufferInfo);
-</code></pre><p>如果您没有为要绘制的图元类型传递第三个参数，则它假定为 <code class="notranslate" translate="no">gl.TRIANGLES</code>。</p>
+</code></pre>
+<p>如果您没有为要绘制的图元类型传递第三个参数，则它假定为 <code class="notranslate" translate="no">gl.TRIANGLES</code>。</p>
 <p>这是一个例子，我们有一个没有索引的三角形和一个有索引的四边形。 因为我们使用了<code class="notranslate" translate="no">twgl.drawBufferInfo</code>，所以当我们切换数据时不需要修改代码。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-drawbufferinfo.html"></iframe>
@@ -629,40 +643,33 @@ var attribSetters  = twgl.createAttributeSetters(gl, program);
 <pre class="prettyprint">
 // 初始化时
 var uniformSetters = twgl.createUniformSetters(program);
-
-// 绘制时
-uniformSetters.u_ambient([1, 0, 0, 1]); // 设置环境光为红色
-
+<p>// 绘制时
+uniformSetters.u_ambient([1, 0, 0, 1]); // 设置环境光为红色</p>
 </pre>
 <p>这样做不好的原因就是，在使用GLSL的过程中经常会修改，调试。假设屏幕上什么都没有出现，首先我会简化着色器，例如我会尽可能简化片断着色器。</p>
 <pre class="prettyprint showlinemods">
 #version 300 es
 precision highp float;
-
-in vec4 v_position;
+<p>in vec4 v_position;
 in vec2 v_texCoord;
 in vec3 v_normal;
 in vec3 v_surfaceToLight;
-in vec3 v_surfaceToView;
-
-uniform vec4 u_lightColor;
+in vec3 v_surfaceToView;</p>
+<p>uniform vec4 u_lightColor;
 uniform vec4 u_ambient;
 uniform sampler2D u_diffuse;
 uniform vec4 u_specular;
 uniform float u_shininess;
-uniform float u_specularFactor;
-
-out vec4 outColor;
-
-vec4 lit(float l ,float h, float m) {
+uniform float u_specularFactor;</p>
+<p>out vec4 outColor;</p>
+<p>vec4 lit(float l ,float h, float m) {
 return vec4(1.0,
 max(l, 0.0),
-(l > 0.0) ? pow(max(0.0, h), m) : 0.0,
+(l &gt; 0.0) ? pow(max(0.0, h), m) : 0.0,
 1.0);
-}
-
-void main() {
-vec4 diffuseColor = texture2D(u*diffuse, v_texCoord);
+}</p>
+<p>void main() {
+vec4 diffuseColor = texture2D(u<em>diffuse, v_texCoord);
 vec3 a_normal = normalize(v_normal);
 vec3 surfaceToLight = normalize(v_surfaceToLight);
 vec3 surfaceToView = normalize(v_surfaceToView);
@@ -670,13 +677,14 @@ vec3 halfVector = normalize(surfaceToLight + surfaceToView);
 vec4 litR = lit(dot(a_normal, surfaceToLight),
 dot(a_normal, halfVector), u_shininess);
 vec4 outColor = vec4((
-u_lightColor * (diffuseColor _ litR.y + diffuseColor _ u*ambient +
-u_specular * litR.z \* u_specularFactor)).rgb,
-diffuseColor.a);
-
--   outColor = vec4(0,1,0,1); // &lt;!--- just green
+u_lightColor * (diffuseColor _ litR.y + diffuseColor _ u</em>ambient +
+u_specular * litR.z * u_specularFactor)).rgb,
+diffuseColor.a);</p>
+<ul>
+<li>outColor = vec4(0,1,0,1); // &lt;!— just green
 }
-</pre>
+</pre></li>
+</ul>
 <p>注意到我添加了一行，直接将 <code class="notranslate" translate="no">outColor</code> 设置为固定颜色。
 大多数驱动会发现之前的行没有为结果做贡献，优化后就会把没用的变量移除，
 下次我运行程序调用 <code class="notranslate" translate="no">twgl.createUniformSetters</code> 就不会为<code class="notranslate" translate="no">u_ambient</code> 创建 setter，所以 <code class="notranslate" translate="no">uniformSetters.u_ambient()</code> 就会报错。</p>

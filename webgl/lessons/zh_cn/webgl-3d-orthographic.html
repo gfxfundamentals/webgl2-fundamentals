@@ -243,7 +243,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 做三维只需要再迈出一小步。</p>
 <p>二维例子中的二维点 (x, y) 与 3x3 的矩阵相乘，
 在三维中我们需要三维点 (x, y, z) 与 4x4 的矩阵相乘。</p>
-<p>让我们将上个例子改成三维的，这里会继续使用 F ，但是这次是三维的 &#39;F&#39; 。</p>
+<p>让我们将上个例子改成三维的，这里会继续使用 F ，但是这次是三维的 ‘F’ 。</p>
 <p>首先需要修改顶点着色器以支持三维处理，这是原顶点着色器。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">#version 300 es
 
@@ -289,7 +289,7 @@ void main() {
 
   ...
 
-  // 使用组成 &#39;F&#39; 的数据填充当前 ARRAY_BUFFER 缓冲
+  // 使用组成 'F' 的数据填充当前 ARRAY_BUFFER 缓冲
   function setGeometry(gl) {
     gl.bufferData(
         gl.ARRAY_BUFFER,
@@ -378,22 +378,18 @@ void main() {
 <div>newX = x *  c + y * s;</div>
 <div>newY = x * -s + y * c;</div>
 </div>
-
 <p>绕 Y 轴旋转</p>
 <div class="webgl_center">
 <div>newX = x *  c + z * s;</div>
 <div>newZ = x * -s + z * c;</div>
 </div>
-
 <p>绕 X 轴旋转</p>
 <div class="webgl_center">
 <div>newY = y *  c + z * s;</div>
 <div>newZ = y * -s + z * c;</div>
 </div>
-
 <p>它们提供这些旋转方式。</p>
 <iframe class="external_diagram" src="../resources/axis-diagram.html" style="width: 540px; height: 240px;"></iframe>
-
 <p>同样的我们将实现一些简单的方法</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  translate: function(m, tx, ty, tz) {
     return m4.multiply(m, m4.translation(tx, ty, tz));
@@ -519,7 +515,7 @@ void main() {
 所以很难看出三维效果。解决这个问题的方法是将它拉伸成三维几何体。
 现在的 F 是由三个矩形组成，每个矩形两个三角形。让它变三维需要 16 个矩形。
 三个矩形在正面，三个背面，一个左侧，四个右侧，两个上侧，三个底面。</p>
-<p><img class="webgl_center noinvertdark" width="300" src="../resources/3df.svg" /></p>
+<img class="webgl_center noinvertdark" width="300" src="../resources/3df.svg" />
 <p>需要列出的还有很多，16 个矩形每个有两个三角形，每个三角形有 3 个顶点，
 所以一共有 96 个顶点。如果你想看这些可以去示例的源码里找。</p>
 <p>我们需要绘制更多顶点所以</p>
@@ -601,7 +597,7 @@ void main() {
 
   ...
 
-// 向缓冲传入 &#39;F&#39; 的颜色值
+// 向缓冲传入 'F' 的颜色值
 
 function setColors(gl) {
   gl.bufferData(
@@ -630,15 +626,15 @@ function setColors(gl) {
 </div>
 
 </p>
-<p>呃，发生了什么？它好像把 &#39;F&#39; 的所有部分都按照提供的顺序显示出来了，
+<p>呃，发生了什么？它好像把 ‘F’ 的所有部分都按照提供的顺序显示出来了，
 正面，背面，侧面等等。有时候这并不是想要的结果，在背面的物体反而被绘制出来了。</p>
-<p><img class="webgl_center" style="background-color: transparent;" width="163" height="190" src="../resources/polygon-drawing-order.gif" /></p>
-<p><span style="background: rgb(200, 70, 120); color: white; padding: 0.25em">红色部分</span>是 &#39;F&#39; 的<strong>正面</strong>，但是因为它在数据的前部所以最先被绘制出来，然后它后面的面绘制后挡住了它。
+<img class="webgl_center" style="background-color: transparent;" width="163" height="190" src="../resources/polygon-drawing-order.gif" />
+<p><span style="background: rgb(200, 70, 120); color: white; padding: 0.25em">红色部分</span>是 ‘F’ 的<strong>正面</strong>，但是因为它在数据的前部所以最先被绘制出来，然后它后面的面绘制后挡住了它。
 例如<span style="background: rgb(80, 70, 200); color: white; padding: 0.25em">紫色部分</span>
-实际上是 &#39;F&#39; 的背面，由于它在数据中是第二个所以第二个被画出来。</p>
+实际上是 ‘F’ 的背面，由于它在数据中是第二个所以第二个被画出来。</p>
 <p>WebGL 中的三角形有正反面的概念，正面三角形的顶点顺序是逆时针方向，
 反面三角形是顺时针方向。</p>
-<p><img src="../resources/triangle-winding.svg" class="webgl_center" width="400" /></p>
+<img src="../resources/triangle-winding.svg" class="webgl_center" width="400" />
 <p>WebGL 可以只绘制正面或反面三角形，可以这样开启</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.enable(gl.CULL_FACE)
 </code></pre>
@@ -665,11 +661,13 @@ function setColors(gl) {
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">           1,   2,   3,
           40,  50,  60,
          700, 800, 900,
-</code></pre><p>只需要交换后两个顶点的位置</p>
+</code></pre>
+<p>只需要交换后两个顶点的位置</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">           1,   2,   3,
 *         700, 800, 900,
 *          40,  50,  60,
-</code></pre><p>通过修正朝向错误后得到</p>
+</code></pre>
+<p>通过修正朝向错误后得到</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step5.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-step5.html" target="_blank">点此在新窗口中浏览</a>
@@ -725,7 +723,8 @@ WebGL 绘制一个着色像素之前会检查对应的深度像素，
       1,
     ];
   }
-</code></pre><p>和我们简单的 <code class="notranslate" translate="no">projection</code> 方法不同的是正射投影有更多的参数可以传递，
+</code></pre>
+<p>和我们简单的 <code class="notranslate" translate="no">projection</code> 方法不同的是正射投影有更多的参数可以传递，
 左，右，上，下，近和远，给我们更灵活的选择。为了用这个方法实现之前的投影，
 需要这样调用</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var left = 0;
@@ -735,7 +734,8 @@ var top = 0;
 var near = 400;
 var far = -400;
 m4.orthographic(left, right, bottom, top, near, far);
-</code></pre><p>下一篇将讲述<a href="webgl-3d-perspective.html">如何实现透视投影</a>。</p>
+</code></pre>
+<p>下一篇将讲述<a href="webgl-3d-perspective.html">如何实现透视投影</a>。</p>
 <div class="webgl_bottombar">
 <h3>为什么属性类型是 vec4 但是 gl.vertexAttribPointer 的大小是 3</h3>
 <p>
@@ -756,18 +756,16 @@ var stride = 0;        // 0 = 移动距离 * 单位距离长度sizeof(type)
 var offset = 0;        // 从绑定缓冲的起始处开始
 gl.vertexAttribPointer(
     positionAttributeLocation, size, type, normalize, stride, offset);
-
-...
+<p>…
 // 告诉颜色属性怎么从 colorBuffer (ARRAY_BUFFER) 中读取颜色值
 var size = 3; // 每次迭代使用 3 个单位的数据
 var type = gl.UNSIGNED_BYTE; // 单位数据类型是无符号 8 位整数
 var normalize = true; // 标准化数据 (从 0-255 转换到 0.0-1.0)
-var stride = 0; // 0 = 移动距离 \* 单位距离长度 sizeof(type)
+var stride = 0; // 0 = 移动距离 * 单位距离长度 sizeof(type)
 // 每次迭代跳多少距离到下一个数据
 var offset = 0; // 从绑定缓冲的起始处开始
 gl.vertexAttribPointer(
-colorAttributeLocation, size, type, normalize, stride, offset);
-
+colorAttributeLocation, size, type, normalize, stride, offset);</p>
 </pre>
 <p>
 这里的 '3' 表示的时每次迭代从缓冲中提取三个值给顶点着色器中的属性。

@@ -236,24 +236,27 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>I am making 3D app by using javascript and webgl. Fps is 60 when I draw 1000 icons with 32x32 pixel but When I draw 1000 icons with size 256x256 pixel, fps is 10, perform drop.</p>
-<p>What should I do to increase FPS by drawing 1000 icon with size 256x256? </p>
-<h2 id="answer-">Answer:</h2>
-<p>GPUs are fill rate bound. That means there is a limit maximum number of pixels they can draw per frame at 60fps. Every GPU is different but it&#39;s common for an app to run slow if it&#39;s drawing to draw too many pixels.</p>
+<p>What should I do to increase FPS by drawing 1000 icon with size 256x256?</p>
+<h2 id="answer">Answer:</h2>
+<p>GPUs are fill rate bound. That means there is a limit maximum number of pixels they can draw per frame at 60fps. Every GPU is different but it’s common for an app to run slow if it’s drawing to draw too many pixels.</p>
 <p>So if you are drawing 1000 32x32 quads thats about 1 million pixels. If you are drawing 1000 256x256 quads thats about 65 million pixels so 65x the work.</p>
 <p>Some things you can do.</p>
 <ol>
-<li><p>Turn on the depth test and draw front to back</p>
-<p>This only works if your icons are 100% opaque or optionally have some 100% transparent pixels and you&#39;re using <code class="notranslate" translate="no">discard</code> to not draw those pixels. If you have various levels of alpha (you&#39;re blending) then you can&#39;t use this technique.</p>
+<li>
+<p>Turn on the depth test and draw front to back</p>
+<p>This only works if your icons are 100% opaque or optionally have some 100% transparent pixels and you’re using <code class="notranslate" translate="no">discard</code> to not draw those pixels. If you have various levels of alpha (you’re blending) then you can’t use this technique.</p>
 <p>This will help it draw less pixels but still far more than the 32x32 case.</p>
 </li>
-<li><p>Try to figure out which quads you don&#39;t need to draw. </p>
-<p>There are only 8 million pixels on a 4k display so why draw 65 million pixels? That means on average every pixel is being overdrawn 7 times! </p>
+<li>
+<p>Try to figure out which quads you don’t need to draw.</p>
+<p>There are only 8 million pixels on a 4k display so why draw 65 million pixels? That means on average every pixel is being overdrawn 7 times!</p>
 <p>If there is anyway for you to know you can skip some quads skip them.</p>
 </li>
-<li><p>Make sure you&#39;re using mips if the textures are larger than the size they&#39;re being drawn.</p>
-<p>It&#39;s slower to draw a 2x2 quad using a 1024x1024 texture without mips than with. The reason is without mips the GPU has to jump a long way between pixels which is likely to be a cache mish. With mips it will grab the appropriate mip level and pixels next to each other will be in the cache.</p>
+<li>
+<p>Make sure you’re using mips if the textures are larger than the size they’re being drawn.</p>
+<p>It’s slower to draw a 2x2 quad using a 1024x1024 texture without mips than with. The reason is without mips the GPU has to jump a long way between pixels which is likely to be a cache mish. With mips it will grab the appropriate mip level and pixels next to each other will be in the cache.</p>
 </li>
 </ol>
 <p>As an example on my late 2018 Macbook Air with Intel UHD Graphics 617 I can only draw about 5 million pixels per frame at 60fps in WebGL.</p>

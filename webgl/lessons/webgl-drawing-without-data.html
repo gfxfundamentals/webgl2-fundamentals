@@ -236,7 +236,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>This article assumes you&#39;ve read many of the other articles
+      <p>This article assumes you’ve read many of the other articles
 starting with <a href="webgl-fundamentals.html">the fundamentals</a>.
 If you have not read them please start there first.</p>
 <p>In <a href="webgl-smallest-programs.html">the article on the smallest WebGL programs</a>
@@ -245,13 +245,13 @@ In this article will go over drawing with no data.</p>
 <p>Traditionally, WebGL apps put geometry data in buffers.
 They then use attributes to pull vertex data from those buffers
 into shaders and convert them to clip space.</p>
-<p>The word <strong>traditionally</strong> is important. It&#39;s only a <strong>tradition</strong>
-to do it this way. It is in no way a requirement. WebGL doesn&#39;t
+<p>The word <strong>traditionally</strong> is important. It’s only a <strong>tradition</strong>
+to do it this way. It is in no way a requirement. WebGL doesn’t
 care how we do it, it only cares that our vertex shaders
 assign clip space coordinates to <code class="notranslate" translate="no">gl_Position</code>.</p>
 <p>In GLSL ES 3.0 there is a special variable, <code class="notranslate" translate="no">gl_VertexID</code>
 available in vertex shaders. Effectively it counts vertices.
-Let&#39;s use it to draw calculate vertex positions with no data.
+Let’s use it to draw calculate vertex positions with no data.
 Well compute the points of a circle based on that variable.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
 uniform int numVerts;
@@ -264,14 +264,14 @@ void main() {
   float radius = 0.8;
 
   vec2 pos = vec2(cos(angle), sin(angle)) * radius;
-
+  
   gl_Position = vec4(pos, 0, 1);
   gl_PointSize = 5.0;
 }
 </code></pre>
 <p>The code above should be pretty straight forward.
 <code class="notranslate" translate="no">gl_VertexID</code> is going to count from 0 to however
-many vertices we ask to draw. We&#39;ll pass that same number
+many vertices we ask to draw. We’ll pass that same number
 in as <code class="notranslate" translate="no">numVerts</code>.
 Based on that we generate positions for a circle.</p>
 <p>If we stopped there the circle would be an ellipse
@@ -291,10 +291,10 @@ void main() {
   float radius = 0.8;
 
   vec2 pos = vec2(cos(angle), sin(angle)) * radius;
-
+  
 +  float aspect = resolution.y / resolution.x;
 +  vec2 scale = vec2(aspect, 1);
-
+  
 +  gl_Position = vec4(pos * scale, 0, 1);
   gl_PointSize = 5.0;
 }
@@ -309,13 +309,13 @@ void main() {
   outColor = vec4(1, 0, 0, 1);
 }
 </code></pre>
-<p>In our JavaScript at init time we&#39;ll compile the shader and look up the uniforms,</p>
+<p>In our JavaScript at init time we’ll compile the shader and look up the uniforms,</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// setup GLSL program
 const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
-const numVertsLoc = gl.getUniformLocation(program, &#39;numVerts&#39;);
-const resolutionLoc = gl.getUniformLocation(program, &#39;resolution&#39;);
+const numVertsLoc = gl.getUniformLocation(program, 'numVerts');
+const resolutionLoc = gl.getUniformLocation(program, 'resolution');
 </code></pre>
-<p>And to render we&#39;ll use the program, 
+<p>And to render we’ll use the program,
 set the <code class="notranslate" translate="no">resolution</code> and <code class="notranslate" translate="no">numVerts</code> uniforms, and draw the points.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.useProgram(program);
 
@@ -339,7 +339,7 @@ gl.drawArrays(gl.POINTS, offset, numVerts);
 <p>Is this technique useful? Well with some creative code
 we could make a starfield or a simple rain effect with
 almost no data and a single draw call.</p>
-<p>Let&#39;s do the rain just to see it work. First we&#39;ll
+<p>Let’s do the rain just to see it work. First we’ll
 change the vertex shader to</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
 uniform int numVerts;
@@ -354,16 +354,16 @@ void main() {
   gl_PointSize = 5.0;
 }
 </code></pre>
-<p>For this situation we don&#39;t need the resolution.</p>
-<p>We&#39;ve added a <code class="notranslate" translate="no">time</code> uniform which will be the time
+<p>For this situation we don’t need the resolution.</p>
+<p>We’ve added a <code class="notranslate" translate="no">time</code> uniform which will be the time
 in seconds since the page loaded.</p>
-<p>For &#39;x&#39; we&#39;re just going to go from -1 to 1</p>
-<p>For &#39;y&#39; we use <code class="notranslate" translate="no">time + u</code> but <code class="notranslate" translate="no">fract</code> returns
+<p>For ‘x’ we’re just going to go from -1 to 1</p>
+<p>For ‘y’ we use <code class="notranslate" translate="no">time + u</code> but <code class="notranslate" translate="no">fract</code> returns
 only the fractional portion so a value from 0.0 to 1.0.
 By expanding that to 1.0 to -1.0 we get a y that repeats
 over time but one that is offset differently for each
 point.</p>
-<p>Let&#39;s change the color to blue in the fragment shader.</p>
+<p>Let’s change the color to blue in the fragment shader.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">precision highp float;
 
 out vec4 outColor;
@@ -376,9 +376,9 @@ void main() {
 <p>Then in JavaScript we need to look up the time uniform</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// setup GLSL program
 const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
-const numVertsLoc = gl.getUniformLocation(program, &#39;numVerts&#39;);
--const resolutionLoc = gl.getUniformLocation(program, &#39;resolution&#39;);
-+const timeLoc = gl.getUniformLocation(program, &#39;time&#39;);
+const numVertsLoc = gl.getUniformLocation(program, 'numVerts');
+-const resolutionLoc = gl.getUniformLocation(program, 'resolution');
++const timeLoc = gl.getUniformLocation(program, 'time');
 </code></pre>
 <p>And we need to convert to code to <a href="webgl-animation.html">animate</a>
 by creating a render loop and setting the <code class="notranslate" translate="no">time</code> uniform.</p>
@@ -415,7 +415,7 @@ in order. We need to add some randomness. There is no
 random number generator in GLSL. Instead we can use a
 function that generates something that appears random
 enough.</p>
-<p>Here&#39;s one</p>
+<p>Here’s one</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">// hash function from https://www.shadertoy.com/view/4djSRW
 // given a value between 0 and 1
 // returns a value between 0 and 1 that *appears* kind of random
@@ -438,12 +438,12 @@ float hash(float p) {
 </code></pre>
 <p>We pass <code class="notranslate" translate="no">hash</code> our previous 0 to 1 value and it gives us
 back a pseudo random 0 to 1 value.</p>
-<p>Let&#39;s also make the points smaller</p>
+<p>Let’s also make the points smaller</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">  gl_Position = vec4(x, y, 0, 1);
 -  gl_PointSize = 5.0;
 +  gl_PointSize = 2.0;
 </code></pre>
-<p>And bump up the number of points we&#39;re drawing</p>
+<p>And bump up the number of points we’re drawing</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">-const numVerts = 20;
 +const numVerts = 400;
 </code></pre>
@@ -459,7 +459,7 @@ Look for some clump of points and watch as they fall off
 the bottom and pop back on the top.
 If there was more going on in the background like if
 this cheap rain effect was happening over a 3D game
-it&#39;s possible no one would ever notice it&#39;s repeating.</p>
+it’s possible no one would ever notice it’s repeating.</p>
 <p>We can fix the repetition by adding in a little more randomness.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">void main() {
   float u = float(gl_VertexID) / float(numVerts);  // goes from 0 to 1
@@ -472,7 +472,7 @@ it&#39;s possible no one would ever notice it&#39;s repeating.</p>
   gl_PointSize = 2.0;
 }
 </code></pre>
-<p>In the code above we added <code class="notranslate" translate="no">off</code>. Since we&#39;re calling <code class="notranslate" translate="no">floor</code>
+<p>In the code above we added <code class="notranslate" translate="no">off</code>. Since we’re calling <code class="notranslate" translate="no">floor</code>
 the value of <code class="notranslate" translate="no">floor(time + u)</code> will effectively give us
 a second timer that only changes once per second for each vertex.
 This offset is in sync with the code moving the point down the screen
@@ -480,26 +480,26 @@ so at the same instance the point jumps back to the top
 of the screen some small amount is added to the value
 <code class="notranslate" translate="no">hash</code> is being passed which means this particular point
 will get a new random number and therefore a new random horizontal position.</p>
-<p>The result is a rain effect that doesn&#39;t appear to repeat</p>
+<p>The result is a rain effect that doesn’t appear to repeat</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-no-data-point-rain-less-repeat.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-no-data-point-rain-less-repeat.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>Can we do more than <code class="notranslate" translate="no">gl.POINTS</code>? Of course! </p>
-<p>Let&#39;s make circles. To do this we need triangles around
+<p>Can we do more than <code class="notranslate" translate="no">gl.POINTS</code>? Of course!</p>
+<p>Let’s make circles. To do this we need triangles around
 a center like slices of pie. We can think of each triangle
 as 2 points around the edge of the pie followed by 1 point in the center.
 We then repeat for each slice of the pie.</p>
 <div class="webgl_center"><img src="resources/circle-points.svg" style="width: 400px;"></div>
-
 <p>So first we want some kind of counter that changes once per pie slice</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">int sliceId = gl_VertexID / 3;
 </code></pre>
 <p>Then we need a count around the edge of the circle that goes</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">0, 1, ?, 1, 2, ?, 2, 3, ?, ...
-</code></pre><p>The ? value doesn&#39;t really matter because looking at the
+</code></pre>
+<p>The ? value doesn’t really matter because looking at the
 diagram above the 3rd value is always in the center (0,0)
 so we can just multiply by 0 regardless of value.</p>
 <p>To get the pattern above this would work</p>
@@ -509,7 +509,8 @@ int edge = triVertexId + sliceId;
 <p>For points on the edge vs points in the center we need
 this pattern. 2 on the edge then 1 in the center, repeat.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">1, 1, 0, 1, 1, 0, 1, 1, 0, ...
-</code></pre><p>We can get that pattern with</p>
+</code></pre>
+<p>We can get that pattern with</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">float radius = step(1.5, float(triVertexId));
 </code></pre>
 <p><code class="notranslate" translate="no">step(a, b)</code> is 0 if a &lt; b and 1 otherwise. You can think of it as</p>
@@ -518,7 +519,7 @@ this pattern. 2 on the edge then 1 in the center, repeat.</p>
 }
 </code></pre>
 <p><code class="notranslate" translate="no">step(1.5, float(triVertexId))</code> will be 1 when 1.5 is less than <code class="notranslate" translate="no">triVertexId</code>.
-That&#39;s true for the first 2 vertices of each triangle and false
+That’s true for the first 2 vertices of each triangle and false
 for the last one.</p>
 <p>We can get triangle vertices for a circle like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">int numSlices = 8;
@@ -530,7 +531,7 @@ float angle = angleU * PI * 2.0;
 float radius = step(float(triVertexId), 1.5);
 vec2 pos = vec2(cos(angle), sin(angle)) * radius;
 </code></pre>
-<p>Putting all of this together let&#39;s just try to draw 1 circle.</p>
+<p>Putting all of this together let’s just try to draw 1 circle.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
 uniform int numVerts;
 uniform vec2 resolution;
@@ -549,11 +550,11 @@ void main() {
 
   float aspect = resolution.y / resolution.x;
   vec2 scale = vec2(aspect, 1);
-
+  
   gl_Position = vec4(pos * scale, 0, 1);
 }
 </code></pre>
-<p>Notice we put <code class="notranslate" translate="no">resolution</code> back in so we don&#39;t get an ellipse.</p>
+<p>Notice we put <code class="notranslate" translate="no">resolution</code> back in so we don’t get an ellipse.</p>
 <p>For a 8 slice circle we need 8 * 3 vertices</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">-const numVerts = 400;
 +const numVerts = 8 * 3;
@@ -576,8 +577,8 @@ the same for all vertices in the circle.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">int numVertsPerCircle = numSlices * 3;
 int circleId = gl_VertexID / numVertsPerCircle;
 </code></pre>
-<p>For example let&#39;s draw a circle of circles.</p>
-<p>First let&#39;s turn the code above into a function,</p>
+<p>For example let’s draw a circle of circles.</p>
+<p>First let’s turn the code above into a function,</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">vec2 computeCircleTriangleVertex(int vertexId) {
   int numSlices = 8;
   int sliceId = vertexId / 3;
@@ -589,7 +590,7 @@ int circleId = gl_VertexID / numVertsPerCircle;
   return vec2(cos(angle), sin(angle)) * radius;
 }
 </code></pre>
-<p>Now here&#39;s the original code we used to draw
+<p>Now here’s the original code we used to draw
 a circle of points at the top of this article.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">float u = float(gl_VertexID) / float(numVerts);  // goes from 0 to 1
 float angle = u * PI * 2.0;                      // goes from 0 to 2PI
@@ -617,10 +618,10 @@ instead of the number of vertices.</p>
   vec2 pos = vec2(cos(angle), sin(angle)) * radius;
 
 +  vec2 triPos = computeCircleTriangleVertex(gl_VertexID) * 0.1;
-
+  
   float aspect = resolution.y / resolution.x;
   vec2 scale = vec2(aspect, 1);
-
+  
 -  gl_Position = vec4(pos * scale, 0, 1);
 +  gl_Position = vec4((pos + triPos) * scale, 0, 1);
 }
@@ -638,12 +639,12 @@ instead of the number of vertices.</p>
 </p>
 <p>And of course we could apply the same things we did
 above to make a rain of circles. That probably has no
-point so I&#39;m not going to go through it but it does show
+point so I’m not going to go through it but it does show
 making triangles in the vertex shader with no data.</p>
 <p>The above technique could be used for making rectangles
 or squares instead, then generating UV coordinates,
 passing those the fragment shader and texture mapping
-our generated geometry. This might be good for 
+our generated geometry. This might be good for
 falling snowflakes or leaves that actually flip around in 3D
 by applying the 3D techniques we used in the articles
 on <a href="webgl-3d-perspective.html">3D perspective</a>.</p>
@@ -655,37 +656,34 @@ you should ask your computer to do as little work as possible
 so if there is a bunch of stuff you can pre-calculate at init
 time and pass it into the shader in some form or another you
 should do that.</p>
-<p>For example here&#39;s an extreme vertex shader
+<p>For example here’s an extreme vertex shader
 that calculates a bunch of cubes (warning, has sound).</p>
 <iframe width="700" height="400" src="https://www.vertexshaderart.com/art/zd2E5vCZduc5JeoFz" frameborder="0" allowfullscreen></iframe>
-
-<p>As an intellectual curiosity of the puzzle &quot;If I had no data
-except a vertex id could I draw something interesting?&quot; it&#39;s
+<p>As an intellectual curiosity of the puzzle “If I had no data
+except a vertex id could I draw something interesting?” it’s
 kind of neat. In fact <a href="https://www.vertexshaderart.com">that entire website</a> is about
 the puzzle of if you only have a vertex id can you make something
 interesting. But, for performance it would be much much faster to use
 the more traditional techniques of passing in cube vertex data
 in buffers and reading that data with attributes or other techniques
-we&#39;ll go in other articles.</p>
+we’ll go in other articles.</p>
 <p>There is some balance to be struck. For the rain example above if you want that exact
 effect then the code above is pretty efficient. Somewhere between
 the two lies the boundary where one technique is more performant
 than another. Usually the more traditional techniques are far more flexible
 as well but you have to decide on a case by case basis when to use one
 way or another.</p>
-<p>The point of this article is mostly to introduce these ideas 
+<p>The point of this article is mostly to introduce these ideas
 and to emphasize other ways of thinking about what WebGL
 is actually doing. Again it only cares that you set <code class="notranslate" translate="no">gl_Position</code>
-and output a color in your shaders. It doesn&#39;t care how you do it.</p>
+and output a color in your shaders. It doesn’t care how you do it.</p>
 <div class="webgl_bottombar" id="pointsissues">
 <h3>A problem with <code class="notranslate" translate="no">gl.POINTS</code></h3>
 <p>
 One thing a technique like this can be useful for is to simulate drawing
 with <code class="notranslate" translate="no">gl.POINTS</code>.
 </p>
-
-There are 2 problems with <code class="notranslate" translate="no">gl.POINTS</code>
-
+<p>There are 2 problems with <code class="notranslate" translate="no">gl.POINTS</code></p>
 <ol>
 <li>They have a maximum size<br/><br/>Most people using <code class="notranslate" translate="no">gl.POINTS</code> use small sizes
 but if that maximum size is smaller than you need you'll need to choose a different solution.

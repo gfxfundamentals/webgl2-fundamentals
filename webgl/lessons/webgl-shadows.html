@@ -250,17 +250,17 @@ you need to already understand the following topics.</p>
 <li><a href="webgl-planar-projection-mapping.html">Projecting textures</a></li>
 <li><a href="webgl-visualizing-the-camera.html">Visualizing the Camera</a></li>
 </ul>
-<p>So if you haven&#39;t read those please go read them first.</p>
-<p>On top of that this article assumes you&#39;ve read the article on
+<p>So if you haven’t read those please go read them first.</p>
+<p>On top of that this article assumes you’ve read the article on
 <a href="webgl-less-code-more-fun.html">less code more fun</a>
 as it uses the library mentioned there so as to
-unclutter the example. If you don&#39;t understand
+unclutter the example. If you don’t understand
 what buffers, vertex arrays, and attributes are or when
 a function named <code class="notranslate" translate="no">twgl.setUniforms</code> what it means
-to set uniforms, etc... then you should probably to go further back and
+to set uniforms, etc… then you should probably to go further back and
 <a href="webgl-fundamentals.html">read the fundamentals</a>.</p>
 <p>So first off there is more than one way to draw shadows.
-Every way has it&#39;s tradeoffs. The most common way to draw
+Every way has it’s tradeoffs. The most common way to draw
 shadows is to use shadow maps.</p>
 <p>Shadow maps work by combining the techniques from all the prerequisite
 articles above.</p>
@@ -272,37 +272,35 @@ we saw how to project an image on to objects</p>
 </div>
 
 </p>
-<p>Recall that we didn&#39;t draw that image on top of the objects in the scene,
+<p>Recall that we didn’t draw that image on top of the objects in the scene,
 rather, as the objects were rendered, for each pixel we checked if the
 projected texture was in range, if so we sampled the appropriate color from
 the projected texture, if not we sampled a color from a different texture
-who&#39;s color was looked up using texture coordinates that mapped a texture
+who’s color was looked up using texture coordinates that mapped a texture
 to the object.</p>
 <p>What if the projected texture instead contained depth data from the point
 of view of a light. In other words assume there was a light at the tip of
 the frustum shown in that example above and the projected texture had depth
-info from the light&#39;s point of view. The sphere would have depth values closer
+info from the light’s point of view. The sphere would have depth values closer
 to the light, the plane would have depth values further
-from the light. </p>
+from the light.</p>
 <div class="webgl_center"><img class="noinvertdark" src="resources/depth-map-generation.svg" style="width: 600px;"></div>
-
 <p>If we had that data then when choosing a color to render
 we could get a depth value from the projected texture and check if the
-depth of the pixel we&#39;re about to draw is closer or further from the light.
-If it&#39;s further from the light that
+depth of the pixel we’re about to draw is closer or further from the light.
+If it’s further from the light that
 means something was else was closer to the light. In other words,
 something is blocking the light, therefore this pixel is in a shadow.</p>
 <div class="webgl_center"><img class="noinvertdark" src="resources/projected-depth-texture.svg" style="width: 600px;"></div>
-
 <p>Here the depth texture is projected through light space inside the frustum from the point of view of the light.
-When we are drawing the pixels of the floor we compute that pixel&#39;s depth from the point of view 
+When we are drawing the pixels of the floor we compute that pixel’s depth from the point of view
 of the light (0.3 in the diagram above). We then look at the corresponding depth in
 the projected depth map texture. From the point of view of the light the depth value
 in the texture will be 0.1 because it hit the sphere. Seeing that 0.1 &lt; 0.3 we
 know the floor at that position must be in shadow.</p>
-<p>First let&#39;s draw the shadow map. We&#39;ll take the last example from
+<p>First let’s draw the shadow map. We’ll take the last example from
 <a href="webgl-planar-projection-mapping.html">the article on planar projection mapping</a>
-but instead of loading a texture we&#39;ll <a href="webgl-render-to-texture.html">render to a texture</a>
+but instead of loading a texture we’ll <a href="webgl-render-to-texture.html">render to a texture</a>
 so we create a depth texture and attach it to a framebuffer as the <code class="notranslate" translate="no">DEPTH_ATTACHMENT</code>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const depthTexture = gl.createTexture();
 const depthTextureSize = 512;
@@ -334,7 +332,7 @@ gl.framebufferTexture2D(
 <p>To use it we need to able to render the scene more than once with different
 shaders. Once with a simple shader just to render to the depth texture and
 then again with our current shader that projects a texture.</p>
-<p>So first let&#39;s change <code class="notranslate" translate="no">drawScene</code> so we can pass it the program we want
+<p>So first let’s change <code class="notranslate" translate="no">drawScene</code> so we can pass it the program we want
 to render with</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">-function drawScene(projectionMatrix, cameraMatrix, textureMatrix) {
 +function drawScene(projectionMatrix, cameraMatrix, textureMatrix, programInfo) {
@@ -381,54 +379,56 @@ to render with</p>
   twgl.drawBufferInfo(gl, planeBufferInfo);
 }
 </code></pre>
-<p>Now that we&#39;re going to be using the same vertex arrays with multiple
+<p>Now that we’re going to be using the same vertex arrays with multiple
 shader programs we need to make sure those programs use the same attributes.
 This was brought up before when talking about vertex arrays (VAOs in the code above)
 but I think this is the first example on this site that actually runs into this
-issue. In other words we&#39;re going to draw the sphere and the plane with both
+issue. In other words we’re going to draw the sphere and the plane with both
 the projected texture shader program and the solid color shader program.
 The projected texture shader program has 2 attributes, <code class="notranslate" translate="no">a_position</code> and
 <code class="notranslate" translate="no">a_texcoord</code>. The solid color shader program just was one, <code class="notranslate" translate="no">a_position</code>.
-If we don&#39;t tell WebGL what attribute locations to use it&#39;s possible
+If we don’t tell WebGL what attribute locations to use it’s possible
 it would <code class="notranslate" translate="no">a_position</code> location = 0 for shader and location = 1 for the other
 (or really WebGL could pick any arbitrary location). If that happens
-then the attributes we setup in <code class="notranslate" translate="no">sphereVAO</code> and <code class="notranslate" translate="no">planeVAO</code> won&#39;t match
-both programs. </p>
+then the attributes we setup in <code class="notranslate" translate="no">sphereVAO</code> and <code class="notranslate" translate="no">planeVAO</code> won’t match
+both programs.</p>
 <p>We can solve this 2 ways.</p>
 <ol>
-<li><p>In GLSL add <code class="notranslate" translate="no">layout(location = 0)</code> in front of each attribute </p>
+<li>In GLSL add <code class="notranslate" translate="no">layout(location = 0)</code> in front of each attribute</li>
+</ol>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">layout(location = 0) in vec4 a_position;
 layout(location = 1) in vec4 a_texcoord;
 </code></pre>
-<p>If we had 150 shaders we&#39;d have to repeat those locations across all of them
+<p>If we had 150 shaders we’d have to repeat those locations across all of them
 and track which shaders use which locations</p>
-</li>
-<li><p>call <code class="notranslate" translate="no">gl.bindAttribLocation</code> before linking shaders</p>
-<p>In this case before we call <code class="notranslate" translate="no">gl.linkProgram</code> we&#39;d call <code class="notranslate" translate="no">gl.bindAttribLocation</code>.
+<ol start="2">
+<li>
+<p>call <code class="notranslate" translate="no">gl.bindAttribLocation</code> before linking shaders</p>
+<p>In this case before we call <code class="notranslate" translate="no">gl.linkProgram</code> we’d call <code class="notranslate" translate="no">gl.bindAttribLocation</code>.
 (see <a href="webgl-fundamentals.html">first article</a>)</p>
+</li>
+</ol>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.bindAttribLocation(program, 0, &quot;a_position&quot;);
 gl.bindAttribLocation(program, 1, &quot;a_texcoord&quot;);
 gl.linkProgram(program);
 ...
 </code></pre>
-</li>
-</ol>
-<p>We&#39;ll use this second way since it&#39;s more <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">D.R.Y</a></p>
-<p>The library we&#39;re using to compile and link our shaders as the option to do this
+<p>We’ll use this second way since it’s more <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">D.R.Y</a></p>
+<p>The library we’re using to compile and link our shaders as the option to do this
 for us. We just pass it the names of the attributes and their locations and it
 will call <code class="notranslate" translate="no">gl.bindAttribLocation</code> for us</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// setup GLSL programs
-+// note: Since we&#39;re going to use the same VAO with multiple
++// note: Since we're going to use the same VAO with multiple
 +// shader programs we need to make sure all programs use the
 +// same attribute locations. There are 2 ways to do that.
 +// (1) assign them in GLSL. (2) assign them by calling `gl.bindAttribLocation`
-+// before linking. We&#39;re using method 2 as it&#39;s more. D.R.Y.
++// before linking. We're using method 2 as it's more. D.R.Y.
 +const programOptions = {
 +  attribLocations: {
-+    &#39;a_position&#39;: 0,
-+    &#39;a_normal&#39;:   1,
-+    &#39;a_texcoord&#39;: 2,
-+    &#39;a_color&#39;:    3,
++    'a_position': 0,
++    'a_normal':   1,
++    'a_texcoord': 2,
++    'a_color':    3,
 +  },
 +};
 -const textureProgramInfo = twgl.createProgramInfo(gl, [vs, fs]);
@@ -436,7 +436,7 @@ will call <code class="notranslate" translate="no">gl.bindAttribLocation</code> 
 +const textureProgramInfo = twgl.createProgramInfo(gl, [vs, fs], programOptions);
 +const colorProgramInfo = twgl.createProgramInfo(gl, [colorVS, colorFS], programOptions);
 </code></pre>
-<p>Now let&#39;s use <code class="notranslate" translate="no">drawScene</code> to draw the scene from the point of view of the light
+<p>Now let’s use <code class="notranslate" translate="no">drawScene</code> to draw the scene from the point of view of the light
 and then again with the depth texture</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render() {
   twgl.resizeCanvasToDisplaySize(gl.canvas);
@@ -497,7 +497,7 @@ and then again with the depth texture</p>
   const projectionMatrix =
       m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
 
-  // Compute the camera&#39;s matrix using look at.
+  // Compute the camera's matrix using look at.
   const cameraPosition = [settings.cameraX, settings.cameraY, 7];
   const target = [0, 0, 0];
   const up = [0, 1, 0];
@@ -510,16 +510,16 @@ and then again with the depth texture</p>
 <p>Note I renamed <code class="notranslate" translate="no">textureWorldMatrix</code> to <code class="notranslate" translate="no">lightWorldMatrix</code> and
 <code class="notranslate" translate="no">textureProjectionMatrix</code> to <code class="notranslate" translate="no">lightProjectionMatrix</code>. They are really the
 same thing but before we were projecting a texture through arbitrary space.
-Now we&#39;re trying to project a shadow map from a light. The math is the same
+Now we’re trying to project a shadow map from a light. The math is the same
 but it seemed appropriate to rename the variables.</p>
 <p>Above we first render the sphere and the plane to the depth texture
 using the color shader we made to draw the frustum lines. That shader
 just draws a solid color and does nothing else special which is all
 we need when rendering to the depth texture.</p>
 <p>After that, we render the scene again to the canvas just as we did before,
-projecting the texture into the scene. 
+projecting the texture into the scene.
 When we reference the depth texture in a shader only the red
-value is valid so we&#39;ll just repeat it for red, green, and blue.</p>
+value is valid so we’ll just repeat it for red, green, and blue.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">void main() {
   vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
   bool inRange = 
@@ -529,14 +529,14 @@ value is valid so we&#39;ll just repeat it for red, green, and blue.</p>
       projectedTexcoord.y &lt;= 1.0;
 
 -  vec4 projectedTexColor = texture2D(u_projectedTexture, projectedTexcoord.xy);
-+  // the &#39;r&#39; channel has the depth values
++  // the 'r' channel has the depth values
 +  vec4 projectedTexColor = vec4(texture2D(u_projectedTexture, projectedTexcoord.xy).rrr, 1);
   vec4 texColor = texture2D(u_texture, v_texcoord) * u_colorMult;
   float projectedAmount = inRange ? 1.0 : 0.0;
   gl_FragColor = mix(texColor, projectedTexColor, projectedAmount);
 }
 </code></pre>
-<p>While we&#39;re at it let&#39;s add a cube to the scene</p>
+<p>While we’re at it let’s add a cube to the scene</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">+const cubeBufferInfo = twgl.primitives.createCubeBufferInfo(
 +    gl,
 +    2,  // size
@@ -570,7 +570,7 @@ function drawScene(projectionMatrix, cameraMatrix, textureMatrix, programInfo) {
 
 ...
 </code></pre>
-<p>and let&#39;s tweak the settings. We&#39;ll move the camera
+<p>and let’s tweak the settings. We’ll move the camera
 and widen the field of view for the texture projection to cover more of the scene</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const settings = {
 -  cameraX: 2.5,
@@ -598,7 +598,7 @@ frustum outside of the <code class="notranslate" translate="no">drawScene</code>
 
 </p>
 <p>This is exactly the same as the top example except instead
-of loading an image we&#39;re generating a depth texture by
+of loading an image we’re generating a depth texture by
 rendering the scene to it. If you want to verify adjust <code class="notranslate" translate="no">cameraX</code>
 back to 2.5 and <code class="notranslate" translate="no">fieldOfView</code> to 45 and it should look the same
 as above except with our new depth texture being projected
@@ -606,10 +606,10 @@ instead of a loaded image.</p>
 <p>Depth values go from 0.0 to 1.0 representing their position
 through the frustum so 0.0 (dark) is close to the tip
 of the frustum and 1.0 (light) is at the far open end.</p>
-<p>So all that&#39;s left to do is instead of choosing between our projected
+<p>So all that’s left to do is instead of choosing between our projected
 texture color and our texture mapped color we can use the depth from
 the depth texture to check if the Z position from the depth texture
-is closer or further from the light then the depth of the pixel we&#39;re
+is closer or further from the light then the depth of the pixel we’re
 being asked to draw. If the depth from the depth texture is closer than something
 was blocking the light and this pixel is in a shadow.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">void main() {
@@ -633,25 +633,25 @@ was blocking the light and this pixel is in a shadow.</p>
 </code></pre>
 <p>Above if the <code class="notranslate" translate="no">projectedDepth</code> is less than the <code class="notranslate" translate="no">currentDepth</code> then
 the from the point of view of the light something was closer to
-the light so this pixel we&#39;re about to draw is in shadow.</p>
-<p>If we run this we&#39;ll get a shadow</p>
+the light so this pixel we’re about to draw is in shadow.</p>
+<p>If we run this we’ll get a shadow</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-shadows-basic.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-shadows-basic.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>It&#39;s kind of working, we can see the shadow of the sphere on
-the ground but what&#39;s with all these funky patterns where there
+<p>It’s kind of working, we can see the shadow of the sphere on
+the ground but what’s with all these funky patterns where there
 is supposed to be no shadow? These patterns
 are called <em>shadow acne</em>. They come from the fact that the
 depth data stored in the depth texture has been quantized both
-in that it&#39;s a texture, a grid of pixels, it was projected from the
-point of view of the light but we&#39;re comparing it to values from the point of view of the camera. That means the grid of values in the
+in that it’s a texture, a grid of pixels, it was projected from the
+point of view of the light but we’re comparing it to values from the point of view of the camera. That means the grid of values in the
 depth map is not aligned with our camera and
 so when we compute <code class="notranslate" translate="no">currentDepth</code> there are times when one value
 will be slightly more or slightly less than <code class="notranslate" translate="no">projectedDepth</code>.</p>
-<p>Let&#39;s add a bias. </p>
+<p>Let’s add a bias.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">...
 
 +uniform float u_bias;
@@ -720,9 +720,9 @@ function drawScene(projectionMatrix, cameraMatrix, textureMatrix, programInfo, /
 </p>
 <p>slide the bias value and you can how it affects when and where
 the patterns appear.</p>
-<p>To get closer to completion this let&#39;s actually add in a spot light calculation
+<p>To get closer to completion this let’s actually add in a spot light calculation
 from <a href="webgl-3d-lighting-spot.html">the article on spot lights</a>.</p>
-<p>First let&#39;s paste in the needed parts to the vertex shader directly
+<p>First let’s paste in the needed parts to the vertex shader directly
 from <a href="webgl-3d-lighting-spot.html">that article</a>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
 in vec4 a_position;
@@ -793,7 +793,7 @@ uniform float u_bias;
 out vec4 outColor;
 
 void main() {
-+  // because v_normal is a varying it&#39;s interpolated
++  // because v_normal is a varying it's interpolated
 +  // so it will not be a unit vector. Normalizing it
 +  // will make it a unit vector again
 +  vec3 normal = normalize(v_normal);
@@ -818,7 +818,7 @@ void main() {
       projectedTexcoord.y &gt;= 0.0 &amp;&amp;
       projectedTexcoord.y &lt;= 1.0;
 
-  // the &#39;r&#39; channel has the depth values
+  // the 'r' channel has the depth values
   float projectedDepth = texture(u_projectedTexture, projectedTexcoord.xy).r;
   float shadowLight = (inRange &amp;&amp; projectedDepth &lt;= currentDepth) ? 0.0 : 1.0;
 
@@ -832,7 +832,7 @@ void main() {
 </code></pre>
 <p>Notice we just use <code class="notranslate" translate="no">shadowLight</code> to adjust the affect of the <code class="notranslate" translate="no">light</code> and
 <code class="notranslate" translate="no">specular</code>. If an object is in shadow than there is no light.</p>
-<p>We just need to set the uniforms </p>
+<p>We just need to set the uniforms</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">-function drawScene(projectionMatrix, cameraMatrix, textureMatrix, programInfo) {
 +function drawScene(
 +    projectionMatrix,
@@ -898,7 +898,7 @@ Similarly the same article tells us the 4th row is the world position so we can 
 the lightWorldPosition and viewWorldPosition (also known as the camera world position)
 by pulling them out of the their respective matrices. Of course we could have also
 got them by exposing more settings or passing more variables.</p>
-<p>Let&#39;s also clear the background to black and set the frustum lines to white</p>
+<p>Let’s also clear the background to black and set the frustum lines to white</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render() {
 
   ...
@@ -932,7 +932,7 @@ got them by exposing more settings or passing more variables.</p>
 </div>
 
 </p>
-<p>For a directional light we&#39;d copy the shader code from
+<p>For a directional light we’d copy the shader code from
 <a href="webgl-3d-lighting-directional.html">the article on directional lights</a>
 and change our projection from perspective to orthographic.</p>
 <p>First the vertex shader</p>
@@ -1006,7 +1006,7 @@ uniform float u_bias;
 out vec4 outColor;
 
 void main() {
-  // because v_normal is a varying it&#39;s interpolated
+  // because v_normal is a varying it's interpolated
   // so it will not be a unit vector. Normalizing it
   // will make it a unit vector again
   vec3 normal = normalize(v_normal);
@@ -1033,7 +1033,7 @@ void main() {
       projectedTexcoord.y &gt;= 0.0 &amp;&amp;
       projectedTexcoord.y &lt;= 1.0;
 
-  // the &#39;r&#39; channel has the depth values
+  // the 'r' channel has the depth values
   float projectedDepth = texture(u_projectedTexture, projectedTexcoord.xy).r;
   float shadowLight = (inRange &amp;&amp; projectedDepth &lt;= currentDepth) ? 0.0 : 1.0;
 
@@ -1077,7 +1077,7 @@ only have a direction, there is no position for the light itself, we still
 have to choose a position in order to decide the area to compute and apply
 the shadow map.</p>
 <p>This article is getting long and there are still many things to cover related
-to shadows so we&#39;ll leave the rest to <a href="webgl-shadows-continued.html">the next article</a>.</p>
+to shadows so we’ll leave the rest to <a href="webgl-shadows-continued.html">the next article</a>.</p>
 
     </div>
     <div class="lesson-sidebar">

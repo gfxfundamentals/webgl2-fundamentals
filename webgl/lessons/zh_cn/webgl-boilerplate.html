@@ -272,7 +272,8 @@ function compileShader(gl, shaderSource, shaderType) {
 
   return shader;
 }
-</code></pre><p>这是链接 2 个着色器到一个着色程序中的代码</p>
+</code></pre>
+<p>这是链接 2 个着色器到一个着色程序中的代码</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/**
  * 从 2 个着色器中创建一个程序
  *
@@ -301,7 +302,8 @@ function createProgram(gl, vertexShader, fragmentShader) {
 
   return program;
 };
-</code></pre><p>处理错误的方式有很多种，抛出错误信息可能是最好的方式。
+</code></pre>
+<p>处理错误的方式有很多种，抛出错误信息可能是最好的方式。
 而且这几行代码在几乎所有的 WebGL 程序中都是相似的。</p>
 <p>现在所有现代浏览器都支持多行模板文字，这是我存储着色器的首选方式。我可以做类似的事情</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var vertexShaderSource = `#version 300 es
@@ -313,7 +315,8 @@ void main() {
    gl_Position = u_matrix * a_position;
 }
 `;
-</code></pre><p>这易于编辑着色器。一些较旧的浏览器（如 IE）不支持这个，但首先我使用的是 WebGL，所以我并不真正关心 IE。 如果我确实关心并且有一个非 WebGL 回退，我会使用一些构建步骤比如
+</code></pre>
+<p>这易于编辑着色器。一些较旧的浏览器（如 IE）不支持这个，但首先我使用的是 WebGL，所以我并不真正关心 IE。 如果我确实关心并且有一个非 WebGL 回退，我会使用一些构建步骤比如
 <a href="https://babeljs.io/">Babel</a> 来将上面的代码转换成 IE 可以理解的东西。</p>
 <p>过去我喜欢将我的着色器存储在非 javascript &lt;script&gt; 标签中。它也使它们易于编辑，因此我会使用这样的代码。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/**
@@ -348,9 +351,11 @@ function createShaderFromScript(gl, scriptId, opt_shaderType) {
 
   return compileShader(gl, shaderSource, opt_shaderType);
 };
-</code></pre><p>现在编译着色器只需要</p>
+</code></pre>
+<p>现在编译着色器只需要</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var shader = compileShaderFromScript(gl, &quot;someScriptTagId&quot;);
-</code></pre><p>我通常会更进一步，使用一个方法编译两个着色器，附加到程序并链接到程序。</p>
+</code></pre>
+<p>我通常会更进一步，使用一个方法编译两个着色器，附加到程序并链接到程序。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/**
  * 通过两个 script 标签创建程序。
  *
@@ -365,17 +370,20 @@ function createProgramFromScripts(
   var fragmentShader = createShaderFromScriptTag(gl, fragmentShaderId, gl.FRAGMENT_SHADER);
   return createProgram(gl, vertexShader, fragmentShader);
 }
-</code></pre><p>另一几乎在我所有 WebGL 应用中都会使用的代码是重置画布大小。你可以<a href="webgl-resizing-the-canvas.html">在这里看看那个方法是如何实现的</a>.</p>
+</code></pre>
+<p>另一几乎在我所有 WebGL 应用中都会使用的代码是重置画布大小。你可以<a href="webgl-resizing-the-canvas.html">在这里看看那个方法是如何实现的</a>.</p>
 <p>所有示例中使用的这两个方法都在</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;script src=&quot;resources/webgl-utils.js&quot;&gt;&lt;/script&gt;
-</code></pre><p>里，并且像这样使用</p>
+</code></pre>
+<p>里，并且像这样使用</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var program = webglUtils.createProgramFromScripts(
   gl, [idOfVertexShaderScript, idOfFragmentShaderScript]);
 
 ...
 
 webglUtils.resizeCanvasToMatchDisplaySize(canvas);
-</code></pre><p>这样做就可以剔除大量和示例无关的代码，突出示例想要表达的内容。</p>
+</code></pre>
+<p>这样做就可以剔除大量和示例无关的代码，突出示例想要表达的内容。</p>
 <p>多数这些示例中使用的实际样板 API 是</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/**
  * 从 2 个来源创建一个程序。
@@ -399,7 +407,8 @@ function createProgramFromSources(gl,
                                   opt_attribs,
                                   opt_locations,
                                   opt_errorCallback)
-</code></pre><p><code class="notranslate" translate="no">shaderSources</code> 是一个包含 GLSL 源码的字符串数组 i。数组中的第一个字符串是顶点着色器源。第二个是片段着色器源。</p>
+</code></pre>
+<p><code class="notranslate" translate="no">shaderSources</code> 是一个包含 GLSL 源码的字符串数组 i。数组中的第一个字符串是顶点着色器源。第二个是片段着色器源。</p>
 <p>这是我最小的一套 WebGL 样板代码。
 <a href="../../resources/webgl-utils.js">你可以在 <code class="notranslate" translate="no">webgl-utils.js</code> 中找到源码</a>.
 如果你想要更有组织的代码。可以查看<a href="https://twgljs.org">TWGL.js</a>.</p>
@@ -407,18 +416,22 @@ function createProgramFromSources(gl,
 <p>我还建议你看看<a href="webgl-less-code-more-fun.html">码少趣多</a> 和 <a href="https://twgljs.org">TWGL</a>.</p>
 <p>请注意，当我们添加它时，出于类似原因还有更多脚本</p>
 <ul>
-<li><p><a href="../../resources/webgl-lessons-ui.js"><code class="notranslate" translate="no">webgl-lessons-ui.js</code></a></p>
+<li>
+<p><a href="../../resources/webgl-lessons-ui.js"><code class="notranslate" translate="no">webgl-lessons-ui.js</code></a></p>
 <p>这个代码提供了含有数值的滑块，并能够在拖拽时更新数值。
 同样的，我只是不想在示例代码中参杂太多不相干代码。</p>
 </li>
-<li><p><a href="../../resources/lessons-helper.js"><code class="notranslate" translate="no">lessons-helper.js</code></a></p>
+<li>
+<p><a href="../../resources/lessons-helper.js"><code class="notranslate" translate="no">lessons-helper.js</code></a></p>
 <p>这个代码在 webgl2fundamentals.org 以外不是必须的，它只是能够在在线编辑器中提供合适的错误提示。</p>
 </li>
-<li><p><a href="../../resources/m3.js"><code class="notranslate" translate="no">m3.js</code></a></p>
+<li>
+<p><a href="../../resources/m3.js"><code class="notranslate" translate="no">m3.js</code></a></p>
 <p>这是一个二维数学库，在讲到矩阵式需要用到，本来是将它们写在代码中的，但是考虑到无关代码较多，
 就整合到一个脚本文件中了。</p>
 </li>
-<li><p><a href="../../resources/m4.js"><code class="notranslate" translate="no">m4.js</code></a></p>
+<li>
+<p><a href="../../resources/m4.js"><code class="notranslate" translate="no">m4.js</code></a></p>
 <p>这是一个三维数学库，它们在三维的文章中使用，同样的由于代码较多，为保证示例代码显示明确，
 就将它们写在一个文件中了。</p>
 </li>

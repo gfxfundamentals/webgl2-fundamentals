@@ -236,31 +236,33 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I&#39;ve set <code class="notranslate" translate="no">preserveDrawingBuffer</code> to <code class="notranslate" translate="no">true</code>.
-Doing this results in everything drawn on the buffer to be seen all at once, however, 
-I was wondering if there is a way to somehow fade the buffer as time goes on so that the old elements drawn disappear over time, and the newest drawn elements appear with a relatively high opacity until they also fade away. </p>
+      <h2 id="question">Question:</h2>
+<p>I’ve set <code class="notranslate" translate="no">preserveDrawingBuffer</code> to <code class="notranslate" translate="no">true</code>.
+Doing this results in everything drawn on the buffer to be seen all at once, however,
+I was wondering if there is a way to somehow fade the buffer as time goes on so that the old elements drawn disappear over time, and the newest drawn elements appear with a relatively high opacity until they also fade away.</p>
 <p>Is there a better way to achieve such an effect?</p>
-<p>I&#39;ve tried to render previous elements again by lowering their opacity until it reaches 0 but it didn&#39;t seem like an efficient way of fading as once something is drawn I don&#39;t plan on changing it.</p>
+<p>I’ve tried to render previous elements again by lowering their opacity until it reaches 0 but it didn’t seem like an efficient way of fading as once something is drawn I don’t plan on changing it.</p>
 <p>Thanks!</p>
-<h2 id="answer-">Answer:</h2>
-<p>It&#39;s actually common it just redraw stuff which I went over here</p>
-<p><a href="https://stackoverflow.com/questions/38339215/webgl-smoothly-fade-lines-out-of-canvas/38345958#38345958">https://stackoverflow.com/questions/38339215/webgl-smoothly-fade-lines-out-of-canvas/38345958#38345958</a></p>
-<p>Redrawing stuff means you can keep some things from not fading out. For example if you&#39;re making a space shooting game and you only want explosions and missile trails to fade out but you don&#39;t want the spaceships and asteroids to fade out then you need to do it by redrawing everything and manually fading stuff out by drawn them while decreasing their alpha</p>
-<p>If you just want everything to fade out then you can use a post processing type effect. </p>
+<h2 id="answer">Answer:</h2>
+<p>It’s actually common it just redraw stuff which I went over here</p>
+<p>https://stackoverflow.com/questions/38339215/webgl-smoothly-fade-lines-out-of-canvas/38345958#38345958</p>
+<p>Redrawing stuff means you can keep some things from not fading out. For example if you’re making a space shooting game and you only want explosions and missile trails to fade out but you don’t want the spaceships and asteroids to fade out then you need to do it by redrawing everything and manually fading stuff out by drawn them while decreasing their alpha</p>
+<p>If you just want everything to fade out then you can use a post processing type effect.</p>
 <p>You make 2 textures and attach them to 2 framebuffers. You blend/fade the first framebuffer <code class="notranslate" translate="no">fadeFb1</code> into the second one <code class="notranslate" translate="no">fadeFb2</code> with a fadeColor using</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl_FragColor = mix(textureColor, fadeColor, mixAmount);
-</code></pre><p>You then draw any new stuff to <code class="notranslate" translate="no">fadeFb2</code></p>
+</code></pre>
+<p>You then draw any new stuff to <code class="notranslate" translate="no">fadeFb2</code></p>
 <p>Then finally draw <code class="notranslate" translate="no">fadeFb2</code> to the canvas so you can see the result.</p>
-<p>The next frame you do the same thing except swap which buffer you&#39;re drawing to and which one you&#39;re fading to.</p>
+<p>The next frame you do the same thing except swap which buffer you’re drawing to and which one you’re fading to.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">frame 0: mix(fadeFb1,fadeColor)-&gt;fadeFb2, draw-&gt;fadeFb2, fadeFB2-&gt;canvas
 frame 1: mix(fadeFb2,fadeColor)-&gt;fadeFb1, draw-&gt;fadeFb1, fadeFB1-&gt;canvas
 frame 2: mix(fadeFb1,fadeColor)-&gt;fadeFb2, draw-&gt;fadeFb2, fadeFB2-&gt;canvas
 ...
-</code></pre><p>Note you don&#39;t clear when you draw since you need the result to be left behind</p>
-<p>As for setting up framebuffers there&#39;s a tutorial here that might be useful</p>
-<p><a href="http://webglfundamentals.org/webgl/lessons/webgl-image-processing-continued.html">http://webglfundamentals.org/webgl/lessons/webgl-image-processing-continued.html</a></p>
-<p>Here&#39;s an example using <a href="http://twgljs.org">twgl</a> since I&#39;m too lazy for straight WebGL</p>
+</code></pre>
+<p>Note you don’t clear when you draw since you need the result to be left behind</p>
+<p>As for setting up framebuffers there’s a tutorial here that might be useful</p>
+<p>http://webglfundamentals.org/webgl/lessons/webgl-image-processing-continued.html</p>
+<p>Here’s an example using <a href="http://twgljs.org">twgl</a> since I’m too lazy for straight WebGL</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-fade-the-drawing-buffer-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-fade-the-drawing-buffer-example-1.html" target="_blank">click here to open in a separate window</a>

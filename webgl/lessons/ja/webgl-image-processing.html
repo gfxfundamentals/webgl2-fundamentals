@@ -265,7 +265,8 @@ void main() {
 +   // The GPU will interpolate this value between points
 +   v_texCoord = a_texCoord;
 }
-</code></pre><p>次にテクスチャの色を調べるためのフラグメントシェーダーを修正します。</p>
+</code></pre>
+<p>次にテクスチャの色を調べるためのフラグメントシェーダーを修正します。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
@@ -282,7 +283,8 @@ void main() {
    // Look up a color from the texture.
    outColor = texture(u_image, v_texCoord);
 }
-</code></pre><p>2つのシェーダーが用意できたら、画像を読込してテクスチャを生成してテクスチャに画像をコピーします。
+</code></pre>
+<p>2つのシェーダーが用意できたら、画像を読込してテクスチャを生成してテクスチャに画像をコピーします。
 ブラウザでは画像は非同期で読込されるため、読込完了するまでコードを少しアレンジする必要があります。テクスチャの読込完了後に描画します。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+function main() {
 +  var image = new Image();
@@ -317,7 +319,7 @@ function render(image) {
 +  gl.enableVertexAttribArray(texCoordAttributeLocation);
 +  var size = 2;          // 2 components per iteration
 +  var type = gl.FLOAT;   // the data is 32bit floats
-+  var normalize = false; // don&#39;t normalize the data
++  var normalize = false; // don't normalize the data
 +  var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
 +  var offset = 0;        // start at the beginning of the buffer
 +  gl.vertexAttribPointer(
@@ -330,11 +332,11 @@ function render(image) {
 +  // (ie, the unit all other texture commands will affect
 +  gl.activeTexture(gl.TEXTURE0 + 0);
 +
-+  // Bind it to texture unit 0&#39; 2D bind point
++  // Bind it to texture unit 0' 2D bind point
 +  gl.bindTexture(gl.TEXTURE_2D, texture);
 +
-+  // Set the parameters so we don&#39;t need mips and so we&#39;re not filtering
-+  // and we don&#39;t repeat
++  // Set the parameters so we don't need mips and so we're not filtering
++  // and we don't repeat
 +  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 +  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 +  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -372,7 +374,8 @@ function render(image) {
 +  setRectangle(gl, 0, 0, image.width, image.height);
 
 }
-</code></pre><p>以下がWebGLでレンダリングされた画像です。</p>
+</code></pre>
+<p>以下がWebGLでレンダリングされた画像です。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image.html" target="_blank">ここをクリックすると別ウィンドウで開きます</a>
@@ -385,7 +388,8 @@ function render(image) {
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 outColor = texture(u_image, v_texCoord).bgra;
 ...
-</code></pre><p>これで赤と青が入れ替わりましたね。</p>
+</code></pre>
+<p>これで赤と青が入れ替わりましたね。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-red2blue.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-red2blue.html" target="_blank">ここをクリックすると別ウィンドウで開きます</a>
@@ -398,7 +402,7 @@ WebGLはテクスチャ座標を参照しているので、
 <p>以下はテクスチャ内の左右のピクセルを正規化したフラグメントシェーダーです。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
-// fragment shaders don&#39;t have a default precision so we need
+// fragment shaders don't have a default precision so we need
 // to pick one. highp is a good default. It means &quot;high precision&quot;
 precision highp float;
 
@@ -420,7 +424,8 @@ void main() {
 +      texture(u_image, v_texCoord + vec2( onePixel.x, 0.0)) +
 +      texture(u_image, v_texCoord + vec2(-onePixel.x, 0.0))) / 3.0;
 }
-</code></pre><p>これでぼかし表現できました。ぼやけていない上記画像と比較してみて下さい。</p>
+</code></pre>
+<p>これでぼかし表現できました。ぼやけていない上記画像と比較してみて下さい。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-blend.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-blend.html" target="_blank">ここをクリックすると別ウィンドウで開きます</a>
@@ -437,7 +442,7 @@ void main() {
 <p>フラグメントシェーダーで畳み込み行列を実装すると以下のようになります。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
-// fragment shaders don&#39;t have a default precision so we need
+// fragment shaders don't have a default precision so we need
 // to pick one. highp is a good default. It means &quot;high precision&quot;
 precision highp float;
 
@@ -469,7 +474,8 @@ void main() {
       texture(u_image, v_texCoord + onePixel * vec2( 1,  1)) * u_kernel[8] ;
   outColor = vec4((colorSum / u_kernelWeight).rgb, 1);
 }
-</code></pre><p>JavaScriptからは、畳み込み行列とそのウェイトをシェーダーに送ります。</p>
+</code></pre>
+<p>JavaScriptからは、畳み込み行列とそのウェイトをシェーダーに送ります。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> function computeKernelWeight(kernel) {
    var weight = kernel.reduce(function(prev, curr) {
        return prev + curr;
@@ -487,11 +493,12 @@ void main() {
      -1, -1, -1
  ];
 
-// set the kernel and it&#39;s weight
+// set the kernel and it's weight
  gl.uniform1fv(kernelLocation, edgeDetectKernel);
  gl.uniform1f(kernelWeightLocation, computeKernelWeight(edgeDetectKernel));
  ...
-</code></pre><p>これで完成ですね。ドロップダウンで別の行列も選択できるようにしました。</p>
+</code></pre>
+<p>これで完成ですね。ドロップダウンで別の行列も選択できるようにしました。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-3x3-convolution.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-3x3-convolution.html" target="_blank">ここをクリックすると別ウィンドウで開きます</a>
@@ -506,26 +513,21 @@ void main() {
 テクスチャはテクスチャユニットにバインドされています。
 ユーザーのPCがそれ以上に対応している場合もありますが、全てのWebGL2の実装では少なくとも16のテクスチャユニットをサポートしてる必要があります。
 各サンプラーユニフォームが参照するテクスチャユニットを設定するには、そのサンプラーユニフォームの位置を調べて参照したいテクスチャユニットのインデックスを指定します。
-
-例:
+<p>例:</p>
 <pre class="prettyprint showlinemods">
 var textureUnitIndex = 6; // use texture unit 6.
 var u_imageLoc = gl.getUniformLocation(
     program, "u_image");
 gl.uniform1i(u_imageLoc, textureUnitIndex);
 </pre>
-
-異なるユニットにテクスチャを設定する場合は、gl.activeTextureを呼び出して、ユニットに必要なテクスチャをバインドします。
-例:
-
+<p>異なるユニットにテクスチャを設定する場合は、gl.activeTextureを呼び出して、ユニットに必要なテクスチャをバインドします。
+例:</p>
 <pre class="prettyprint showlinemods">
 // Bind someTexture to texture unit 6.
 gl.activeTexture(gl.TEXTURE6);
 gl.bindTexture(gl.TEXTURE_2D, someTexture);
 </pre>
-
-以下で動作します。
-
+<p>以下で動作します。</p>
 <pre class="prettyprint showlinemods">
 var textureUnitIndex = 6; // use texture unit 6.
 // Bind someTexture to texture unit 6.
@@ -533,7 +535,6 @@ gl.activeTexture(gl.TEXTURE0 + textureUnitIndex);
 gl.bindTexture(gl.TEXTURE_2D, someTexture);
 </pre>
 </div>
-
 <div class="webgl_bottombar">
 <h3>GLSLのa_、u_、v_の接頭辞は何ですか？</h3>
 <p>

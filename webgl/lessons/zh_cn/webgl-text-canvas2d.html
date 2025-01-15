@@ -245,7 +245,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   &lt;canvas id=&quot;canvas&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
   &lt;canvas id=&quot;text&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
 &lt;/div&gt;
-</code></pre><p>接下来设置 CSS 让画布成为覆盖层</p>
+</code></pre>
+<p>接下来设置 CSS 让画布成为覆盖层</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">.container {
     position: relative;
 }
@@ -256,21 +257,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     top: 0px;
     z-index: 10;
 }
-</code></pre><p>在初始化时找到文字画布并创建一个二维上下文。</p>
+</code></pre>
+<p>在初始化时找到文字画布并创建一个二维上下文。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 找到画布
 var textCanvas = document.querySelector(&quot;#text&quot;);
 
 // 创建一个二维上下文
 var ctx = textCanvas.getContext(&quot;2d&quot;);
-</code></pre><p>渲染时，像 WebGL 一样，需要每帧都清空二维画布。</p>
+</code></pre>
+<p>渲染时，像 WebGL 一样，需要每帧都清空二维画布。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawScene() {
     ...
 
     // 清空二维画布
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-</code></pre><p>然后只调用 <code class="notranslate" translate="no">fillText</code> 绘制文字</p>
+</code></pre>
+<p>然后只调用 <code class="notranslate" translate="no">fillText</code> 绘制文字</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    ctx.fillText(someMsg, pixelX, pixelY);
-</code></pre><p>这是结果</p>
+</code></pre>
+<p>这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-canvas2d.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-canvas2d.html" target="_blank">点此在新窗口中浏览</a>
@@ -302,7 +307,8 @@ ctx.fillText(someMessage, 20, 20);
 
 // 还原画布设置
 ctx.restore();
-</code></pre><p>我们之前讲过使用二维画布的平移方法，
+</code></pre>
+<p>我们之前讲过使用二维画布的平移方法，
 不需要在绘制箭头的时候做其他运算了。我们只是假设绘制在原点，并且需要把原点移动到 F 的右上角。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-canvas2d-arrows.html"></iframe>

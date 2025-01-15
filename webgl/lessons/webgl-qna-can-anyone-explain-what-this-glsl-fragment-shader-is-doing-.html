@@ -236,10 +236,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I realise this is a math-centric question but... if you look at this webpage (and have a good graphics card) <a href="http://mrdoob.github.com/three.js/examples/webgl_shader.html">http://mrdoob.github.com/three.js/examples/webgl_shader.html</a></p>
-<p>If you look at the source, you&#39;ll notice a scary looking fragment shader.</p>
-<p>I&#39;m not looking for a detailed explanation, but an idea of the sort of thing that&#39;s happening, or the source of information on what exactly is happening here.. I&#39;m not after a guide to GLSL, but info on the maths. I realise this might be better suited to Math StackExchange site but thought I&#39;d try here first...</p>
+      <h2 id="question">Question:</h2>
+<p>I realise this is a math-centric question but… if you look at this webpage (and have a good graphics card) http://mrdoob.github.com/three.js/examples/webgl_shader.html</p>
+<p>If you look at the source, you’ll notice a scary looking fragment shader.</p>
+<p>I’m not looking for a detailed explanation, but an idea of the sort of thing that’s happening, or the source of information on what exactly is happening here… I’m not after a guide to GLSL, but info on the maths. I realise this might be better suited to Math StackExchange site but thought I’d try here first…</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;script id=&quot;fragmentShader&quot; type=&quot;x-shader/x-fragment&quot;&gt;
 
    uniform vec2 resolution;
@@ -274,10 +274,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    }
 
   &lt;/script&gt;
-</code></pre><h2 id="answer-">Answer:</h2>
+</code></pre>
+<h2 id="answer">Answer:</h2>
 <p><a href="http://www.pouet.net/prod.php?which=52761">Monjori</a> is from the demo scene.</p>
-<p>The simple answer is it&#39;s using a formula to generate a pattern. WebGL is going to call this function once for every pixel on the screen. The only things that will change are time and gl_FragCoord which is the location of the pixel being drawn.</p>
-<p>Let&#39;s break it down a little</p>
+<p>The simple answer is it’s using a formula to generate a pattern. WebGL is going to call this function once for every pixel on the screen. The only things that will change are time and gl_FragCoord which is the location of the pixel being drawn.</p>
+<p>Let’s break it down a little</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // this is the resolution of the window
   uniform vec2 resolution;
 
@@ -313,7 +314,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       // the second +/i is cos of 0.0 to 1.0 across the screen
       d=200.0+cos(f*g/2.0)*18.0+cos(e*g)*7.0;
 
-      // I&#39;m stopping here. You can probably figure out the rest
+      // I'm stopping here. You can probably figure out the rest
       // see answer
       r=sqrt(pow(i-e,2.0)+pow(d-f,2.0));
       q=f/r;
@@ -332,26 +333,31 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       f=(sin(a*g)+1.0)/2.0;
       gl_FragColor=vec4(vec3(f*i/1.6,i/2.0+d/13.0,i)*d*p.x+vec3(i/1.3+d/8.0,i/2.0+d/18.0,i)*d*(1.0-p.x),1.0);
 }
-</code></pre><p>One of the things that&#39;s good to try to see what&#39;s happening is to insert early exits in the shader. First off you can see the shader here</p>
-<p><a href="http://glsl.heroku.com/e#1579.0">http://glsl.heroku.com/e#1579.0</a></p>
+</code></pre>
+<p>One of the things that’s good to try to see what’s happening is to insert early exits in the shader. First off you can see the shader here</p>
+<p>http://glsl.heroku.com/e#1579.0</p>
 <p>or</p>
-<p><a href="https://www.shadertoy.com/view/lsfyRS">https://www.shadertoy.com/view/lsfyRS</a></p>
+<p>https://www.shadertoy.com/view/lsfyRS</p>
 <p>If we go to line 11</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">      e=400.0*(p.x*0.5+0.5);
-</code></pre><p>and insert just after it something like this</p>
+</code></pre>
+<p>and insert just after it something like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">      e=400.0*(p.x*0.5+0.5);
       gl_FragColor = vec4(e / 400.0, 0, 0, 1);
       return;
-</code></pre><p>As long as we convert the value to something from 0 to 1 we can see the result</p>
+</code></pre>
+<p>As long as we convert the value to something from 0 to 1 we can see the result</p>
 <p>for example going down to line 14</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">d=200.0+cos(f*g/2.0)*18.0+cos(e*g)*7.0;
-</code></pre><p>Since we know it goes from 200 +/- 18 +/- 7 that&#39;s 175 + 225 so convert that to 0 to 1 with</p>
+</code></pre>
+<p>Since we know it goes from 200 +/- 18 +/- 7 that’s 175 + 225 so convert that to 0 to 1 with</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">d=200.0+cos(f*g/2.0)*18.0+cos(e*g)*7.0;
 float tmp = (d - 175.0) / 50.0;
 gl_FragColor = vec4(tmp, 0, 0, 1);
 return;
-</code></pre><p>will give you some idea what it&#39;s doing.</p>
-<p>I&#39;m sure you can work out the rest.</p>
+</code></pre>
+<p>will give you some idea what it’s doing.</p>
+<p>I’m sure you can work out the rest.</p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 3.0 by

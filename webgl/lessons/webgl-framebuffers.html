@@ -239,7 +239,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p>This article is meant to try to give you a mental image
 of what a framebuffer is in WebGL. Framebuffers come up
 as they allow you to <a href="webgl-render-to-texture.html">render to a texture</a>.</p>
-<p>A Framebuffer is just a <em>collection of attachments</em>. That&#39;s it! It is
+<p>A Framebuffer is just a <em>collection of attachments</em>. That’s it! It is
 used to allow rendering to textures and renderbuffers.</p>
 <p>You can think of a Framebuffer object like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">class Framebuffer {
@@ -249,7 +249,8 @@ used to allow rendering to textures and renderbuffers.</p>
     this.readBuffer = gl.BACK,
   }
 }
-</code></pre><p>And the <code class="notranslate" translate="no">WebGL2RenderingContext</code> (the <code class="notranslate" translate="no">gl</code> object) like this</p>
+</code></pre>
+<p>And the <code class="notranslate" translate="no">WebGL2RenderingContext</code> (the <code class="notranslate" translate="no">gl</code> object) like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// pseudo code
 gl = {
   drawFramebufferBinding: defaultFramebufferForCanvas,
@@ -322,10 +323,10 @@ gl.drawBuffers(drawBuffers) {
 }
 </code></pre>
 <p>The drawBuffers array determines if a particular attachment is rendered to or not.
-The valid values are either <code class="notranslate" translate="no">gl.NONE</code> which means <em>don&#39;t render to this attachment</em> or,
+The valid values are either <code class="notranslate" translate="no">gl.NONE</code> which means <em>don’t render to this attachment</em> or,
 <code class="notranslate" translate="no">gl.COLOR_ATTACHMENTx</code> where <code class="notranslate" translate="no">x</code> is the same as the index of the attachment. One other
 value is <code class="notranslate" translate="no">gl.BACK</code> which is only valid when <code class="notranslate" translate="no">null</code> is bound to the current framebuffer
-in which case <code class="notranslate" translate="no">gl.BACK</code> means &#39;render to the backbuffer (the canvas)&#39;</p>
+in which case <code class="notranslate" translate="no">gl.BACK</code> means ‘render to the backbuffer (the canvas)’</p>
 <p>You can set the read buffer with <code class="notranslate" translate="no">gl.readBuffer</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// pseudo code
 gl.readBuffer(readBuffer) {
@@ -336,7 +337,7 @@ gl.readBuffer(readBuffer) {
 <p>The readBuffer sets which attachment is read when calling <code class="notranslate" translate="no">gl.readPixels</code>.</p>
 <p>The important part is a <em>framebuffer</em> is just a simple collection of attachments.
 The complications are the restrictions on what those attachments
-can be and the combinations that work. For example a floating point texture 
+can be and the combinations that work. For example a floating point texture
 attachment can not be rendered to by default. Extensions can enable that like
 <code class="notranslate" translate="no">EXT_color_buffer_float</code>. Similarly if there is
 more than one attachment they must all be the same dimensions.</p>

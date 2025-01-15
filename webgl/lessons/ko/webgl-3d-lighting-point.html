@@ -254,18 +254,21 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>한번 해 봅시다.</p>
 <p>먼저 조명의 위치가 필요합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform vec3 u_lightWorldPosition;
-</code></pre><p>그리고 표면의 월드 공간산의 위치를 계산할 수 있는 방법이 필요합니다.
-그러려면 위치값을 월드 행렬로 곱하면 됩니다 따라서...</p>
+</code></pre>
+<p>그리고 표면의 월드 공간산의 위치를 계산할 수 있는 방법이 필요합니다.
+그러려면 위치값을 월드 행렬로 곱하면 됩니다 따라서…</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform mat4 u_world;
 
 ...
 
 // 표면의 월드 공간상 위치를 계산
 vec3 surfaceWorldPosition = (u_world * a_position).xyz;
-</code></pre><p>이어서 이전과 유사하게 표면에서 조명을 향하는 벡터를 계산할 수 있습니다.
+</code></pre>
+<p>이어서 이전과 유사하게 표면에서 조명을 향하는 벡터를 계산할 수 있습니다.
 이번에는 표면위의 모든 위치값마다 점 (조명)까지의 방향을 계산한다는 것이 다릅니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v_surfaceToLight = u_lightPosition - surfaceWorldPosition;
-</code></pre><p>전체적으로 보면 아래와 같습니다.</p>
+</code></pre>
+<p>전체적으로 보면 아래와 같습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 in vec4 a_position;
@@ -293,7 +296,8 @@ void main() {
 +  // 표면에서 조명을 향하는 벡터를 계산하고 프래그먼트 셰이더로 전달합니다.
 +  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
 }
-</code></pre><p>이제 프래그먼트 셰이더에서는 표면에서 조명을 향하는 벡터가 단위 벡터가 아니기 때문에 정규화해야 합니다.
+</code></pre>
+<p>이제 프래그먼트 셰이더에서는 표면에서 조명을 향하는 벡터가 단위 벡터가 아니기 때문에 정규화해야 합니다.
 정점 셰이더에서 정규화를 할 수도 있지만 <em>varying</em>이기 때문에 각 위치마다 값이 선형 보간되고,
 프래그먼트 셰이더에서는 그 보간된 벡터는 단위 벡터가 아닙니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
@@ -324,14 +328,16 @@ void main() {
   // 알파를 제외한 색상 부분만 light값을 곱해줍니다.
   outColor.rgb *= light;
 }
-</code></pre><p><code class="notranslate" translate="no">u_world</code>와 <code class="notranslate" translate="no">u_lightWorldPosition</code>의 위치를 찾아야 합니다.</p>
+</code></pre>
+<p><code class="notranslate" translate="no">u_world</code>와 <code class="notranslate" translate="no">u_lightWorldPosition</code>의 위치를 찾아야 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">-  var reverseLightDirectionLocation =
 -      gl.getUniformLocation(program, &quot;u_reverseLightDirection&quot;);
 +  var lightWorldPositionLocation =
 +      gl.getUniformLocation(program, &quot;u_lightWorldPosition&quot;);
 +  var worldLocation =
 +      gl.getUniformLocation(program, &quot;u_world&quot;);
-</code></pre><p>그리고 값을 설정해 줍니다.</p>
+</code></pre>
+<p>그리고 값을 설정해 줍니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 행렬값을 설정
 +  gl.uniformMatrix4fv(
 +      worldLocation, false,
@@ -346,7 +352,8 @@ void main() {
 -  gl.uniform3fv(reverseLightDirectionLocation, normalize([0.5, 0.7, 1]));
 +  // 조명 위치를 설정
 +  gl.uniform3fv(lightWorldPositionLocation, [20, 30, 50]);
-</code></pre><p>결과는 이렇게 됩니다.</p>
+</code></pre>
+<p>결과는 이렇게 됩니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-point.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-point.html" target="_blank">새 창으로 열기</a>
@@ -355,7 +362,7 @@ void main() {
 </p>
 <p>이제 점 조명이 있으니 반사 하이라이트(specular highlighting)라 불리는 효과를 추가할 수 있습니다.</p>
 <p>실제 세상에서 물체를 볼 때, 물체가 밝게 빛나는 것은 표면에서 빛을 당신쪽으로 직접 반사하기 때문입니다. 마치 거울처럼요.</p>
-<p><img class="webgl_center" src="../resources/specular-highlights.jpg" /></p>
+<img class="webgl_center" src="../resources/specular-highlights.jpg" />
 <p>빛이 눈에 직접 반사되는지를 계산하여 이 효과를 모사할 수 있습니다.
 여기서도 <em>내적</em>을 활용할 수 있습니다.</p>
 <p>무엇을 확인해야 하는걸까요? 생각해 봅시다.
@@ -367,7 +374,7 @@ void main() {
 </p>
 <p>모델의 표면에서 조명을 향하는 방향을 알 수 있다면(위에서 보셨다시피 이미 우리는 이 값을 계산할 수 있었습니다.),
 그리고 표면에서 뷰/눈/카메라를 향하는 방향을 할 수 있다면(이 값은 우리가 계산할 수 있는 값입니다.), 이 두 벡터를 더하고 정규화해서
-<code class="notranslate" translate="no">halfVector</code>라 불리는 벡터를 얻을 수 있습니다. 이 벡터는 두 벡터의 중간에 위치한 벡터입니다. 
+<code class="notranslate" translate="no">halfVector</code>라 불리는 벡터를 얻을 수 있습니다. 이 벡터는 두 벡터의 중간에 위치한 벡터입니다.
 halfVector와 표면의 법선이 동일하면 빛이 뷰/눈/카메라로 완벽히 반사되는 각도라는 뜻입니다.
 동일하다는 것은 어떻게 알 수 있을까요? 전에 한것처럼 <em>내적</em>하면 됩니다.
 1이면 동일하다는 뜻이고, 0이면 수직하다는 뜻입니다. -1이면 반대 방향이라는 뜻이고요.</p>
@@ -409,7 +416,8 @@ void main() {
 +  // 표면에서 뷰/카메라를 향하는 벡터를 계산하고 프래그먼트 셰이더로 전달합니다.
 +  v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition;
 }
-</code></pre><p>다음으로 프래그먼트 셰이더에서는 표면에서 뷰를 향하는 벡터와 표면에서 조명을 향하는 벡터의 사이 벡터인 
+</code></pre>
+<p>다음으로 프래그먼트 셰이더에서는 표면에서 뷰를 향하는 벡터와 표면에서 조명을 향하는 벡터의 사이 벡터인
 <code class="notranslate" translate="no">halfVector</code>를 계산해야 합니다. 그리고 <code class="notranslate" translate="no">halfVector</code>와 법선 벡터의 내적을 통해
 빛이 뷰 방향으로 반사되는지를 알아내야 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 정점 셰이더에서 넘어온 값
@@ -441,7 +449,8 @@ void main() {
 +  // specular 값을 더해줍니다.
 +  outColor.rgb += specular;
 }
-</code></pre><p>마지막으로 <code class="notranslate" translate="no">u_viewWorldPosition</code>을 찾아서 값을 설정해야 합니다.</p>
+</code></pre>
+<p>마지막으로 <code class="notranslate" translate="no">u_viewWorldPosition</code>을 찾아서 값을 설정해야 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var lightWorldPositionLocation =
     gl.getUniformLocation(program, &quot;u_lightWorldPosition&quot;);
 +var viewWorldPositionLocation =
@@ -459,7 +468,8 @@ var cameraMatrix = makeLookAt(camera, target, up);
 
 +// 카메라/뷰 위치를 설정
 +gl.uniform3fv(viewWorldPositionLocation, camera);
-</code></pre><p>아래는 그 결과입니다.</p>
+</code></pre>
+<p>아래는 그 결과입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-point-specular.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-point-specular.html" target="_blank">새 창으로 열기</a>
@@ -467,7 +477,7 @@ var cameraMatrix = makeLookAt(camera, target, up);
 
 </p>
 <p><strong>으악 너무 밝습니다!</strong></p>
-<p>밝기 문제를 내적값의 제곱을 통해 고칠 수 있습니다. 
+<p>밝기 문제를 내적값의 제곱을 통해 고칠 수 있습니다.
 이렇게 하면 반사 하이라이트의 감쇄를 선형 감쇄에서 지수 감쇄로 바꿀 수 있습니다.</p>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example noborder" style="width: 300px; height: 300px;" src="/webgl/lessons/resources/power-graph.html"></iframe>
@@ -487,7 +497,8 @@ var cameraMatrix = makeLookAt(camera, target, up);
 +  if (light &gt; 0.0) {
 +    specular = pow(dot(normal, halfVector), u_shininess);
 +  }
-</code></pre><p>내적값이 음수가 될 수도 있습니다. WebGL에서 음수값의 제곱은 정의되지 않은(undefined) 결과를 나타내고, 이는 좋지 않습니다.
+</code></pre>
+<p>내적값이 음수가 될 수도 있습니다. WebGL에서 음수값의 제곱은 정의되지 않은(undefined) 결과를 나타내고, 이는 좋지 않습니다.
 따라서 내적값이 음수가 되면 우리는 그냥 specular를 0.0으로 설정할 것입니다.</p>
 <p>당연히 해당 위치를 찾아서 값을 설정해 줘야겠죠.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+var shininessLocation = gl.getUniformLocation(program, &quot;u_shininess&quot;);
@@ -496,7 +507,8 @@ var cameraMatrix = makeLookAt(camera, target, up);
 
 // shininess 값을 설정
 gl.uniform1f(shininessLocation, shininess);
-</code></pre><p>결과는 아래와 같습니다.</p>
+</code></pre>
+<p>결과는 아래와 같습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-point-specular-power.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-point-specular-power.html" target="_blank">새 창으로 열기</a>
@@ -519,17 +531,20 @@ uniform float u_shininess;
   // specular 값을 더해줍니다.
 *  outColor.rgb += specular * u_specularColor;
 }
-</code></pre><p>그리고 당연히 아래 코드와</p>
+</code></pre>
+<p>그리고 당연히 아래 코드와</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+  var lightColorLocation =
 +      gl.getUniformLocation(program, &quot;u_lightColor&quot;);
 +  var specularColorLocation =
 +      gl.getUniformLocation(program, &quot;u_specularColor&quot;);
-</code></pre><p>아래 코드가 필요합니다.</p>
+</code></pre>
+<p>아래 코드가 필요합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+  // 조명 색상을 설정
 +  gl.uniform3fv(lightColorLocation, normalize([1, 0.6, 0.6]));  // 빨간색 조명
 +  // 반사 색상을 설정
 +  gl.uniform3fv(specularColorLocation, normalize([1, 0.6, 0.6]));  // 빨간색 조명
-</code></pre><p><div class="webgl_example_container">
+</code></pre>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-point-color.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-point-color.html" target="_blank">새 창으로 열기</a>
 </div>
@@ -559,7 +574,6 @@ uniform float u_shininess;
 <div class="webgl_center"><pre class="glocal-center-content">pow(-5, 2.5)</pre></div>
 <p>결과는 양수일까요 음수일까요? 그건 <a href="https://betterexplained.com/articles/a-visual-intuitive-guide-to-imaginary-numbers/">허수의 영역입니다</a>.</p>
 </div>
-
 
     </div>
     <div class="lesson-sidebar">

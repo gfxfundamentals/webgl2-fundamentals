@@ -264,12 +264,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>高效的将物体移动到相机前是非常重要的。最简单的方式是使用一个“逆向”矩阵，
 计算逆矩阵的数学原理比较复杂但概念很简单，逆就是你想通过一个值去抵消一个值。
 例如，123 的逆就是 -123 ，一个缩放为 5 的缩放矩阵的逆是缩放为 1/5 或 0.2
-的缩放矩阵，一个绕 X 轴旋转 30&deg; 的旋转矩阵的逆是绕 X 旋转 -30&deg;。</p>
-<p>目前为止我们使用过平移，旋转和缩放去控制 &#39;F&#39; 的位置和姿态，
+的缩放矩阵，一个绕 X 轴旋转 30° 的旋转矩阵的逆是绕 X 旋转 -30°。</p>
+<p>目前为止我们使用过平移，旋转和缩放去控制 ‘F’ 的位置和姿态，
 将这些矩阵相乘后得到一个矩阵，可以将物体从原始位置移动到期望的位置，大小和姿态。
 我们可以对相机进行同样的操作，一旦有了相机从原点移动旋转到目标位置的矩阵后，
 就可以计算出它的逆矩阵，利用这个逆矩阵可以不动相机，将物体从相反的方向移动到相机前。</p>
-<p>让我们来做一个三维场景，像上图一样有一圈 &#39;F&#39; 。</p>
+<p>让我们来做一个三维场景，像上图一样有一圈 ‘F’ 。</p>
 <p>这是代码。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawScene() {
   var numFs = 5;
@@ -312,21 +312,26 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     gl.drawArrays(primitiveType, offset, count);
   }
 }
-</code></pre><p>就在我们计算出投影矩阵之后，您可以看到我们计算了一个像上图中那样围绕 &#39;F&#39; 旋转的相机。</p>
+</code></pre>
+<p>就在我们计算出投影矩阵之后，您可以看到我们计算了一个像上图中那样围绕 ‘F’ 旋转的相机。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 计算相机矩阵
   var cameraMatrix = m4.yRotation(cameraAngleRadians);
   cameraMatrix = m4.translate(cameraMatrix, 0, 0, radius * 1.5);
-</code></pre><p>然后通过相机矩阵计算“视图矩阵”，视图矩阵是将所有物体以相反于相机的方向运动， 就好像相机位于原点(0,0,0)</p>
+</code></pre>
+<p>然后通过相机矩阵计算“视图矩阵”，视图矩阵是将所有物体以相反于相机的方向运动， 就好像相机位于原点(0,0,0)</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 通过相机矩阵计算“视图矩阵”
   var viewMatrix = m4.inverse(cameraMatrix);
-</code></pre><p>然后我们将它们组合（相乘）形成一个组合矩阵。</p>
+</code></pre>
+<p>然后我们将它们组合（相乘）形成一个组合矩阵。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 创建一个组合投影矩阵. 这将应用于透视和以相机为原点中心进行运动
   var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
-</code></pre><p>最后，我们使用该空间作为放置每个‘F’的起始空间</p>
+</code></pre>
+<p>最后，我们使用该空间作为放置每个‘F’的起始空间</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    var x = Math.cos(angle) * radius;
     var z = Math.sin(angle) * radius;
     var matrix = m4.translate(viewProjectionMatrix, x, 0, z);
-</code></pre><p>换句话说，每个<code class="notranslate" translate="no">F</code> 的视图投影都是相同的。 同样的视角，同样的相机。</p>
+</code></pre>
+<p>换句话说，每个<code class="notranslate" translate="no">F</code> 的视图投影都是相同的。 同样的视角，同样的相机。</p>
 <p>看！一个绕 F 旋转的相机。拖动 <code class="notranslate" translate="no">cameraAngle</code> 滑块移动相机。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-camera.html"></iframe>
@@ -357,7 +362,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 |    |    |    |    |
 +----+----+----+----+
 </pre></div>
-
 <p>矩阵的这个区域代表的是 Z 轴。在这个例子中相机的 Z-axis 进行了单位化，
 单位化也就是一个做一个类似 1.0 的矢量，如果你回到<a href="webgl-2d-rotation.html">二维旋转的文章</a>，
 那里讲到的单位圆在二维旋转中用法，在三维中需要一个单位球，单位向量表示单位球上的点。</p>
@@ -403,18 +407,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 | Tx | Ty | Tz |  1 |  <- 相机位置
 +----+----+----+----+
 </pre></div>
-
 <p>这是计算叉乘的代码</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function cross(a, b) {
   return [a[1] * b[2] - a[2] * b[1],
           a[2] * b[0] - a[0] * b[2],
           a[0] * b[1] - a[1] * b[0]];
 }
-</code></pre><p>这是向量相减的代码</p>
+</code></pre>
+<p>这是向量相减的代码</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function subtractVectors(a, b) {
   return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
 }
-</code></pre><p>这是单位化向量的代码</p>
+</code></pre>
+<p>这是单位化向量的代码</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function normalize(v) {
   var length = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
   // 确定不会除以 0
@@ -424,7 +429,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     return [0, 0, 0];
   }
 }
-</code></pre><p>这是计算“朝向”矩阵的代码</p>
+</code></pre>
+<p>这是计算“朝向”矩阵的代码</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m4 = {
   lookAt: function(cameraPosition, target, up) {
     var zAxis = normalize(
@@ -442,7 +448,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       1,
     ];
   },
-</code></pre><p>这是在移动过程中朝向某个确切的 &#39;F&#39; 的用法。</p>
+</code></pre>
+<p>这是在移动过程中朝向某个确切的 ‘F’ 的用法。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
 
   // 计算第一个 F 的位置
@@ -468,14 +475,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   var viewMatrix = m4.inverse(cameraMatrix);
 
   ...
-</code></pre><p>这是结果。</p>
+</code></pre>
+<p>这是结果。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-camera-look-at.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-camera-look-at.html" target="_blank">点此在新窗口中浏览</a>
 </div>
 
 </p>
-<p>拖动滑块观察相机是如何追踪单个 &#39;F&#39; 的。</p>
+<p>拖动滑块观察相机是如何追踪单个 ‘F’ 的。</p>
 <p>你也可以对其他东西使用“lookAt”方法而不只是相机。通常是让角色视线跟着某人，
 将炮塔指向目标，让物体沿着路径移动。你可以算出物体当前在路径上的位置和不久后的位置，
 然后将这两个值放入 <code class="notranslate" translate="no">lookAt</code> 方法，可以让物体沿着路径移动并且朝着路径的方向。</p>

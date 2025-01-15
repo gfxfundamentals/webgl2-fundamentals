@@ -236,8 +236,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I&#39;m creating a 2D rendering engine with WebGL in which I&#39;m using Texture Atlases and batching hundreds of entities at once. I need to set a unique alpha value for each entity, and I&#39;m at a loss of how to do this.</p>
+      <h2 id="question">Question:</h2>
+<p>I’m creating a 2D rendering engine with WebGL in which I’m using Texture Atlases and batching hundreds of entities at once. I need to set a unique alpha value for each entity, and I’m at a loss of how to do this.</p>
 <p>My current fragment shader is this:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    precision mediump float;
 
@@ -250,8 +250,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         vec4 texture = texture2D(u_image, v_texCoord);
         gl_FragColor = vec4(texture.rgb, texture.a * u_alpha);
     }
-</code></pre><p>I&#39;d like to change that global uniform into a uniform buffer or an array of unique values that will be applied to the v_texCoord, but I don&#39;t know how to do this.</p>
-<h2 id="answer-">Answer:</h2>
+</code></pre>
+<p>I’d like to change that global uniform into a uniform buffer or an array of unique values that will be applied to the v_texCoord, but I don’t know how to do this.</p>
+<h2 id="answer">Answer:</h2>
 <p>You need to pass those values in as an attribute just like <code class="notranslate" translate="no">v_texCoord</code>.</p>
 <p>in vertex shader</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">attribute float a_alpha;
@@ -262,18 +263,21 @@ void main() {
    v_alpha = a_alpha;  // pass the alpha values to the fragment shader.
    ...
 }
-</code></pre><p>in fragment shader</p>
+</code></pre>
+<p>in fragment shader</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">varying float v_alpha;
 ...
 gl_FragColor = vec4(texture.rgb, texture.a * v_alpha);
-</code></pre><p>Instead of using a separate attribute you could also just make your texture coordinates have 3 values. u, v, and alpha. In other words, change <code class="notranslate" translate="no">v_texCoord</code> to a <code class="notranslate" translate="no">vec3</code>. Update the attribute in the vertex shader to take a <code class="notranslate" translate="no">vec3</code>. Update your UV data so each UV also has an alpha. Change your fragment shader to.</p>
+</code></pre>
+<p>Instead of using a separate attribute you could also just make your texture coordinates have 3 values. u, v, and alpha. In other words, change <code class="notranslate" translate="no">v_texCoord</code> to a <code class="notranslate" translate="no">vec3</code>. Update the attribute in the vertex shader to take a <code class="notranslate" translate="no">vec3</code>. Update your UV data so each UV also has an alpha. Change your fragment shader to.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">varying vec3 v_texCoord;
 
 void main () {
     vec4 texture = texture2D(u_image, v_texCoord.xy);
     gl_FragColor = vec4(texture.rgb, texture.a * v_texCoord.z);
 }
-</code></pre><div class="so">
+</code></pre>
+<div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 3.0 by
     <a data-href="https://stackoverflow.com/users/1352484">Abraham Walters</a>

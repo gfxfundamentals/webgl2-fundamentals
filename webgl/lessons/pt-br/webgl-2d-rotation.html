@@ -241,7 +241,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <a href="webgl-2d-translation.html">sobre translação de geometrias</a>.</p>
 <p>Eu tenho que admitir, agora mesmo, que eu não faço ideia se a maneira
 como eu explico irá fazer sentido, mas não importa, eu posso tentar.</p>
-<p>Primeiro, eu quero lhe introduzir ao que é chamado de &quot;círculo unitário&quot;. Se
+<p>Primeiro, eu quero lhe introduzir ao que é chamado de “círculo unitário”. Se
 você lembra da matemática do ensino médio (não vá dormir, ein!), um círculo
 possui um raio. O raio de um círculo é a distãncia do centro do círculo até
 sua extremidade. Um círculo unitário é, na verdade, um círculo com o raio de 1.0.</p>
@@ -252,12 +252,12 @@ sua extremidade. Um círculo unitário é, na verdade, um círculo com o raio de
 
 </p>
 <p>Observe que, de acordo com o que você arrasta a alça azul em torno do círculo,
-as posições X e Y mudam. Eles representam a posição desse ponto no círculo. 
+as posições X e Y mudam. Eles representam a posição desse ponto no círculo.
 Na parte superior, Y é 1 e X é 0. Na direita, X é 1 e Y é 0.</p>
 <p>Se você se lembra da matemática básica de 3ª série, se você multiplicar algo por 1,
 o valor multiplicado continua igual. Então 123 * 1 = 123. Muito básico, certo?
 Bem, um círculo unitário, um círculo com um raio de 1.0, também é uma forma de 1.
-É um 1 que está rotacionando. Então, você pode multiplicar algo por este círculo unitário e, 
+É um 1 que está rotacionando. Então, você pode multiplicar algo por este círculo unitário e,
 de certa forma, é como multiplicar por 1, exceto que a magia acontece e as coisas rotacionam.</p>
 <p>Nós vamos pegar os valores de X e Y, de qualquer ponto no círculo unitário e,
 vamos multiplicar nossa geometria de acordo com <a href="webgl-2d-translation.html">nosso exemplo anterior</a>.</p>
@@ -280,7 +280,8 @@ void main() {
 * vec2 position = rotatedPosition + u_translation;
 
 ...
-</code></pre><p>E também atualizamos o JavaScript para que possámos passar os dois valores.</p>
+</code></pre>
+<p>E também atualizamos o JavaScript para que possámos passar os dois valores.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
 
 +  var rotationLocation = gl.getUniformLocation(program, &quot;u_rotation&quot;);
@@ -327,7 +328,8 @@ void main() {
     var count = 18;
     gl.drawArrays(primitiveType, offset, count);
   }
-</code></pre><p>E aqui está o resultado. Arraste a alça no círculo para rotacionar, ou,
+</code></pre>
+<p>E aqui está o resultado. Arraste a alça no círculo para rotacionar, ou,
 os sliders para translacionar.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-rotation.html"></iframe>
@@ -340,28 +342,25 @@ os sliders para translacionar.</p>
     rotatedX = a_position.x * u_rotation.y + a_position.y * u_rotation.x;
     rotatedY = a_position.y * u_rotation.y - a_position.x * u_rotation.x;
 </pre>
-
 <p>Digamos que você tenha um retângulo e que você queira girá-lo.
 Antes de começar a rotacioná-lo, o canto superior direito está em 3.0, 9.0.
 Vamos escolher um ponto no círculo unitário à 30 graus no sentido horário.</p>
-<p><img src="../../resources/rotate-30.png" class="webgl_center invertdark" /></p>
+<img src="../../resources/rotate-30.png" class="webgl_center invertdark" />
 <p>A posição no círculo é 0.50 e 0.87</p>
 <pre class="webgl_center">
    3.0 * 0.87 + 9.0 * 0.50 = 7.1
    9.0 * 0.87 - 3.0 * 0.50 = 6.3
 </pre>
-
 <p>É exatamente aonde precisamos que ele esteja</p>
-<p><img src="../../resources/rotation-drawing.svg" width="500" class="webgl_center"/></p>
+<img src="../../resources/rotation-drawing.svg" width="500" class="webgl_center"/>
 <p>A mesma coisa se aplica para 60 graus no sentido horário</p>
-<p><img src="../../resources/rotate-60.png" class="webgl_center invertdark" /></p>
+<img src="../../resources/rotate-60.png" class="webgl_center invertdark" />
 <p>A posição no círculo é 0.87 e 0.50</p>
 <pre class="webgl_center">
    3.0 * 0.50 + 9.0 * 0.87 = 9.3
    9.0 * 0.50 - 3.0 * 0.87 = 1.9
 </pre>
-
-<p>Você pode ver que ao girar esse ponto no sentido horário, à direita, 
+<p>Você pode ver que ao girar esse ponto no sentido horário, à direita,
 o valor X aumenta e o Y diminui. Se mantivéssemos passando 90 graus,
 o X começaria a ficar mais pequeno novamente e o Y começaria a ficar maior.
 Esse padrão nos dá a rotação.</p>
@@ -375,17 +374,19 @@ maneira.</p>
   var c = Math.cos(angleInRadians);
   console.log(&quot;s = &quot; + s + &quot; c = &quot; + c);
 }
-</code></pre><p>Se você copiar e colar o código no seu console de JavaScript e
+</code></pre>
+<p>Se você copiar e colar o código no seu console de JavaScript e
 escrever <code class="notranslate" translate="no">printSineAndCosignForAngle(30)</code>, você verá que
 <code class="notranslate" translate="no">s = 0.49 c = 0.87</code> será impresso (nota: eu arredondei os valores).</p>
-<p>Se você colocar tudo isso junto, você será capaz de rotacionar sua 
+<p>Se você colocar tudo isso junto, você será capaz de rotacionar sua
 geometria em qualquer ângulo que vocẽ desejar. Apenas defina a rotação
 com o seno e o cosseno referentes ao ângulo que você deseja.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
   var angleInRadians = angleInDegrees * Math.PI / 180;
   rotation[0] = Math.sin(angleInRadians);
   rotation[1] = Math.cos(angleInRadians);
-</code></pre><p>Aqui está uma versão que tem um ajuste de ângulo. 
+</code></pre>
+<p>Aqui está uma versão que tem um ajuste de ângulo.
 Arraste os sliders para translacionar ou girar.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-rotation-angle.html"></iframe>
@@ -393,7 +394,7 @@ Arraste os sliders para translacionar ou girar.</p>
 </div>
 
 </p>
-<p>Espero que tudo isso tenha feito algum sentido pra você. 
+<p>Espero que tudo isso tenha feito algum sentido pra você.
 <a href="webgl-2d-scale.html">A seguir, um exemplo mais simples. Escala em 2D</a>.</p>
 <div class="webgl_bottombar"><h3>O que são radianos?</h3>
 <p>

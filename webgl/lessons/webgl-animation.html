@@ -239,9 +239,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p>This post is a continuation of a series of posts about WebGL.
 The first <a href="webgl-fundamentals.html">started with fundamentals</a>.
 and the previous was about <a href="webgl-3d-camera.html">3D cameras</a>.
-If you haven&#39;t read those please view them first.</p>
+If you haven’t read those please view them first.</p>
 <p>How do we animate something in WebGL?</p>
-<p>Actually this isn&#39;t specific to WebGL but generally if you want
+<p>Actually this isn’t specific to WebGL but generally if you want
 to animate something in JavaScript you need to change something
 over time and draw again.</p>
 <p>We can take one of our previous samples and animate it as follows.</p>
@@ -259,20 +259,21 @@ function drawScene() {
 *  // Call drawScene again next frame
 *  requestAnimationFrame(drawScene);
 }
-</code></pre><p>And here it is</p>
+</code></pre>
+<p>And here it is</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-animation-not-frame-rate-independent.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-animation-not-frame-rate-independent.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>There&#39;s a subtle problem though. The code above has a
+<p>There’s a subtle problem though. The code above has a
 <code class="notranslate" translate="no">rotationSpeed / 60.0</code>. We divided by 60.0 because we assumed the browser
 will respond to requestAnimationFrame 60 times a second which is pretty common.</p>
-<p>That&#39;s not actually a valid assumption though. Maybe the user is on a low-powered
+<p>That’s not actually a valid assumption though. Maybe the user is on a low-powered
 device like an old smartphone. Or maybe the user is running some heavy program in
 the background. There are all kinds of reasons the browser might not be displaying
-frames at 60 frames a second. Maybe it&#39;s the year 2020 and all machines run at 240
+frames at 60 frames a second. Maybe it’s the year 2020 and all machines run at 240
 frames a second now. Maybe the user is a gamer and has a CRT monitor running at 90
 frames a second.</p>
 <p>You can see the problem in this example</p>
@@ -281,13 +282,13 @@ frames a second.</p>
 </div>
 
 </p>
-<p>In the example above we want to rotate all of the &#39;F&#39;s at the same speed.
-The &#39;F&#39; in the middle is running full speed and is frame rate independent. The one
+<p>In the example above we want to rotate all of the 'F’s at the same speed.
+The ‘F’ in the middle is running full speed and is frame rate independent. The one
 on the left and the right are simulating if the browser was only running at 1/8th
 max speed for the current machine. The one on the left is <strong>NOT</strong> frame rate
 independent. The one on the right <strong>IS</strong> frame rate independent.</p>
 <p>Notice because the one on the left is not taking into account that the frame rate
-might be slow it&#39;s not keeping up. The one on the right though, even though it&#39;s
+might be slow it’s not keeping up. The one on the right though, even though it’s
 running at 1/8 the frame rate it is keeping up with the middle one running at full
 speed.</p>
 <p>The way to make animation frame rate independent is to compute how much time it took
@@ -312,22 +313,24 @@ requestAnimationFrame(drawScene);
 *  then = now;
 
    ...
-</code></pre><p>Once we have the <code class="notranslate" translate="no">deltaTime</code> in seconds then all our calculations can be in how
+</code></pre>
+<p>Once we have the <code class="notranslate" translate="no">deltaTime</code> in seconds then all our calculations can be in how
 many units per second we want something to happen. In this case
 <code class="notranslate" translate="no">rotationSpeed</code> is 1.2 which means we want to rotate 1.2 radians per second.
-That&#39;s about 1/5 of a turn or in other words it will take about 5 seconds to
+That’s about 1/5 of a turn or in other words it will take about 5 seconds to
 turn around completely regardless of the frame rate.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*    rotation[1] += rotationSpeed * deltaTime;
-</code></pre><p>Here&#39;s that one working.</p>
+</code></pre>
+<p>Here’s that one working.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-animation.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-animation.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>You aren&#39;t likely to see a difference from the one
-at the top of this page unless you are on a slow machine but if you don&#39;t
-make your animations frame rate independent you&#39;ll likely have some users
+<p>You aren’t likely to see a difference from the one
+at the top of this page unless you are on a slow machine but if you don’t
+make your animations frame rate independent you’ll likely have some users
 that are getting a very different experience than you planned.</p>
 <p>Next up <a href="webgl-3d-textures.html">how to apply textures</a>.</p>
 <div class="webgl_bottombar">
@@ -358,9 +361,6 @@ right time to sync your animation with the screen and it also only calls you if
 your tab is visible.
 </p>
 </div>
-
-
-
 
     </div>
     <div class="lesson-sidebar">

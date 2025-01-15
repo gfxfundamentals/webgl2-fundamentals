@@ -237,14 +237,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>GPGPU는 &quot;일반 목적&quot; GPU이고 이것은 픽셀을 그리는 것 외에 다른 용도로 사용하는 것을 의미합니다.</p>
+      <p>GPGPU는 “일반 목적” GPU이고 이것은 픽셀을 그리는 것 외에 다른 용도로 사용하는 것을 의미합니다.</p>
 <p>WebGL에서 GPGPU의 기본적인 컨셉은 텍스처가 이미지가 아닌 2D 배열이라는 것입니다.
 <a href="webgl-3d-textures.html">이 텍스쳐에 관한 글</a>에서 텍스처를 읽는 방법을 다루고,
 <a href="webgl-render-to-texture.html">이 텍스처 랜더링에 대한 글</a>에서 쓰는방법을 다뤘습니다.
 즉 텍스쳐를 2D 배열의 값이라고 하면 2D 배열에서 읽고 쓰는 방법을 배웠다고 할 수 있습니다.
 버퍼는 위치, 법선, 텍스처 좌표만이 아니라 무엇이든 될 수 있습니다. 예를 들어 속도, 질량, 주가 등이
 될 수 있고 창의적으로 수학적 지식을 사용하는 것이 WebGL에서 GPGPU의 본질입니다.</p>
-<h2 id="-">우선 텍스쳐로 해봅시다.</h2>
+<h2 id="우선-텍스쳐로-해봅시다">우선 텍스쳐로 해봅시다.</h2>
 <p>자바스크립트에 있는 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map"><code class="notranslate" translate="no">Array.p rototype.map</code></a> 함수는 앞 배열의 각 요소에 대하여 함수를 호출합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function multBy2(v) {
     return v * 2;
@@ -257,7 +257,7 @@ const dst = src.map(multBy2);
 </code></pre>
 <p><code class="notranslate" translate="no">multBy2</code>를 <code class="notranslate" translate="no">gl.drawArrays</code> 나 <code class="notranslate" translate="no">gl.drawElements</code>으로 셰이더에서 <code class="notranslate" translate="no">map</code> 함수를 실행하는 것과 비슷하다고 생각할 수 있습니다.
 하지만 약간의 차이가 있습니다.</p>
-<h2 id="-">셰이더는 배열을 생성하지 않습니다. 배열을 제공해야 합니다.</h2>
+<h2 id="셰이더는-배열을-생성하지-않습니다-배열을-제공해야-합니다">셰이더는 배열을 생성하지 않습니다. 배열을 제공해야 합니다.</h2>
 <p>커스텀 map 함수를 만들어 자바스크립트에서 가상의 셰이더를 시뮬레이션해 봅시다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function multBy2(v) {
   return v * 2;
@@ -276,7 +276,7 @@ const src = [1, 2, 3, 4, 5, 6];
 
 // dst is now [2, 4, 6, 8, 10, 12];
 </code></pre>
-<h2 id="-out-">셰이더는 out으로 설정한 변수를 내보내지 않습니다.</h2>
+<h2 id="셰이더는-out으로-설정한-변수를-내보내지-않습니다">셰이더는 out으로 설정한 변수를 내보내지 않습니다.</h2>
 <p>이것은 간단히 시뮬레이션 할 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">+let outColor;
 
@@ -299,7 +299,7 @@ mapSrcToDst(src, multBy2, dst);
 
 // dst is now [2, 4, 6, 8, 10, 12];
 </code></pre>
-<h2 id="-">셰이더는 원본 기반이 아니라 목적지 기반입니다.</h2>
+<h2 id="셰이더는-원본-기반이-아니라-목적지-기반입니다">셰이더는 원본 기반이 아니라 목적지 기반입니다.</h2>
 <p>다시말해, 셰이더는 목적지(픽셀)를 바꿔가며 여기에 어떤 값을 넣어야 하는지 묻습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">let outColor;
 
@@ -326,7 +326,7 @@ mapDst(dst, multBy2(src));
 
 // dst is now [2, 4, 6, 8, 10, 12];
 </code></pre>
-<h2 id="webgl-index-id-gl_fragcoord-">WebGL에서 값을 얻기위한 픽셀의 index 나 ID는 <code class="notranslate" translate="no">gl_FragCoord</code>입니다.</h2>
+<h2 id="webgl에서-값을-얻기위한-픽셀의-index-나-id는-gl_fragcoord입니다">WebGL에서 값을 얻기위한 픽셀의 index 나 ID는 <code class="notranslate" translate="no">gl_FragCoord</code>입니다.</h2>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">let outColor;
 +let gl_FragCoord;
 
@@ -353,7 +353,7 @@ mapDst(dst, multBy2(src));
 
 // dst is now [2, 4, 6, 8, 10, 12];
 </code></pre>
-<h2 id="webgl-2d-">WebGL에서 텍스처는 2D 배열입니다.</h2>
+<h2 id="webgl에서-텍스처는-2d-배열입니다">WebGL에서 텍스처는 2D 배열입니다.</h2>
 <p><code class="notranslate" translate="no">dst</code> 배열이 3x2 텍스처를 나타낸디고 가정해봅시다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">let outColor;
 let gl_FragCoord;
@@ -416,15 +416,15 @@ const dstWidth = 3;
 const dstHeight = 2;
 
 // 3x2 canvas를 만듭니다.
-const canvas = document.createElement(&#39;canvas&#39;);
+const canvas = document.createElement('canvas');
 canvas.width = dstWidth;
 canvas.height = dstHeight;
 
-const gl = canvas.getContext(&#39;webgl2&#39;);
+const gl = canvas.getContext('webgl2');
 
 const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
-const positionLoc = gl.getAttribLocation(program, &#39;position&#39;);
-const srcTexLoc = gl.getUniformLocation(program, &#39;srcTex&#39;);
+const positionLoc = gl.getAttribLocation(program, 'position');
+const srcTexLoc = gl.getUniformLocation(program, 'srcTex');
 
 // 전체 canvas를 커버하는 clip space의 quad를 만emqslek.
 const buffer = gl.createBuffer();
@@ -490,27 +490,32 @@ for (let i = 0; i &lt; dstWidth * dstHeight; ++i) {
 </p>
 <p>위의 코드에 대한 몇 가지 참고 사항.</p>
 <ul>
-<li><p>-1과 1사이의 clip space에서 사각형 그리기.</p>
+<li>
+<p>-1과 1사이의 clip space에서 사각형 그리기.</p>
 <p>We create vertices for a -1 to +1 quad from 2 triangles. This means, assuming the viewport
 우리는 2개의 삼각형으로 -1에서 1사이의 사각형을 만들었다. viewport가 정확히 설정됐다면
 목적지의 모든픽셀을 그릴 것입니다.
 다시말해 셰이더에게 배열의 모든 요소에 대해 값을 생성하라고 한다. 이 예제에서 배열은 canvas 다.</p>
 </li>
-<li><p><code class="notranslate" translate="no">texelFetch</code> 는 하나의 texel을 가져오는 텍스처 함수입니다.</p>
+<li>
+<p><code class="notranslate" translate="no">texelFetch</code> 는 하나의 texel을 가져오는 텍스처 함수입니다.</p>
 <p>3개의 인자를 가지는데 sampler, 정수 기반의 texel 좌표, 밉맵 레벨을 받습니다.
 <code class="notranslate" translate="no">gl_FragCoord</code> 는 vec2이고 <code class="notranslate" translate="no">texelFetch</code>를 사용하기위해선 <code class="notranslate" translate="no">ivec2</code>로 형변환 해야합니다.
 소스 텍스처와 대상 텍스처(화면)의 크기가 이 경우 동일한 경우 여기서 추가 연산할 필요가 없습니다.</p>
 </li>
-<li><p>셰이더는 픽셀당 4개의 값을 출력해야합니다.</p>
+<li>
+<p>셰이더는 픽셀당 4개의 값을 출력해야합니다.</p>
 <p>이번 예외적인 경우에는 이것이 출력을 읽는 방법에 영향을 줍니다. 우리는 <code class="notranslate" translate="no">readPixels</code>로 <code class="notranslate" translate="no">RGBA/UNSIGNED_BYTE</code>
 <a href="webgl-readpixels.html">because other format/type combinations are not supported</a>를 요청했습니다.
 그래서 모든 출력의 4번째 값을 확인해야합니다.</p>
 <p>참고: WebGL이 한 번에 4가지 값을 출력한다는 사실을 활용하여 더 효율적으로 설계할수 있을 것입니다.</p>
 </li>
-<li><p>텍스쳐의 내부 포맷은 <code class="notranslate" translate="no">R8</code>입니다.</p>
+<li>
+<p>텍스쳐의 내부 포맷은 <code class="notranslate" translate="no">R8</code>입니다.</p>
 <p>이것의 의미는 오직 텍스처의 Red 채널만 데이터에서 얻을수 있다는 것입니다.</p>
 </li>
-<li><p>입력 데이터와 출력 데이터(canvas)는 모두 <code class="notranslate" translate="no">UNSIGNED_BYTE</code> 값입니다.</p>
+<li>
+<p>입력 데이터와 출력 데이터(canvas)는 모두 <code class="notranslate" translate="no">UNSIGNED_BYTE</code> 값입니다.</p>
 <p>이것의 의미는 0에서 255사이의 정수값만 주고받을 수 있다는 것입니다.
 다른 형식의 텍스처를 전달해서 사용 할 수도 있습니다.
 또한 출력 값의 범위를 넓히기 위해 다른 형식의 텍스처로 렌더링할 수 있습니다.</p>
@@ -562,9 +567,9 @@ void main() {
 </code></pre>
 <p>자바스크립트에서 uniform변수 <code class="notranslate" translate="no">dstDimensions</code>을 전달해야합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
-const positionLoc = gl.getAttribLocation(program, &#39;position&#39;);
-const srcTexLoc = gl.getUniformLocation(program, &#39;srcTex&#39;);
-+const dstDimensionsLoc = gl.getUniformLocation(program, &#39;dstDimensions&#39;);
+const positionLoc = gl.getAttribLocation(program, 'position');
+const srcTexLoc = gl.getUniformLocation(program, 'srcTex');
++const dstDimensionsLoc = gl.getUniformLocation(program, 'dstDimensions');
 </code></pre>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.useProgram(program);
 gl.uniform1i(srcTexLoc, 0); // 셰이더에게 src 텍스처가 0번째에 있다고 알려줍니다.
@@ -583,8 +588,8 @@ gl.uniform1i(srcTexLoc, 0); // 셰이더에게 src 텍스처가 0번째에 있�
 
 </p>
 <p>더 많은 배열을 입력으로 사용하려면 텍스처를 추가하기만 하면 됩니다.</p>
-<h2 id="-transform-feedback-"><em>transform feedback</em>을 사용해봅시다.</h2>
-<p>&quot;Transform Feedback&quot; 은 vertex shader에서 varrings 출력을 하나 이상의 버퍼에 쓸 수 있는 기능입니다.
+<h2 id="transform-feedback을-사용해봅시다"><em>transform feedback</em>을 사용해봅시다.</h2>
+<p>“Transform Feedback” 은 vertex shader에서 varrings 출력을 하나 이상의 버퍼에 쓸 수 있는 기능입니다.
 transform feedback의 장점은 출력이 일차원 이기 때문에 예측하기가 더 쉽다는 것입니다.
 앞에서 본 자바스크립트의 <code class="notranslate" translate="no">map</code>함수와 더 비슷합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
@@ -608,7 +613,7 @@ precision highp float;
 void main() {
 }
 </code></pre>
-<p>transform feedback을 사용하려면 WebGL에 작성하고자 하는 varring들과 순서를 알려주어야 합니다. 셰이더 프로그램을 연결하기 전에 &#39;gl.transformFeedbackVariings&#39;를 호출해야 합니다. 이번에는 이 과정을 확인하기위해서 셰이더 컴파일과 링크를 수동으로 해보겠습니다.</p>
+<p>transform feedback을 사용하려면 WebGL에 작성하고자 하는 varring들과 순서를 알려주어야 합니다. 셰이더 프로그램을 연결하기 전에 'gl.transformFeedbackVariings’를 호출해야 합니다. 이번에는 이 과정을 확인하기위해서 셰이더 컴파일과 링크를 수동으로 해보겠습니다.</p>
 <p>다음은 쉐이더를 컴파일하기 위한 코드입니다.
 <a href="webgl-fundamentals.html">첫번째 글</a>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function createShader(gl, type, src) {
@@ -628,7 +633,7 @@ const fShader = createShader(gl, gl.FRAGMENT_SHADER, fs);
 const program = gl.createProgram();
 gl.attachShader(program, vShader);
 gl.attachShader(program, fShader);
-gl.transformFeedbackVaryings(program, [&#39;sum&#39;, &#39;difference&#39;, &#39;product&#39;], gl.SEPARATE_ATTRIBS);
+gl.transformFeedbackVaryings(program, ['sum', 'difference', 'product'], gl.SEPARATE_ATTRIBS);
 gl.linkProgram(program);
 if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
     throw new Error(gl.getProgramParameter(program));
@@ -639,12 +644,12 @@ fragment 셰이더에서 어떤 작업을 한 경우, varying들 중 일부만 f
 마지막 인자는 1이나 2가 될수있습니다. 또는 매핑되는 <code class="notranslate" translate="no">SEPARATE_ATTRIBS</code> 나 <code class="notranslate" translate="no">INTERLEAVED_ATTRIBS</code>도 있습니다.
 <code class="notranslate" translate="no">SEPARATE_ATTRIBS</code>의 뜻은 각 varying이 다른 버퍼에 저장된다는 속성이고
 <code class="notranslate" translate="no">INTERLEAVED_ATTRIBS</code>는 모든 varrings가 같은 버퍼에 저장된다는 속성입니다. 순서는 위에서 지정한 순서로 저장됩니다.
-위 예제에서 <code class="notranslate" translate="no">[&#39;sum&#39;, &#39;difference&#39;, &#39;product&#39;]</code>로 정의 하고 <code class="notranslate" translate="no">INTERLEAVED_ATTRIBS</code>를 사용한다면 출력은
+위 예제에서 <code class="notranslate" translate="no">['sum', 'difference', 'product']</code>로 정의 하고 <code class="notranslate" translate="no">INTERLEAVED_ATTRIBS</code>를 사용한다면 출력은
 <code class="notranslate" translate="no">sum0, difference0, product0, sum1, difference1, product1, sum2, difference2, product2, etc...</code>로 하나의 버퍼에
 저장됩니다. 위 예제에선 <code class="notranslate" translate="no">SEPARATE_ATTRIBS</code>했고 각각 다른 버퍼에 저장될 것입니다.</p>
 <p>따라서 다른 예와 마찬가지로 입력 attributes에 대한 버퍼를 설정해야 합니다</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const aLoc = gl.getAttribLocation(program, &#39;a&#39;);
-const bLoc = gl.getAttribLocation(program, &#39;b&#39;);
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const aLoc = gl.getAttribLocation(program, 'a');
+const bLoc = gl.getAttribLocation(program, 'b');
 
 // vertex array object를 생성합니다. (attribute state)
 const vao = gl.createVertexArray();
@@ -703,7 +708,7 @@ gl.bindBuffer(gl.ARRAY_BUFFER, null); // 생성된 버퍼들이 bind되어있으
 </code></pre>
 <p><code class="notranslate" translate="no">bindBufferBase</code>를 호출해서 output0, output1, output2이 사용할 버퍼를 각각 설정해줍니다. 0, 1, 2 출력들은 프로그램을 링킹할때 <code class="notranslate" translate="no">gl.transformFeedbackVaryings</code>로 전달한 변수이름 배열에 대응됩니다.</p>
 <p>생성된 &quot;transform feedback&quot;이 완료되면 다음과 같은 상태가 됩니다.</p>
-<p><img src="../resources/transform-feedback-diagram.png" style="width: 625px;" class="webgl_center"></p>
+<img src="../resources/transform-feedback-diagram.png" style="width: 625px;" class="webgl_center">
 <p>또한 버퍼 내에서 쓸 하위 범위를 지정할 수 있는 <code class="notranslate" translate="no">bindBufferRange</code> 기능도 있지만 여기서는 사용하지 않습니다.</p>
 <p>그리고 셰이더를 사용하기 위해 다음과 같이 설정합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.useProgram(program);
@@ -729,9 +734,9 @@ gl.disable(gl.RASTERIZER_DISCARD);
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">log(`a: ${a}`);
 log(`b: ${b}`);
 
-printResults(gl, sumBuffer, &#39;sums&#39;);
-printResults(gl, differenceBuffer, &#39;differences&#39;);
-printResults(gl, productBuffer, &#39;products&#39;);
+printResults(gl, sumBuffer, 'sums');
+printResults(gl, differenceBuffer, 'differences');
+printResults(gl, productBuffer, 'products');
 
 function printResults(gl, buffer, label) {
     const results = new Float32Array(a.length);
@@ -751,9 +756,9 @@ function printResults(gl, buffer, label) {
 </div>
 
 </p>
-<p>이것으로 GPU로 전달한 &#39;a&#39;와 &#39;b&#39;들의 값을 덧셈, 뺄셈, 곱셈 하는것을 볼 수 있습니다.</p>
+<p>이것으로 GPU로 전달한 'a’와 'b’들의 값을 덧셈, 뺄셈, 곱셈 하는것을 볼 수 있습니다.</p>
 <p>참고: <a href="https://webgl2fundamentals.org/webgl/lessons/resources/webgl-state-diagram.html?exampleId=transform-feedback">transform feedback에 대한 state diagram</a>이 위의 예제와 똑같진 않지만 시각적으로 파악하기에 도움이 될 것입니다. transform feedback과 함께 사용하는 vertex 셰이더는 점의 원에 대한 위치와 색상을 생성합니다.</p>
-<h2 id="-particles">첫 번째 예제: particles</h2>
+<h2 id="첫-번째-예제-particles">첫 번째 예제: particles</h2>
 <p>매우 간단한 파티클 시스템이 있다고 가정합니다. 모든 파티클은 위치와 속도를 가지고
 화면을 벗어났을때 반대편으로 wraping합니다.</p>
 <p>이 사이트의 다른 대부분의 글에서 파이틀의 위치를 자바스크립트에서 업데이트 합니다.</p>
@@ -768,14 +773,16 @@ setup particle attributes
 for each particle
   set uniforms
   draw particle
-</code></pre><p>또는 모든 파티클의 새로운 위치를 버퍼에 업로드 할 수 있습니다.</p>
+</code></pre>
+<p>또는 모든 파티클의 새로운 위치를 버퍼에 업로드 할 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">bindBuffer(..., particlePositionBuffer)
 bufferData(..., latestParticlePositions, ...)
 useProgram (particleShader)
 setup particle attributes
 set uniforms
 draw particles
-</code></pre><p>위의 transform feedback 예제을 사용하는것으로 각 파이틀에 대한 속도에 해당하는 버퍼를 만들 수 있습니다.
+</code></pre>
+<p>위의 transform feedback 예제을 사용하는것으로 각 파이틀에 대한 속도에 해당하는 버퍼를 만들 수 있습니다.
 그리고 그 위치들을 위한 버퍼를 2개 만듭니다. transform feedback을 사용하여 한 위치 버퍼에 속도를 추가하고 다른
 위치 버퍼에 씁니다. 그리고 새로운 위치로 파티클을 그립니다. 다음 프레임에서 방금 업데이트한 버퍼에서 위치를 읽고
 속도를 더해 처음에 읽은 버퍼에 저장합니다.</p>
@@ -790,7 +797,7 @@ uniform vec2 canvasDimensions;
 out vec2 newPosition;
 
 vec2 euclideanModulo(vec2 n, vec2 m) {
-    return mod(mod(n, m) + m, m);
+	return mod(mod(n, m) + m, m);
 }
 
 void main() {
@@ -828,20 +835,20 @@ void main() {
 }
 </code></pre>
 <p>그리고 이것을 셰이더를 컴파일 할 때 transform feedback varyings 변수이름 배열을 포함해서 사용합니다.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const updatePositionProgram = createProgram(gl, [updatePositionVS, updatePositionFS], [&#39;newPosition&#39;]);
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const updatePositionProgram = createProgram(gl, [updatePositionVS, updatePositionFS], ['newPosition']);
 const drawParticlesProgram = createProgram(gl, [drawParticlesVS, drawParticlesFS]);
 </code></pre>
 <p>평소처럼 uniform 변수의 위치를 찾습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const updatePositionPrgLocs = {
-    oldPosition: gl.getAttribLocation(updatePositionProgram, &#39;oldPosition&#39;),
-    velocity: gl.getAttribLocation(updatePositionProgram, &#39;velocity&#39;),
-    canvasDimensions: gl.getUniformLocation(updatePositionProgram, &#39;canvasDimensions&#39;),
-    deltaTime: gl.getUniformLocation(updatePositionProgram, &#39;deltaTime&#39;),
+    oldPosition: gl.getAttribLocation(updatePositionProgram, 'oldPosition'),
+    velocity: gl.getAttribLocation(updatePositionProgram, 'velocity'),
+    canvasDimensions: gl.getUniformLocation(updatePositionProgram, 'canvasDimensions'),
+    deltaTime: gl.getUniformLocation(updatePositionProgram, 'deltaTime'),
 };
 
 const drawParticlesProgLocs = {
-    position: gl.getAttribLocation(drawParticlesProgram, &#39;position&#39;),
-    matrix: gl.getUniformLocation(drawParticlesProgram, &#39;matrix&#39;),
+    position: gl.getAttribLocation(drawParticlesProgram, 'position'),
+    matrix: gl.getUniformLocation(drawParticlesProgram, 'matrix'),
 };
 </code></pre>
 <p>이제 랜덤 위치와 속도를 생성합니다.</p>
@@ -935,7 +942,7 @@ const tf2 = makeTransformFeedback(gl, position2Buffer);
 </code></pre>
 <p>transform feedback을 사용할 때는 다른 bind point에서 버퍼의 bind를 해제하는 것이 중요합니다.
 <code class="notranslate" translate="no">ARRAY_BUFFER</code>는 이전에 설정한 버퍼를 계속해서 가지고 있습니다. <code class="notranslate" translate="no">TRANSFORM_FEEDBACK_BUFFER</code>은
-<code class="notranslate" translate="no">gl.bindBufferBase</code>을 호출할때 설정됩니다.이것은 조금 헷갈리는데 <code class="notranslate" translate="no">TRANSFORM_FEEDBACK_BUFFER</code>로 gl.bindBufferBase<code class="notranslate" translate="no">을 호출하는 것은 사실 두개의 공간에 버퍼를 bind하는 것입니다. transform feedback 객체 내부에서 찾은 bind point고 두번째는</code>TRANSFORM_FEEDBACK_BUFFER`라는 전역 bind point입니다.</p>
+<code class="notranslate" translate="no">gl.bindBufferBase</code>을 호출할때 설정됩니다.이것은 조금 헷갈리는데 <code class="notranslate" translate="no">TRANSFORM_FEEDBACK_BUFFER</code>로 gl.bindBufferBase<code class="notranslate" translate="no">을 호출하는 것은 사실 두개의 공간에 버퍼를 bind하는 것입니다. transform feedback 객체 내부에서 찾은 bind point고 두번째는 </code>TRANSFORM_FEEDBACK_BUFFER`라는 전역 bind point입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// 남아있는 것을 unbind 합니다.
 gl.bindBuffer(gl.ARRAY_BUFFER, null);
 gl.bindBuffer(gl.TRANSFORM_FEEDBACK_BUFFER, null);
@@ -1015,11 +1022,11 @@ requestAnimationFrame(render);
 </div>
 
 </p>
-<h2 id="-">다음 예제: 점으로부터 가장 가까운 선분 찾기.</h2>
+<h2 id="다음-예제-점으로부터-가장-가까운-선분-찾기">다음 예제: 점으로부터 가장 가까운 선분 찾기.</h2>
 <p>좋은 예제인지는 모르겠습니다. 왜냐하면 모든 선과 점을 비교하는 것보다 더 나은 알고리즘이 있을 것입니다.
 예를 들어 여러 공간 분할 알고리즘을 사용하면 쉽게 95%의 점을 제외 하는것이 가능하고 더 빨라질 것입니다.
 그래도 이 예제를 통해 GPGPU의 몇 가지 기능을 알수있습니다.</p>
-<p>문제 : 500개의 점과 1000개의 선분이 있고 각 점마다 어떤 선분이 가장 가까운지 찾습니다. 전체 탐색으로 문제를 풀면..</p>
+<p>문제 : 500개의 점과 1000개의 선분이 있고 각 점마다 어떤 선분이 가장 가까운지 찾습니다. 전체 탐색으로 문제를 풀면…</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">for each point
   minDistanceSoFar = MAX_VALUE
   for each line segment
@@ -1027,7 +1034,8 @@ requestAnimationFrame(render);
     if distance is &lt; minDistanceSoFar
        minDistanceSoFar = distance
        closestLine = line segment
-</code></pre><p>500개의 점을 각각 1000개의 선분과 비교하면 500,000번의 비교가 이뤄진다.
+</code></pre>
+<p>500개의 점을 각각 1000개의 선분과 비교하면 500,000번의 비교가 이뤄진다.
 일반적인 GPU는 100또는 1000개의 코어를 가지고 있기 때문에 GPU에서 이것을 할 수 있다면 잠재적으로 수백 또는 수천배 더
 빨라질 수 있습니다.</p>
 <p>이번에는 파티클에 대해 했던것 처럼 버퍼에 점을 넣을 수 있지만 선 세그먼트를 버퍼에 넣을 수는 없습니다.
@@ -1067,7 +1075,7 @@ requestAnimationFrame(render);
 
   void main() {
     ivec2 linesTexDimensions = textureSize(linesTex, 0);
-
+    
     // find the closest line segment
     float minDist = 10000000.0; 
     int minIndex = -1;
@@ -1080,7 +1088,7 @@ requestAnimationFrame(render);
         minIndex = i;
       }
     }
-
+    
     closestNdx = minIndex;
   }
   `;
@@ -1095,7 +1103,7 @@ const numPoints = points.length / 2;
 const numLineSegments = lines.length / 2 / 2;
 </code></pre>
 <p>표로 확인하면 아래와 같습니다.</p>
-<p><img src="../resources/line-segments-points.svg" style="width: 500px;" class="webgl_center"></p>
+<img src="../resources/line-segments-points.svg" style="width: 500px;" class="webgl_center">
 <p>선분들은 왼쪽에서 오른쪽으로 0에서 4까지 번호가 매겨진다. 따라서 코드를 실행한다면,
 첫 번째 점(<span style="color: red;">빨간색</span>)은 가장 가까운 선으로서 1의 값을 가져야하고,
 두번째 점(<span style="color: green;">초록색</span>)은 3의 값을 가져야 합니다.</p>
@@ -1144,12 +1152,12 @@ const { tex: linesTex, dimensions: linesTexDimensions } = createDataTexture(gl, 
 저장하고 싶다면 텍스처에 데이터를 512x2와 같은 텍스처로 데이터를 넣어야합니다? 데이터를 정사각형에 넣는다면
 정사각형으로 만든 최대크기까지 제한이 없습니다. 따라서 최대크기가 1024일때 100만개 이상의 값을 가지는 배열을 수용할 수 있습니다.</p>
 <p>다음으로 셰이더를 컴파일하고 uniform 위치를 look up합니다.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const closestLinePrg = createProgram(gl, [closestLineVS, closestLineFS], [&#39;closestNdx&#39;]);
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const closestLinePrg = createProgram(gl, [closestLineVS, closestLineFS], ['closestNdx']);
 
 const closestLinePrgLocs = {
-    point: gl.getAttribLocation(closestLinePrg, &#39;point&#39;),
-    linesTex: gl.getUniformLocation(closestLinePrg, &#39;linesTex&#39;),
-    numLineSegments: gl.getUniformLocation(closestLinePrg, &#39;numLineSegments&#39;),
+    point: gl.getAttribLocation(closestLinePrg, 'point'),
+    linesTex: gl.getUniformLocation(closestLinePrg, 'linesTex'),
+    numLineSegments: gl.getUniformLocation(closestLinePrg, 'numLineSegments'),
 };
 </code></pre>
 <p>점들에 대한 vertex array를 만듭니다.</p>
@@ -1345,7 +1353,7 @@ void main() {
 <p>마지막으로 점을 그릴 때 사용한 방법과 동일하게 색을 계산하여 점과 일치하도록 합니다.</p>
 <p>이제 모든 새로운 셰이더를 컴파일하고 uniform 위치를 가져옵니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const closestLinePrg = createProgram(
-    gl, [closestLineVS, closestLineFS], [&#39;closestNdx&#39;]);
+    gl, [closestLineVS, closestLineFS], ['closestNdx']);
 +const drawLinesPrg = createProgram(
 +    gl, [drawLinesVS, drawClosestLinesPointsFS]);
 +const drawClosestLinesPrg = createProgram(
@@ -1354,24 +1362,24 @@ void main() {
 +    gl, [drawPointsVS, drawClosestLinesPointsFS]);
 
 const closestLinePrgLocs = {
-  point: gl.getAttribLocation(closestLinePrg, &#39;point&#39;),
-  linesTex: gl.getUniformLocation(closestLinePrg, &#39;linesTex&#39;),
-  numLineSegments: gl.getUniformLocation(closestLinePrg, &#39;numLineSegments&#39;),
+  point: gl.getAttribLocation(closestLinePrg, 'point'),
+  linesTex: gl.getUniformLocation(closestLinePrg, 'linesTex'),
+  numLineSegments: gl.getUniformLocation(closestLinePrg, 'numLineSegments'),
 };
 +const drawLinesPrgLocs = {
-+  linesTex: gl.getUniformLocation(drawLinesPrg, &#39;linesTex&#39;),
-+  matrix: gl.getUniformLocation(drawLinesPrg, &#39;matrix&#39;),
++  linesTex: gl.getUniformLocation(drawLinesPrg, 'linesTex'),
++  matrix: gl.getUniformLocation(drawLinesPrg, 'matrix'),
 +};
 +const drawClosestLinesPrgLocs = {
-+  closestNdx: gl.getAttribLocation(drawClosestLinesPrg, &#39;closestNdx&#39;),
-+  linesTex: gl.getUniformLocation(drawClosestLinesPrg, &#39;linesTex&#39;),
-+  matrix: gl.getUniformLocation(drawClosestLinesPrg, &#39;matrix&#39;),
-+  numPoints: gl.getUniformLocation(drawClosestLinesPrg, &#39;numPoints&#39;),
++  closestNdx: gl.getAttribLocation(drawClosestLinesPrg, 'closestNdx'),
++  linesTex: gl.getUniformLocation(drawClosestLinesPrg, 'linesTex'),
++  matrix: gl.getUniformLocation(drawClosestLinesPrg, 'matrix'),
++  numPoints: gl.getUniformLocation(drawClosestLinesPrg, 'numPoints'),
 +};
 +const drawPointsPrgLocs = {
-+  point: gl.getAttribLocation(drawPointsPrg, &#39;point&#39;),
-+  matrix: gl.getUniformLocation(drawPointsPrg, &#39;matrix&#39;),
-+  numPoints: gl.getUniformLocation(drawPointsPrg, &#39;numPoints&#39;),
++  point: gl.getAttribLocation(drawPointsPrg, 'point'),
++  matrix: gl.getUniformLocation(drawPointsPrg, 'matrix'),
++  numPoints: gl.getUniformLocation(drawPointsPrg, 'numPoints'),
 +};
 </code></pre>
 <p>점들과 가까운 선분을 그리기위해 vertex arrays가 필요합니다.</p>
@@ -1465,7 +1473,7 @@ gl.drawArrays(gl.POINTS, 0, numPoints);
 const numPoints = points.length / 2;
 const numLineSegments = lines.length / 2 / 2;
 </code></pre>
-<p>그리고 실행하게 되면..</p>
+<p>그리고 실행하게 되면…</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-gpgpu-closest-line-transformfeedback.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-gpgpu-closest-line-transformfeedback.html" target="_blank">새 창으로 열기</a>
@@ -1497,13 +1505,13 @@ uniform float deltaTime;
 out vec4 outColor;
 
 vec2 euclideanModulo(vec2 n, vec2 m) {
-    return mod(mod(n, m) + m, m);
+	return mod(mod(n, m) + m, m);
 }
 
 void main() {
   // 텍스처 좌표를 gl_FragCoord로 계산합니다.
   ivec2 texelCoord = ivec2(gl_FragCoord.xy);
-
+  
   vec2 position = texelFetch(linesTex, texelCoord, 0).xy;
   vec2 velocity = texelFetch(velocityTex, texelCoord, 0).xy;
   vec2 newPosition = euclideanModulo(position + velocity * deltaTime, canvasDimensions);
@@ -1514,11 +1522,11 @@ void main() {
 </code></pre>
 <p>그런 다음 포인트와 선분을 업데이트 하기위한 2개의 새 셰이더를 컴파일하고 uniform의 위치를 찾아둡니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">+const updatePositionPrg = createProgram(
-+    gl, [updatePositionVS, updatePositionFS], [&#39;newPosition&#39;]);
++    gl, [updatePositionVS, updatePositionFS], ['newPosition']);
 +const updateLinesPrg = createProgram(
 +    gl, [updateLinesVS, updateLinesFS]);
 const closestLinePrg = createProgram(
-    gl, [closestLineVS, closestLineFS], [&#39;closestNdx&#39;]);
+    gl, [closestLineVS, closestLineFS], ['closestNdx']);
 const drawLinesPrg = createProgram(
     gl, [drawLinesVS, drawClosestLinesPointsFS]);
 const drawClosestLinesPrg = createProgram(
@@ -1527,37 +1535,37 @@ const drawPointsPrg = createProgram(
     gl, [drawPointsVS, drawClosestLinesPointsFS]);
 
 +const updatePositionPrgLocs = {
-+  oldPosition: gl.getAttribLocation(updatePositionPrg, &#39;oldPosition&#39;),
-+  velocity: gl.getAttribLocation(updatePositionPrg, &#39;velocity&#39;),
-+  canvasDimensions: gl.getUniformLocation(updatePositionPrg, &#39;canvasDimensions&#39;),
-+  deltaTime: gl.getUniformLocation(updatePositionPrg, &#39;deltaTime&#39;),
++  oldPosition: gl.getAttribLocation(updatePositionPrg, 'oldPosition'),
++  velocity: gl.getAttribLocation(updatePositionPrg, 'velocity'),
++  canvasDimensions: gl.getUniformLocation(updatePositionPrg, 'canvasDimensions'),
++  deltaTime: gl.getUniformLocation(updatePositionPrg, 'deltaTime'),
 +};
 +const updateLinesPrgLocs = {
-+  position: gl.getAttribLocation(updateLinesPrg, &#39;position&#39;),
-+  linesTex: gl.getUniformLocation(updateLinesPrg, &#39;linesTex&#39;),
-+  velocityTex: gl.getUniformLocation(updateLinesPrg, &#39;velocityTex&#39;),
-+  canvasDimensions: gl.getUniformLocation(updateLinesPrg, &#39;canvasDimensions&#39;),
-+  deltaTime: gl.getUniformLocation(updateLinesPrg, &#39;deltaTime&#39;),
++  position: gl.getAttribLocation(updateLinesPrg, 'position'),
++  linesTex: gl.getUniformLocation(updateLinesPrg, 'linesTex'),
++  velocityTex: gl.getUniformLocation(updateLinesPrg, 'velocityTex'),
++  canvasDimensions: gl.getUniformLocation(updateLinesPrg, 'canvasDimensions'),
++  deltaTime: gl.getUniformLocation(updateLinesPrg, 'deltaTime'),
 +};
 const closestLinePrgLocs = {
-  point: gl.getAttribLocation(closestLinePrg, &#39;point&#39;),
-  linesTex: gl.getUniformLocation(closestLinePrg, &#39;linesTex&#39;),
-  numLineSegments: gl.getUniformLocation(closestLinePrg, &#39;numLineSegments&#39;),
+  point: gl.getAttribLocation(closestLinePrg, 'point'),
+  linesTex: gl.getUniformLocation(closestLinePrg, 'linesTex'),
+  numLineSegments: gl.getUniformLocation(closestLinePrg, 'numLineSegments'),
 };
 const drawLinesPrgLocs = {
-  linesTex: gl.getUniformLocation(drawLinesPrg, &#39;linesTex&#39;),
-  matrix: gl.getUniformLocation(drawLinesPrg, &#39;matrix&#39;),
+  linesTex: gl.getUniformLocation(drawLinesPrg, 'linesTex'),
+  matrix: gl.getUniformLocation(drawLinesPrg, 'matrix'),
 };
 const drawClosestLinesPrgLocs = {
-  closestNdx: gl.getAttribLocation(drawClosestLinesPrg, &#39;closestNdx&#39;),
-  linesTex: gl.getUniformLocation(drawClosestLinesPrg, &#39;linesTex&#39;),
-  matrix: gl.getUniformLocation(drawClosestLinesPrg, &#39;matrix&#39;),
-  numPoints: gl.getUniformLocation(drawClosestLinesPrg, &#39;numPoints&#39;),
+  closestNdx: gl.getAttribLocation(drawClosestLinesPrg, 'closestNdx'),
+  linesTex: gl.getUniformLocation(drawClosestLinesPrg, 'linesTex'),
+  matrix: gl.getUniformLocation(drawClosestLinesPrg, 'matrix'),
+  numPoints: gl.getUniformLocation(drawClosestLinesPrg, 'numPoints'),
 };
 const drawPointsPrgLocs = {
-  point: gl.getAttribLocation(drawPointsPrg, &#39;point&#39;),
-  matrix: gl.getUniformLocation(drawPointsPrg, &#39;matrix&#39;),
-  numPoints: gl.getUniformLocation(drawPointsPrg, &#39;numPoints&#39;),
+  point: gl.getAttribLocation(drawPointsPrg, 'point'),
+  matrix: gl.getUniformLocation(drawPointsPrg, 'matrix'),
+  numPoints: gl.getUniformLocation(drawPointsPrg, 'numPoints'),
 };
 </code></pre>
 <p>점과 선분에 대해 속도를 생성해야 합니다.</p>
@@ -1681,9 +1689,9 @@ const gl = canvas.getContext(&quot;webgl2&quot;);
 if (!gl) {
   return;
 }
-+const ext = gl.getExtension(&#39;EXT_color_buffer_float&#39;);
++const ext = gl.getExtension('EXT_color_buffer_float');
 +if (!ext) {
-+  alert(&#39;need EXT_color_buffer_float&#39;);
++  alert('need EXT_color_buffer_float');
 +  return;
 +}
 </code></pre>
@@ -1858,9 +1866,10 @@ function updateLineEndPoints(deltaTime) {
 </div>
 
 </p>
-<h2 id="gpgpu-">GPGPU에 대한 몇 가지 주의 사항</h2>
+<h2 id="gpgpu에-대한-몇-가지-주의-사항">GPGPU에 대한 몇 가지 주의 사항</h2>
 <ul>
-<li><p>WebGL1의 GPGPU는 대부분 출력 텍스처로 2D 배열만 지원했습니다. WebGL2는 transfrom feedback을
+<li>
+<p>WebGL1의 GPGPU는 대부분 출력 텍스처로 2D 배열만 지원했습니다. WebGL2는 transfrom feedback을
 통해 임의의 크기의 1D 배열을 처리할 수 있는 기능이 추가됐습니다.</p>
 <p>궁금하다면 <a href="https://webglfundamentals.org/webgl/lessons/webgl-gpgpu.html">webgl1을 사용한 동일한 글</a>을
 참조하여 텍스처로 출력하는 기능만 사용하여 이 것들이 어떻게 구현됐는지 확인할 수 있습니다. 하지만
@@ -1873,7 +1882,8 @@ function updateLineEndPoints(deltaTime) {
 <li><a href="../../webgl-gpgpu-closest-line-dynamic.html">동적인 버전</a></li>
 </ul>
 </li>
-<li><p>파이어폭스 버그<a id="firefox-bug"></a></p>
+<li>
+<p>파이어폭스 버그<a id="firefox-bug"></a></p>
 <p>버전 84의 파이어폭스는 <code class="notranslate" translate="no">drawArraysIndexed</code>가 호출 됐을때 최소 하나의 활성화된 attribute가 분모로 0을 사용하는
 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1677552">버그</a>가 있다.
 즉, 위의 예제에서 <code class="notranslate" translate="no">drawArraysIndexed</code>으로 가까운 선분들을 그린다면 실패합니다.</p>
@@ -1887,10 +1897,12 @@ function updateLineEndPoints(deltaTime) {
 </code></pre>
 <p>를 사용할때 attribute로 사용합니다. <a href="../../webgl/webgl-gpgpu-closest-line-dynamic-transformfeedback-ff.html">이렇게 파이어폭스에서 동작 할 것입니다.</a>.</p>
 </li>
-<li><p>GPU는 CPU와 같은 정밀도를 가지고 있지 않습니다.</p>
+<li>
+<p>GPU는 CPU와 같은 정밀도를 가지고 있지 않습니다.</p>
 <p>결과를 보고 받아들일지 결정해야합니다.</p>
 </li>
-<li><p>GPGPU에대한 overhead.</p>
+<li>
+<p>GPGPU에대한 overhead.</p>
 <p>위의 처음 몇가지 예에서 WebGL을 사용하여 데이터를 계산한다음 결과를 읽었습니다.
 버퍼들과 텍스처를 설정하고 attributes 와 uniforms를 설정하는 것은 오래 걸립니다.
 특정 크기 이하의 겅우 자바스크립트로 수행하는 것이 더 빠를수도 있습니다.
@@ -1898,7 +1910,8 @@ function updateLineEndPoints(deltaTime) {
 트레이드오프가 정의되지 않은 위치입니다. 최소 1000개 이상의 작업을 수행하지 않을 경우
 자바스크립트를 사용하는 것이 좋습니다.</p>
 </li>
-<li><p><code class="notranslate" translate="no">readPixels</code> 과 <code class="notranslate" translate="no">getBufferSubData</code> 는 느립니다.</p>
+<li>
+<p><code class="notranslate" translate="no">readPixels</code> 과 <code class="notranslate" translate="no">getBufferSubData</code> 는 느립니다.</p>
 <p>WebGL에서 결과를 읽는 것은 느리기 때문에 가능한 피하는 것이 중요합니다. 예를 들어,
 위의 파티클 시스템이나 동적인 가까운 선분찾기 예제의 결과는 자바스크립트로 읽지 않습니다.
 가능한 오래 GPU에 결과를 보관하고 있습니다. 비효율적인 예시를 들면</p>
@@ -1912,7 +1925,7 @@ function updateLineEndPoints(deltaTime) {
 <li>다음 단계를 위해 결과를 준비하고</li>
 <li>준비된 결과를 GPU에 업로드 합니다.</li>
 <li>다시 GPU로 연산하고</li>
-<li>결과를 읽고 ...</li>
+<li>결과를 읽고 …</li>
 </ul>
 <p>아래와 같은 창의적 해결책을 찾는다면 훨씬 더 빠를 것입니다.</p>
 <ul>
@@ -1935,7 +1948,8 @@ function updateLineEndPoints(deltaTime) {
 히스토그램 데이터를 직접 시각화 하는 셰이더를 작성하여 자바스크립트로 다시 읽을 필요가 없게 되었습니다.</p>
 <p>그렇게 함으로써 전체 프로세스가 GPU에 머무르며 훨씬 더 빠를 수 있었습니다.</p>
 </li>
-<li><p>GPU는 많은 것들을 병렬로 처리 할 수 있지만, 대부분은 CPU가 멀티 테스킹하는 방식으로 할 수 없습니다.
+<li>
+<p>GPU는 많은 것들을 병렬로 처리 할 수 있지만, 대부분은 CPU가 멀티 테스킹하는 방식으로 할 수 없습니다.
 GPU는 일반적으로 &quot;<a href="https://www.google.com/search?q=preemptive+multitasking">preemptive multitasking</a>&quot;를
 할 수 없습니다.
 이것의 의미는 실행시간이 5분인 매우 복잡한 셰이더를 사용하면 전체 시스템이 5분동안 멈출 수 있습니다.
@@ -1950,7 +1964,8 @@ GPU는 일반적으로 &quot;<a href="https://www.google.com/search?q=preemptive
 GPU가 &quot;느려지기 전&quot;까지 얼마나 많은 작업을 처리할수있는지 확실히 알 방법이 없습니다.</p>
 <p>저는 해결책을 제시할 수 없고 하려는 일에 따라 이 문제에 부딪힐 수도 있다는 경고를 하는것 입니다.</p>
 </li>
-<li><p>모바일 장치는 일반적으로 부동 소수점 텍스처에 대한 렌더링을 지원하지 않습니다.</p>
+<li>
+<p>모바일 장치는 일반적으로 부동 소수점 텍스처에 대한 렌더링을 지원하지 않습니다.</p>
 <p>이 문제를 해결하는 데는 다양한 방법이 있습니다. GLSL 함수들 <code class="notranslate" translate="no">floatBitsToInt</code>, <code class="notranslate" translate="no">floatBitsToUint</code>,
 <code class="notranslate" translate="no">IntBitsToFloat</code>, <code class="notranslate" translate="no">UintBitsToFloat</code>으로 변환하여 사용할 수 있습니다.</p>
 <p>예를 들어, <a href="../../webgl-gpgpu-particles.html">텍스처 기반의 파티클 예제</a>는 부동 소수점 텍스처에 써야합니다.
@@ -1970,7 +1985,7 @@ uniform float deltaTime;
 out ivec4 outColor;
 
 vec2 euclideanModulo(vec2 n, vec2 m) {
-    return mod(mod(n, m) + m, m);
+	return mod(mod(n, m) + m, m);
 }
 
 void main() {
@@ -2003,7 +2018,7 @@ void main() {
 <code class="notranslate" translate="no">gl.drawXXX</code>를 호출했을때 셰이더가 호출되고 &quot;이 값을 어떤값으로 설정해야 합니까?&quot;라고 묻습니다.</p>
 <p>그리고 이제 진짜 끝입니다.</p>
 <hr>
-<p>GPGPU를 통해 파티클을 만든 이후 후반부에는 Compute 셰이더를 사용하여 &quot;slime&quot; 시뮬레이션을 하는
+<p>GPGPU를 통해 파티클을 만든 이후 후반부에는 Compute 셰이더를 사용하여 “slime” 시뮬레이션을 하는
 <a href="https://www.youtube.com/watch?v=X-iSQQgOd1A">멋진 비디오</a>가 있습니다.</p>
 <p><a href="https://jsgist.org/?src=94e9058c7ef1a4f124eccab4e7fdcd1d">WebGL2로 위의 기술을 변환한 결과입니다.</a>.</p>
 

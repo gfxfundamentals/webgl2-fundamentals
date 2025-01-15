@@ -236,11 +236,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>I know that in theory you have to first find the coordinates on the height map like (x = <code class="notranslate" translate="no">width HM / width Terrain * x Terrain</code>) and y coordinate (<code class="notranslate" translate="no">y = height HM / height Terrain * y Terrain</code>) and after getting the location on the height map, we get the actual height by <code class="notranslate" translate="no">min_height + (colorVal / (max_color - min_color) * *max_height - min_height</code>) thus returning a Z value for a particular segment.</p>
-<p>But how can i actually import the height map and take its parameters? I&#39;m writing in javascript with no additional libraries (three,babylon).</p>
+<p>But how can i actually import the height map and take its parameters? I’m writing in javascript with no additional libraries (three,babylon).</p>
 <p><strong>edit</strong></p>
-<p>Currently i&#39;m hardcoding the z values based on x and y ranges:</p>
+<p>Currently i’m hardcoding the z values based on x and y ranges:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    Plane.prototype.modifyGeometry=function(x,y){
     if((x&gt;=0&amp;&amp;x&lt;100)&amp;&amp;(y&gt;=0&amp;&amp;y&lt;100)){
         return 25;
@@ -260,15 +260,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     else{
         return 0;
     }
-</code></pre><p><strong> edit </strong></p>
+</code></pre>
+<p>** edit **</p>
 <p>i can get a flat grid (or with randomly generated heights), but as soon as i add the image data, i get a blank screen(no errors though). Here is the code (i changed it up a bit):</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var gl;
 var canvas;
 
 var img = new Image();
 // img.onload = run;
-img.crossOrigin = &#39;anonymous&#39;;
-img.src = &#39;https://threejsfundamentals.org/threejs/resources/images/heightmap-96x64.png&#39;;
+img.crossOrigin = 'anonymous';
+img.src = 'https://threejsfundamentals.org/threejs/resources/images/heightmap-96x64.png';
 
 
 var gridWidth;
@@ -325,7 +326,7 @@ canvas = document.getElementById( &quot;gl-canvas&quot; );
 
 
 gl = WebGLUtils.setupWebGL( canvas );
-if ( !gl ) { alert( &quot;WebGL isn&#39;t available&quot; ); }
+if ( !gl ) { alert( &quot;WebGL isn't available&quot; ); }
 
 gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
@@ -343,7 +344,7 @@ var positionBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(gridPoints), 
 gl.STATIC_DRAW);
-
+    
     var indexBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(gridIndices), 
@@ -353,7 +354,7 @@ var vPosition = gl.getAttribLocation( program, &quot;vPosition&quot; );
 gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
 gl.enableVertexAttribArray( vPosition );
 
-var matrixLoc = gl.getUniformLocation(program, &#39;matrix&#39;);
+var matrixLoc = gl.getUniformLocation(program, 'matrix');
 
 var m4 = twgl.m4;
 var projection = m4.perspective(60 * Math.PI / 180, gl.canvas.clientWidth / 
@@ -389,7 +390,8 @@ gl.drawElements(gl.LINES, numVertices, gl.UNSIGNED_SHORT, 0);
 gl.drawElements(gl.LINES,numVertices,gl.UNSIGNED_SHORT,0);
 requestAnimFrame(render);
 }
-</code></pre><h2 id="answer-">Answer:</h2>
+</code></pre>
+<h2 id="answer">Answer:</h2>
 <p>You basically just make a grid of points and change the Z values.</p>
 <p>First a flat grid</p>
 <p><div class="webgl_example_container">
@@ -398,9 +400,9 @@ requestAnimFrame(render);
 </div>
 
 </p>
-<p>Grid with height map. </p>
-<p>Here&#39;s a gray scale image we can use as a height map</p>
-<p><img src="https://threejsfundamentals.org/threejs/resources/images/heightmap-96x64.png" width="486"></p>
+<p>Grid with height map.</p>
+<p>Here’s a gray scale image we can use as a height map</p>
+<img src="https://threejsfundamentals.org/threejs/resources/images/heightmap-96x64.png" width="486">
 <p>Read it by loading a img, drawing to a 2D canvas, calling getImageData. Then just read the red values for height.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-import-a-heightmap-in-webgl-example-2.html"></iframe>
@@ -408,7 +410,7 @@ requestAnimFrame(render);
 </div>
 
 </p>
-<p>Then instead of making a grid of lines make a grid of triangles. There&#39;s lots of ways to do that. You could put 2 triangle per grid square. This code put&#39;s 4. You also need to generate normals. I copied the code to generate normals from <a href="https://webglfundamentals.org/webgl/lessons/webgl-3d-geometry-lathe.html">this article</a> which is fairly generic normal generating code.  Being a grid you could make a grid specific normal generator which would be faster since being a grid you know which vertices are shared.</p>
+<p>Then instead of making a grid of lines make a grid of triangles. There’s lots of ways to do that. You could put 2 triangle per grid square. This code put’s 4. You also need to generate normals. I copied the code to generate normals from <a href="https://webglfundamentals.org/webgl/lessons/webgl-3d-geometry-lathe.html">this article</a> which is fairly generic normal generating code.  Being a grid you could make a grid specific normal generator which would be faster since being a grid you know which vertices are shared.</p>
 <p>This code is also using <a href="https://twgljs.org">twgl</a> because WebGL is too verbose but it should be clear how to do it in plain WebGL from reading the names of the twgl functions.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-import-a-heightmap-in-webgl-example-3.html"></iframe>

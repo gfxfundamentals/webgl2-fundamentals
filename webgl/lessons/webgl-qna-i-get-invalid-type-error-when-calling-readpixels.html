@@ -236,21 +236,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">context.readPixels(0, 0, context.drawingBufferWidth, context.drawingBufferHeight, context.RGBA, context.FLOAT, pixels);
-</code></pre><p>This is the code. I get this error in the console:
+</code></pre>
+<p>This is the code. I get this error in the console:
 <strong>WebGL: INVALID_ENUM: readPixels: invalid type</strong></p>
 <p>But this works perfectly fine:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">context.readPixels(0, 0, context.drawingBufferWidth, context.drawingBufferHeight, context.RGBA, context.UNSIGNED_BYTE, pixels);
-</code></pre><p>Float or int is supposed to be supported, but only unsigned_byte works.
-There&#39;s no resource online on how to correctly apply a type that seems to work.
+</code></pre>
+<p>Float or int is supposed to be supported, but only unsigned_byte works.
+There’s no resource online on how to correctly apply a type that seems to work.
 Everything follows a different pattern.</p>
-<h2 id="answer-">Answer:</h2>
+<h2 id="answer">Answer:</h2>
 <p>FLOAT is not guaranteed to be supported. The only format/type combination that is guaranteed to be supported is RGBA/UNSIGNED_BYTE. <a href="https://www.khronos.org/registry/OpenGL/specs/es/2.0/es_full_spec_2.0.pdf">See Spec, section 4.3.1</a></p>
-<p>After that one other <strong>implementation dependent</strong> format/type combo might be supported depending on the type of thing you&#39;re reading. You can query that with</p>
+<p>After that one other <strong>implementation dependent</strong> format/type combo might be supported depending on the type of thing you’re reading. You can query that with</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const altFormat = gl.getParameter(gl.IMPLEMENTATION_COLOR_READ_FORMAT);
 const altType = gl.getParameter(gl.IMPLEMENTATION_COLOR_READ_TYPE);
-</code></pre><p><div class="webgl_example_container">
+</code></pre>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-i-get-invalid-type-error-when-calling-readpixels-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-i-get-invalid-type-error-when-calling-readpixels-example-1.html" target="_blank">click here to open in a separate window</a>
 </div>

@@ -272,7 +272,8 @@ void main() {
   v_surfaceToView = (u_viewInverse[3] - (u_world * a_position)).xyz;
   gl_Position = v_position;
 }
-</code></pre><p>프래그먼트 셰이더:</p>
+</code></pre>
+<p>프래그먼트 셰이더:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
@@ -311,7 +312,8 @@ void main() {
                 u_specular * litR.z * u_specularFactor)).rgb,
     diffuseColor.a);
 }
-</code></pre><p>그러면 화면에 그릴 때 필요한 다양한 값들을 찾고 설정하기 위해서는 아래와 같은 코드를 작성해야만 할 겁니다.</p>
+</code></pre>
+<p>그러면 화면에 그릴 때 필요한 다양한 값들을 찾고 설정하기 위해서는 아래와 같은 코드를 작성해야만 할 겁니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 초기화 시점에
 var u_worldViewProjectionLoc   = gl.getUniformLocation(program, &quot;u_worldViewProjection&quot;);
 var u_lightWorldPosLoc         = gl.getUniformLocation(program, &quot;u_lightWorldPos&quot;);
@@ -377,7 +379,8 @@ gl.uniform1f(u_shininessLoc, shininess);
 gl.uniform1f(u_specularFactorLoc, specularFactor);
 
 gl.drawArrays(...);
-</code></pre><p>코드가 정말 기네요.</p>
+</code></pre>
+<p>코드가 정말 기네요.</p>
 <p>이를 단순화 하기위한 다양한 방법이 있습니다.
 추천하는 방법 중 하나는 WebGL에 필요한 uniform, attribute들과 그 location을 요청하고 값을 설정하는 함수를 만드는 것입니다.
 그리는 자바스크립트 객체를 그 함수로 넘김으로써 그 작업을 훨씬 쉽게 수행할 수 있습니다.
@@ -420,7 +423,8 @@ gl.bindAttribArray(vao);
 twgl.setUniforms(uniformSetters, uniforms);
 
 gl.drawArrays(...);
-</code></pre><p>아까보다 훨씬 짧고, 간결해 보입니다.</p>
+</code></pre>
+<p>아까보다 훨씬 짧고, 간결해 보입니다.</p>
 <p>편의에 따라 여러 개의 자바스크립트 객체를 사용할 수도 있습니다.
 예를들어,</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 초기화 시점에
@@ -493,14 +497,15 @@ objects.forEach(function(object) {
   twgl.setUniforms(uniformSetters, objects.materialUniforms);
   gl.drawArrays(...);
 });
-</code></pre><p>위의 헬퍼 함수를 사용한 예제는 아래와 같습니다.</p>
+</code></pre>
+<p>위의 헬퍼 함수를 사용한 예제는 아래와 같습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-less-code-more-fun.html" target="_blank">새 창으로 열기</a>
 </div>
 
 </p>
-<p>여기서 조금 더 나아가 봅시다. 
+<p>여기서 조금 더 나아가 봅시다.
 위 코드에서는 <code class="notranslate" translate="no">attribs</code> 변수를 우리가 생성한 버퍼를 기반으로 설정해 주었습니다.
 위에서는 버퍼를 설정하는 코드를 보여드리진 않았습니다.
 예를들어 정점 위치, 법선과 텍스처 좌표를 만들고 싶다면 아래와 같은 코드가 필요할겁니다.</p>
@@ -520,7 +525,8 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texcoords), gl.STATIC_DRAW);
 var normalBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
-</code></pre><p>패턴을 보면 이 역시 아래와 같이 단순화 할 수 있습니다.</p>
+</code></pre>
+<p>패턴을 보면 이 역시 아래와 같이 단순화 할 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 한 개의 삼각형
 var arrays = {
    position: { numComponents: 3, data: [0, -10, 0, 10, 10, 0, -10, 10, 0], },
@@ -530,7 +536,8 @@ var arrays = {
 
 var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
 var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
-</code></pre><p>훨씬 간결하네요!</p>
+</code></pre>
+<p>훨씬 간결하네요!</p>
 <p>아래는 그 결과입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-triangle.html"></iframe>
@@ -539,7 +546,7 @@ var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
 
 </p>
 <p>이러한 방식은 우리가 인덱스를 사용할때도 마찬가지입니다.
-<code class="notranslate" translate="no">createVAOFromBufferInfo</code>가 모든 attribute를 설정하고 여러분의 <code class="notranslate" translate="no">indices</code>에 대해 
+<code class="notranslate" translate="no">createVAOFromBufferInfo</code>가 모든 attribute를 설정하고 여러분의 <code class="notranslate" translate="no">indices</code>에 대해
 <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code>를 설정해 주기 때문에 해당 VAO를 바인딩하고 <code class="notranslate" translate="no">gl.drawElements</code>를 호출하면 됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 인덱스를 사용해 정의한 사각형
 var arrays = {
@@ -551,20 +558,22 @@ var arrays = {
 
 var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
 var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
-</code></pre><p>렌더링 시점에서 <code class="notranslate" translate="no">gl.drawArrays</code> 대신에 <code class="notranslate" translate="no">gl.drawElements</code>를 호출하면 됩니다.</p>
+</code></pre>
+<p>렌더링 시점에서 <code class="notranslate" translate="no">gl.drawArrays</code> 대신에 <code class="notranslate" translate="no">gl.drawElements</code>를 호출하면 됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 
 // geometry를 그립니다.
 gl.drawElements(gl.TRIANGLES, bufferInfo.numElements, gl.UNSIGNED_SHORT, 0);
-</code></pre><p>아래는 그 결과입니다.</p>
+</code></pre>
+<p>아래는 그 결과입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-quad.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-less-code-more-fun-quad.html" target="_blank">새 창으로 열기</a>
 </div>
 
 </p>
-<p>마지막은 조금 지나치게 간략화 했다고도 보일 수 있습니다. 
-<code class="notranslate" translate="no">position</code>을 보면 거의 항상 세개의 컴포넌트인 (x, y, z)로 정의되고, 
+<p>마지막은 조금 지나치게 간략화 했다고도 보일 수 있습니다.
+<code class="notranslate" translate="no">position</code>을 보면 거의 항상 세개의 컴포넌트인 (x, y, z)로 정의되고,
 <code class="notranslate" translate="no">texcoords</code>의 경우 거의 항상 두개, 인덱스는 세개, 법선은 세개의 값으로 정의됩니다.
 따라서 알아서 컴포넌트의 갯수를 추정하도록 할 수도 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 인덱스를 사용해 정의한 사각형
@@ -574,7 +583,8 @@ var arrays = {
    normal:   [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
    indices:  [0, 1, 2, 1, 2, 3],
 };
-</code></pre><p>이러한 경우의 결과는 아래와 같습니다.</p>
+</code></pre>
+<p>이러한 경우의 결과는 아래와 같습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-quad-guess.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-less-code-more-fun-quad-guess.html" target="_blank">새 창으로 열기</a>
@@ -583,7 +593,7 @@ var arrays = {
 </p>
 <p>개인적으로 이렇게 하는것이 더 좋은지 모르겠습니다.
 알아서 추정한다는 것이 신경쓰이는데 추정된 값이 틀릴 수도 있기 때문입니다.
-예를들어 제가 texcoord attribute에 추가적인 텍스처 좌표를 사용하기로 생각했는데 
+예를들어 제가 texcoord attribute에 추가적인 텍스처 좌표를 사용하기로 생각했는데
 컴포넌트가 2개라고 가정하면 그건 틀린 겁니다.
 물론 이러한 경우 그 전 예제처럼 여러분이 직접 값을 명시해 줄 수 있습니다.
 제가 걱정되는 것은 알아서 추정하는 코드를 수정하면 이전에 작동하던 것이 작동하지 않게 될 수 있기 때문인 것 같습니다.
@@ -596,15 +606,18 @@ var arrays = {
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var program = twgl.createProgramFromSources(gl, [vs, fs]);
 var uniformSetters = twgl.createUniformSetters(gl, program);
 var attribSetters  = twgl.createAttributeSetters(gl, program);
-</code></pre><p>위 코드도 아래와 같이 단순화 할 수 있습니다.</p>
+</code></pre>
+<p>위 코드도 아래와 같이 단순화 할 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var programInfo = twgl.createProgramInfo(gl, [&quot;vertexshader&quot;, &quot;fragmentshader&quot;]);
-</code></pre><p>반환되는 객체는 아래와 같습니다.</p>
+</code></pre>
+<p>반환되는 객체는 아래와 같습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">programInfo = {
    program: WebGLProgram,  // 우리가 컴파일한 프로그램
    uniformSetters: ...,    // createUniformSetters의 반환과 같은 setter
    attribSetters: ...,     // createAttribSetters의 반환과 같은 setter
 }
-</code></pre><p>이상으로 또 다른 간략화 예시였습니다.
+</code></pre>
+<p>이상으로 또 다른 간략화 예시였습니다.
 이러한 방식은 여러 개의 프로그램을 사용할때 편리한데, 각 프로그램와 관련된  setter들을 자동적으로 가지고 있도록 하기 때문입니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-quad-programinfo.html"></iframe>
@@ -618,7 +631,8 @@ var attribSetters  = twgl.createAttributeSetters(gl, program);
 이러한 역할을 수행하는 <code class="notranslate" translate="no">twgl.drawBufferInfo</code>함수가 있습니다.
 이는 아래와 같이 사용됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">twgl.drawBufferInfo(gl, bufferInfo);
-</code></pre><p>프리미티브의 타입을 명시하는 세 번째 인자를 생략하고 호출하면 <code class="notranslate" translate="no">gl.TRIANGLES</code>로 가정합니다.</p>
+</code></pre>
+<p>프리미티브의 타입을 명시하는 세 번째 인자를 생략하고 호출하면 <code class="notranslate" translate="no">gl.TRIANGLES</code>로 가정합니다.</p>
 <p>아래는 인덱스를 사용하지 않는 삼각형과 인덱스를 사용하는 사각형을 동시에 사용하는 예제입니다.
 <code class="notranslate" translate="no">twgl.drawBufferInfo</code>를 사용하고 있기 때문에 데이터를 스위치할 때 다른 코드를 사용할 필요가 없어집니다.</p>
 <p><div class="webgl_example_container">
@@ -644,10 +658,9 @@ var attribSetters  = twgl.createAttributeSetters(gl, program);
 <pre class="prettyprint">
 // 초기화 시점에
 var uniformSetters = twgl.createUniformSetters(program);
-
-// 그리는 시점에
+<p>// 그리는 시점에
 uniformSetters.u_ambient([1, 0, 0, 1]); // ambient color를 빨간색으로 설정.
-</pre>
+</pre></p>
 <p>이렇게 하는것이 좋지 않은 이유는 GLSL 프로그램을 작성할 때 셰이더를 변경하는 경우가 종종 생긴다는 겁니다. 주로 디버깅 목적으로요.
 예를들어 프로그램을 사용했더니 화면에 아무것도 보이지 않는다고 합시다.
 저같은 경우 이렇게 아무것도 나타나지 않을때 때 제일 먼저 하는 작업은 셰이더를 단순화 하는 것입니다.
@@ -656,44 +669,41 @@ uniformSetters.u_ambient([1, 0, 0, 1]); // ambient color를 빨간색으로 설�
 <pre class="prettyprint showlinemods">
 #version 300 es
 precision highp float;
-
-in vec4 v_position;
+<p>in vec4 v_position;
 in vec2 v_texCoord;
 in vec3 v_normal;
 in vec3 v_surfaceToLight;
-in vec3 v_surfaceToView;
-
-uniform vec4 u_lightColor;
+in vec3 v_surfaceToView;</p>
+<p>uniform vec4 u_lightColor;
 uniform vec4 u_ambient;
 uniform sampler2D u_diffuse;
 uniform vec4 u_specular;
 uniform float u_shininess;
-uniform float u_specularFactor;
-
-out vec4 outColor;
-
-vec4 lit(float l ,float h, float m) {
-  return vec4(1.0,
-              max(l, 0.0),
-              (l > 0.0) ? pow(max(0.0, h), m) : 0.0,
-              1.0);
+uniform float u_specularFactor;</p>
+<p>out vec4 outColor;</p>
+<p>vec4 lit(float l ,float h, float m) {
+return vec4(1.0,
+max(l, 0.0),
+(l &gt; 0.0) ? pow(max(0.0, h), m) : 0.0,
+1.0);
+}</p>
+<p>void main() {
+vec4 diffuseColor = texture2D(u_diffuse, v_texCoord);
+vec3 a_normal = normalize(v_normal);
+vec3 surfaceToLight = normalize(v_surfaceToLight);
+vec3 surfaceToView = normalize(v_surfaceToView);
+vec3 halfVector = normalize(surfaceToLight + surfaceToView);
+vec4 litR = lit(dot(a_normal, surfaceToLight),
+dot(a_normal, halfVector), u_shininess);
+vec4 outColor = vec4((
+u_lightColor * (diffuseColor * litR.y + diffuseColor * u_ambient +
+u_specular * litR.z * u_specularFactor)).rgb,
+diffuseColor.a);</p>
+<ul>
+<li>outColor = vec4(0,1,0,1);  // &lt;!— 단순한 초록색으로
 }
-
-void main() {
-  vec4 diffuseColor = texture2D(u_diffuse, v_texCoord);
-  vec3 a_normal = normalize(v_normal);
-  vec3 surfaceToLight = normalize(v_surfaceToLight);
-  vec3 surfaceToView = normalize(v_surfaceToView);
-  vec3 halfVector = normalize(surfaceToLight + surfaceToView);
-  vec4 litR = lit(dot(a_normal, surfaceToLight),
-                    dot(a_normal, halfVector), u_shininess);
-  vec4 outColor = vec4((
-    u_lightColor * (diffuseColor * litR.y + diffuseColor * u_ambient +
-                u_specular * litR.z * u_specularFactor)).rgb,
-      diffuseColor.a);
-*  outColor = vec4(0,1,0,1);  // &lt;!--- 단순한 초록색으로
-}
-</pre>
+</pre></li>
+</ul>
 <p><code class="notranslate" translate="no">outColor</code>를 단색으로 설정하는 라인을 추가한 것에 주목하세요.
 대부분의 드라이버는 위쪽 라인의 코드들이 최종 결과에 영향을 주지 않는다는 것을 알아냅니다.
 그래서 모든 uniform들을 최적화합니다. 프로그램을 다시 실행하여 <code class="notranslate" translate="no">twgl.createUniformSetters</code>를 호출하면 <code class="notranslate" translate="no">u_ambient</code>를 위한 setter를 생성하지 못하고 위 코드에서 <code class="notranslate" translate="no">uniformSetters.u_ambient()</code>를 호출하는 부분이 실패하면서 아래와 같은 메시지가 나타납니다.
@@ -704,7 +714,6 @@ TypeError: undefined is not a function
 <p><code class="notranslate" translate="no">twgl.setUniforms</code>은 이 문제를 해결해 줍니다.
 이 함수는 실제로 존재하는 uniform들만 설정하도록 되어 있습니다.</p>
 </div>
-
 
     </div>
     <div class="lesson-sidebar">

@@ -236,35 +236,40 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>How I can use to stencil buffer for my easiest program? 
+      <h2 id="question">Question:</h2>
+<p>How I can use to stencil buffer for my easiest program?
 I have read many different themes about it, but I not found a detailed guide about it.
 I want to cut out for hole each side in a created tetrahedron.</p>
 <p><a href="https://i.stack.imgur.com/yV9oD.png"><img src="https://i.stack.imgur.com/yV9oD.png" alt="enter image description here"></a></p>
 <p>Please explain to me step by step use stencil buffer?</p>
 <p><a href="https://dropfiles.ru/filesgroup/62503e88028a16b1055f78a7e2b70456.html">Link for my program</a></p>
-<h2 id="answer-">Answer:</h2>
+<h2 id="answer">Answer:</h2>
 <p>To use the stencil buffer you have to first request it when you create the webgl context</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const gl = someCanvasElement.getContext(&#39;webgl&#39;, {stencil: true});
-</code></pre><p>Then you turn on the stencil test</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const gl = someCanvasElement.getContext('webgl', {stencil: true});
+</code></pre>
+<p>Then you turn on the stencil test</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  gl.enable(gl.STENCIL_TEST);
-</code></pre><p>Set up the test so it always passes and set the reference value to 1</p>
+</code></pre>
+<p>Set up the test so it always passes and set the reference value to 1</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  gl.stencilFunc(
      gl.ALWAYS,    // the test
      1,            // reference value
      0xFF,         // mask
   );
-</code></pre><p>And set the operation so we&#39;ll set the stencil to the reference value when both the stencil and depth tests pass</p>
+</code></pre>
+<p>And set the operation so we’ll set the stencil to the reference value when both the stencil and depth tests pass</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  gl.stencilOp(
      gl.KEEP,     // what to do if the stencil test fails
      gl.KEEP,     // what to do if the depth test fails
      gl.REPLACE,  // what to do if both tests pass
   );
-</code></pre><p>We then draw the first inner triangle</p>
+</code></pre>
+<p>We then draw the first inner triangle</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">... lots of setup for a single triangle ...
 
 gl.drawArrays(...) or gl.drawElements(...)
-</code></pre><p>Then we change the test so it only passes if the stencil is zero</p>
+</code></pre>
+<p>Then we change the test so it only passes if the stencil is zero</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  gl.stencilFunc(
      gl.EQUAL,     // the test
      0,            // reference value
@@ -275,7 +280,9 @@ gl.drawArrays(...) or gl.drawElements(...)
      gl.KEEP,     // what to do if the depth test fails
      gl.KEEP,     // what to do if both tests pass
   );
-</code></pre><p>and now we can draw something else (the larger triangle) and it will only draw where there is 0 in the stencil buffer which is everywhere except where the first triangle was drawn.</p>
+
+</code></pre>
+<p>and now we can draw something else (the larger triangle) and it will only draw where there is 0 in the stencil buffer which is everywhere except where the first triangle was drawn.</p>
 <p>Example:</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-use-the-stencil-buffer-example-1.html"></iframe>

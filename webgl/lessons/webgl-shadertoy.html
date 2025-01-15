@@ -236,14 +236,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>This article assumes you&#39;ve read many of the other articles
+      <p>This article assumes you’ve read many of the other articles
 starting with <a href="webgl-fundamentals.html">the fundamentals</a>.
-If you have not read them please start there first. </p>
+If you have not read them please start there first.</p>
 <p>In <a href="webgl-drawing-without-data.html">the article on the drawing without data</a>
 we showed a few examples of drawing things with no data using a
 vertex shader. This article will be about drawing things with
 no data using fragment shaders.</p>
-<p>We&#39;ll start with a simple solid color shader
+<p>We’ll start with a simple solid color shader
 with no math using the code <a href="webgl-fundamentals.html">from the very first article</a>.</p>
 <p>A simple vertex shader</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
@@ -294,7 +294,7 @@ goes from -1 to +1 in x and y to cover the canvas, set set the attributes.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  // Create a vertex array object (attribute state)
   const vao = gl.createVertexArray();
 
-  // and make it the one we&#39;re currently working with
+  // and make it the one we're currently working with
   gl.bindVertexArray(vao);
 
   // Create a buffer to put three 2d clip space points in
@@ -321,7 +321,7 @@ goes from -1 to +1 in x and y to cover the canvas, set set the attributes.</p>
       positionAttributeLocation,
       2,          // 2 components per iteration
       gl.FLOAT,   // the data is 32bit floats
-      false,      // don&#39;t normalize the data
+      false,      // don't normalize the data
       0,          // 0 = move forward size * sizeof(type) each iteration to get the next position
       0,          // start at the beginning of the buffer
   );
@@ -354,10 +354,10 @@ goes from -1 to +1 in x and y to cover the canvas, set set the attributes.</p>
 <p>In <a href="webgl-how-it-works.html">the article on how WebGL works</a> we added more
 color by providing a color for each vertex. In <a href="webgl-3d-textures.html">the article on textures</a>
 we added more color by supplying textures and texture coordinates.
-So how do we get something more than a solid color with out any more data? 
+So how do we get something more than a solid color with out any more data?
 WebGL provides a variable called <code class="notranslate" translate="no">gl_FragCoord</code> that is equal to the <strong>pixel</strong>
 coordinate of the pixel currently being drawn.</p>
-<p>So let&#39;s change our fragment shader to use that to compute a color</p>
+<p>So let’s change our fragment shader to use that to compute a color</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const fs = `#version 300 es
   precision highp float;
 
@@ -371,10 +371,10 @@ coordinate of the pixel currently being drawn.</p>
 `;
 </code></pre>
 <p>Like we mentioned above <code class="notranslate" translate="no">gl_FragCoord</code> is a <strong>pixel</strong> coordinate so it will
-count across and up the canvas. By dividing by 50 we&#39;ll get a value that goes
-from 0 to 1 from as <code class="notranslate" translate="no">gl_FragCoord</code> goes from 0 to 50. By using <code class="notranslate" translate="no">fract</code> we&#39;ll
+count across and up the canvas. By dividing by 50 we’ll get a value that goes
+from 0 to 1 from as <code class="notranslate" translate="no">gl_FragCoord</code> goes from 0 to 50. By using <code class="notranslate" translate="no">fract</code> we’ll
 keep just the <em>fract</em>ional part so for example when <code class="notranslate" translate="no">gl_FragCoord</code> is 75.
-75 / 50 = 1.5, fract(1.5) = 0.5 so we&#39;ll get a value that goes from 0 to 1
+75 / 50 = 1.5, fract(1.5) = 0.5 so we’ll get a value that goes from 0 to 1
 every 50 pixels.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-shadertoy-gl-fragcoord.html"></iframe>
@@ -386,7 +386,7 @@ every 50 pixels.</p>
 and every 50 pixels up green goes from 0 to 1.</p>
 <p>With our setup now we could make more complex math for a fancier image.
 but we have one problem in that we have no idea how large the canvas is
-so we&#39;d have to hard code for a specific size. We can solve that problem
+so we’d have to hard code for a specific size. We can solve that problem
 by passing in the size of the canvas and then divide <code class="notranslate" translate="no">gl_FragCoord</code> by
 the size to give us a value that goes from 0 to 1 across and up the canvas
 regardless of size.</p>
@@ -422,6 +422,7 @@ gl.drawArrays(
 );
 
 ...
+
 </code></pre>
 <p>which lets us make our spread of red and green always fit the canvas regardless
 of resolution</p>
@@ -431,7 +432,7 @@ of resolution</p>
 </div>
 
 </p>
-<p>Let&#39;s also pass in the mouse position in pixel coordinates.</p>
+<p>Let’s also pass in the mouse position in pixel coordinates.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const fs = `#version 300 es
   precision highp float;
 
@@ -463,7 +464,7 @@ function setMousePosition(e) {
   render();
 }
 
-canvas.addEventListener(&#39;mousemove&#39;, setMousePosition);
+canvas.addEventListener('mousemove', setMousePosition);
 </code></pre>
 <p>and set the uniform.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.uniform2f(resolutionLocation, gl.canvas.width, gl.canvas.height);
@@ -490,12 +491,12 @@ canvas.addEventListener(&#39;mousemove&#39;, setMousePosition);
 +}
 +render();
 </code></pre>
-<p>and while we&#39;re at it lets handle touch too</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">canvas.addEventListener(&#39;mousemove&#39;, setMousePosition);
-+canvas.addEventListener(&#39;touchstart&#39;, (e) =&gt; {
+<p>and while we’re at it lets handle touch too</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">canvas.addEventListener('mousemove', setMousePosition);
++canvas.addEventListener('touchstart', (e) =&gt; {
 +  e.preventDefault();
 +}, {passive: false});
-+canvas.addEventListener(&#39;touchmove&#39;, (e) =&gt; {
++canvas.addEventListener('touchmove', (e) =&gt; {
 +  e.preventDefault();
 +  setMousePosition(e.touches[0]);
 +}, {passive: false});
@@ -526,7 +527,7 @@ more thing, a time value we can use to add to our computations.</p>
   }
 `;
 </code></pre>
-<p>And now the blue channel will pulse to the time. We just need to 
+<p>And now the blue channel will pulse to the time. We just need to
 look up the uniform, and set it in a <a href="webgl-animation.html">requestAnimationFrame loop</a>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// look up uniform locations
 const resolutionLocation = gl.getUniformLocation(program, &quot;u_resolution&quot;);
@@ -558,10 +559,10 @@ const mouseLocation = gl.getUniformLocation(program, &quot;u_mouse&quot;);
 +requestAnimationFrame(render);
 -render();
 </code></pre>
-<p>Also we no longer need to render on mousemove since we&#39;re rendering continuously.</p>
+<p>Also we no longer need to render on mousemove since we’re rendering continuously.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">let mouseX = 0;
 let mouseY = 0;
-canvas.addEventListener(&#39;mousemove&#39;, (e) =&gt; {
+canvas.addEventListener('mousemove', (e) =&gt; {
   const rect = canvas.getBoundingClientRect();
   mouseX = e.clientX - rect.left;
   mouseY = rect.height - (e.clientY - rect.top) - 1;  // bottom is 0 in WebGL
@@ -577,10 +578,10 @@ canvas.addEventListener(&#39;mousemove&#39;, (e) =&gt; {
 </p>
 <p>So now with all of that we can take a shader from <a href="https://shadertoy.com">Shadertoy.com</a>. Shadertoy shaders you provide a function called <code class="notranslate" translate="no">mainImage</code> in this form</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">void mainImage(out vec4 fragColor, in vec2 fragCoord)
-{    
+{	
 }
 </code></pre>
-<p>Where your job is to set <code class="notranslate" translate="no">fragColor</code> just like you&#39;d normally set <code class="notranslate" translate="no">gl_FragColor</code> and
+<p>Where your job is to set <code class="notranslate" translate="no">fragColor</code> just like you’d normally set <code class="notranslate" translate="no">gl_FragColor</code> and
 <code class="notranslate" translate="no">fragCoord</code> is the same as <code class="notranslate" translate="no">gl_FragCoord</code>. Adding this extra function lets Shadertoy
 impose a little more structure as well as do some extra work before or after calling
 <code class="notranslate" translate="no">mainImage</code>. For us to use it we just need to call it like this</p>
@@ -599,7 +600,7 @@ void main() {
   mainImage(outColor, gl_FragCoord.xy);
 }
 </code></pre>
-<p>Except that Shadertoy uses the uniform names <code class="notranslate" translate="no">iResolution</code>, <code class="notranslate" translate="no">iMouse</code> and <code class="notranslate" translate="no">iTime</code> so let&#39;s rename them.</p>
+<p>Except that Shadertoy uses the uniform names <code class="notranslate" translate="no">iResolution</code>, <code class="notranslate" translate="no">iMouse</code> and <code class="notranslate" translate="no">iTime</code> so let’s rename them.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
 precision highp float;
 
@@ -628,14 +629,14 @@ void main() {
 +const timeLocation = gl.getUniformLocation(program, &quot;iTime&quot;);
 </code></pre>
 <p>Taking <a href="https://www.shadertoy.com/view/3l23Rh">this shadertoy shader</a> and pasting it
-in our shader above where it says <code class="notranslate" translate="no">//---insert shadertoy code here--</code> gives us...</p>
+in our shader above where it says <code class="notranslate" translate="no">//---insert shadertoy code here--</code> gives us…</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-shadertoy.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-shadertoy.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>That&#39;s an extraordinarily beautiful image for having no data!</p>
+<p>That’s an extraordinarily beautiful image for having no data!</p>
 <p>I made the sample above only render when the mouse is over the canvas or when touched.
 This is because the math required
 to draw the image above is complex and slow and letting it run continuously would
@@ -644,20 +645,18 @@ a very fast GPU the image above might run smooth. On my laptop
 though it runs slow and jerky.</p>
 <p>This brings up an extremely important point. <strong>The shaders on
 shadertoy are not best practice</strong>. Shadertoy is a puzzle and
-a challenge of <em>&quot;If I have no data and only a function that
+a challenge of <em>“If I have no data and only a function that
 takes very little input can I make an interesting or beautiful
-image&quot;</em>. It&#39;s not the way to make performant WebGL.</p>
+image”</em>. It’s not the way to make performant WebGL.</p>
 <p>Take for example <a href="https://www.shadertoy.com/view/4sS3zG">this amazing shadertoy shader</a> that looks like this</p>
 <div class="webgl_center"><img src="resources/shadertoy-dolphin.png" style="width: 639px;"></div>
-
-<p>It&#39;s beautiful but it runs at about 19 frames a second in a tiny
+<p>It’s beautiful but it runs at about 19 frames a second in a tiny
 640x360 window on my high powered laptop. Expand the window to full screen and it runs around
 2 or 3 frames per second. Testing on my higher spec desktop it still only hits 45 frames per
 second at 640x360 and maybe 10 full screen.</p>
-<p>Compare it to this game that&#39;s also fairly beautiful and yet runs at 30 to 60 frames per second
+<p>Compare it to this game that’s also fairly beautiful and yet runs at 30 to 60 frames per second
 even on lower-powered GPUs</p>
 <iframe class="webgl_center" style="width:560px; height: 360px;" src="https://www.youtube-nocookie.com/embed/7v9gZK9HqqI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
 <p>This is because the game uses best practices drawing things with textured
 triangles instead of complex math.</p>
 <p>So, please take that to heart. The examples on Shadertoy are
@@ -668,9 +667,9 @@ of wonder.</p>
 <p>They are also a great way to learn a lot of math.
 But, they are also not remotely the way you get a performant
 WebGL app. So please keep that in mind.</p>
-<p>Otherwise, if you want to run more Shadertoy shaders you&#39;ll
-need to provide a few more uniforms. Here&#39;s a list of the
-uniforms Shadertoy provides </p>
+<p>Otherwise, if you want to run more Shadertoy shaders you’ll
+need to provide a few more uniforms. Here’s a list of the
+uniforms Shadertoy provides</p>
 <div class="webgl_center"><table  class="tabular-data tabular-data1">
 <thead><tr><td>type</td><td>name</td><td>where</td><td>description</td></tr></thead>
 <tbody>
@@ -686,25 +685,24 @@ uniforms Shadertoy provides </p>
 <tr><td><b>vec4</b></td><td><b>iDate</b></td><td>image / buffer / sound</td><td>Year, month, day, time in seconds in .xyzw</td></tr>
 <tr><td><b>float</b></td><td><b>iSampleRate</b></td><td>image / buffer / sound</td><td>The sound sample rate (typically 44100)</td></tr>
 </tbody></table></div>
-
 <p>Notice <code class="notranslate" translate="no">iMouse</code> and <code class="notranslate" translate="no">iResolution</code> are actually supposed to be
 a <code class="notranslate" translate="no">vec4</code> and a <code class="notranslate" translate="no">vec3</code> respectively so you may need to adjust
 those to match.</p>
-<p><code class="notranslate" translate="no">iChannel</code> are textures so if the shader needs them you&#39;ll need
+<p><code class="notranslate" translate="no">iChannel</code> are textures so if the shader needs them you’ll need
 to provide <a href="webgl-3d-textures.html">textures</a>.</p>
 <p>Shadertoy also lets you use multiple shaders to render to
-offscreen textures so if a shader needs those you&#39;ll need to setup
+offscreen textures so if a shader needs those you’ll need to setup
 <a href="webgl-render-to-texture.html">textures to render to</a>.</p>
-<p>The &quot;where&quot; column indicates which uniforms are
-available in which shaders. &quot;image&quot; is a shader
-that renders to the canvas. &quot;buffer&quot; is a shader
-that renders to an offscreen texture. &quot;sound&quot; is
+<p>The “where” column indicates which uniforms are
+available in which shaders. “image” is a shader
+that renders to the canvas. “buffer” is a shader
+that renders to an offscreen texture. “sound” is
 a shader where <a href="https://stackoverflow.com/questions/34859701/how-do-shadertoys-audio-shaders-work">your shader is expected to generate
 sound data into a texture</a>.</p>
-<p>I hope this helped explain Shadertoy. It&#39;s a great site with amazing works
-but is good to know what&#39;s really going on. If you want to learn more about
+<p>I hope this helped explain Shadertoy. It’s a great site with amazing works
+but is good to know what’s really going on. If you want to learn more about
 the techniques used in these kinds of shader 2 good resources are
-<a href="&quot;https://www.iquilezles.org/www/index.htm">the blog of the person that created the shadertoy website</a> and <a href="https://thebookofshaders.com/">The Book of Shaders</a> (which is a little misleading since it really only covers the kind of shaders used on shadertoy, not the kind used in performant apps and games. Still, it&#39;s a great resource!</p>
+<a href="%22https://www.iquilezles.org/www/index.htm">the blog of the person that created the shadertoy website</a> and <a href="https://thebookofshaders.com/">The Book of Shaders</a> (which is a little misleading since it really only covers the kind of shaders used on shadertoy, not the kind used in performant apps and games. Still, it’s a great resource!</p>
 <div class="webgl_bottombar" id="pixel-coords">
 <h3>Pixel Coordinates</h3>
 <p>Pixel coordinates in WebGL

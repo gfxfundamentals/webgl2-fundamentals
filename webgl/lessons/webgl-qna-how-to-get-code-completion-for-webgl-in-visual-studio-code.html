@@ -236,37 +236,43 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I have a school project and i need to use WEBGL. But its pretty difficult to write all the code without autocompletion. I didn&#39;t find proper extension. Do you have ideas?</p>
-<h2 id="answer-">Answer:</h2>
+      <h2 id="question">Question:</h2>
+<p>I have a school project and i need to use WEBGL. But its pretty difficult to write all the code without autocompletion. I didn’t find proper extension. Do you have ideas?</p>
+<h2 id="answer">Answer:</h2>
 <p>In order for visual studio code to give you auto completion it needs to know the types of variables.</p>
 <p>So for example if you have this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const gl = init();
-</code></pre><p>VSCode has no idea what type the variable <code class="notranslate" translate="no">gl</code> is so it can&#39;t auto complete. But you can tell it the type by adding a JSDOC style comment above it like this</p>
+</code></pre>
+<p>VSCode has no idea what type the variable <code class="notranslate" translate="no">gl</code> is so it can’t auto complete. But you can tell it the type by adding a JSDOC style comment above it like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/** @type {WebGLRenderingContext} */
 const gl = init();
-</code></pre><p>Now it will auto complete</p>
+</code></pre>
+<p>Now it will auto complete</p>
 <p><a href="https://i.stack.imgur.com/8mvFM.png"><img src="https://i.stack.imgur.com/8mvFM.png" alt="enter image description here"></a></p>
 <p>The same is true for HTML elements. If you do this</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const canvas = document.querySelector(&#39;#mycanvas&#39;);
-</code></pre><p>VSCode has no idea what type of element that is but you can tell it</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const canvas = document.querySelector('#mycanvas');
+</code></pre>
+<p>VSCode has no idea what type of element that is but you can tell it</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/** @type {HTMLCanvasElement} */
-const canvas = document.querySelector(&#39;#mycanvas&#39;);
-</code></pre><p>Now it will know it&#39;s an <code class="notranslate" translate="no">HTMLCanvasElement</code></p>
+const canvas = document.querySelector('#mycanvas');
+</code></pre>
+<p>Now it will know it’s an <code class="notranslate" translate="no">HTMLCanvasElement</code></p>
 <p><a href="https://i.stack.imgur.com/oArWf.png"><img src="https://i.stack.imgur.com/oArWf.png" alt="enter image description here"></a></p>
-<p>And, because it knows it&#39;s an <code class="notranslate" translate="no">HTMLCanvasElement</code> it knows that <code class="notranslate" translate="no">.getContext(&#39;webgl&#39;)</code> returns a <code class="notranslate" translate="no">WebGLRenderingContext</code> so it will automatically offer auto completion for the context as well</p>
+<p>And, because it knows it’s an <code class="notranslate" translate="no">HTMLCanvasElement</code> it knows that <code class="notranslate" translate="no">.getContext('webgl')</code> returns a <code class="notranslate" translate="no">WebGLRenderingContext</code> so it will automatically offer auto completion for the context as well</p>
 <p><a href="https://i.stack.imgur.com/7zR4q.png"><img src="https://i.stack.imgur.com/7zR4q.png" alt="enter image description here"></a></p>
-<p>Note that if you&#39;re pass the canvas into some function then again, VSCode has no idea what that function returns. In otherwords</p>
+<p>Note that if you’re pass the canvas into some function then again, VSCode has no idea what that function returns. In otherwords</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/** @type {HTMLCanvasElement} */
-const canvas = document.querySelector(&#39;#mycanvas&#39;);
+const canvas = document.querySelector('#mycanvas');
 const gl = someLibraryInitWebGL(canvas);
-</code></pre><p>You won&#39;t get completion anymore since VSCode as no idea what <code class="notranslate" translate="no">someLibraryInitWebGL</code> returns so follow the rule at the top and tell it.</p>
+</code></pre>
+<p>You won’t get completion anymore since VSCode as no idea what <code class="notranslate" translate="no">someLibraryInitWebGL</code> returns so follow the rule at the top and tell it.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">/** @type {HTMLCanvasElement} */
-const canvas = document.querySelector(&#39;#mycanvas&#39;);
+const canvas = document.querySelector('#mycanvas');
 
 /** @type {WebGLRenderingContext} */
 const gl = someLibraryInitWebGL(canvas);
-</code></pre><p>You can see other JSDOC annotations <a href="https://jsdoc.app/">here</a> if you want to document your own functions, for example their argument and return types.</p>
+</code></pre>
+<p>You can see other JSDOC annotations <a href="https://jsdoc.app/">here</a> if you want to document your own functions, for example their argument and return types.</p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 4.0 by

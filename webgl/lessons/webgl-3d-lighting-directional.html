@@ -237,23 +237,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="lesson">
     <div class="lesson-main">
       <p>This article is a continuation of <a href="webgl-3d-camera.html">WebGL 3D Cameras</a>.
-If you haven&#39;t read that I suggest <a href="webgl-3d-camera.html">you start there</a>.</p>
+If you haven’t read that I suggest <a href="webgl-3d-camera.html">you start there</a>.</p>
 <p>There are many ways to implement lighting. Probably the simplest is <em>directional lighting</em>.</p>
 <p>Directional lighting assumes the light is coming uniformly from one direction. The sun
-on a clear day is often considered a directional light. It&#39;s so far way that its rays
+on a clear day is often considered a directional light. It’s so far way that its rays
 can be considered to be hitting the surface of an object all in parallel.</p>
 <p>Computing directional lighting is actually pretty simple. If we know what direction
 the light is traveling and we know what direction the surface of the object is facing
 we can take the <em>dot product</em> of the 2 directions and it will give us the cosine of
 the angle between the 2 directions.</p>
-<p>Here&#39;s an example</p>
+<p>Here’s an example</p>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/dot-product.html"></iframe>
   <div class="webgl_center">drag the points</div>
 </div>
 
 </p>
-<p>Drag the points around, if you get them exactly opposite of each other you&#39;ll see the dot product
+<p>Drag the points around, if you get them exactly opposite of each other you’ll see the dot product
 is -1. If they are at the same spot exactly the dot product is 1.</p>
 <p>How is that useful? Well if we know what direction the surface of our 3d object is facing
 and we know the direction the light is shining then we can just take the dot product
@@ -277,13 +277,13 @@ is the word for a unit vector that describes the direction a surface is facing.<
 
 </p>
 <p>The lines sticking out of the objects represent normals for each vertex.</p>
-<p>Notice the cube has 3 normals at each corner. That&#39;s because you need
-3 different normals to represent the way each face of the cube is um, .. facing.</p>
+<p>Notice the cube has 3 normals at each corner. That’s because you need
+3 different normals to represent the way each face of the cube is um, … facing.</p>
 <p>Here the normals are also colored based on their direction with
 positive x being <span style="color: red;">red</span>, up being
 <span style="color: green;">green</span> and positive z being
 <span style="color: blue;">blue</span>.</p>
-<p>So, let&#39;s go add normals to our <code class="notranslate" translate="no">F</code> from <a href="webgl-3d-camera.html">our previous examples</a>
+<p>So, let’s go add normals to our <code class="notranslate" translate="no">F</code> from <a href="webgl-3d-camera.html">our previous examples</a>
 so we can light it. Since the <code class="notranslate" translate="no">F</code> is very boxy and its faces are aligned
 to the x, y, or z axis it will be pretty easy. Things that are facing forward
 have the normal <code class="notranslate" translate="no">0, 0, 1</code>. Things that are facing away are <code class="notranslate" translate="no">0, 0, -1</code>. Facing
@@ -420,8 +420,9 @@ left is <code class="notranslate" translate="no">-1, 0, 0</code>, Facing right i
   ]);
   gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
 }
-</code></pre><p>and set them up. While we&#39;re at it let&#39;s remove the vertex colors
-so it&#39;s easier to see the lighting.</p>
+</code></pre>
+<p>and set them up. While we’re at it let’s remove the vertex colors
+so it’s easier to see the lighting.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// look up where the vertex data needs to go.
 var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 -var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
@@ -434,7 +435,7 @@ var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 -gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 -gl.enableVertexAttribArray(colorLocation);
 -
--// We&#39;ll supply RGB as bytes.
+-// We'll supply RGB as bytes.
 -gl.vertexAttribPointer(colorLocation, 3, gl.UNSIGNED_BYTE, true, 0, 0);
 -
 -// Set Colors.
@@ -448,7 +449,8 @@ gl.vertexAttribPointer(normalLocation, 3, gl.FLOAT, false, 0, 0);
 
 // Set normals.
 setNormals(gl);
-</code></pre><p>Now we need to make our shaders use them</p>
+</code></pre>
+<p>Now we need to make our shaders use them</p>
 <p>First the vertex shader we just pass the normals through to
 the fragment shader</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
@@ -479,7 +481,8 @@ void main() {
 +  // Pass the normal to the fragment shader
 +  v_normal = a_normal;
 }
-</code></pre><p>And the fragment shader we&#39;ll do the math using the dot product
+</code></pre>
+<p>And the fragment shader we’ll do the math using the dot product
 of the direction of the light and the normal</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
@@ -499,13 +502,13 @@ out vec4 outColor;
 
 void main() {
 -  outColor = v_color;
-+  // because v_normal is a varying it&#39;s interpolated
++  // because v_normal is a varying it's interpolated
 +  // so it will not be a unit vector. Normalizing it
 +  // will make it a unit vector again
 +  vec3 normal = normalize(v_normal);
 +
 +  // compute the light by taking the dot product
-+  // of the normal to the light&#39;s reverse direction
++  // of the normal to the light's reverse direction
 +  float light = dot(normal, u_reverseLightDirection);
 +
 +  outColor = u_color;
@@ -514,13 +517,16 @@ void main() {
 +  // by the light
 +  outColor.rgb *= light;
 }
-</code></pre><p>Then we need to lookup the locations of <code class="notranslate" translate="no">u_color</code> and <code class="notranslate" translate="no">u_reverseLightDirection</code>.</p>
+</code></pre>
+<p>Then we need to lookup the locations of <code class="notranslate" translate="no">u_color</code> and <code class="notranslate" translate="no">u_reverseLightDirection</code>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // lookup uniforms
   var matrixLocation = gl.getUniformLocation(program, &quot;u_matrix&quot;);
 +  var colorLocation = gl.getUniformLocation(program, &quot;u_color&quot;);
 +  var reverseLightDirectionLocation =
 +      gl.getUniformLocation(program, &quot;u_reverseLightDirection&quot;);
-</code></pre><p>and we need to set them</p>
+
+</code></pre>
+<p>and we need to set them</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // Set the matrix.
   gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
@@ -529,7 +535,8 @@ void main() {
 +
 +  // set the light direction.
 +  gl.uniform3fv(reverseLightDirectionLocation, normalize([0.5, 0.7, 1]));
-</code></pre><p><code class="notranslate" translate="no">normalize</code>, which we went over before, will make whatever values we put in there
+</code></pre>
+<p><code class="notranslate" translate="no">normalize</code>, which we went over before, will make whatever values we put in there
 into a unit vector. The specific values in the sample are
 <code class="notranslate" translate="no">x = 0.5</code> which is positive <code class="notranslate" translate="no">x</code> means the light is on the right pointing left.
 <code class="notranslate" translate="no">y = 0.7</code> which is positive <code class="notranslate" translate="no">y</code> means the light is above pointing down.
@@ -544,14 +551,14 @@ and pointing more down then right.</p>
 
 </p>
 <p>If you rotate the F you might notice something. The F is rotating
-but the lighting isn&#39;t changing. As the F rotates we want whatever part
+but the lighting isn’t changing. As the F rotates we want whatever part
 is facing the direction of the light to be the brightest.</p>
 <p>To fix this we need to re-orient the normals as the object is re-oriented.
 Like we did for positions we can multiply the normals by some matrix. The most obvious
-matrix would be the <code class="notranslate" translate="no">world</code> matrix. As it is right now we&#39;re only passing in
-1 matrix called <code class="notranslate" translate="no">u_matrix</code>. Let&#39;s change it to pass in 2 matrices. One called
+matrix would be the <code class="notranslate" translate="no">world</code> matrix. As it is right now we’re only passing in
+1 matrix called <code class="notranslate" translate="no">u_matrix</code>. Let’s change it to pass in 2 matrices. One called
 <code class="notranslate" translate="no">u_world</code> which will be the world matrix. Another called <code class="notranslate" translate="no">u_worldViewProjection</code>
-which will be what we&#39;re currently passing in as <code class="notranslate" translate="no">u_matrix</code></p>
+which will be what we’re currently passing in as <code class="notranslate" translate="no">u_matrix</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 // an attribute is an input (in) to a vertex shader.
@@ -571,8 +578,9 @@ void main() {
 *  // orient the normals and pass to the fragment shader
 *  v_normal = mat3(u_world) * a_normal;
 }
-</code></pre><p>Notice we are multiplying <code class="notranslate" translate="no">a_normal</code> by <code class="notranslate" translate="no">mat3(u_world)</code>. That&#39;s
-because normals are a direction so we don&#39;t care about translation.
+</code></pre>
+<p>Notice we are multiplying <code class="notranslate" translate="no">a_normal</code> by <code class="notranslate" translate="no">mat3(u_world)</code>. That’s
+because normals are a direction so we don’t care about translation.
 The orientation portion of the matrix is only in the top 3x3
 area of the matrix.</p>
 <p>Now we have to look those uniforms up</p>
@@ -581,7 +589,8 @@ area of the matrix.</p>
 *  var worldViewProjectionLocation =
 *      gl.getUniformLocation(program, &quot;u_worldViewProjection&quot;);
 +  var worldLocation = gl.getUniformLocation(program, &quot;u_world&quot;);
-</code></pre><p>And we have to change the code that updates them</p>
+</code></pre>
+<p>And we have to change the code that updates them</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*var worldMatrix = m4.yRotation(fRotationRadians);
 *var worldViewProjectionMatrix = m4.multiply(viewProjectionMatrix,
                                              worldMatrix);
@@ -591,7 +600,8 @@ area of the matrix.</p>
 *    worldViewProjectionLocation, false,
 *    worldViewProjectionMatrix);
 *gl.uniformMatrix4fv(worldLocation, false, worldMatrix);
-</code></pre><p>and here&#39;s that</p>
+</code></pre>
+<p>and here’s that</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-directional-world.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-directional-world.html" target="_blank">click here to open in a separate window</a>
@@ -599,8 +609,8 @@ area of the matrix.</p>
 
 </p>
 <p>Rotate the F and notice which ever side is facing the light direction gets lit.</p>
-<p>There is one problem which I don&#39;t know how to show directly so I&#39;m
-going to show it in a diagram. We&#39;re multiplying the <code class="notranslate" translate="no">normal</code> by
+<p>There is one problem which I don’t know how to show directly so I’m
+going to show it in a diagram. We’re multiplying the <code class="notranslate" translate="no">normal</code> by
 the <code class="notranslate" translate="no">u_world</code> matrix to re-orient the normals.
 What happens if we scale the world matrix?
 It turns out we get the wrong normals.</p>
@@ -610,27 +620,27 @@ It turns out we get the wrong normals.</p>
 </div>
 
 </p>
-<p>I&#39;ve never bothered to understand
+<p>I’ve never bothered to understand
 the solution but it turns out you can get the inverse of the world matrix,
 transpose it, which means swap the columns for rows, and use that instead
-and you&#39;ll get the right answer.</p>
+and you’ll get the right answer.</p>
 <p>In the diagram above the <span style="color: #F0F;">purple</span> sphere
 is unscaled. The <span style="color: #F00;">red</span> sphere on the left
 is scaled and the normals are being multiplied by the world matrix. You
 can see something is wrong. The <span style="color: #00F;">blue</span>
 sphere on the right is using the world inverse transpose matrix.</p>
 <p>Click the diagram to cycle through different representations. You should
-notice when the scale is extreme it&#39;s very easy to see the normals
+notice when the scale is extreme it’s very easy to see the normals
 on the left (world) are <strong>not</strong> staying perpendicular to the surface of the sphere
 where as the ones on the right (worldInverseTranspose) are staying perpendicular
 to the sphere. The last mode makes them all shaded red. You should see the lighting
 on the 2 outer spheres is very different based on which matrix is used.
-It&#39;s hard to tell which is correct which is why this is a subtle issue but
-based on the other visualizations it&#39;s clear using the worldInverseTranspose
+It’s hard to tell which is correct which is why this is a subtle issue but
+based on the other visualizations it’s clear using the worldInverseTranspose
 is correct.</p>
-<p>To implement this in our example let&#39;s change the code like this. First we&#39;ll update
+<p>To implement this in our example let’s change the code like this. First we’ll update
 the shader. Technically we could just update the value of <code class="notranslate" translate="no">u_world</code>
-but it&#39;s best if we rename things so they&#39;re named what they actually are
+but it’s best if we rename things so they’re named what they actually are
 otherwise it will get confusing.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
@@ -655,11 +665,13 @@ void main() {
   // orient the normals and pass to the fragment shader
 *  v_normal = mat3(u_worldInverseTranspose) * a_normal;
 }
-</code></pre><p>Then we need to look that up</p>
+</code></pre>
+<p>Then we need to look that up</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">-  var worldLocation = gl.getUniformLocation(program, &quot;u_world&quot;);
 +  var worldInverseTransposeLocation =
 +      gl.getUniformLocation(program, &quot;u_worldInverseTranspose&quot;);
-</code></pre><p>And we need to compute and set it</p>
+</code></pre>
+<p>And we need to compute and set it</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var worldMatrix = m4.yRotation(fRotationRadians);
 var worldViewProjectionMatrix = m4.multiply(viewProjectionMatrix, worldMatrix);
 +var worldInverseMatrix = m4.inverse(worldMatrix);
@@ -673,7 +685,8 @@ gl.uniformMatrix4fv(
 +gl.uniformMatrix4fv(
 +    worldInverseTransposeLocation, false,
 +    worldInverseTransposeMatrix);
-</code></pre><p>and here&#39;s the code to transpose a matrix</p>
+</code></pre>
+<p>and here’s the code to transpose a matrix</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m4 = {
   transpose: function(m) {
     return [
@@ -684,8 +697,9 @@ gl.uniformMatrix4fv(
     ];
   },
   ...
-</code></pre><p>Because the effect is subtle and because we aren&#39;t scaling anything
-there&#39;s no noticeable difference but at least now we&#39;re prepared.</p>
+</code></pre>
+<p>Because the effect is subtle and because we aren’t scaling anything
+there’s no noticeable difference but at least now we’re prepared.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-directional-worldinversetranspose.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-directional-worldinversetranspose.html" target="_blank">click here to open in a separate window</a>

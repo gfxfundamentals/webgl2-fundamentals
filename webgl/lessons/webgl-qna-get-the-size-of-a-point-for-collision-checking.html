@@ -236,12 +236,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>Forgive me if my terminology is wrong, but I&#39;m just trying to do some simple point collision detection in WebGL.  I have a bunch of <code class="notranslate" translate="no">gl.POINTS</code> floating around a canvas (640x480, set as HTML attributes), I&#39;ve set <code class="notranslate" translate="no">gl_PointSize = 10.0</code> in my vertex shader, and am trying to convert this to the correct coordinate system.  </p>
-<p>I just want to do some basic collision detection based on the four corners of each rendered point (just to have the points bounce off each other, given I&#39;ve increased their size to represent a square).  </p>
-<p>The issue I&#39;m having is that I can&#39;t seem to wrap my head around how to calculate their exact size.  I have their vertex location and thought I could simply do a normalization between the canvas size, point size, and the WebGL coordinates of [-1, 1].</p>
-<p>Basically, is there a &#39;simple&#39; way to calculate the precise size of a point?</p>
-<h2 id="answer-">Answer:</h2>
+      <h2 id="question">Question:</h2>
+<p>Forgive me if my terminology is wrong, but I’m just trying to do some simple point collision detection in WebGL.  I have a bunch of <code class="notranslate" translate="no">gl.POINTS</code> floating around a canvas (640x480, set as HTML attributes), I’ve set <code class="notranslate" translate="no">gl_PointSize = 10.0</code> in my vertex shader, and am trying to convert this to the correct coordinate system.</p>
+<p>I just want to do some basic collision detection based on the four corners of each rendered point (just to have the points bounce off each other, given I’ve increased their size to represent a square).</p>
+<p>The issue I’m having is that I can’t seem to wrap my head around how to calculate their exact size.  I have their vertex location and thought I could simply do a normalization between the canvas size, point size, and the WebGL coordinates of [-1, 1].</p>
+<p>Basically, is there a ‘simple’ way to calculate the precise size of a point?</p>
+<h2 id="answer">Answer:</h2>
 <p>The size of a point is its center +/- half its size</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+-[canvas]-----------------------+
 |                                |
@@ -252,16 +252,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 |  +---+                         |
 |                                |
 +--------------------------------+
-</code></pre><p>In the example above the canvas 32x7
+</code></pre>
+<p>In the example above the canvas 32x7
 The center of the point is at 4x2 in pixels. Its <code class="notranslate" translate="no">gl_PointSize</code> is 3. Its clip space position would be</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">cx = px / canvasWidth * 2 - 1
 cx = 4 / 32 * 2 - 1 = -0.75
 cy = py / canvasHeight * 2 - 1
 cy = 2 /  7 * 2 - 1 = -0.43
-</code></pre><p>Its clip space width and height are</p>
+</code></pre>
+<p>Its clip space width and height are</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">clipWidth  = gl_PointSize / canvasWidth
 clipHeight = gl_PointSize / canvasHeight
-</code></pre><p>Also remember that +Y is up in WebGL</p>
+</code></pre>
+<p>Also remember that +Y is up in WebGL</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-get-the-size-of-a-point-for-collision-checking-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-get-the-size-of-a-point-for-collision-checking-example-1.html" target="_blank">click here to open in a separate window</a>
@@ -280,7 +283,8 @@ clipHeight = gl_PointSize / canvasHeight
    | + |   |     &lt;--- you can see the center of that pixel is at -0.5, -0.5
    |   |   |
    +---+---+-- -1
-</code></pre><p>In pixel space the same canvas would be</p>
+</code></pre>
+<p>In pixel space the same canvas would be</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">   0   1   2
    |   |   |
    +---+---+-- 2
@@ -292,7 +296,8 @@ clipHeight = gl_PointSize / canvasHeight
    | + |   |     &lt;--- you can see the center of that pixel is at 0.5, 0.5
    |   |   |
    +---+---+-- 0
-</code></pre><p><code class="notranslate" translate="no">gl.POINTS</code> takes the center of the point in pixel space, adds +/- gl_PointSize / 2 to make a rectangle. Any pixel who&#39;s center is inside that rectangle will be rendered (or rather considered for rendering given all the other tests depth/stencil/discard, etc...)</p>
+</code></pre>
+<p><code class="notranslate" translate="no">gl.POINTS</code> takes the center of the point in pixel space, adds +/- gl_PointSize / 2 to make a rectangle. Any pixel who’s center is inside that rectangle will be rendered (or rather considered for rendering given all the other tests depth/stencil/discard, etc…)</p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 4.0 by

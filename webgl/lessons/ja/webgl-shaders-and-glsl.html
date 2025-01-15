@@ -245,13 +245,14 @@ WebGLの仕組みを読んでいない場合は<a href="webgl-how-it-works.html"
 それぞれのシェーダーは <em>関数</em> です。
 頂点シェーダーとフラグメントシェーダーはシェーダープログラム（またはプログラムとも呼ぶ）にリンクされています。
 一般的なWebGLアプリでは複数のシェーダープログラムを持ちます。</p>
-<h2 id="-vertex-shader-">頂点シェーダー（Vertex Shader）</h2>
+<h2 id="頂点シェーダー（vertex-shader）">頂点シェーダー（Vertex Shader）</h2>
 <p>頂点シェーダーの役割はクリップ空間座標を生成する事です。頂点シェーダーは常に以下のようなコードになります。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 void main() {
    gl_Position = doMathToMakeClipspaceCoordinates
 }
-</code></pre><p>シェーダーは頂点ごとに1回呼び出されます。
+</code></pre>
+<p>シェーダーは頂点ごとに1回呼び出されます。
 呼び出されたらグローバル変数の <code class="notranslate" translate="no">gl_Position</code> にクリップ空間座標を設定します。</p>
 <p>頂点シェーダーは入力データが必要です。頂点シェーダーがデータを受け取る方法は3種類あります。</p>
 <ol>
@@ -259,17 +260,20 @@ void main() {
 <li><a href="#uniforms">ユニフォーム</a> (1回の描画の間で全ての頂点で共通の値を持つデータ)</li>
 <li><a href="#textures-in-vertex-shaders">テクスチャ</a> (ピクセル/テクセルから読み込まれるデータ)</li>
 </ol>
-<h3 id="-attribute-">属性（attribute）</h3>
+<h3 id="属性（attribute）">属性（attribute）</h3>
 <p>頂点シェーダーでデータを取得する最も一般的な方法は、バッファと <em>属性</em> を使う方法です。
 バッファと属性については<a href="webgl-how-it-works.html">WebGL2の基本</a>で説明しました。
 まずはバッファを作成します。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var buf = gl.createBuffer();
-</code></pre><p>次にバッファにデータを入れます。</p>
+</code></pre>
+<p>次にバッファにデータを入れます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindBuffer(gl.ARRAY_BUFFER, buf);
 gl.bufferData(gl.ARRAY_BUFFER, someData, gl.STATIC_DRAW);
-</code></pre><p>そして、作ったシェーダープログラムから属性のロケーションを調べます。</p>
+</code></pre>
+<p>そして、作ったシェーダープログラムから属性のロケーションを調べます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var positionLoc = gl.getAttribLocation(someShaderProgram, &quot;a_position&quot;);
-</code></pre><p>最後にバッファからデータをどのように属性に渡すか指定します。</p>
+</code></pre>
+<p>最後にバッファからデータをどのように属性に渡すか指定します。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// turn on getting data out of a buffer for this attribute
 gl.enableVertexAttribArray(positionLoc);
 
@@ -281,7 +285,8 @@ var stride = 0;         // how many bytes to move to the next vertex
                         // 0 = use the correct stride for type and numComponents
 
 gl.vertexAttribPointer(positionLoc, numComponents, type, false, stride, offset);
-</code></pre><p><a href="webgl-fundamentals.html">WebGL2の基本</a>ではシェーダーで計算せずに直接データを渡していました。</p>
+</code></pre>
+<p><a href="webgl-fundamentals.html">WebGL2の基本</a>ではシェーダーで計算せずに直接データを渡していました。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 in vec4 a_position;
@@ -289,9 +294,10 @@ in vec4 a_position;
 void main() {
    gl_Position = a_position;
 }
-</code></pre><p>バッファにクリップ空間の頂点を入れておけば動作するでしょう。</p>
+</code></pre>
+<p>バッファにクリップ空間の頂点を入れておけば動作するでしょう。</p>
 <p>属性の型として <code class="notranslate" translate="no">float</code>、<code class="notranslate" translate="no">vec2</code>、<code class="notranslate" translate="no">vec3</code>、<code class="notranslate" translate="no">vec4</code>、<code class="notranslate" translate="no">mat2</code>、<code class="notranslate" translate="no">mat3</code>、<code class="notranslate" translate="no">mat4</code>、<code class="notranslate" translate="no">int</code>、<code class="notranslate" translate="no">ivec2</code>、<code class="notranslate" translate="no">ivec3</code>、<code class="notranslate" translate="no">ivec4</code>、<code class="notranslate" translate="no">uint</code>、<code class="notranslate" translate="no">uvec2</code>、<code class="notranslate" translate="no">uvec3</code>、<code class="notranslate" translate="no">uvec4</code> を利用できます。</p>
-<h3 id="-uniform-">ユニフォーム（uniform）</h3>
+<h3 id="ユニフォーム（uniform）">ユニフォーム（uniform）</h3>
 <p>頂点シェーダーのユニフォームは頂点シェーダーに渡される値です。
 描画呼び出し（ドローコール）中の全ての頂点に対して同じ値を持ちます。
 簡単な例として上記の頂点シェーダーにオフセットを追加できます。</p>
@@ -303,12 +309,15 @@ in vec4 a_position;
 void main() {
    gl_Position = a_position + u_offset;
 }
-</code></pre><p>これで全ての頂点で同じオフセットが加算でき図形が平行移動します。
+</code></pre>
+<p>これで全ての頂点で同じオフセットが加算でき図形が平行移動します。
 最初にユニフォームのロケーションを調べます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var offsetLoc = gl.getUniformLocation(someProgram, &quot;u_offset&quot;);
-</code></pre><p>そして、描画する前にユニフォームを設定します。</p>
+</code></pre>
+<p>そして、描画する前にユニフォームを設定します。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.uniform4fv(offsetLoc, [1, 0, 0, 0]);  // offset it to the right half the screen
-</code></pre><p>ユニフォームには多くの種類があります。
+</code></pre>
+<p>ユニフォームには多くの種類があります。
 データをセットする際には、シェーダープログラム側のユニフォームの定義に合う適切な関数を呼び出す必要があります。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.uniform1f (floatUniformLoc, v);                 // for float
 gl.uniform1fv(floatUniformLoc, [v]);               // for float or float array
@@ -345,7 +354,8 @@ gl.uniform4uv(ivec4UniformLoc, [v0, v1, v2, v4]);  // for uvec4 or uvec4 array
 // sampler2DArray, sampler2DArrayShadow
 gl.uniform1i (samplerUniformLoc,   v);
 gl.uniform1iv(samplerUniformLoc, [v]);
-</code></pre><p>上記以外にも <code class="notranslate" translate="no">bool</code>、<code class="notranslate" translate="no">bvec2</code>、<code class="notranslate" translate="no">bvec3</code>、<code class="notranslate" translate="no">bvec4</code> という型もあります。
+</code></pre>
+<p>上記以外にも <code class="notranslate" translate="no">bool</code>、<code class="notranslate" translate="no">bvec2</code>、<code class="notranslate" translate="no">bvec3</code>、<code class="notranslate" translate="no">bvec4</code> という型もあります。
 これは <code class="notranslate" translate="no">gl.uniform?f?</code> や <code class="notranslate" translate="no">gl.uniform?i?</code>、<code class="notranslate" translate="no">gl.uniform?u?</code> で使う事ができます。</p>
 <p>ユニフォームが配列で定義されている場合、その値を1度にセットできます。例えば以下のようになります。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// in shader
@@ -356,7 +366,8 @@ var someVec2Loc = gl.getUniformLocation(someProgram, &quot;u_someVec2&quot;);
 
 // at render time
 gl.uniform2fv(someVec2Loc, [1, 2, 3, 4, 5, 6]);  // set the entire array of u_someVec2
-</code></pre><p>しかし、配列の要素を個別に設定したい場合、各要素のロケーションを個別に調べる必要があります。</p>
+</code></pre>
+<p>しかし、配列の要素を個別に設定したい場合、各要素のロケーションを個別に調べる必要があります。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// in JavaScript at init time
 var someVec2Element0Loc = gl.getUniformLocation(someProgram, &quot;u_someVec2[0]&quot;);
 var someVec2Element1Loc = gl.getUniformLocation(someProgram, &quot;u_someVec2[1]&quot;);
@@ -366,18 +377,21 @@ var someVec2Element2Loc = gl.getUniformLocation(someProgram, &quot;u_someVec2[2]
 gl.uniform2fv(someVec2Element0Loc, [1, 2]);  // set element 0
 gl.uniform2fv(someVec2Element1Loc, [3, 4]);  // set element 1
 gl.uniform2fv(someVec2Element2Loc, [5, 6]);  // set element 2
-</code></pre><p>また、構造体を利用する事もできます。</p>
+</code></pre>
+<p>また、構造体を利用する事もできます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">struct SomeStruct {
   bool active;
   vec2 someVec2;
 };
 uniform SomeStruct u_someThing;
-</code></pre><p>構造体を使う場合、ロケーションの取得は構造体の要素1つずつに行えます。</p>
+</code></pre>
+<p>構造体を使う場合、ロケーションの取得は構造体の要素1つずつに行えます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var someThingActiveLoc = gl.getUniformLocation(someProgram, &quot;u_someThing.active&quot;);
 var someThingSomeVec2Loc = gl.getUniformLocation(someProgram, &quot;u_someThing.someVec2&quot;);
-</code></pre><h3 id="-">頂点シェーダーでのテクスチャの利用</h3>
+</code></pre>
+<h3 id="頂点シェーダーでのテクスチャの利用">頂点シェーダーでのテクスチャの利用</h3>
 <p>テクスチャの利用は<a href="#textures-in-fragment-shaders">フラグメントシェーダーでのテクスチャの利用</a>で説明します。</p>
-<h2 id="-fragment-shader-">フラグメントシェーダー（Fragment Shader）</h2>
+<h2 id="フラグメントシェーダー（fragment-shader）">フラグメントシェーダー（Fragment Shader）</h2>
 <p>フラグメントシェーダーの役割は描画対象のピクセルの色を決定する事です。
 フラグメントシェーダーは常に以下のようなコードになります。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
@@ -388,7 +402,8 @@ out vec4 outColor;  // you can pick any name
 void main() {
    outColor = doMathToMakeAColor;
 }
-</code></pre><p>フラグメントシェーダーは1ピクセルごとに1回呼び出されます。
+</code></pre>
+<p>フラグメントシェーダーは1ピクセルごとに1回呼び出されます。
 呼び出される度にout変数に何らかの色を設定します。</p>
 <p>フラグメントシェーダーもデータが必要です。データを取得する方法は3つあります。</p>
 <ol>
@@ -396,9 +411,9 @@ void main() {
 <li><a href="#textures-in-fragment-shaders">テクスチャ</a> (ピクセル/テクセルから読み込まれるデータ)</li>
 <li><a href="#varyings">ヴァリイング</a> (頂点シェーダーから渡されるデータ。必要に応じて補間される)</li>
 </ol>
-<h3 id="-">フラグメントシェーダーのユニフォーム</h3>
+<h3 id="フラグメントシェーダーのユニフォーム">フラグメントシェーダーのユニフォーム</h3>
 <p>仕組みは共通で<a href="#uniforms">頂点シェーダーのユニフォーム</a>を参照して下さい。</p>
-<h3 id="-">フラグメントシェーダーのテクスチャ</h3>
+<h3 id="フラグメントシェーダーのテクスチャ">フラグメントシェーダーのテクスチャ</h3>
 <p>シェーダーでテクスチャから値を取得するには、<code class="notranslate" translate="no">sampler2D</code> ユニフォームを作成してGLSL関数 <code class="notranslate" translate="no">texture</code> で値を取得します。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">precision highp float;
 
@@ -410,7 +425,8 @@ void main() {
    vec2 texcoord = vec2(0.5, 0.5);  // get a value from the middle of the texture
    outColor = texture(u_texture, texcoord);
 }
-</code></pre><p>テクスチャから得られるデータは<a href="webgl-3d-textures.html">様々なWebGLの設定</a>に依存します。
+</code></pre>
+<p>テクスチャから得られるデータは<a href="webgl-3d-textures.html">様々なWebGLの設定</a>に依存します。
 最低限、テクスチャにデータを作成して配置する必要があります。例えば</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var tex = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -432,15 +448,19 @@ gl.texImage2D(gl.TEXTURE_2D,
               type,
               data);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-</code></pre><p>次にシェーダープログラムでユニフォームのロケーションを調べます。</p>
+</code></pre>
+<p>次にシェーダープログラムでユニフォームのロケーションを調べます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var someSamplerLoc = gl.getUniformLocation(someProgram, &quot;u_texture&quot;);
-</code></pre><p>そして、テクスチャユニットにバインドします。</p>
+</code></pre>
+<p>そして、テクスチャユニットにバインドします。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var unit = 5;  // Pick some texture unit
 gl.activeTexture(gl.TEXTURE0 + unit);
 gl.bindTexture(gl.TEXTURE_2D, tex);
-</code></pre><p>シェーダーにどのテクスチャユニットを指定したかの情報を渡します。</p>
+</code></pre>
+<p>シェーダーにどのテクスチャユニットを指定したかの情報を渡します。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.uniform1i(someSamplerLoc, unit);
-</code></pre><h3 id="-varying-">ヴァリイング（Varying）</h3>
+</code></pre>
+<h3 id="ヴァリイング（varying）">ヴァリイング（Varying）</h3>
 <p>ヴァリイングとは頂点シェーダーからフラグメントシェーダーに値を渡す方法です。
 これは<a href="webgl-how-it-works.html">WebGLの仕組み</a>で説明しました。</p>
 <p>ヴァリイングを使用するには、頂点シェーダーとフラグメントシェーダーの両方で同じヴァリイングを宣言する必要があります。
@@ -459,7 +479,8 @@ void main() {
   gl_Position = a_position + u_offset;
 +  v_positionWithOffset = a_position + u_offset;
 }
-</code></pre><p>フラグメントシェーダー：</p>
+</code></pre>
+<p>フラグメントシェーダー：</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
@@ -472,7 +493,8 @@ void main() {
 +  vec4 color = v_positionWithOffset * 0.5 + 0.5;
 +  outColor = color;
 }
-</code></pre><p>上記のコード例は実用的でないです。
+</code></pre>
+<p>上記のコード例は実用的でないです。
 一般的には、クリップ空間座標の値を直接フラグメントシェーダーにコピーして色として使う事はありません。
 それにも関わらずそれは動作して色を生成します。</p>
 <h2 id="glsl">GLSL</h2>
@@ -487,16 +509,19 @@ GLSLにはJavaScriptにない独特な特殊機能があります。
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 a = vec4(1, 2, 3, 4);
 vec4 b = a * 2.0;
 // b is now vec4(2, 4, 6, 8);
-</code></pre><p>同様に行列の乗算とベクトルから行列の乗算を行えます。</p>
+</code></pre>
+<p>同様に行列の乗算とベクトルから行列の乗算を行えます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">mat4 a = ???
 mat4 b = ???
 mat4 c = a * b;
 
 vec4 v = ???
 vec4 y = c * v;
-</code></pre><p>また、vecのための様々なセレクタを持っています。例えばvec4の場合</p>
+</code></pre>
+<p>また、vecのための様々なセレクタを持っています。例えばvec4の場合</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 v;
-</code></pre><ul>
+</code></pre>
+<ul>
 <li><code class="notranslate" translate="no">v.x</code> は <code class="notranslate" translate="no">v.s</code> や <code class="notranslate" translate="no">v.r</code> や <code class="notranslate" translate="no">v[0]</code> と同じ意味です。</li>
 <li><code class="notranslate" translate="no">v.y</code> は <code class="notranslate" translate="no">v.t</code> や <code class="notranslate" translate="no">v.g</code> や <code class="notranslate" translate="no">v[1]</code> と同じ意味です。</li>
 <li><code class="notranslate" translate="no">v.z</code> は <code class="notranslate" translate="no">v.p</code> や <code class="notranslate" translate="no">v.b</code> や <code class="notranslate" translate="no">v[2]</code> と同じ意味です。</li>
@@ -505,46 +530,59 @@ vec4 y = c * v;
 <p>これにより、vecのコンポーネントの入れ替え(swizzleなどと表現される)は容易です。
 入れ替えだけでなく同じ要素を繰り返すこともできます。例えば</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v.yyyy
-</code></pre><p>と</p>
+</code></pre>
+<p>と</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4(v.y, v.y, v.y, v.y)
-</code></pre><p>は同じ値です。同様に</p>
+</code></pre>
+<p>は同じ値です。同様に</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v.bgra
-</code></pre><p>は</p>
+</code></pre>
+<p>は</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4(v.b, v.g, v.r, v.a)
-</code></pre><p>と同じ値になります。
+</code></pre>
+<p>と同じ値になります。
 vecやmatの値を定義する際には複数の要素を一度に記述する事もできます。例えば</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4(v.rgb, 1)
-</code></pre><p>と書けば</p>
+</code></pre>
+<p>と書けば</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4(v.r, v.g, v.b, 1)
-</code></pre><p>という意味になります。また</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">float f = 1;  // ERROR 1 is an int. You can&#39;t assign an int to a float
-</code></pre><p>は</p>
+</code></pre>
+<p>という意味になります。また</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">float f = 1;  // ERROR 1 is an int. You can't assign an int to a float
+</code></pre>
+<p>は</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">float f = 1.0;      // use float
 float f = float(1)  // cast the integer to a float
-</code></pre><p>と同じ意味です。</p>
+</code></pre>
+<p>と同じ意味です。</p>
 <p>上記の <code class="notranslate" translate="no">vec4(v.rgb, 1)</code> の例では、<code class="notranslate" translate="no">float(1)</code> と同様に <code class="notranslate" translate="no">vec4</code> が内部のものをキャストしているので <code class="notranslate" translate="no">1</code> でエラーは出ません。</p>
 <p>GLSLには多くのビルトイン関数があります。
 それらの多くは1度に複数のコンポーネントで動作します。
 例えば、角度(angle)から正弦(sine)を計算する関数は</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">T sin(T angle)
-</code></pre><p>T は <code class="notranslate" translate="no">float</code>、<code class="notranslate" translate="no">vec2</code>、<code class="notranslate" translate="no">vec3</code>、<code class="notranslate" translate="no">vec4</code> のいずれかである事を意味します。
+</code></pre>
+<p>T は <code class="notranslate" translate="no">float</code>、<code class="notranslate" translate="no">vec2</code>、<code class="notranslate" translate="no">vec3</code>、<code class="notranslate" translate="no">vec4</code> のいずれかである事を意味します。
 <code class="notranslate" translate="no">vec4</code> を渡すと <code class="notranslate" translate="no">vec4</code> が返ってきます。言い換えれば <code class="notranslate" translate="no">v</code> が <code class="notranslate" translate="no">vec4</code> であれば</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 s = sin(v);
-</code></pre><p>は、以下と同じに解釈されます。</p>
+</code></pre>
+<p>は、以下と同じに解釈されます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 s = vec4(sin(v.x), sin(v.y), sin(v.z), sin(v.w));
-</code></pre><p>1つの引数がfloatで残りが <code class="notranslate" translate="no">T</code> という場合もあります。
+</code></pre>
+<p>1つの引数がfloatで残りが <code class="notranslate" translate="no">T</code> という場合もあります。
 この場合はfloatが全体に適用されます。
 例えばv1とv2がvec4型、fがfloat型だとして</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 m = mix(v1, v2, f);
-</code></pre><p>以下と同じです。</p>
+</code></pre>
+<p>以下と同じです。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 m = vec4(
   mix(v1.x, v2.x, f),
   mix(v1.y, v2.y, f),
   mix(v1.z, v2.z, f),
   mix(v1.w, v2.w, f));
-</code></pre><p><a href="https://www.khronos.org/files/opengles3-quick-reference-card.pdf">OpenGL ES 3.0リファレンスカード</a>の最後の3ページにあるGLSLの全関数リストが見れます。
+</code></pre>
+<p><a href="https://www.khronos.org/files/opengles3-quick-reference-card.pdf">OpenGL ES 3.0リファレンスカード</a>の最後の3ページにあるGLSLの全関数リストが見れます。
 本当に辛口で冗長なものが好きな方は<a href="https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf">GLSL ES 3.00 spec</a>を試してみて下さい。</p>
-<h2 id="-">まとめ</h2>
+<h2 id="まとめ">まとめ</h2>
 <p>WebGLは様々なシェーダーを作成しシェーダーにデータを供給します。
 <code class="notranslate" translate="no">gl.drawArrays</code> や <code class="notranslate" translate="no">gl.drawElements</code> を呼び出して、各頂点に対して現在の頂点シェーダーを呼び出して頂点を処理し、
 各ピクセルに対して現在のフラグメントシェーダーを呼び出しピクセルをレンダリングします。</p>

@@ -236,39 +236,37 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>This article assumes you&#39;ve read the article on
+      <p>This article assumes you’ve read the article on
 <a href="webgl-less-code-more-fun.html">less code more fun</a>
 as it uses the library mentioned there so as to
-unclutter the example. If you don&#39;t understand
+unclutter the example. If you don’t understand
 what buffers, vertex arrays, and attributes are or when
 a function named <code class="notranslate" translate="no">twgl.setUniforms</code> what it means
-to set uniforms, etc... then you should probably to go further back and
+to set uniforms, etc… then you should probably to go further back and
 <a href="webgl-fundamentals.html">read the fundamentals</a>.</p>
-<p>It also assumes you&#39;ve read <a href="webgl-3d-perspective.html">the articles on perspective</a>,
+<p>It also assumes you’ve read <a href="webgl-3d-perspective.html">the articles on perspective</a>,
 <a href="webgl-3d-camera.html">the article on cameras</a>, <a href="webgl-3d-textures.html">the article on textures</a>,
 and <a href="webgl-visualizing-the-camera.html">the article visualizing the camera</a> so if
-you haven&#39;t read those you should probably start there first.</p>
-<p>Projection mapping is the process of &quot;projecting&quot; an image in the same sense
+you haven’t read those you should probably start there first.</p>
+<p>Projection mapping is the process of “projecting” an image in the same sense
 of pointing a movie projector at a screen and projecting a movie on it.
 A movie projector projects a perspective plane. As the screen gets further
 from the projector the image gets bigger. If you angle the screen so
-it&#39;s non-perpendicular to the movie projector the result would be
+it’s non-perpendicular to the movie projector the result would be
 a trapezoid or some arbitrary quadrilateral.</p>
 <div class="webgl_center"><img src="resources/perspective-projection.svg" style="width: 400px"></div>
-
-<p>Of course projection mapping doesn&#39;t have to be flat. There are things like 
-cylindrical projection mapping, spherical projection mapping, and more etc... </p>
-<p>Let&#39;s cover planar projection mapping first. In this case
-you&#39;d have to imagine the movie projector is as large as the screen
+<p>Of course projection mapping doesn’t have to be flat. There are things like
+cylindrical projection mapping, spherical projection mapping, and more etc…</p>
+<p>Let’s cover planar projection mapping first. In this case
+you’d have to imagine the movie projector is as large as the screen
 so that instead of movie getting larger as the screen gets further
 from the movie projector it stays the same size.</p>
 <div class="webgl_center"><img src="resources/orthographic-projection.svg" style="width: 400px"></div>
-
-<p>First let&#39;s make a simple scene that draws a plane and a sphere.
-We&#39;ll texture both with a simple 8x8 checkerboard texture.</p>
+<p>First let’s make a simple scene that draws a plane and a sphere.
+We’ll texture both with a simple 8x8 checkerboard texture.</p>
 <p>The shaders are similar to the ones from <a href="webgl-3d-textures.html">the article on textures</a>
-except the various matrices are separated out so we don&#39;t need to multiply them together
-in JavaScript. </p>
+except the various matrices are separated out so we don’t need to multiply them together
+in JavaScript.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
 in vec4 a_position;
 in vec2 a_texcoord;
@@ -305,7 +303,7 @@ void main() {
 }
 `;
 </code></pre>
-<p>Here&#39;s the code to setup the program, sphere buffers, and plane buffers</p>
+<p>Here’s the code to setup the program, sphere buffers, and plane buffers</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// setup GLSL program
 // compiles shader, links program, look up locations
 const textureProgramInfo = twgl.createProgramInfo(gl, [vs, fs]);
@@ -355,7 +353,7 @@ gl.texImage2D(
 gl.generateMipmap(gl.TEXTURE_2D);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 </code></pre>
-<p>To draw we&#39;ll make a function that takes a projection matrix
+<p>To draw we’ll make a function that takes a projection matrix
 and a camera matrix, computes the view matrix from the camera
 matrix and then draws the sphere and the plane</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Uniforms for each object.
@@ -429,7 +427,7 @@ function render() {
   const projectionMatrix =
       m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
 
-  // Compute the camera&#39;s matrix using look at.
+  // Compute the camera's matrix using look at.
   const cameraPosition = [settings.cameraX, settings.cameraY, 7];
   const target = [0, 0, 0];
   const up = [0, 1, 0];
@@ -448,9 +446,9 @@ to help understand the scene.</p>
 </div>
 
 </p>
-<p>Now let&#39;s planar project a texture on to those the sphere
+<p>Now let’s planar project a texture on to those the sphere
 and the plane.</p>
-<p>The first thing to do, let&#39;s <a href="webgl-3d-textures.html">load a texture</a>.</p>
+<p>The first thing to do, let’s <a href="webgl-3d-textures.html">load a texture</a>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function loadImageTexture(url) {
   // Create a texture.
   const texture = gl.createTexture();
@@ -461,7 +459,7 @@ and the plane.</p>
   // Asynchronously load an image
   const image = new Image();
   image.src = url;
-  image.addEventListener(&#39;load&#39;, function() {
+  image.addEventListener('load', function() {
     // Now that the image has loaded make copy it to the texture.
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
@@ -472,16 +470,16 @@ and the plane.</p>
   return texture;
 }
 
-const imageTexture = loadImageTexture(&#39;resources/f-texture.png&#39;);
+const imageTexture = loadImageTexture('resources/f-texture.png');
 </code></pre>
 <p>Recall from <a href="webgl-visualizing-the-camera.html">the article on visualizing the camera</a>
 We created a -1 to +1 cube and drew it to represent the frustum of the camera.
 Our matrices made it so the space inside that frustum represents some frustum shaped
 area inside the world space that is being converted from that world space into
 -1 to +1 clip space. We can do a similar thing here.</p>
-<p>Let&#39;s try it. First in our fragment shader we&#39;ll draw the projected texture
+<p>Let’s try it. First in our fragment shader we’ll draw the projected texture
 anywhere its texture coordinates are between 0.0 and 1.0.
-Outside that range we&#39;ll use the checkerboard texture</p>
+Outside that range we’ll use the checkerboard texture</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const fs = `#version 300 es
 precision highp float;
 
@@ -514,14 +512,14 @@ void main() {
 }
 `;
 </code></pre>
-<p>To compute the projected texture coordinates we&#39;ll make a
+<p>To compute the projected texture coordinates we’ll make a
 a matrix that represents a 3D space oriented and positioned
-in a certain direction just like the camera from <a href="webgl-visualizing-the-camera.html">the article on visualizing the camera</a>. 
-We&#39;ll then project the world positions
+in a certain direction just like the camera from <a href="webgl-visualizing-the-camera.html">the article on visualizing the camera</a>.
+We’ll then project the world positions
 of the sphere and plane vertices through that space. Where
 they are between 0 and 1 the code we just wrote will show the
 texture.</p>
-<p>Let&#39;s add code to the vertex shader to project the world positions of the
+<p>Let’s add code to the vertex shader to project the world positions of the
 sphere and plane through this <em>space</em></p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
 in vec4 a_position;
@@ -547,14 +545,14 @@ void main() {
 +  v_projectedTexcoord = u_textureMatrix * worldPosition;
 }
 </code></pre>
-<p>So now all that&#39;s left is to actually compute the matrix that
+<p>So now all that’s left is to actually compute the matrix that
 defines this oriented space. All we have to do is compute a
 world matrix like we would for any other object, then take
 its inverse. This will give as a matrix that lets us orient
 the world positions of other objects relative to this space.
 This is exactly the same thing the view matrix does from
 <a href="webgl-3d-camera.html">the article on cameras</a>.</p>
-<p>We&#39;ll use our <code class="notranslate" translate="no">lookAt</code> function we made in that <a href="webgl-3d-camera.html">same article</a></p>
+<p>We’ll use our <code class="notranslate" translate="no">lookAt</code> function we made in that <a href="webgl-3d-camera.html">same article</a></p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const settings = {
   cameraX: 2.75,
   cameraY: 5,
@@ -592,10 +590,10 @@ function drawScene(projectionMatrix, cameraMatrix) {
   ...
 }
 </code></pre>
-<p>Of course you don&#39;t have to use <code class="notranslate" translate="no">lookAt</code>. You can make
+<p>Of course you don’t have to use <code class="notranslate" translate="no">lookAt</code>. You can make
 a world matrix anyway you choose, for example using
 a <a href="webgl-scene-graph.html">scene graph</a> or <a href="webgl-2d-matrix-stack.html">matrix stack</a>.</p>
-<p>Before we run it let&#39;s add some kind of scale</p>
+<p>Before we run it let’s add some kind of scale</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const settings = {
   cameraX: 2.75,
   cameraY: 5,
@@ -639,7 +637,7 @@ function drawScene(projectionMatrix, cameraMatrix) {
 
 </p>
 <p>I think it might be hard to see the space the texture is in.
-Let&#39;s add a wireframe cube to help visualize</p>
+Let’s add a wireframe cube to help visualize</p>
 <p>First we need a separate set of shaders. These shaders
 can just draw a solid color, no textures.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const colorVS = `#version 300 es
@@ -737,7 +735,7 @@ that space exists.</p>
 +  // Setup all the needed attributes.
 +  gl.bindVertexArray(cubeLinesVAO);
 +
-+  // scale the cube in Z so it&#39;s really long
++  // scale the cube in Z so it's really long
 +  // to represent the texture is being projected to
 +  // infinity
 +  const mat = m4.scale(textureWorldMatrix, 1, 1, 1000);
@@ -762,9 +760,9 @@ is.</p>
 </div>
 
 </p>
-<p>I think it&#39;s important to note that we&#39;re not really <em>projecting</em>
-the texture. Rather we&#39;re doing the opposite. For each pixel
-of an object being rendered we&#39;re seeing what part of the texture
+<p>I think it’s important to note that we’re not really <em>projecting</em>
+the texture. Rather we’re doing the opposite. For each pixel
+of an object being rendered we’re seeing what part of the texture
 would be projected there and then looking up the color at that part
 of the texture.</p>
 <p>Since we mentioned movie projectors above how would would we simulate
@@ -799,7 +797,7 @@ function drawScene(projectionMatrix, cameraMatrix) {
 -      textureWorldMatrix,
 -      settings.projWidth, settings.projHeight, 1,
 -  );
-
+  
 +  const textureProjectionMatrix = settings.perspective
 +      ? m4.perspective(
 +          degToRad(settings.fieldOfView),
@@ -829,7 +827,7 @@ drawing the lines</p>
 
 ...
 
--// scale the cube in Z so it&#39;s really long
+-// scale the cube in Z so it's really long
 -// to represent the texture is being projected to
 -// infinity
 -const mat = m4.scale(textureWorldMatrix, 1, 1, 1000);
@@ -846,9 +844,9 @@ drawing the lines</p>
 
 </p>
 <p>It kind of works but both our projection and our cube lines
-are using the 0 to 1 space so it&#39;s only using a 1/4th of the
+are using the 0 to 1 space so it’s only using a 1/4th of the
 projection frustum.</p>
-<p>To fix first let&#39;s make our cube be -1 to +1 cube in all directions</p>
+<p>To fix first let’s make our cube be -1 to +1 cube in all directions</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const cubeLinesBufferInfo = twgl.createBufferInfoFromArrays(gl, {
   position: [
 -     0,  0, -1,
@@ -939,17 +937,17 @@ offer a way to do planar projection with a texture.</p>
 <p>Another is decals. Decals are the way you put paint splats or explosion marks on
 a surface. Decals generally do not work via shaders like above. Instead, you
 write some function that goes over the geometry of the models you want to apply
-the decal. For each triangle you check if it&#39;s inside the area the decal would
+the decal. For each triangle you check if it’s inside the area the decal would
 apply, the same as in <code class="notranslate" translate="no">inRange</code> check in the shader example in JavaScript. For
 each triangle that is in range you add it to some new geometry with the
 projected texture coordinates. You then add that decal to the list of things you
 need to draw.</p>
-<p>Generating geometry is right thing to do otherwise you&#39;d
-need different shaders for 2 decals, 3 decals, 4 decals, etc...
+<p>Generating geometry is right thing to do otherwise you’d
+need different shaders for 2 decals, 3 decals, 4 decals, etc…
 and your shaders would quickly get too complicated and hit your GPUs
 shader texture limit.</p>
 <p>Yet another is simulating real world <a href="https://en.wikipedia.org/wiki/Projection_mapping">projection mapping</a>.
-You build a 3D model of the thing you&#39;re going to project video on and then
+You build a 3D model of the thing you’re going to project video on and then
 do the projection using code like above except with video as your texture.
 You can then perfect and edit the video to match the model without
 having to be at the actual site with a real projector.</p>
@@ -962,10 +960,9 @@ in all cases.</p>
 <pre class="prettyprint"><code class="notranslate" translate="no">
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
-
-  float projectedAmount = inRange ? 1.0 : 0.0;
-  gl_FragColor = mix(texColor, projectedTexColor, projectedAmount);
-</code></pre>
+<p>float projectedAmount = inRange ? 1.0 : 0.0;
+gl_FragColor = mix(texColor, projectedTexColor, projectedAmount);
+</code></pre></p>
 <p> Why didn't we do something like this?</p>
 <pre class="prettyprint"><code class="notranslate" translate="no">
   if (inRange) {
@@ -987,20 +984,18 @@ conditionally. For example we could have written this:</p>
 <pre class="prettyprint"><code class="notranslate" translate="no">
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
-
-  if (inRange) {
-    gl_FragColor = projectedTexColor;
-  } else {
-    gl_FragColor = texColor;
-  }
-</code></pre>
+<p>if (inRange) {
+gl_FragColor = projectedTexColor;
+} else {
+gl_FragColor = texColor;
+}
+</code></pre></p>
 <p>or this</p>
 <pre class="prettyprint"><code class="notranslate" translate="no">
   vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
   vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
-
-  gl_FragColor = inRange ? projectedTexColor : texColor;
-</code></pre>
+<p>gl_FragColor = inRange ? projectedTexColor : texColor;
+</code></pre></p>
 <p>But we can't access the textures themselves conditionally. It might work on your GPU but it won't
 work on all GPUs.</p>
 <p>In any case it's important to know.</p>

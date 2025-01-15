@@ -246,12 +246,13 @@ da WebGL2 <a href="webgl1-to-webgl2.html">veja este artigo</a>.</p>
 estava opcionalmente disponível na WebGL1 e agora que é
 sempre disponível na WebGL2 [acho que você provavelmente deveria
 sempre usá-lo] (webgl1-to-webgl2.html # Vertex-Array-Objects).</p>
-<h2 id="o-tamanho-de-uma-textura-est-dispon-vel-para-shaders-">O tamanho de uma textura está disponível para shaders.</h2>
-<p>Na WebGL1 se o seu shader precisasse conhecer o tamanho 
+<h2 id="o-tamanho-de-uma-textura-está-disponível-para-shaders">O tamanho de uma textura está disponível para shaders.</h2>
+<p>Na WebGL1 se o seu shader precisasse conhecer o tamanho
 de uma textura, que você precisava passar do tamanho
 em uniformente. Na WebGL2 você pode chamar</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec2 size = textureSize(sampler, lod)
-</code></pre><p>Para obter o tamanho de qualquer lod de uma textura</p>
+</code></pre>
+<p>Para obter o tamanho de qualquer lod de uma textura</p>
 <h2 id="pesquisa-direta-texel">Pesquisa Direta Texel</h2>
 <p>Muitas vezes, é conveniente armazenar grandes matrizes de dados em uma textura.
 Na WebGL1 você poderia fazer isso, mas você só poderia abordar as texturas
@@ -259,7 +260,8 @@ com cooridados de textura (0,0 a 1,0). Na WebGL2 você pode olhar
 valores de uma textura por pixel / texel coordenadas diretamente
 tornando o acesso à rede ligeiramente mais fácil</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 values = texelFetch(sampler, ivec2Position, lod);
-</code></pre><h2 id="muitos-formatos-de-textura">Muitos formatos de textura</h2>
+</code></pre>
+<h2 id="muitos-formatos-de-textura">Muitos formatos de textura</h2>
 <p>A WebGL1 tinha apenas alguns formatos de textura. WebGL2 tem TONELADAS!</p>
 <ul>
 <li><code class="notranslate" translate="no">RGBA32I</code></li>
@@ -325,21 +327,22 @@ um acesso de shader a centenas de texturas, embora
 apenas tem um número relativamente pequeno de unidades de textura. Você pode
 selecione a fatia em seu shader</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 color = texture(someSampler2DArray, vec3(u, v, slice));
-</code></pre><h2 id="non-power-de-2-formatos-de-textura">Non-Power de 2 formatos de textura</h2>
+</code></pre>
+<h2 id="non-power-de-2-formatos-de-textura">Non-Power de 2 formatos de textura</h2>
 <p>Nas texturas WebGL1 que não eram um poder de 2 não podiam ter mips.
 Na WebGL2, esse limite é removido. A Non-power de textura 2 funciona exatamente
 o mesmo que o poder de 2 texturas.</p>
-<h2 id="restri-es-de-loop-em-shaders-removidas">Restrições de loop em shaders removidas</h2>
+<h2 id="restrições-de-loop-em-shaders-removidas">Restrições de loop em shaders removidas</h2>
 <p>Na WebGL1, um loop em um shader precisava usar uma expressão de inteiro constante.
 WebGL2 remove esse limite (em GLSL 300 es)</p>
-<h2 id="fun-es-da-matriz-no-glsl">Funções da matriz no GLSL</h2>
+<h2 id="funções-da-matriz-no-glsl">Funções da matriz no GLSL</h2>
 <p>Na WebGL1 se necessário para obter o inverso de uma matriz que você precisava
 passe-o como um uniforme. No WebGL2 GLSL 300 é existe o construído em
 função <code class="notranslate" translate="no">inverse</code>, bem como <code class="notranslate" translate="no">transpose</code>.</p>
 <h2 id="texturas-comprimidas-comuns">Texturas comprimidas comuns</h2>
 <p>Na WebGL1 existem vários formatos de textura comprimida
 que dependem de hardware. O S3TC era basicamente apenas de desktop.
-PVRTC era apenas iOS. Etc ..</p>
+PVRTC era apenas iOS. Etc …</p>
 <p>Na WebGL2, esses formatos devem ser suportados em todos os lugares</p>
 <ul>
 <li><code class="notranslate" translate="no">COMPRESSED_R11_EAC RED</code></li>
@@ -357,58 +360,55 @@ PVRTC era apenas iOS. Etc ..</p>
 <p>Objetos de Buffer Uniform permitem que você especifique um monte de uniformes
 de um buffer. As vantagens são</p>
 <ol>
-<li><p>Você pode manipular todos os uniformes no buffer
-fora da WebGL</p>
+<li>
+<p>Você pode manipular todos os uniformes no buffer
+   fora da WebGL</p>
 <p>Na WebGL1, se você tivesse 16 uniformes que exigiriam
-16 chamadas para <code class="notranslate" translate="no">gl.uinformXXX</code>. Isso é relativamente lento.
-Na WebGL2 se você usar
-Um Objeto de Buffer Uniform, você pode definir os valores em
-uma matriz digitada tudo dentro do JavaScript, o que significa que é
-muito mais rápido. Quando todos os valores estiverem configurados
-você carrega todos eles com 1 chamada para <code class="notranslate" translate="no">gl.bufferData</code>
-ou <code class="notranslate" translate="no">gl.bufferSubData</code> e depois diga ao programa
-usar esse buffer com <code class="notranslate" translate="no">gl.bindBufferRange</code> para que apenas
-2 chamadas.</p>
+   16 chamadas para <code class="notranslate" translate="no">gl.uinformXXX</code>. Isso é relativamente lento.
+   Na WebGL2 se você usar
+   Um Objeto de Buffer Uniform, você pode definir os valores em
+   uma matriz digitada tudo dentro do JavaScript, o que significa que é
+   muito mais rápido. Quando todos os valores estiverem configurados
+   você carrega todos eles com 1 chamada para <code class="notranslate" translate="no">gl.bufferData</code>
+   ou <code class="notranslate" translate="no">gl.bufferSubData</code> e depois diga ao programa
+   usar esse buffer com <code class="notranslate" translate="no">gl.bindBufferRange</code> para que apenas
+   2 chamadas.</p>
 </li>
-<li><p>Você pode ter diferentes conjuntos de uniformes de objetos buffer</p>
+<li>
+<p>Você pode ter diferentes conjuntos de uniformes de objetos buffer</p>
+</li>
+</ol>
 <p>Primeiro, alguns termos. Um bloco uniforme é uma coleção
-de uniformes definidos em um shader. Um Objeto de Buffer Uniform
-é um buffer que contém os valores de um bloco uniforme
-usará. Você pode criar tantos Objetos de Buffer Uniform
-como você deseja e vincular um deles a um determinado bloco uniforme
-quando você desenha.</p>
+   de uniformes definidos em um shader. Um Objeto de Buffer Uniform
+   é um buffer que contém os valores de um bloco uniforme
+   usará. Você pode criar tantos Objetos de Buffer Uniform
+   como você deseja e vincular um deles a um determinado bloco uniforme
+   quando você desenha.</p>
 <p>Por exemplo, você poderia ter 4 blocos uniformes definidos
-em um sombreador.</p>
-<ul>
-<li><p>Um bloco uniforme de matriz global que contém
-matrizes que são iguais para todas as chamadas de desenho como a
-matriz de projeção, matriz de exibição, etc.</p>
-</li>
-<li><p>Um bloco modelo uniforme que contém matrizes que são
-diferentes por modelo, por exemplo, a matriz mundial e
-matriz normal.</p>
-</li>
-<li><p>Um bloco de material uniforme que contém as configurações de material
-como difusa, ambiente, especular, etc.</p>
-</li>
-<li><p>Um bloco uniforme de iluminação que contém os dados de iluminação
-como a cor clara, a posição da luz, etc.</p>
-</li>
-</ul>
+   em um sombreador.</p>
+<p>* Um bloco uniforme de matriz global que contém
+     matrizes que são iguais para todas as chamadas de desenho como a
+     matriz de projeção, matriz de exibição, etc.</p>
+<p>* Um bloco modelo uniforme que contém matrizes que são
+     diferentes por modelo, por exemplo, a matriz mundial e
+     matriz normal.</p>
+<p>* Um bloco de material uniforme que contém as configurações de material
+     como difusa, ambiente, especular, etc.</p>
+<p>* Um bloco uniforme de iluminação que contém os dados de iluminação
+     como a cor clara, a posição da luz, etc.</p>
 <p>Em seguida, em tempo de execução, você poderia criar um objeto buffer
-uniforme global, um modelo de objeto de buffer uniforme por modelo, um
-objeto de buffer uinformado leve por luz e um objeto buffer uniforme
-por material.</p>
+   uniforme global, um modelo de objeto de buffer uniforme por modelo, um
+   objeto de buffer uinformado leve por luz e um objeto buffer uniforme
+   por material.</p>
 <p>Para desenhar qualquer item em particular, assumindo que todos os valores
 já estão atualizados, tudo o que você precisa fazer é vincular os
 4 objetos de buffer uniformes desejados</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindBufferRange(..., globalBlockIndx, globalMatrixUBO, ...);
-gl.bindBufferRange(..., modelBlockIndx, someModelMatrixUBO, ...);
-gl.bindBufferRange(..., materialBlockIndx, someMaterialSettingsUBO, ...);
-gl.bindBufferRange(..., lightBlockIndx, someLightSettingsUBO, ...);
-</code></pre></li>
-</ol>
-<h2 id="texturas-inteiras-atributos-e-matem-tica">Texturas inteiras, atributos e matemática</h2>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">   gl.bindBufferRange(..., globalBlockIndx, globalMatrixUBO, ...);
+   gl.bindBufferRange(..., modelBlockIndx, someModelMatrixUBO, ...);
+   gl.bindBufferRange(..., materialBlockIndx, someMaterialSettingsUBO, ...);
+   gl.bindBufferRange(..., lightBlockIndx, someLightSettingsUBO, ...);
+</code></pre>
+<h2 id="texturas-inteiras-atributos-e-matemática">Texturas inteiras, atributos e matemática</h2>
 <p>Na WebGL2 você pode ter texturas baseadas em números inteiros onde, como
 na WebGL1, todas as texturas representavam valores de ponto flutuante
 mesmo que não fossem representados por valores de ponto flutuante.</p>
@@ -432,20 +432,20 @@ os desenvolvedores de motores tiveram uma experiência diferente.</p>
 <h2 id="texturas-de-profundidade">Texturas de profundidade</h2>
 <p>As texturas de profundidade foram opcionais no WebGL1 e PITA para trabalhar. Agora eles são padrão.
 Comumente usado para computação de mapas de sombra</p>
-<h2 id="derivados-padr-o">Derivados Padrão</h2>
+<h2 id="derivados-padrão">Derivados Padrão</h2>
 <p>Estes são agora padrão. Os usos comuns incluem padrões de computação nos shaders em vez de passá-los</p>
 <h2 id="instanciado-desenho">Instanciado Desenho</h2>
 <p>Agora Padrão, usos comuns estão desenhando muitas árvores, arbustos ou grama rapidamente.</p>
-<h2 id="unsigned_int-ndices">UNSIGNED_INT índices</h2>
+<h2 id="unsigned_int-índices">UNSIGNED_INT índices</h2>
 <p>Ser capaz de usar entradas de 32 bits para índices remove o limite de tamanho da geometria indexada</p>
-<h2 id="configura-o-gl_fragdepth-">Configuração <code class="notranslate" translate="no">gl_FragDepth</code></h2>
+<h2 id="configuração-gl_fragdepth">Configuração <code class="notranslate" translate="no">gl_FragDepth</code></h2>
 <p>Permitindo que você escreva seus próprios valores personalizados para o buffer de profundidade / z-buffer.</p>
-<h2 id="equa-o-de-mistura-min-max">Equação de mistura MIN / MAX</h2>
+<h2 id="equação-de-mistura-min--max">Equação de mistura MIN / MAX</h2>
 <p>Podendo levar o mínimo ou máximo de 2 cores ao misturar</p>
 <h2 id="multiplos-desenhos-buffers">Multiplos desenhos Buffers</h2>
 <p>Ser capaz de desenhar vários buffers de uma só vez a partir de um shader. Isso é comumente usado
 para várias técnicas de renderização diferida.</p>
-<h2 id="acesso-textura-em-sombreadores-de-v-rtices">Acesso à textura em sombreadores de vértices</h2>
+<h2 id="acesso-à-textura-em-sombreadores-de-vértices">Acesso à textura em sombreadores de vértices</h2>
 <p>Na WebGL1, essa era uma característica opcional. Houve uma contagem de quantas texturas
 você poderia acessar em um vertex shader e essa contagem permitia ser 0. Mais
 os dispositivos os apoiaram. Na WebGL2, a contagem é necessária para ser pelo menos 16.</p>
@@ -453,17 +453,17 @@ os dispositivos os apoiaram. Na WebGL2, a contagem é necessária para ser pelo 
 <p>Na WebGL1, a tela em si poderia ser anti-aliased com o GPU incorporamdo
 sistema multi-amostras, mas não houve suporte para mutli-amostragem controlada pelo usuário. No WebGL2
 agora você pode fazer várias multi-amostras de renderbuffers.</p>
-<h2 id="consultas-de-oclus-o">Consultas de oclusão</h2>
+<h2 id="consultas-de-oclusão">Consultas de oclusão</h2>
 <p>As consultas de oclusão permitem que você pergunte a GPU para verificar se deve renderizar algo
 que qualquer pixel realmente seria desenhado.</p>
-<h2 id="texturas-de-ponto-flutuante-sempre-dispon-veis">Texturas de ponto flutuante sempre disponíveis</h2>
+<h2 id="texturas-de-ponto-flutuante-sempre-disponíveis">Texturas de ponto flutuante sempre disponíveis</h2>
 <p>As texturas de ponto flutuante são usadas para muitos efeitos especiais
 e cálculos. Na WebGL1 eles eram opcionais. Na WebGL2
 eles apenas existem.</p>
 <p>Nota: Infelizmente eles ainda estão restritos naquela filtragem e a renderização,
 para texturas de pontos flutuantes ainda é opcional. Veja
 <a href="https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/"><code class="notranslate" translate="no">OES_texture_float_linear</code></a>
- e <a href="https://www.khronos.org/registry/webgl/extensions/EXT_color_buffer_float/"><code class="notranslate" translate="no">EXT_color_buffer_float</code></a>.</p>
+e <a href="https://www.khronos.org/registry/webgl/extensions/EXT_color_buffer_float/"><code class="notranslate" translate="no">EXT_color_buffer_float</code></a>.</p>
 
     </div>
     <div class="lesson-sidebar">

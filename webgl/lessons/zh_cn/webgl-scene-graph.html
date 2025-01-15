@@ -270,9 +270,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>有了场景图就只需要让月亮成为地球的子节点然后绕地球运转。
 地球绕太阳运转的部分场景图会处理，它通过遍历节点并把矩阵相乘，就像这样</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">worldMatrix = greatGrandParent * grandParent * parent * self(localMatrix)
-</code></pre><p>按照术语我们的宇宙关系应该是这样的</p>
+</code></pre>
+<p>按照术语我们的宇宙关系应该是这样的</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">worldMatrixForMoon = galaxyMatrix * starMatrix * planetMatrix * moonMatrix;
-</code></pre><p>我们可以用一个简单的递归函数来实现这个运算</p>
+</code></pre>
+<p>我们可以用一个简单的递归函数来实现这个运算</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function computeWorldMatrix(currentNode, parentWorldMatrix) {
     // 通过把我们的父节点的世界矩阵和当前结点的局部矩阵相乘，
     // 计算出当前节点的世界矩阵
@@ -283,11 +285,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         computeWorldMatrix(child, worldMatrix);
     });
 }
-</code></pre><p>这里使用了三维场景图中常用的术语。</p>
+</code></pre>
+<p>这里使用了三维场景图中常用的术语。</p>
 <ul>
-<li><p><code class="notranslate" translate="no">localMatrix</code>: 当前节点的局部矩阵。它会在局部空间的原点对自己和子节点进行转换操作。</p>
+<li>
+<p><code class="notranslate" translate="no">localMatrix</code>: 当前节点的局部矩阵。它会在局部空间的原点对自己和子节点进行转换操作。</p>
 </li>
-<li><p><code class="notranslate" translate="no">worldMatrix</code>: 将当前结点的局部空间的变换转换到场景图根节点所在的空间。
+<li>
+<p><code class="notranslate" translate="no">worldMatrix</code>: 将当前结点的局部空间的变换转换到场景图根节点所在的空间。
 换句话说它将节点放在了世界空间中，如果我们计算月球的世界矩阵，就会得到之前看到的有趣的轨道。</p>
 </li>
 </ul>
@@ -299,14 +304,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    children: [],      // 子节点序列
    thingToDraw: ??,   // 当前节点需要绘制的物体
 };
-</code></pre><p>我们来做一个太阳系的场景图，为了保持简洁我不会使用纹理。
+</code></pre>
+<p>我们来做一个太阳系的场景图，为了保持简洁我不会使用纹理。
 先来创建几个方法来帮助我们管理节点，首先定义一个节点类</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var Node = function() {
   this.children = [];
   this.localMatrix = m4.identity();
   this.worldMatrix = m4.identity();
 };
-</code></pre><p>提供一个设定节点父节点的方式。</p>
+</code></pre>
+<p>提供一个设定节点父节点的方式。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">Node.prototype.setParent = function(parent) {
   // 从父节点中移除
   if (this.parent) {
@@ -322,7 +329,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   }
   this.parent = parent;
 };
-</code></pre><p>这段代码根据父子节点关系和局部矩阵计算世界矩阵。如果我们从父节点调用，
+</code></pre>
+<p>这段代码根据父子节点关系和局部矩阵计算世界矩阵。如果我们从父节点调用，
 它将会递归的计算出子节点的世界矩阵。如果你对矩阵运算不太了解
 <a href="webgl-2d-matrices.html">可以看看这个文章</a>。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">Node.prototype.updateWorldMatrix = function(parentWorldMatrix) {
@@ -340,7 +348,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     child.updateWorldMatrix(worldMatrix);
   });
 };
-</code></pre><p>为了简单我们只包含太阳，月亮和地球，也会使用假的距离使内容便于呈现在屏幕上。
+</code></pre>
+<p>为了简单我们只包含太阳，月亮和地球，也会使用假的距离使内容便于呈现在屏幕上。
 我们会用黄色的球体代表太阳，蓝绿色的球体代表地球，灰色的代表月亮。
 如果你对 <code class="notranslate" translate="no">drawInfo</code>, <code class="notranslate" translate="no">bufferInfo</code>, 和 <code class="notranslate" translate="no">programInfo</code> 感到陌生可以
 <a href="webgl-drawing-multiple-things.html">看看前一篇文章</a>。</p>
@@ -380,11 +389,13 @@ moonNode.drawInfo = {
   bufferInfo: sphereBufferInfo,
   vertexArray: sphereVAO,
 };
-</code></pre><p>现在将它们关联起来</p>
+</code></pre>
+<p>现在将它们关联起来</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// connect the celestial objects
 moonNode.setParent(earthNode);
 earthNode.setParent(sunNode);
-</code></pre><p>同样创建一个物体列表和一个将要绘制的物体列表</p>
+</code></pre>
+<p>同样创建一个物体列表和一个将要绘制的物体列表</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var objects = [
   sunNode,
   earthNode,
@@ -396,19 +407,23 @@ var objectsToDraw = [
   earthNode.drawInfo,
   moonNode.drawInfo,
 ];
-</code></pre><p>渲染时更新每个物体的局部矩阵来旋转每个物体</p>
+</code></pre>
+<p>渲染时更新每个物体的局部矩阵来旋转每个物体</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 更新每个物体的局部矩阵
 m4.multiply(m4.yRotation(0.01), sunNode.localMatrix  , sunNode.localMatrix);
 m4.multiply(m4.yRotation(0.01), earthNode.localMatrix, earthNode.localMatrix);
 m4.multiply(m4.yRotation(0.01), moonNode.localMatrix , moonNode.localMatrix);
-</code></pre><p>局部矩阵更新了就可以更新世界矩阵</p>
+</code></pre>
+<p>局部矩阵更新了就可以更新世界矩阵</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">sunNode.updateWorldMatrix();
-</code></pre><p>最后将世界矩阵和投影视图矩阵相乘得到每个物体的<a href="webgl-3d-perspective.html">世界视图投影矩阵</a>。</p>
+</code></pre>
+<p>最后将世界矩阵和投影视图矩阵相乘得到每个物体的<a href="webgl-3d-perspective.html">世界视图投影矩阵</a>。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 计算每个物体的矩阵
 objects.forEach(function(object) {
   object.drawInfo.uniforms.u_matrix = m4.multiply(viewProjectionMatrix, object.worldMatrix);
 });
-</code></pre><p>渲染过程使<a href="webgl-drawing-multiple-things.html">上节中相似的循环</a>。</p>
+</code></pre>
+<p>渲染过程使<a href="webgl-drawing-multiple-things.html">上节中相似的循环</a>。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-scene-graph-solar-system.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-scene-graph-solar-system.html" target="_blank">点此在新窗口中浏览</a>
@@ -421,7 +436,8 @@ earthNode.localMatrix = m4.translation(100, 0, 0));
 
 // 让地球变为两倍大小
 earthNode.localMatrix = m4.scale(earthNode.localMatrix, 2, 2, 2);
-</code></pre><p><div class="webgl_example_container">
+</code></pre>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-scene-graph-solar-system-larger-earth.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-scene-graph-solar-system-larger-earth.html" target="_blank">点此在新窗口中浏览</a>
 </div>
@@ -434,7 +450,8 @@ earthNode.localMatrix = m4.scale(earthNode.localMatrix, 2, 2, 2);
   earth
    |
   moon
-</code></pre><p>我们将它变成</p>
+</code></pre>
+<p>我们将它变成</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> solarSystem
    |    |
    |   sun
@@ -446,7 +463,8 @@ earthNode.localMatrix = m4.scale(earthNode.localMatrix, 2, 2, 2);
   moonOrbit
       |
      moon
-</code></pre><p>这样就让地球绕 solarSystem 转动，我们就可以单独旋转和缩放太阳并且不会影响到地球，
+</code></pre>
+<p>这样就让地球绕 solarSystem 转动，我们就可以单独旋转和缩放太阳并且不会影响到地球，
 同样的地球可以独立于月球转动。让我们给 <code class="notranslate" translate="no">solarSystem</code>, <code class="notranslate" translate="no">earthOrbit</code> 和 <code class="notranslate" translate="no">moonOrbit</code>
 定义节点。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var solarSystemNode = new Node();
@@ -458,7 +476,8 @@ var moonOrbitNode = new Node();
 
  // 月球离太阳 20 个单位距离
 moonOrbitNode.localMatrix = m4.translation(20, 0, 0);
-</code></pre><p>轨道距离将从原始节点中移除</p>
+</code></pre>
+<p>轨道距离将从原始节点中移除</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var earthNode = new Node();
 -// 地球离太阳 100 个单位距离
 -earthNode.localMatrix = m4.translation(100, 0, 0));
@@ -469,14 +488,16 @@ moonOrbitNode.localMatrix = m4.translation(20, 0, 0);
 
 var moonNode = new Node();
 -moonNode.localMatrix = m4.translation(20, 0, 0);  // 月亮离地球 20 个单位距离
-</code></pre><p>像这样连接它们</p>
+</code></pre>
+<p>像这样连接它们</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 关联物体
 sunNode.setParent(solarSystemNode);
 earthOrbitNode.setParent(solarSystemNode);
 earthNode.setParent(earthOrbitNode);
 moonOrbitNode.setParent(earthOrbitNode);
 moonNode.setParent(moonOrbitNode);
-</code></pre><p>只需要更新轨道</p>
+</code></pre>
+<p>只需要更新轨道</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 更新每个物体的局部矩阵
 -m4.multiply(m4.yRotation(0.01), sunNode.localMatrix  , sunNode.localMatrix);
 -m4.multiply(m4.yRotation(0.01), earthNode.localMatrix, earthNode.localMatrix);
@@ -487,7 +508,8 @@ moonNode.setParent(moonOrbitNode);
 // 更新场景图中所有节点的世界矩阵
 -sunNode.updateWorldMatrix();
 +solarSystemNode.updateWorldMatrix();
-</code></pre><p>你会看到地球是两倍大小，月球不是。</p>
+</code></pre>
+<p>你会看到地球是两倍大小，月球不是。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-scene-graph-solar-system-larger-earth-fixed.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-scene-graph-solar-system-larger-earth-fixed.html" target="_blank">点此在新窗口中浏览</a>
@@ -517,7 +539,8 @@ m4.multiply(m4.yRotation(0.01), moonOrbitNode.localMatrix, moonOrbitNode.localMa
 +m4.multiply(m4.yRotation(0.05), earthNode.localMatrix, earthNode.localMatrix);
 +// 旋转月亮
 +m4.multiply(m4.yRotation(-0.01), moonNode.localMatrix, moonNode.localMatrix);
-</code></pre><p><div class="webgl_example_container">
+</code></pre>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-scene-graph-solar-system-adjusted.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-scene-graph-solar-system-adjusted.html" target="_blank">点此在新窗口中浏览</a>
 </div>
@@ -542,7 +565,8 @@ x = x * scale  // frame #4, x = 0  OOPS!
 
 scale = 1;
 x = x * scale  // frame #5, x = 0  OOPS!
-</code></pre><p>最后会丢失值，我们可以添加其他的类从外部更新矩阵。让我们给 <code class="notranslate" translate="no">Node</code> 的定义中添加一个 <code class="notranslate" translate="no">source</code>。
+</code></pre>
+<p>最后会丢失值，我们可以添加其他的类从外部更新矩阵。让我们给 <code class="notranslate" translate="no">Node</code> 的定义中添加一个 <code class="notranslate" translate="no">source</code>。
 如果 <code class="notranslate" translate="no">source</code> 存在就从它那里获取局部矩阵。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*var Node = function(source) {
   this.children = [];
@@ -559,7 +583,8 @@ Node.prototype.updateWorldMatrix = function(matrix) {
 +  }
 
   ...
-</code></pre><p>现在我们可以创建一个源。通常一个源会提供平移，旋转和缩放变换，就像这样</p>
+</code></pre>
+<p>现在我们可以创建一个源。通常一个源会提供平移，旋转和缩放变换，就像这样</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var TRS = function() {
   this.translation = [0, 0, 0];
   this.rotation = [0, 0, 0];
@@ -580,14 +605,16 @@ TRS.prototype.getMatrix = function(dst) {
   m4.scale(dst, s[0], s[1], s[2]), dst);
   return dst;
 };
-</code></pre><p>然后这样使用它</p>
+</code></pre>
+<p>然后这样使用它</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 在初始化阶段用源初始化节点
 var someTRS  = new TRS();
 var someNode = new Node(someTRS);
 
 // 渲染阶段
 someTRS.rotation[2] += elapsedTime;
-</code></pre><p>现在就不会有问题了，因为每次都会创建一个新的矩阵。</p>
+</code></pre>
+<p>现在就不会有问题了，因为每次都会创建一个新的矩阵。</p>
 <p>你可能回想我又不做太阳系，场景图有什么意义呢？
 如果你想动画一个人物就可能需要这样一个场景图</p>
 <p><div class="webgl_diagram_container">

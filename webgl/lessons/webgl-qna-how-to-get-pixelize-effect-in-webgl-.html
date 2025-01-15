@@ -236,21 +236,21 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>I want to simulate effect of old pc low resolution like atari or commodore in webgl is there a way to draw image and then some how make pixels bigger ?</p>
-<p>I&#39;m new to webgl so how should I start doing this effect?</p>
+<p>I’m new to webgl so how should I start doing this effect?</p>
 <p>I found <a href="https://threejs.org/examples/#webgl_postprocessing_nodes">this</a> there is mosaic effect but it usses three.js and i want to do it without frameworks.</p>
-<h2 id="answer-">Answer:</h2>
+<h2 id="answer">Answer:</h2>
 <p>There are many ways to do it. The easiest is just to render to a low res texture by attaching it a framebuffer and then render that texture to the canvas with texture filtering set to <code class="notranslate" translate="no">NEAREST</code>.</p>
-<p>Here&#39;s a sample. It&#39;s using <a href="http://twgljs.org">TWGL</a> which is not a framework, just a helper to make WebGL less verbose. See comments (and <a href="http://twgljs.org/docs/">docs</a>) if you want to translate it to verbose raw webgl.</p>
-<p>If you&#39;re new to webgl <a href="http://webglfundamentals.org">I&#39;d suggest starting here</a></p>
+<p>Here’s a sample. It’s using <a href="http://twgljs.org">TWGL</a> which is not a framework, just a helper to make WebGL less verbose. See comments (and <a href="http://twgljs.org/docs/">docs</a>) if you want to translate it to verbose raw webgl.</p>
+<p>If you’re new to webgl <a href="http://webglfundamentals.org">I’d suggest starting here</a></p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-get-pixelize-effect-in-webgl--example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-get-pixelize-effect-in-webgl--example-1.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>It&#39;s also common to render to a texture (like above) but a higher resolution texture, then filter it down using a shaders, mips, and/or linear filtering. The advantage being you&#39;ll get more anti-aliasing </p>
+<p>It’s also common to render to a texture (like above) but a higher resolution texture, then filter it down using a shaders, mips, and/or linear filtering. The advantage being you’ll get more anti-aliasing</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-get-pixelize-effect-in-webgl--example-2.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-get-pixelize-effect-in-webgl--example-2.html" target="_blank">click here to open in a separate window</a>
@@ -259,7 +259,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </p>
 <hr>
 <h1 id="update">update</h1>
-<p>In 2020 possibly the easiest thing you can do is just make a canvas the resolution you want, for example 32x32 and set it&#39;s CSS size to be larger and then use the <code class="notranslate" translate="no">image-rendering: pixelated</code> CSS setting to tell the browser not to smooth it as it scales the image</p>
+<p>In 2020 possibly the easiest thing you can do is just make a canvas the resolution you want, for example 32x32 and set it’s CSS size to be larger and then use the <code class="notranslate" translate="no">image-rendering: pixelated</code> CSS setting to tell the browser not to smooth it as it scales the image</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;canvas 
     width=&quot;32&quot;
     height=&quot;32&quot;
@@ -269,7 +269,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         image-rendering: crisp-edges; /* for firefox */
         image-rendering: pixelated;   /* for everything else */
     &quot;&gt;&lt;/canvas&gt;
-</code></pre><p><div class="webgl_example_container">
+</code></pre>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-get-pixelize-effect-in-webgl--example-3.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-get-pixelize-effect-in-webgl--example-3.html" target="_blank">click here to open in a separate window</a>
 </div>

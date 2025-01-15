@@ -244,24 +244,27 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>WebGL은 브라우저에 의해 웹 페이지와 합성될 때 미리 곱하는 알파(pre-multiplied alpha)를 수행하는 것이 기본값입니다.
 이는 투명도가 있는 .png <code class="notranslate" translate="no">&lt;img&gt;</code> 태그, 2D 캔버스 태그와 동일합니다.</p>
 <p>WebGL에는 OpenGL처럼 동작하도록 하기위한 여러 방법들이 있습니다.</p>
-<h3 id="-1-webgl-non-premultiplied-alpha-">#1) WebGL에 알파를 미리 곱하지 않고(non-premultiplied alpha) 합성하도록 설정</h3>
+<h3 id="1-webgl에-알파를-미리-곱하지-않고non-premultiplied-alpha-합성하도록-설정">#1) WebGL에 알파를 미리 곱하지 않고(non-premultiplied alpha) 합성하도록 설정</h3>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl = canvas.getContext(&quot;webgl2&quot;, {
   premultipliedAlpha: false  // 알파를 미리 곱하지 않도록 요청
 });
-</code></pre><p>기본값은 true입니다.</p>
-<p>물론 이렇게 해도 캔버스 아래에 있는 배경색(캔버스의 배경색, 캔버스 컨테이너의 배경색, 페이지의 배경색, 캔버스가 z-index &gt; 0일 경우 캔버스 뒤에 있는 항목, 등등...)으로 페이지 위에 합성됩니다.
+</code></pre>
+<p>기본값은 true입니다.</p>
+<p>물론 이렇게 해도 캔버스 아래에 있는 배경색(캔버스의 배경색, 캔버스 컨테이너의 배경색, 페이지의 배경색, 캔버스가 z-index &gt; 0일 경우 캔버스 뒤에 있는 항목, 등등…)으로 페이지 위에 합성됩니다.
 다시말해 CSS 색상이 웹 페이지의 해당 영역을 정의합니다.</p>
 <p>알파값과 관련하여 문제가 발생하는지를 확인하는 좋은 방법은 캔버스의 배경을 빨강색같은 밝은 색상으로 설정하는 겁니다.
 무슨 일이 일어나고 있는지 바로 보실 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;canvas style=&quot;background: red;&quot;&gt;&lt;canvas&gt;
-</code></pre><p>또한 알파값 관련 문제를 숨기기 위해 검은색으로 설정할 수도 있습니다.</p>
-<h3 id="-2-webgl-">#2) WebGL에 백버퍼에 알파값을 사용하지 않도록 설정</h3>
+</code></pre>
+<p>또한 알파값 관련 문제를 숨기기 위해 검은색으로 설정할 수도 있습니다.</p>
+<h3 id="2-webgl에-백버퍼에-알파값을-사용하지-않도록-설정">#2) WebGL에 백버퍼에 알파값을 사용하지 않도록 설정</h3>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl = canvas.getContext(&quot;webgl&quot;, { alpha: false }};
-</code></pre><p>이렇게 하면 백버퍼는 RGB값만 가지기 때문에 좀 더 OpenGL과 비슷합니다.
+</code></pre>
+<p>이렇게 하면 백버퍼는 RGB값만 가지기 때문에 좀 더 OpenGL과 비슷합니다.
 잘 만들어진 브라우저는 이를 확인하여 WebGL이 합성하는 방식을 최적화할 수 있기 때문에 이 방법을 사용하는 것이 좋습니다.
 물론 이렇게 되면 백버퍼에 알파값이 없을 것이므로 혹시 여러분이 다른 목적으로 백버퍼에 알파를 사용하고 있었다면 그 기능은 제대로 동작하지 않을겁니다.
 백버퍼의 알파값을 사용하는 앱은 별로 없습니다. 제 생각에는 이것이(알파를 사용하지 않는 것이) 기본값이 되어야 한다고 생각합니다.</p>
-<h3 id="-3-">#3) 렌더링의 마지막에 알파 지우기</h3>
+<h3 id="3-렌더링의-마지막에-알파-지우기">#3) 렌더링의 마지막에 알파 지우기</h3>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">..
 renderScene();
 ..
@@ -274,43 +277,49 @@ gl.colorMask(false, false, false, true);
 
 // 지우기
 gl.clear(gl.COLOR_BUFFER_BIT);
-</code></pre><p>일반적으로 지우기는 하드웨어에에서 특별히 처리되기 때문에 매우 빠르게 실행됩니다.
+</code></pre>
+<p>일반적으로 지우기는 하드웨어에에서 특별히 처리되기 때문에 매우 빠르게 실행됩니다.
 제가 만든 초기의 WebGL 데모에서는 대부분 이런 방식으로 작성했습니다.
 제가 더 똑똑했다면 위의 #2 방법으로 만들었을 것 같습니다.
 이 글을 작성한 후에 바로 수정해야겠네요.
 대부분의 WebGL 라이브러리는 이 방법(역주: #2를 일컫는 것 같습니다.)을 기본값으로 해야할 것처럼 보입니다.
 실제로 알파값을 사용하는 경우에만 그렇게 설정하도록 하고, 나머지 경우에는 따로 처리를 하지 않아도
 높은 성능과 더 적은 오류가 발생하도록요.</p>
-<h3 id="-4-">#4) 알파를 지우고 이후에는 알파값을 렌더링하지 않도록 설정</h3>
+<h3 id="4-알파를-지우고-이후에는-알파값을-렌더링하지-않도록-설정">#4) 알파를 지우고 이후에는 알파값을 렌더링하지 않도록 설정</h3>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 초기화할 때, 백버퍼 지우기
 gl.clearColor(1,1,1,1);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
 // 알파 렌더링 끄기
 gl.colorMask(true, true, true, false);
-</code></pre><p>물론 여러분이 생성한 프레임 버퍼에 렌더링을 하는 경우라면 알파로 렌더링하도록 켰다가 캔버스 렌더링으로 전환할 때 다시 꺼야할 수 있습니다.</p>
-<h3 id="-5-">#5) 이미지 처리</h3>
+</code></pre>
+<p>물론 여러분이 생성한 프레임 버퍼에 렌더링을 하는 경우라면 알파로 렌더링하도록 켰다가 캔버스 렌더링으로 전환할 때 다시 꺼야할 수 있습니다.</p>
+<h3 id="5-이미지-처리">#5) 이미지 처리</h3>
 <p>WebGL에 알파 채널이 있는 이미지를 로딩하는 경우
 WebGL은 알파값을 곱하지 않은 파일에 있는 그대로의 값을 가져옵니다.
 OpenGL에서는 이것이 일반적인데 왜냐하면 이렇게 해야 손실이 없기 때문입니다.
 알파를 미리 곱하게 되면 손실이 발생합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">1, 0.5, 0.5, 0  // RGBA
-</code></pre><p>위는 알파를 미리 곱하지 않은 값을 겁니다. 왜냐하면 알파가 미리 곱해졌다면 
+</code></pre>
+<p>위는 알파를 미리 곱하지 않은 값을 겁니다. 왜냐하면 알파가 미리 곱해졌다면
 <code class="notranslate" translate="no">a = 0</code>이기 때문에 <code class="notranslate" translate="no">r</code>, <code class="notranslate" translate="no">g</code>, <code class="notranslate" translate="no">b</code>가 0이 되어야 합니다.</p>
 <p>필요한 경우에는 이미지를 로딩할 때 WebGL이 알파를 미리 곱하도록 할 수 있습니다.
 아래와 같이 <code class="notranslate" translate="no">UNPACK_PREMULTIPLY_ALPHA_WEBGL</code>를 true로 설정하면 됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-</code></pre><p>기본값은 알파를 미리 곱하지 않는 것입니다.</p>
+</code></pre>
+<p>기본값은 알파를 미리 곱하지 않는 것입니다.</p>
 <p>대부분의 Canvas 2D 구현은 알파를 미리 곱하는 방식으로로 작동한다는 점에 유의하세요.
-따라서 캔버스를 WebGL로 전환할 때 <code class="notranslate" translate="no">UNPACK_PREMULTIPLY_ALPHA_WEBGL</code>이 false라면 
+따라서 캔버스를 WebGL로 전환할 때 <code class="notranslate" translate="no">UNPACK_PREMULTIPLY_ALPHA_WEBGL</code>이 false라면
 WebGL은 데이터를 알파를 미리 곱하기 전의 값으로 다시 변환합니다.</p>
-<h3 id="-6-">#6) 미리 곱해진 알파에 적용 가능한 블렌딩 함수 사용</h3>
+<h3 id="6-미리-곱해진-알파에-적용-가능한-블렌딩-함수-사용">#6) 미리 곱해진 알파에 적용 가능한 블렌딩 함수 사용</h3>
 <p>제가 작성하거나 작업한 거의 모든 OpenGL 앱들은 아래 코드를 사용합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-</code></pre><p>위 함수는 알파라 미리 곱해지지 않은 경우에 제대로 작동합니다.</p>
+</code></pre>
+<p>위 함수는 알파라 미리 곱해지지 않은 경우에 제대로 작동합니다.</p>
 <p>알파가 미리 곱해진 텍스처를 가지고 작업하시려면 아래와 같이 하셔야 할 겁니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-</code></pre><p>여기까지가 제가 알고 있는 방법입니다. 더 알고 계신 내용이 있다면 아래에 글을 적어주세요.</p>
+</code></pre>
+<p>여기까지가 제가 알고 있는 방법입니다. 더 알고 계신 내용이 있다면 아래에 글을 적어주세요.</p>
 
     </div>
     <div class="lesson-sidebar">

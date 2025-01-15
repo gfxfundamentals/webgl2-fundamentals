@@ -238,22 +238,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <div class="lesson-main">
       <p>This post is a continuation of many articles about WebGL. The last one
 was about <a href="webgl-text-canvas2d.html">using Canvas 2D for rendering text over a WebGL canvas</a>.
-If you haven&#39;t read it you might want to check that out before continuing.</p>
+If you haven’t read it you might want to check that out before continuing.</p>
 <p>In the last article we went over <a href="webgl-text-canvas2d.html">how to use a 2D canvas to draw text over your WebGL
 scene</a>. That technique works and is easy to do but it has
 a limitation that the text can not be obscured by other 3d objects. To do that we
 actually need to draw the text in WebGL.</p>
 <p>The simplest way to do that is to make textures with text in them. You could for example
 go into Photoshop or some other paint program and draw an image with some text in it.</p>
-<p><img class="webgl_center" src="resources/my-awesme-text.png" /></p>
-<p>Then make some plane geometry and display it. This is actually how some games I&#39;ve
+<img class="webgl_center" src="resources/my-awesme-text.png" />
+<p>Then make some plane geometry and display it. This is actually how some games I’ve
 worked on did all their text. For example Locoroco only had about 270 strings. It was
 localized into 17 languages. We had an Excel sheet with all the languages and a script
 that would launch Photoshop and generate a texture, one for each message in each language.</p>
 <p>Of course you can also generate the textures at runtime. Since WebGL is in the browser
 again we can rely on the Canvas 2D API to help generate our textures.</p>
 <p>Starting with the examples from the <a href="webgl-text-canvas2d.html">previous article</a>
-let&#39;s add a function to fill a 2D canvas with some text</p>
+let’s add a function to fill a 2D canvas with some text</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var textCtx = document.createElement(&quot;canvas&quot;).getContext(&quot;2d&quot;);
 
 // Puts text in center of canvas.
@@ -268,28 +268,31 @@ function makeTextCanvas(text, width, height) {
   textCtx.fillText(text, width / 2, height / 2);
   return textCtx.canvas;
 }
-</code></pre><p>Now that we need to draw 2 different things in WebGL, the &#39;F&#39; and our text, I&#39;m going
+</code></pre>
+<p>Now that we need to draw 2 different things in WebGL, the ‘F’ and our text, I’m going
 to switch over to <a href="webgl-drawing-multiple-things.html">using some helper functions as described in a previous article</a>.
-If it&#39;s not clear what <code class="notranslate" translate="no">programInfo</code>, <code class="notranslate" translate="no">bufferInfo</code>, etc are see that article.</p>
-<p>So, let&#39;s create the &#39;F&#39; and a unit quad.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Create data for &#39;F&#39;
+If it’s not clear what <code class="notranslate" translate="no">programInfo</code>, <code class="notranslate" translate="no">bufferInfo</code>, etc are see that article.</p>
+<p>So, let’s create the ‘F’ and a unit quad.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Create data for 'F'
 var fBufferInfo = primitives.create3DFBufferInfo(gl);
 var fVAO = webglUtils.createVAOFromBufferInfo(
     gl, fProgramInfo, fBufferInfo);
 
-// Create a unit quad for the &#39;text&#39;
+// Create a unit quad for the 'text'
 var textBufferInfo = primitives.createXYQuadBufferInfo(gl, 1);
 var textVAO = webglUtils.createVAOFromBufferInfo(
     gl, textProgramInfo, textBufferInfo);
-</code></pre><p>The XY quad is a quad (square) that&#39;s 1 unit big. This one is centered at the origin. Being 1 unit
-it&#39;s extents are -0.5, -0.5 and 0.5, 0.5</p>
+</code></pre>
+<p>The XY quad is a quad (square) that’s 1 unit big. This one is centered at the origin. Being 1 unit
+it’s extents are -0.5, -0.5 and 0.5, 0.5</p>
 <p>Next create 2 shaders</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// setup GLSL programs
 var fProgramInfo = webglUtils.createProgramInfo(
     gl, [fVertexShaderSource, fFragmentShaderSource]);
 var textProgramInfo = webglUtils.createProgramInfo(
     gl, [textVertexShaderSource, textFragmentShaderSource]);
-</code></pre><p>And create our text texture. We generate mips since the text will get small</p>
+</code></pre>
+<p>And create our text texture. We generate mips since the text will get small</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// create text texture.
 var textCanvas = makeTextCanvas(&quot;Hello!&quot;, 100, 26);
 var textWidth  = textCanvas.width;
@@ -300,7 +303,8 @@ gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textCanvas);
 gl.generateMipmap(gl.TEXTURE_2D);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-</code></pre><p>Setup uniforms for both the &#39;F&#39; and text</p>
+</code></pre>
+<p>Setup uniforms for both the ‘F’ and text</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var fUniforms = {
   u_matrix: m4.identity(),
 };
@@ -309,9 +313,10 @@ var textUniforms = {
   u_matrix: m4.identity(),
   u_texture: textTex,
 };
-</code></pre><p>Now when we compute the matrices for the F we start with the viewMatrix instead
+</code></pre>
+<p>Now when we compute the matrices for the F we start with the viewMatrix instead
 of the viewProjectionMatrix like other samples. We multiply that by the parts
-that make up our F&#39;s orientation</p>
+that make up our F’s orientation</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var fViewMatrix = m4.translate(viewMatrix,
     translation[0] + xx * spread, translation[1] + yy * spread, translation[2]);
 fViewMatrix = m4.xRotate(fViewMatrix, rotation[0]);
@@ -319,13 +324,15 @@ fViewMatrix = m4.yRotate(fViewMatrix, rotation[1] + yy * xx * 0.2);
 fViewMatrix = m4.zRotate(fViewMatrix, rotation[2] + now + (yy * 3 + xx) * 0.1);
 fViewMatrix = m4.scale(fViewMatrix, scale[0], scale[1], scale[2]);
 fViewMatrix = m4.translate(fViewMatrix, -50, -75, 0);
-</code></pre><p>Then finally we multiply in the projectionMatrix when setting our uniform value.</p>
+</code></pre>
+<p>Then finally we multiply in the projectionMatrix when setting our uniform value.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">fUniforms.u_matrix = m4.multiply(projectionMatrix, fViewMatrix);
-</code></pre><p>It&#39;s important to note here that <code class="notranslate" translate="no">projectionMatrix</code> is on the left. This lets us
+</code></pre>
+<p>It’s important to note here that <code class="notranslate" translate="no">projectionMatrix</code> is on the left. This lets us
 multiply in the projectionMatrix as though it was the first matrix. Normally
 we multiply on the right.</p>
 <p>Drawing the F looks like this</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// setup to draw the &#39;F&#39;
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// setup to draw the 'F'
 gl.useProgram(fProgramInfo.program);
 
 // setup the attributes and buffers for the F
@@ -336,15 +343,17 @@ fUniforms.u_matrix = m4.multiply(projectionMatrix, fViewMatrix);
 webglUtils.setUniforms(fProgramInfo, fUniforms);
 
 webglUtils.drawBufferInfo(gl, fBufferInfo);
-</code></pre><p>For the text we start with the projectionMatrix and then get only the position
+</code></pre>
+<p>For the text we start with the projectionMatrix and then get only the position
 from the fViewMatrix we saved before. This will get us a space in front the view.
 We also need to scale our unit quad to match the dimensions of the texture.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// use just the view position of the &#39;F&#39; for the text
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// use just the view position of the 'F' for the text
 var textMatrix = m4.translate(projectionMatrix,
     fViewMatrix[12], fViewMatrix[13], fViewMatrix[14]);
 // scale the F to the size we need it.
 textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
-</code></pre><p>And then render the text</p>
+</code></pre>
+<p>And then render the text</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// setup to draw the text.
 gl.useProgram(textProgramInfo.program);
 
@@ -355,23 +364,26 @@ webglUtils.setUniforms(textProgramInfo, textUniforms);
 
 // Draw the text.
 webglUtils.drawBufferInfo(gl, textBufferInfo);
-</code></pre><p>So here it is</p>
+</code></pre>
+<p>So here it is</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>You&#39;ll notice that sometimes parts of our text cover up parts of our Fs. That&#39;s because
-we&#39;re drawing a quad. The default color of the canvas is transparent black (0,0,0,0) and
-we&#39;re drawing that color in the quad. We could instead blend our pixels.</p>
+<p>You’ll notice that sometimes parts of our text cover up parts of our Fs. That’s because
+we’re drawing a quad. The default color of the canvas is transparent black (0,0,0,0) and
+we’re drawing that color in the quad. We could instead blend our pixels.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.enable(gl.BLEND);
 gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-</code></pre><p>This makes it take the source pixel (the color from our fragment shader) and combine it
-with the dest pixel (the color in the canvas) according to the blend function. We&#39;ve set the
+</code></pre>
+<p>This makes it take the source pixel (the color from our fragment shader) and combine it
+with the dest pixel (the color in the canvas) according to the blend function. We’ve set the
 blend function to <code class="notranslate" translate="no">SRC_ALPHA</code> for source  and <code class="notranslate" translate="no">ONE_MINUS_SRC_ALPHA</code> for dest.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">result = dest * (1 - src_alpha) + src * src_alpha
-</code></pre><p>so for example if the dest is green <code class="notranslate" translate="no">0,1,0,1</code> and the source is red <code class="notranslate" translate="no">1,0,0,1</code> we&#39;d have</p>
+</code></pre>
+<p>so for example if the dest is green <code class="notranslate" translate="no">0,1,0,1</code> and the source is red <code class="notranslate" translate="no">1,0,0,1</code> we’d have</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">src = [1, 0, 0, 1]
 dst = [0, 1, 0, 1]
 src_alpha = src[3]  // this is 1
@@ -382,7 +394,8 @@ result = dst * 0 + src * 1
 
 // which is the same as
 result = src
-</code></pre><p>For the parts of the texture with transparent black <code class="notranslate" translate="no">0,0,0,0</code></p>
+</code></pre>
+<p>For the parts of the texture with transparent black <code class="notranslate" translate="no">0,0,0,0</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">src = [0, 0, 0, 0]
 dst = [0, 1, 0, 1]
 src_alpha = src[3]  // this is 0
@@ -393,42 +406,47 @@ result = dst * 1 + src * 0
 
 // which is the same as
 result = dst
-</code></pre><p>Here&#39;s the result with blending enabled.</p>
+</code></pre>
+<p>Here’s the result with blending enabled.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-enable-blend.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-enable-blend.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>You can see it&#39;s better but it&#39;s still not perfect. If you look
-close you&#39;ll sometimes see this issue</p>
-<p><img class="webgl_center" src="resources/text-zbuffer-issue.png" /></p>
-<p>What&#39;s happening? We&#39;re currently drawing an F then its text, then the next F
+<p>You can see it’s better but it’s still not perfect. If you look
+close you’ll sometimes see this issue</p>
+<img class="webgl_center" src="resources/text-zbuffer-issue.png" />
+<p>What’s happening? We’re currently drawing an F then its text, then the next F
 then its text repeated. We still have a <a href="webgl-3d-orthographic.html">depth buffer</a> so when we draw the
 text for an F, even though blending made some pixels stay the background color
 the depth buffer was still updated. When we draw the next F if parts of that F are
-behind those pixels from some previously drawn text they won&#39;t be drawn.</p>
-<p>We&#39;ve just run into one of the most difficult issues of rendering 3D on a GPU.
+behind those pixels from some previously drawn text they won’t be drawn.</p>
+<p>We’ve just run into one of the most difficult issues of rendering 3D on a GPU.
 <strong>Transparency has issues</strong>.</p>
 <p>The most common solution for pretty much all transparent
 rendering is to draw all the opaque stuff first, then after, draw all the transparent
 stuff sorted by z distance with the depth buffer testing on but depth buffer updating off.</p>
-<p>Let&#39;s first separate drawing of the opaque stuff (the Fs) from the transparent stuff (the text).
-First we&#39;ll declare something to remember the text positions.</p>
+<p>Let’s first separate drawing of the opaque stuff (the Fs) from the transparent stuff (the text).
+First we’ll declare something to remember the text positions.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var textPositions = [];
-</code></pre><p>And in the loop for rendering the Fs we&#39;ll remember those positions</p>
+</code></pre>
+<p>And in the loop for rendering the Fs we’ll remember those positions</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// remember the position for the text
 textPositions.push([fViewMatrix[12], fViewMatrix[13], fViewMatrix[14]]);
-</code></pre><p>Before we draw the &#39;F&#39;s we&#39;ll disable blending and turn on writing to the depth buffer</p>
+</code></pre>
+<p>Before we draw the 'F’s we’ll disable blending and turn on writing to the depth buffer</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.disable(gl.BLEND);
 gl.depthMask(true);
-</code></pre><p>For drawing the text we&#39;ll turn on blending and turn off writing to the depth buffer.</p>
+</code></pre>
+<p>For drawing the text we’ll turn on blending and turn off writing to the depth buffer.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.enable(gl.BLEND);
 gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 gl.depthMask(false);
-</code></pre><p>And then draw text at all the positions we saved</p>
+</code></pre>
+<p>And then draw text at all the positions we saved</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">textPositions.forEach(function(pos) {
-  // use just the view position of the &#39;F&#39; for the text
+  // use just the view position of the 'F' for the text
   var textMatrix = m4.translate(projectionMatrix,
       pos[0], pos[1], pos[2]);
   // scale the F to the size we need it.
@@ -445,25 +463,26 @@ gl.depthMask(false);
   // Draw the text.
   webglUtils.drawBufferInfo(gl, textBufferInfo);
 });
-</code></pre><p>And now it mostly works</p>
+</code></pre>
+<p>And now it mostly works</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-separate-opaque-from-transparent.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-separate-opaque-from-transparent.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>Notice we didn&#39;t sort like I mentioned above. In this case since we&#39;re drawing mostly opaque text
-there&#39;s probably going to be no noticeable difference if we sort so I&#39;ll save that for some
+<p>Notice we didn’t sort like I mentioned above. In this case since we’re drawing mostly opaque text
+there’s probably going to be no noticeable difference if we sort so I’ll save that for some
 other article.</p>
-<p>Another issue is the text is intersecting its own &#39;F&#39;. There really
-isn&#39;t a specific solution for that. If you were making an MMO and wanted the text of each
+<p>Another issue is the text is intersecting its own ‘F’. There really
+isn’t a specific solution for that. If you were making an MMO and wanted the text of each
 player to always appear you might try to make the text appear above the head. Just translate
 it +Y some number of units, enough to make sure it was always above the player.</p>
-<p>You can also move it forward toward the camera. Let&#39;s do that here just for the hell of it.
-Because &#39;pos&#39; is in view space that means it&#39;s relative to the eye (which is at 0,0,0 in view space).
+<p>You can also move it forward toward the camera. Let’s do that here just for the hell of it.
+Because ‘pos’ is in view space that means it’s relative to the eye (which is at 0,0,0 in view space).
 So if we normalize it we get a unit vector pointing from the eye to that point which we can then
 multiply by some amount to move the text a specific number of units toward or away from the eye.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+// because pos is in view space that means it&#39;s a vector from the eye to
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+// because pos is in view space that means it's a vector from the eye to
 +// some position. So translate along that vector back toward the eye some distance
 +var fromEye = m4.normalize(pos);
 +var amountToMoveTowardEye = 150;  // because the F is 150 units long
@@ -475,9 +494,10 @@ var textMatrix = m4.translate(projectionMatrix,
 *    viewX, viewY, viewZ);
 // scale the F to the size we need it.
 textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
-// because pos is in view space that means it&#39;s a vector from the eye to
+// because pos is in view space that means it's a vector from the eye to
 // some position. So translate along that vector back toward the eye some distance
-</code></pre><p>Here&#39;s that.</p>
+</code></pre>
+<p>Here’s that.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-moved-toward-view.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-moved-toward-view.html" target="_blank">click here to open in a separate window</a>
@@ -485,21 +505,23 @@ textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
 
 </p>
 <p>You still might notice an issue with the edges of the letters.</p>
-<p><img class="webgl_center" src="resources/text-gray-outline.png" /></p>
+<img class="webgl_center" src="resources/text-gray-outline.png" />
 <p>The issue here is the Canvas 2D API produces only premultiplied alpha values.
 When we upload the contents of the canvas to a texture WebGL tries to un-premultiply
-the values but it can&#39;t do this perfectly because premultiplied alpha is lossy.</p>
-<p>To fix that let&#39;s tell WebGL not to un-premultiply</p>
+the values but it can’t do this perfectly because premultiplied alpha is lossy.</p>
+<p>To fix that let’s tell WebGL not to un-premultiply</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-</code></pre><p>This tells WebGL to supply premultiplied alpha values to <code class="notranslate" translate="no">gl.texImage2D</code> and <code class="notranslate" translate="no">gl.texSubImage2D</code>.
+</code></pre>
+<p>This tells WebGL to supply premultiplied alpha values to <code class="notranslate" translate="no">gl.texImage2D</code> and <code class="notranslate" translate="no">gl.texSubImage2D</code>.
 If the data passed to <code class="notranslate" translate="no">gl.texImage2D</code> is already premultiplied as it is for Canvas 2D data then
 WebGL can just pass it through.</p>
 <p>We also need to change the blending function</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">-gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 +gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-</code></pre><p>The old one multiplied the src color by its alpha. That&#39;s what <code class="notranslate" translate="no">SRC_ALPHA</code> means. But
-now our texture&#39;s data has already been multiplied by its alpha. That&#39;s what premultiplied means.
-So we don&#39;t need the GPU to do the multiplication. Setting it to <code class="notranslate" translate="no">ONE</code> means multiply by 1.</p>
+</code></pre>
+<p>The old one multiplied the src color by its alpha. That’s what <code class="notranslate" translate="no">SRC_ALPHA</code> means. But
+now our texture’s data has already been multiplied by its alpha. That’s what premultiplied means.
+So we don’t need the GPU to do the multiplication. Setting it to <code class="notranslate" translate="no">ONE</code> means multiply by 1.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-premultiplied-alpha.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-premultiplied-alpha.html" target="_blank">click here to open in a separate window</a>
@@ -512,7 +534,7 @@ from <a href="webgl-3d-perspective.html">the perspective article</a> our perspec
 to scale our object by <code class="notranslate" translate="no">-Z</code> to make it get smaller in the distance. So, we can just scale
 by <code class="notranslate" translate="no">-Z</code> times some desired-scale to compensate.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
-// because pos is in view space that means it&#39;s a vector from the eye to
+// because pos is in view space that means it's a vector from the eye to
 // some position. So translate along that vector back toward the eye some distance
 var fromEye = normalize(pos);
 var amountToMoveTowardEye = 150;  // because the F is 150 units long
@@ -527,7 +549,8 @@ var textMatrix = m4.translate(projectionMatrix,
 // scale the F to the size we need it.
 textMatrix = m4.scale(textMatrix, textWidth * scale, textHeight * scale, 1);
 ...
-</code></pre><p><div class="webgl_example_container">
+</code></pre>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-consistent-scale.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-consistent-scale.html" target="_blank">click here to open in a separate window</a>
 </div>
@@ -571,28 +594,32 @@ var textTextures = [
     height: textHeight,
   };
 });
-</code></pre><p>Then at render time select a texture</p>
+</code></pre>
+<p>Then at render time select a texture</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*textPositions.forEach(function(pos, ndx) {
 
   +// select a texture
   +var tex = textTextures[ndx];
-</code></pre><p>Use that textures size in our matrix calculations</p>
+</code></pre>
+<p>Use that textures size in our matrix calculations</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  var textMatrix = m4.translate(projectionMatrix,
       viewX, viewY, viewZ);
   // scale the F to the size we need it.
   *textMatrix = m4.scale(textMatrix, tex.width * scale, tex.height * scale, 1);
-</code></pre><p>and set the uniform for the texture before drawing</p>
+</code></pre>
+<p>and set the uniform for the texture before drawing</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  textUniforms.u_texture = tex.texture;
-</code></pre><p><div class="webgl_example_container">
+</code></pre>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-different-text.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-different-text.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>We&#39;ve been using black to draw the text into the canvas.
+<p>We’ve been using black to draw the text into the canvas.
 It would be more useful if we rendered the text in white. Then we could multiply
 the text by a color and make it any color we want.</p>
-<p>First we&#39;ll change the text shader to multiply by a color</p>
+<p>First we’ll change the text shader to multiply by a color</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 in vec2 v_texcoord;
 
@@ -604,9 +631,11 @@ out vec4 outColor;
 void main() {
 *   outColor = texture2D(u_texture, v_texcoord) * u_color;
 }
-</code></pre><p>And when we draw the text into the canvas use white</p>
+</code></pre>
+<p>And when we draw the text into the canvas use white</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">textCtx.fillStyle = &quot;white&quot;;
-</code></pre><p>Then we&#39;ll make some colors</p>
+</code></pre>
+<p>Then we’ll make some colors</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// colors, 1 for each F
 var colors = [
   [0.0, 0.0, 0.0, 1], // 0
@@ -626,10 +655,12 @@ var colors = [
   [0.5, 5.0, 5.0, 1], // 14,
   [0.0, 5.0, 5.0, 1], // 15,
 ];
-</code></pre><p>At draw time we select a color</p>
+</code></pre>
+<p>At draw time we select a color</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// set color uniform
 textUniforms.u_color = colors[ndx];
-</code></pre><p>Colors</p>
+</code></pre>
+<p>Colors</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-different-colors.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-different-colors.html" target="_blank">click here to open in a separate window</a>
@@ -637,12 +668,12 @@ textUniforms.u_color = colors[ndx];
 
 </p>
 <p>This technique is actually the technique most browsers use when they are GPU accelerated.
-They generate textures with your HTML content and all the various styles you&#39;ve applied
-and as long as that content doesn&#39;t change they can just render the texture
-again when you scroll etc.. Of course if you&#39;re updating things all the time then
+They generate textures with your HTML content and all the various styles you’ve applied
+and as long as that content doesn’t change they can just render the texture
+again when you scroll etc… Of course if you’re updating things all the time then
 this technique might get a little bit slow because re-generating the textures and re-uploading
 them to the GPU is a relatively slow operation.</p>
-<p>In <a href="webgl-text-glyphs.html">the next article we&#39;ll go over a technique that is probably better for cases where
+<p>In <a href="webgl-text-glyphs.html">the next article we’ll go over a technique that is probably better for cases where
 things update often</a>.</p>
 <div class="webgl_bottombar">
 <h3>Scaling Text without pixelation</h3>
@@ -672,9 +703,6 @@ text you'll start to see the triangles.</li>
 <li>One more is to <a href="https://www.google.com/search?q=loop+blinn+curve+rendering">use very special shaders that render curves</a>. That's very cool
 but way beyond what I can explain here.</li>
 </div>
-
-
-
 
     </div>
     <div class="lesson-sidebar">

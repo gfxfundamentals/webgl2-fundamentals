@@ -237,7 +237,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="lesson">
     <div class="lesson-main">
       <p>This article is a continuation of <a href="webgl-image-processing.html">WebGL Image Processing</a>.
-If you haven&#39;t read that I suggest <a href="webgl-image-processing.html">you start there</a>.</p>
+If you haven’t read that I suggest <a href="webgl-image-processing.html">you start there</a>.</p>
 <p>The next most obvious question for image processing is how to apply multiple effects?</p>
 <p>Well, you could try to generate shaders on the fly. Provide a UI that lets the
 user select the effects he wants to use then generate a shader that does
@@ -251,12 +251,11 @@ Texture 1      -&gt; [Sharpen]     -&gt; Texture 2
 Texture 2      -&gt; [Edge Detect] -&gt; Texture 1
 Texture 1      -&gt; [Blur]        -&gt; Texture 2
 Texture 2      -&gt; [Normal]      -&gt; Canvas</pre></blockquote>
-
 <p>To do this we need to create framebuffers. In WebGL and OpenGL, a Framebuffer
 is actually a poor name. A WebGL/OpenGL Framebuffer is really just a
 list of attachments and not actually a buffer of any kind. But, by
 attaching a texture to a framebuffer we can render into that texture.</p>
-<p>First let&#39;s turn <a href="webgl-image-processing.html">the old texture creation code</a> into a function</p>
+<p>First let’s turn <a href="webgl-image-processing.html">the old texture creation code</a> into a function</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  function createAndSetupTexture(gl) {
     var texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -285,7 +284,8 @@ attaching a texture to a framebuffer we can render into that texture.</p>
                 srcFormat,
                 srcType,
                 image);
-</code></pre><p>And now let&#39;s use that function to make 2 more textures and attach them to 2 framebuffers.</p>
+</code></pre>
+<p>And now let’s use that function to make 2 more textures and attach them to 2 framebuffers.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // create 2 textures and attach them to framebuffers.
   var textures = [];
   var framebuffers = [];
@@ -314,7 +314,8 @@ attaching a texture to a framebuffer we can render into that texture.</p>
     gl.framebufferTexture2D(
         gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, texture, mipLevel);
   }
-</code></pre><p>Now let&#39;s make a set of kernels and then a list of them to apply.</p>
+</code></pre>
+<p>Now let’s make a set of kernels and then a list of them to apply.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // Define several convolution kernels
   var kernels = {
     normal: [
@@ -346,7 +347,8 @@ attaching a texture to a framebuffer we can render into that texture.</p>
     &quot;gaussianBlur&quot;,
     &quot;unsharpen&quot;
   ];
-</code></pre><p>And finally let&#39;s apply each one, ping ponging which texture we are rendering too</p>
+</code></pre>
+<p>And finally let’s apply each one, ping ponging which texture we are rendering too</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  function drawEffects() {
     // Tell it to use our program (pair of shaders)
     gl.useProgram(program);
@@ -361,7 +363,7 @@ attaching a texture to a framebuffer we can render into that texture.</p>
     // Tell the shader to get the texture from texture unit 0
     gl.uniform1i(imageLocation, 0);
 
-    // don&#39;t y flip images while drawing to the textures
+    // don't y flip images while drawing to the textures
     gl.uniform1f(flipYLocation, 1);
 
     // loop through each effect we want to apply.
@@ -402,7 +404,7 @@ attaching a texture to a framebuffer we can render into that texture.</p>
   }
 
   function drawWithKernel(name) {
-    // set the kernel and it&#39;s weight
+    // set the kernel and it's weight
     gl.uniform1fv(kernelLocation, kernels[name]);
     gl.uniform1f(kernelWeightLocation, computeKernelWeight(kernels[name]));
 
@@ -412,7 +414,8 @@ attaching a texture to a framebuffer we can render into that texture.</p>
     var count = 6;
     gl.drawArrays(primitiveType, offset, count);
   }
-</code></pre><p>Here&#39;s a working version with a slightly more flexible UI. Check the effects
+</code></pre>
+<p>Here’s a working version with a slightly more flexible UI. Check the effects
 to turn them on. Drag the effects to reorder how they are applied.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-processing.html"></iframe>
@@ -424,13 +427,13 @@ to turn them on. Drag the effects to reorder how they are applied.</p>
 <p>Calling <code class="notranslate" translate="no">gl.bindFramebuffer</code> with <code class="notranslate" translate="no">null</code> tells WebGL you want to render
 to the canvas instead of to one of your framebuffers.</p>
 <p>Also framebuffers may or may not work depending on which attachments you
-put on them. There&#39;s a list of which types and combinations of attachments
+put on them. There’s a list of which types and combinations of attachments
 are supposed to always work. The one used here, one <code class="notranslate" translate="no">RGBA</code>/<code class="notranslate" translate="no">UNSIGNED_BYTE</code> texture
 assigned to the <code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> attachment point, is always supposed to work.
 More exotic texture formats and or combinations of attachments might not work.
-In that case you&#39;re supposed to bind the framebuffer and then call
+In that case you’re supposed to bind the framebuffer and then call
 <code class="notranslate" translate="no">gl.checkFramebufferStatus</code> and see if it returns <code class="notranslate" translate="no">gl.FRAMEBUFFER_COMPLETE</code>.
-If it does you&#39;re good to go. If not you&#39;ll need to tell the user to fallback
+If it does you’re good to go. If not you’ll need to tell the user to fallback
 to something else. Fortunately WebGL2 supports many formats and combinations.</p>
 <p>WebGL has to convert from <a href="webgl-fundamentals.html">clip space</a> back into pixels.
 It does this based on the settings of <code class="notranslate" translate="no">gl.viewport</code>. Since the framebuffers
@@ -438,7 +441,7 @@ we are rendering into are a different size than the canvas we need to set the
 viewport appropriately depending if we are rendering to a texture or the canvas.</p>
 <p>Finally in the <a href="webgl-fundamentals.html">original example</a> we flipped the Y
 coordinate when rendering because WebGL displays the canvas with 0,0 being the
-bottom left corner instead of the more traditional for 2D top left. That&#39;s not
+bottom left corner instead of the more traditional for 2D top left. That’s not
 needed when rendering to a framebuffer. Because the framebuffer is never
 displayed, which part is top and bottom is irrelevant. All that matters is
 that pixel 0,0 in the framebuffer corresponds to 0,0 in our calculations.
@@ -453,31 +456,33 @@ void main() {
 +   gl_Position = vec4(clipSpace * vec2(1, u_flipY), 0, 1);
   ...
 }
-</code></pre><p>And then we can set it when we render with</p>
+</code></pre>
+<p>And then we can set it when we render with</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
 +  var flipYLocation = gl.getUniformLocation(program, &quot;u_flipY&quot;);
 
   ...
 
-+  // don&#39;t flip
++  // don't flip
 +  gl.uniform1f(flipYLocation, 1);
 
   ...
 
 +  // flip
 +  gl.uniform1f(flipYLocation, -1);
-</code></pre><p>I kept this example simple by using a single GLSL program that can achieve
-multiple effects. If you wanted to do full on image processing you&#39;d probably
+</code></pre>
+<p>I kept this example simple by using a single GLSL program that can achieve
+multiple effects. If you wanted to do full on image processing you’d probably
 need many GLSL programs. A program for hue, saturation and luminance adjustment.
 Another for brightness and contrast. One for inverting, another for adjusting
-levels, etc. You&#39;d need to change the code to switch GLSL programs and update
-the parameters for that particular program. I&#39;d considered writing that example
-but it&#39;s an exercise best left to the reader because multiple GLSL programs each
+levels, etc. You’d need to change the code to switch GLSL programs and update
+the parameters for that particular program. I’d considered writing that example
+but it’s an exercise best left to the reader because multiple GLSL programs each
 with their own parameter needs probably means some major refactoring to keep it
 all from becoming a big mess of spaghetti.</p>
 <p>I hope this and the preceding examples have made WebGL seem a little more
 approachable and I hope starting with 2D helps make WebGL a little easier to
-understand. If I find the time I&#39;ll try to write <a href="webgl-2d-translation.html">a few more articles</a>
+understand. If I find the time I’ll try to write <a href="webgl-2d-translation.html">a few more articles</a>
 about how to do 3D as well as more details on <a href="webgl-how-it-works.html">what WebGL is really doing under the hood</a>.
 For a next step consider learning <a href="webgl-2-textures.html">how to use 2 or more textures</a>.</p>
 

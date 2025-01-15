@@ -236,14 +236,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>I am currently doing straightforward direct-to-screen (no multiple passes or postprocessing) rendering in WebGL. I would like to determine the average brightness/luminance of the entire rendered image (i.e. a single number), in a way which is efficient enough to do every frame.</p>
-<p>What I&#39;m looking to accomplish is to implement “exposure” adjustment (as a video camera or the human eye would) in the scene, so as to view both indoor and outdoor scenes with realistic lighting and no transitions — the brightness of the current frame will be negative feedback to the brightness of the next frame.</p>
+<p>What I’m looking to accomplish is to implement “exposure” adjustment (as a video camera or the human eye would) in the scene, so as to view both indoor and outdoor scenes with realistic lighting and no transitions — the brightness of the current frame will be negative feedback to the brightness of the next frame.</p>
 <p>I am currently calculating a very rough approximation on the CPU side by sending a few rays through my scene data to find the brightness at those points; this works, but has too few samples to be stable (brightness varies noticeably with view angle as the rays cross light sources). I would prefer to offload the work to the GPU if at all possible, as my application is typically CPU-bound.</p>
-<h2 id="answer-">Answer:</h2>
-<p>I know this question is 8 years old but hey....</p>
+<h2 id="answer">Answer:</h2>
+<p>I know this question is 8 years old but hey…</p>
 <p>First off, WebGL1, generateMipmap only works for power of 2 images.</p>
-<p>I&#39;d suggest either (1) generating a simple shaders like this</p>
+<p>I’d suggest either (1) generating a simple shaders like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function createShader(texWidth, texHeight) {
   return `
   precision mediump float;
@@ -269,15 +269,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   }
   `;
 }
-</code></pre><p><div class="webgl_example_container">
+
+</code></pre>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-determine-the-average-brightness-in-a-scene--example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-determine-the-average-brightness-in-a-scene--example-1.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>the only problem with this solution is that it can&#39;t be parallelized by the GPU AFAIK so (2) I might test doing something similar to generating mipmaps where I say make a shader that does 16x16 pixels and target it to generate a smaller texture and repeat until I get to 1x1. I&#39;d have to test to see if that&#39;s actually faster and what size cell 2x2, 4x4, 16x16 etc is best.</p>
-<p>Finally, if possible, like the example above, if I don&#39;t actually need the result on the CPU then just pass that 1x1 texture as input to some other shader. The example just draws 3 points but of course you could feed those values into the shader that&#39;s drawing the video to do some image processing like crank up the exposure if the brightness is low try to auto level the image based on the min and max brightness etc...</p>
-<p>Note that in WebGL2 you wouldn&#39;t have to generate a different shader per size as WebGL2, or rather GLSL ES 3.0 you can have loops that are not based on constant values.</p>
+<p>the only problem with this solution is that it can’t be parallelized by the GPU AFAIK so (2) I might test doing something similar to generating mipmaps where I say make a shader that does 16x16 pixels and target it to generate a smaller texture and repeat until I get to 1x1. I’d have to test to see if that’s actually faster and what size cell 2x2, 4x4, 16x16 etc is best.</p>
+<p>Finally, if possible, like the example above, if I don’t actually need the result on the CPU then just pass that 1x1 texture as input to some other shader. The example just draws 3 points but of course you could feed those values into the shader that’s drawing the video to do some image processing like crank up the exposure if the brightness is low try to auto level the image based on the min and max brightness etc…</p>
+<p>Note that in WebGL2 you wouldn’t have to generate a different shader per size as WebGL2, or rather GLSL ES 3.0 you can have loops that are not based on constant values.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-determine-the-average-brightness-in-a-scene--example-2.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-determine-the-average-brightness-in-a-scene--example-2.html" target="_blank">click here to open in a separate window</a>

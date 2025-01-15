@@ -236,43 +236,45 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-javascript">if (statuseffect) {
-            // Clearing the stencil buffer
-            gl.clearStencil(0);
-            gl.clear(gl.STENCIL_BUFFER_BIT);
+           // Clearing the stencil buffer
+           gl.clearStencil(0);
+           gl.clear(gl.STENCIL_BUFFER_BIT);
+       
+
+           gl.stencilFunc(gl.ALWAYS, 1, 1);
+           gl.stencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE);
+       
+
+            gl.colorMask(false, false, false, false); 
+            
+           gl.enable(gl.STENCIL_TEST);
+
+           // Renders the mask through gl.drawArrays L111
+           drawImage(statuseffectmask.texture, lerp(-725, 675, this.Transtion_Value), 280, 128 * 4, 32 * 4)
+       
+           // Telling the stencil now to draw/keep only pixels that equals 1 - which we set earlier
+           gl.stencilFunc(gl.EQUAL, 1, 1);
+           gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+           
+           // enabling back the color buffer
+           gl.colorMask(true, true, true, true);
+      
+       
+           drawImage(statuseffect.texture, lerp(-725, 675, this.Transtion_Value), 280, 128 * 4, 32 * 4)
+
+  
+           gl.disable(gl.STENCIL_TEST);
+        }
 
 
-            gl.stencilFunc(gl.ALWAYS, 1, 1);
-            gl.stencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE);
-
-
-             gl.colorMask(false, false, false, false); 
-
-            gl.enable(gl.STENCIL_TEST);
-
-            // Renders the mask through gl.drawArrays L111
-            drawImage(statuseffectmask.texture, lerp(-725, 675, this.Transtion_Value), 280, 128 * 4, 32 * 4)
-
-            // Telling the stencil now to draw/keep only pixels that equals 1 - which we set earlier
-            gl.stencilFunc(gl.EQUAL, 1, 1);
-            gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
-
-            // enabling back the color buffer
-            gl.colorMask(true, true, true, true);
-
-
-            drawImage(statuseffect.texture, lerp(-725, 675, this.Transtion_Value), 280, 128 * 4, 32 * 4)
-
-
-            gl.disable(gl.STENCIL_TEST);
-         }
 </code></pre>
 <p>Im trying to get something to work like this <a href="https://i.stack.imgur.com/ESdGp.png"><img src="https://i.stack.imgur.com/ESdGp.png" alt="enter image description here"></a>
 Where it gets the transparency of the sprite, and then draws a sprite in areas where there is no transparency, thank you.</p>
-<h2 id="answer-">Answer:</h2>
-<p>It&#39;s not clear why you want to use the stencil for this. Normally you&#39;d just <a href="https://webglfundamentals.org/webgl/lessons/webgl-text-texture.html">setup blending and use the transparency to blend</a>. </p>
-<p>If you really wanted to use the stencil you&#39;d need to make a shader that calls <code class="notranslate" translate="no">discard</code> if the transparency (alpha) is less then some value in order to make the stencil get set only where the sprite is not transparent </p>
+<h2 id="answer">Answer:</h2>
+<p>It’s not clear why you want to use the stencil for this. Normally you’d just <a href="https://webglfundamentals.org/webgl/lessons/webgl-text-texture.html">setup blending and use the transparency to blend</a>.</p>
+<p>If you really wanted to use the stencil you’d need to make a shader that calls <code class="notranslate" translate="no">discard</code> if the transparency (alpha) is less then some value in order to make the stencil get set only where the sprite is not transparent</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">precision highp float;
 
 varying vec2 v_texcoord;
@@ -283,26 +285,27 @@ uniform float u_alphaTest;
 void main() {
   vec4 color = texture2D(u_texture, v_texcoord);
   if (color.a &lt; u_alphaTest) {
-    discard;  // don&#39;t draw this pixel
+    discard;  // don't draw this pixel
   }
   gl_FragColor = color;
 }
-</code></pre><p>But the thing is that would already draw the texture transparently without using the stencil.</p>
+</code></pre>
+<p>But the thing is that would already draw the texture transparently without using the stencil.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-use-a-2d-sprite-s-transparency-as-a-mask-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-use-a-2d-sprite-s-transparency-as-a-mask-example-1.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>Otherwise if you really want to use the stencil now that the code is discarding some pixels it should work and your code was correct. note the  code below doesn&#39;t clear the stencil because it defaults to being cleared every frame</p>
+<p>Otherwise if you really want to use the stencil now that the code is discarding some pixels it should work and your code was correct. note the  code below doesn’t clear the stencil because it defaults to being cleared every frame</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-use-a-2d-sprite-s-transparency-as-a-mask-example-2.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-use-a-2d-sprite-s-transparency-as-a-mask-example-2.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>Let me also point out that that this is also probably better done using alpha blending, passing both textures into a single shader and passing in another matrix or other uniforms to apply one texture&#39;s alpha ot the other. This would be more flexible as you could can blend across all values of 0 to 1 where as with the stencil you can only mask 0 or 1 period.</p>
-<p>My point isn&#39;t to say &quot;don&#39;t use the stencil&quot; but rather that there are times where it&#39;s best and times where it&#39;s not. Only you can know for your situation which solution to choose.</p>
+<p>Let me also point out that that this is also probably better done using alpha blending, passing both textures into a single shader and passing in another matrix or other uniforms to apply one texture’s alpha ot the other. This would be more flexible as you could can blend across all values of 0 to 1 where as with the stencil you can only mask 0 or 1 period.</p>
+<p>My point isn’t to say “don’t use the stencil” but rather that there are times where it’s best and times where it’s not. Only you can know for your situation which solution to choose.</p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 4.0 by

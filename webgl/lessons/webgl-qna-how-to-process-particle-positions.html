@@ -236,13 +236,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>Using a 4x4x4 grid as an example, I have 64 vertices (which I’ll call particles) which start with specific positions relative to each other.  These 64 particles will move in the x, y and z directions, losing their initial positions relative to each other.  However each cycle, the new particle positions and velocities need to be calculated based upon the original starting relationships between a particle and its original neighbors.</p>
 <p>I’ve learned that I need to use textures, and consequently Framebuffers for this, and am now able to write two 3DTextures which flip-flop to provide the writing and reading functionality to perform this.  However, in the next cycle when gl_FragCoord is passed to the fragment shader, with a particle’s new position (could be switched with another particle for instance), I don’t see any mechanism by which the original coordinate of the texture which held a particle’s information will be written with a particle’s current information.  Is there some mechanism I’m not understanding that allows moving particles to have their data stored in a static grid (the 3D texture), with each particle’s data always populating the same coordinate, so I can use a texelFetch to grab a particle’s data, as well as the original neighbors’ data?  Can I change gl_FragCoord, and have a pixel output where I want, or is it an unchangeable input variable?</p>
 <p>Once I resolve this issue, I’m hoping to then implement a Transform Feedback to perform the actual movement of the vertices without dumping a texture to the CPU and extracting the position data and reuploading it to the GPU for the next cycle.</p>
 <p>Are there any suggestions for how to keep track of each particle’s original position, original neighbors, and current position relative to those original neighbors using textures written in Framebuffers?</p>
-<h2 id="answer-">Answer:</h2>
-<p>I’m confused about your confusion </p>
+<h2 id="answer">Answer:</h2>
+<p>I’m confused about your confusion</p>
 <p>Here’s a simple JavaScript only particle system. Each particle starts at a random location and moves in a random direction</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-process-particle-positions-example-1.html"></iframe>

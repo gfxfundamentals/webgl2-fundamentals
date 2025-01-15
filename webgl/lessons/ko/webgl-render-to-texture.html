@@ -238,12 +238,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="lesson">
     <div class="lesson-main">
       <p>이 글은 WebGL2 시리즈에서 이어지는 글입니다.
-가장 첫 글은 <a href="webgl-fundamentals.html">WebGL2 기초</a> 이고 바로 이전 글은 
+가장 첫 글은 <a href="webgl-fundamentals.html">WebGL2 기초</a> 이고 바로 이전 글은
 <a href="webgl-data-textures.html">텍스처에 데이터를 전달하는 법</a>에 관한 글입니다.
 이 글들을 아직 읽지 않으셨다면 먼저 읽고 오세요.</p>
 <p>지난번 글에서는 자바스크립트에서 텍스처로 데이터를 전달하는 방법을 알아보았습니다.
 이 글에서는 WebGL2를 사용해 텍스처에 렌더링 하는 방법을 알아볼겁니다.
-참고로 이 주제는 <a href="webgl-image-processing-continued.html">이미지 처리</a>에서 이미 
+참고로 이 주제는 <a href="webgl-image-processing-continued.html">이미지 처리</a>에서 이미
 간략하게 다루긴 했습니다만 여기서는 좀 더 자세히 알아볼겁니다.</p>
 <p>텍스처에 렌더링하는것은 꽤 간단합니다. 우선 특정한 크기의 텍스처를 만듭니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// create to render to
@@ -264,16 +264,17 @@ gl.bindTexture(gl.TEXTURE_2D, targetTexture);
                 targetTextureWidth, targetTextureHeight, border,
                 format, type, data);
 
-  // set the filtering so we don&#39;t need mips
+  // set the filtering so we don't need mips
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 }
-</code></pre><p><code class="notranslate" translate="no">data</code>가 <code class="notranslate" translate="no">null</code>인 것에 주목하세요. 우리는 데이터를 전달할 필요가 없습니다.
+</code></pre>
+<p><code class="notranslate" translate="no">data</code>가 <code class="notranslate" translate="no">null</code>인 것에 주목하세요. 우리는 데이터를 전달할 필요가 없습니다.
 여기서는 단지 WebGL이 텍스처를 할당하기만 하면 됩니다.</p>
 <p>다음으로 프레임 버퍼를 만듭니다. <a href="webgl-framebuffers.html">프레임 버퍼란 단지 어떤 데이터들의 집합입니다(collection of attachments)</a>.
 여기서 어떤 데이터란 텍스처 또는 렌더버퍼(renderbuffer)입니다.
-텍스처에 대해서는 이미 알아보았고, 렌더버퍼란 텍스처와 아주 유사하지만 텍스처는 
+텍스처에 대해서는 이미 알아보았고, 렌더버퍼란 텍스처와 아주 유사하지만 텍스처는
 지원하지 않은 몇몇 포맷과 옵션을 지원한다는 점이 다릅니다.
 또한 텍스처와는 다르게 렌더버퍼는 셰이더의 입력으로 직접 사용할 수 없습니다.</p>
 <p>이제 프레임버를 만들고 우리의 텍스처를 붙여줍시다.</p>
@@ -285,10 +286,11 @@ gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
 const attachmentPoint = gl.COLOR_ATTACHMENT0;
 gl.framebufferTexture2D(
     gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, targetTexture, level);
-</code></pre><p>텍스처나 버퍼와 동일하게, 프레임 버퍼를 만들고 나서 <code class="notranslate" translate="no">FRAMEBUFFER</code>라는 
-바인드 포인트에 바인딩 해주어야 합니다. 이렇게 하고나면 프레임 버퍼와 관련된 
+</code></pre>
+<p>텍스처나 버퍼와 동일하게, 프레임 버퍼를 만들고 나서 <code class="notranslate" translate="no">FRAMEBUFFER</code>라는
+바인드 포인트에 바인딩 해주어야 합니다. 이렇게 하고나면 프레임 버퍼와 관련된
 다른 모는 함수는 바인드 포인트에 바인딩된 프레임 버퍼를 참조하게 됩니다.</p>
-<p>프레임 버퍼가 바인딩되면, 우리가  <code class="notranslate" translate="no">gl.clear</code>, <code class="notranslate" translate="no">gl.drawArrays</code>, 
+<p>프레임 버퍼가 바인딩되면, 우리가  <code class="notranslate" translate="no">gl.clear</code>, <code class="notranslate" translate="no">gl.drawArrays</code>,
 <code class="notranslate" translate="no">gl.drawElements</code>를 호출할 때마다 WebGL은 캔버스 대신 우리의 텍스처에 렌더링을 수행하게 됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawCube(aspect) {
   // 우리의 프로그램(셰이더 쌍)을 사용할 것입니다.
@@ -329,7 +331,8 @@ gl.framebufferTexture2D(
   var count = 6 * 6;
   gl.drawArrays(primitiveType, offset, count);
 }
-</code></pre><p>참고로 투영 행렬을 계산하기 위해 <code class="notranslate" translate="no">aspect</code>를 전달해 주어야 하는데 
+</code></pre>
+<p>참고로 투영 행렬을 계산하기 위해 <code class="notranslate" translate="no">aspect</code>를 전달해 주어야 하는데
 우리의 대상 텍스처가 카메라와는 종횡비가 다르기 때문입니다.</p>
 <p>아래는 호출 방법입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 장면을 그립니다.
@@ -375,7 +378,8 @@ function drawScene(time) {
 
   requestAnimationFrame(drawScene);
 }
-</code></pre><p>결과는 아래와 같습니다.</p>
+</code></pre>
+<p>결과는 아래와 같습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-render-to-texture.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-render-to-texture.html" target="_blank">새 창으로 열기</a>
@@ -386,14 +390,15 @@ function drawScene(time) {
 예제의 경우 먼저 텍스처에 렌더링을 하기 때문에 뷰포트를 텍스처의 크기로 설정했습니다.
 두 번째로는 캔버스에 렌더링을 하기 때문에 뷰포트를 캔버스의 크기로 설정했습니다.</p>
 <p>투영 행렬을 계산할 때도 유사한데, 우리가 렌더링하려는 대상의 종횡비에 맞는 값을 사용해야 합니다.
-저도 결과가 이상하거나 렌더링이 되지 않는 경우에 대해 디버깅하느라 수많은 시간을 보낸 적이 있습니다. 
+저도 결과가 이상하거나 렌더링이 되지 않는 경우에 대해 디버깅하느라 수많은 시간을 보낸 적이 있습니다.
 결국에는 <code class="notranslate" translate="no">gl.viewport</code>를 호출하지 않거나 올바른 종횡비를 설정하지 않은것을 발견하곤 했습니다.
 잊어버리기가 쉽기 때문에 저는 <code class="notranslate" translate="no">gl.bindFramebuffer</code>를 직접 호출하지 않고, 아래와 같은 함수를 만들어서 호출합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function bindFramebufferAndSetViewport(fb, width, height) {
    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
    gl.viewport(0, 0, width, height);
 }
-</code></pre><p>그리고 렌더링 대상을 변경할 때는 이 함수만을 사용합니다. 그러면 잊어버리지 않을 겁니다.</p>
+</code></pre>
+<p>그리고 렌더링 대상을 변경할 때는 이 함수만을 사용합니다. 그러면 잊어버리지 않을 겁니다.</p>
 <p>주의하셔야 할 것중 하나는 우리의 프레임 버퍼에는 깊이 버퍼(depth buffer)가 없다는 것입니다. 오직 텍스처만 갖고 있습니다.
 즉 깊이 테스팅을 수행하지 않기 때문에 3D 가 제대로 동작하지 않는다는 것입니다.
 정육면체 3개를 그린다면 결과는 아래와 같아집니다.</p>
@@ -407,7 +412,7 @@ function drawScene(time) {
 하지만 우리는 세 개의 육면체를 모두 같은 깊이에 그렸습니다.
 반면 캔버스에 보이는 세 개의 가로로 놓여진 육면체들은 서로 올바르게 교차하는 것을 보실 수 있습니다.
 왜냐하면 캔버스에는 깊이 버퍼가 있지만, 우리가 사용한 프레임 버퍼에는 깊이 버퍼가 없기 때문입니다.</p>
-<p><img class="webgl_center" src="../resources/cubes-without-depth-buffer.jpg" width="100%" height="100%" /></p>
+<img class="webgl_center" src="../resources/cubes-without-depth-buffer.jpg" width="100%" height="100%" />
 <p>깊이 버퍼를 추가하기 위해서는 깊이 텍스처를 만들고 프레임 버퍼에 붙여줘야 합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// create a depth texture
 const depthTexture = gl.createTexture();
@@ -426,7 +431,7 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
                 targetTextureWidth, targetTextureHeight, border,
                 format, type, data);
 
-  // set the filtering so we don&#39;t need mips
+  // set the filtering so we don't need mips
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -435,7 +440,8 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
   // attach the depth texture to the framebuffer
   gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depthTexture, level);
 }
-</code></pre><p>그렇게 하면 결과는 이렇게 됩니다.</p>
+</code></pre>
+<p>그렇게 하면 결과는 이렇게 됩니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-render-to-texture-3-cubes-with-depth-buffer.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-render-to-texture-3-cubes-with-depth-buffer.html" target="_blank">새 창으로 열기</a>
@@ -443,7 +449,7 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
 
 </p>
 <p>이제 프레임 버퍼에 깊이 버퍼가 추가되었기 때문에 안쪽의 육면체들도 올바르게 교차하는 것을 보실 수 있습니다.</p>
-<p><img class="webgl_center" src="../resources/cubes-with-depth-buffer.jpg" width="100%" height="100%" /></p>
+<img class="webgl_center" src="../resources/cubes-with-depth-buffer.jpg" width="100%" height="100%" />
 <p>WebGL은 특정 조합의 attachment들만 사용할 수 있다는 점에 주의하십시오.
 <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/#FBO_ATTACHMENTS">명세에 따르면</a> 동작이 보장되어 있는 attachment 조합은:</p>
 <ul>
@@ -454,7 +460,8 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
 <p>다른 조합에 대해서는 사용자의 시스템/GPU/드라이버/브라우저가 해당 조합을 지원하는지를 확인하셔야만 합니다.
 확인하려면 프레임 버퍼를 만들고 attachment를 추가한 뒤에 아래 함수를 호출하세요.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-</code></pre><p>status가 <code class="notranslate" translate="no">FRAMEBUFFER_COMPLETE</code>면 attachment 조합이 사용 가능한 상태입니다.
+</code></pre>
+<p>status가 <code class="notranslate" translate="no">FRAMEBUFFER_COMPLETE</code>면 attachment 조합이 사용 가능한 상태입니다.
 그렇지 않으면 사용자에게 당신은 운이 없었다는 것을 알려주거나 다른 방식으로 처리하도록 구현해야 합니다.</p>
 <p>아직 <a href="webgl-less-code-more-fun.html">WebGL을 단순화해서 더 적은 코드로 즐기기</a>를 읽지 않으셨다면 한번 읽어 보세요.</p>
 <div class="webgl_bottombar">
@@ -466,8 +473,6 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
 그리고 그 텍스처는 캔버스를 웹 페이지에 그리는 데 사용됩니다.
 </p>
 </div>
-
-
 
     </div>
     <div class="lesson-sidebar">

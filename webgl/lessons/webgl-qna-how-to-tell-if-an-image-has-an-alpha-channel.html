@@ -236,54 +236,60 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>When you load a WebGL texture directly from a DOM image, how do you tell if the image has an alpha channel or not?  Is there anyway except to guess based on the filename (e.g. &quot;contains .PNG may be RGBA otherwise RGB&quot;).  There is a width and height in the DOM image, but nothing I can see that says what format it is. i.e.:</p>
+      <h2 id="question">Question:</h2>
+<p>When you load a WebGL texture directly from a DOM image, how do you tell if the image has an alpha channel or not?  Is there anyway except to guess based on the filename (e.g. “contains .PNG may be RGBA otherwise RGB”).  There is a width and height in the DOM image, but nothing I can see that says what format it is. i.e.:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    const img = await loadDOMImage(url);
-    const format = gl.RGBA; //Does this always need to be RGBA? I&#39;m wasting space in most cases where its only RGB
+    const format = gl.RGBA; //Does this always need to be RGBA? I'm wasting space in most cases where its only RGB
     const internalFormat = gl.RGBA;
     const type = gl.UNSIGNED_BYTE; //This is guaranteed to be correct, right?  No HDR formats supported by the DOM?
-</code></pre><p>  gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, format, type, img); </p>
+</code></pre>
+<p>gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, format, type, img);</p>
 <p>My load function looks like this FWIW:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  async loadDOMImage(url) {
          return new Promise(
            (resolve, reject)=&gt;{
              const img = new Image(); 
-             img.crossOrigin = &#39;anonymous&#39;;
-             img.addEventListener(&#39;load&#39;, function() {
+             img.crossOrigin = 'anonymous';
+             img.addEventListener('load', function() {
                resolve(img);
              }, false);
-             img.addEventListener(&#39;error&#39;, function(err) {
+             img.addEventListener('error', function(err) {
                reject(err);
              }, false);
-
+                  
              img.src = uri;
-
+    
            }
          );
        }
-</code></pre><h2 id="answer-">Answer:</h2>
+</code></pre>
+<h2 id="answer">Answer:</h2>
 <blockquote>
-<p>how do you tell if the image has an alpha channel or not? </p>
+<p>how do you tell if the image has an alpha channel or not?</p>
 </blockquote>
-<p>You can&#39;t. You can only guess. </p>
+<p>You can’t. You can only guess.</p>
 <ol>
-<li><p>you could see the URL ends in .png and assume it has alpha. You might be wrong</p>
+<li>
+<p>you could see the URL ends in .png and assume it has alpha. You might be wrong</p>
 </li>
-<li><p>you could draw image into a 2D canvas then call getImageData, read all the alpha pixels and see if any of them are not 255</p>
+<li>
+<p>you could draw image into a 2D canvas then call getImageData, read all the alpha pixels and see if any of them are not 255</p>
 </li>
 </ol>
 <blockquote>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> const format = gl.RGBA;
-</code></pre><p>Does this always need to be RGBA? I&#39;m wasting space in most cases where its only RGB</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const format = gl.RGBA; 
+</code></pre>
+<p>Does this always need to be RGBA? I’m wasting space in most cases where its only RGB</p>
 </blockquote>
-<p>It&#39;s unlikely to waste space. Most GPUs work best with RGBA values so even if you choose RGB it&#39;s unlikely to save space.</p>
+<p>It’s unlikely to waste space. Most GPUs work best with RGBA values so even if you choose RGB it’s unlikely to save space.</p>
 <blockquote>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const type = gl.UNSIGNED_BYTE;
-</code></pre><p>This is guaranteed to be correct, right? </p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const type = gl.UNSIGNED_BYTE; 
+</code></pre>
+<p>This is guaranteed to be correct, right?</p>
 </blockquote>
-<p><code class="notranslate" translate="no">texImage2D</code> takes the image you pass in and converts it to <code class="notranslate" translate="no">type</code> and <code class="notranslate" translate="no">format</code>. It then passes that converted data to the GPU. </p>
+<p><code class="notranslate" translate="no">texImage2D</code> takes the image you pass in and converts it to <code class="notranslate" translate="no">type</code> and <code class="notranslate" translate="no">format</code>. It then passes that converted data to the GPU.</p>
 <blockquote>
-<p> No HDR formats supported by the DOM?</p>
+<p>No HDR formats supported by the DOM?</p>
 </blockquote>
 <p>That is undefined and browser specific. I know of no HDR image formats supported by any browsers. What image formats a browser supports is up to the browser.</p>
 <hr>

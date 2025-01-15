@@ -240,7 +240,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 gelesen hast, wird es dür dich einige Änderungen geben die dir bewusst sein sollten.</p>
 <h2 id="multiline-template-literals">Multiline Template Literals</h2>
 <p>Auf webglfundamentals.org werden fast alle Skripte in nicht-javascript
-<code class="notranslate" translate="no">script</code> Tags gehalten. </p>
+<code class="notranslate" translate="no">script</code> Tags gehalten.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;script id=&quot;vertexshader&quot; type=&quot;not-js&quot;&gt;;
 shader
 goes
@@ -250,59 +250,67 @@ here
 ...
 
 var vertexShaderSource = document.querySelector(&quot;#vertexshader&quot;).text;
-</code></pre><p>Auf webgl2fundamentals.org bin ich zu multiline template literals übergegangen</p>
+</code></pre>
+<p>Auf webgl2fundamentals.org bin ich zu multiline template literals übergegangen</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var vertexShaderSource = `
 shader
 goes
 here
 `;
-</code></pre><p>multiline template literals werden von allen WebGL-fähigen Browsern unterstützt,
-den IE11 ausgenommen. Wenn du IE11 benutzen möchtest, solltest du einen Transpiler 
+</code></pre>
+<p>multiline template literals werden von allen WebGL-fähigen Browsern unterstützt,
+den IE11 ausgenommen. Wenn du IE11 benutzen möchtest, solltest du einen Transpiler
 wie <a href="https://babeljs.io">babel</a> in Erwägung ziehen.</p>
 <h2 id="alle-shader-benutzen-die-version-glsl-300-es">Alle Shader benutzen die Version GLSL 300 es</h2>
 <p>Ich habe alle Shader auf GLSL 300 es umgestellt. Ich dachte mir,
 wozu WebGL2 benutzen wenn man keine WebGL2 Shader benutzt?</p>
 <h2 id="alle-beispiele-nutzen-vertex-array-objects">Alle Beispiele nutzen Vertex Array Objects</h2>
-<p>Vertex Array Objects sind ein optionales Feature in WebGL1, in WebGL2 sind sie 
-ein standard Feature. <a href="webgl1-to-webgl2.html#Vertex-Array-Objects">Ich finde man sollte sie überall benutzen</a>.
+<p>Vertex Array Objects sind ein optionales Feature in WebGL1, in WebGL2 sind sie
+ein standard Feature. <a href="../webgl1-to-webgl2.html#Vertex-Array-Objects">Ich finde man sollte sie überall benutzen</a>.
 Eigentlich sollte ich wohl zu webglfundamentals.org zurückkehren und sie, an den wenigen Stellen and den sie nicht verfügbar sind, <a href="https://github.com/greggman/oes-vertex-array-object-polyfill">mit Hilfe von polyfill</a> einsetzen. Es gibt absolut keine Nachteile, der Code wird unkomplizierter und in fast allen Fällen effizienter.</p>
-<h2 id="andere-kleine-nderungen">Andere kleine Änderungen</h2>
+<h2 id="andere-kleine-änderungen">Andere kleine Änderungen</h2>
 <ul>
-<li><p>Ich habe versucht die Beispiele leicht anzupassen um die gängigsten Muster zu demonstrieren</p>
+<li>
+<p>Ich habe versucht die Beispiele leicht anzupassen um die gängigsten Muster zu demonstrieren</p>
 <p>Die meisten Apps setzen globale WebGL Status wie Blending, Culling oder Depth Testing in
 der Render-Schleife, weil diese Einstellungen sich oft mehrmals ändern. Auf webglfundamentals.org
 setze ich diese Werte zur Initialisierungszeit, weil sie nur einmalig gesetzt werden müssen,
 diese Methode ist jedoch nicht gängig.</p>
 </li>
-<li><p>Ich setze den Viewport in allen Beispielen</p>
+<li>
+<p>Ich setze den Viewport in allen Beispielen</p>
 <p>Das habe ich auf webglfundamentals.org ausgelassen, weil es für die Beispiele
 nicht notwendig war. Es wird jedoch in nahezu allen echten Anwendungen nötig sein.</p>
 </li>
-<li><p>Ich habe jquery entfernt</p>
-<p>Als ich anfing war es nicht üblich <code class="notranslate" translate="no">&lt;input type=&quot;range&quot;&gt;</code> zu unterstützen. Jetzt 
+<li>
+<p>Ich habe jquery entfernt</p>
+<p>Als ich anfing war es nicht üblich <code class="notranslate" translate="no">&lt;input type=&quot;range&quot;&gt;</code> zu unterstützen. Jetzt
 wird es überall unterstützt.</p>
 </li>
-<li><p>Ich habe allen Hilfsfuntionen einen Prefix angefügt</p>
+<li>
+<p>Ich habe allen Hilfsfuntionen einen Prefix angefügt</p>
 <p>Code wie</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> var program = createProgramFromScripts(...)
-</code></pre><p> wurde zu</p>
+</code></pre>
+<p>wurde zu</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> webglUtils.createProgramFromSources(...);
-</code></pre><p> Ich hoffe dadurch wird klarer was diese Funktionen sind und 
- wo man sie finden kann.</p>
+</code></pre>
+<p>Ich hoffe dadurch wird klarer was diese Funktionen sind und
+wo man sie finden kann.</p>
 </li>
 </ul>
 <h2 id="was-nun">Was nun</h2>
 <p>Ich überlege ob ich nicht manche der Beispiele auf webglfundamentals
-entsprechend anpassen sollte. Es hat einige Wochen harter Arbeit gekostet 
-um alle bestehenden Beispiele und Artikel zu überarbeiten. Ich habe das Gefühl, 
-dass WebGL1 innerhalb der nächsten zwölf Monate zum größten Teil durch WebGL2 ersetzt 
-werden wird, weil alle Browser auf Autoupdates eingestellt sind. Firefox und 
-Chrome werden dann mit WebGL2 ausgeliefert und somit einen hohen Anteil von 
-Benutzern auf Dektop und Android abdecken. Wenn Apple und Microsoft Safari macOS, 
-Safari iOS und Edge WebGL2 fähig machen, sollten die meisten Benutzer abgedeckt 
+entsprechend anpassen sollte. Es hat einige Wochen harter Arbeit gekostet
+um alle bestehenden Beispiele und Artikel zu überarbeiten. Ich habe das Gefühl,
+dass WebGL1 innerhalb der nächsten zwölf Monate zum größten Teil durch WebGL2 ersetzt
+werden wird, weil alle Browser auf Autoupdates eingestellt sind. Firefox und
+Chrome werden dann mit WebGL2 ausgeliefert und somit einen hohen Anteil von
+Benutzern auf Dektop und Android abdecken. Wenn Apple und Microsoft Safari macOS,
+Safari iOS und Edge WebGL2 fähig machen, sollten die meisten Benutzer abgedeckt
 sein und wir können alle mit WebGL2 weiter machen.</p>
 <p>Hoffentlich finde ich die Zeit mehr Artikel zu schreiben.
-Angesichts der oben beschriebenen Tatsachen, werden alle Artikel ab nun 
+Angesichts der oben beschriebenen Tatsachen, werden alle Artikel ab nun
 nur noch WebGL2 benutzen.
 Galube ich zumindest.</p>
 

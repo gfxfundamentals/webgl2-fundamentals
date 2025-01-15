@@ -236,18 +236,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I&#39;d like to normalize <strong>monochrome</strong> image pixels in that way the minimum value is black, the maximum is white and values in between are spread proportionally.
+      <h2 id="question">Question:</h2>
+<p>I’d like to normalize <strong>monochrome</strong> image pixels in that way the minimum value is black, the maximum is white and values in between are spread proportionally.
 Currently I do it in canvas in two steps, but I believe it should be faster in WebGL.</p>
-<p>I can imagine manipulating colors via fragment shader, but I couldn&#39;t find any efficient way for (1) determining the actual range of the image, nor (2) approach for passing this info to another fragment shader, which could then perform that grey level normalization.</p>
-<h2 id="answer-">Answer:</h2>
-<p>Seems like you could generate progressively smaller textures in your fragment shader and in each texture write out min and max. So for example if you have a 16x16 texture then for every 2x2 pixels write out 1 pixels that represent the max. </p>
+<p>I can imagine manipulating colors via fragment shader, but I couldn’t find any efficient way for (1) determining the actual range of the image, nor (2) approach for passing this info to another fragment shader, which could then perform that grey level normalization.</p>
+<h2 id="answer">Answer:</h2>
+<p>Seems like you could generate progressively smaller textures in your fragment shader and in each texture write out min and max. So for example if you have a 16x16 texture then for every 2x2 pixels write out 1 pixels that represent the max.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> vec4 c00 = texture2D(sampler, uv);
  vec4 c10 = texture2D(sampler, uv + vec2(onePixelRight, 0));
  vec4 c01 = texture2D(sampler, uv + vec2(0, onePixelUp));
  vec4 c11 = texture2D(sampler, uv + vec2(onePixelRight, onePixelUp);
  gl_FragColor = max(max(c00, c10), max(c01, c11));
-</code></pre><p>Repeat until you get to 1x1 pixel. Do the same for min. When you&#39;re done you&#39;ll have 2 1x1 pixel textures. Either read them with readPixels or pass them to another shader as your range.</p>
+</code></pre>
+<p>Repeat until you get to 1x1 pixel. Do the same for min. When you’re done you’ll have 2 1x1 pixel textures. Either read them with readPixels or pass them to another shader as your range.</p>
 <p>It might be faster to use larger chunks, instead of 2x2 do 8x8 or 16x16 areas but keep reducing until you get to 1x1 pixels</p>
 <p>In pseudo code.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// setup
@@ -263,7 +264,7 @@ while w &gt; 1 || h &gt; 1
    textures.push(create Texture of size w, h)
    framebuffers.push(create framebuffer and attach texture)
 }
-
+  
 // computation
 bind original image as input texture
 foreach(framebuffer)
@@ -271,7 +272,8 @@ foreach(framebuffer)
    render to framebuffer with max GLSL shader above
    bind texture of current framebuffer as input to next iteration
 }
-</code></pre><p>Now the last framebuffer as a 1x1 pixel texture with the max value in it. </p>
+</code></pre>
+<p>Now the last framebuffer as a 1x1 pixel texture with the max value in it.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-determine-min-max-values-for-the-entire-image-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-determine-min-max-values-for-the-entire-image-example-1.html" target="_blank">click here to open in a separate window</a>
@@ -285,7 +287,7 @@ foreach(framebuffer)
 </div>
 
 </p>
-<p>Now that you have the answer you can pass it to another shader to &quot;contrastify&quot; your texture</p>
+<p>Now that you have the answer you can pass it to another shader to “contrastify” your texture</p>
 <p>If you read out the values then</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform vec4 u_minColor;
 uniform vec4 u_maxColor;
@@ -296,7 +298,8 @@ uniform sampler2D u_texture;
   vec4 color = texture2D(u_texture, uv);     
   vec4 range = u_maxColor - u_minColor;
   gl_FragColor = (color - u_minColor) * range;
-</code></pre><p>If you just want to pass in the textures without reading them out then</p>
+</code></pre>
+<p>If you just want to pass in the textures without reading them out then</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler2D u_minColor;
 uniform sampler2D u_maxColor;
 uniform sampler2D u_texture;
@@ -307,14 +310,15 @@ uniform sampler2D u_texture;
   vec4 color = texture2D(u_texture, uv);     
   vec4 range = maxColor - minColor;
   gl_FragColor = vec4(((color - minColor) / range).rgb, 1);
-</code></pre><p>I don&#39;t know if one is better than the other. I&#39;d assume reading from a texture is slower than reading from a uniform but for a shader this small the performance difference might be minimal</p>
+</code></pre>
+<p>I don’t know if one is better than the other. I’d assume reading from a texture is slower than reading from a uniform but for a shader this small the performance difference might be minimal</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-determine-min-max-values-for-the-entire-image-example-3.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-determine-min-max-values-for-the-entire-image-example-3.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>As for monochrome just change the src textures to <code class="notranslate" translate="no">gl.LUMINANCE</code> </p>
+<p>As for monochrome just change the src textures to <code class="notranslate" translate="no">gl.LUMINANCE</code></p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 3.0 by

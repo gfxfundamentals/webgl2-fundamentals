@@ -241,30 +241,38 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>有一些通用的或者半通用的命名约定。尤其与矩阵相关时。我不知道谁率先使用了这些名称。我想我是从<a href="https://www.nvidia.com/object/using_sas.html">NVidia 的标准注释和语义</a>学到的。这更加正式，通过确定的命名，尝试让着色器在更多的情况下工作。有点过时，但基本部分仍然奏效。</p>
 <p>这是我想到的列表</p>
 <ul>
-<li><p>世界矩阵 world matrix (或者有时被成为模型矩阵 model matrix)</p>
+<li>
+<p>世界矩阵 world matrix (或者有时被成为模型矩阵 model matrix)</p>
 <p>转换模型顶点到世界空间的矩阵</p>
 </li>
-<li><p>相机矩阵 camera matrix</p>
+<li>
+<p>相机矩阵 camera matrix</p>
 <p>代表相机在世界空间中位置的矩阵。另一种说法是相机的<em>世界矩阵</em>。</p>
 </li>
-<li><p>视图矩阵 view matrix</p>
+<li>
+<p>视图矩阵 view matrix</p>
 <p>把世界空间中所有东西移到相机前。这是<em>相机矩阵</em>的逆。</p>
 </li>
-<li><p>投影矩阵 projection matrix</p>
+<li>
+<p>投影矩阵 projection matrix</p>
 <p>矩阵转换视锥体空间到裁剪空间或者一些正交空间到裁剪空间。 另一种说法是你的矩阵数学库透视函数<code class="notranslate" translate="no">perspective</code>和正交函数<code class="notranslate" translate="no">ortho</code>或者
 <code class="notranslate" translate="no">orthographic</code>返回的矩阵。</p>
 </li>
-<li><p>本地矩阵 local matrix</p>
+<li>
+<p>本地矩阵 local matrix</p>
 <p>当使用<a href="webgl-scene-graph.html">场景图</a>时，本地矩阵是是某一节点和其他节点相乘之前的矩阵。</p>
 </li>
 </ul>
 <p>如果着色器需要矩阵的组合，它们通常从右向左列出，即使着色器中它们是乘在<em>右边的</em>。例如：</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">worldViewProjection = projection * view * world
-</code></pre><p>另外两个对于矩阵常见的操作是求逆</p>
+</code></pre>
+<p>另外两个对于矩阵常见的操作是求逆</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">viewMatrix = inverse(cameraMatrix)
-</code></pre><p>和转置</p>
+</code></pre>
+<p>和转置</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">worldInverseTranpose = transpose(inverse(world))
-</code></pre><p>希望了解这些术语，在你看其他人的着色器代码时，如果你很幸运他们使用接近或类似的名字时，你可以理解实际上在做什么。</p>
+</code></pre>
+<p>希望了解这些术语，在你看其他人的着色器代码时，如果你很幸运他们使用接近或类似的名字时，你可以理解实际上在做什么。</p>
 <p>现在，让我们接着学习<a href="webgl-animation.html">动画</a>.</p>
 
     </div>

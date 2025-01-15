@@ -247,7 +247,7 @@ CSS 决定画布显示的尺寸。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-html">&lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;
 </code></pre>
 <p>JavaScript</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const canvas = document.querySelector(&#39;#c&#39;)
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const canvas = document.querySelector('#c')
 canvas.width = 400
 canvas.height = 300
 </code></pre>
@@ -300,9 +300,10 @@ canvas.height = 300
     &lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;
   &lt;/body&gt;
 &lt;/html&gt;
-</code></pre><p>现在只需要将 drawingbuffer 的尺寸设置为为浏览器拉伸后的画布尺寸。
+</code></pre>
+<p>现在只需要将 drawingbuffer 的尺寸设置为为浏览器拉伸后的画布尺寸。
 这是一个复杂的话题。让我们来看看一些不同的方法</p>
-<h2 id="-clientwidth-clientheight-">使用 <code class="notranslate" translate="no">clientWidth</code> 和 <code class="notranslate" translate="no">clientHeight</code></h2>
+<h2 id="使用-clientwidth-和-clientheight">使用 <code class="notranslate" translate="no">clientWidth</code> 和 <code class="notranslate" translate="no">clientHeight</code></h2>
 <p>这是最简单的方法。
 <code class="notranslate" translate="no">clientWidth</code> 和 <code class="notranslate" translate="no">clientHeight</code> 属性是所有 HTML 元素都有的属性，可以告诉我们元素的大小（CSS 像素）。</p>
 <blockquote>
@@ -351,7 +352,8 @@ canvas.height = 300
 
 +   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
    ...
-</code></pre><p>现在没问题了。</p>
+</code></pre>
+<p>现在没问题了。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-resize-canvas-viewport.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-resize-canvas-viewport.html" target="_blank">点此在新窗口中浏览</a>
@@ -364,13 +366,12 @@ canvas.height = 300
 或者做其他的事情需要不同的视域尺寸。
 WebGL 没办法知道你的意图所以就不能自动帮你设置视域。</p>
 <hr>
-<h2 id="-devicepixelratio-">处理 <code class="notranslate" translate="no">devicePixelRatio</code> 和缩放</h2>
+<h2 id="处理-devicepixelratio-和缩放">处理 <code class="notranslate" translate="no">devicePixelRatio</code> 和缩放</h2>
 <p>为什么这还没有结束？嗯，这就是事情变得复杂的地方。</p>
 <p>首先要了解的是，浏览器中的大多数尺寸都是以 CSS 像素为单位的。这是一个使不同设备有不同尺寸的尝试。例如，在本文的顶部，我们将画布的显示大小设置为 400x300 CSS 像素。根据用户是否拥有 HD-DPI 显示器，或者进行了放大或缩小，或者设置了操作系统缩放级别，显示器上的实际像素数量会有所不同。</p>
 <p><code class="notranslate" translate="no">window.devicePixelRatio</code> 一般会告诉我们实际像素与显示器上 CSS 像素的比率。例如，这是您浏览器的当前设置</p>
 <blockquote>
 <div>devicePixelRatio = <span data-diagram="dpr"></span></div>
-
 </blockquote>
 <p>如果您使用的是台式机或笔记本电脑， 请尝试按 <kbd>ctrl</kbd>+<kbd>+</kbd> 和 <kbd>ctrl</kbd>+<kbd>-</kbd> 进行放大和缩小 (在 Mac 上为<kbd>⌘</kbd>+<kbd>+</kbd> and <kbd>⌘</kbd>+<kbd>-</kbd> )。您应该会看到数字发生变化。</p>
 <p>因此，如果我们希望画布中的像素数与实际用于显示它的像素数相匹配
@@ -415,7 +416,6 @@ WebGL 没办法知道你的意图所以就不能自动帮你设置视域。</p>
 <p>下面是一个紫色的 <code class="notranslate" translate="no">&lt;canvas&gt;</code>，设置为容器的 <code class="notranslate" translate="no">width: 100%</code>。 缩小几次到 75% 或 60%，你可能会看到它的 <code class="notranslate" translate="no">clientWidth</code> 和它的 <code class="notranslate" translate="no">getBoundingClientRect().width</code> 不一样。</p>
 <blockquote>
 <div data-diagram="getBoundingClientRect"></div>
-
 </blockquote>
 <p>在我的机器上我得到这些数值</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">Windows 10, zoom level 75%, Chrome
@@ -433,7 +433,8 @@ getBoundingClientRect().width = 699.9999389648438
 Firefox, both Windows and MacOS all zoom levels
 clientWidth: 700
 getBoundingClientRect().width = 700
-</code></pre><p>注意：Firefox 在此特定设置中显示 700，但通过足够多的各种测试，我看到它从<code class="notranslate" translate="no">getBoundingClientRect</code> 给出非整数结果，例如使窗口变小，以便 100% 画布小于 700，你可能会得到一个 Firefox 上的非整数结果。</p>
+</code></pre>
+<p>注意：Firefox 在此特定设置中显示 700，但通过足够多的各种测试，我看到它从<code class="notranslate" translate="no">getBoundingClientRect</code> 给出非整数结果，例如使窗口变小，以便 100% 画布小于 700，你可能会得到一个 Firefox 上的非整数结果。</p>
 <p>因此，鉴于此我们可以尝试使用 <code class="notranslate" translate="no">getBoundingClientRect</code>。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function resizeCanvasToDisplaySize(canvas) {
   // 查找浏览器在 CSS 像素中显示画布的大小。
@@ -468,7 +469,7 @@ getBoundingClientRect().width = 700
 <p>不幸的是，虽然所有现代浏览器都可以使用 <code class="notranslate" translate="no">ResizeObserver</code>，但<code class="notranslate" translate="no">devicePixelContentBoxSize</code>目前仅适用于 Chrome/Edge。 这是如何使用它。</p>
 <p>我们创建了一个 <code class="notranslate" translate="no">ResizeObserver</code> 并传递给它一个函数，以便在观察到的任何元素大小改变时调用它。 在我们的例子中，是我们的画布。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const resizeObserver = new ResizeObserver(onResize)
-resizeObserver.observe(canvas, { box: &#39;content-box&#39; })
+resizeObserver.observe(canvas, { box: 'content-box' })
 </code></pre>
 <p>上面的代码创建了一个 <code class="notranslate" translate="no">ResizeObserver</code>，当观察到的元素改变大小时，它将调用函数 <code class="notranslate" translate="no">onResize</code>（如下）。我们让它<code class="notranslate" translate="no">观察</code>画布的<code class="notranslate" translate="no">content-box</code>何时改变大小。这很重要，但有点令人困惑。 我们可以要求它告诉我们
 <code class="notranslate" translate="no">device-pixel-content-box</code> 何时改变大小， 但让我们想象一下我们有一个画布，它是窗口的某个百分比大小，就像上面常见的 100% 的行示例一样。在这种情况下，无论缩放级别如何，我们的画布都将始终具有相同数量的设备像素。 当我们缩放时窗口没有改变大小，所以仍然有相同数量的设备像素。 另一方面，<code class="notranslate" translate="no">content-box</code> 会随着我们的缩放而改变，因为它是用 CSS 像素来衡量的，所以当我们缩放时，或多或少的 CSS 像素适合设备像素的数量。</p>
@@ -477,10 +478,10 @@ resizeObserver.observe(canvas, { box: &#39;content-box&#39; })
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const resizeObserver = new ResizeObserver(onResize)
 try {
     // 只告诉我们改变的设备像素数
-    resizeObserver.observe(canvas, { box: &#39;device-pixel-content-box&#39; })
+    resizeObserver.observe(canvas, { box: 'device-pixel-content-box' })
 } catch (ex) {
     // 不支持 device-pixel-content-box 时回退到这个
-    resizeObserver.observe(canvas, { box: &#39;content-box&#39; })
+    resizeObserver.observe(canvas, { box: 'content-box' })
 }
 </code></pre>
 <p><code class="notranslate" translate="no">onResize</code> 函数将使用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserverEntry"><code class="notranslate" translate="no">ResizeObserverEntry</code>s</a>数组调用。 每当大小改变时我们将把尺寸记录到 map 对象中以便我们处理多个元素。</p>

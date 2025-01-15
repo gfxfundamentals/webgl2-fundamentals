@@ -236,23 +236,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>From <a href="https://webgl2fundamentals.org/webgl/lessons/webgl-image-processing.html">https://webgl2fundamentals.org/webgl/lessons/webgl-image-processing.html</a></p>
+      <h2 id="question">Question:</h2>
+<p>From https://webgl2fundamentals.org/webgl/lessons/webgl-image-processing.html</p>
 <blockquote>
-<p>WebGL2 adds the ability to read a texture using pixel coordinates as well. Which way is best is up to you. I feel like it&#39;s more common to use texture coordinates than pixel coordinates.</p>
+<p>WebGL2 adds the ability to read a texture using pixel coordinates as well. Which way is best is up to you. I feel like it’s more common to use texture coordinates than pixel coordinates.</p>
 </blockquote>
 <p>Nowhere is this mentioned other then passing uniform with texture dimensions in pixels and calculate from there, is there a way to access these pixel coords without calculation as it is supposed here?</p>
-<h2 id="answer-">Answer:</h2>
+<h2 id="answer">Answer:</h2>
 <p>You can read individual pixels/texels from a texture in WebGL2 with <code class="notranslate" translate="no">texelFetch</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 color = texelFetch(someUniformSampler, ivec2(pixelX, pixelY), intMipLevel);
-</code></pre><p>For example, compute the average color of a texture by reading each pixel</p>
+</code></pre>
+<p>For example, compute the average color of a texture by reading each pixel</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-accessing-textures-by-pixel-coordinate-in-webgl2-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-accessing-textures-by-pixel-coordinate-in-webgl2-example-1.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>notes: since the canvas is RGBA8 can only get integer result. Could change to some float format but that would complicate the example which is not about rendering it&#39;s about <code class="notranslate" translate="no">texelFetch</code>.</p>
+<p>notes: since the canvas is RGBA8 can only get integer result. Could change to some float format but that would complicate the example which is not about rendering it’s about <code class="notranslate" translate="no">texelFetch</code>.</p>
 <p>Of course just by changing the data from R8 to RGBA8 we can do 4 arrays as once if we interleave the values</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-accessing-textures-by-pixel-coordinate-in-webgl2-example-2.html"></iframe>
@@ -261,7 +262,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 </p>
 <p>To do more requires figuring out some way to arrange the data and use an input to the fragment shader to figure out where the data is. For example we again interleave the data, 5 arrays so the data goes 0,1,2,3,4,0,1,2,3,4,0,1,2,3,4.</p>
-<p>Let&#39;s go back to R8 and do 5 separate arrays. We need to draw 5 pixels. We can tell which pixel is being drawn by looking at <code class="notranslate" translate="no">gl_FragCoord</code>. We can use that to offset which pixels we look at and pass in how many to skip.</p>
+<p>Let’s go back to R8 and do 5 separate arrays. We need to draw 5 pixels. We can tell which pixel is being drawn by looking at <code class="notranslate" translate="no">gl_FragCoord</code>. We can use that to offset which pixels we look at and pass in how many to skip.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-accessing-textures-by-pixel-coordinate-in-webgl2-example-3.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-accessing-textures-by-pixel-coordinate-in-webgl2-example-3.html" target="_blank">click here to open in a separate window</a>

@@ -236,18 +236,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I am trying to use WebGL achieve <a href="https://en.wikipedia.org/wiki/Droste_effect">Droste effect</a> on a cube&#39;s faces. There is a single mesh in the viewport, a cube, and all of its faces share the same texture. To achieve Droste effect, I update the texture on each frame and I actually just take a snapshot of the <code class="notranslate" translate="no">canvas</code> whose WebGL context I am drawing to, which over time results in the Droste effect as the snapshot increasingly contain more and more nested past frames.</p>
+      <h2 id="question">Question:</h2>
+<p>I am trying to use WebGL achieve <a href="https://en.wikipedia.org/wiki/Droste_effect">Droste effect</a> on a cube’s faces. There is a single mesh in the viewport, a cube, and all of its faces share the same texture. To achieve Droste effect, I update the texture on each frame and I actually just take a snapshot of the <code class="notranslate" translate="no">canvas</code> whose WebGL context I am drawing to, which over time results in the Droste effect as the snapshot increasingly contain more and more nested past frames.</p>
 <p>There is a demo of what I have right now in action here:</p>
-<p><a href="https://tomashubelbauer.github.io/webgl-op-1/?cubeTextured">https://tomashubelbauer.github.io/webgl-op-1/?cubeTextured</a></p>
+<p>https://tomashubelbauer.github.io/webgl-op-1/?cubeTextured</p>
 <p>The code in question follows:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Set up fragment and vertex shader and attach them to a program, link the program
 // Create a vertex buffer, an index buffer and a texture coordinate buffer
-// Tesselate the cube&#39;s vertices and fill in the index and texture coordinate buffers
-const textureCanvas = document.createElement(&#39;canvas&#39;);
+// Tesselate the cube's vertices and fill in the index and texture coordinate buffers
+const textureCanvas = document.createElement('canvas');
 textureCanvas.width = 256;
 textureCanvas.height = 256;
-const textureContext = textureCanvas.getContext(&#39;2d&#39;);
+const textureContext = textureCanvas.getContext('2d');
 
 // In every `requestAnimationFrame`:
 textureContext.drawImage(context.canvas, 0, 0);
@@ -261,24 +261,28 @@ context.activeTexture(context.TEXTURE0);
 context.bindTexture(context.TEXTURE_2D, texture);
 context.uniform1i(fragmentShaderTextureSamplerUniformLocation, 0);
 context.drawElements(context.TRIANGLES, 36, context.UNSIGNED_SHORT, 0)
-</code></pre><p>The above is the meat of it all, there is a separate canvas from the WebGL one and it gets the WebGL canvas drawn on it before each WebGL frame and this canvas is then used to create the texture for the given frame and the texture is applied to the cube&#39;s faces according to the texture coordinate buffer and the texture sampler uniform provided to the fragment shader which just uses <code class="notranslate" translate="no">gl_FragColor = texture2D(textureSampler, textureCoordinate)</code> like you would expect.</p>
+</code></pre>
+<p>The above is the meat of it all, there is a separate canvas from the WebGL one and it gets the WebGL canvas drawn on it before each WebGL frame and this canvas is then used to create the texture for the given frame and the texture is applied to the cube’s faces according to the texture coordinate buffer and the texture sampler uniform provided to the fragment shader which just uses <code class="notranslate" translate="no">gl_FragColor = texture2D(textureSampler, textureCoordinate)</code> like you would expect.</p>
 <p>But this is super slow (30 FPS slow on this simple demo with one cube mesh where all my other demoes some with an order of magnitude more tris still edge the 60 FPS <code class="notranslate" translate="no">requestAnimationFrame</code> cap).</p>
-<p>Also it feels weird to do this &quot;outside&quot; of WebGL by using the external canvas when I feel like it should be achievable using WebGL alone.</p>
+<p>Also it feels weird to do this “outside” of WebGL by using the external canvas when I feel like it should be achievable using WebGL alone.</p>
 <p>I know WebGL keeps two buffers, one for the active frame and the back buffer for the recently drawn frame and these two swap with each frame to achieve immediate screen update. Is it possible to tap to this back buffer and use it as a texture? Can you please provide example code of how that would be done?</p>
-<h2 id="answer-">Answer:</h2>
+<h2 id="answer">Answer:</h2>
 <p>From <a href="https://webglfundamentals.org/webgl/lessons/webgl-render-to-texture.html">this article</a></p>
 <p>The normal way to do this is to render to a texture by attaching that texture to a framebuffer.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const fb = gl.createFramebuffer();
 gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
 gl.framebufferTexture2D(
-    gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0 /* level */)
-</code></pre><p>Now to render to the texture</p>
+    gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0 /* level */) 
+</code></pre>
+<p>Now to render to the texture</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
 gl.viewport(0, 0, textureWidth, textureHeight);
-</code></pre><p>To render to the canvas</p>
+</code></pre>
+<p>To render to the canvas</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-</code></pre><p>To do what you want you need 2 textures since you can not read from and write to the same texture at the same time so you draw say </p>
+</code></pre>
+<p>To do what you want you need 2 textures since you can not read from and write to the same texture at the same time so you draw say</p>
 <ul>
 <li>Draw Image to TextureA</li>
 <li>Draw Previous Frame (TextureB) to TextureA</li>
@@ -291,7 +295,7 @@ gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 </div>
 
 </p>
-<p>As for the canvas and its 2 buffers, no it is not possible to directly use them as textures. You can call <code class="notranslate" translate="no">gl.copyTexImage2D</code> or <code class="notranslate" translate="no">gl.copyTexSubImage2D</code> top copy a portion of the canvas to a texture though so that is another solution. It&#39;s less flexible and I believe slower than the framebuffer method</p>
+<p>As for the canvas and its 2 buffers, no it is not possible to directly use them as textures. You can call <code class="notranslate" translate="no">gl.copyTexImage2D</code> or <code class="notranslate" translate="no">gl.copyTexSubImage2D</code> top copy a portion of the canvas to a texture though so that is another solution. It’s less flexible and I believe slower than the framebuffer method</p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 4.0 by

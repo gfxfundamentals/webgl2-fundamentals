@@ -238,7 +238,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="lesson">
     <div class="lesson-main">
       <p>이 글은 WebGL2의 몇가지 정밀도 이슈에 관한 글입니다.</p>
-<h2 id="-lowp-mediump-highp-"><code class="notranslate" translate="no">lowp</code>, <code class="notranslate" translate="no">mediump</code>, <code class="notranslate" translate="no">highp</code></h2>
+<h2 id="lowp-mediump-highp"><code class="notranslate" translate="no">lowp</code>, <code class="notranslate" translate="no">mediump</code>, <code class="notranslate" translate="no">highp</code></h2>
 <p>이 사이트의 <a href="webgl-fundamentals.html">첫 번째 글</a>에서 우린 정점 셰이더와 프래그먼트 셰이더를 만들었습니다.
 프래그먼트 셰이더를 만들 때 지나가는 말로 프래그먼트 셰이더는 기본 정밀도를 가지지 않으므로 아래와 같은 코드를 추가해서 설정해야 한다고 언급했었습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">precision highp float;
@@ -250,7 +250,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 WebGL에서 대부분의 숫자는 32비트만을 사용합니다.
 더 적은 bit = 더 빠름, 더 많은 bit = 더 정확하고 더 넓은 범위입니다.</p>
 <p>이걸 잘 설명할 수 있을지 모르겠습니다.
-정밀도 이슈의 다른 예시로 <a href="https://www.google.com/search?q=double+vs+float">double vs float</a>를 검색해 보셔도 되지만 
+정밀도 이슈의 다른 예시로 <a href="https://www.google.com/search?q=double+vs+float">double vs float</a>를 검색해 보셔도 되지만
 이를 설명하는 한 가지 방법을 이야기해보자면 byte와 short 또는 자바스크립트의 <code class="notranslate" translate="no">Uint8Array</code> 와 <code class="notranslate" translate="no">Uint16Array</code>의 차이와 같다는 겁니다.</p>
 <ul>
 <li><code class="notranslate" translate="no">Uint8Array</code>는 unsigned 8bit integer 배열입니다. 8bit는 0에서 255까지 2<sup>8</sup>개의 값을 저장할 수 있습니다.</li>
@@ -273,13 +273,13 @@ WebGL에서 대부분의 숫자는 32비트만을 사용합니다.
 실제로 어떤 값이 표현될 수 있는지 알아보지 않아도, 색상이 0에서 1사이인 걸 알고 있습니다.
 <code class="notranslate" translate="no">lowp</code>가 -2에서 +2고 512개의 고유값만 표현할 수 있다면 128개의 값만이 0에서 1사이에 들어있을 것 같습니다.
 그 말은 여러분이 4/128값을 가지고 있는데 거기에 1/512를 더하려고 한다면, 1/512는 <code class="notranslate" translate="no">lowp</code>로 표현될 수 없기 때문에 사실상 0이므로 아무일도 일어나지 않을 것이라는 겁니다.</p>
-<p>모든 코드에 <code class="notranslate" translate="no">highp</code>를 사용하고 이 문제를 그냥 무시할 수도 있겠지만 
+<p>모든 코드에 <code class="notranslate" translate="no">highp</code>를 사용하고 이 문제를 그냥 무시할 수도 있겠지만
 실제 사용되는 장치에서는 <code class="notranslate" translate="no">lowp</code>로 9비트만 사용하는 경우 또는 <code class="notranslate" translate="no">mediump</code>로 16비트만 사용하는 경우가
 <code class="notranslate" translate="no">highp</code>를 사용하는 경우보다 빠릅니다. 대개 눈에 띄일 정도로 빠릅니다.</p>
 <p>마지막으로 알아두셔야 할 것은 <code class="notranslate" translate="no">Uint8Array</code>나 <code class="notranslate" translate="no">Uint16Array</code>와는 다르게, <code class="notranslate" translate="no">lowp</code> 또는 <code class="notranslate" translate="no">mediump</code>, 심지어 <code class="notranslate" translate="no">highp</code>도 더 높은 정밀도(더 많은 비트)를 사용하는 경우가 있습니다.
 예를 들어 데스크탑 GPU에서 여러분이 셰이더에 <code class="notranslate" translate="no">mediump</code>를 설정했다고 하더라도 내부적으로는 32비트를 사용할 가능성이 높습니다.
 그래서 <code class="notranslate" translate="no">lowp</code>나 <code class="notranslate" translate="no">mediump</code>를 사용하는 셰이더를 테스트하는데 문제가 발생하기도 합니다.
-여러분의 셰이더가 실제로 <code class="notranslate" translate="no">lowp</code>나 <code class="notranslate" translate="no">mediump</code>인 경우에도 올바르게 작동하는지 보기 위해서는 
+여러분의 셰이더가 실제로 <code class="notranslate" translate="no">lowp</code>나 <code class="notranslate" translate="no">mediump</code>인 경우에도 올바르게 작동하는지 보기 위해서는
 실제로 <code class="notranslate" translate="no">lowp</code>에 8비트를 사용하고 <code class="notranslate" translate="no">highp</code>에 16비트를 사용하는 기기에서 테스트를 하셔야 합니다.</p>
 <p>성능을 위해 <code class="notranslate" translate="no">mediump</code>를 사용하고 싶으시다면 아래는 몇 가지 발생할 수 있는 이슈를 소개해 드립니다.</p>
 <p>좋은 예시 중 하나는 아마 <a href="webgl-3d-lighting-point.html">점 조명</a>일건데,
@@ -339,26 +339,28 @@ void main() {
 그리고 나서 프래그먼트 셰이더 코드를 보면 아래와 같습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">  vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
 </code></pre>
-<p>괜찮아 보이네요. 그런데 벡터를 정규화하는 일반적인 방법은 벡터를 그 길이로 나누는 것이고 
+<p>괜찮아 보이네요. 그런데 벡터를 정규화하는 일반적인 방법은 벡터를 그 길이로 나누는 것이고
 일반적으로 길이를 계산하는 방법은 아래와 같습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  float length = sqrt(v.x * v.x + v.y * v.y * v.z * v.z);
-</code></pre><p>만일 x, y, z값중에 하나가 1000이라면 1000*1000은 1000000입니다.
+</code></pre>
+<p>만일 x, y, z값중에 하나가 1000이라면 1000*1000은 1000000입니다.
 1000000은 <code class="notranslate" translate="no">mediump</code>의 범위를 벗어납니다.</p>
 <p>해결 방법 중 하나는 정점 셰이더에서 정규화 하는 것입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 표면에서 조명을 향하는 벡터를 계산하고
   // 프래그먼트 셰이더로 그 값을 넘깁니다.
 -  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
 +  v_surfaceToLight = normalize(u_lightWorldPosition - surfaceWorldPosition);
-</code></pre><p>이제 <code class="notranslate" translate="no">v_surfaceToLight</code>에 대입된 값은 -1과 +1 사이이므로 <code class="notranslate" translate="no">mediump</code> 범위 안에 들어옵니다.</p>
+</code></pre>
+<p>이제 <code class="notranslate" translate="no">v_surfaceToLight</code>에 대입된 값은 -1과 +1 사이이므로 <code class="notranslate" translate="no">mediump</code> 범위 안에 들어옵니다.</p>
 <p>참고로 정점 셰이더에서의 정규화를 하면 결과가 완전히 동일하지는 않습니다.
 그래도 충분히 비슷하기 때문에 옆에 놓고 비교하지 않는다면 차이점을 알아볼 수 없을 정도입니다.</p>
-<p><code class="notranslate" translate="no">normalize</code>, <code class="notranslate" translate="no">length</code>, <code class="notranslate" translate="no">distance</code>, <code class="notranslate" translate="no">dot</code>과 같은 함수들은 모두 비슷한 이슈를 가지고 있어서 
+<p><code class="notranslate" translate="no">normalize</code>, <code class="notranslate" translate="no">length</code>, <code class="notranslate" translate="no">distance</code>, <code class="notranslate" translate="no">dot</code>과 같은 함수들은 모두 비슷한 이슈를 가지고 있어서
 값이 너무 크다면 <code class="notranslate" translate="no">mediump</code>의 범위를 벗어나게 됩니다.</p>
 <p>하지만 여러분은 실제로 <code class="notranslate" translate="no">mediump</code>가 16비트로 설정된 기기에서 테스트를 하셔야 합니다.
 데스크탑에서는 <code class="notranslate" translate="no">mediump</code>가 32비트여서 <code class="notranslate" translate="no">highp</code>와 같기 때문에 이러한 문제가 나타나지 않을겁니다.</p>
-<h2 id="16-mediump-">16비트 <code class="notranslate" translate="no">mediump</code> 지원 여부 확인</h2>
+<h2 id="16비트-mediump-지원-여부-확인">16비트 <code class="notranslate" translate="no">mediump</code> 지원 여부 확인</h2>
 <p><code class="notranslate" translate="no">gl.getShaderPrecisionFormat</code>를 호출하고, <code class="notranslate" translate="no">VERTEX_SHADER</code> 또는 <code class="notranslate" translate="no">FRAGMENT_SHADER</code>로 셰이더 타입을 넘겨주고,
-<code class="notranslate" translate="no">LOW_FLOAT</code>, <code class="notranslate" translate="no">MEDIUM_FLOAT</code>, <code class="notranslate" translate="no">HIGH_FLOAT</code>, <code class="notranslate" translate="no">LOW_INT</code>, <code class="notranslate" translate="no">MEDIUM_INT</code>, <code class="notranslate" translate="no">HIGH_INT</code> 중 하나를 넘겨주면 
+<code class="notranslate" translate="no">LOW_FLOAT</code>, <code class="notranslate" translate="no">MEDIUM_FLOAT</code>, <code class="notranslate" translate="no">HIGH_FLOAT</code>, <code class="notranslate" translate="no">LOW_INT</code>, <code class="notranslate" translate="no">MEDIUM_INT</code>, <code class="notranslate" translate="no">HIGH_INT</code> 중 하나를 넘겨주면
 정밀도 정보를 반환해 줍니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-precision-lowp-mediump-highp.html"></iframe>
@@ -381,7 +383,7 @@ in lowp vec4 normal;         // attribute 또는 varying 입력
 out lowp vec4 texcoord;      // 프래그먼트 셰이더 출력 또는 varying 출력
 lowp float foo;              // 변수
 </code></pre>
-<h2 id="-">텍스처 포맷</h2>
+<h2 id="텍스처-포맷">텍스처 포맷</h2>
 <p>텍스처 또한 명세에 말하길 실제 사용되는 정밀도가 명시된 요구 정밀도보다 더 클 수 있는 또다른 예시입니다.</p>
 <p>예를 들어 다음과 같이 채널당 4비트씩, 총 16비트 텍스처를 생성할 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texImage2D(
@@ -395,7 +397,8 @@ lowp float foo;              // 변수
   gl.UNSIGNED_SHORT_4_4_4_4,   // 타입
   null,
 );
-</code></pre><p>하지만 실제 구현상에서는 내부적으로 더 높은 해상도를 사용할 수 있습니다.
+</code></pre>
+<p>하지만 실제 구현상에서는 내부적으로 더 높은 해상도를 사용할 수 있습니다.
 제 생각에 대부분의 데스크탑에서는 이렇게 더 높은 해상도를 사용하고 대부분의 모바일 GPU에서는 그렇지 않을 겁니다.</p>
 <p>테스트해 볼 수 있습니다.
 먼저 위처럼 채널당 4비트인 텍스처를 요청할 겁니다.
@@ -411,17 +414,14 @@ lowp float foo;              // 변수
 </p>
 <p>제 스마트폰에서 실행하면 텍스처가 채널당 4비트를 사용(또는 다른 채널은 테스트하지 않았으므로 최소한 Red 채널의 경우 4비트)하고 있음을 알 수 있습니다.</p>
 <div class="webgl_center"><img src="../resources/mobile-4-4-4-4-texture-no-dither.png" style="image-rendering: pixelated; width: 600px;"></div>
-
 <p>반면에 데스크탑에서는 4비트를 사용하려 했지만 실제로는 채널당 8비트를 사용하는 걸 볼 수 있습니다.</p>
 <div class="webgl_center"><img src="../resources/desktop-4-4-4-4-texture-no-dither.png" style="image-rendering: pixelated; width: 600px;"></div>
-
 <p>한 가지 주목할 점은 기본적으로 WebGL은 결과를 디더링하여 이와 같은 그라데이션이 더 부드럽게 보이도록 처리한다는 것입니다.
 아래 코드로 디더링을 끌 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.disable(gl.DITHER);
 </code></pre>
 <p>디더링을 끄지 않는다면 스마트폰에서는 아래와 같은 결과가 나타납니다.</p>
 <div class="webgl_center"><img src="../resources/mobile-4-4-4-4-texture-dither.png" style="image-rendering: pixelated; width: 600px;"></div>
-
 <p>이러한 것이 실제로 문제가 되는 경우는 렌더링 타겟으로 낮은 비트 해상도의 텍스처 포맷을 설정하고,
 실제로 그렇게 낮은 비트를 사용하는 장치에서 테스트 해 보지 않는 경우입니다.
 데스크탑에서만 테스트했다면 이러한 문제는 발견하기 어려울 겁니다.</p>

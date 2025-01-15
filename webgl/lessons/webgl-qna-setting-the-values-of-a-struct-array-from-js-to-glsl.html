@@ -236,8 +236,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I&#39;ve been trying to make a structure that will contain all the lights of my WebGL app, and I&#39;m having troubles setting up it&#39;s values from JS. The structure is as follows: </p>
+      <h2 id="question">Question:</h2>
+<p>I’ve been trying to make a structure that will contain all the lights of my WebGL app, and I’m having troubles setting up it’s values from JS. The structure is as follows:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">struct Light {
     vec4 position;
     vec4 ambient;
@@ -252,7 +252,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     float spotLightCosCutOff;
 };
 uniform Light lights[numLights];
-</code></pre><p>After testing LOTS of things I made it work but I&#39;m not happy with the code I wrote: </p>
+</code></pre>
+<p>After testing LOTS of things I made it work but I’m not happy with the code I wrote:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">program.uniform.lights = []; 
     program.uniform.lights.push({
         position: &quot;&quot;,
@@ -267,18 +268,19 @@ uniform Light lights[numLights];
         spotExponent: &quot;&quot;,
         spotLightCosCutOff: &quot;&quot;         
     });
-
+ 
 
             program.uniform.lights[0].position = gl.getUniformLocation(program, &quot;lights[0].position&quot;);
             program.uniform.lights[0].diffuse = gl.getUniformLocation(program, &quot;lights[0].diffuse&quot;);
             program.uniform.lights[0].specular = gl.getUniformLocation(program, &quot;lights[0].specular&quot;);
             program.uniform.lights[0].ambient = gl.getUniformLocation(program, &quot;lights[0].ambient&quot;);
-
+    
     ... and so on
-</code></pre><p>I&#39;m sorry for making you look at this code, I know it&#39;s horrible but I can&#39;t find a better way. </p>
-<p>Is there a standard or recommended way of doing this properly? Can anyone enlighten me? </p>
-<h2 id="answer-">Answer:</h2>
-<p>You&#39;re doing it right. You could try to tighten it up a bit as in</p>
+</code></pre>
+<p>I’m sorry for making you look at this code, I know it’s horrible but I can’t find a better way.</p>
+<p>Is there a standard or recommended way of doing this properly? Can anyone enlighten me?</p>
+<h2 id="answer">Answer:</h2>
+<p>You’re doing it right. You could try to tighten it up a bit as in</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">lightLocations = [
   &quot;position&quot;,
   &quot;diffuse&quot;,
@@ -307,7 +309,8 @@ for (var ll = 0; ll &lt; numLights; ++ll) {
   }
   program.uniform.lights[ll] = locations;
 }
-</code></pre><div class="so">
+</code></pre>
+<div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 3.0 by
     <a data-href="https://stackoverflow.com/users/1056429">Miki de Arcayne</a>

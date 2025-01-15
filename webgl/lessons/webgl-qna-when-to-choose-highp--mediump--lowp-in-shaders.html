@@ -236,44 +236,48 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>What&#39;s the best practice for them? Is there any performance difference?</p>
-<h2 id="answer-">Answer:</h2>
+      <h2 id="question">Question:</h2>
+<p>What’s the best practice for them? Is there any performance difference?</p>
+<h2 id="answer">Answer:</h2>
 <blockquote>
-<p>What&#39;s the best practice for them?</p>
+<p>What’s the best practice for them?</p>
 </blockquote>
 <p>For the most part these only matter on mobile. The spec says an implementation can always use a higher precision so on desktop both the vertex shader and fragment shader run in highp always. (I know of no desktop GPUs for which this is not true)</p>
 <p>From the <a href="https://www.khronos.org/files/opengles_shading_language.pdf">spec</a> section 4.5.2</p>
 <blockquote>
-<h2 id="4-5-2-precision-qualifiers">4.5.2 Precision Qualifiers</h2>
-<p>...</p>
+<h2 id="452-precision-qualifiers">4.5.2 Precision Qualifiers</h2>
+<p>…</p>
 <p>Precision qualifiers declare a minimum range and precision that the underlying implementation must use
 when storing these variables. Implementations may use greater range and precision than requested, but
 not less.</p>
 </blockquote>
-<p>For Mobile and Tablets then there are several answers. There is no best. It&#39;s up to you</p>
+<p>For Mobile and Tablets then there are several answers. There is no best. It’s up to you</p>
 <ol>
-<li><p>use the lowest precision you can that still does what you need it to do.</p>
+<li>
+<p>use the lowest precision you can that still does what you need it to do.</p>
 </li>
-<li><p>use highp and ignore the perf issues and the old phones where it doesn&#39;t work</p>
+<li>
+<p>use highp and ignore the perf issues and the old phones where it doesn’t work</p>
 </li>
-<li><p>use mediump and ignore the bugs (See below)</p>
+<li>
+<p>use mediump and ignore the bugs (See below)</p>
 </li>
-<li><p>check if the user&#39;s device supports highp, if not use different shaders with less features.</p>
+<li>
+<p>check if the user’s device supports highp, if not use different shaders with less features.</p>
 </li>
 </ol>
-<p>WebGL defaults to vertex shaders use highp and fragment shaders don&#39;t have a default an you have to specify one. Further, highp in the fragment shader is an optional feature and some mobile GPUs don&#39;t support it. I don&#39;t know what percent that is in 2019. AFAIK most or maybe even all phones shipping in 2019 support highp but older phones (2011, 2012, 2013) don&#39;t.]</p>
+<p>WebGL defaults to vertex shaders use highp and fragment shaders don’t have a default an you have to specify one. Further, highp in the fragment shader is an optional feature and some mobile GPUs don’t support it. I don’t know what percent that is in 2019. AFAIK most or maybe even all phones shipping in 2019 support highp but older phones (2011, 2012, 2013) don’t.]</p>
 <p>From the spec:</p>
 <blockquote>
 <p>The vertex language requires any uses of <code class="notranslate" translate="no">lowp</code>, <code class="notranslate" translate="no">mediump</code> and <code class="notranslate" translate="no">highp</code> to compile and link without error.
 The fragment language requires any uses of <code class="notranslate" translate="no">lowp</code> and <code class="notranslate" translate="no">mediump</code> to compile without error. <strong>Support for
 <code class="notranslate" translate="no">highp</code> is optional</strong>.</p>
 </blockquote>
-<p>Examples of places you generally need highp. Phong shaded point lights usually need highp. So for example you might use only directional lights on a system that doesn&#39;t support highp OR you might use only directional lights on mobile for performance.</p>
+<p>Examples of places you generally need highp. Phong shaded point lights usually need highp. So for example you might use only directional lights on a system that doesn’t support highp OR you might use only directional lights on mobile for performance.</p>
 <blockquote>
 <p>Is there any performance difference?</p>
 </blockquote>
-<p>Yes but as it says above an implemenation is free to use a higher precision. So if you use mediump on a desktop GPU you won&#39;t see any perf difference since it&#39;s really using highp always. On mobile you will see a perf diff, at least in 2019. You may also see where your shaders really needed highp.</p>
+<p>Yes but as it says above an implemenation is free to use a higher precision. So if you use mediump on a desktop GPU you won’t see any perf difference since it’s really using highp always. On mobile you will see a perf diff, at least in 2019. You may also see where your shaders really needed highp.</p>
 <p>Here is a phong shader set to use mediump. On desktop since mediump is actually highp it works</p>
 <p><img src="https://user-images.githubusercontent.com/234804/43352753-6ed6b9f8-9263-11e8-9716-3819a8c92095.png" alt=""></p>
 <p>On Mobile where mediump is actually mediump it breaks</p>

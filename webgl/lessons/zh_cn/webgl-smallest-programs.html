@@ -240,18 +240,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 如果你尚未阅读这些文章，则可能需要先阅读这些文章。</p>
 <p>我不知道应该吧这篇文章放哪个分类下，因为它主要有两个目的：</p>
 <ol>
-<li><p>向你展示最小的 WebGL 程序</p>
-<p> 这些技巧对于测试一些东西，或者做一个 <a href="https://meta.stackoverflow.com/a/349790/128511">完整最小可验证集 (MCVE for Stack Overflow)</a>
- 或者在找 bug 的时候都非常有用。</p>
+<li>
+<p>向你展示最小的 WebGL 程序</p>
+<p>这些技巧对于测试一些东西，或者做一个 <a href="https://meta.stackoverflow.com/a/349790/128511">完整最小可验证集 (MCVE for Stack Overflow)</a>
+或者在找 bug 的时候都非常有用。</p>
 </li>
-<li><p>学着跳出框子思考</p>
-<p> 我希望多写几篇这样的文章，来帮助你宏观的思考，而不是一些通用的模板。
- <a href="webgl-drawing-without-data.html">这里有个例子</a>。</p>
+<li>
+<p>学着跳出框子思考</p>
+<p>我希望多写几篇这样的文章，来帮助你宏观的思考，而不是一些通用的模板。
+<a href="webgl-drawing-without-data.html">这里有个例子</a>。</p>
 </li>
 </ol>
-<h2 id="-">清除</h2>
+<h2 id="清除">清除</h2>
 <p>这里有个最小的 WebGL 程序：</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const gl = document.querySelector(&#39;canvas&#39;).getContext(&#39;webgl2&#39;)
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const gl = document.querySelector('canvas').getContext('webgl2')
 gl.clearColor(1, 0, 0, 1) // 红色
 gl.clear(gl.COLOR_BUFFER_BIT)
 </code></pre>
@@ -268,7 +270,7 @@ gl.clear(gl.COLOR_BUFFER_BIT)
 </code></pre>
 <p>现在从帧缓存里渲染纹理，立方体变品红色了吗？
 如果没有，那么你的问题出在别的地方，而不是渲染到纹理这部分。</p>
-<h2 id="using-the-scissor_test-and-gl-clear-">Using the <code class="notranslate" translate="no">SCISSOR_TEST</code> and <code class="notranslate" translate="no">gl.clear</code></h2>
+<h2 id="using-the-scissor_test-and-glclear">Using the <code class="notranslate" translate="no">SCISSOR_TEST</code> and <code class="notranslate" translate="no">gl.clear</code></h2>
 <p><code class="notranslate" translate="no">SCISSOR_TEST</code> 将绘制和清除区域剪裁到一些小的方形画布中（或者当前帧缓存）。</p>
 <p>你可以通过下面代码开启剪裁</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.enable(gl.SCISSOR_TEST)
@@ -278,7 +280,7 @@ gl.clear(gl.COLOR_BUFFER_BIT)
 </code></pre>
 <p>这样就可以使用 <code class="notranslate" translate="no">SCISSOR_TEST</code> 和 <code class="notranslate" translate="no">gl.clear</code> 画一个矩形。</p>
 <p>例子：</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const gl = document.querySelector(&#39;#c&#39;).getContext(&#39;webgl2&#39;)
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const gl = document.querySelector('#c').getContext('webgl2')
 
 gl.enable(gl.SCISSOR_TEST)
 
@@ -311,7 +313,7 @@ function rand(min, max) {
 
 </p>
 <p>不是说这段特定的代码会很有用，但是知道总是好的。</p>
-<h2 id="-gl-points-">使用一个大的 <code class="notranslate" translate="no">gl.POINTS</code></h2>
+<h2 id="使用一个大的-glpoints">使用一个大的 <code class="notranslate" translate="no">gl.POINTS</code></h2>
 <p>如大部分例子中展示的，在 WebGL 中做的最多的就是创建缓存，
 将顶点数据放进缓存，创建带属性的着色器，设置属性从缓存中读取数据。
 然后绘制，可能着色器还用到了全局变量和纹理。</p>
@@ -356,7 +358,8 @@ gl.drawArrays(gl.POINTS, offset, count)
 值得注意的是，不同的 GPU 或驱动有不同的可使用的最大 Point 尺寸。
 你可以查询最大值：</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const [minSize, maxSize] = gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE);
-</code></pre><p>WebGL 规范只要求最大值为 1.0。幸运的是，<a href="https://web3dsurvey.com/webgl/parameters/ALIASED_POINT_SIZE_RANGE">绝大多数 GPU 和驱动支持更大的值</a>。</p>
+</code></pre>
+<p>WebGL 规范只要求最大值为 1.0。幸运的是，<a href="https://web3dsurvey.com/webgl/parameters/ALIASED_POINT_SIZE_RANGE">绝大多数 GPU 和驱动支持更大的值</a>。</p>
 <p>在你设置 <code class="notranslate" translate="no">gl_PointSize</code> 后，当顶点着色器退出后，无论你给 <code class="notranslate" translate="no">gl_Position</code> 设置了什么值，
 都将被转变成在屏幕/画布中的像素值，然后会以这个位置为中点，
 向四个方向延伸 +/- gl_PointSize / 2，生成一个矩形。</p>
@@ -425,7 +428,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
 比如我们加载了一张图片，但没有显示。如果我们使用上面的着色器，图片显示在单点了吗？
 我们渲染到了纹理，如果想要查看纹理，通常我们会通过缓存和属性设置一些几何体。
 但我们可以将纹理展示在单点上来渲染纹理。</p>
-<h2 id="-points-">使用多个单独的 <code class="notranslate" translate="no">POINTS</code></h2>
+<h2 id="使用多个单独的-points">使用多个单独的 <code class="notranslate" translate="no">POINTS</code></h2>
 <p>这里有另一个对上面例子的简单修改。我们可以将顶点着色器修改成：</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
 // 顶点着色器
@@ -441,7 +444,7 @@ void main() {
 <p>属性有默认值 <code class="notranslate" translate="no">0, 0, 0, 1</code>，所以像我们上面的修改还是可以正常工作的。
 但现在，我们可以设置我们想要的位置了。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">+const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
-const positionLoc = gl.getAttribLocation(program, &#39;position&#39;);
+const positionLoc = gl.getAttribLocation(program, 'position');
 
 ...
 
@@ -483,8 +486,8 @@ void main() {
 <p>然后我们需要查找颜色的位置：</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// 设置 GLSL 程序
 const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
-const positionLoc = gl.getAttribLocation(program, &#39;position&#39;);
-+const colorLoc = gl.getUniformLocation(program, &#39;color&#39;);
+const positionLoc = gl.getAttribLocation(program, 'position');
++const colorLoc = gl.getUniformLocation(program, 'color');
 </code></pre>
 <p>然后使用：</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.useProgram(program);
@@ -501,7 +504,8 @@ for (let i = 0; i &lt; numPoints; ++i) {
   const count = 1;
   gl.drawArrays(gl.POINTS, offset, count);
 }
-</code></pre><p>现在，我们得到了 5 种颜色的 5 个点，而且我们没有设置缓存或者属性。</p>
+</code></pre>
+<p>现在，我们得到了 5 种颜色的 5 个点，而且我们没有设置缓存或者属性。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-simple-points.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-simple-points.html" target="_blank">点此在新窗口中浏览</a>

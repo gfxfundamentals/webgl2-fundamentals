@@ -258,7 +258,8 @@ void main() {
 +  // 传递纹理坐标到片断着色器
 +  v_texcoord = a_texcoord;
 }
-</code></pre><p>在片断着色器中声明一个 sampler2D 类型的全局变量，可以让我们引用一个纹理，
+</code></pre>
+<p>在片断着色器中声明一个 sampler2D 类型的全局变量，可以让我们引用一个纹理，
 然后使用从顶点着色器传入的纹理坐标调用 <code class="notranslate" translate="no">texture</code> 方法，
 在纹理上找到对应的颜色。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
@@ -275,7 +276,8 @@ out vec4 outColor;
 void main() {
 *   outColor = texture(u_texture, v_texcoord);
 }
-</code></pre><p>我们需要设置纹理坐标</p>
+</code></pre>
+<p>我们需要设置纹理坐标</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 找到顶点坐标中的属性
 var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 *var texcoordAttributeLocation = gl.getAttribLocation(program, &quot;a_texcoord&quot;);
@@ -298,7 +300,8 @@ var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&q
 *var offset = 0;        // 从缓冲起始位置开始读取
 *gl.vertexAttribPointer(
 *    texcoordAttributeLocation, size, type, normalize, stride, offset);
-</code></pre><p>如你所见，我们将图像映射到 &#39;F&#39; 中的每个矩形面上。</p>
+</code></pre>
+<p>如你所见，我们将图像映射到 ‘F’ 中的每个矩形面上。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*// 为 F 设置纹理坐标缓冲
 *function setTexcoords(gl) {
 *  gl.bufferData(
@@ -322,11 +325,12 @@ var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&q
 * ...
 *       ]),
 *       gl.STATIC_DRAW);
-</code></pre><p>我们还需要一个纹理，我们可以从头做一个但在这个例子中就直接加载一个图像把，
+</code></pre>
+<p>我们还需要一个纹理，我们可以从头做一个但在这个例子中就直接加载一个图像把，
 因为那可能是常用的做法。</p>
 <p>这是我们将要使用的图像</p>
-<p><img class="webgl_center" src="../../resources/f-texture.png" /></p>
-<p>一颗赛艇的图像！事实上使用一个带有 &#39;F&#39; 的图像能够在结果中清楚的分辨出纹理的方向。</p>
+<img class="webgl_center" src="../../resources/f-texture.png" />
+<p>一颗赛艇的图像！事实上使用一个带有 ‘F’ 的图像能够在结果中清楚的分辨出纹理的方向。</p>
 <p>加载图像的过程是异步的，我们请求图像资源后浏览器需要一段时间去下载。
 通常有两种处理方法，一种是等纹理下载完成后再开始绘制，另一种是在图像加载前使用生成的纹理，
 这种方式可以立即启动渲染，一旦图像下载完成就拷贝到纹理。我们将使用下方的方法。</p>
@@ -341,31 +345,33 @@ var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&q
 *// 异步加载图像
 *var image = new Image();
 *image.src = &quot;resources/f-texture.png&quot;;
-*image.addEventListener(&#39;load&#39;, function() {
+*image.addEventListener('load', function() {
 *  // 现在图像加载完成，拷贝到纹理中
 *  gl.bindTexture(gl.TEXTURE_2D, texture);
 *  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
 *  gl.generateMipmap(gl.TEXTURE_2D);
 *});
-</code></pre><p>这是结果</p>
+</code></pre>
+<p>这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-textures.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-textures.html" target="_blank">点此在新窗口中浏览</a>
 </div>
 
 </p>
-<p>如果我只想使用一部分图像覆盖 &#39;F&#39; 的正面怎么办，纹理是通过“纹理坐标”来引用的，
+<p>如果我只想使用一部分图像覆盖 ‘F’ 的正面怎么办，纹理是通过“纹理坐标”来引用的，
 纹理坐标 0.0 到 1.0 对应纹理从左到右，0.0 到 1.0 对应第一个像素所在行到最后一行。
 注意我没有使用上或者下，上下在纹理坐标空间中是没有意义的，因为绘制一些东西后再重定向后，
 是没有上下的概念的，主要是依据传递给 WebGL 的纹理数据，纹理数据的开头对应纹理坐标 0, 0，
 结尾对应纹理坐标 1, 1</p>
-<p><img class="webgl_center noinvertdark" width="405" src="../resources/texture-coordinates-diagram.svg" /></p>
+<img class="webgl_center noinvertdark" width="405" src="../resources/texture-coordinates-diagram.svg" />
 <p>我将纹理载入到 Photoshop 中得到一些点的坐标。</p>
-<p><img class="webgl_center" width="256" height="256" src="../../resources/f-texture-pixel-coords.png" /></p>
+<img class="webgl_center" width="256" height="256" src="../../resources/f-texture-pixel-coords.png" />
 <p>可以像这样将像素坐标转换到纹理坐标</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">texcoordX = pixelCoordX / (width  - 1)
 texcoordY = pixelCoordY / (height - 1)
-</code></pre><p>这是正面的纹理坐标</p>
+</code></pre>
+<p>这是正面的纹理坐标</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 正面左竖
  38 / 255,  44 / 255,
  38 / 255, 223 / 255,
@@ -389,7 +395,8 @@ texcoordY = pixelCoordY / (height - 1)
 113 / 255, 151 / 255,
 203 / 255, 151 / 255,
 203 / 255, 112 / 255,
-</code></pre><p>对背面也使用相同的纹理坐标，得到这样的结果。</p>
+</code></pre>
+<p>对背面也使用相同的纹理坐标，得到这样的结果。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-textures-texture-coords-mapped.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-textures-texture-coords-mapped.html" target="_blank">点此在新窗口中浏览</a>
@@ -410,7 +417,8 @@ texcoordY = pixelCoordY / (height - 1)
  -3,  4,
   2, -1,
   2,  4,
-</code></pre><p>这是结果</p>
+</code></pre>
+<p>这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-textures-repeat-clamp.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-textures-repeat-clamp.html" target="_blank">点此在新窗口中浏览</a>
@@ -420,12 +428,13 @@ texcoordY = pixelCoordY / (height - 1)
 <p>你可以使用<code class="notranslate" translate="no">CLAMP_TO_EDGE</code>告诉 WebGL 再某个方向不需要重复，例如</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-</code></pre><p>you can also tell WebGL to mirror the texture when it repeat use <code class="notranslate" translate="no">gl.MIRRORED_REPEAT</code>.
+</code></pre>
+<p>you can also tell WebGL to mirror the texture when it repeat use <code class="notranslate" translate="no">gl.MIRRORED_REPEAT</code>.
 您还可以在 WebGL 中使用 <code class="notranslate" translate="no">gl.MIRRORED_REPEAT</code> 进行重复时使用镜像纹理。
 点击上方示例中的按钮，观察结果。</p>
 <p>你可能注意到在加载纹理时调用了 <code class="notranslate" translate="no">gl.generateMipmap</code>，那是干什么的？</p>
 <p>假设我们有这样一个 16×16 像素的纹理。</p>
-<p><img class="webgl_center" src="../resources/mip-low-res-enlarged.png" style="border: 2px solid black;" /></p>
+<img class="webgl_center" src="../resources/mip-low-res-enlarged.png" style="border: 2px solid black;" />
 <p>假设我们要将它绘制在屏幕的 2×2 个像素上，那么这 4 个像素应该使用什么颜色？
 这里有 256 个像素可以选择，如果在 Photoshop 中将 16×16 的图像缩放到 2×2，
 它会将每个角 8×8 的像素的平均值赋给这四个像素。不幸的是绘制 64 个像素再求平均在 GPU
@@ -433,7 +442,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 就需要对 1024x1024 或 100 万个像素求平均 4 次，这需要很多运算同时速度要快。</p>
 <p>事实上 GPU 使用的是一个纹理贴图（mipmap），纹理贴图是一个逐渐缩小的图像集合，
 每一个是前一个的四分之一大小，16×16 纹理的纹理贴图看起来像这样。</p>
-<p><img class="webgl_center noinvertdark nobg" src="../resources/mipmap-low-res-enlarged.png" /></p>
+<img class="webgl_center noinvertdark nobg" src="../resources/mipmap-low-res-enlarged.png" />
 <p>通常每个子图都是前一级的双线性插值，这就是 <code class="notranslate" translate="no">gl.generateMipmap</code> 做的事情，
 它根据原始图像创建所有的缩小级别，你也可以自己提供缩小级别的图像。</p>
 <p>现在如果你想将 16x16 像素的纹理绘制到屏幕的 2×2 个像素上，
@@ -477,9 +486,8 @@ WebGL 会从创建的贴图中找到从之前级别贴图插值出的 2×2 贴�
 中下使用的是 <code class="notranslate" translate="no">NEAREST_MIPMAP_LINEAR</code>，也就是找到最合适的两个贴图各取一点进行混合，
 如果仔细看会发现仍然有块状感，尤其是水平方向；右下使用的是 <code class="notranslate" translate="no">LINEAR_MIPMAP_LINEAR</code>，
 也就是选出最合适的两个贴图各取 4 个点进行混合。</p>
-<p><img class="webgl_center noinvertdark nobg" src="../resources/different-colored-mips.png" /></p>
+<img class="webgl_center noinvertdark nobg" src="../resources/different-colored-mips.png" />
 <div class="webgl_center">不同颜色的贴图</div>
-
 <p>你可能会想既然理论上 <code class="notranslate" translate="no">LINEAR_MIPMAP_LINEAR</code> 是最好的选择为什么还要有其他选择，
 一个原因是 <code class="notranslate" translate="no">LINEAR_MIPMAP_LINEAR</code> 是最慢的，读 8 个像素比读 1 个像素慢一些，
 在现代的 GPU 上如果一次使用一个贴图可能没什么问题，但是现在的游戏可能一次就需要 2
@@ -491,16 +499,19 @@ WebGL 会从创建的贴图中找到从之前级别贴图插值出的 2×2 贴�
 <p>设置筛选器可以调用 <code class="notranslate" translate="no">gl.texParameter</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-</code></pre><p><code class="notranslate" translate="no">TEXTURE_MIN_FILTER</code> 是当绘制的比最大贴图小的时候。
+</code></pre>
+<p><code class="notranslate" translate="no">TEXTURE_MIN_FILTER</code> 是当绘制的比最大贴图小的时候。
 <code class="notranslate" translate="no">TEXTURE_MAG_FILTER</code> 是绘制的比最大的贴图大的时候。
 对于 <code class="notranslate" translate="no">TEXTURE_MAG_FILTER</code> 只有 <code class="notranslate" translate="no">NEAREST</code> 和 <code class="notranslate" translate="no">LINEAR</code> 两个可选设置。</p>
 <p>需要注意的是，WebGL2 要求纹理是“纹理完整”的，否则它们将无法渲染。
 “纹理完整”意味着要么</p>
 <ol>
-<li><p>您已经设置了过滤，因此它只使用第一个贴图级别，这意味着
+<li>
+<p>您已经设置了过滤，因此它只使用第一个贴图级别，这意味着
 将“TEXTURE_MIN_FILTER”设置为“LINEAR”或“NEAREST”。</p>
 </li>
-<li><p>如果您使用的是多个贴图，那么它们需要是正确的尺寸，并且您必须提供所有这些
+<li>
+<p>如果您使用的是多个贴图，那么它们需要是正确的尺寸，并且您必须提供所有这些
 缩小到 1x1 大小。</p>
 </li>
 </ol>
@@ -523,21 +534,23 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     <tr><td><img src="../resources/noodles-05.jpg" /></td><td><img src="../resources/noodles-06.jpg" /></td></tr>
   </table>
 </div>
-
 <p>脑中出现了 3 个答案</p>
 <ol>
-<li><p>制作一个复杂的着色器，引用 6 个纹理，传入一些额外的顶点信息表明使用的纹理是什么。<strong>不要这样做！</strong>
+<li>
+<p>制作一个复杂的着色器，引用 6 个纹理，传入一些额外的顶点信息表明使用的纹理是什么。<strong>不要这样做！</strong>
 稍微一想就知道你要写一大堆不同的着色器应用于不同面数量的图形之类。</p>
 </li>
-<li><p>绘制 6 个面代替立方体，这是常用的解决办法，不错但是只能用在简单的图形例如立方体。
+<li>
+<p>绘制 6 个面代替立方体，这是常用的解决办法，不错但是只能用在简单的图形例如立方体。
 如果有一个包含 1000 个方形的图形就要绘制 1000 个面，会非常慢。</p>
 </li>
-<li><p>我敢说，<strong>最好的方法</strong>就是将图像放在一个纹理中，然后利用纹理坐标映射不同的图像到每个面，
+<li>
+<p>我敢说，<strong>最好的方法</strong>就是将图像放在一个纹理中，然后利用纹理坐标映射不同的图像到每个面，
 这是很多高性能应用（读作<strong>游戏</strong>）使用的技术。例如我们将所有的图像放入这样一个纹理中
 像这样</p>
 </li>
 </ol>
-<p><img class="webgl_center" src="../../resources/noodles.jpg" /></p>
+<img class="webgl_center" src="../../resources/noodles.jpg" />
 <p>然后为立方体的每个面设置不同的纹理坐标。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    // 选择左上图
     0   , 0  ,
@@ -581,7 +594,8 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     0.5 , 1  ,
     0.75, 0.5,
     0.75, 1  ,
-</code></pre><p>然后得到</p>
+</code></pre>
+<p>然后得到</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-textures-texture-atlas.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-textures-texture-atlas.html" target="_blank">点此在新窗口中浏览</a>
@@ -606,7 +620,6 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 </p>
 <p>所以现在你就知道了如果有人说 UVs 其实就是再说纹理坐标。</p>
 </div>
-
 <div class="webgl_bottombar">
 <h3>图片不是2的幂</h3>
 <p>如果您习惯于 WebGL1，WebGL1 限制纹理的尺寸不是2的幂，换句话说 **不是** 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 等,

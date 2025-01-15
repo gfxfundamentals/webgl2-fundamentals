@@ -236,13 +236,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>I am new to WEBGL, I read a lot of posts about fragment shaders. However, I cannot figure out how to access the primitive vertices (or a flag for each vertex) in the fragment shader.</p>
 <p>My goal is to discard the fragment if at least one of its primitive vertices are clipped.</p>
 <p>Thanks for the help</p>
-<h2 id="answer-">Answer:</h2>
-<p>You can&#39;t directly access vertices in a fragment shader. The only data a fragment shader gets by default is the screen coordinate (canvas/framebuffer coord) and depth buffer value for the current pixel being rasterized. All other data you have to pass in.  </p>
-<p>Of the top of my head, in the vertex shader you could compute if a vertex is clipped and pass that info on to the fragment shaders as a varying. You&#39;d pass 0 if not clipped and 1 if clipped. varyings get interpolated so if in the fragment shader the varying is &gt; 0 then one of the vertices was clipped.</p>
+<h2 id="answer">Answer:</h2>
+<p>You can’t directly access vertices in a fragment shader. The only data a fragment shader gets by default is the screen coordinate (canvas/framebuffer coord) and depth buffer value for the current pixel being rasterized. All other data you have to pass in.</p>
+<p>Of the top of my head, in the vertex shader you could compute if a vertex is clipped and pass that info on to the fragment shaders as a varying. You’d pass 0 if not clipped and 1 if clipped. varyings get interpolated so if in the fragment shader the varying is &gt; 0 then one of the vertices was clipped.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-detect-clipped-triangles-in-the-framgment-shader-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-detect-clipped-triangles-in-the-framgment-shader-example-1.html" target="_blank">click here to open in a separate window</a>
@@ -256,8 +256,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </div>
 
 </p>
-<p>This would arguably be more efficient since instead of rejecting 1000s of pixels one at a time we&#39;re rejecting the entire triangle and skipping even checking per pixel. It takes more data though since we need to be able to pass in all 3 vertices for every triangle to the vertex shader at the same time.</p>
-<p>note: if you&#39;re new to WebGL you might find <a href="https://webglfundamentals.org">these articles</a> useful.</p>
+<p>This would arguably be more efficient since instead of rejecting 1000s of pixels one at a time we’re rejecting the entire triangle and skipping even checking per pixel. It takes more data though since we need to be able to pass in all 3 vertices for every triangle to the vertex shader at the same time.</p>
+<p>note: if you’re new to WebGL you might find <a href="https://webglfundamentals.org">these articles</a> useful.</p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 4.0 by

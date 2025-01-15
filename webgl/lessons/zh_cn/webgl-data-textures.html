@@ -259,7 +259,6 @@ WebGL2 支持所有在 WebGL1 中 <em>未定义大小</em> 的格式</p>
     </tbody>
   </table>
 </div>
-
 <p>它们被称为 <em>未定义大小</em> 因为它们在内部的实际表示方式在 WebGL1 中是未定义的。
 它们在 WebGL2 中被定义。 除了那些未定义大小的格式之外，还有许多定义了大小的格式，包括</p>
 <div class="webgl_center">
@@ -331,7 +330,6 @@ WebGL2 支持所有在 WebGL1 中 <em>未定义大小</em> 的格式</p>
     </tbody>
   </table>
 </div>
-
 <p>还有这些深度和模板格式
 And these depth and stencil formats as well</p>
 <div class="webgl_center">
@@ -354,7 +352,6 @@ And these depth and stencil formats as well</p>
     </tbody>
   </table>
 </div>
-
 <p>Legend:</p>
 <ul>
 <li>单个数字比如 <code class="notranslate" translate="no">8</code> 表示 8 位将归一化为 0 到 1</li>
@@ -431,21 +428,19 @@ And these depth and stencil formats as well</p>
       <tr><td>DEPTH_COMPONENT32F                              </td><td>DEPTH_COMPONENT </td><td>FLOAT                          </td><td>4  </td></tr>
       <tr><td>DEPTH24_STENCIL8                                </td><td>DEPTH_STENCIL   </td><td>UNSIGNED_INT_24_8              </td><td>4  </td></tr>
       <tr><td>DEPTH32F_STENCIL8                               </td><td>DEPTH_STENCIL   </td><td>FLOAT_32_UNSIGNED_INT_24_8_REV </td><td>8  </td></tr>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  &lt;tr&gt;&lt;td&gt;RGBA                                            &lt;/td&gt;&lt;td&gt;RGBA            &lt;/td&gt;&lt;td&gt;UNSIGNED_BYTE                  &lt;/td&gt;&lt;td&gt;4  &lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;RGBA                                            &lt;/td&gt;&lt;td&gt;RGBA            &lt;/td&gt;&lt;td&gt;UNSIGNED_SHORT_4_4_4_4         &lt;/td&gt;&lt;td&gt;2  &lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;RGBA                                            &lt;/td&gt;&lt;td&gt;RGBA            &lt;/td&gt;&lt;td&gt;UNSIGNED_SHORT_5_5_5_1         &lt;/td&gt;&lt;td&gt;2  &lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;RGB                                             &lt;/td&gt;&lt;td&gt;RGB             &lt;/td&gt;&lt;td&gt;UNSIGNED_BYTE                  &lt;/td&gt;&lt;td&gt;3  &lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;RGB                                             &lt;/td&gt;&lt;td&gt;RGB             &lt;/td&gt;&lt;td&gt;UNSIGNED_SHORT_5_6_5           &lt;/td&gt;&lt;td&gt;2  &lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;LUMINANCE_ALPHA                                 &lt;/td&gt;&lt;td&gt;LUMINANCE_ALPHA &lt;/td&gt;&lt;td&gt;UNSIGNED_BYTE                  &lt;/td&gt;&lt;td&gt;2  &lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;LUMINANCE                                       &lt;/td&gt;&lt;td&gt;LUMINANCE       &lt;/td&gt;&lt;td&gt;UNSIGNED_BYTE                  &lt;/td&gt;&lt;td&gt;1  &lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;ALPHA                                           &lt;/td&gt;&lt;td&gt;ALPHA           &lt;/td&gt;&lt;td&gt;UNSIGNED_BYTE                  &lt;/td&gt;&lt;td&gt;1  &lt;/td&gt;&lt;/tr&gt;
 
-      <tr><td>RGBA                                            </td><td>RGBA            </td><td>UNSIGNED_BYTE                  </td><td>4  </td></tr>
-      <tr><td>RGBA                                            </td><td>RGBA            </td><td>UNSIGNED_SHORT_4_4_4_4         </td><td>2  </td></tr>
-      <tr><td>RGBA                                            </td><td>RGBA            </td><td>UNSIGNED_SHORT_5_5_5_1         </td><td>2  </td></tr>
-      <tr><td>RGB                                             </td><td>RGB             </td><td>UNSIGNED_BYTE                  </td><td>3  </td></tr>
-      <tr><td>RGB                                             </td><td>RGB             </td><td>UNSIGNED_SHORT_5_6_5           </td><td>2  </td></tr>
-      <tr><td>LUMINANCE_ALPHA                                 </td><td>LUMINANCE_ALPHA </td><td>UNSIGNED_BYTE                  </td><td>2  </td></tr>
-      <tr><td>LUMINANCE                                       </td><td>LUMINANCE       </td><td>UNSIGNED_BYTE                  </td><td>1  </td></tr>
-      <tr><td>ALPHA                                           </td><td>ALPHA           </td><td>UNSIGNED_BYTE                  </td><td>1  </td></tr>
-
-    </tbody>
-
+&lt;/tbody&gt;
+</code></pre>
   </table>
 </div>
-
 <p>让我们创建一个 3×2 像素的 <code class="notranslate" translate="no">R8</code> 纹理， 因为是 <code class="notranslate" translate="no">R8</code> 纹理，
 所以在红色通道里每个像素只有一个值</p>
 <p>我们继续使用<a href="webgl-3d-textures.html">上篇文章</a>中的例子，首先修改纹理坐标，每个面使用整个纹理</p>
@@ -462,7 +457,8 @@ function setTexcoords(gl) {
         0, 1,
         1, 1,
         ...
-</code></pre><p>然后修改代码创建一个纹理</p>
+</code></pre>
+<p>然后修改代码创建一个纹理</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 创建一个纹理
 var texture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -494,7 +490,8 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
 -// 异步加载图像
 -...
-</code></pre><p>这是结果</p>
+</code></pre>
+<p>这是结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-data-texture-3x2-bad.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-data-texture-3x2-bad.html" target="_blank">点此在新窗口中浏览</a>
@@ -504,7 +501,8 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 <p>哦！为什么不管用？！？！！</p>
 <p>查看 JavaScript 控制台看到这样的错误信息</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">WebGL: INVALID_OPERATION: texImage2D: ArrayBufferView not big enough for request
-</code></pre><p>结果是 WebGL 中有一种首次创建 OpenGL 后的模糊设定，
+</code></pre>
+<p>结果是 WebGL 中有一种首次创建 OpenGL 后的模糊设定，
 计算机有时在数据为某些特定大小时速度会快一些，
 例如一次拷贝 2，4 或 8 个字节比一次拷贝 1 个字节要快，
 WebGL 默认使用 4 字节长度，所以它期望每一行数据是多个 4 字节数据（最后一行除外）。</p>
@@ -514,7 +512,8 @@ WebGL 默认使用 4 字节长度，所以它期望每一行数据是多个 4 �
 <p>我们可以告诉 WebGL 一次处理 1 个字节</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const alignment = 1;
 gl.pixelStorei(gl.UNPACK_ALIGNMENT, alignment);
-</code></pre><p>有效参数为 1，2，4 和 8.</p>
+</code></pre>
+<p>有效参数为 1，2，4 和 8.</p>
 <p>我觉得你可能无法计算出对齐数据和非对齐数据的速度区别，
 所以希望默认值是 1 而不是 4， 这样这个问题就不会困扰新手，
 但是为了适配 OpenGL，所以要保留相同的默认设置，这样移植应用就不用改变行数，

@@ -241,7 +241,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 첫 글은 <a href="webgl-fundamentals.html">WebGL2 기초</a>이며 이 전 글은 <a href="webgl-3d-camera.html">3D 카메라</a> 입니다.
 아직 위 글들을 읽지 않았다면 먼저 읽어 보시기 바랍니다.</p>
 <p>WebGL에서 애니메이션은 어떻게 구현할까요?</p>
-<p>사실 WebGL에만 국한된 것은 아니고, 일반적으로 자바스크립트에서 무언가를 애니메이션하고 싶을때는 
+<p>사실 WebGL에만 국한된 것은 아니고, 일반적으로 자바스크립트에서 무언가를 애니메이션하고 싶을때는
 시간의 흐름에 따라 무언가를 변화시킨 뒤에 다시 그리도록 해야 합니다.</p>
 <p>이전 예제들 중에 하나를 골라서 아래와 같이 애니메이션을 해 보겠습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*var fieldOfViewRadians = degToRad(60);
@@ -258,7 +258,8 @@ function drawScene() {
 *  // 다음 프레임의 drawScene을 다시 호출합니다.
 *  requestAnimationFrame(drawScene);
 }
-</code></pre><p>결과는 아래와 같습니다.</p>
+</code></pre>
+<p>결과는 아래와 같습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-animation-not-frame-rate-independent.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-animation-not-frame-rate-independent.html" target="_blank">새 창으로 열기</a>
@@ -279,16 +280,16 @@ function drawScene() {
 </div>
 
 </p>
-<p>이 예제에서는 모든 &#39;F&#39;를 동일한 속도로 회전하도록 하고 싶습니다.
-가운데 &#39;F&#39;는 최대 속도로 동작하지만 프레임 갱신 속도에 독립적으로 동작합니다.
+<p>이 예제에서는 모든 'F’를 동일한 속도로 회전하도록 하고 싶습니다.
+가운데 'F’는 최대 속도로 동작하지만 프레임 갱신 속도에 독립적으로 동작합니다.
 왼쪽과 오른쪽은 브라우저가 1/8속도로 동작하는 상황을 시뮬레이션 한것입니다.
 왼쪽은 프레임 속도에 독립적이지 <strong>않습니다</strong>. 오른쪽은 프레임 속도에 <strong>독립적입니다</strong>.</p>
 <p>왼쪽의 경우에는 프레임 갱신 속도가 느린 상황을 가정하고 있지 않기 때문에 같은 속도를 유지하지 못합니다.
 하지만 오른쪽의 경우 1/8 프레임 갱신 속도에도 불구하고 가운데의 최대 속도와 동일한 속도를 유지하고 있습니다.</p>
-<p>애니메이션을 프레임 갱신 속도에 독립적으로 만드는 방법은 프레임간 소요된 시간을 계산하고 
+<p>애니메이션을 프레임 갱신 속도에 독립적으로 만드는 방법은 프레임간 소요된 시간을 계산하고
 이를 현재 프레임에서 애니메이션을 얼마나 진행해야 하는지를 계산하는 데 사용하는 것입니다.</p>
 <p>먼저 시간을 얻어와야 합니다. 다행히 <code class="notranslate" translate="no">requestAnimationFrame</code>는 페이지가 로드된 시점으로부터의 시간을 전달해 줍니다.</p>
-<p><code class="notranslate" translate="no">requestAnimationFrame</code>는 시간을 밀리세컨드(1/1000초) 단위로 전달해주지만 </p>
+<p><code class="notranslate" translate="no">requestAnimationFrame</code>는 시간을 밀리세컨드(1/1000초) 단위로 전달해주지만</p>
 <p>그러면 아래와 같이 소요 시간(delta time)을 계산할 수 있게 됩니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*var then = 0;
 
@@ -304,11 +305,13 @@ requestAnimationFrame(drawScene);
 *  then = now;
 
    ...
-</code></pre><p>초 단위의 <code class="notranslate" translate="no">deltaTime</code>을 얻게 되면 이제 모든 계산은 1초당 얼마나 많은 변화가 일어나야 하는지를 기준으로 계산됩니다.
+</code></pre>
+<p>초 단위의 <code class="notranslate" translate="no">deltaTime</code>을 얻게 되면 이제 모든 계산은 1초당 얼마나 많은 변화가 일어나야 하는지를 기준으로 계산됩니다.
 <code class="notranslate" translate="no">rotationSpeed</code>의 경우 값이 1.2였는데 그 말은 초당 1.2 라디안만큼 회전하겠다는 뜻이 됩니다.
 1.2 라디안은 1/5회전쯤 되고, 그 말은 프레임 속도와 상관없이 대략 5초가 지나면 한 바퀴를 회전하게 된다는 뜻입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*    rotation[1] += rotationSpeed * deltaTime;
-</code></pre><p>동작 결과는 아래와 같습니다.</p>
+</code></pre>
+<p>동작 결과는 아래와 같습니다.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-animation.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-animation.html" target="_blank">새 창으로 열기</a>
@@ -341,9 +344,6 @@ requestAnimationFrame(drawScene);
 스크린과 애니메이션이 동기화되도록 적절한 시간에 여러분의 함수를 호출해주고 또한 탭이 화면에 표시되고 있을때만 호출합니다.
 </p>
 </div>
-
-
-
 
     </div>
     <div class="lesson-sidebar">

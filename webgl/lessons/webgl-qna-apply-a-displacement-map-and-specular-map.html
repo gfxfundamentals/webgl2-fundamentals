@@ -236,15 +236,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>I am trying to apply both displacement mapping and specular mapping for the earth and only displacement mapping for the moon.</p>
-<p>I could transfer height map to normal map but if I use the same height map to apply displacement mapping, it does not work as I expected..</p>
+<p>I could transfer height map to normal map but if I use the same height map to apply displacement mapping, it does not work as I expected…</p>
 <p>Here is the example image</p>
 <p><a href="https://i.stack.imgur.com/eJgLg.png"><img src="https://i.stack.imgur.com/eJgLg.png" alt="Example 1"></a></p>
 <p>as you can see the bumpness around the earth and the moon but there are no actual height diffrences.</p>
 <p>If I apply specular map to the earth, the earth becomes like this</p>
 <p><a href="https://i.stack.imgur.com/zRSZu.png"><img src="https://i.stack.imgur.com/zRSZu.png" alt="Example 2"></a></p>
-<p>I want only the ocean of the earth to shine but my code turns the earth into the whole black, I can only see some white dots on the earth...</p>
+<p>I want only the ocean of the earth to shine but my code turns the earth into the whole black, I can only see some white dots on the earth…</p>
 <p>These textures are from this <a href="http://planetpixelemporium.com/earth.html">site</a></p>
 <p>Here is my both vertex shader code and the fragment shader code</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&quot;use strict&quot;;
@@ -282,19 +282,19 @@ out vec3 vPosition;
 
 void main() 
 {
-
+  
   float disp;
-
+  
   if(uEarth)
     disp = texture(earth_disp, aTexCoord).r; //Extracting the color information from the image
   else if(uMoon)
     disp = texture(moon_disp, aTexCoord).r; //Extracting the color information from the image
-
+  
   vec4 displace = aPosition;
-
+  
   float displaceFactor = 2.0;
   float displaceBias = 0.5;
-
+  
   if(uEarth || uMoon) //Using Displacement Mapping
   {
     displace += (displaceFactor * disp - displaceBias) * aNormal;
@@ -302,13 +302,13 @@ void main()
   }
   else //Not using displacement mapping
     gl_Position = uMvpMatrix * aPosition;
-
+  
   // Calculate the vertex position in the world coordinate
   vPosition = vec3(uModelMatrix * aPosition);
-
+  
   vNormal = normalize(vec3(uNormalMatrix * aNormal));
   vTexCoord = aTexCoord;
-
+  
 }`;
 
 // Fragment shader program
@@ -389,7 +389,7 @@ void main()
     // Normalize the normal because it is interpolated and not 1.0 in length any more
     vec3 normal = normalize(vNormal);
 
-
+    
     // Calculate the light direction and make its length 1.
     vec3 lightDirection = normalize(uLightPosition - vPosition);
 
@@ -409,9 +409,9 @@ void main()
     vec3 ambient = uAmbientLight * fColor.rgb;
     float specularFactor = texture(specularMap, vTexCoord).r; //Extracting the color information from the image
 
-
-
-
+    
+    
+    
     vec3 diffuseBump;
     if(uIsEarth || uIsMoon)
     {
@@ -429,7 +429,7 @@ void main()
       vec3 r = reflect(-lightDirection, bumpNormal); // Reflect from the surface
       specular = lightSpecular * specularFactor * pow(dot(r, v), shiness);
     }
-
+    
     //Update Final Color
     if(uIsEarth)
       fColor = vec4( (diffuse * diffuseBump * specular) + ambient, fColor.a); // Specular
@@ -438,15 +438,18 @@ void main()
     else if(uIsSun)
       fColor = vec4(diffuse + ambient, fColor.a);
 }`;
-</code></pre><p>Could you tell me where do I have to check?</p>
-<h2 id="answer-">Answer:</h2>
-<p>If it was me I&#39;d first strip the shader down the simplest thing and see if I get what I want. You want a specular shine so do you get a specular shine with only specular calculations in your shaders</p>
-<p>Trimming your shaders to just draw a flat phong shading didn&#39;t produce the correct results</p>
+</code></pre>
+<p>Could you tell me where do I have to check?</p>
+<h2 id="answer">Answer:</h2>
+<p>If it was me I’d first strip the shader down the simplest thing and see if I get what I want. You want a specular shine so do you get a specular shine with only specular calculations in your shaders</p>
+<p>Trimming your shaders to just draw a flat phong shading didn’t produce the correct results</p>
 <p>This line</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">fColor = vec4( (diffuse * specular) + ambient, fColor.a);
-</code></pre><p>needed to be</p>
+</code></pre>
+<p>needed to be</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">fColor = vec4( (diffuse + specular) + ambient, fColor.a);
-</code></pre><p>You add the specular, not multiply by it.</p>
+</code></pre>
+<p>You add the specular, not multiply by it.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-apply-a-displacement-map-and-specular-map-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-apply-a-displacement-map-and-specular-map-example-1.html" target="_blank">click here to open in a separate window</a>
@@ -460,7 +463,7 @@ void main()
 </div>
 
 </p>
-<p>Then you should argably not use lots of boolean conditionals on your shader. Either make different shaders for find a way to do it without the booleans. So for example we don&#39;t need</p>
+<p>Then you should argably not use lots of boolean conditionals on your shader. Either make different shaders for find a way to do it without the booleans. So for example we don’t need</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler2D earth_disp;
 uniform sampler2D moon_disp;
 
@@ -474,18 +477,21 @@ uniform sampler2D moon_bump;
 uniform bool uIsSun;
 uniform bool uIsEarth;
 uniform bool uIsMoon;
-</code></pre><p>we can just have</p>
+</code></pre>
+<p>we can just have</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler2D displacementMap;
 uniform sampler2D surfaceColor;
 uniform sampler2D bumpMap;
-</code></pre><p>Then we can set the <code class="notranslate" translate="no">displacementMap</code> and the <code class="notranslate" translate="no">bumpMap</code> to a single pixel 0,0,0,0 texture and there will be no displacement and no bump.</p>
+</code></pre>
+<p>Then we can set the <code class="notranslate" translate="no">displacementMap</code> and the <code class="notranslate" translate="no">bumpMap</code> to a single pixel 0,0,0,0 texture and there will be no displacement and no bump.</p>
 <p>As for different lighting for sun, given the sun uses neither the bump map nor the displacement map nor even lighting at all it would arguably be better to use a different shader but, we can also just add a <code class="notranslate" translate="no">maxDot</code> value like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform float maxDot;
 
 ...
 
    nDotL = max(dot(lightDirection, normal), maxDot)
-</code></pre><p>If <code class="notranslate" translate="no">maxDot</code> is zero we&#39;ll get a normal dot product. If <code class="notranslate" translate="no">maxDot</code> is one we get no lighting.</p>
+</code></pre>
+<p>If <code class="notranslate" translate="no">maxDot</code> is zero we’ll get a normal dot product. If <code class="notranslate" translate="no">maxDot</code> is one we get no lighting.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-apply-a-displacement-map-and-specular-map-example-3.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-apply-a-displacement-map-and-specular-map-example-3.html" target="_blank">click here to open in a separate window</a>
@@ -493,20 +499,24 @@ uniform sampler2D bumpMap;
 
 </p>
 <p>As for the displacement, displacement only works on vertices so you need a lot of vertices in your sphere to be able to see any displacement</p>
-<p>As well there was an bug related to displacement. You&#39;re passing in normals as vec4 and this line</p>
+<p>As well there was an bug related to displacement. You’re passing in normals as vec4 and this line</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">displace += (displaceFactor * disp - displaceBias) * aNormal;
-</code></pre><p>Ends up adding a vec4 displacement.  In other words let&#39;s say you started with an <code class="notranslate" translate="no">a_Position</code> of <code class="notranslate" translate="no">vec4(1,0,0,1)</code> which would be on the left side of the sphere. <code class="notranslate" translate="no">aNormal</code> because you declared it as a <code class="notranslate" translate="no">vec4</code> is probably <code class="notranslate" translate="no">vec4(1,0,0,1)</code> as well. Assuming you&#39;re actually passing it vec3 normal data via attributes from your buffer the default value for W is 1. Let&#39;s assume <code class="notranslate" translate="no">disp</code> is 1, <code class="notranslate" translate="no">displaceFactor</code> is 2 and <code class="notranslate" translate="no">displaceBias</code> is 0.5 which is what you had. You end up wioth</p>
+</code></pre>
+<p>Ends up adding a vec4 displacement.  In other words let’s say you started with an <code class="notranslate" translate="no">a_Position</code> of <code class="notranslate" translate="no">vec4(1,0,0,1)</code> which would be on the left side of the sphere. <code class="notranslate" translate="no">aNormal</code> because you declared it as a <code class="notranslate" translate="no">vec4</code> is probably <code class="notranslate" translate="no">vec4(1,0,0,1)</code> as well. Assuming you’re actually passing it vec3 normal data via attributes from your buffer the default value for W is 1. Let’s assume <code class="notranslate" translate="no">disp</code> is 1, <code class="notranslate" translate="no">displaceFactor</code> is 2 and <code class="notranslate" translate="no">displaceBias</code> is 0.5 which is what you had. You end up wioth</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">displace = vec4(1,0,0,1) + (2 * 1 + 0.5) * vec4(1,0,0,1)
 displace = vec4(1,0,0,1) + (1.5) * vec4(1,0,0,1)
 displace = vec4(1,0,0,1) + vec4(1.5,0,0,1.5)
 displace = vec4(2.5,0,0,2.5)
-</code></pre><p>But you don&#39;t want W to be 2.5. One fix is to just use the xyz part of the normal.</p>
+</code></pre>
+<p>But you don’t want W to be 2.5. One fix is to just use the xyz part of the normal.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">displace.xyz += (displaceFactor * disp - displaceBias) * aNormal.xyz;
-</code></pre><p>The more normal fix would be to only declare the normal attribute as vec3</p>
+</code></pre>
+<p>The more normal fix would be to only declare the normal attribute as vec3</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">in vec3 aNormal;
 
 displace.xyz += (displaceFactor * disp - displaceBias) * aNormal;
-</code></pre><p>In my example above the spheres are only radius = 1 so we only want adjust this displacement a little. I set <code class="notranslate" translate="no">displaceFactor</code> to 0.1 and <code class="notranslate" translate="no">displaceBias</code> to 0.</p>
+</code></pre>
+<p>In my example above the spheres are only radius = 1 so we only want adjust this displacement a little. I set <code class="notranslate" translate="no">displaceFactor</code> to 0.1 and <code class="notranslate" translate="no">displaceBias</code> to 0.</p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 4.0 by

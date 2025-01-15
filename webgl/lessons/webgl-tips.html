@@ -242,25 +242,25 @@ using WebGL that seemed too small to have their own article.</p>
 <p><a id="screenshot" data-toc="Taking a screenshot"></a></p>
 <h1 id="taking-a-screenshot-of-the-canvas">Taking A Screenshot of the Canvas</h1>
 <p>In the browser there are effectively 2 functions that will take a screenshot.
-The old one 
+The old one
 <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL"><code class="notranslate" translate="no">canvas.toDataURL</code></a>
-and the new better one 
+and the new better one
 <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob"><code class="notranslate" translate="no">canvas.toBlob</code></a></p>
-<p>So you&#39;d think it would be easy to take a screenshot by just adding some code like</p>
+<p>So you’d think it would be easy to take a screenshot by just adding some code like</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-html">&lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;
 +&lt;button id=&quot;screenshot&quot; type=&quot;button&quot;&gt;Save...&lt;/button&gt;
 </code></pre>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const elem = document.querySelector(&#39;#screenshot&#39;);
-elem.addEventListener(&#39;click&#39;, () =&gt; {
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const elem = document.querySelector('#screenshot');
+elem.addEventListener('click', () =&gt; {
   canvas.toBlob((blob) =&gt; {
     saveBlob(blob, `screencapture-${canvas.width}x${canvas.height}.png`);
   });
 });
 
 const saveBlob = (function() {
-  const a = document.createElement(&#39;a&#39;);
+  const a = document.createElement('a');
   document.body.appendChild(a);
-  a.style.display = &#39;none&#39;;
+  a.style.display = 'none';
   return function saveData(blob, fileName) {
      const url = window.URL.createObjectURL(blob);
      a.href = url;
@@ -269,7 +269,7 @@ const saveBlob = (function() {
   };
 }());
 </code></pre>
-<p>Here&#39;s the example from <a href="webgl-animation.html">the article on animation</a>
+<p>Here’s the example from <a href="webgl-animation.html">the article on animation</a>
 with the code above added and some CSS to place the button</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-tips-screenshot-bad.html"></iframe>
@@ -279,18 +279,18 @@ with the code above added and some CSS to place the button</p>
 </p>
 <p>When I tried it I got this screenshot</p>
 <div class="webgl_center"><img src="resources/screencapture-398x298.png"></div>
-
-<p>Yes, it&#39;s just a blank image.</p>
-<p>It&#39;s possible it worked for you depending on your browser/OS but in general
-it&#39;s not likely to work.</p>
+<p>Yes, it’s just a blank image.</p>
+<p>It’s possible it worked for you depending on your browser/OS but in general
+it’s not likely to work.</p>
 <p>The issue is that for performance and compatibility reasons, by default the browser
-will clear a WebGL canvas&#39;s drawing buffer after you&#39;ve drawn to it.</p>
+will clear a WebGL canvas’s drawing buffer after you’ve drawn to it.</p>
 <p>There are 3 solutions.</p>
 <ol>
-<li><p>call your rendering code just before capturing</p>
+<li>
+<p>call your rendering code just before capturing</p>
 <p>The code we used as a <code class="notranslate" translate="no">drawScene</code> function. It would be best to make that
 code not change any state and then we could call it to render for capturing.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">elem.addEventListener(&#39;click&#39;, () =&gt; {
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">elem.addEventListener('click', () =&gt; {
 +  drawScene();
   canvas.toBlob((blob) =&gt; {
     saveBlob(blob, `screencapture-${canvas.width}x${canvas.height}.png`);
@@ -298,11 +298,12 @@ code not change any state and then we could call it to render for capturing.</p>
 });
 </code></pre>
 </li>
-<li><p>call the capturing code in our render loop</p>
-<p>In this case we&#39;d just set a flag that we want to capture and then
+<li>
+<p>call the capturing code in our render loop</p>
+<p>In this case we’d just set a flag that we want to capture and then
 in the rendering loop actually do the capture</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">let needCapture = false;
-elem.addEventListener(&#39;click&#39;, () =&gt; {
+elem.addEventListener('click', () =&gt; {
    needCapture = true;
 });
 </code></pre>
@@ -322,14 +323,15 @@ somewhere after everything has been drawn</p>
 }
 </code></pre>
 </li>
-<li><p>Set <code class="notranslate" translate="no">preserveDrawingBuffer: true</code> when creating the WebGL context</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js"> const gl = someCanvas.getContext(&#39;webgl2&#39;, {preserveDrawingBuffer: true});
+<li>
+<p>Set <code class="notranslate" translate="no">preserveDrawingBuffer: true</code> when creating the WebGL context</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const gl = someCanvas.getContext('webgl2', {preserveDrawingBuffer: true});
 </code></pre>
-<p> This makes webgl not clear the canvas after compositing the canvas with the
- rest of the page but prevents certain <em>possible</em> optimizations.</p>
+<p>This makes webgl not clear the canvas after compositing the canvas with the
+rest of the page but prevents certain <em>possible</em> optimizations.</p>
 </li>
 </ol>
-<p>I&#39;d pick #1 above. For this particular example first I&#39;d separate the parts of
+<p>I’d pick #1 above. For this particular example first I’d separate the parts of
 the code that update state from the parts that draw.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  var then = 0;
 
@@ -375,7 +377,7 @@ the code that update state from the parts that draw.</p>
   }
 </code></pre>
 <p>and now we can just call <code class="notranslate" translate="no">drawScene</code> before capturing</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">elem.addEventListener(&#39;click&#39;, () =&gt; {
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">elem.addEventListener('click', () =&gt; {
 +  drawScene();
   canvas.toBlob((blob) =&gt; {
     saveBlob(blob, `screencapture-${canvas.width}x${canvas.height}.png`);
@@ -389,15 +391,15 @@ the code that update state from the parts that draw.</p>
 </div>
 
 </p>
-<p>If you actually check the captured image you&#39;ll see the background is transparent.
+<p>If you actually check the captured image you’ll see the background is transparent.
 See <a href="webgl-and-alpha.html">this article</a> for a few details.</p>
 <hr>
 <p><a id="preservedrawingbuffer" data-toc="Prevent the Canvas Being Cleared"></a></p>
 <h1 id="preventing-the-canvas-being-cleared">Preventing the canvas being cleared</h1>
-<p>Let&#39;s say you wanted to let the user paint with an animated
+<p>Let’s say you wanted to let the user paint with an animated
 object. You need to pass in <code class="notranslate" translate="no">preserveDrawingBuffer: true</code> when
 you create the webgl context. This prevents the browser from
-clearing the canvas. </p>
+clearing the canvas.</p>
 <p>Taking the last example from <a href="webgl-animation.html">the article on animation</a></p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">var canvas = document.querySelector(&quot;#canvas&quot;);
 -var gl = canvas.getContext(&quot;webgl2&quot;);
@@ -408,7 +410,8 @@ clearing the canvas. </p>
 -gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 +// Clear the depth buffer.
 +gl.clear(gl.DEPTH_BUFFER_BIT);
-</code></pre><p><div class="webgl_example_container">
+</code></pre>
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-tips-preservedrawingbuffer.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-tips-preservedrawingbuffer.html" target="_blank">click here to open in a separate window</a>
 </div>
@@ -416,19 +419,19 @@ clearing the canvas. </p>
 </p>
 <p>Note that if you were serious about making a drawing program this would not be a
 solution as the browser will still clear the canvas anytime we change its
-resolution. We&#39;re changing is resolution based on its display size. Its display
+resolution. We’re changing is resolution based on its display size. Its display
 size changes when the window changes size. That can include when the user downloads
 a file, even in another tab, and the browser adds a status bar. It also includes when
 the user turns their phone and the browser switches from portrait to landscape.</p>
-<p>If you really wanted to make a drawing program you&#39;d
+<p>If you really wanted to make a drawing program you’d
 <a href="webgl-render-to-texture.html">render to a texture</a>.</p>
 <hr>
 <p><a id="tabindex" data-toc="Get Keyboard Input From a Canvas"></a></p>
 <h1 id="getting-keyboard-input">Getting Keyboard Input</h1>
-<p>If you&#39;re making a full page / full screen webgl app then you can do whatever
-you want but often you&#39;d like some canvas to just be a part of a larger page and
-you&#39;d like it so if the user clicks on the canvas the canvas gets keyboard input.
-A canvas can&#39;t normally get keyboard input though. To fix that set the
+<p>If you’re making a full page / full screen webgl app then you can do whatever
+you want but often you’d like some canvas to just be a part of a larger page and
+you’d like it so if the user clicks on the canvas the canvas gets keyboard input.
+A canvas can’t normally get keyboard input though. To fix that set the
 <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/tabIndex"><code class="notranslate" translate="no">tabindex</code></a>
 of the canvas to 0 or more. Eg.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-html">&lt;canvas tabindex=&quot;0&quot;&gt;&lt;/canvas&gt;
@@ -440,42 +443,42 @@ to none</p>
   outline:none;
 }
 </code></pre>
-<p>To demonstrate here are 3 canvases </p>
+<p>To demonstrate here are 3 canvases</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-html">&lt;canvas id=&quot;c1&quot;&gt;&lt;/canvas&gt;
 &lt;canvas id=&quot;c2&quot; tabindex=&quot;0&quot;&gt;&lt;/canvas&gt;
 &lt;canvas id=&quot;c3&quot; tabindex=&quot;1&quot;&gt;&lt;/canvas&gt;
 </code></pre>
-<p>and some css just for the last canvas </p>
+<p>and some css just for the last canvas</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-css">#c3:focus {
     outline: none;
 }
 </code></pre>
-<p>Let&#39;s attach the same event listeners to all of them</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">document.querySelectorAll(&#39;canvas&#39;).forEach((canvas) =&gt; {
-  const ctx = canvas.getContext(&#39;2d&#39;);
+<p>Let’s attach the same event listeners to all of them</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">document.querySelectorAll('canvas').forEach((canvas) =&gt; {
+  const ctx = canvas.getContext('2d');
 
   function draw(str) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.textAlign = &#39;center&#39;;
-    ctx.textBaseline = &#39;middle&#39;;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
     ctx.fillText(str, canvas.width / 2, canvas.height / 2);
   }
   draw(canvas.id);
 
-  canvas.addEventListener(&#39;focus&#39;, () =&gt; {
-    draw(&#39;has focus press a key&#39;);
+  canvas.addEventListener('focus', () =&gt; {
+    draw('has focus press a key');
   });
 
-  canvas.addEventListener(&#39;blur&#39;, () =&gt; {
-    draw(&#39;lost focus&#39;);
+  canvas.addEventListener('blur', () =&gt; {
+    draw('lost focus');
   });
 
-  canvas.addEventListener(&#39;keydown&#39;, (e) =&gt; {
+  canvas.addEventListener('keydown', (e) =&gt; {
     draw(`keyCode: ${e.keyCode}`);
   });
 });
 </code></pre>
-<p>Notice you can&#39;t get the first canvas to accept keyboard input.
+<p>Notice you can’t get the first canvas to accept keyboard input.
 The second canvas you can but it gets highlighted. The 3rd
 canvas has both solutions applied.</p>
 <p><div class="webgl_example_container">

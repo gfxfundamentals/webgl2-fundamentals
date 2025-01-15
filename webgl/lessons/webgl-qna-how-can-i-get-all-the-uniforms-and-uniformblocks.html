@@ -236,7 +236,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>when I write uniformBuffer in shader like this.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform Material {
  uniform vec4 u_DiffuseColor;
@@ -245,11 +245,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  uniform float u_AlphaTestValue;
  uniform float u_Shininess;
 };
-</code></pre><p>gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS) and gl.getActiveUniform(program, i) still contaion uniformBuffer item( for example u_DiffuseColor,it&#39;s redundant!), the only one thing I found is  gl.getUniformLocation(program, uniName) will return null.</p>
+</code></pre>
+<p>gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS) and gl.getActiveUniform(program, i) still contaion uniformBuffer item( for example u_DiffuseColor,it’s redundant!), the only one thing I found is  gl.getUniformLocation(program, uniName) will return null.</p>
 <p>is there another better way i can get uniforms not include uniformBuffer item,because the i should dispose them with two different way.</p>
-<p><a href="https://stackoverflow.com/questions/4783912/how-can-i-find-a-list-of-all-the-uniforms-in-opengl-es-2-0-vertex-shader-pro/4970703">https://stackoverflow.com/questions/4783912/how-can-i-find-a-list-of-all-the-uniforms-in-opengl-es-2-0-vertex-shader-pro/4970703</a>
+<p>https://stackoverflow.com/questions/4783912/how-can-i-find-a-list-of-all-the-uniforms-in-opengl-es-2-0-vertex-shader-pro/4970703
 Maybe this is not best way when have uniformBuffer block in shader with opengles3.0</p>
-<h2 id="answer-">Answer:</h2>
+<h2 id="answer">Answer:</h2>
 <p>You can get all uniforms and which blocks they are in by calling <code class="notranslate" translate="no">gl.getActiveUniform</code> and <code class="notranslate" translate="no">gl.getActiveUniforms</code>. <code class="notranslate" translate="no">gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS)</code> returns the number of uniforms. You then create an array of indices to pass to <code class="notranslate" translate="no">gl.getActiveUniforms</code> and pass it <code class="notranslate" translate="no">gl.UNIFORM_BLOCK_INDEX</code>. -1 = not in a block.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-can-i-get-all-the-uniforms-and-uniformblocks-example-1.html"></iframe>
@@ -257,10 +258,10 @@ Maybe this is not best way when have uniformBuffer block in shader with opengles
 </div>
 
 </p>
-<p>Other questions related to using uniform blocks </p>
-<p><a href="https://stackoverflow.com/questions/56760912/what-is-the-correct-sequence-for-uploading-a-uniform-block">https://stackoverflow.com/questions/56760912/what-is-the-correct-sequence-for-uploading-a-uniform-block</a></p>
-<p><a href="https://stackoverflow.com/questions/38841124/updating-uniform-buffer-data-in-webgl-2">https://stackoverflow.com/questions/38841124/updating-uniform-buffer-data-in-webgl-2</a></p>
-<p><a href="https://stackoverflow.com/questions/44629165/bind-multiple-uniform-buffer-objects/">https://stackoverflow.com/questions/44629165/bind-multiple-uniform-buffer-objects/</a></p>
+<p>Other questions related to using uniform blocks</p>
+<p>https://stackoverflow.com/questions/56760912/what-is-the-correct-sequence-for-uploading-a-uniform-block</p>
+<p>https://stackoverflow.com/questions/38841124/updating-uniform-buffer-data-in-webgl-2</p>
+<p>https://stackoverflow.com/questions/44629165/bind-multiple-uniform-buffer-objects/</p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 4.0 by

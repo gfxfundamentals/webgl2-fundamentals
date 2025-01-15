@@ -237,7 +237,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="lesson">
     <div class="lesson-main">
       <p><a href="https://webglfundamentals.org">webglfundamentals.org</a>を読んだ方はいくつかの違いがあるので注意して下さい。</p>
-<h2 id="-">複数行のテンプレートリテラル</h2>
+<h2 id="複数行のテンプレートリテラル">複数行のテンプレートリテラル</h2>
 <p>webglfundamentals.orgでは、ほとんど全てのスクリプトはjavascriptではない <code class="notranslate" translate="no">&lt;script&gt;</code> タグに格納されていました。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;script id=&quot;vertexshader&quot; type=&quot;not-js&quot;&gt;;
 shader
@@ -248,43 +248,51 @@ here
 ...
 
 var vertexShaderSource = document.querySelector(&quot;#vertexshader&quot;).text;
-</code></pre><p>webgl2fundamentals.orgでは複数行のテンプレートリテラルに切り替えました。</p>
+</code></pre>
+<p>webgl2fundamentals.orgでは複数行のテンプレートリテラルに切り替えました。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var vertexShaderSource = `
 shader
 goes
 here
 `;
-</code></pre><p>複数行のテンプレートリテラルは、IE11以外の全てのWebGL対応ブラウザでサポートされています。
+</code></pre>
+<p>複数行のテンプレートリテラルは、IE11以外の全てのWebGL対応ブラウザでサポートされています。
 IE11をサポートする場合、<a href="https://babeljs.io">babel</a>のようなトランスパイラの使用を検討して下さい。</p>
-<h2 id="-glsl-300-es-">全てのシェーダーでGLSL 300 esを使用</h2>
+<h2 id="全てのシェーダーでglsl-300-esを使用">全てのシェーダーでGLSL 300 esを使用</h2>
 <p>シェーダーを全てGLSL 300 esに切り替えました。
 WebGL2のシェーダーを使わない場合、WebGL2を使う必要がないと考えました。</p>
-<h2 id="-">全てのサンプルで頂点配列オブジェクトを使用</h2>
+<h2 id="全てのサンプルで頂点配列オブジェクトを使用">全てのサンプルで頂点配列オブジェクトを使用</h2>
 <p>頂点配列オブジェクトはWebGL1ではオプションですが、WebGL2では標準です。
-<a href="webgl1-to-webgl2.html#Vertex-Array-Objects">WebGL2では常に使われるべきだと思います</a>。
+<a href="../webgl1-to-webgl2.html#Vertex-Array-Objects">WebGL2では常に使われるべきだと思います</a>。
 webglfundamentals.orgでは、頂点配列オブジェクトを利用するためには<a href="https://github.com/greggman/oes-vertex-array-object-polyfill">ポリフィルが必要です</a>。
 ほぼ全てのケースでマイナス要素がなく、コードが簡単で効率的になります。</p>
-<h2 id="-">その他の細かい変更点</h2>
+<h2 id="その他の細かい変更点">その他の細かい変更点</h2>
 <ul>
-<li><p>多くのサンプルを少し再構成し、一般的なパターンに変更</p>
-<p> ほとんどのアプリでは描画ループ処理の中でブレンディング、カリング、デプステストなどのグローバルなWebGLの状態を設定するのが一般的です。webglfundamentals.orgでは初期化時に設定していました。</p>
+<li>
+<p>多くのサンプルを少し再構成し、一般的なパターンに変更</p>
+<p>ほとんどのアプリでは描画ループ処理の中でブレンディング、カリング、デプステストなどのグローバルなWebGLの状態を設定するのが一般的です。webglfundamentals.orgでは初期化時に設定していました。</p>
 </li>
-<li><p>全てのサンプルでビューポート（viewport）追加に変更</p>
-<p> webglfundamentals.orgではビューポートを省きました。
- 実際には必要ないですが、現実の世界ではこのコードで必要です。</p>
+<li>
+<p>全てのサンプルでビューポート（viewport）追加に変更</p>
+<p>webglfundamentals.orgではビューポートを省きました。
+実際には必要ないですが、現実の世界ではこのコードで必要です。</p>
 </li>
-<li><p>jqueryを削除</p>
-<p> 私が始めた頃はまだ <code class="notranslate" translate="no">&lt;input type=&quot;range&quot;&gt;</code> をサポートする事は一般的でなかったですが、今ではどこでもサポートされています。</p>
+<li>
+<p>jqueryを削除</p>
+<p>私が始めた頃はまだ <code class="notranslate" translate="no">&lt;input type=&quot;range&quot;&gt;</code> をサポートする事は一般的でなかったですが、今ではどこでもサポートされています。</p>
 </li>
-<li><p>全てのヘルパー関数にプレフィックスをつけるように変更</p>
-<p> 以前はこのようなコードです。</p>
+<li>
+<p>全てのヘルパー関数にプレフィックスをつけるように変更</p>
+<p>以前はこのようなコードです。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> var program = createProgramFromScripts(...)
-</code></pre><p> 今はこうなりました。</p>
+</code></pre>
+<p>今はこうなりました。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> webglUtils.createProgramFromSources(...);
-</code></pre><p> これでどんな機能か、どこにあるのか明確になるかと思います。</p>
+</code></pre>
+<p>これでどんな機能か、どこにあるのか明確になるかと思います。</p>
 </li>
 </ul>
-<h2 id="-">次は何をするか</h2>
+<h2 id="次は何をするか">次は何をするか</h2>
 <p>webglfundamentalsの例に合わせるように変更すべきかどうかを議論しました。
 既存の事例や記事全てを編集するのに数週間かかりましたが、しっかりとした作業ができました。
 ブラウザは自動更新なので、12ヶ月以内にWebGL1はWebGL2に置き換えられると思います。

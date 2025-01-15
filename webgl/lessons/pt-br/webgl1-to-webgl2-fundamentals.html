@@ -250,18 +250,20 @@ here
 ...
 
 var vertexShaderSource = document.querySelector(&quot;#vertexshader&quot;).text;
-</code></pre><p>Na WebGL2fundamentals.org, eu mudei completamente para permitir o uso de
+</code></pre>
+<p>Na WebGL2fundamentals.org, eu mudei completamente para permitir o uso de
 literais de templates multilinhas</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var vertexShaderSource = `
 shader
 goes
 here
 `;
-</code></pre><p>literais de templates multilinhas são suportados em todos os navegadores
+</code></pre>
+<p>literais de templates multilinhas são suportados em todos os navegadores
 compatíveis com a WebGL, exceto o IE11. Se você precisa de suporte para o IE11, considere utilizar
 um transpilador como o <a href="https://babeljs.io">babel</a>.</p>
-<h2 id="todos-os-shaders-usam-a-vers-o-glsl-300-es">Todos os Shaders usam a versão GLSL 300 es</h2>
-<p>Troquei todos os shaders para GLSL 300 es. Eu pensei...qual é o ponto
+<h2 id="todos-os-shaders-usam-a-versão-glsl-300-es">Todos os Shaders usam a versão GLSL 300 es</h2>
+<p>Troquei todos os shaders para GLSL 300 es. Eu pensei…qual é o ponto
 de se usar a WebGL2 se você não pretende usar os Shaders da WebGL2?</p>
 <h2 id="todos-os-exemplos-utilizam-objetos-vertex-array">Todos os exemplos utilizam objetos Vertex Array</h2>
 <p>Os objetos Vertex Array são um recurso opcional na WebGL21, mas
@@ -272,33 +274,39 @@ webglfundamentals.org e usá-los em todos os lugares
 <a href="https://github.com/greggman/oes-vertex-array-object-polyfill">usando um polyfill</a>
 para os poucos lugares em que eles não estão disponíveis. Existe indiscutivelmente uma desvantagem zero
 e seu código fica mais fácil e eficiente em quase todos os casos.</p>
-<h2 id="outras-pequenas-mudan-as">Outras pequenas mudanças</h2>
+<h2 id="outras-pequenas-mudanças">Outras pequenas mudanças</h2>
 <ul>
-<li><p>Eu tentei reestruturar algumas amostras para demonstrar um pouco os padrões mais comuns</p>
+<li>
+<p>Eu tentei reestruturar algumas amostras para demonstrar um pouco os padrões mais comuns</p>
 <p>Por exemplo, a maioria dos aplicativos geralmente configura o estado global da WebGL2 como mesclagem (blending), eliminação (culling), teste de profundidade (depth testing)
 no seu loop de renderização, uma vez que, essas configurações geralmente mudam várias vezes como no
 webglfundamentals.org eu os defini no tempo de inicialização, porque eles só precisavam ser
 definidos uma vez, mas esse não é um padrão comum.</p>
 </li>
-<li><p>Eu configurei a viewport em todas as amostras</p>
+<li>
+<p>Eu configurei a viewport em todas as amostras</p>
 <p>Deixei isso de fora na WebGL2fundamentals.org porque as amostras
 realmente não precisam disso, mas isso é necessário em praticamente todo o código do mundo real.</p>
 </li>
-<li><p>Eu removi o jquery.</p>
+<li>
+<p>Eu removi o jquery.</p>
 <p>Voltando para quando eu iniciei, talvez ainda não fosse comum
 o suporte à templates strings <code class="notranslate" translate="no">&lt;input type=&quot;range&quot;&gt;</code>, mas agora é suportado
 em qualquer lugar.</p>
 </li>
-<li><p>Eu fiz todas as funções auxiliares (helpers) com um prefixo</p>
+<li>
+<p>Eu fiz todas as funções auxiliares (helpers) com um prefixo</p>
 <p>códigos como</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var program = createProgramFromScripts(...)
-</code></pre><p>se transformaram em</p>
+</code></pre>
+<p>se transformaram em</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">webglUtils.createProgramFromSources(...);
-</code></pre><p>Eu espero que isso faça com que seja mais claro o que
+</code></pre>
+<p>Eu espero que isso faça com que seja mais claro o que
 essas funções são e onde encontrá-las.</p>
 </li>
 </ul>
-<h2 id="o-que-vem-por-a-">O que vem por aí</h2>
+<h2 id="o-que-vem-por-aí">O que vem por aí</h2>
 <p>Eu estou discutindo se devo ou não mudar qualquer um dos exemplos da WebGL2fundamentals
 para que venham a coincidirem. Demorou algumas semanas de trabalho duro para editar
 todos os exemplos existentes e artigos. Eu sinto que com 12 meses a

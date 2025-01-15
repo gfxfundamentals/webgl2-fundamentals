@@ -236,13 +236,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>I am using Three.js as a framework for developing a space simulator and I am trying, but failing to get night lights working.</p>
 <p>The simulator can be accessed here:</p>
 <p><a href="http://orbitingeden.com">orbitingeden.com</a></p>
 <p>and a page running the code snippet below can be found here:</p>
 <p><a href="http://orbitingeden.com/orrery/soloearth.html">orbitingeden.com/orrery/soloearth.html</a></p>
-<p>The code for the sample page is here. I don&#39;t even know where to begin. I tried rendering two globes a few units apart, one closer to the sun (daytime version) and one further(nighttime version) but there are many problems, not the least of which is that they begin to overlap each other in strange dodecahedron kind of ways. I adopted the tDiffuse2 idea from this <a href="http://www.esfandiarmaghsoudi.com/Apps/SolarSystem/">orrery</a>, but couldn&#39;t get it working.</p>
+<p>The code for the sample page is here. I don’t even know where to begin. I tried rendering two globes a few units apart, one closer to the sun (daytime version) and one further(nighttime version) but there are many problems, not the least of which is that they begin to overlap each other in strange dodecahedron kind of ways. I adopted the tDiffuse2 idea from this <a href="http://www.esfandiarmaghsoudi.com/Apps/SolarSystem/">orrery</a>, but couldn’t get it working.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;!doctype html&gt;
 &lt;html lang=&quot;en&quot;&gt;
  &lt;head&gt;
@@ -269,7 +269,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    animate();
 
    function init() {
-    container = document.createElement( &#39;div&#39; );
+    container = document.createElement( 'div' );
     document.body.appendChild( container );
 
     scene = new THREE.Scene();
@@ -352,9 +352,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   &lt;/script&gt;
  &lt;/body&gt;
 &lt;/html&gt;
-</code></pre><h2 id="answer-">Answer:</h2>
-<p>If I understand your question....</p>
-<p>I don&#39;t know three.js but in general I&#39;d do this by having a shader that has gets passed both the day and night time textures and then selecting one or the other in the shader. For example</p>
+</code></pre>
+<h2 id="answer">Answer:</h2>
+<p>If I understand your question…</p>
+<p>I don’t know three.js but in general I’d do this by having a shader that has gets passed both the day and night time textures and then selecting one or the other in the shader. For example</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler2D dayTexture;
 uniform sampler2D nightTexture;
 varying vec3 v_surfaceToLight;  // assumes this gets passed in from vertex shader
@@ -373,16 +374,19 @@ void main () {
 
    gl_FragColor = color * ...;
 }
-</code></pre><p>Basically you take the lighting calculation and instead of using it for lighting you use it to select the texture. A lighting calculation usually uses a dot product between the normal of the surface and the direction of the light (the sun) from the surface. That gives you the cosine of the angle between those to vectors. Cosine goes from -1 to 1 so if the value is from -1 to 0 it&#39;s facing away from the sun, if it&#39;s 0 to +1 it&#39;s facing toward the sun.</p>
+</code></pre>
+<p>Basically you take the lighting calculation and instead of using it for lighting you use it to select the texture. A lighting calculation usually uses a dot product between the normal of the surface and the direction of the light (the sun) from the surface. That gives you the cosine of the angle between those to vectors. Cosine goes from -1 to 1 so if the value is from -1 to 0 it’s facing away from the sun, if it’s 0 to +1 it’s facing toward the sun.</p>
 <p>The line</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">   vec4 color = angle &lt; 0.0 ? dayColor : nightColor;
-</code></pre><p>selects the day or night. That&#39;s going to be a harsh cutoff. You might experiment with something more fuzzy like</p>
+</code></pre>
+<p>selects the day or night. That’s going to be a harsh cutoff. You might experiment with something more fuzzy like</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">   // convert from -1 &lt;-&gt; +1 to 0 &lt;-&gt; +1
    float lerp0To1 = angle * 0.5 + 0.5; 
 
    // mix between night and day
    vec4 color = mix(nightColor, dayColor, lerp0to1);
-</code></pre><p>That would give you 100% day on the spot directly facing the sun and 100% night on the spot directly opposite the sun and a mix in-between. Probably not what you want but you can futs with the numbers. For example</p>
+</code></pre>
+<p>That would give you 100% day on the spot directly facing the sun and 100% night on the spot directly opposite the sun and a mix in-between. Probably not what you want but you can futs with the numbers. For example</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">   // sharpen the mix
    angle = clamp(angle * 10.0, -1.0, 1.0);
 
@@ -391,7 +395,8 @@ void main () {
 
    // mix between night and day
    vec4 color = mix(nightColor, dayColor, lerp0to1);
-</code></pre><p>Hopefully that made sense.</p>
+</code></pre>
+<p>Hopefully that made sense.</p>
 <hr>
 <p>So I spent a little time working up a Three.js example, partly to learn Three.js. The sample is here.</p>
 <p><div class="webgl_example_container">
@@ -430,7 +435,8 @@ void main( void ) {
     // comment in the next line to see the mixAmount
     //gl_FragColor = vec4( mixAmount, mixAmount, mixAmount, 1.0 );
 }
-</code></pre><p>The big difference from the one above is that since the sun is generally considered a directional light since it is so far away then all you need is it&#39;s direction. In other words, which way it&#39;s pointing relative to the earth. </p>
+</code></pre>
+<p>The big difference from the one above is that since the sun is generally considered a directional light since it is so far away then all you need is it’s direction. In other words, which way it’s pointing relative to the earth.</p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 3.0 by

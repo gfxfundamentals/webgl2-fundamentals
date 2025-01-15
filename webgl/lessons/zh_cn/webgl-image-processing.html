@@ -262,7 +262,8 @@ void main() {
 +   // The GPU will interpolate this value between points
 +   v_texCoord = a_texCoord;
 }
-</code></pre><p>然后，我们从纹理中查找颜色来供给片段着色器使用。</p>
+</code></pre>
+<p>然后，我们从纹理中查找颜色来供给片段着色器使用。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
@@ -279,8 +280,9 @@ void main() {
    // Look up a color from the texture.
    outColor = texture(u_image, v_texCoord);
 }
-</code></pre><p>最后，我们需要加载图像，创建纹理并将图像复制到纹理中。 因为在
-浏览器中图像是异步加载的，因此我们必须重新编排代码以等待纹理图片加载结束。 
+</code></pre>
+<p>最后，我们需要加载图像，创建纹理并将图像复制到纹理中。 因为在
+浏览器中图像是异步加载的，因此我们必须重新编排代码以等待纹理图片加载结束。
 一旦加载完后，我们将绘制它。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+function main() {
 +  var image = new Image();
@@ -315,7 +317,7 @@ function render(image) {
 +  gl.enableVertexAttribArray(texCoordAttributeLocation);
 +  var size = 2;          // 2 components per iteration
 +  var type = gl.FLOAT;   // the data is 32bit floats
-+  var normalize = false; // don&#39;t normalize the data
++  var normalize = false; // don't normalize the data
 +  var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
 +  var offset = 0;        // start at the beginning of the buffer
 +  gl.vertexAttribPointer(
@@ -328,11 +330,11 @@ function render(image) {
 +  // (ie, the unit all other texture commands will affect
 +  gl.activeTexture(gl.TEXTURE0 + 0);
 +
-+  // Bind it to texture unit 0&#39; 2D bind point
++  // Bind it to texture unit 0' 2D bind point
 +  gl.bindTexture(gl.TEXTURE_2D, texture);
 +
-+  // Set the parameters so we don&#39;t need mips and so we&#39;re not filtering
-+  // and we don&#39;t repeat
++  // Set the parameters so we don't need mips and so we're not filtering
++  // and we don't repeat
 +  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 +  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 +  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -370,7 +372,8 @@ function render(image) {
 +  setRectangle(gl, 0, 0, image.width, image.height);
 
 }
-</code></pre><p>下面就是用WebGL渲染的图片了。</p>
+</code></pre>
+<p>下面就是用WebGL渲染的图片了。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image.html" target="_blank">点此在新窗口中浏览</a>
@@ -381,7 +384,8 @@ function render(image) {
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
 outColor = texture(u_image, v_texCoord).bgra;
 ...
-</code></pre><p>现在，红色和蓝色部分交换了。</p>
+</code></pre>
+<p>现在，红色和蓝色部分交换了。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-red2blue.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-red2blue.html" target="_blank">点此在新窗口中浏览</a>
@@ -393,7 +397,7 @@ outColor = texture(u_image, v_texCoord).bgra;
 <p>下面的片段着色器平均左右两边纹理中的像素值。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
-// fragment shaders don&#39;t have a default precision so we need
+// fragment shaders don't have a default precision so we need
 // to pick one. highp is a good default. It means &quot;high precision&quot;
 precision highp float;
 
@@ -415,7 +419,8 @@ void main() {
 +      texture(u_image, v_texCoord + vec2( onePixel.x, 0.0)) +
 +      texture(u_image, v_texCoord + vec2(-onePixel.x, 0.0))) / 3.0;
 }
-</code></pre><p>你可以对比下上面没有做模糊处理的图片。</p>
+</code></pre>
+<p>你可以对比下上面没有做模糊处理的图片。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-blend.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-blend.html" target="_blank">点此在新窗口中浏览</a>
@@ -429,7 +434,7 @@ void main() {
 <p>在我们例子里，我们将要在着色器中做卷积操作。下面是片段着色器。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
-// fragment shaders don&#39;t have a default precision so we need
+// fragment shaders don't have a default precision so we need
 // to pick one. highp is a good default. It means &quot;high precision&quot;
 precision highp float;
 
@@ -461,7 +466,8 @@ void main() {
       texture(u_image, v_texCoord + onePixel * vec2( 1,  1)) * u_kernel[8] ;
   outColor = vec4((colorSum / u_kernelWeight).rgb, 1);
 }
-</code></pre><p>在JavaScript中，我们需要提供卷积核和权重。</p>
+</code></pre>
+<p>在JavaScript中，我们需要提供卷积核和权重。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> function computeKernelWeight(kernel) {
    var weight = kernel.reduce(function(prev, curr) {
        return prev + curr;
@@ -479,11 +485,12 @@ void main() {
      -1, -1, -1
  ];
 
-// set the kernel and it&#39;s weight
+// set the kernel and it's weight
  gl.uniform1fv(kernelLocation, edgeDetectKernel);
  gl.uniform1f(kernelWeightLocation, computeKernelWeight(edgeDetectKernel));
  ...
-</code></pre><p>显示结果中，你可以使用下拉框选择不同的核。</p>
+</code></pre>
+<p>显示结果中，你可以使用下拉框选择不同的核。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-3x3-convolution.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-3x3-convolution.html" target="_blank">点此在新窗口中浏览</a>
@@ -498,24 +505,19 @@ void main() {
 所有的WebGL2实现必须支持至少16个纹理单元(一般用户机器会支持更多)。
 每个uniform采样器引用的纹理单元是是通过查找采样器的位置，然后设置你要引用的纹理单元索引。
 例如：
-
 <pre class="prettyprint showlinemods">
 var textureUnitIndex = 6; // use texture unit 6.
 var u_imageLoc = gl.getUniformLocation(
     program, "u_image");
 gl.uniform1i(u_imageLoc, textureUnitIndex);
 </pre>
-
-为了设置纹理到不同的单元，你需要调用gl.activeTexture，然后绑定纹理到你相应的单元上去。如下：
-
+<p>为了设置纹理到不同的单元，你需要调用gl.activeTexture，然后绑定纹理到你相应的单元上去。如下：</p>
 <pre class="prettyprint showlinemods">
 // Bind someTexture to texture unit 6.
 gl.activeTexture(gl.TEXTURE6);
 gl.bindTexture(gl.TEXTURE_2D, someTexture);
 </pre>
-
-也可以这样：
-
+<p>也可以这样：</p>
 <pre class="prettyprint showlinemods">
 var textureUnitIndex = 6; // use texture unit 6.
 // Bind someTexture to texture unit 6.
@@ -523,7 +525,6 @@ gl.activeTexture(gl.TEXTURE0 + textureUnitIndex);
 gl.bindTexture(gl.TEXTURE_2D, someTexture);
 </pre>
 </div>
-
 <div class="webgl_bottombar">
 <h3>a_, u_, and v_ 这些前缀在GLSL中什么意思？</h3>
 <p>

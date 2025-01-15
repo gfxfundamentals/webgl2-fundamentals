@@ -237,7 +237,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="lesson">
     <div class="lesson-main">
       <p>让我们绘制一些阴影！</p>
-<h2 id="-">前提条件</h2>
+<h2 id="前提条件">前提条件</h2>
 <p>计算基本的阴影并没有<em>那么</em>难，但是需要一些背景知识。为了能够理解本文，你需要已经理解以下话题。</p>
 <ul>
 <li><a href="webgl-3d-orthographic.html">正射投影</a></li>
@@ -250,7 +250,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </ul>
 <p>因此，如果你还没有阅读过这些话题，请先去读一下。</p>
 <p>首先，本文假设你已经读过
-<a href="webgl-less-code-more-fun.html">码少趣多</a>，因为本文使用到了那里提到的库，以便使得本文的例子更整洁。如果你不明白缓冲区，顶点数组和属性是什么，或者不明白 <code class="notranslate" translate="no">twgl.setUniforms</code> 函数是设置 uniforms 的，等等... 那么你可能要往回读
+<a href="webgl-less-code-more-fun.html">码少趣多</a>，因为本文使用到了那里提到的库，以便使得本文的例子更整洁。如果你不明白缓冲区，顶点数组和属性是什么，或者不明白 <code class="notranslate" translate="no">twgl.setUniforms</code> 函数是设置 uniforms 的，等等… 那么你可能要往回读
 <a href="webgl-fundamentals.html">基础概念</a>.</p>
 <p>首先，绘制阴影的方法不止一种。每一种方法都有它们的优缺点。绘制阴影最常见的方法是使用阴影映射（shadow map）。</p>
 <p>阴影映射是通过组合上面前提条件文章中提到的技术来实现的。</p>
@@ -264,10 +264,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>回想一下，我们并没有把那张图像绘制在场景的物体上，而是在物体被渲染的时候，对于每一个像素，我们都会检查被投影的纹理是否在范围内，如果在范围内，我们会从被投影的纹理中采样相应的颜色，如果不在范围内，则我们就会从另一个不同的纹理中采样一个颜色，纹理的颜色是通过使用纹理坐标进行查找的，纹理坐标把一个纹理映射到了物体上。</p>
 <p>如果被投影的纹理里包含了来自光源视角的深度数据，则会怎么样？换句话说，假设上面的例子中，在视椎体的顶端有一个光源，而被投影的纹理包含了在该光源视角下的深度信息。结果是，球体会得到一个更加接近光源的深度值，而平面会得到一个稍微远离光源的深度值。</p>
 <div class="webgl_center"><img class="noinvertdark" src="../resources/depth-map-generation.svg" style="width: 600px;"></div>
-
 <p>如果我们具有了这些深度信息，那么我们在选择要渲染哪个颜色的时候，我们就可以从被投影的纹理中进行采样，得到一个采样深度值，然后和当前正在绘制的像素的深度值进行比较。如果当前像素的深度值比采样得到的深度值大，则说明还有其他东西比当前像素更加接近光源。也就是说，某样东西挡住了光源，因此该像素是处于阴影中的。</p>
 <div class="webgl_center"><img class="noinvertdark" src="../resources/projected-depth-texture.svg" style="width: 600px;"></div>
-
 <p>其中，深度纹理被投影到光源视角下的视椎体内。当我们绘制地板的像素时，我们会计算在光源视角下，该像素的深度值（在上图中是 0.3）。然后我们在被投影的深度纹理中找到对应的深度值。在光源视角下，纹理内的深度值是 0.1，因为光线首先击中的是球体。因为 0.1 &lt; 0.3，所以我们知道该位置的地板一定在阴影内。</p>
 <p>首先，我们来绘制阴影映射。 我们会取 <a href="webgl-planar-projection-mapping.html">平面的投影映射文章</a>的最后一个示例，但我们并不是加载一个纹理，
 的最后一个示例，但我们并不是加载一个纹理，我们会 <a href="webgl-render-to-texture.html">渲染到纹理</a>
@@ -360,10 +358,11 @@ gl.framebufferTexture2D(
 layout(location = 1) in vec4 a_texcoord;
 </code></pre>
 <p>如果我们有 150 个着色器，我们必须在所有着色器上重复这些并跟踪哪些着色器使用哪些位置</p>
-<ol>
-<li><p>在链接着色器之前调用 <code class="notranslate" translate="no">gl.bindAttribLocation</code></p>
-<p> 在这种情况下，在调用 <code class="notranslate" translate="no">gl.linkProgram</code> 之前，我们先调用 <code class="notranslate" translate="no">gl.bindAttribLocation</code>.
- (见 <a href="webgl-fundamentals.html">第一篇文章</a>)</p>
+<ol start="2">
+<li>
+<p>在链接着色器之前调用 <code class="notranslate" translate="no">gl.bindAttribLocation</code></p>
+<p>在这种情况下，在调用 <code class="notranslate" translate="no">gl.linkProgram</code> 之前，我们先调用 <code class="notranslate" translate="no">gl.bindAttribLocation</code>.
+(见 <a href="webgl-fundamentals.html">第一篇文章</a>)</p>
 </li>
 </ol>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.bindAttribLocation(program, 0, &quot;a_position&quot;);
@@ -381,10 +380,10 @@ gl.linkProgram(program);
 +// 在链接之前。我们正在使用方法 2，因为它更 D.R.Y.
 +const programOptions = {
 +  attribLocations: {
-+    &#39;a_position&#39;: 0,
-+    &#39;a_normal&#39;:   1,
-+    &#39;a_texcoord&#39;: 2,
-+    &#39;a_color&#39;:    3,
++    'a_position': 0,
++    'a_normal':   1,
++    'a_texcoord': 2,
++    'a_color':    3,
 +  },
 +};
 -const textureProgramInfo = twgl.createProgramInfo(gl, [vs, fs]);
@@ -474,7 +473,7 @@ gl.linkProgram(program);
       projectedTexcoord.y &lt;= 1.0;
 
 -  vec4 projectedTexColor = texture2D(u_projectedTexture, projectedTexcoord.xy);
-+  // &#39;r&#39; 通道内包含深度值
++  // 'r' 通道内包含深度值
 +  vec4 projectedTexColor = vec4(texture2D(u_projectedTexture, projectedTexcoord.xy).rrr, 1);
   vec4 texColor = texture2D(u_texture, v_texcoord) * u_colorMult;
   float projectedAmount = inRange ? 1.0 : 0.0;
@@ -734,7 +733,7 @@ void main() {
       projectedTexcoord.y &gt;= 0.0 &amp;&amp;
       projectedTexcoord.y &lt;= 1.0;
 
-  // &#39;r&#39; 通道内包含深度值
+  // 'r' 通道内包含深度值
   float projectedDepth = texture(u_projectedTexture, projectedTexcoord.xy).r;
   float shadowLight = (inRange &amp;&amp; projectedDepth &lt;= currentDepth) ? 0.0 : 1.0;
 
@@ -936,7 +935,7 @@ void main() {
       projectedTexcoord.y &gt;= 0.0 &amp;&amp;
       projectedTexcoord.y &lt;= 1.0;
 
-  // &#39;r&#39; 通道内包含深度值
+  // 'r' 通道内包含深度值
   float projectedDepth = texture(u_projectedTexture, projectedTexcoord.xy).r;
   float shadowLight = (inRange &amp;&amp; projectedDepth &lt;= currentDepth) ? 0.0 : 1.0;
 

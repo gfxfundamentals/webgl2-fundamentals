@@ -248,22 +248,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 如果您对矩阵几乎没有经验，请暂时跳过上面的链接并继续阅读。
 </p>
 </div>
-
 <p>之前的三篇文章讲了如何对二维物体进行<a href="webgl-2d-translation.html">平移</a>，
 <a href="webgl-2d-rotation.html">旋转</a>，和 <a href="webgl-2d-scale.html">缩放</a>。
 每种变换都改变了着色器并且这些变换还受先后顺序影响。在
 <a href="webgl-2d-scale.html">前例</a>中我们先缩放，再旋转，最后平移，如果执行顺序不同
 结果也不同。</p>
 <p>例如这是缩放 2, 1 ，旋转 30 度，然后平移 100, 0 的结果。</p>
-<p><img src="../../resources/f-scale-rotation-translation.svg" class="webgl_center" width="400" /></p>
+<img src="../../resources/f-scale-rotation-translation.svg" class="webgl_center" width="400" />
 <p>这是平移 100, 0 ，旋转 30 度，然后缩放 2, 1 的结果。</p>
-<p><img src="../../resources/f-translation-rotation-scale.svg" class="webgl_center" width="400" /></p>
+<img src="../../resources/f-translation-rotation-scale.svg" class="webgl_center" width="400" />
 <p>结果截然不同，更糟的是，针对第二种情况中的转换顺序，需要写一个新的着色器。</p>
 <p>有些比我聪明的人可能已经想到了矩阵，对于二维我们使用 3x3 的矩阵，
 3x3 的矩阵就像是有 9 个格子的格网。</p>
-<p><link href="../resources/webgl-2d-matrices.css" rel="stylesheet"></p>
+<link href="../resources/webgl-2d-matrices.css" rel="stylesheet">
 <div class="glocal-center"><table class="glocal-center-content glocal-mat"><tr><td>1.0</td><td>2.0</td><td>3.0</td></tr><tr><td>4.0</td><td>5.0</td><td>6.0</td></tr><tr><td>7.0</td><td>8.0</td><td>9.0</td></tr></table></div>
-
 <p>在计算的时候我们将位置坐标沿着矩阵列的方向依次相乘再将结果加起来。
 我们的位置信息只有两个值， x 和 y 。但是要进行运算需要三个值，
 所以我们将第三个值赋值为 1 。</p>
@@ -273,17 +271,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <tr><td class="glocal-right">newX&nbsp;=&nbsp;</td><td>x&nbsp;*&nbsp;</td><td class="glocal-border">1.0</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">newY&nbsp;=&nbsp;</td><td>x&nbsp;*&nbsp;</td><td class="glocal-border">2.0</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">extra&nbsp;=&nbsp;</td><td>x&nbsp;*&nbsp;</td><td class="glocal-border">3.0</td><td>&nbsp;+</td></tr>
 <tr><td></td><td>y&nbsp;*&nbsp;</td><td class="glocal-border">4.0</td><td class="glocal-left">&nbsp;+</td><td></td><td>y&nbsp;*&nbsp;</td><td class="glocal-border">5.0</td><td class="glocal-left">&nbsp;+&nbsp;</td><td></td><td>y&nbsp;*&nbsp;</td><td class="glocal-border">6.0</td><td>&nbsp;+</td></tr>
 <tr><td></td><td>1&nbsp;*&nbsp;</td><td>7.0</td><td>&nbsp;</td><td></td><td>1&nbsp;*&nbsp;</td><td>8.0</td><td>&nbsp;&nbsp;</td><td></td><td>1&nbsp;*&nbsp;</td><td>9.0</td><td>&nbsp;</td></tr></table></div>
-
 <p>你可能会想“这样做有什么意义？”，好吧，假设我们要进行平移，
 平移的量为 tx 和 ty ，然后定义一个这样的矩阵</p>
 <div class="glocal-center"><table class="glocal-center-content glocal-mat"><tr><td>1.0</td><td>0.0</td><td>0.0</td></tr><tr><td>0.0</td><td>1.0</td><td>0.0</td></tr><tr><td>tx</td><td>ty</td><td>1.0</td></tr></table></div>
-
 <p>然后计算结果</p>
 <div class="glocal-center"><table class="glocal-center-content">
 <col/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/>
 <tr><td>newX&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">1.0</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">newY&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">extra&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td>&nbsp;+</td></tr><tr><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td class="glocal-left">&nbsp;+</td><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">1.0</td><td class="glocal-left">&nbsp;+&nbsp;</td><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td>&nbsp;+</td></tr>
 <tr><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>tx</td><td>&nbsp;</td><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>ty</td><td>&nbsp;&nbsp;</td><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>1.0</td><td>&nbsp;</td></tr></table></div>
-
 <p>如果你还记得线性代数的知识，我们可以删除和 0 相乘的部分，
 和 1 相乘相当于没变，所以简化后为</p>
 <div class="glocal-center"><table class="glocal-center-content">
@@ -291,68 +286,57 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <tr><td>newX&nbsp;=&nbsp;</td><td>x</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">1.0</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">newY&nbsp;=&nbsp;</td><td class="glocal-blk">x</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-blk glocal-left">&nbsp;+</td><td class="glocal-right">extra&nbsp;=&nbsp;</td><td class="glocal-blk">x</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-blk">&nbsp;+</td></tr>
 <tr><td></td><td class="glocal-blk">y</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-blk glocal-left">&nbsp;+</td><td></td><td>y</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">1.0</td><td class="glocal-left">&nbsp;+&nbsp;</td><td></td><td class="glocal-blk">y</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-blk">&nbsp;+</td></tr>
 <tr><td></td><td class="glocal-blk">1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td>tx</td><td>&nbsp;</td><td></td><td class="glocal-blk">1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td>ty</td><td>&nbsp;&nbsp;</td><td></td><td>1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk">1.0</td><td>&nbsp;</td></tr></table></div>
-
 <p>或者更简洁</p>
 <div class="webgl_center"><pre class="webgl_math">
 newX = x + tx;
 newY = y + ty;
 </pre></div>
-
 <p>其他的就不用关心了。这个看起来和<a href="webgl-2d-translation.html">平移例子中的代码</a>有些相似。</p>
 <p>同样的来实现旋转，在旋转章节提到过，旋转只需要和旋转角对应的正弦和余弦值</p>
 <div class="webgl_center"><pre class="webgl_math">
 s = Math.sin(angleToRotateInRadians);
 c = Math.cos(angleToRotateInRadians);
 </pre></div>
-
 <p>然后我们创建一个这样的矩阵</p>
 <div class="glocal-center"><table class="glocal-center-content glocal-mat"><tr><td>c</td><td>-s</td><td>0.0</td></tr><tr><td>s</td><td>c</td><td>0.0</td></tr><tr><td>0.0</td><td>0.0</td><td>1.0</td></tr></table></div>
-
 <p>使用矩阵后得到</p>
 <div class="glocal-center"><table class="glocal-center-content">
 <col/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/>
 <tr><td>newX&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">c</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">newY&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">-s</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">extra&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td>&nbsp;+</td></tr>
 <tr><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">s</td><td class="glocal-left">&nbsp;+</td><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">c</td><td class="glocal-left">&nbsp;+&nbsp;</td><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td>&nbsp;+</td></tr>
 <tr><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>0.0</td><td>&nbsp;</td><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>0.0</td><td>&nbsp;&nbsp;</td><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>1.0</td><td>&nbsp;</td></tr></table></div>
-
 <p>遮住没有意义的部分（和 0 或 1 相乘的部分）</p>
 <div class="glocal-center"><table class="glocal-center-content">
 <col/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/>
 <tr><td>newX&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">c</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">newY&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">-s</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">extra&nbsp;=&nbsp;</td><td class="glocal-blk">x</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-blk">&nbsp;+</td></tr>
 <tr><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">s</td><td class="glocal-left glocal-blk">&nbsp;+</td><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">c</td><td class="glocal-left glocal-blk">&nbsp;+&nbsp;</td><td></td><td class="glocal-blk">y</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-blk">&nbsp;+</td></tr>
 <tr><td></td><td class="glocal-blk">1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk">0.0</td><td>&nbsp;</td><td></td><td class="glocal-blk">1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk">0.0</td><td>&nbsp;&nbsp;</td><td></td><td>1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk">1.0</td><td>&nbsp;</td></tr></table></div>
-
 <p>然后得到简化版</p>
 <pre class="webgl_center">
 newX = x *  c + y * s;
 newY = x * -s + y * c;
 </pre>
-
 <p>正是我们在<a href="webgl-2d-rotation.html">旋转例子</a>中得到的结果。</p>
 <p>最后是缩放，我们将两个缩放因子叫做 sx 和 sy 。</p>
 <p>然后创建一个这样的矩阵</p>
 <div class="glocal-center"><table class="glocal-center-content glocal-mat"><tr><td>sx</td><td>0.0</td><td>0.0</td></tr><tr><td>0.0</td><td>sy</td><td>0.0</td></tr><tr><td>0.0</td><td>0.0</td><td>1.0</td></tr></table></div>
-
 <p>使用矩阵后得到</p>
 <div class="glocal-center"><table class="glocal-center-content">
 <col/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/>
 <tr><td>newX&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">sx</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">newY&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td class="glocal-left">&nbsp;+</td><td class="glocal-right">extra&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td>&nbsp;+</td></tr>
 <tr><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td class="glocal-left">&nbsp;+</td><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">sy</td><td class="glocal-left">&nbsp;+&nbsp;</td><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">0.0</td><td>&nbsp;+</td></tr>
 <tr><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>0.0</td><td>&nbsp;</td><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>0.0</td><td>&nbsp;&nbsp;</td><td></td><td>1</td><td>&nbsp;*&nbsp;</td><td>1.0</td><td>&nbsp;</td></tr></table></div>
-
 <p>实际上是</p>
 <div class="glocal-center"><table class="glocal-center-content">
 <col/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/><col/><col class="glocal-sp"/><col/><col/><col class="glocal-b"/>
 <tr><td>newX&nbsp;=&nbsp;</td><td>x</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">sx</td><td class="glocal-left glocal-blk">&nbsp;+</td><td class="glocal-right">newY&nbsp;=&nbsp;</td><td class="glocal-blk">x</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-left glocal-blk">&nbsp;+</td><td class="glocal-right">extra&nbsp;=&nbsp;</td><td class="glocal-blk">x</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-blk">&nbsp;+</td></tr>
 <tr><td></td><td class="glocal-blk">y</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-left glocal-blk">&nbsp;+</td><td></td><td>y</td><td>&nbsp;*&nbsp;</td><td class="glocal-border">sy</td><td class="glocal-left glocal-blk">&nbsp;+&nbsp;</td><td></td><td class="glocal-blk">y</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk glocal-border">0.0</td><td class="glocal-blk">&nbsp;+</td></tr>
 <tr><td></td><td class="glocal-blk">1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk">0.0</td><td>&nbsp;</td><td></td><td class="glocal-blk">1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk">0.0</td><td>&nbsp;&nbsp;</td><td></td><td>1</td><td class="glocal-blk">&nbsp;*&nbsp;</td><td class="glocal-blk">1.0</td><td>&nbsp;</td></tr></table></div>
-
 <p>简化后</p>
 <pre class="webgl_center">
 newX = x * sx;
 newY = y * sy;
 </pre>
-
 <p>和<a href="webgl-2d-scale.html">缩放例子</a>相似。</p>
 <p>现在你可能还会想“那又怎样，有什么意义？”，
 好像花了更多精力做之前做过的事情。</p>
@@ -421,7 +405,8 @@ newY = y * sy;
     ];
   },
 };
-</code></pre><p>现在该修改着色器了，原来的着色器像这样</p>
+</code></pre>
+<p>现在该修改着色器了，原来的着色器像这样</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
 
 in vec2 a_position;
@@ -514,7 +499,8 @@ void main() {
     var matrix = m3.multiply(scaleMatrix, rotationMatrix);
     matrix = m3.multiply(matrix, translationMatrix);
     ...
-</code></pre><p>这是对应的版本。</p>
+</code></pre>
+<p>这是对应的版本。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform-trs.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-matrix-transform-trs.html" target="_blank">点此在新窗口中浏览</a>
@@ -523,7 +509,7 @@ void main() {
 </p>
 <p>像这样的矩阵相乘对层级变换至关重要，比如身体的手臂部分运动，
 月球属于绕太阳转动的地球的一部分，或者树上的树枝。
-写一个简单的层级运动的例子，我们来画 5 个 &#39;F&#39; ，并且每个 &#39;F&#39;
+写一个简单的层级运动的例子，我们来画 5 个 ‘F’ ，并且每个 ‘F’
 都以前一个的矩阵为基础。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">    // 绘制场景
     function drawScene() {
@@ -559,10 +545,8 @@ void main() {
 这个方法创建一个单位矩阵。单位矩阵就像 1.0 一样，
 和它相乘的矩阵不会变化，就像</p>
 <div class="webgl_center">X * 1 = X</div>
-
 <p>同样的</p>
 <div class="webgl_center">matrixX * identity = matrixX</div>
-
 <p>这是创建单位矩阵的代码。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m3 = {
   identity: function () {
@@ -573,17 +557,18 @@ void main() {
     ];
   },
 ...
-</code></pre><p>这是 5 个 F 。</p>
+</code></pre>
+<p>这是 5 个 F 。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-geometry-matrix-transform-hierarchical.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-geometry-matrix-transform-hierarchical.html" target="_blank">点此在新窗口中浏览</a>
 </div>
 
 </p>
-<p>再看一个例子，之前的每个例子中 &#39;F&#39; 都是绕着它的左上角旋转。
-这是因为我们总是绕原点旋转，而 &#39;F&#39; 的原点就是左上角，也就是 (0, 0) 。</p>
+<p>再看一个例子，之前的每个例子中 ‘F’ 都是绕着它的左上角旋转。
+这是因为我们总是绕原点旋转，而 ‘F’ 的原点就是左上角，也就是 (0, 0) 。</p>
 <p>现在我们可以使用矩阵运算，并且自定义转换的顺序。我们可以在应用其他变换前改变旋转中心。</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">    // 创建一个矩阵，可以将原点移动到 &#39;F&#39; 的中心
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">    // 创建一个矩阵，可以将原点移动到 'F' 的中心
     var moveOriginMatrix = m3.translation(-50, -75);
     ...
 
@@ -614,7 +599,8 @@ void main() {
   vec2 clipSpace = zeroToTwo - 1.0;
 
   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
-</code></pre><p>逐步观察，首先，“从像素坐标转换到 0.0 到 1.0”，
+</code></pre>
+<p>逐步观察，首先，“从像素坐标转换到 0.0 到 1.0”，
 事实上是一个缩放变换，第二步也是缩放变换，接着是一个平移和一个 Y
 为 -1 的缩放。我们可以将这些操作放入一个矩阵传给着色器，
 创建两个缩放矩阵，一个缩放 1.0/分辨率，另一个缩放 2.0 ，
@@ -631,7 +617,8 @@ void main() {
     ];
   },
   ...
-</code></pre><p>现在可以简化着色器，这是新的着色器。</p>
+</code></pre>
+<p>现在可以简化着色器，这是新的着色器。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 in vec2 a_position;
@@ -642,7 +629,8 @@ void main() {
   // 使位置和矩阵相乘
   gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
 }
-</code></pre><p>在 JavaScript 中需要乘上投影矩阵</p>
+</code></pre>
+<p>在 JavaScript 中需要乘上投影矩阵</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  // 绘制场景
   function drawScene() {
     ...
@@ -711,21 +699,28 @@ matrix = m3.scale(matrix, scale[0], scale[1])
 </p>
 <p>最后一件事，我们之前使用了多种矩阵顺序。第一例中使用</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">translation * rotation * scale
-</code></pre><p>第二例中使用</p>
+</code></pre>
+<p>第二例中使用</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">scale * rotation * translation
-</code></pre><p>然后观察了它们的区别。</p>
+</code></pre>
+<p>然后观察了它们的区别。</p>
 <p>这有两种方式解读矩阵运算，给定这样一个表达式</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">projectionMat * translationMat * rotationMat * scaleMat * position
-</code></pre><p>第一种可能是多数人觉得比较自然的方式，从右向左解释</p>
+</code></pre>
+<p>第一种可能是多数人觉得比较自然的方式，从右向左解释</p>
 <p>首先将位置乘以缩放矩阵获得缩放后的位置</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">scaledPosition = scaleMat * position
-</code></pre><p>然后将缩放后的位置和旋转矩阵相乘得到缩放旋转位置</p>
+</code></pre>
+<p>然后将缩放后的位置和旋转矩阵相乘得到缩放旋转位置</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">rotatedScaledPosition = rotationMat * scaledPosition
-</code></pre><p>然后将缩放旋转位置和平移矩阵相乘得到缩放旋转平移位置</p>
+</code></pre>
+<p>然后将缩放旋转位置和平移矩阵相乘得到缩放旋转平移位置</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">translatedRotatedScaledPosition = translationMat * rotatedScaledPosition
-</code></pre><p>最后和投影矩阵相乘得到裁剪空间中的坐标</p>
+</code></pre>
+<p>最后和投影矩阵相乘得到裁剪空间中的坐标</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">clipspacePosition = projectionMatrix * translatedRotatedScaledPosition
-</code></pre><p>第二种方式是从左往右解释，在这个例子中每一个矩阵改变的都是画布的*坐标空间&quot;，
+</code></pre>
+<p>第二种方式是从左往右解释，在这个例子中每一个矩阵改变的都是画布的*坐标空间&quot;，
 画布的起始空间是裁剪空间的范围(-1 到 +1)，矩阵从左到右改变着画布所在的空间。</p>
 <p>第一步：没有矩阵（或者单位矩阵）</p>
 <blockquote>

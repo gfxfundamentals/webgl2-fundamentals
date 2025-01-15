@@ -236,43 +236,43 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>This article assumes you&#39;ve read <a href="webgl-multiple-views.html">the article on multiple views</a>
+      <p>This article assumes you’ve read <a href="webgl-multiple-views.html">the article on multiple views</a>
 If you have not read that article please <a href="webgl-multiple-views.html">go read it first</a>.</p>
-<p>This article also assumes you&#39;ve read the article on
+<p>This article also assumes you’ve read the article on
 <a href="webgl-less-code-more-fun.html">less code more fun</a>
 as it uses the library mentioned there so as to
-unclutter the example. If you don&#39;t understand
+unclutter the example. If you don’t understand
 what buffers, vertex arrays, and attributes are or when
 a function named <code class="notranslate" translate="no">twgl.setUniforms</code> what it means
-to set uniforms, etc... then you should probably to go further back and
+to set uniforms, etc… then you should probably to go further back and
 <a href="webgl-fundamentals.html">read the fundamentals</a>.</p>
-<p>It&#39;s often useful to be able to visualize what a camera
-sees, it&#39;s &quot;frustum&quot;. This is surprisingly easy.
+<p>It’s often useful to be able to visualize what a camera
+sees, it’s “frustum”. This is surprisingly easy.
 As pointed in the articles on <a href="webgl-3d-orthographic.html">orthographic</a>
 and <a href="webgl-3d-perspective.html">perspective</a> projection those projection
 matrices take some space and convert them into the -1 to +1 box of clip space.
 Further a camera matrix is just a matrix that represents some
 place and orientation in world space of the camera.</p>
 <p>So, the first thing that should be kind of obvious. If we just
-use the camera matrix to draw something we&#39;ll have an object
+use the camera matrix to draw something we’ll have an object
 representing the camera. The complication is that a camera
-can&#39;t see itself, but, using the techniques from
+can’t see itself, but, using the techniques from
 <a href="webgl-multiple-views.html">the article on multiple views</a>
-we can have 2 views. We&#39;ll use a different camera in each
+we can have 2 views. We’ll use a different camera in each
 view. The 2nd view will look at the first and so will see
-be able to see this object we&#39;re drawing to represent the
+be able to see this object we’re drawing to represent the
 camera used in the other view.</p>
-<p>First let&#39;s make some data to represent the camera.
-Let&#39;s make a cube and then let&#39;s add a cone to the end.
-We&#39;re going to draw this with lines. We&#39;ll use <a href="webgl-indexed-vertices.html">indices</a>
+<p>First let’s make some data to represent the camera.
+Let’s make a cube and then let’s add a cone to the end.
+We’re going to draw this with lines. We’ll use <a href="webgl-indexed-vertices.html">indices</a>
 to connect the vertices.</p>
 <p><a href="webgl-3d-camera.html">Cameras</a> view down the -Z direction
-so let&#39;s put the cube and cone on the positive side with the
+so let’s put the cube and cone on the positive side with the
 cone opening toward -Z</p>
 <p>First the cube lines</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// create geometry for a camera
 function createCameraBufferInfo(gl) {
-  // first let&#39;s add a cube. It goes from 1 to 3
+  // first let's add a cube. It goes from 1 to 3
   // because cameras look down -Z so we want
   // the camera to start at Z = 0.
   const positions = [
@@ -296,13 +296,13 @@ function createCameraBufferInfo(gl) {
   });
 }
 </code></pre>
-<p>Then let&#39;s add in the cone lines</p>
+<p>Then let’s add in the cone lines</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// create geometry for a camera
 function createCameraBufferInfo(gl) {
-  // first let&#39;s add a cube. It goes from 1 to 3
+  // first let's add a cube. It goes from 1 to 3
   // because cameras look down -Z so we want
   // the camera to start at Z = 0.
-+  // We&#39;ll put a cone in front of this cube opening
++  // We'll put a cone in front of this cube opening
 +  // toward -Z
   const positions = [
     -1, -1,  1,  // cube vertices
@@ -341,17 +341,17 @@ function createCameraBufferInfo(gl) {
   });
 }
 </code></pre>
-<p>And then finally let&#39;s add in a scale because our F is
+<p>And then finally let’s add in a scale because our F is
 150 units tall and this camera is 2 to 3 units big it will
 be tiny next to our F. We could scale it by multiplying in
 a scale matrix when we draw it or we could scale the data
 itself here.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">-function createCameraBufferInfo(gl) {
 +function createCameraBufferInfo(gl, scale = 1) {
-  // first let&#39;s add a cube. It goes from 1 to 3
+  // first let's add a cube. It goes from 1 to 3
   // because cameras look down -Z so we want
   // the camera to start at Z = 0.
-  // We&#39;ll put a cone in front of this cube opening
+  // We'll put a cone in front of this cube opening
   // toward -Z
   const positions = [
     -1, -1,  1,  // cube vertices
@@ -394,7 +394,7 @@ itself here.</p>
 }
 </code></pre>
 <p>Our current shader program draws with vertex colors.
-Let&#39;s make another that draws with a solid color.</p>
+Let’s make another that draws with a solid color.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const colorVS = `#version 300 es
 in vec4 a_position;
 
@@ -417,9 +417,9 @@ void main() {
   outColor = u_color;
 }
 `;
-&lt;/script&gt;
+&lt;/script&gt;  
 </code></pre>
-<p>Now let&#39;s use those to draw one scene with a camera viewing the
+<p>Now let’s use those to draw one scene with a camera viewing the
 other scene</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// setup GLSL programs
 // compiles shaders, links program, looks up locations
@@ -427,7 +427,7 @@ other scene</p>
 +const vertexColorProgramInfo = twgl.createProgramInfo(gl, [vs, fs]);
 +const solidColorProgramInfo = twgl.createProgramInfo(gl, [colorVS, colorFS]);
 
-// create buffers and fill with data for a 3D &#39;F&#39;
+// create buffers and fill with data for a 3D 'F'
 const fBufferInfo = twgl.primitives.create3DFBufferInfo(gl);
 const fVAO = twgl.createVAOFromBufferInfo(gl, vertexColorProgramInfo, fBufferInfo);
 
@@ -456,7 +456,7 @@ function render() {
   gl.enable(gl.DEPTH_TEST);
   gl.enable(gl.SCISSOR_TEST);
 
-  // we&#39;re going to split the view in 2
+  // we're going to split the view in 2
   const effectiveWidth = gl.canvas.clientWidth / 2;
   const aspect = effectiveWidth / gl.canvas.clientHeight;
   const near = 1;
@@ -467,7 +467,7 @@ function render() {
 -      m4.perspective(fieldOfViewRadians), aspect, near, far);
 +      m4.perspective(degToRad(settings.cam1FieldOfView), aspect, near, far);
 
-  // Compute the camera&#39;s matrix using look at.
+  // Compute the camera's matrix using look at.
 -  const cameraPosition = [0, 0, -75];
 +  const cameraPosition = [
 +      settings.cam1PosX, 
@@ -480,7 +480,7 @@ function render() {
 
   let worldMatrix = m4.yRotation(degToRad(settings.rotation));
   worldMatrix = m4.xRotate(worldMatrix, degToRad(settings.rotation));
-  // center the &#39;F&#39; around its origin
+  // center the 'F' around its origin
   worldMatrix = m4.translate(worldMatrix, -35, -75, -5);
 
   const {width, height} = gl.canvas;
@@ -503,7 +503,7 @@ function render() {
 +  const perspectiveProjectionMatrix2 =
 +      m4.perspective(degToRad(60), aspect, near, far);
 +
-+  // Compute the camera&#39;s matrix using look at.
++  // Compute the camera's matrix using look at.
 +  const cameraPosition2 = [-600, 400, -400];
 +  const target2 = [0, 0, 0];
 +  const cameraMatrix2 = m4.lookAt(cameraPosition2, target2, up);
@@ -517,8 +517,8 @@ function render() {
 +    const viewMatrix = m4.inverse(cameraMatrix2);
 +
 +    let mat = m4.multiply(perspectiveProjectionMatrix2, viewMatrix);
-+    // use the first&#39;s camera&#39;s matrix as the matrix to position
-+    // the camera&#39;s representative in the scene
++    // use the first's camera's matrix as the matrix to position
++    // the camera's representative in the scene
 +    mat = m4.multiply(mat, cameraMatrix);
 +
 +    gl.useProgram(solidColorProgramInfo.program);
@@ -548,16 +548,16 @@ in the scene on the right.</p>
 </div>
 
 </p>
-<p>Let&#39;s also draw something to represent the camera&#39;s frustum.</p>
+<p>Let’s also draw something to represent the camera’s frustum.</p>
 <p>Since the frustum represents a conversion to clip space
 then we can make a cube that represents clip space
 and use the inverse of the projection matrix to place it
 in the scene.</p>
 <p>First we need a clip space line cube.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function createClipspaceCubeBufferInfo(gl) {
-  // first let&#39;s add a cube. It goes from 1 to 3
+  // first let's add a cube. It goes from 1 to 3
   // because cameras look down -Z so we want
-  // the camera to start at Z = 0. We&#39;ll put a
+  // the camera to start at Z = 0. We'll put a
   // a cone in front of this cube opening
   // toward -Z
   const positions = [
@@ -598,8 +598,8 @@ const cameraVAO = twgl.createVAOFromBufferInfo(
     const viewMatrix = m4.inverse(cameraMatrix2);
 
     let mat = m4.multiply(perspectiveProjectionMatrix2, viewMatrix);
-    // use the first&#39;s camera&#39;s matrix as the matrix to position
-    // the camera&#39;s representative in the scene
+    // use the first's camera's matrix as the matrix to position
+    // the camera's representative in the scene
     mat = m4.multiply(mat, cameraMatrix);
 
     gl.useProgram(solidColorProgramInfo.program);
@@ -636,7 +636,7 @@ const cameraVAO = twgl.createVAOFromBufferInfo(
   }
 }
 </code></pre>
-<p>Let&#39;s also make it so we can adjust the near and far settings
+<p>Let’s also make it so we can adjust the near and far settings
 of the first camera</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const settings = {
   rotation: 150,  // in degrees
@@ -666,12 +666,12 @@ of the first camera</p>
 </div>
 
 </p>
-<p>If you adjust the near or far planes or the field of view so they clip the F you&#39;ll
+<p>If you adjust the near or far planes or the field of view so they clip the F you’ll
 see the frustum representation matches.</p>
 <p>Whether we use a perspective projection or an orthographic
 projection for the camera on the left it will work either way
 because a projection matrix always converts to clip space
-so it&#39;s inverse will always take our +1 to -1 cube and warp
+so it’s inverse will always take our +1 to -1 cube and warp
 it appropriately.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const settings = {
   rotation: 150,  // in degrees
@@ -707,11 +707,11 @@ const perspectiveProjectionMatrix = settings.cam1Ortho
 </div>
 
 </p>
-<p>This kind of visualization should be familiar to anyone that&#39;s
-used a 3D modeling package like <a href="https://blender.org">Blender</a> 
+<p>This kind of visualization should be familiar to anyone that’s
+used a 3D modeling package like <a href="https://blender.org">Blender</a>
 or a 3D game engine with scene editing tools like <a href="https://unity.com">Unity</a>
 or <a href="https://godotengine.org/">Godot</a>.</p>
-<p>It can also be pretty useful for debugging. </p>
+<p>It can also be pretty useful for debugging.</p>
 
     </div>
     <div class="lesson-sidebar">

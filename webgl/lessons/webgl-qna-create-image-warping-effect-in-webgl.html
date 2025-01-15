@@ -236,8 +236,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I&#39;m learning three.js, trying to experiment with transforming images.</p>
+      <h2 id="question">Question:</h2>
+<p>I’m learning three.js, trying to experiment with transforming images.</p>
 <p>I really like the effect shown <a href="https://persona.co/">here.</a></p>
 <p>What steps would I follow to be able to transform images similar to this?</p>
 <p>So far I have:</p>
@@ -247,7 +247,7 @@ var loader = new THREE.TextureLoader();
 // load a resource
 loader.load(
     // resource URL
-    &#39;clouds.jpg&#39;,
+    'clouds.jpg',
     // Function when resource is loaded
     function (texture) {
         init(new THREE.MeshBasicMaterial({
@@ -256,11 +256,11 @@ loader.load(
     },
     // Function called when download progresses
     function (xhr) {
-        console.log((xhr.loaded / xhr.total * 100) + &#39;% loaded&#39;);
+        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
     },
     // Function called when download errors
     function (xhr) {
-        console.log(&#39;An error happened&#39;);
+        console.log('An error happened');
     }
 );
 
@@ -293,10 +293,11 @@ var init = function(material) {
 
     render();
 }
-</code></pre><p>Which renders my image as a flat 2D shape but I&#39;m stuck on how I can then apply effects to the image. Guessing this needs to happen inside <code class="notranslate" translate="no">render</code> but unsure how.</p>
+</code></pre>
+<p>Which renders my image as a flat 2D shape but I’m stuck on how I can then apply effects to the image. Guessing this needs to happen inside <code class="notranslate" translate="no">render</code> but unsure how.</p>
 <p>Or am I better off doing this in plain WebGL?</p>
 <p>Any tips/advice/tutorials are much appreciated!</p>
-<h2 id="answer-">Answer:</h2>
+<h2 id="answer">Answer:</h2>
 <p>Is there any reason to do this in WebGL? Sure, you can do stuff like that in WebGL but you could also do it in 2D canvas</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-create-image-warping-effect-in-webgl-example-1.html"></iframe>
@@ -305,8 +306,8 @@ var init = function(material) {
 
 </p>
 <p>I have no idea what their exact formula is but apparently the technique is inspired by something called <a href="https://www.google.co.jp/search?q=slitscan">slit scan</a>.</p>
-<p>Doing it in WebGL would probably allow more crazy warping because you could easily warp per pixel instead of only per line (per pixel in canvas API would be too slow). Three.js would be fine but there&#39;s no reason to use such a large library for such a small effect</p>
-<p>Here&#39;s a twgl version</p>
+<p>Doing it in WebGL would probably allow more crazy warping because you could easily warp per pixel instead of only per line (per pixel in canvas API would be too slow). Three.js would be fine but there’s no reason to use such a large library for such a small effect</p>
+<p>Here’s a twgl version</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-create-image-warping-effect-in-webgl-example-2.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-create-image-warping-effect-in-webgl-example-2.html" target="_blank">click here to open in a separate window</a>

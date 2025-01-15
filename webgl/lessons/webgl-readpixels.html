@@ -248,20 +248,19 @@ rendering surfaces, the combination format <code class="notranslate" translate="
 is accepted.</p>
 </blockquote>
 <p>The second combination is implementation defined
-<span style="color:red;">which probably means you shouldn&#39;t use it in WebGL if you want your code to be portable</span>.
+<span style="color:red;">which probably means you shouldn’t use it in WebGL if you want your code to be portable</span>.
 You can ask what the format/type combination is by querying</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// assuming a framebuffer is bound with the texture to read attached
 const format = gl.getParameter(gl.IMPLEMENTATION_COLOR_READ_FORMAT);
 const type = gl.getParameter(gl.IMPLEMENTATION_COLOR_READ_TYPE);
 </code></pre>
 <p>Also note what texture formats that are renderable, meaning you can attach them to a framebuffer and render to them,
-are also somewhat implementation defined. 
+are also somewhat implementation defined.
 WebGL2 lists <a href="webgl-data-textures.html">many formats</a> but some are optional (<code class="notranslate" translate="no">LUMINANCE</code> for example) and some
 are not renderable by default but can maybe be made renderable by extension. (<code class="notranslate" translate="no">RGBA32F</code> for example).</p>
 <p><strong>The table below is live</strong>. You may notice that it gives different results depending on the machine, OS, GPU, or even
 browser. I know on my machine Chrome and Firefox give different results for some of the implementation defined values.</p>
 <div class="webgl_center" data-diagram="formats"></div>
-
 <script src="../resources/twgl-full.min.js"></script>
 <script src="resources/webgl-readpixels.js"></script>
     </div>

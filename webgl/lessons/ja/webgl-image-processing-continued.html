@@ -248,7 +248,6 @@ Texture 1      -&gt; [Sharpen]     -&gt; Texture 2
 Texture 2      -&gt; [Edge Detect] -&gt; Texture 1
 Texture 1      -&gt; [Blur]        -&gt; Texture 2
 Texture 2      -&gt; [Normal]      -&gt; Canvas</pre></blockquote>
-
 <p>これを行うにはフレームバッファを作成する必要があります。
 WebGLやOpenGLではフレームバッファは貧弱な名称です。
 WebGL/OpenGLのフレームバッファは、単なるアタッチメントのリストで実際にはどのような種類のバッファでもありません。
@@ -282,7 +281,8 @@ WebGL/OpenGLのフレームバッファは、単なるアタッチメントの�
                 srcFormat,
                 srcType,
                 image);
-</code></pre><p>この関数を使い2枚のテクスチャを作成し、2つのフレームバッファにアタッチしてみます。</p>
+</code></pre>
+<p>この関数を使い2枚のテクスチャを作成し、2つのフレームバッファにアタッチしてみます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // create 2 textures and attach them to framebuffers.
   var textures = [];
   var framebuffers = [];
@@ -311,7 +311,8 @@ WebGL/OpenGLのフレームバッファは、単なるアタッチメントの�
     gl.framebufferTexture2D(
         gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, texture, mipLevel);
   }
-</code></pre><p>色々なエフェクトを畳み込み行列で定義し、エフェクトリストを作ってみます。</p>
+</code></pre>
+<p>色々なエフェクトを畳み込み行列で定義し、エフェクトリストを作ってみます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // Define several convolution kernels
   var kernels = {
     normal: [
@@ -343,7 +344,8 @@ WebGL/OpenGLのフレームバッファは、単なるアタッチメントの�
     &quot;gaussianBlur&quot;,
     &quot;unsharpen&quot;
   ];
-</code></pre><p>最後に2つのテクスチャを交互に使い、エフェクトを次々に適用してみます。</p>
+</code></pre>
+<p>最後に2つのテクスチャを交互に使い、エフェクトを次々に適用してみます。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  function drawEffects() {
     // Tell it to use our program (pair of shaders)
     gl.useProgram(program);
@@ -358,7 +360,7 @@ WebGL/OpenGLのフレームバッファは、単なるアタッチメントの�
     // Tell the shader to get the texture from texture unit 0
     gl.uniform1i(imageLocation, 0);
 
-    // don&#39;t y flip images while drawing to the textures
+    // don't y flip images while drawing to the textures
     gl.uniform1f(flipYLocation, 1);
 
     // loop through each effect we want to apply.
@@ -399,7 +401,7 @@ WebGL/OpenGLのフレームバッファは、単なるアタッチメントの�
   }
 
   function drawWithKernel(name) {
-    // set the kernel and it&#39;s weight
+    // set the kernel and it's weight
     gl.uniform1fv(kernelLocation, kernels[name]);
     gl.uniform1f(kernelWeightLocation, computeKernelWeight(kernels[name]));
 
@@ -409,7 +411,8 @@ WebGL/OpenGLのフレームバッファは、単なるアタッチメントの�
     var count = 6;
     gl.drawArrays(primitiveType, offset, count);
   }
-</code></pre><p>以下は少し手を加えて、柔軟なUIを追加したバージョンです。
+</code></pre>
+<p>以下は少し手を加えて、柔軟なUIを追加したバージョンです。
 チェックを入れたエフェクトが適用されます。
 エフェクトの適用順はドラッグで並べ替えできます。</p>
 <p><div class="webgl_example_container">
@@ -447,20 +450,22 @@ void main() {
 +   gl_Position = vec4(clipSpace * vec2(1, u_flipY), 0, 1);
   ...
 }
-</code></pre><p>反転するかどうかをレンダリング時に設定します。</p>
+</code></pre>
+<p>反転するかどうかをレンダリング時に設定します。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
 +  var flipYLocation = gl.getUniformLocation(program, &quot;u_flipY&quot;);
 
   ...
 
-+  // don&#39;t flip
++  // don't flip
 +  gl.uniform1f(flipYLocation, 1);
 
   ...
 
 +  // flip
 +  gl.uniform1f(flipYLocation, -1);
-</code></pre><p>今回はサンプルコードをシンプルにするために、GLSLプログラムを1つだけ使って複数のエフェクトを実現してみました。
+</code></pre>
+<p>今回はサンプルコードをシンプルにするために、GLSLプログラムを1つだけ使って複数のエフェクトを実現してみました。
 本格的な画像処理をする場合は、GLSLプログラムが複数必要になるでしょう。
 色相や彩度や輝度を調整するGLSLプログラム、明度やコントラストを調整するプGLSLログラム、反転したり量を調整するGLSLプログラムが必要な場合もあります。
 また、GLSLプログラムを切り替えたりパラメーターを更新するために、コードを書き換える必要もあります。

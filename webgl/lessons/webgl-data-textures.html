@@ -241,7 +241,7 @@ The first <a href="webgl-fundamentals.html">started with fundamentals</a>
 and the previous was about <a href="webgl-3d-textures.html">textures</a>.</p>
 <p>In the last post we went over how textures work and how to apply them.
 We created them from images we downloaded. In this article instead of
-using an image we&#39;ll create the data in JavaScript directly.</p>
+using an image we’ll create the data in JavaScript directly.</p>
 <p>Creating data for a texture in JavaScript is mostly straight forward depending
 on the texture format. WebGL2 supports a ton of texture formats though.
 WebGL2 supports all the <em>un-sized</em> formats from WebGL1</p>
@@ -262,8 +262,7 @@ WebGL2 supports all the <em>un-sized</em> formats from WebGL1</p>
     </tbody>
   </table>
 </div>
-
-<p>They&#39;re called <em>un-sized</em> because how they are actually represented internally is undefined in WebGL1.
+<p>They’re called <em>un-sized</em> because how they are actually represented internally is undefined in WebGL1.
 It is defined in WebGL2. In addition to those un-sized formats there are a slew of sized formats including</p>
 <div class="webgl_center">
   <table class="tabular-data tabular-data2">
@@ -334,7 +333,6 @@ It is defined in WebGL2. In addition to those un-sized formats there are a slew 
     </tbody>
   </table>
 </div>
-
 <p>And these depth and stencil formats as well</p>
 <div class="webgl_center">
   <table class="tabular-data tabular-data3">
@@ -356,7 +354,6 @@ It is defined in WebGL2. In addition to those un-sized formats there are a slew 
     </tbody>
   </table>
 </div>
-
 <p>Legend:</p>
 <ul>
 <li>a single number like <code class="notranslate" translate="no">8</code> means 8bits that will be normalized from 0 to 1</li>
@@ -365,7 +362,7 @@ It is defined in WebGL2. In addition to those un-sized formats there are a slew 
 <li>a number preceded by in <code class="notranslate" translate="no">i</code> like <code class="notranslate" translate="no">i8</code> means an integer number.</li>
 <li>a number preceded by in <code class="notranslate" translate="no">ui</code> like <code class="notranslate" translate="no">ui8</code> means an unsigned integer number.</li>
 </ul>
-<p>We won&#39;t use this info here but I <span class="tabular-highlight">highlighted</span>
+<p>We won’t use this info here but I <span class="tabular-highlight">highlighted</span>
 the half and float texture formats to show unlike WebGL1 they are always available in WebGL2
 but they are not marked as either color renderable and/or texture filterable by default.
 Not being color renderable means they can not be rendered to. <a href="webgl-render-to-texture.html">Rendering to a texture is
@@ -373,7 +370,7 @@ covered in another lesson</a>. Not texture filterable means they
 must be used with <code class="notranslate" translate="no">gl.NEAREST</code> only. Both of those features are available as optional
 extensions in WebGL2.</p>
 <p>For each of the formats you specify both the <em>internal format</em> (the format the GPU will use internally)
-and the <em>format</em> and <em>type</em> of the data you&#39;re supplying to WebGL. Here is a table showing which format
+and the <em>format</em> and <em>type</em> of the data you’re supplying to WebGL. Here is a table showing which format
 and type you must supply data for a given internal format</p>
 <div class="webgl_center">
   <table class="tabular-data tabular-data4">
@@ -438,24 +435,22 @@ and type you must supply data for a given internal format</p>
       <tr><td>DEPTH_COMPONENT32F                              </td><td>DEPTH_COMPONENT </td><td>FLOAT                          </td><td>4  </td></tr>
       <tr><td>DEPTH24_STENCIL8                                </td><td>DEPTH_STENCIL   </td><td>UNSIGNED_INT_24_8              </td><td>4  </td></tr>
       <tr><td>DEPTH32F_STENCIL8                               </td><td>DEPTH_STENCIL   </td><td>FLOAT_32_UNSIGNED_INT_24_8_REV </td><td>8  </td></tr>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  &lt;tr&gt;&lt;td&gt;RGBA                                            &lt;/td&gt;&lt;td&gt;RGBA            &lt;/td&gt;&lt;td&gt;UNSIGNED_BYTE                  &lt;/td&gt;&lt;td&gt;4  &lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;RGBA                                            &lt;/td&gt;&lt;td&gt;RGBA            &lt;/td&gt;&lt;td&gt;UNSIGNED_SHORT_4_4_4_4         &lt;/td&gt;&lt;td&gt;2  &lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;RGBA                                            &lt;/td&gt;&lt;td&gt;RGBA            &lt;/td&gt;&lt;td&gt;UNSIGNED_SHORT_5_5_5_1         &lt;/td&gt;&lt;td&gt;2  &lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;RGB                                             &lt;/td&gt;&lt;td&gt;RGB             &lt;/td&gt;&lt;td&gt;UNSIGNED_BYTE                  &lt;/td&gt;&lt;td&gt;3  &lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;RGB                                             &lt;/td&gt;&lt;td&gt;RGB             &lt;/td&gt;&lt;td&gt;UNSIGNED_SHORT_5_6_5           &lt;/td&gt;&lt;td&gt;2  &lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;LUMINANCE_ALPHA                                 &lt;/td&gt;&lt;td&gt;LUMINANCE_ALPHA &lt;/td&gt;&lt;td&gt;UNSIGNED_BYTE                  &lt;/td&gt;&lt;td&gt;2  &lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;LUMINANCE                                       &lt;/td&gt;&lt;td&gt;LUMINANCE       &lt;/td&gt;&lt;td&gt;UNSIGNED_BYTE                  &lt;/td&gt;&lt;td&gt;1  &lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;ALPHA                                           &lt;/td&gt;&lt;td&gt;ALPHA           &lt;/td&gt;&lt;td&gt;UNSIGNED_BYTE                  &lt;/td&gt;&lt;td&gt;1  &lt;/td&gt;&lt;/tr&gt;
 
-      <tr><td>RGBA                                            </td><td>RGBA            </td><td>UNSIGNED_BYTE                  </td><td>4  </td></tr>
-      <tr><td>RGBA                                            </td><td>RGBA            </td><td>UNSIGNED_SHORT_4_4_4_4         </td><td>2  </td></tr>
-      <tr><td>RGBA                                            </td><td>RGBA            </td><td>UNSIGNED_SHORT_5_5_5_1         </td><td>2  </td></tr>
-      <tr><td>RGB                                             </td><td>RGB             </td><td>UNSIGNED_BYTE                  </td><td>3  </td></tr>
-      <tr><td>RGB                                             </td><td>RGB             </td><td>UNSIGNED_SHORT_5_6_5           </td><td>2  </td></tr>
-      <tr><td>LUMINANCE_ALPHA                                 </td><td>LUMINANCE_ALPHA </td><td>UNSIGNED_BYTE                  </td><td>2  </td></tr>
-      <tr><td>LUMINANCE                                       </td><td>LUMINANCE       </td><td>UNSIGNED_BYTE                  </td><td>1  </td></tr>
-      <tr><td>ALPHA                                           </td><td>ALPHA           </td><td>UNSIGNED_BYTE                  </td><td>1  </td></tr>
-
-    </tbody>
+&lt;/tbody&gt;
+</code></pre>
   </table>
 </div>
-
-
-<p>Let&#39;s create a 3x2 pixel <code class="notranslate" translate="no">R8</code> texture. Because it&#39;s an <code class="notranslate" translate="no">R8</code> texture
+<p>Let’s create a 3x2 pixel <code class="notranslate" translate="no">R8</code> texture. Because it’s an <code class="notranslate" translate="no">R8</code> texture
 there is only 1 value per pixel in the red channel.</p>
-<p>We&#39;ll take the sample from the <a href="webgl-3d-textures.html">last article</a>. First we&#39;ll change
+<p>We’ll take the sample from the <a href="webgl-3d-textures.html">last article</a>. First we’ll change
 the texture coordinates to use the entire texture on each face of the cube.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Fill the buffer with texture coordinates the cube.
 function setTexcoords(gl) {
@@ -470,7 +465,8 @@ function setTexcoords(gl) {
         0, 1,
         1, 1,
         ...
-</code></pre><p>Then we&#39;ll change the code that creates a texture</p>
+</code></pre>
+<p>Then we’ll change the code that creates a texture</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Create a texture.
 var texture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -494,7 +490,7 @@ const data = new Uint8Array([
 gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border,
               format, type, data);
 
-// set the filtering so we don&#39;t need mips and it&#39;s not filtered
+// set the filtering so we don't need mips and it's not filtered
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -502,7 +498,8 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
 -// Asynchronously load an image
 -...
-</code></pre><p>And here&#39;s that</p>
+</code></pre>
+<p>And here’s that</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-data-texture-3x2-bad.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-data-texture-3x2-bad.html" target="_blank">click here to open in a separate window</a>
@@ -512,7 +509,8 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 <p>Oops! Why is this not working?!?!?</p>
 <p>Checking the JavaScript console we see this error something like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">WebGL: INVALID_OPERATION: texImage2D: ArrayBufferView not big enough for request
-</code></pre><p>It turns out there&#39;s a kind of obscure setting in WebGL left
+</code></pre>
+<p>It turns out there’s a kind of obscure setting in WebGL left
 over from when OpenGL was first created. Computers sometimes
 go faster when data is a certain size. For example it can
 be faster to copy 2, 4, or 8 bytes at a time instead of 1 at a time.
@@ -520,14 +518,15 @@ WebGL defaults to using 4 bytes at a time so it expects each
 row of data to be a multiple of 4 bytes (except for the last row).</p>
 <p>Our data above is only 3 bytes per row, 6 bytes total but WebGL
 is going to try to read 4 bytes for the first row and 3 bytes
-for the 2nd row for a total of 7 bytes which is why it&#39;s complaining.</p>
+for the 2nd row for a total of 7 bytes which is why it’s complaining.</p>
 <p>We can tell WebGL to deal with 1 byte at a time like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const alignment = 1;
 gl.pixelStorei(gl.UNPACK_ALIGNMENT, alignment);
-</code></pre><p>Valid alignment values are 1, 2, 4, and 8.</p>
+</code></pre>
+<p>Valid alignment values are 1, 2, 4, and 8.</p>
 <p>I suspect in WebGL you will not be able to measure a difference
 in speed between aligned data and un-aligned data. I wish the default
-was 1 instead of 4 so this issue wouldn&#39;t bite new users but, in order
+was 1 instead of 4 so this issue wouldn’t bite new users but, in order
 to stay compatible with OpenGL the default needed to stay the same.
 That way if a ported app supplies padded rows it will work unchanged.
 At the same time, in a new app you can just always set it to <code class="notranslate" translate="no">1</code> and
@@ -549,9 +548,6 @@ Texel is short for Texture Element.
 Personally I generally use "pixel" when referring to the elements of a texture without thinking about it. &#x1f607;
 </p>
 </div>
-
-
-
 
     </div>
     <div class="lesson-sidebar">

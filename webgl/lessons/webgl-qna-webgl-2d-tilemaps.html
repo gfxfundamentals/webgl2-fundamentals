@@ -236,20 +236,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>I am creating a simple 2D web game that works with your typical tile map and sprites.</p>
 <p>The twist is that I want smooth camera controls, both translation and scaling (zooming).</p>
 <p>I tried using both the Canvas 2D API, and WebGL, and in both I simply cannot avoid the bleeding grid line artifacts, while also supporting zooming properly.</p>
 <p>If it matters, all of my tiles are of size 1, and scaled to whatever size is needed, all of their coordinates are integers, and I am using  a texture atlas.</p>
-<p>Here&#39;s an example picture using my WebGL code, where the thin red/white lines are not wanted.
+<p>Here’s an example picture using my WebGL code, where the thin red/white lines are not wanted.
 <a href="https://i.stack.imgur.com/ZziiR.png"><img src="https://i.stack.imgur.com/ZziiR.png" alt="enter image description here"></a></p>
 <p>I remember writing sprite tile maps years ago with desktop GL, ironically using similar code (more or less equivalent to what I could do with WebGL 2), and it never had any of these issues.</p>
 <p>I am considering to try DOM based elements next, but I fear it will not feel or look smooth.</p>
-<h2 id="answer-">Answer:</h2>
+<h2 id="answer">Answer:</h2>
 <p>One solution is to draw the tiles in the fragment shader</p>
 <p>So you have your map, say a <code class="notranslate" translate="no">Uint32Array</code>. Break it down into units of 4 bytes each. First 2 bytes are the tile ID, last byte is flags</p>
-<p>As you walk across the quad for each pixel you lookup in the tilemap texture which tile it is, then you use that to compute UV coordinates to get pixels from that tile out of the texture of tiles. If your texture of tiles has gl.NEAREST sampling set then you&#39;ll never get any bleeding</p>
-<p>Note that unlike traditional tilemaps the ids of each tile is the X,Y coordinate of the tile in the tile texture. In other words if your tile texture has 16x8 tiles across and you want your map to show the tile 7 over and 4 down then the id of that tile is 7,4 (first byte 7, second byte 4) where as in a traditional CPU based system the tile id would probably be 4*16+7 or 71 (the 71st tile). You could add code to the shader to do more traditional indexing but since the shader has to convert the id into 2d texture coords it just seemed easier to use 2d ids.    </p>
+<p>As you walk across the quad for each pixel you lookup in the tilemap texture which tile it is, then you use that to compute UV coordinates to get pixels from that tile out of the texture of tiles. If your texture of tiles has gl.NEAREST sampling set then you’ll never get any bleeding</p>
+<p>Note that unlike traditional tilemaps the ids of each tile is the X,Y coordinate of the tile in the tile texture. In other words if your tile texture has 16x8 tiles across and you want your map to show the tile 7 over and 4 down then the id of that tile is 7,4 (first byte 7, second byte 4) where as in a traditional CPU based system the tile id would probably be 4*16+7 or 71 (the 71st tile). You could add code to the shader to do more traditional indexing but since the shader has to convert the id into 2d texture coords it just seemed easier to use 2d ids.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-webgl-2d-tilemaps-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-webgl-2d-tilemaps-example-1.html" target="_blank">click here to open in a separate window</a>

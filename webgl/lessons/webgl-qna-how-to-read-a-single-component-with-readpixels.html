@@ -236,23 +236,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
-<p>I&#39;ve converted a RGBA image to greyscale image using webgl.</p>
+      <h2 id="question">Question:</h2>
+<p>I’ve converted a RGBA image to greyscale image using webgl.</p>
 <p>When reading the pixel using <code class="notranslate" translate="no">gl.readPixels()</code> with <code class="notranslate" translate="no">gl.RGBA</code> format, getting the values for each pixel as YYYA because an RGBA pixel is converted to YYYA and assigned to <code class="notranslate" translate="no">gl_FragColor</code>. I want only 1 byte Y component for each pixel instead of 4 bytes.</p>
 <p>Tried reading the pixels with <code class="notranslate" translate="no">gl.RED</code> format(instead of <code class="notranslate" translate="no">gl.RGBA</code>)</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RED, gl.UNSIGNED_BYTE, pixels);
-</code></pre><p>but getting the following error on Chrome and getting only zeroes.</p>
+</code></pre>
+<p>but getting the following error on Chrome and getting only zeroes.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">WebGL: INVALID_ENUM: readPixels: invalid format
-</code></pre><ol>
+</code></pre>
+<ol>
 <li>Is it possible to make <code class="notranslate" translate="no">gl_FragColor</code> to output 1 byte per pixel in LUMINANCE mode, instead of RGBA, but the input texture has to be RGBA?</li>
 <li>If the format of gl rendering cannot be changed, is it possible to read only the first byte of each 4 bytes pixel, when calling <code class="notranslate" translate="no">gl.readPixels()</code>?</li>
 </ol>
-<p>Note: </p>
-<ol>
-<li>I&#39;ve already done copy the <code class="notranslate" translate="no">gl.readPixels()</code> output to another array by jumping every 4 bytes. But I want to avoid this copy as it takes more time.</li>
-<li>Also, I need the solution to be a mobile browser(ios safari and android chrome) compatible.<!-- begin snippet: js hide: false console: true babel: false -->
-</li>
-</ol>
+<p>Note:
+3. I’ve already done copy the <code class="notranslate" translate="no">gl.readPixels()</code> output to another array by jumping every 4 bytes. But I want to avoid this copy as it takes more time.
+4. Also, I need the solution to be a mobile browser(ios safari and android chrome) compatible.</p>
+<!-- begin snippet: js hide: false console: true babel: false -->
 <!-- language: lang-js -->
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function webGL() {
     var gTexture;
@@ -276,7 +276,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 }`;
 
         if (srcCanvas === null) {
-            console.log(&#39;Setting up webgl&#39;);
+            console.log('Setting up webgl');
             srcCanvas = inCanvas;
             _initialize(srcCanvas.width, srcCanvas.height);
             program = _createProgram(&quot;rgb2grey&quot;, shaderSourceRGB2GRAY);
@@ -298,7 +298,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return null;
     }
 
-    var gl = _getWebGLContext(document.createElement(&#39;canvas&#39;));
+    var gl = _getWebGLContext(document.createElement('canvas'));
 
     var _initialize = function(width, height) {
         var canvas = gl.canvas;
@@ -359,7 +359,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         shaderProgram = programs[name];
 
         if (shaderProgram){
-            console.log(&#39;Reusing program&#39;);
+            console.log('Reusing program');
             gl.useProgram(shaderProgram);
             return shaderProgram;
         }
@@ -409,7 +409,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   gl.bindFramebuffer(gl.FRAMEBUFFER, gFramebuffer);
 
   gl.uniform2f(textureSizeLocation, width, height);
-
+  
   gl.uniform1i(u_imageLoc, 0);
 
   gl.viewport(0, 0, width, height);
@@ -428,12 +428,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RED, gl.UNSIGNED_BYTE, pixels);
 
         let t2 = performance.now();
-        console.log(&#39;_render dur = &#39; + Number((t1-t0).toFixed(3)) + &#39; ms&#39;);
-        console.log(&#39;_run dur = &#39; + Number((t2-t0).toFixed(3)) + &#39; ms&#39;);
+        console.log('_render dur = ' + Number((t1-t0).toFixed(3)) + ' ms');
+        console.log('_run dur = ' + Number((t2-t0).toFixed(3)) + ' ms');
     }
 
 };
-</code></pre><!-- language: lang-html -->
+</code></pre>
+<!-- language: lang-html -->
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;div&gt;
     &lt;canvas id=&quot;source&quot;&gt;&lt;/canvas&gt;
 &lt;/div&gt;
@@ -441,7 +442,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 &lt;script src=&quot;webgl.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
 
 &lt;script&gt;
-    window.addEventListener(&#39;load&#39;, function(e) {
+    window.addEventListener('load', function(e) {
         var srcImg = new Image();
         srcImg.crossOrigin = &quot;anonymous&quot;;
         srcImg.src = &quot;https://i.picsum.photos/id/17/480/480.jpg&quot;;
@@ -454,7 +455,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             srcCanvas.width = srcImg.width;
             srcCanvas.height = srcImg.height;
 
-            let ctx = srcCanvas.getContext(&#39;2d&#39;);
+            let ctx = srcCanvas.getContext('2d');
             ctx.drawImage(srcImg, 0, 0, srcImg.width, srcImg.height);
 
             var webgl = new webGL();
@@ -463,11 +464,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
             var outData = ctx.createImageData(srcCanvas.width, srcCanvas.height);
 
-            console.log(&#39;\n&#39;);
+            console.log('\n');
             for (let k = 0; k &lt; 12; ++k) {
-                console.log(pixels[k] + &#39;, &#39;);
+                console.log(pixels[k] + ', ');
             }
-            console.log(&#39;\n&#39;);
+            console.log('\n');
 
             // Luminance plot
             for (let i = 0, j = 0; i &lt; (srcCanvas.width * srcCanvas.height * 4); i+=4, ++j ) {
@@ -480,23 +481,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             //     outData.data[i] = pixels[i];
             // }
 
-            srcCanvas.getContext(&#39;2d&#39;).putImageData(outData, 0, 0);
+            srcCanvas.getContext('2d').putImageData(outData, 0, 0);
 
         };
 
     }, true);
 
 &lt;/script&gt;
-</code></pre><!-- end snippet -->
-<h2 id="answer-">Answer:</h2>
+</code></pre>
+<!-- end snippet -->
+<h2 id="answer">Answer:</h2>
 <blockquote>
 <p>Is it possible to make gl_FragColor to output 1 byte per pixel in LUMINANCE mode, instead of RGBA, but the input texture has to be RGBA?</p>
 </blockquote>
-<p>Not portably. The spec for WebGL1 says rendering to a texture only has to be supported for gl.RGBA / gl.UNSIGNED_BYTE. All other formats are optional. </p>
+<p>Not portably. The spec for WebGL1 says rendering to a texture only has to be supported for gl.RGBA / gl.UNSIGNED_BYTE. All other formats are optional.</p>
 <blockquote>
 <p>If the format of gl rendering cannot be changed, is it possible to read only the first byte of each 4 bytes pixel, when calling gl.readPixels()?</p>
 </blockquote>
-<p>No, <a href="https://www.khronos.org/registry/OpenGL/specs/es/2.0/es_full_spec_2.0.pdf">The spec</a> section 4.3.1 says only <code class="notranslate" translate="no">gl.RGBA</code>, <code class="notranslate" translate="no">gl.UNSIGNED_BYTE</code> is supported. All other formats are optional and up to the implementation. This is the same on WebGL2. Even if you make a R8 texture (red only, 8 bits) it&#39;s up to the implemenation if if you can read it as <code class="notranslate" translate="no">gl.RED</code>/<code class="notranslate" translate="no">gl.UNSIGNED_BYTE</code>.</p>
+<p>No, <a href="https://www.khronos.org/registry/OpenGL/specs/es/2.0/es_full_spec_2.0.pdf">The spec</a> section 4.3.1 says only <code class="notranslate" translate="no">gl.RGBA</code>, <code class="notranslate" translate="no">gl.UNSIGNED_BYTE</code> is supported. All other formats are optional and up to the implementation. This is the same on WebGL2. Even if you make a R8 texture (red only, 8 bits) it’s up to the implemenation if if you can read it as <code class="notranslate" translate="no">gl.RED</code>/<code class="notranslate" translate="no">gl.UNSIGNED_BYTE</code>.</p>
 <p>See <a href="https://webglfundamentals.org/webgl/lessons/webgl-readpixels.html">Webgl1</a> and <a href="https://webgl2fundamentals.org/webgl/lessons/webgl-readpixels.html">Webgl2</a></p>
 <div class="so">
   <div>The question and quoted portions thereof are 

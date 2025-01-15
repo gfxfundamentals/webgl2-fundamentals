@@ -237,18 +237,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="lesson">
     <div class="lesson-main">
       <p>This article is a continuation of <a href="webgl-text-html.html">previous WebGL articles about drawing text</a>.
-If you haven&#39;t read them I suggest you start there and work your way back.</p>
+If you haven’t read them I suggest you start there and work your way back.</p>
 <p>Instead of using HTML elements for text we can also use another canvas but with
-a 2D context. Without profiling it&#39;s just a guess that this would be faster
-than using the DOM. Of course it&#39;s also less flexible. You don&#39;t get all the
-fancy CSS styling. But, there&#39;s no HTML elements to create and keep track of.</p>
+a 2D context. Without profiling it’s just a guess that this would be faster
+than using the DOM. Of course it’s also less flexible. You don’t get all the
+fancy CSS styling. But, there’s no HTML elements to create and keep track of.</p>
 <p>Similar to the other examples we make a container but this time we put
 2 canvases in it.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;div class=&quot;container&quot;&gt;
   &lt;canvas id=&quot;canvas&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
   &lt;canvas id=&quot;text&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
 &lt;/div&gt;
-</code></pre><p>Next setup the CSS so the canvas and the HTML overlap</p>
+</code></pre>
+<p>Next setup the CSS so the canvas and the HTML overlap</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">.container {
     position: relative;
 }
@@ -259,31 +260,35 @@ fancy CSS styling. But, there&#39;s no HTML elements to create and keep track of
     top: 0px;
     z-index: 10;
 }
-</code></pre><p>Now look up the text canvas at init time and create a 2D context for it.</p>
+</code></pre>
+<p>Now look up the text canvas at init time and create a 2D context for it.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// look up the text canvas.
 var textCanvas = document.querySelector(&quot;#text&quot;);
 
 // make a 2D context for it
 var ctx = textCanvas.getContext(&quot;2d&quot;);
-</code></pre><p>When drawing, just like WebGL, we need to clear the 2D canvas each frame.</p>
+</code></pre>
+<p>When drawing, just like WebGL, we need to clear the 2D canvas each frame.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawScene() {
     ...
 
     // Clear the 2D canvas
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-</code></pre><p>And then we just call <code class="notranslate" translate="no">fillText</code> to draw text</p>
+</code></pre>
+<p>And then we just call <code class="notranslate" translate="no">fillText</code> to draw text</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    ctx.fillText(someMsg, pixelX, pixelY);
-</code></pre><p>And here&#39;s that example</p>
+</code></pre>
+<p>And here’s that example</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-canvas2d.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-canvas2d.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>Why is the text smaller? Because that&#39;s the default size for Canvas 2D.
+<p>Why is the text smaller? Because that’s the default size for Canvas 2D.
 If you want other sizes <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_text">check out the Canvas 2D API</a>.</p>
-<p>Another reason to use Canvas 2D is it&#39;s easy to draw other things. For example
-let&#39;s add an arrow</p>
+<p>Another reason to use Canvas 2D is it’s easy to draw other things. For example
+let’s add an arrow</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// draw an arrow and text.
 
 // save all the canvas settings
@@ -307,7 +312,8 @@ ctx.fillText(someMessage, 20, 20);
 
 // restore the canvas to its old settings.
 ctx.restore();
-</code></pre><p>Here we&#39;re taking advantage of the Canvas 2D translate function so we don&#39;t have to do any extra
+</code></pre>
+<p>Here we’re taking advantage of the Canvas 2D translate function so we don’t have to do any extra
 math when drawing our arrow. We just pretend to draw at the origin and translate takes care
 of moving that origin to the corner of our F.</p>
 <p><div class="webgl_example_container">
@@ -317,7 +323,7 @@ of moving that origin to the corner of our F.</p>
 
 </p>
 <p>I think that covers using Canvas 2D. <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">Check out the Canvas 2D API</a>
-for more ideas. <a href="webgl-text-texture.html">Next we&#39;ll actually render text in WebGL</a>.</p>
+for more ideas. <a href="webgl-text-texture.html">Next we’ll actually render text in WebGL</a>.</p>
 
     </div>
     <div class="lesson-sidebar">

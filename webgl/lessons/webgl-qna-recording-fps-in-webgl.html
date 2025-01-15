@@ -236,7 +236,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>I am trying to compare performance for 3d applications on mobile devices.  I have a 3d solar system set up in webGL and im trying to record or at least display the FPS.  So far this is what i Have:</p>
 <p>in the body</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;script language=&quot;javascript&quot;&gt;
@@ -246,7 +246,8 @@ message = &quot;fps is equal to &quot;;
 document.write (message); // prints the value of the message variable
 document.write (x); //prints the value of x
 &lt;/script&gt;
-</code></pre><p>and to get The Time Var in the draw function of canvas i have this</p>
+</code></pre>
+<p>and to get The Time Var in the draw function of canvas i have this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var Time = 0;
 function drawScene() {
 var startTime = new Date();
@@ -254,20 +255,21 @@ var startTime = new Date();
 var endTime = new Date();
 Time = (endTime - startTime)
 }
-</code></pre><p>the output i get at the bottom of the canvas is &quot;fps is equal to null&quot;</p>
+</code></pre>
+<p>the output i get at the bottom of the canvas is “fps is equal to null”</p>
 <p>any help would be great!</p>
-<h2 id="answer-">Answer:</h2>
-<p>Displaying FPSs is pretty simple and has really nothing to do with WebGL other than it&#39;s common to want to know. Here&#39;s a small FPS display</p>
+<h2 id="answer">Answer:</h2>
+<p>Displaying FPSs is pretty simple and has really nothing to do with WebGL other than it’s common to want to know. Here’s a small FPS display</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-recording-fps-in-webgl-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-recording-fps-in-webgl-example-1.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>Use requestAnimationFrame for animation because that&#39;s what it&#39;s for. Browsers can sync to the screen refresh to give you buttery smooth animation. They can also stop processing if your page is not visible. setTimeout on the other hand is not designed for animation, will not be synchronised to the browser&#39;s page drawing.</p>
-<p>You should probably not use <code class="notranslate" translate="no">Date.now()</code> for computing FPS as <code class="notranslate" translate="no">Date.now()</code> only returns milliseconds. Also using <code class="notranslate" translate="no">(new Date()).getTime()</code> is especially bad since it&#39;s generating a new <code class="notranslate" translate="no">Date</code> object every frame. </p>
+<p>Use requestAnimationFrame for animation because that’s what it’s for. Browsers can sync to the screen refresh to give you buttery smooth animation. They can also stop processing if your page is not visible. setTimeout on the other hand is not designed for animation, will not be synchronised to the browser’s page drawing.</p>
+<p>You should probably not use <code class="notranslate" translate="no">Date.now()</code> for computing FPS as <code class="notranslate" translate="no">Date.now()</code> only returns milliseconds. Also using <code class="notranslate" translate="no">(new Date()).getTime()</code> is especially bad since it’s generating a new <code class="notranslate" translate="no">Date</code> object every frame.</p>
 <p><code class="notranslate" translate="no">requestAnimationFrame</code> already gets passed the time in microseconds since the page loaded so just use that.</p>
-<p>It&#39;s also common to average the FPS across frames.</p>
+<p>It’s also common to average the FPS across frames.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-recording-fps-in-webgl-example-2.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-recording-fps-in-webgl-example-2.html" target="_blank">click here to open in a separate window</a>

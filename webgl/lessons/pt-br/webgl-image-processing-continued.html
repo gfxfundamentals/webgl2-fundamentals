@@ -251,7 +251,6 @@ Textura 1      -&gt; [Sharpen]     -&gt; Textura 2
 Textura 2      -&gt; [Edge Detect] -&gt; Textura 1
 Textura 1      -&gt; [Blur]        -&gt; Textura 2
 Textura 2      -&gt; [Normal]      -&gt; Tela</pre></blockquote>
-
 <p>Para fazer isso precisamos criar framesbuffers. Na WebGL e OpenGL, um Framebuffer
 é realmente um nome ruim. Uma WebGL / OpenGL Framebuffer é realmente apenas
 uma lista de anexos e não realmente um buffer de qualquer tipo. Mas, ao
@@ -285,7 +284,8 @@ anexar uma textura a um framebuffer, podemos renderizar essa textura.</p>
                 srcFormat,
                 srcType,
                 image);
-</code></pre><p>E agora vamos usar essa função para criar mais 2 texturas e anexá-las a 2 framebuffers.</p>
+</code></pre>
+<p>E agora vamos usar essa função para criar mais 2 texturas e anexá-las a 2 framebuffers.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // crie 2 texturas e anexe-as a framesbuffers.
   var textures = [];
   var framebuffers = [];
@@ -314,7 +314,8 @@ anexar uma textura a um framebuffer, podemos renderizar essa textura.</p>
     gl.framebufferTexture2D(
         gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, texture, mipLevel);
   }
-</code></pre><p>Agora vamos fazer um conjunto de kernels e, em seguida, uma lista deles para se inscrever.</p>
+</code></pre>
+<p>Agora vamos fazer um conjunto de kernels e, em seguida, uma lista deles para se inscrever.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // Definir vários kernels convolution
   var kernels = {
     normal: [
@@ -346,7 +347,8 @@ anexar uma textura a um framebuffer, podemos renderizar essa textura.</p>
     &quot;gaussianBlur&quot;,
     &quot;unsharpen&quot;
   ];
-</code></pre><p>E, finalmente, vamos aplicar a cada um, o ping ponging de qual texturas estamos renderizando também </p>
+</code></pre>
+<p>E, finalmente, vamos aplicar a cada um, o ping ponging de qual texturas estamos renderizando também</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  function drawEffects() {
     // Diga para usar nosso programa (par de shaders)
     gl.useProgram(program);
@@ -412,7 +414,8 @@ anexar uma textura a um framebuffer, podemos renderizar essa textura.</p>
     var count = 6;
     gl.drawArrays(primitiveType, offset, count);
   }
-</code></pre><p>Aqui está uma versão de trabalho com uma interface um pouco mais flexível. Verifique os efeitos
+</code></pre>
+<p>Aqui está uma versão de trabalho com uma interface um pouco mais flexível. Verifique os efeitos
 para ativá-los. Arraste os efeitos para reordenar como eles são aplicados.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-processing.html"></iframe>
@@ -453,7 +456,8 @@ void main() {
 +   gl_Position = vec4(clipSpace * vec2(1, u_flipY), 0, 1);
   ...
 }
-</code></pre><p>E então podemos configurá-lo quando renderizamos com</p>
+</code></pre>
+<p>E então podemos configurá-lo quando renderizamos com</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
 +  var flipYLocation = gl.getUniformLocation(program, &quot;u_flipY&quot;);
 
@@ -466,8 +470,9 @@ void main() {
 
 +  // virar
 +  gl.uniform1f(flipYLocation, -1);
-</code></pre><p>Mantive esse exemplo simples usando um único programa GLSL que pode alcançar
-múltiplos efeitos. Se você quisesse fazer tudo no processamento de imagem, você provavelmente 
+</code></pre>
+<p>Mantive esse exemplo simples usando um único programa GLSL que pode alcançar
+múltiplos efeitos. Se você quisesse fazer tudo no processamento de imagem, você provavelmente
 precisaria de muitos programas GLSL. Um programa para ajuste de tonalidade, saturação e luminância.
 Outro para brilho e contraste. Um para inverter, outro para ajustar
 níveis, etc. Você precisaria alterar o código para trocar programas GLSL e atualizar

@@ -238,22 +238,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <div class="lesson-main">
       <p>Wavefront .obj files are one of the most common formats of
 3D files you can find online. They are not that hard to
-parse the most common forms so let&#39;s parse one. It will
+parse the most common forms so let’s parse one. It will
 hopefully provide a useful example for parsing 3D formats
 in general.</p>
 <p><strong>Disclaimer:</strong> This .OBJ parser is not meant to be exhaustive or
-flawless or handle every .OBJ file. Rather it&#39;s meant as an
+flawless or handle every .OBJ file. Rather it’s meant as an
 exercise to walk through handling what we run into on the way.
 That said, if you run into big issues and solutions a comment
 at the bottom might be helpful for others if they choose to
 use this code.</p>
-<p>The best documentation I&#39;ve found for the .OBJ format is
-<a href="http://paulbourke.net/dataformats/obj/">here</a>. Though 
+<p>The best documentation I’ve found for the .OBJ format is
+<a href="http://paulbourke.net/dataformats/obj/">here</a>. Though
 <a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000507.shtml">this page</a>
 links to many other documents including what appears to
 <a href="https://web.archive.org/web/20200324065233/http://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf">the original docs</a>.</p>
-<p>Let&#39;s look a simple example. Here is a cube.obj file exported from blender&#39;s default scene.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-txt"># Blender v2.80 (sub 75) OBJ File: &#39;&#39;
+<p>Let’s look a simple example. Here is a cube.obj file exported from blender’s default scene.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-txt"># Blender v2.80 (sub 75) OBJ File: ''
 # www.blender.org
 mtllib cube.mtl
 o Cube
@@ -302,23 +302,24 @@ f 6/18/6 5/19/6 1/20/6 2/11/6
 </code></pre>
 <p>Without even looking at the documentation we can probably figure
 out that lines that start with <code class="notranslate" translate="no">v</code> are positions, lines that
-start with<code class="notranslate" translate="no">vt</code> are texture coordinates, and lines that start
-with <code class="notranslate" translate="no">vn</code> are normals. What&#39;s left is to figure out the rest.</p>
+start with<code class="notranslate" translate="no"> vt</code> are texture coordinates, and lines that start
+with <code class="notranslate" translate="no">vn</code> are normals. What’s left is to figure out the rest.</p>
 <p>It appears .OBJ files are text files so the first thing we need
-to do is load a text file. Fortunately in 2020 that&#39;s super easy
+to do is load a text file. Fortunately in 2020 that’s super easy
 if we use <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await">async/await</a>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">async function main() {
   ...
 
-  const response = await fetch(&#39;resources/models/cube/cube.obj&#39;);
+  const response = await fetch('resources/models/cube/cube.obj');
   const text = await response.text();
 </code></pre>
 <p>Next it looks like we can parse it one line at time and that
 each line is in the form of</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">keyword data data data data ...
-</code></pre><p>where the first thing on the line is a keyword and data
+</code></pre>
+<p>where the first thing on the line is a keyword and data
 is separated by spaces. Lines that start with <code class="notranslate" translate="no">#</code> are comments.</p>
-<p>So, let&#39;s set up some code to parse each line, skip blank lines
+<p>So, let’s set up some code to parse each line, skip blank lines
 and comments and then call some function based on the keyword</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">+function parseOBJ(text) {
 +
@@ -326,10 +327,10 @@ and comments and then call some function based on the keyword</p>
 +  };
 +
 +  const keywordRE = /(\w*)(?: )*(.*)/;
-+  const lines = text.split(&#39;\n&#39;);
++  const lines = text.split('\n');
 +  for (let lineNo = 0; lineNo &lt; lines.length; ++lineNo) {
 +    const line = lines[lineNo].trim();
-+    if (line === &#39;&#39; || line.startsWith(&#39;#&#39;)) {
++    if (line === '' || line.startsWith('#')) {
 +      continue;
 +    }
 +    const parts = line.split(/\s+/);
@@ -341,7 +342,7 @@ and comments and then call some function based on the keyword</p>
 +    const parts = line.split(/\s+/).slice(1);
 +    const handler = keywords[keyword];
 +    if (!handler) {
-+      console.warn(&#39;unhandled keyword:&#39;, keyword, &#39;at line&#39;, lineNo + 1);
++      console.warn('unhandled keyword:', keyword, 'at line', lineNo + 1);
 +      continue;
 +    }
 +    handler(parts, unparsedArgs);
@@ -349,16 +350,16 @@ and comments and then call some function based on the keyword</p>
 }
 </code></pre>
 <p>Some things to note: We trim each line to remove leading and trailing
-spaces. I have no idea if this is needed but I think it can&#39;t hurt.
+spaces. I have no idea if this is needed but I think it can’t hurt.
 We split the line by white space using <code class="notranslate" translate="no">/\s+/</code>. Again I have no idea if
 this is needed. Can there be more than one space between data? Can
 there be tabs? No idea but it seemed safer to assume there is variation
-out there given it&#39;s a text format.</p>
+out there given it’s a text format.</p>
 <p>Otherwise we pull out the first part as the keyword and then look up a function
 for that keyword and call it passing it the data after the keyword. So now we
 just need to fill in those functions.</p>
 <p>We guessed the <code class="notranslate" translate="no">v</code>, <code class="notranslate" translate="no">vt</code>, and <code class="notranslate" translate="no">vn</code> data above. The docs say <code class="notranslate" translate="no">f</code>
-stands for &quot;face&quot; or polygon where each piece of data are
+stands for “face” or polygon where each piece of data are
 indices into the positions, texture coordinates, and normals.</p>
 <p>The indices are 1 based if positive or relative to the number
 of vertices parsed so far if negative.
@@ -374,18 +375,18 @@ We know that WebGL can only draw triangles so we need to convert
 the data to triangles. It does not say if a face can have more
 than 4 vertices nor does it says if the face must be convex or
 if it can be concave. For now lets assume they are concave.</p>
-<p>Also, in general, in WebGL we don&#39;t use a different index for
-positions, texcoords, and normals. Instead a &quot;webgl vertex&quot;
+<p>Also, in general, in WebGL we don’t use a different index for
+positions, texcoords, and normals. Instead a “webgl vertex”
 is the combination of all data for that vertex. So for example
 to draw a cube WebGL requires 36 vertices, each face is 2 triangles,
-each triangle is 3 vertices. 6 faces <em> 2 triangles </em> 3 vertices
+each triangle is 3 vertices. 6 faces * 2 triangles * 3 vertices
 per triangle is 36. Even though there are only 8 unique positions,
-6 unique normals, and who knows for texture coordinates. So, we&#39;ll
-need to read the face vertex indices and generate a &quot;webgl vertex&quot;
+6 unique normals, and who knows for texture coordinates. So, we’ll
+need to read the face vertex indices and generate a “webgl vertex”
 that is the combination of data of all 3 things. <a href="webgl-pulling-vertices.html">*</a></p>
 <p>So given all that it looks like we can parse these parts as follows</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
-+  // because indices are base 1 let&#39;s just fill in the 0th data
++  // because indices are base 1 let's just fill in the 0th data
 +  const objPositions = [[0, 0, 0]];
 +  const objTexcoords = [[0, 0]];
 +  const objNormals = [[0, 0, 0]];
@@ -405,7 +406,7 @@ that is the combination of data of all 3 things. <a href="webgl-pulling-vertices
 +  ];
 +
 +  function addVertex(vert) {
-+    const ptn = vert.split(&#39;/&#39;);
++    const ptn = vert.split('/');
 +    ptn.forEach((objIndexStr, i) =&gt; {
 +      if (!objIndexStr) {
 +        return;
@@ -443,11 +444,11 @@ as the <code class="notranslate" translate="no">f</code> indices to make it easy
 <p>In other words an <code class="notranslate" translate="no">f</code> line like</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-txt">f 1/2/3 4/5/6 7/8/9
 </code></pre>
-<p>One of those parts <code class="notranslate" translate="no">4/5/6</code> is saying &quot;use position 4&quot; for this face vertex, &quot;use
-texcoord 5&quot; and &quot;use normal 6&quot; but by putting the position, texcoord, and normal
+<p>One of those parts <code class="notranslate" translate="no">4/5/6</code> is saying “use position 4” for this face vertex, “use
+texcoord 5” and “use normal 6” but by putting the position, texcoord, and normal
 arrays themselves in an array, the <code class="notranslate" translate="no">objVertexData</code> array, we can simplify that to
-&quot;use item n of objData i for webglData i&quot; which lets us make the code simpler.</p>
-<p>At end of our function we return the data we&#39;ve built up</p>
+“use item n of objData i for webglData i” which lets us make the code simpler.</p>
+<p>At end of our function we return the data we’ve built up</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  ...
 
   return {
@@ -457,7 +458,7 @@ arrays themselves in an array, the <code class="notranslate" translate="no">objV
   };
 }
 </code></pre>
-<p>All that&#39;s left to do is draw the data. First we&#39;ll use a variation
+<p>All that’s left to do is draw the data. First we’ll use a variation
 of the shaders from <a href="webgl-3d-lighting-directional.html">the article on directional lighting</a>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
   in vec4 a_position;
@@ -492,9 +493,9 @@ const fs = `#version 300 es
   }
 `;
 </code></pre>
-<p>Then, using the code from the article on 
+<p>Then, using the code from the article on
 <a href="webgl-less-code-more-fun.html">less code more fun</a>
-first we&#39;ll load our data</p>
+first we’ll load our data</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">async function main() {
   // Get A WebGL context
   /** @type {HTMLCanvasElement} */
@@ -512,7 +513,7 @@ first we&#39;ll load our data</p>
   // compiles and links the shaders, looks up attribute and uniform locations
   const meshProgramInfo = twgl.createProgramInfo(gl, [vs, fs]);
 
-  const response = await fetch(&#39;resources/models/cube/cube.obj&#39;);
+  const response = await fetch('resources/models/cube/cube.obj');
   const text = await response.text();
   const data = parseOBJ(text);
 
@@ -535,7 +536,7 @@ first we&#39;ll load our data</p>
   // then gl.bindBuffer, gl.enableVertexAttribArray, and gl.vertexAttribPointer for each attribute
   const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
 </code></pre>
-<p>and then we&#39;ll draw it</p>
+<p>and then we’ll draw it</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  const cameraTarget = [0, 0, 0];
   const cameraPosition = [0, 0, 4];
   const zNear = 0.1;
@@ -558,7 +559,7 @@ first we&#39;ll load our data</p>
     const projection = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
 
     const up = [0, 1, 0];
-    // Compute the camera&#39;s matrix using look at.
+    // Compute the camera's matrix using look at.
     const camera = m4.lookAt(cameraPosition, cameraTarget, up);
 
     // Make a view matrix from the camera matrix.
@@ -606,13 +607,13 @@ you probably want transparent windows and chrome bumpers. The windows are
 <a href="webgl-text-texture.html">transparent</a> and the bumpers are
 <a href="webgl-environment-maps.html">reflective</a> so they need to be drawn differently
 than the body of the car. The <code class="notranslate" translate="no">usemtl</code> tag marks this separation of parts.</p>
-<p>Because we&#39;ll need to draw each of these parts separately let&#39;s fix
-the code so that each time we see a <code class="notranslate" translate="no">usemtl</code> we&#39;ll start a new set of webgl
+<p>Because we’ll need to draw each of these parts separately let’s fix
+the code so that each time we see a <code class="notranslate" translate="no">usemtl</code> we’ll start a new set of webgl
 data.</p>
-<p>First let&#39;s make some code that starts a new webgl data if we don&#39;t already
+<p>First let’s make some code that starts a new webgl data if we don’t already
 have some</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
-  // because indices are base 1 let&#39;s just fill in the 0th data
+  // because indices are base 1 let's just fill in the 0th data
   const objPositions = [[0, 0, 0]];
   const objTexcoords = [[0, 0]];
   const objNormals = [[0, 0, 0]];
@@ -633,10 +634,10 @@ have some</p>
 
 +  const geometries = [];
 +  let geometry;
-+  let material = &#39;default&#39;;
++  let material = 'default';
 +
 +  function newGeometry() {
-+    // If there is an existing geometry and it&#39;s
++    // If there is an existing geometry and it's
 +    // not empty then start a new one.
 +    if (geometry &amp;&amp; geometry.data.position.length) {
 +      geometry = undefined;
@@ -667,7 +668,7 @@ have some</p>
 
 ...
 </code></pre>
-<p>and then let&#39;s call those in the correct places when
+<p>and then let’s call those in the correct places when
 handling our keywords including adding the <code class="notranslate" translate="no">o</code> keyword
 function.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  ...
@@ -698,12 +699,13 @@ function.</p>
   };
 
   ...
+
 </code></pre>
 <p>The <code class="notranslate" translate="no">usemtl</code> keyword is not required so if there is no <code class="notranslate" translate="no">usemtl</code> in the file
 we still want geometry so in the <code class="notranslate" translate="no">f</code> handler we call <code class="notranslate" translate="no">setGeometry</code>
 which will start some if there was no <code class="notranslate" translate="no">usemtl</code> keyword in the file before
 that point.</p>
-<p>Otherwise at the end we&#39;ll return <code class="notranslate" translate="no">geometries</code> which
+<p>Otherwise at the end we’ll return <code class="notranslate" translate="no">geometries</code> which
 is an array of objects, each of which contain <code class="notranslate" translate="no">name</code> and <code class="notranslate" translate="no">data</code>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  ...
 
@@ -715,7 +717,7 @@ is an array of objects, each of which contain <code class="notranslate" translat
 +  return geometries;
 }
 </code></pre>
-<p>While we&#39;re here we should also handle the case where texcoords
+<p>While we’re here we should also handle the case where texcoords
 or normals are missing and just not include them.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">+  // remove any arrays that have no entries.
 +  for (const geometry of geometries) {
@@ -731,12 +733,12 @@ or normals are missing and just not include them.</p>
 </code></pre>
 <p>Continuing with keywords, According to the <a href="https://web.archive.org/web/20200324065233/http://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf"><em>official spec</em></a>,
 <code class="notranslate" translate="no">matlib</code> specifies separate file(s) that contains material info. Unfortunately that
-doesn&#39;t seem to match reality because filenames can have spaces them and the .OBJ format
+doesn’t seem to match reality because filenames can have spaces them and the .OBJ format
 provides no way to escape spaces or quote arguments. Ideally they should have used a well defined format
 like json or xml or yaml or something that solves this issue but in their defense .OBJ is older
 than any of those formats.</p>
 <p>We handle loading the file latter.
-For now let&#39;s just add it on to our loader so we can reference it later.</p>
+For now let’s just add it on to our loader so we can reference it later.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
   ...
 +  const materialLibs = [];
@@ -758,13 +760,13 @@ For now let&#39;s just add it on to our loader so we can reference it later.</p>
 +  };
 }
 </code></pre>
-<p><code class="notranslate" translate="no">o</code> specifies the following items belong to the named &quot;object&quot;. It&#39;s
+<p><code class="notranslate" translate="no">o</code> specifies the following items belong to the named “object”. It’s
 not really clear how to use this. Can we have a file with just <code class="notranslate" translate="no">o</code>
-but no <code class="notranslate" translate="no">usemtl</code>? Let&#39;s assume yes.</p>
+but no <code class="notranslate" translate="no">usemtl</code>? Let’s assume yes.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
   ...
-  let material = &#39;default&#39;;
-+  let object = &#39;default&#39;;
+  let material = 'default';
++  let object = 'default';
 
   ...
 
@@ -810,8 +812,8 @@ want a hard edge sometimes we need to be able to tell the system to
 ignore a face. Smoothing groups let you designate which faces will get
 included when computing vertex normals. As for computing vertex normals
 for geometry in general you can look in <a href="webgl-3d-geometry-lathe.html">the article on lathing</a> for one example.</p>
-<p>For our case let&#39;s just ignore them. It suspect most .obj files have
-normals internally and so probably don&#39;t need smoothing groups. They keep
+<p>For our case let’s just ignore them. It suspect most .obj files have
+normals internally and so probably don’t need smoothing groups. They keep
 them around for modeling packages incase you want to edit and regenerate
 normals.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">+  const noop = () =&gt; {};
@@ -822,13 +824,13 @@ normals.</p>
     ...
   };
 </code></pre>
-<p>One more keyword we haven&#39;t seen yet is <code class="notranslate" translate="no">g</code> for group. It&#39;s basically
+<p>One more keyword we haven’t seen yet is <code class="notranslate" translate="no">g</code> for group. It’s basically
 just meta data. Objects can belong to more than one group.
-Because it will appear in the next file we try let&#39;s add support here
-even though we won&#39;t actually use the data.</p>
+Because it will appear in the next file we try let’s add support here
+even though we won’t actually use the data.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
   ...
-+  let groups = [&#39;default&#39;];
++  let groups = ['default'];
   ...
   function setGeometry() {
     if (!geometry) {
@@ -865,11 +867,11 @@ even though we won&#39;t actually use the data.</p>
     ...
   };
 </code></pre>
-<p>Now that we&#39;re creating multiple sets of geometry we need to change
-our setup code to create <code class="notranslate" translate="no">WebGLBuffers</code> for each one. We&#39;ll also create
-a random color so hopefully it&#39;s easy to see the different parts.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-  const response = await fetch(&#39;resources/models/cube/cube.obj&#39;);
-+  const response = await fetch(&#39;resources/models/cube/chair.obj&#39;);
+<p>Now that we’re creating multiple sets of geometry we need to change
+our setup code to create <code class="notranslate" translate="no">WebGLBuffers</code> for each one. We’ll also create
+a random color so hopefully it’s easy to see the different parts.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-  const response = await fetch('resources/models/cube/cube.obj');
++  const response = await fetch('resources/models/cube/chair.obj');
   const text = await response.text();
 -  const data = parseOBJ(text);
 +  const obj = parseOBJ(text);
@@ -904,7 +906,6 @@ a random color so hopefully it&#39;s easy to see the different parts.</p>
 </code></pre>
 <p>I switched from loading a cube to loading this <a href="http://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a> <a href="https://sketchfab.com/3d-models/chair-aa2acddb218646a59ece132bf95aa558">chair</a> by <a href="https://sketchfab.com/haytonm">haytonm</a> I found on <a href="https://sketchfab.com/">Sketchfab</a></p>
 <div class="webgl_center"><img src="../resources/models/chair/chair.jpg" style="width: 452px;"></div>
-
 <p>To render we just need to loop over the parts</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render(time) {
   ...
@@ -941,7 +942,7 @@ a random color so hopefully it&#39;s easy to see the different parts.</p>
 </div>
 
 </p>
-<p>Wouldn&#39;t it be nice if we could try to center the object?</p>
+<p>Wouldn’t it be nice if we could try to center the object?</p>
 <p>To do that we need to compute the extents which is the minimum
 and maximum vertex positions. So first we can make a function
 that given positions will figure out the min and max positions</p>
@@ -1022,16 +1023,17 @@ well.</p>
 .OBJ files that include vertex colors. To do this they tack on extra
 values to each vertex position so instead of</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v &lt;x&gt; &lt;y&gt; &lt;z&gt;
-</code></pre><p>its</p>
+</code></pre>
+<p>its</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v &lt;x&gt; &lt;y&gt; &lt;z&gt; &lt;red&gt; &lt;green&gt; &lt;blue&gt;
-</code></pre><p>It&#39;s not clear if there is also an optional alpha at end of that.</p>
+</code></pre>
+<p>It’s not clear if there is also an optional alpha at end of that.</p>
 <p>I looked around and found this <a href="https://sketchfab.com/3d-models/book-vertex-chameleon-study-51b0b3bdcd844a9e951a9ede6f192da8">Book - Vertex chameleon study</a> by <a href="https://sketchfab.com/homkahom0">Oleaf</a> License: <a href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC</a> that uses vertex colors.</p>
 <div class="webgl_center"><img src="../resources/models/book-vertex-chameleon-study/book.png" style="width: 446px;"></div>
-
-<p>Let&#39;s see if we can add in support to our parser to handle the vertex colors.</p>
+<p>Let’s see if we can add in support to our parser to handle the vertex colors.</p>
 <p>We need to add stuff for colors everywhere we had position, normals, and texcoords</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
-  // because indices are base 1 let&#39;s just fill in the 0th data
+  // because indices are base 1 let's just fill in the 0th data
   const objPositions = [[0, 0, 0]];
   const objTexcoords = [[0, 0]];
   const objNormals = [[0, 0, 0]];
@@ -1097,10 +1099,10 @@ values to each vertex position so instead of</p>
     ...
   };
 </code></pre>
-<p>Then when we read a <code class="notranslate" translate="no">f</code> face line we call <code class="notranslate" translate="no">addVertex</code>. We&#39;ll need to grab
+<p>Then when we read a <code class="notranslate" translate="no">f</code> face line we call <code class="notranslate" translate="no">addVertex</code>. We’ll need to grab
 the vertex colors here</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  function addVertex(vert) {
-    const ptn = vert.split(&#39;/&#39;);
+    const ptn = vert.split('/');
     ptn.forEach((objIndexStr, i) =&gt; {
       if (!objIndexStr) {
         return;
@@ -1162,7 +1164,7 @@ us. It guesses how many components there are per element in the data. For data w
 that contains the string <code class="notranslate" translate="no">position</code> or <code class="notranslate" translate="no">normal</code> it assumes 3 components per element.
 For a name that contains <code class="notranslate" translate="no">texcoord</code> it assumes 2 components per element. For everything
 else it assumes 4 components per element. That means if our colors are only r, g, b,
-3 components per element, we need to tell it so it doesn&#39;t guess 4.</p>
+3 components per element, we need to tell it so it doesn’t guess 4.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const parts = obj.geometries.map(({data}) =&gt; {
   // Because data is just named arrays like this
   //
@@ -1177,7 +1179,7 @@ else it assumes 4 components per element. That means if our colors are only r, g
   // from the article &quot;less code more fun&quot;.
 
 +   if (data.position.length === data.color.length) {
-+     // it&#39;s 3. The our helper library assumes 4 so we need
++     // it's 3. The our helper library assumes 4 so we need
 +     // to tell it there are only 3.
 +     data.color = { numComponents: 3, data: data.color };
 +   }
@@ -1223,7 +1225,7 @@ to constant white.</p>
 
 +  if (data.color) {
       if (data.position.length === data.color.length) {
-        // it&#39;s 3. The our helper library assumes 4 so we need
+        // it's 3. The our helper library assumes 4 so we need
         // to tell it there are only 3.
         data.color = { numComponents: 3, data: data.color };
       }
@@ -1235,7 +1237,7 @@ to constant white.</p>
   ...
 });
 </code></pre>
-<p>We also can&#39;t use a random color per part any more</p>
+<p>We also can’t use a random color per part any more</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const parts = obj.geometries.map(({data}) =&gt; {
   ...
 
@@ -1253,7 +1255,7 @@ to constant white.</p>
   };
 });
 </code></pre>
-<p>And with that we&#39;re able to load an .OBJ file with vertex colors.</p>
+<p>And with that we’re able to load an .OBJ file with vertex colors.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-load-obj-w-vertex-colors.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-load-obj-w-vertex-colors.html" target="_blank">click here to open in a separate window</a>
@@ -1264,32 +1266,32 @@ to constant white.</p>
 <h2 id="a-bunch-of-notes">A bunch of notes</h2>
 <h3 id="the-loader-above-is-incomplete">The loader above is incomplete</h3>
 <p>You can go <a href="http://paulbourke.net/dataformats/obj/">read more about the .obj format</a>.
-There are tons of features the code above doesn&#39;t support. Also, the code has
-not been tested on very many .obj files so maybe there are lurking bugs. That said, I 
+There are tons of features the code above doesn’t support. Also, the code has
+not been tested on very many .obj files so maybe there are lurking bugs. That said, I
 suspect the majority of .obj files online only use the features shown above so I suspect
-it&#39;s probably a useful example.</p>
+it’s probably a useful example.</p>
 <h3 id="the-loader-is-not-checking-for-errors">The loader is not checking for errors</h3>
 <p>Example: the <code class="notranslate" translate="no">vt</code> keyword can have 3 values per entry instead of just 2. 3 values
-would be for 3D textures which is not common so I didn&#39;t bother. If you did pass it
-a file with 3D texture coordinates you&#39;d have to change the shaders to handle 3D
+would be for 3D textures which is not common so I didn’t bother. If you did pass it
+a file with 3D texture coordinates you’d have to change the shaders to handle 3D
 textures and the code that generates <code class="notranslate" translate="no">WebGLBuffers</code> (calls <code class="notranslate" translate="no">createBufferInfoFromArrays</code>)
-to tell it it&#39;s 3 components per UV coordinate.</p>
-<h3 id="it-s-assuming-the-data-is-homogeneous">It&#39;s assuming the data is homogeneous</h3>
+to tell it it’s 3 components per UV coordinate.</p>
+<h3 id="its-assuming-the-data-is-homogeneous">It’s assuming the data is homogeneous</h3>
 <p>I have no idea if some <code class="notranslate" translate="no">f</code> keywords can have 3 entries
-and others only 2 in the same file. If that&#39;s possible the code above doesn&#39;t
+and others only 2 in the same file. If that’s possible the code above doesn’t
 handle it.</p>
 <p>The code also assumes that if vertex positions have x, y, z they all
 have x, y, z. If there are files out there where some vertex positions
 have x, y, z, others have only x, y, and still others have x, y, z, r, g, b
-then we&#39;d have to refractor.</p>
+then we’d have to refractor.</p>
 <h3 id="you-could-put-all-the-data-in-one-buffer">You could put all the data in one buffer</h3>
 <p>The code above puts the data for position, texcoord, normal in separate buffers.
-You could put them in one buffer by either interleaving them 
-pos,uv,nrm,pos,uv,nrm,... but you&#39;d then need to change
+You could put them in one buffer by either interleaving them
+pos,uv,nrm,pos,uv,nrm,… but you’d then need to change
 how the attributes are setup to pass in strides and offsets.</p>
 <p>Extending that you could even put the data for all the parts in the same
-buffers where as currently it&#39;s one buffer per data type per part.</p>
-<p>I left those out because I don&#39;t think it&#39;s that important and because it would clutter the example.</p>
+buffers where as currently it’s one buffer per data type per part.</p>
+<p>I left those out because I don’t think it’s that important and because it would clutter the example.</p>
 <h3 id="you-could-re-index-the-vertices">You could re-index the vertices</h3>
 <p>The code above expands the vertices into flat lists of triangles. We could have reindexed
 the vertices. Especially if we put all vertex data in a single buffer or at least a single
@@ -1301,7 +1303,7 @@ map</em> to help look up the indices.</p>
 const webglIndices = [];
 
 function addVertex(vert) {
-  const ptn = vert.split(&#39;/&#39;);
+  const ptn = vert.split('/');
   // first convert all the indices to positive indices
   const indices = ptn.forEach((objIndexStr, i) =&gt; {
     if (!objIndexStr) {
@@ -1312,7 +1314,7 @@ function addVertex(vert) {
   });
   // now see that particular combination of position,texcoord,normal
   // already exists
-  const id = indices.join(&#39;,&#39;);
+  const id = indices.join(',');
   let vertIndex = idToIndexMap[id];
   if (!vertIndex) {
     // No. Add it.
@@ -1327,42 +1329,47 @@ function addVertex(vert) {
   webglIndices.push(vertexIndex);
 }
 </code></pre>
-<p>Or you could just manually re-index if you think it&#39;s important.</p>
-<h3 id="the-code-doesn-t-handle-position-only-or-position-texcoord-only-">The code doesn&#39;t handle position only or position + texcoord only.</h3>
+<p>Or you could just manually re-index if you think it’s important.</p>
+<h3 id="the-code-doesnt-handle-position-only-or-position--texcoord-only">The code doesn’t handle position only or position + texcoord only.</h3>
 <p>The code as written assumes normals exists. Like we did for
 <a href="webgl-3d-geometry-lathe.html">the lathe example</a> we could generate normals
-if they don&#39;t exist, taking into account smoothing groups if we want. Or we
-could also use different shaders that either don&#39;t use normals or compute normals.</p>
-<h3 id="you-shouldn-t-use-obj-files">You shouldn&#39;t use .OBJ files</h3>
+if they don’t exist, taking into account smoothing groups if we want. Or we
+could also use different shaders that either don’t use normals or compute normals.</p>
+<h3 id="you-shouldnt-use-obj-files">You shouldn’t use .OBJ files</h3>
 <p>Honestly you should not use .OBJ files IMO. I mostly wrote this as an example.
 If you can pull vertex data out of a file you can write importers for any format.</p>
 <p>Problems with .OBJ files include</p>
 <ul>
-<li><p>no support for lights or cameras</p>
-<p>That might be okay because maybe you&#39;re loading a bunch of parts
-(like trees, bushes, rocks for a landscape) and you don&#39;t need cameras
-or lights. Still it&#39;s nice to have the option if you want to load entire scenes
+<li>
+<p>no support for lights or cameras</p>
+<p>That might be okay because maybe you’re loading a bunch of parts
+(like trees, bushes, rocks for a landscape) and you don’t need cameras
+or lights. Still it’s nice to have the option if you want to load entire scenes
 as some artist created them.</p>
 </li>
-<li><p>No hierarchy, No scene graph</p>
-<p>If you want to load a car ideally you&#39;d like to be able to turn the wheels
+<li>
+<p>No hierarchy, No scene graph</p>
+<p>If you want to load a car ideally you’d like to be able to turn the wheels
 and have them spin around their centers. This is impossible with .OBJ
 because .OBJ contains no <a href="webgl-scene-graph.html">scene graph</a>. Better formats
 include that data which is much more useful if you want to be able to orient
-parts, slide a window, open a door, move the legs of a character, etc...</p>
+parts, slide a window, open a door, move the legs of a character, etc…</p>
 </li>
-<li><p>no support for animation or skinning</p>
+<li>
+<p>no support for animation or skinning</p>
 <p>We went over <a href="webgl-skinning.html">skinning</a> elsewhere but .OBJ provides no
 data for skinning and no data for animation. Again that might be okay
-for your needs but I&#39;d prefer one format that handles more.</p>
+for your needs but I’d prefer one format that handles more.</p>
 </li>
-<li><p>.OBJ doesn&#39;t support more modern materials.</p>
+<li>
+<p>.OBJ doesn’t support more modern materials.</p>
 <p>Materials are usually pretty engine specific but lately there is at least
-some agreement on physically based rendering materials. .OBJ doesn&#39;t support
+some agreement on physically based rendering materials. .OBJ doesn’t support
 that AFAIK.</p>
 </li>
-<li><p>.OBJ requires parsing</p>
-<p>Unless you&#39;re making a generic viewer for users to upload .OBJ files into it
+<li>
+<p>.OBJ requires parsing</p>
+<p>Unless you’re making a generic viewer for users to upload .OBJ files into it
 the best practice is to use a format that requires as little parsing as possible.
 .GLTF is a format designed for WebGL. It uses JSON so you can just load it in.
 For binary data it uses formats that are ready to load into the GPU directly,

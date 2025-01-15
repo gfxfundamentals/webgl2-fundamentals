@@ -236,59 +236,64 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <p>I want to get a snapshot of my webgl canvas and I want a high resolution capture so I increased my canvas size. This automatically changes <code class="notranslate" translate="no">gl.draingBufferWidth</code> and <code class="notranslate" translate="no">gl.draingBufferWidth</code>. I then set viewport and then render the scene.</p>
 <p>My code works correctly in low resolution (under 4000*4000) but in higher resolutions there are many problems.</p>
-<p>If the resolution is a bit higher the snapshot not does not completely show. See attached file. If the resolution increases more nothing is shown. And finally at some resolutions my  instance of webgl is destroyed and I have to restart the browser to get webgl running again </p>
+<p>If the resolution is a bit higher the snapshot not does not completely show. See attached file. If the resolution increases more nothing is shown. And finally at some resolutions my  instance of webgl is destroyed and I have to restart the browser to get webgl running again</p>
 <p>Is there any way to get a snapshot from webgl canvas with a high-resolution ? Can I use another solution?</p>
-<h2 id="answer-">Answer:</h2>
-<p>4000x4000 pixel is 4000x4000x4 or 64meg of memory. 8000x8000 is 256meg of memory. Browser&#39;s don&#39;t like allocating that large chunks of memory and often set limits on the page. So for example you have an 8000x8000 WebGL canvas which requires 2 buffers. The drawingbuffer AND the texture being displayed on the page. The drawingbuffer might be anti-aliases. If it&#39;s 4x MSAA then it would require a gig of memory just for that buffer. Then you take a screenshot so another 256meg of memory. So yes, the browser for one reason or another is likely to kill your page.</p>
-<p>On top of that WebGL has it&#39;s own limits in size. You can look up that limit which is effectively <a href="https://web3dsurvey.com/webgl/parameters/MAX_TEXTURE_SIZE"><code class="notranslate" translate="no">MAX_TEXTURE_SIZE</code></a> or <a href="https://web3dsurvey.com/webgl/parameters/MAX_VIEWPORT_DIMS"><code class="notranslate" translate="no">MAX_VIEWPORT_DIMS</code></a>. You can see from those about 40% of machines can&#39;t drawing larger than 4096 (although if you <a href="https://web3dsurvey.com/webgl/parameters/MAX_VIEWPORT_DIMS?platforms=0000ff03c02d20f201">filter to desktop only it&#39;s much better</a>). That number only means what the hardware can do. It&#39;s still limited by memory.</p>
-<p>One way to kind of maybe solve this issue is to draw the image in parts. How you do that will depend on your app. If you&#39;re using a fairly standard perspective matrix for all your rendering you can use slightly different math to render any portion of the view. Most 3d math libraries have a <code class="notranslate" translate="no">perspective</code> function and most of them also have a corresponding <code class="notranslate" translate="no">frustum</code> function that is slightly more flexible.</p>
-<p>Here&#39;s a fairly standard style WebGL simple sample that draws a cube using a typical <code class="notranslate" translate="no">perspective</code> function</p>
+<h2 id="answer">Answer:</h2>
+<p>4000x4000 pixel is 4000x4000x4 or 64meg of memory. 8000x8000 is 256meg of memory. Browser’s don’t like allocating that large chunks of memory and often set limits on the page. So for example you have an 8000x8000 WebGL canvas which requires 2 buffers. The drawingbuffer AND the texture being displayed on the page. The drawingbuffer might be anti-aliases. If it’s 4x MSAA then it would require a gig of memory just for that buffer. Then you take a screenshot so another 256meg of memory. So yes, the browser for one reason or another is likely to kill your page.</p>
+<p>On top of that WebGL has it’s own limits in size. You can look up that limit which is effectively <a href="https://web3dsurvey.com/webgl/parameters/MAX_TEXTURE_SIZE"><code class="notranslate" translate="no">MAX_TEXTURE_SIZE</code></a> or <a href="https://web3dsurvey.com/webgl/parameters/MAX_VIEWPORT_DIMS"><code class="notranslate" translate="no">MAX_VIEWPORT_DIMS</code></a>. You can see from those about 40% of machines can’t drawing larger than 4096 (although if you <a href="https://web3dsurvey.com/webgl/parameters/MAX_VIEWPORT_DIMS?platforms=0000ff03c02d20f201">filter to desktop only it’s much better</a>). That number only means what the hardware can do. It’s still limited by memory.</p>
+<p>One way to kind of maybe solve this issue is to draw the image in parts. How you do that will depend on your app. If you’re using a fairly standard perspective matrix for all your rendering you can use slightly different math to render any portion of the view. Most 3d math libraries have a <code class="notranslate" translate="no">perspective</code> function and most of them also have a corresponding <code class="notranslate" translate="no">frustum</code> function that is slightly more flexible.</p>
+<p>Here’s a fairly standard style WebGL simple sample that draws a cube using a typical <code class="notranslate" translate="no">perspective</code> function</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-render-large-scale-images-like-32000x32000-example-1.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-render-large-scale-images-like-32000x32000-example-1.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>And here&#39;s the same code rendering at 400x200 in eight 100x100 parts using a typical <code class="notranslate" translate="no">frustum</code> function instead of <code class="notranslate" translate="no">perspective</code></p>
+<p>And here’s the same code rendering at 400x200 in eight 100x100 parts using a typical <code class="notranslate" translate="no">frustum</code> function instead of <code class="notranslate" translate="no">perspective</code></p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-render-large-scale-images-like-32000x32000-example-2.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-render-large-scale-images-like-32000x32000-example-2.html" target="_blank">click here to open in a separate window</a>
 </div>
 
 </p>
-<p>If you run the snippet above you&#39;ll see it&#39;s generating 8 images</p>
+<p>If you run the snippet above you’ll see it’s generating 8 images</p>
 <p>The important parts are this</p>
 <p>First we need to decide on the total size we want</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const totalWidth = 400;
 const totalHeight = 200;
-</code></pre><p>Then we&#39;ll make a function that will render any smaller portion of that size</p>
+</code></pre>
+<p>Then we’ll make a function that will render any smaller portion of that size</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function renderPortion(totalWidth, totalHeight, partX, partY, partWidth, partHeight) {
    ...
-</code></pre><p>We&#39;ll set the canvas to the size of the part</p>
+</code></pre>
+<p>We’ll set the canvas to the size of the part</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  gl.canvas.width = partWidth;
   gl.canvas.height = partHeight;
-
+  
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-</code></pre><p>And then compute what we need to pass to the <code class="notranslate" translate="no">frustum</code> function. First we compute the rectangle at zNear that a perspective matrix would make given our field of view, aspect, and zNear values</p>
+</code></pre>
+<p>And then compute what we need to pass to the <code class="notranslate" translate="no">frustum</code> function. First we compute the rectangle at zNear that a perspective matrix would make given our field of view, aspect, and zNear values</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // corners at zNear for total image
   const zNearTotalTop = Math.tan(fov) * 0.5 * zNear;
   const zNearTotalBottom = -zNearTotalTop;
   const zNearTotalLeft = zNearTotalBottom * aspect;
   const zNearTotalRight = zNearTotalTop * aspect;
-
+  
   // width, height at zNear for total image
   const zNearTotalWidth = zNearTotalRight - zNearTotalLeft;
   const zNearTotalHeight = zNearTotalTop - zNearTotalBottom;
-</code></pre><p>Then we compute the corresponding area at zNear for the part of that we want to render and pass those to <code class="notranslate" translate="no">frustum</code> to generate a projection matrix.</p>
+</code></pre>
+<p>Then we compute the corresponding area at zNear for the part of that we want to render and pass those to <code class="notranslate" translate="no">frustum</code> to generate a projection matrix.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  const zNearPartLeft = zNearTotalLeft + partX * zNearTotalWidth / totalWidth;   const zNearPartRight = zNearTotalLeft + (partX + partWidth) * zNearTotalWidth / totalWidth;
   const zNearPartBottom = zNearTotalBottom + partY * zNearTotalHeight / totalHeight;
   const zNearPartTop = zNearTotalBottom + (partY + partHeight) * zNearTotalHeight / totalHeight;
 
   const projection = m4.frustum(zNearPartLeft, zNearPartRight, zNearPartBottom, zNearPartTop, zNear, zFar);
-</code></pre><p>Then we just render like normal</p>
+</code></pre>
+<p>Then we just render like normal</p>
 <p>Finally on the outside we have a loop to use the function we just generated to render as many parts as we want at whatever resolution we want.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const totalWidth = 400;
 const totalHeight = 200;
@@ -303,9 +308,10 @@ for (let y = 0; y &lt; totalHeight; y += partHeight) {
     // do something with image.
   }
 }
-</code></pre><p>This will let you render to any size you want but you&#39;ll need some other way to assemble the images into one larger image. You may or may not be able to do that in the browser. You could try making a giant 2D canvas and drawing each part into it (that assumes 2d canvas doesn&#39;t have the same limits as WebGL). To do that there&#39;s no need to make the images, just draw the webgl canvas into the 2d canvas.</p>
-<p>Otherwise you might have to send them to a server you create to assemble the image or depending on your use case let the user save them and load them all into an image editing program. </p>
-<p>Or if you just want to display them the browser will probably do better with 16x16 1024x1024 images than one 16kx16k image. In that case you probably want to call <code class="notranslate" translate="no">canvas.toBlob</code> instead of using dataURLs and then call <code class="notranslate" translate="no">URL.createObjectURL</code> for each blob. That way you won&#39;t have these giant dataURL strings sitting around.</p>
+</code></pre>
+<p>This will let you render to any size you want but you’ll need some other way to assemble the images into one larger image. You may or may not be able to do that in the browser. You could try making a giant 2D canvas and drawing each part into it (that assumes 2d canvas doesn’t have the same limits as WebGL). To do that there’s no need to make the images, just draw the webgl canvas into the 2d canvas.</p>
+<p>Otherwise you might have to send them to a server you create to assemble the image or depending on your use case let the user save them and load them all into an image editing program.</p>
+<p>Or if you just want to display them the browser will probably do better with 16x16 1024x1024 images than one 16kx16k image. In that case you probably want to call <code class="notranslate" translate="no">canvas.toBlob</code> instead of using dataURLs and then call <code class="notranslate" translate="no">URL.createObjectURL</code> for each blob. That way you won’t have these giant dataURL strings sitting around.</p>
 <p>Example:</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-render-large-scale-images-like-32000x32000-example-3.html"></iframe>
@@ -314,8 +320,8 @@ for (let y = 0; y &lt; totalHeight; y += partHeight) {
 
 </p>
 <p>If you want the user to be able to download a 16386x16386 image instead of 256 1024x1024 images then yet one more solution is to use the part rendering code above and for each row (or rows) of images write their data to a blobs to manually generate a PNG. <a href="https://medium.com/the-guardian-mobile-innovation-lab/generating-images-in-javascript-without-using-the-canvas-api-77f3f4355fad">This blog post</a> covers manually generating PNGs from data  and <a href="https://stackoverflow.com/a/51247740/128511">this answer suggests how to do it for very large data</a>.</p>
-<h2 id="update-">update:</h2>
-<p>Just for fun I wrote this <a href="https://github.com/greggman/dekapng">library to help generate giant pngs in the browser</a>. </p>
+<h2 id="update">update:</h2>
+<p>Just for fun I wrote this <a href="https://github.com/greggman/dekapng">library to help generate giant pngs in the browser</a>.</p>
 <div class="so">
   <div>The question and quoted portions thereof are 
     CC BY-SA 4.0 by

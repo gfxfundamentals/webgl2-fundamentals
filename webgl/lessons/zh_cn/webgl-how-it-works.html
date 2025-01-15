@@ -241,9 +241,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 第一部分是处理顶点(数据流)，变成裁剪空间节点；第二部分是基于第一部分的结果绘制像素。</p>
 <p>当你调用</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.drawArrays(gl.TRIANGLES, 0, 9);
-</code></pre><p>数字9意味着处理“9个顶点”，相应地就有9个点被处理。</p>
+</code></pre>
+<p>数字9意味着处理“9个顶点”，相应地就有9个点被处理。</p>
 <div class="webgl_center"><img src="../resources/vertex-shader-anim.gif" /></div>
-
 <p>左边是你提供的数据。点着色器是用<a href="webgl-shaders-and-glsl.html">GLSL</a>写的函数。
 每个顶点都用调用一次它。在这个函数里面， 做了一些数学运算和设置裁剪空间的顶点坐标
 到一个特殊变量<code class="notranslate" translate="no">gl_position</code>。GPU 获得了这些坐标值并在内部存起来。</p>
@@ -264,14 +264,16 @@ function setGeometry(gl) {
           -175,  100]),
       gl.STATIC_DRAW);
 }
-</code></pre><p>我们只有三个顶点。</p>
+</code></pre>
+<p>我们只有三个顶点。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Draw the scene.
 function drawScene() {
   ...
   // Draw the geometry.
 *  gl.drawArrays(gl.TRIANGLES, 0, 3);
 }
-</code></pre><p>在点着色器代码中，我们声明了前面带<code class="notranslate" translate="no">out</code>的<em>varying</em>变量，它能够传给片段着色器。</p>
+</code></pre>
+<p>在点着色器代码中，我们声明了前面带<code class="notranslate" translate="no">out</code>的<em>varying</em>变量，它能够传给片段着色器。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">out vec4 v_color;
 ...
 void main() {
@@ -283,7 +285,8 @@ void main() {
   // Color space goes from 0.0 to 1.0
 *  v_color = gl_Position * 0.5 + 0.5;
 }
-</code></pre><p>相应地，在片段着色器中,我们以前置<code class="notranslate" translate="no">in</code>声明了同样的<em>varying</em>变量。</p>
+</code></pre>
+<p>相应地，在片段着色器中,我们以前置<code class="notranslate" translate="no">in</code>声明了同样的<em>varying</em>变量。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 precision highp float;
@@ -295,7 +298,8 @@ out vec4 outColor;
 void main() {
 *  outColor = v_color;
 }
-</code></pre><p>WebGL 将会连接在点着色器和片段着色器中拥有相同名称和类型的 varying 变量。</p>
+</code></pre>
+<p>WebGL 将会连接在点着色器和片段着色器中拥有相同名称和类型的 varying 变量。</p>
 <p>下面是演示版本</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-triangle-with-position-for-color.html"></iframe>
@@ -310,25 +314,27 @@ void main() {
 <p>实际上，当 GPU 栅格化这个三角形的时候，它会基于这个三个顶点的颜色值做插值计算。
 然后，WebGL 会基于这些插值来调用片段着色器。</p>
 <p>下面例子中，我们用到下面 3 个顶点。</p>
-<p><style>
+<style>
 table.vertex_table {
   border: 1px solid black;
   border-collapse: collapse;
   font-family: monospace;
   font-size: small;
-}</p>
-<p>table.vertex_table th {
+}
+
+table.vertex_table th {
   background-color: #88ccff;
   padding-right: 1em;
   padding-left: 1em;
-}</p>
-<p>table.vertex_table td {
+}
+
+table.vertex_table td {
   border: 1px solid black;
   text-align: right;
   padding-right: 1em;
   padding-left: 1em;
 }
-</style></p>
+</style>
 <div class="hcenter">
 <table class="vertex_table">
 <tr><th colspan="2">Vertices</th></tr>
@@ -337,7 +343,6 @@ table.vertex_table {
 <tr><td>-175</td><td>100</td></tr>
 </table>
 </div>
-
 <p>我们的顶点着色器应用矩阵来平移，旋转，缩放和转换为裁剪空间。
 平移，旋转和比例的默认值是平移= 200、150，旋转= 0，比例= 1,1，因此实际上仅是平移。
 给定我们的后缓冲区为 400x300，我们的顶点着色器将应用矩阵，然后计算以下 3 个裁剪空间顶点。</p>
@@ -349,7 +354,6 @@ table.vertex_table {
 <tr><td>-0.875</td><td>-0.660</td></tr>
 </table>
 </div>
-
 <p>还将这些值转换到色彩空间，并写入到我们声明的 <em>varying</em> 变量 v_color。</p>
 <div class="hcenter">
 <table class="vertex_table">
@@ -359,7 +363,6 @@ table.vertex_table {
 <tr><td>0.0625</td><td>0.170</td><td>0.5</td></tr>
 </table>
 </div>
-
 <p>然后，写入到 v_color 的 3 个值被插值计算并传给绘制每个像素的片段着色器。</p>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 600px; height: 400px;" src="/webgl/lessons/resources/fragment-shader-anim.html"></iframe>
@@ -381,7 +384,8 @@ void main() {
   // Copy the color from the attribute to the varying.
 *  v_color = a_color;
 }
-</code></pre><p>现在，我们必须提供供 WebGL 使用的颜色。</p>
+</code></pre>
+<p>现在，我们必须提供供 WebGL 使用的颜色。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // look up where the vertex data needs to go.
   var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 +  var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
@@ -429,7 +433,8 @@ void main() {
 +          r2, b2, g2, 1]),
 +      gl.STATIC_DRAW);
 +}
-</code></pre><p>结果显示如下：</p>
+</code></pre>
+<p>结果显示如下：</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-with-2-colors.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle-with-2-colors.html" target="_blank">点此在新窗口中浏览</a>
@@ -454,7 +459,8 @@ function setColors(gl) {
 *          Math.random(), Math.random(), Math.random(), 1]),
       gl.STATIC_DRAW);
 }
-</code></pre><p>现在，你就能看到插值的 <em>varying</em> 了。</p>
+</code></pre>
+<p>现在，你就能看到插值的 <em>varying</em> 了。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-with-random-colors.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle-with-random-colors.html" target="_blank">点此在新窗口中浏览</a>
@@ -463,17 +469,19 @@ function setColors(gl) {
 </p>
 <p>我想这不是很令人兴奋，但是它确实演示了使用多个属性并将数据从顶点着色器传递到片段着色器的过程。
 如果您查看[图像处理示例]（webgl-image-processing.html），您会发现它们还使用额外的属性来传递纹理坐标。</p>
-<h2 id="-">缓冲区和属性的命令做了什么?</h2>
-<p>缓冲区是将顶点和将每个顶点数据传给GPU的方法。 <code class="notranslate" translate="no">gl.createBuffer</code>创建一个缓冲区。 
+<p>##缓冲区和属性的命令做了什么?</p>
+<p>缓冲区是将顶点和将每个顶点数据传给GPU的方法。 <code class="notranslate" translate="no">gl.createBuffer</code>创建一个缓冲区。
 <code class="notranslate" translate="no">gl.bindBuffer</code>将该缓冲区设置为正在处理的缓冲区。 <code class="notranslate" translate="no">gl.bufferData</code>将数据复制到当前缓冲区中。</p>
 <p>数据进入缓冲区后，我们需要告诉WebGL如何获取数据并将其提供给顶点着色器的属性。</p>
 <p>为此，首先我们要问WebGL给它分配给属性的位置。 例如，下面的代码：</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// look up where the vertex data needs to go.
 var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
-</code></pre><p>一旦知道了属性的位置，便发出2条命令。</p>
+</code></pre>
+<p>一旦知道了属性的位置，便发出2条命令。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.enableVertexAttribArray(location);
-</code></pre><p>这条命令告诉WebGL我们想要从缓冲区取数据</p>
+</code></pre>
+<p>这条命令告诉WebGL我们想要从缓冲区取数据</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.vertexAttribPointer(
     location,
     numComponents,
@@ -481,7 +489,8 @@ var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
     normalizeFlag,
     strideToNextPieceOfData,
     offsetIntoBuffer);
-</code></pre><p>上面这条命令告诉WebGL：从最后调用gl.bindBuffer绑定的缓冲区中获取数据；
+</code></pre>
+<p>上面这条命令告诉WebGL：从最后调用gl.bindBuffer绑定的缓冲区中获取数据；
 每个顶点有多少个（1-4）分量；数据类型是什么（BYTE，FLOAT，INT，UNSIGNED_SHORT等）；
 从一条数据到下一条数据需要跳过的字节数; 以及数据在缓冲区的偏移量。</p>
 <p>如果每种数据类型使用1个缓冲区，则步幅和偏移量都可以始终为0。
@@ -527,8 +536,7 @@ function setColors(gl) {
   var r2 = Math.random() * 256; // when stored in the
   var b2 = Math.random() * 256; // Uint8Array
   var g2 = Math.random() * 256;
-
-gl.bufferData(
+<p>gl.bufferData(
 gl.ARRAY_BUFFER,
 new Uint8Array( // Uint8Array
 [ r1, b1, g1, 255,
@@ -538,20 +546,17 @@ r2, b2, g2, 255,
 r2, b2, g2, 255,
 r2, b2, g2, 255]),
 gl.STATIC_DRAW);
-}
-
+}</p>
 </pre>
 <p>
 下面是实例演示：
 </p>
-
-<div class="webgl_example_container">
+<p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-rectangle-with-2-byte-colors.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-2d-rectangle-with-2-byte-colors.html" target="_blank">点此在新窗口中浏览</a>
 </div>
 
-
-
+</p>
 </div>
 
     </div>

@@ -240,17 +240,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p>이건 WebGL의 안티패턴 목록입니다.
 안티패턴은 하지 말아야 할 것들입니다.</p>
 <ol>
-<li><p><a id="viewportwidth"></a><code class="notranslate" translate="no">WebGLRenderingContext</code>에 <code class="notranslate" translate="no">viewportWidth</code> 및 <code class="notranslate" translate="no">viewportHeight</code> 값 설정</p>
+<li>
+<p><a id="viewportwidth"></a><code class="notranslate" translate="no">WebGLRenderingContext</code>에 <code class="notranslate" translate="no">viewportWidth</code> 및 <code class="notranslate" translate="no">viewportHeight</code> 값 설정</p>
 <p>일부 코드는 뷰포트 너비와 높이에 대한 속성을 추가하고 이를 <code class="notranslate" translate="no">WebGLRenderingContext</code>에 다음과 같이 추가합니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl = canvas.getContext(&quot;webgl2&quot;);
 gl.viewportWidth = canvas.width;    // 나쁨!!!
 gl.viewportHeight = canvas.height;  // 나쁨!!!
-</code></pre><p>그리고 아래와 같이 호출하는 경우가 있습니다.</p>
+</code></pre>
+<p>그리고 아래와 같이 호출하는 경우가 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-</code></pre><p><strong>나쁜 이유:</strong></p>
+</code></pre>
+<p><strong>나쁜 이유:</strong></p>
 <p>이제 캔버스의 크기를 바꿀 때마다 2개의 속성을 갱신해줘야 하기 때문에 객관적으로 좋지 않습니다.
 예를 들어 사용자가 창의 크기를 조정할 때 캔버스의 크기를 바꾼다면 <code class="notranslate" translate="no">gl.viewportWidth</code>와 <code class="notranslate" translate="no">gl.viewportHeight</code>는 값을 다시 설정해주기 전까지는 잘못된 값을 갖고있게 됩니다.</p>
-<p>어느 새로운 프로그래머가 코드를 훑어보고 <code class="notranslate" translate="no">gl.viewportWidth</code>와 <code class="notranslate" translate="no">gl.viewportHeight</code>를 WebGL 명세서의 일부라고 
+<p>어느 새로운 프로그래머가 코드를 훑어보고 <code class="notranslate" translate="no">gl.viewportWidth</code>와 <code class="notranslate" translate="no">gl.viewportHeight</code>를 WebGL 명세서의 일부라고
 몇개월동안 오해할 수도 있기 때문에 주관적으로도 나쁘다고 생각합니다.</p>
 <p><strong>대신 할 일:</strong></p>
 <p>왜 괜히 일을 복잡하게 만들어야 할까요?
@@ -258,19 +261,21 @@ WebGL 컨텍스트는 해당 컨텍스트가 적용될 캔버스의 참조를 �
 <pre class="prettyprint">
 gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 </pre>
-
 <p>컨텍스트 자체도 너비와 높이를 가지고 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 뷰포트를 캔버스 drawingBuffer의 크기와 일치하도록 해야 할 때는
 // 아래 코드가 항상 올바른 결과를 냅니다.
 gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-</code></pre><p>위 코드가 극단적인 경우도 처리할 수 있는 반면 <code class="notranslate" translate="no">gl.canvas.width</code>와 <code class="notranslate" translate="no">gl.canvas.height</code>를 사용하는 코드는 그렇지 않습니다.
+</code></pre>
+<p>위 코드가 극단적인 경우도 처리할 수 있는 반면 <code class="notranslate" translate="no">gl.canvas.width</code>와 <code class="notranslate" translate="no">gl.canvas.height</code>를 사용하는 코드는 그렇지 않습니다.
 그 이유는 <a href="#drawingbuffer">여기</a>를 보시면 됩니다.</p>
 </li>
-<li><p><a id="canvaswidth"></a>종횡비에 <code class="notranslate" translate="no">canvas.width</code> 및 <code class="notranslate" translate="no">canvas.height</code> 사용</p>
+<li>
+<p><a id="canvaswidth"></a>종횡비에 <code class="notranslate" translate="no">canvas.width</code> 및 <code class="notranslate" translate="no">canvas.height</code> 사용</p>
 <p>종종 코드에 이런식으로 종횡비에 대해 <code class="notranslate" translate="no">canvas.width</code>와 <code class="notranslate" translate="no">canvas.height</code>를 사용하는 경우가 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var aspect = canvas.width / canvas.height;
 perspective(fieldOfView, aspect, zNear, zFar);
-</code></pre><p><strong>나쁜 이유:</strong></p>
+</code></pre>
+<p><strong>나쁜 이유:</strong></p>
 <p>캔버스의 너비와 높이는 캔버스가 표시되는 크기와 관련이 없습니다.
 CSS가 캔버스의 표시되는 크기를 결정합니다.</p>
 <p><strong>대신 할 일:</strong></p>
@@ -279,39 +284,42 @@ CSS가 캔버스의 표시되는 크기를 결정합니다.</p>
 이 값들을 사용하면 CSS 설정에 관계없이 항상 올바른 종횡비를 얻을 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var aspect = canvas.clientWidth / canvas.clientHeight;
 perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
-</code></pre><p>다음 예제들은 drawingbuffer 크기(<code class="notranslate" translate="no">width=&quot;400&quot; height=&quot;300&quot;</code>)를 모두 동일하지만 
+</code></pre>
+<p>다음 예제들은 drawingbuffer 크기(<code class="notranslate" translate="no">width=&quot;400&quot; height=&quot;300&quot;</code>)를 모두 동일하지만
 CSS를 사용하여 브라우저에는 다른 크기로 캔버스를 표시하도록 만든 예제입니다.
-두 예제 모두 올바른 종횡비로 &#39;F&#39;를 표시한다는 점에 주목하세요.</p>
+두 예제 모두 올바른 종횡비로 'F’를 표시한다는 점에 주목하세요.</p>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 150px; height: 200px;" src="/webgl/lessons/../webgl-canvas-clientwidth-clientheight.html"></iframe>
 </div>
 
-
+</p>
 <p></p>
 <div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 400px; height: 150px;" src="/webgl/lessons/../webgl-canvas-clientwidth-clientheight.html"></iframe>
 </div>
 
-</p>
+
 <p><code class="notranslate" translate="no">canvas.width</code>와 <code class="notranslate" translate="no">canvas.height</code>를 사용했다면 그렇지 않을 겁니다.</p>
 <p><div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 150px; height: 200px;" src="/webgl/lessons/../webgl-canvas-width-height.html"></iframe>
 </div>
 
-
+</p>
 <p></p>
 <div class="webgl_diagram_container">
   <iframe class="webgl_example " style="width: 400px; height: 150px;" src="/webgl/lessons/../webgl-canvas-width-height.html"></iframe>
 </div>
 
-</p>
+
 </li>
-<li><p><a id="innerwidth"></a><code class="notranslate" translate="no">window.innerWidth</code>와 <code class="notranslate" translate="no">window.innerHeight</code>를 무언가를 계산하는 데 사용</p>
+<li>
+<p><a id="innerwidth"></a><code class="notranslate" translate="no">window.innerWidth</code>와 <code class="notranslate" translate="no">window.innerHeight</code>를 무언가를 계산하는 데 사용</p>
 <p>많은 WebGL 프로그램 여러 곳에서 <code class="notranslate" translate="no">window.innerWidth</code>와 <code class="notranslate" translate="no">window.innerHeight</code>를 사용하곤 합니다.
 예를 들어:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">canvas.width = window.innerWidth;                    // 나쁨!!
 canvas.height = window.innerHeight;                  // 나쁨!!
-</code></pre><p><strong>나쁜 이유:</strong></p>
+</code></pre>
+<p><strong>나쁜 이유:</strong></p>
 <p>포터블하지 않습니다.
 캔버스가 화면 전체를 채우는 WebGL 페이지에서는 문제가 없을 수 있습니다.
 그렇지 않은 경우엔 문제가 발생합니다.
@@ -327,7 +335,8 @@ var height = gl.canvas.clientHeight;
 
 gl.canvas.width = width;
 gl.canvas.height = height;
-</code></pre><p>여기 9가지 경우가 있습니다.
+</code></pre>
+<p>여기 9가지 경우가 있습니다.
 모두 똑같은 코드를 사용하고 있습니다.
 어떤 코드도 <code class="notranslate" translate="no">window.innerWidth</code>나 <code class="notranslate" translate="no">window.innerHeight</code>를 참조하지 않는다는 점에 주목하세요.</p>
 <p><a href="../../webgl-same-code-canvas-fullscreen.html" target="_blank">CSS를 사용한 전체 화면 캔버스만 있는 페이지</a></p>
@@ -347,17 +356,20 @@ border를 <code class="notranslate" translate="no">1em</code>으로 설정하면
 <p><a href="../../webgl-same-code-body-only-fullscreen.html" target="_blank">전체 화면으로 표시할 CSS 요소가 없고 코드로 캔버스를 삽입하는 페이지</a></p>
 <p>다시 말하지만 요점은, 웹을 받아들이고 위의 기술들을 사용하여 코드를 작성한다면 다른 방식으로 사용할 때에도 코드를 수정할 필요가 없게 된다는 것입니다.</p>
 </li>
-<li><p><a id="resize"></a>캔버스 크기 변경을 위해 <code class="notranslate" translate="no">&#39;resize&#39;</code> 이벤트 사용</p>
-<p>일부 앱은 캔버스의 크기 조정을 위해 다음과 같은 윈도우 <code class="notranslate" translate="no">&#39;resize&#39;</code> 이벤트를 확인합니다.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">window.addEventListener(&#39;resize&#39;, resizeTheCanvas);
-</code></pre><p>또는 아래와 같이요.</p>
+<li>
+<p><a id="resize"></a>캔버스 크기 변경을 위해 <code class="notranslate" translate="no">'resize'</code> 이벤트 사용</p>
+<p>일부 앱은 캔버스의 크기 조정을 위해 다음과 같은 윈도우 <code class="notranslate" translate="no">'resize'</code> 이벤트를 확인합니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">window.addEventListener('resize', resizeTheCanvas);
+</code></pre>
+<p>또는 아래와 같이요.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">window.onresize = resizeTheCanvas;
-</code></pre><p><strong>나쁜 이유:</strong></p>
+</code></pre>
+<p><strong>나쁜 이유:</strong></p>
 <p>그 자체로 나쁘진 않지만, <em>대부분</em>의 WebGL 프로그램을 고려하면 사용에 적합하지는 않습니다.
-특히 <code class="notranslate" translate="no">&#39;resize&#39;</code>는 윈도우의 크기가 바뀔 때만 동작합니다. 어떠한 이유로 캔버스의 크기가 바뀔 때는 동작하지 않습니다.
+특히 <code class="notranslate" translate="no">'resize'</code>는 윈도우의 크기가 바뀔 때만 동작합니다. 어떠한 이유로 캔버스의 크기가 바뀔 때는 동작하지 않습니다.
 예를 들어 3D 에디터를 만들고 있다고 가정해 봅시다. 캔버스는 왼쪽에 있고 설정 창은 오른쪽에 있습니다.
 두 부분을 분리하는 드래그할 수 있는 바가 있도록 만들었고 바를 드래그하여 설정 창을 크거나 작게 만들 수 있습니다.
-이 경우 <code class="notranslate" translate="no">&#39;resize&#39;</code> 이벤트가 발생하지 않습니다.
+이 경우 <code class="notranslate" translate="no">'resize'</code> 이벤트가 발생하지 않습니다.
 마찬가지로 다른 컨텐츠가 추가되거나 제거되는 페이지가 있고 브라우저가 레이아웃을 변경함에 따라 캔버스의 크기가 변한다면 resize 이벤트가 발생하지 않습니다.</p>
 <p><strong>대신 할 일:</strong></p>
 <p>안티패턴에 대한 위의 여러 해결법과 마찬가지로 대부분의 경우에 작동하도록 코드를 작성할 수 있습니다.
@@ -378,7 +390,8 @@ function render() {
    requestAnimationFrame(render);
 }
 render();
-</code></pre><p>이제 위와 같은 경우에도 캔버스가 올바른 크기로 조정됩니다.
+</code></pre>
+<p>이제 위와 같은 경우에도 캔버스가 올바른 크기로 조정됩니다.
 다른 경우를 고려하려 코드를 바꿀 필요가 없습니다.
 예시로 위의 #3에서 동일한 코드를 사용하여 에디터 부분의 크기 변경이 가능하도록 한 코드입니다.</p>
 <p><div class="webgl_example_container">
@@ -395,7 +408,8 @@ const resizeObserver = new ResizeObserver(render);
 resizeObserver.observe(gl.canvas, {box: 'content-box'});
 </pre>
 </li>
-<li><p><a id="properties"></a><code class="notranslate" translate="no">WebGLObject</code>에 속성 추가</p>
+<li>
+<p><a id="properties"></a><code class="notranslate" translate="no">WebGLObject</code>에 속성 추가</p>
 <p><code class="notranslate" translate="no">WebGLObject</code>는 <code class="notranslate" translate="no">WebGLBuffer</code>나 <code class="notranslate" translate="no">WebGLTexture</code>처럼 WebGL의 다양한 유형의 리소스입니다.
 일부 앱들은 이런 객체에 속성을 추가하는 경우가 있습니다.
 예시 코드:</p>
@@ -406,8 +420,9 @@ buffer.numComponents = 75;  // 나쁨!!
 var program = gl.createProgram();
 ...
 program.u_matrixLoc = gl.getUniformLocation(program, &quot;u_matrix&quot;);  // 나쁨!!
-</code></pre><p><strong>나쁜 이유:</strong></p>
-<p>이게 나쁜 이유는 WebGL이 &quot;컨텍스트를 잃을&quot; 수 있기 때문입니다.
+</code></pre>
+<p><strong>나쁜 이유:</strong></p>
+<p>이게 나쁜 이유는 WebGL이 “컨텍스트를 잃을” 수 있기 때문입니다.
 어떤 이유로든 발생할 수 있지만 가장 일반적인 원인으로 브라우저가 너무 많은 GPU 리소스를 사용하고 있다고 판단하면 여유 공간 확보를 위해 일부 <code class="notranslate" translate="no">WebGLRenderingContext</code>의 컨텍스트를 의도적으로 없앨 수 있습니다.
 WebGL 프로그램이 항상 작동하길 바란다면 이를 처리해야 하는데요.
 구글 맵에서는 이를 처리하고 있습니다.</p>
@@ -416,10 +431,12 @@ WebGL 프로그램이 항상 작동하길 바란다면 이를 처리해야 하�
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var buffer = null;
 buffer.itemSize = 3;        // 오류!
 buffer.numComponents = 75;  // 오류!
-</code></pre><p>다음과 같은 오류가 발생하면서 앱이 죽어버립니다.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">TypeError: Cannot set property &#39;itemSize&#39; of null
-</code></pre><p>많은 앱들이 컨텍스트를 잃어버린 경우에는 앱이 죽어도 상관하지 않는데, 
-컨텍스트 손실 이벤트를 처리하도록 앱을 업데이트하기로 결정했을 경우에는 결국 수정해야 할 코드를 
+</code></pre>
+<p>다음과 같은 오류가 발생하면서 앱이 죽어버립니다.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">TypeError: Cannot set property 'itemSize' of null
+</code></pre>
+<p>많은 앱들이 컨텍스트를 잃어버린 경우에는 앱이 죽어도 상관하지 않는데,
+컨텍스트 손실 이벤트를 처리하도록 앱을 업데이트하기로 결정했을 경우에는 결국 수정해야 할 코드를
 미리 작성하는 것은 안 좋은 생각인 것 같습니다.</p>
 <p><strong>대신 할 일:</strong></p>
 <p><code class="notranslate" translate="no">WebGLObject</code>와 이에 관한 정보를 함께 유지하고 싶다면 한 가지 방법은 자바스크립트 객체를 사용하는 겁니다.
@@ -434,7 +451,8 @@ var programInfo = {
   id: program,
   u_matrixLoc: gl.getUniformLocation(program, &quot;u_matrix&quot;),
 };
-</code></pre><p>개인적으로 <a href="webgl-less-code-more-fun.html">WebGL 작성을 훨씬 간단히 만들어주는 간단한 헬퍼</a>를 사용하는 것을 추천합니다.</p>
+</code></pre>
+<p>개인적으로 <a href="webgl-less-code-more-fun.html">WebGL 작성을 훨씬 간단히 만들어주는 간단한 헬퍼</a>를 사용하는 것을 추천합니다.</p>
 </li>
 </ol>
 <p>위의 내용이 제가 인터넷에서 본 코드 중 WebGL 안티패턴이라고 생각하는 것들의 일부입니다.
@@ -497,7 +515,6 @@ GPU에는 지원할 수 있는 픽셀 사각형(texture, renderbuffer)의 크기
 다른 하나는 drawingbuffer의 실제 크기를 알아야 하는 모든 종류의 후처리 효과의 계산입니다.
 </p>
 </div>
-
 
     </div>
     <div class="lesson-sidebar">

@@ -261,7 +261,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </p>
 <p>我们可以将颜色值和点乘结果相乘，BOOM！有光了！</p>
 <p>还有一个问题，我们如何知道三维物体的朝向？</p>
-<h2 id="-">法向量</h2>
+<h2 id="法向量">法向量</h2>
 <p>我不知道为什么叫<strong>法向量</strong>，但是在三维图形学中法向量就是描述面的朝向的单位向量。</p>
 <p>这是正方体和球体的一些法向量。</p>
 <p><div class="webgl_diagram_container">
@@ -411,7 +411,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   ]);
   gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
 }
-</code></pre><p>在代码中使用它们，先移除顶点颜色以便观察光照效果。</p>
+</code></pre>
+<p>在代码中使用它们，先移除顶点颜色以便观察光照效果。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 找顶点着色器中的属性
 var positionLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
 -var colorLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
@@ -438,7 +439,8 @@ gl.vertexAttribPointer(normalLocation, 3, gl.FLOAT, false, 0, 0);
 
 // 设置法向量
 setNormals(gl);
-</code></pre><p>现在让着色器使用它</p>
+</code></pre>
+<p>现在让着色器使用它</p>
 <p>首先在顶点着色器中只将法向量传递给片断着色器</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
@@ -467,7 +469,8 @@ void main() {
 +  // 将法向量传递给片段着色器
 +  v_normal = a_normal;
 }
-</code></pre><p>然后在片断着色器中将法向量和光照方向点乘</p>
+</code></pre>
+<p>然后在片断着色器中将法向量和光照方向点乘</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 precision highp float;
@@ -497,13 +500,16 @@ void main() {
 +  // 让我们只将颜色部分（不是 alpha）乘以光
 +  outColor.rgb *= light;
 }
-</code></pre><p>然后找到 <code class="notranslate" translate="no">u_color</code> 和 <code class="notranslate" translate="no">u_reverseLightDirection</code> 的位置。</p>
+</code></pre>
+<p>然后找到 <code class="notranslate" translate="no">u_color</code> 和 <code class="notranslate" translate="no">u_reverseLightDirection</code> 的位置。</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 寻找全局变量
   var matrixLocation = gl.getUniformLocation(program, &quot;u_matrix&quot;);
 +  var colorLocation = gl.getUniformLocation(program, &quot;u_color&quot;);
 +  var reverseLightDirectionLocation =
 +      gl.getUniformLocation(program, &quot;u_reverseLightDirection&quot;);
-</code></pre><p>为它们赋值</p>
+
+</code></pre>
+<p>为它们赋值</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // 设置矩阵
   gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
@@ -512,7 +518,8 @@ void main() {
 +
 +  // 设置光线方向
 +  gl.uniform3fv(reverseLightDirectionLocation, normalize([0.5, 0.7, 1]));
-</code></pre><p>我们之前用到的 <code class="notranslate" translate="no">normalize</code> 会将原向量转换为单位向量。
+</code></pre>
+<p>我们之前用到的 <code class="notranslate" translate="no">normalize</code> 会将原向量转换为单位向量。
 例子中的 <code class="notranslate" translate="no">x = 0.5</code> 说明光线是从右往左照，<code class="notranslate" translate="no">y = 0.7</code> 说明光线从上方往下照，
 <code class="notranslate" translate="no">z = 1</code> 说明光线从在场景前方。对应的值表示光源大多指向场景，在靠右方和上方一点的位置。</p>
 <p>这是结果</p>
@@ -547,7 +554,8 @@ void main() {
 *  // 重定向法向量并传递给片断着色器
 *  v_normal = mat3(u_world) * a_normal;
 }
-</code></pre><p>注意到我们将 <code class="notranslate" translate="no">a_normal</code> 与 <code class="notranslate" translate="no">mat3(u_world)</code> 相乘，
+</code></pre>
+<p>注意到我们将 <code class="notranslate" translate="no">a_normal</code> 与 <code class="notranslate" translate="no">mat3(u_world)</code> 相乘，
 那是因为法向量是方向所以不用关心位移，
 矩阵的左上 3x3 部分才是控制姿态的。</p>
 <p>找到全局变量</p>
@@ -556,7 +564,8 @@ void main() {
 *  var worldViewProjectionLocation =
 *      gl.getUniformLocation(program, &quot;u_worldViewProjection&quot;);
 +  var worldLocation = gl.getUniformLocation(program, &quot;u_world&quot;);
-</code></pre><p>然后更新它们</p>
+</code></pre>
+<p>然后更新它们</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*var worldMatrix = m4.yRotation(fRotationRadians);
 *var worldViewProjectionMatrix = m4.multiply(viewProjectionMatrix,
                                              worldMatrix);
@@ -566,7 +575,8 @@ void main() {
 *    worldViewProjectionLocation, false,
 *    worldViewProjectionMatrix);
 *gl.uniformMatrix4fv(worldLocation, false, worldMatrix);
-</code></pre><p>结果</p>
+</code></pre>
+<p>结果</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-directional-world.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-directional-world.html" target="_blank">点此在新窗口中浏览</a>
@@ -617,11 +627,13 @@ void main() {
   // 重定向法向量并传递给片断着色器
 *  v_normal = mat3(u_worldInverseTranspose) * a_normal;
 }
-</code></pre><p>然后找到它</p>
+</code></pre>
+<p>然后找到它</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">-  var worldLocation = gl.getUniformLocation(program, &quot;u_world&quot;);
 +  var worldInverseTransposeLocation =
 +      gl.getUniformLocation(program, &quot;u_worldInverseTranspose&quot;);
-</code></pre><p>更新它</p>
+</code></pre>
+<p>更新它</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var worldMatrix = m4.yRotation(fRotationRadians);
 var worldViewProjectionMatrix = m4.multiply(viewProjectionMatrix, worldMatrix);
 +var worldInverseMatrix = m4.inverse(worldMatrix);
@@ -635,7 +647,8 @@ gl.uniformMatrix4fv(
 +gl.uniformMatrix4fv(
 +    worldInverseTransposeLocation, false,
 +    worldInverseTransposeMatrix);
-</code></pre><p>这是转置的代码</p>
+</code></pre>
+<p>这是转置的代码</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m4 = {
   transpose: function(m) {
     return [
@@ -646,7 +659,8 @@ gl.uniformMatrix4fv(
     ];
   },
   ...
-</code></pre><p>由于我们并没有进行缩放，所以没有明显的变化，但防患于未然。</p>
+</code></pre>
+<p>由于我们并没有进行缩放，所以没有明显的变化，但防患于未然。</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lighting-directional-worldinversetranspose.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lighting-directional-worldinversetranspose.html" target="_blank">点此在新窗口中浏览</a>

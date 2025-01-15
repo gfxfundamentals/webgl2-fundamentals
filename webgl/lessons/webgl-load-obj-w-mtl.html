@@ -239,16 +239,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p>In <a href="webgl-load-obj.html">the previous article</a> we parsed .OBJ files.
 In this article lets parse their complementary .MTL material files.</p>
 <p><strong>Disclaimer:</strong> This .MTL parser is not meant to be exhaustive or
-flawless or handle every .MTL file. Rather it&#39;s meant as an
+flawless or handle every .MTL file. Rather it’s meant as an
 exercise to walk through handling what we run into on the way.
 That said, if you run into big issues and solutions a comment
 at the bottom might be helpful for others if they choose to
 use this code.</p>
 <p>We loaded this <a href="http://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a> <a href="https://sketchfab.com/3d-models/chair-aa2acddb218646a59ece132bf95aa558">chair</a> by <a href="https://sketchfab.com/haytonm">haytonm</a> I found on <a href="https://sketchfab.com/">Sketchfab</a></p>
 <div class="webgl_center"><img src="../resources/models/chair/chair.jpg" style="width: 452px;"></div>
-
 <p>It has a corresponding .MTL file that looks like this</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"># Blender MTL File: &#39;None&#39;
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"># Blender MTL File: 'None'
 # Material Count: 11
 
 newmtl D1blinn1SG
@@ -282,7 +281,8 @@ d 1.000000
 illum 2
 
 ... similar for 8 more materials
-</code></pre><p>Checking <a href="http://paulbourke.net/dataformats/mtl/">a description of the .MTL file format</a>
+</code></pre>
+<p>Checking <a href="http://paulbourke.net/dataformats/mtl/">a description of the .MTL file format</a>
 We can see the keyword <code class="notranslate" translate="no">newmtl</code> starts a new material by the given name and below
 that are all the settings for that material. Each line starts with a keyword similar
 to the .OBJ file so we can start with a similar framework</p>
@@ -298,10 +298,10 @@ to the .OBJ file so we can start with a similar framework</p>
   };
 
   const keywordRE = /(\w*)(?: )*(.*)/;
-  const lines = text.split(&#39;\n&#39;);
+  const lines = text.split('\n');
   for (let lineNo = 0; lineNo &lt; lines.length; ++lineNo) {
     const line = lines[lineNo].trim();
-    if (line === &#39;&#39; || line.startsWith(&#39;#&#39;)) {
+    if (line === '' || line.startsWith('#')) {
       continue;
     }
     const m = keywordRE.exec(line);
@@ -312,7 +312,7 @@ to the .OBJ file so we can start with a similar framework</p>
     const parts = line.split(/\s+/).slice(1);
     const handler = keywords[keyword];
     if (!handler) {
-      console.warn(&#39;unhandled keyword:&#39;, keyword);
+      console.warn('unhandled keyword:', keyword);
       continue;
     }
     handler(parts, unparsedArgs);
@@ -328,9 +328,9 @@ to the .OBJ file so we can start with a similar framework</p>
 <li><code class="notranslate" translate="no">Kd</code> is the diffuse color which was our color in <a href="webgl-3d-lighting-point.html">the article on point lights</a></li>
 <li><code class="notranslate" translate="no">Ks</code> is the specular color</li>
 <li><code class="notranslate" translate="no">Ke</code> is the emissive color</li>
-<li><code class="notranslate" translate="no">Ni</code> is the optical density. We won&#39;t use this</li>
-<li><code class="notranslate" translate="no">d</code> stands for &quot;dissolve&quot; which is the opacity</li>
-<li><code class="notranslate" translate="no">illum</code> specifies the kind of illumination. The document lists 11 kinds. We&#39;ll ignore this for now.</li>
+<li><code class="notranslate" translate="no">Ni</code> is the optical density. We won’t use this</li>
+<li><code class="notranslate" translate="no">d</code> stands for “dissolve” which is the opacity</li>
+<li><code class="notranslate" translate="no">illum</code> specifies the kind of illumination. The document lists 11 kinds. We’ll ignore this for now.</li>
 </ul>
 <p>I debated on whether or not to keep those names just as they are. I suppose a math
 person loves short names. Most code style guides prefer descriptive names so I
@@ -364,15 +364,17 @@ or manually specify it. In other words we could do this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// pseudo code - manually specify the path for both the .OBJ and .MTL files
 const obj = downloadAndParseObj(pathToOBJFile);
 const materials = downloadAndParseMtl(pathToMTLFile);
-</code></pre><p>Or we can do this</p>
+</code></pre>
+<p>Or we can do this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// pseudo code - guess the path to the .MTL file based on the .OBJ file
 const obj = downloadAndParseObj(pathToOBJFile);
 const materials = downloadAndParseMtl(pathToOBJFile, obj);
-</code></pre><p>I chose the latter which I&#39;m not totally sure is a good or bad idea.
+</code></pre>
+<p>I chose the latter which I’m not totally sure is a good or bad idea.
 According to the docs an .OBJ file can contain references to multiple .MTL
-files. I&#39;ve never seen an example of that but I&#39;m guessing the author of
+files. I’ve never seen an example of that but I’m guessing the author of
 the docs did.</p>
-<p>Further, I&#39;ve never seen the .MTL file named anything different than the
+<p>Further, I’ve never seen the .MTL file named anything different than the
 .OBJ file. In other words if the .OBJ file is <code class="notranslate" translate="no">bananas.obj</code> the .MTL file
 seems to almost always bee <code class="notranslate" translate="no">bananas.mtl</code>.</p>
 <p>That said, the spec says the .MTL files are specified in the <code class="notranslate" translate="no">.OBJ</code> file
@@ -382,8 +384,8 @@ we separate out the URL for the .OBJ file, then build new URLs for the
 .MTL files relative to the .OBJ file. Finally we load all of them,
 concatenate them since they are just text files, and pass them to our
 parser.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-const response = await fetch(&#39;resources/models/chair/chair.obj&#39;);
-+const objHref = &#39;resources/models/chair/chair.obj&#39;;
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-const response = await fetch('resources/models/chair/chair.obj');
++const objHref = 'resources/models/chair/chair.obj';
 +const response = await fetch(objHref);
 const text = await response.text();
 const obj = parseOBJ(text);
@@ -393,9 +395,9 @@ const obj = parseOBJ(text);
 +  const response = await fetch(matHref);
 +  return await response.text();
 +}));
-+const materials = parseMTL(matTexts.join(&#39;\n&#39;));
++const materials = parseMTL(matTexts.join('\n'));
 </code></pre>
-<p>Now we need to use the materials. First when we setup the parts we&#39;ll
+<p>Now we need to use the materials. First when we setup the parts we’ll
 use the name of the material we pulled out of the .OBJ file and use it
 to look up a material from the materials we just loaded.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">-const parts = obj.geometries.map(({data}) =&gt; {
@@ -439,7 +441,7 @@ to look up a material from the materials we just loaded.</p>
 }
 </code></pre>
 <p>Then we need to change the shaders. Because the materials have specular settings
-we&#39;ll add in the specular calculation from <a href="webgl-3d-lighting-point.html">the article on point lighting</a> except with one difference, we&#39;ll compute
+we’ll add in the specular calculation from <a href="webgl-3d-lighting-point.html">the article on point lighting</a> except with one difference, we’ll compute
 specular lighting from a directional light instead of a point light.</p>
 <p><code class="notranslate" translate="no">ambient</code> and <code class="notranslate" translate="no">emissive</code> might need an explanation. <code class="notranslate" translate="no">ambient</code> is the color
 of the material from light with no direction. We can multiply that by an
@@ -447,7 +449,7 @@ of the material from light with no direction. We can multiply that by an
 if we want to see it. This tends to wash thing out.</p>
 <p><code class="notranslate" translate="no">emissive</code> is the color the of the material separate from all lights so
 we just add it on. <code class="notranslate" translate="no">emissive</code> might be used if you have an area that glows.</p>
-<p>Here&#39;s the new shader.</p>
+<p>Here’s the new shader.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
 in vec4 a_position;
 in vec3 a_normal;
@@ -521,12 +523,11 @@ void main () {
 </div>
 
 </p>
-<p>Let&#39;s try to load an .OBJ file that has a .MTL that references textures</p>
-<p> I found <a href="https://www.blendswap.com/blends/view/69174">this CC-BY-NC 3.0 windmill 3D model</a> by <a href="https://www.blendswap.com/user/ahedov">ahedov</a>.</p>
+<p>Let’s try to load an .OBJ file that has a .MTL that references textures</p>
+<p>I found <a href="https://www.blendswap.com/blends/view/69174">this CC-BY-NC 3.0 windmill 3D model</a> by <a href="https://www.blendswap.com/user/ahedov">ahedov</a>.</p>
 <div class="webgl_center"><img src="../resources/models/windmill/windmill-obj.jpg"></div>
-
 <p>Its .MTL file looks like this</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"># Blender MTL File: &#39;windmill_001.blend&#39;
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"># Blender MTL File: 'windmill_001.blend'
 # Material Count: 2
 
 newmtl Material
@@ -553,8 +554,9 @@ illum 1
 map_Kd windmill_001_base_COL.jpg
 map_Bump windmill_001_base_NOR.jpg
 map_Ns windmill_001_base_SPEC.jpg
-</code></pre><p>We can see <code class="notranslate" translate="no">map_Kd</code>, <code class="notranslate" translate="no">map_Bump</code>, and <code class="notranslate" translate="no">map_Ns</code> all specify image files.
-Let&#39;s add them to our .MTL parser</p>
+</code></pre>
+<p>We can see <code class="notranslate" translate="no">map_Kd</code>, <code class="notranslate" translate="no">map_Bump</code>, and <code class="notranslate" translate="no">map_Ns</code> all specify image files.
+Let’s add them to our .MTL parser</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">+function parseMapArgs(unparsedArgs) {
 +  // TODO: handle options
 +  return unparsedArgs;
@@ -584,16 +586,16 @@ function parseMTL(text) {
 
   ...
 </code></pre>
-<p>Note: I made <code class="notranslate" translate="no">parseMapArgs</code> because according to <a href="http://paulbourke.net/dataformats/mtl/">the spec</a> there are a bunch of extra options we don&#39;t see in this file. We&#39;d need some major refactoring to use them but for now I to hopefully handle filenames with space and no options.</p>
-<p>To load all these textures we could use the code from <a href="webgl-3d-textures.html">the article on textures</a> but let&#39;s use our helpers again to unclutter the code.</p>
-<p>Two materials might reference the same image so let&#39;s keep all the textures in
-an object by filename so we don&#39;t load any twice.</p>
+<p>Note: I made <code class="notranslate" translate="no">parseMapArgs</code> because according to <a href="http://paulbourke.net/dataformats/mtl/">the spec</a> there are a bunch of extra options we don’t see in this file. We’d need some major refactoring to use them but for now I to hopefully handle filenames with space and no options.</p>
+<p>To load all these textures we could use the code from <a href="webgl-3d-textures.html">the article on textures</a> but let’s use our helpers again to unclutter the code.</p>
+<p>Two materials might reference the same image so let’s keep all the textures in
+an object by filename so we don’t load any twice.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const textures = {};
 
 // load texture for materials
 for (const material of Object.values(materials)) {
   Object.entries(material)
-    .filter(([key]) =&gt; key.endsWith(&#39;Map&#39;))
+    .filter(([key]) =&gt; key.endsWith('Map'))
     .forEach(([key, filename]) =&gt; {
       let texture = textures[filename];
       if (!texture) {
@@ -608,13 +610,13 @@ for (const material of Object.values(materials)) {
 <p>The code above goes through each property of each material. If the property ends
 in <code class="notranslate" translate="no">&quot;Map&quot;</code> it creates a relative URL, creates a texture and assigns it back to
 the material. Our helper will asynchronously load the image into the texture.</p>
-<p>We&#39;ll also put in a single white pixel texture we can use for any material that doesn&#39;t reference a texture. This way we can use the same shader. Otherwise we&#39;d need different shaders, one for materials with a texture and a different one for materials without.</p>
+<p>We’ll also put in a single white pixel texture we can use for any material that doesn’t reference a texture. This way we can use the same shader. Otherwise we’d need different shaders, one for materials with a texture and a different one for materials without.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">-const textures = {};
 +const textures = {
 +  defaultWhite: twgl.createTexture(gl, {src: [255, 255, 255, 255]}),
 +};
 </code></pre>
-<p>Let&#39;s also assign defaults for any material parameters that are missing.</p>
+<p>Let’s also assign defaults for any material parameters that are missing.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+const defaultMaterial = {
 +  diffuse: [1, 1, 1],
 +  diffuseMap: textures.defaultWhite,
@@ -642,7 +644,8 @@ const parts = obj.geometries.map(({material, data}) =&gt; {
     vao,
   };
 });
-</code></pre><p>To use the textures we need to change the shader. Let&#39;s use them one at a time. We&#39;ll first
+</code></pre>
+<p>To use the textures we need to change the shader. Let’s use them one at a time. We’ll first
 use the diffuse map.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
 in vec4 a_position;
@@ -725,8 +728,7 @@ void main () {
 a black and white texture that specifies how shiny a particular surface
 is or another way to think of it is how much of the specular reflection is used.</p>
 <div class="webgl_center"><img src="../resources/models/windmill/windmill_001_base_SPEC.jpg" style="width: 512px;"></div>
-
-<p>To use it we just need to update the shader since we&#39;re already loading
+<p>To use it we just need to update the shader since we’re already loading
 all the textures.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const fs = `#version 300 es
 precision highp float;
@@ -774,7 +776,7 @@ void main () {
 }
 `;
 </code></pre>
-<p>We should also add a default for any material that doesn&#39;t have a specular map</p>
+<p>We should also add a default for any material that doesn’t have a specular map</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const defaultMaterial = {
   diffuse: [1, 1, 1],
   diffuseMap: textures.defaultWhite,
@@ -786,7 +788,7 @@ void main () {
 };
 </code></pre>
 <p>It would be hard to see what this does with the material settings as they are in the
-.MTL file so let&#39;s hack the specular settings so they&#39;re more pleasing.</p>
+.MTL file so let’s hack the specular settings so they’re more pleasing.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">// hack the materials so we can see the specular map
 Object.values(materials).forEach(m =&gt; {
   m.shininess = 25;
@@ -800,30 +802,31 @@ Object.values(materials).forEach(m =&gt; {
 </div>
 
 </p>
-<p>I&#39;m actually surprised the blades are set to reflect. If you look back up at the
-.MTL file you&#39;ll see shininess <code class="notranslate" translate="no">Ns</code> is set to 0.0 which means the specular highlights
+<p>I’m actually surprised the blades are set to reflect. If you look back up at the
+.MTL file you’ll see shininess <code class="notranslate" translate="no">Ns</code> is set to 0.0 which means the specular highlights
 would be extremely blown out. But, also <code class="notranslate" translate="no">illum</code> is specified as 1 for both materials.
 According to the docs illum 1 means</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">color = KaIa + Kd { SUM j=1..ls, (N * Lj)Ij }
-</code></pre><p>Which translated into something more readable is</p>
+</code></pre>
+<p>Which translated into something more readable is</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">color = ambientColor * lightAmbient + diffuseColor * sumOfLightCalculations
-</code></pre><p>As you can see there nothing about using specular whatsoever and yet the file
+</code></pre>
+<p>As you can see there nothing about using specular whatsoever and yet the file
 has a specular map! ¯_(ツ)_/¯. Specular highlights require illum 2 or higher.
 This is my experience with .OBJ/.MTL files,
 that there is always some manual tweaking required for the materials. How you fix
-it is up to you. You can edit the .MTL file or you can add code. For now we&#39;ll
-go the &quot;add code&quot; direction.</p>
+it is up to you. You can edit the .MTL file or you can add code. For now we’ll
+go the “add code” direction.</p>
 <p>The last map this .MTL file uses is a <code class="notranslate" translate="no">map_Bump</code> bump map.
 This is another place where the .OBJ/.MTL files show there age.
 The file referenced is clearly a normal map, not a bump map.</p>
 <div class="webgl_center"><img src="../resources/models/windmill/windmill_001_base_NOR.jpg" style="width: 512px;"></div>
-
 <p>There is no option in the .MTL file to specify normal maps or that bump maps
 should be used as normal maps. We could use some heuristic like maybe if the
-filename has &#39;nor&#39; in it? Or, maybe we could just assume all files referenced by
-<code class="notranslate" translate="no">map_Bump</code> are normal maps in 2020 and beyond since I&#39;m not sure I&#39;ve seen an
-.OBJ file with an actual bump map in over a decade. Let&#39;s go that route for now.</p>
-<p>We&#39;ll grab the code for generating tangents from <a href="webgl-3d-lighting-normal-mapping.html">the article on normal mapping</a>.</p>
+filename has ‘nor’ in it? Or, maybe we could just assume all files referenced by
+<code class="notranslate" translate="no">map_Bump</code> are normal maps in 2020 and beyond since I’m not sure I’ve seen an
+.OBJ file with an actual bump map in over a decade. Let’s go that route for now.</p>
+<p>We’ll grab the code for generating tangents from <a href="webgl-3d-lighting-normal-mapping.html">the article on normal mapping</a>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const parts = obj.geometries.map(({material, data}) =&gt; {
   ...
 
@@ -850,7 +853,7 @@ filename has &#39;nor&#39; in it? Or, maybe we could just assume all files refer
   };
 });
 </code></pre>
-<p>We also need to add a default normal map for materials that don&#39;t have one</p>
+<p>We also need to add a default normal map for materials that don’t have one</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const textures = {
   defaultWhite: twgl.createTexture(gl, {src: [255, 255, 255, 255]}),
 +  defaultNormal: twgl.createTexture(gl, {src: [127, 127, 255, 0]}),
@@ -869,6 +872,7 @@ const defaultMaterial = {
   opacity: 1,
 };
 ...
+
 </code></pre>
 <p>And then we need to incorporate the shader changes from <a href="webgl-3d-lighting-normal-mapping.html">the article on normal mapping</a>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
@@ -964,15 +968,15 @@ void main () {
 </div>
 
 </p>
-<p>I&#39;m sure there are way more features of the .MTL file we could try to support.
+<p>I’m sure there are way more features of the .MTL file we could try to support.
 For example the <code class="notranslate" translate="no">refl</code> keyword specifies reflection maps which is another word
 for <a href="webgl-environment-maps.html">environment map</a>. They also show the various
 <code class="notranslate" translate="no">map_</code> keywords take a bunch of optional arguments. A few are:</p>
 <ul>
 <li><code class="notranslate" translate="no">-clamp on | off</code> specifies whether the texture repeats</li>
 <li><code class="notranslate" translate="no">-mm base gain</code> specifies an offset and multiplier for texture values</li>
-<li><code class="notranslate" translate="no">-o u v w</code> specifies an offset for texture coordinates. You&#39;d apply those using a texture matrix similar to what we did in <a href="webgl-2d-drawimage.html">the article on drawImage</a></li>
-<li><code class="notranslate" translate="no">-s u v w</code> specifies a scale for texture coordinates. As above you&#39;d put those in a texture matrix</li>
+<li><code class="notranslate" translate="no">-o u v w</code> specifies an offset for texture coordinates. You’d apply those using a texture matrix similar to what we did in <a href="webgl-2d-drawimage.html">the article on drawImage</a></li>
+<li><code class="notranslate" translate="no">-s u v w</code> specifies a scale for texture coordinates. As above you’d put those in a texture matrix</li>
 </ul>
 <p>I have no idea how many .MTL files are out there that use those settings.</p>
 <p>A bigger point to take home is that adding support for every feature makes
@@ -980,17 +984,16 @@ the shaders bigger and more complicated. Above we have a form of <em>uber shader
 a shader that tries to handle all cases. To make it work we passed in various
 defaults. For example we set the <code class="notranslate" translate="no">diffuseMap</code> to a white texture so if we
 load something without textures it will still display. The diffuse color will
-be multiplied by white which is 1.0 so we&#39;ll just get the diffuse color.
+be multiplied by white which is 1.0 so we’ll just get the diffuse color.
 Similarly we passed in a white default vertex color in case there are no
 vertex colors.</p>
 <p>This is a common way to get things working and if it works fast enough for your
-needs then there is no reason to change it. But, it&#39;s more common to generate
+needs then there is no reason to change it. But, it’s more common to generate
 shaders that turn these features on/off. If there are no vertex colors then
-generate a shader, as in manipulate the shader strings, so they don&#39;t have an
-<code class="notranslate" translate="no">a_color</code> attribute nor all the related code. Similarly if a material doesn&#39;t
-have a diffuse map then generate a shader that doesn&#39;t have a <code class="notranslate" translate="no">uniform sampler2D
-diffuseMap</code> and removes all related code. If it doesn&#39;t have any maps then we
-don&#39;t need texture coordinates so we&#39;d leave those out as well.</p>
+generate a shader, as in manipulate the shader strings, so they don’t have an
+<code class="notranslate" translate="no">a_color</code> attribute nor all the related code. Similarly if a material doesn’t
+have a diffuse map then generate a shader that doesn’t have a <code class="notranslate" translate="no">uniform sampler2D diffuseMap</code> and removes all related code. If it doesn’t have any maps then we
+don’t need texture coordinates so we’d leave those out as well.</p>
 <p>When you add up all the combinations there can be 1000s of shader variations.
 With just what we have above there is</p>
 <ul>
@@ -998,8 +1001,8 @@ With just what we have above there is</p>
 <li>specularMap yes/no</li>
 <li>normalMap yes/no</li>
 <li>vertex colors yes/no</li>
-<li>ambientMap yes/no (we didn&#39;t support this but .MTL file does)</li>
-<li>reflectionMap yes/no (we didn&#39;t support this but the .MTL file does)</li>
+<li>ambientMap yes/no (we didn’t support this but .MTL file does)</li>
+<li>reflectionMap yes/no (we didn’t support this but the .MTL file does)</li>
 </ul>
 <p>Just those represent 64 combinations. If we add in say 1 to 4 lights, and those
 lights can be spot, or point, or, directional we end up with 8192 possible
@@ -1016,14 +1019,13 @@ we could have done something like this</p>
 uniform bool hasDiffuseMap;
 uniform vec4 diffuse;
 uniform sampler2D diffuseMap
-
-...
-  vec4 effectiveDiffuse = diffuse;
-  if (hasDiffuseMap) {
-    effectiveDiffuse *= texture2D(diffuseMap, texcoord);
-  }
-...
-</code></pre>
+<p>…
+vec4 effectiveDiffuse = diffuse;
+if (hasDiffuseMap) {
+effectiveDiffuse *= texture2D(diffuseMap, texcoord);
+}
+…
+</code></pre></p>
 <p>Conditionals like that are generally discouraged because depending on the
 GPU/driver they are often not very performant.</p>
 <p>Either do like we did above and try to make the code have no conditionals. We used

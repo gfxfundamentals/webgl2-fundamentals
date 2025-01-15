@@ -237,20 +237,21 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="lesson">
     <div class="lesson-main">
       <p>This is a continuation from <a href="webgl-fundamentals.html">WebGL Fundamentals</a>.
-If you haven&#39;t read about how WebGL works you might want to <a href="webgl-how-it-works.html">read this first</a>.</p>
-<p>We&#39;ve talked about shaders and GLSL but haven&#39;t really given them any specific details.
-I think I was hoping it would be clear by example but let&#39;s try to make it clearer just in case.</p>
+If you haven’t read about how WebGL works you might want to <a href="webgl-how-it-works.html">read this first</a>.</p>
+<p>We’ve talked about shaders and GLSL but haven’t really given them any specific details.
+I think I was hoping it would be clear by example but let’s try to make it clearer just in case.</p>
 <p>As mentioned in <a href="webgl-how-it-works.html">how it works</a> WebGL requires 2 shaders every time you
 draw something. A <em>vertex shader</em> and a <em>fragment shader</em>. Each shader is a <em>function</em>. A vertex
 shader and fragment shader are linked together into a shader program (or just program). A typical
 WebGL app will have many shader programs.</p>
 <h2 id="vertex-shader">Vertex Shader</h2>
-<p>A Vertex Shader&#39;s job is to generate clipspace coordinates. It always takes the form</p>
+<p>A Vertex Shader’s job is to generate clipspace coordinates. It always takes the form</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 void main() {
    gl_Position = doMathToMakeClipspaceCoordinates
 }
-</code></pre><p>Your shader is called once per vertex. Each time it&#39;s called you are required to set the special global variable, <code class="notranslate" translate="no">gl_Position</code> to some clipspace coordinates.</p>
+</code></pre>
+<p>Your shader is called once per vertex. Each time it’s called you are required to set the special global variable, <code class="notranslate" translate="no">gl_Position</code> to some clipspace coordinates.</p>
 <p>Vertex shaders need data. They can get that data in 3 ways.</p>
 <ol>
 <li><a href="#attributes">Attributes</a> (data pulled from buffers)</li>
@@ -262,12 +263,15 @@ void main() {
 <a href="webgl-how-it-works.html">How it works</a> covered buffers and
 attributes. You create buffers,</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var buf = gl.createBuffer();
-</code></pre><p>put data in those buffers</p>
+</code></pre>
+<p>put data in those buffers</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindBuffer(gl.ARRAY_BUFFER, buf);
 gl.bufferData(gl.ARRAY_BUFFER, someData, gl.STATIC_DRAW);
-</code></pre><p>Then, given a shader program you made you look up the location of its attributes,</p>
+</code></pre>
+<p>Then, given a shader program you made you look up the location of its attributes,</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var positionLoc = gl.getAttribLocation(someShaderProgram, &quot;a_position&quot;);
-</code></pre><p>then tell WebGL how to pull data out of those buffers and into the attribute</p>
+</code></pre>
+<p>then tell WebGL how to pull data out of those buffers and into the attribute</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// turn on getting data out of a buffer for this attribute
 gl.enableVertexAttribArray(positionLoc);
 
@@ -279,7 +283,8 @@ var stride = 0;         // how many bytes to move to the next vertex
                         // 0 = use the correct stride for type and numComponents
 
 gl.vertexAttribPointer(positionLoc, numComponents, type, false, stride, offset);
-</code></pre><p>In <a href="webgl-fundamentals.html">WebGL fundamentals</a> we showed that we can do no math
+</code></pre>
+<p>In <a href="webgl-fundamentals.html">WebGL fundamentals</a> we showed that we can do no math
 in the shader and just pass the data directly through.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
@@ -288,7 +293,8 @@ in vec4 a_position;
 void main() {
    gl_Position = a_position;
 }
-</code></pre><p>If we put clipspace vertices into our buffers it will work.</p>
+</code></pre>
+<p>If we put clipspace vertices into our buffers it will work.</p>
 <p>Attributes can use <code class="notranslate" translate="no">float</code>, <code class="notranslate" translate="no">vec2</code>, <code class="notranslate" translate="no">vec3</code>, <code class="notranslate" translate="no">vec4</code>, <code class="notranslate" translate="no">mat2</code>, <code class="notranslate" translate="no">mat3</code>, <code class="notranslate" translate="no">mat4</code>,
 <code class="notranslate" translate="no">int</code>, <code class="notranslate" translate="no">ivec2</code>, <code class="notranslate" translate="no">ivec3</code>, <code class="notranslate" translate="no">ivec4</code>, <code class="notranslate" translate="no">uint</code>, <code class="notranslate" translate="no">uvec2</code>, <code class="notranslate" translate="no">uvec3</code>, <code class="notranslate" translate="no">uvec4</code> as types.</p>
 <h3 id="uniforms">Uniforms</h3>
@@ -303,12 +309,15 @@ in vec4 a_position;
 void main() {
    gl_Position = a_position + u_offset;
 }
-</code></pre><p>And now we could offset every vertex by a certain amount. First we&#39;d look up the
+</code></pre>
+<p>And now we could offset every vertex by a certain amount. First we’d look up the
 location of the uniform</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var offsetLoc = gl.getUniformLocation(someProgram, &quot;u_offset&quot;);
-</code></pre><p>And then before drawing we&#39;d set the uniform</p>
+</code></pre>
+<p>And then before drawing we’d set the uniform</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.uniform4fv(offsetLoc, [1, 0, 0, 0]);  // offset it to the right half the screen
-</code></pre><p>Uniforms can be many types. For each type you have to call the corresponding function to set it.</p>
+</code></pre>
+<p>Uniforms can be many types. For each type you have to call the corresponding function to set it.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.uniform1f (floatUniformLoc, v);                 // for float
 gl.uniform1fv(floatUniformLoc, [v]);               // for float or float array
 gl.uniform2f (vec2UniformLoc,  v0, v1);            // for vec2
@@ -344,7 +353,8 @@ gl.uniform4uv(ivec4UniformLoc, [v0, v1, v2, v4]);  // for uvec4 or uvec4 array
 // sampler2DArray, sampler2DArrayShadow
 gl.uniform1i (samplerUniformLoc,   v);
 gl.uniform1iv(samplerUniformLoc, [v]);
-</code></pre><p>There&#39;s also types <code class="notranslate" translate="no">bool</code>, <code class="notranslate" translate="no">bvec2</code>, <code class="notranslate" translate="no">bvec3</code>, and <code class="notranslate" translate="no">bvec4</code>. They use either the <code class="notranslate" translate="no">gl.uniform?f?</code>, <code class="notranslate" translate="no">gl.uniform?i?</code>,
+</code></pre>
+<p>There’s also types <code class="notranslate" translate="no">bool</code>, <code class="notranslate" translate="no">bvec2</code>, <code class="notranslate" translate="no">bvec3</code>, and <code class="notranslate" translate="no">bvec4</code>. They use either the <code class="notranslate" translate="no">gl.uniform?f?</code>, <code class="notranslate" translate="no">gl.uniform?i?</code>,
 or <code class="notranslate" translate="no">gl.uniform?u?</code> functions.</p>
 <p>Note that for an array you can set all the uniforms of the array at once. For example</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// in shader
@@ -355,7 +365,8 @@ var someVec2Loc = gl.getUniformLocation(someProgram, &quot;u_someVec2&quot;);
 
 // at render time
 gl.uniform2fv(someVec2Loc, [1, 2, 3, 4, 5, 6]);  // set the entire array of u_someVec2
-</code></pre><p>But if you want to set individual elements of the array you must look up the location of
+</code></pre>
+<p>But if you want to set individual elements of the array you must look up the location of
 each element individually.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// in JavaScript at init time
 var someVec2Element0Loc = gl.getUniformLocation(someProgram, &quot;u_someVec2[0]&quot;);
@@ -366,19 +377,22 @@ var someVec2Element2Loc = gl.getUniformLocation(someProgram, &quot;u_someVec2[2]
 gl.uniform2fv(someVec2Element0Loc, [1, 2]);  // set element 0
 gl.uniform2fv(someVec2Element1Loc, [3, 4]);  // set element 1
 gl.uniform2fv(someVec2Element2Loc, [5, 6]);  // set element 2
-</code></pre><p>Similarly if you create a struct</p>
+</code></pre>
+<p>Similarly if you create a struct</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">struct SomeStruct {
   bool active;
   vec2 someVec2;
 };
 uniform SomeStruct u_someThing;
-</code></pre><p>you have to look up each field individually</p>
+</code></pre>
+<p>you have to look up each field individually</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var someThingActiveLoc = gl.getUniformLocation(someProgram, &quot;u_someThing.active&quot;);
 var someThingSomeVec2Loc = gl.getUniformLocation(someProgram, &quot;u_someThing.someVec2&quot;);
-</code></pre><h3 id="textures-in-vertex-shaders">Textures in Vertex Shaders</h3>
+</code></pre>
+<h3 id="textures-in-vertex-shaders">Textures in Vertex Shaders</h3>
 <p>See <a href="#textures-in-fragment-shaders">Textures in Fragment Shaders</a>.</p>
 <h2 id="fragment-shader">Fragment Shader</h2>
-<p>A Fragment Shader&#39;s job is to provide a color for the current pixel being rasterized.
+<p>A Fragment Shader’s job is to provide a color for the current pixel being rasterized.
 It always takes the form</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
@@ -388,7 +402,8 @@ out vec4 outColor;  // you can pick any name
 void main() {
    outColor = doMathToMakeAColor;
 }
-</code></pre><p>Your fragment shader is called once per pixel. Each time it&#39;s called you are required
+</code></pre>
+<p>Your fragment shader is called once per pixel. Each time it’s called you are required
 to set your out variable to some color.</p>
 <p>Fragment shaders need data. They can get data in 3 ways</p>
 <ol>
@@ -411,7 +426,8 @@ void main() {
    vec2 texcoord = vec2(0.5, 0.5);  // get a value from the middle of the texture
    outColor = texture(u_texture, texcoord);
 }
-</code></pre><p>What data comes out of the texture is <a href="webgl-3d-textures.html">dependent on many settings</a>.
+</code></pre>
+<p>What data comes out of the texture is <a href="webgl-3d-textures.html">dependent on many settings</a>.
 At a minimum we need to create and put data in the texture, for example</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var tex = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -432,17 +448,22 @@ gl.texImage2D(gl.TEXTURE_2D,
               format,
               type,
               data);
-</code></pre><p>Set the filtering</p>
+</code></pre>
+<p>Set the filtering</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-</code></pre><p>Then look up the uniform location in the shader program</p>
+</code></pre>
+<p>Then look up the uniform location in the shader program</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var someSamplerLoc = gl.getUniformLocation(someProgram, &quot;u_texture&quot;);
-</code></pre><p>WebGL then requires you to bind it to a texture unit</p>
+</code></pre>
+<p>WebGL then requires you to bind it to a texture unit</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var unit = 5;  // Pick some texture unit
 gl.activeTexture(gl.TEXTURE0 + unit);
 gl.bindTexture(gl.TEXTURE_2D, tex);
-</code></pre><p>And tell the shader which unit you bound the texture to</p>
+</code></pre>
+<p>And tell the shader which unit you bound the texture to</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.uniform1i(someSamplerLoc, unit);
-</code></pre><h3 id="varyings">Varyings</h3>
+</code></pre>
+<h3 id="varyings">Varyings</h3>
 <p>A varying is a way to pass a value from a vertex shader to a fragment shader which we
 covered in <a href="webgl-how-it-works.html">how it works</a>.</p>
 <p>To use a varying we need to declare matching varyings in both a vertex and fragment shader.
@@ -462,7 +483,8 @@ void main() {
   gl_Position = a_position + u_offset;
 +  v_positionWithOffset = a_position + u_offset;
 }
-</code></pre><p>Fragment shader</p>
+</code></pre>
+<p>Fragment shader</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
@@ -475,14 +497,15 @@ void main() {
 +  vec4 color = v_positionWithOffset * 0.5 + 0.5;
 +  outColor = color;
 }
-</code></pre><p>The example above is a mostly nonsense example. It doesn&#39;t generally make sense to
+</code></pre>
+<p>The example above is a mostly nonsense example. It doesn’t generally make sense to
 directly copy the clip space values to the fragment shader and use them as colors. Nevertheless
 it will work and produce colors.</p>
 <h2 id="glsl">GLSL</h2>
 <p>GLSL stands for <a href="https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf">Graphics Library Shader Language</a>.
-It&#39;s the language shaders are written
+It’s the language shaders are written
 in. It has some special semi unique features that are certainly not common in JavaScript.
-It&#39;s designed to do the math that is commonly needed to compute things for rasterizing
+It’s designed to do the math that is commonly needed to compute things for rasterizing
 graphics. So for example it has built in types like <code class="notranslate" translate="no">vec2</code>, <code class="notranslate" translate="no">vec3</code>, and <code class="notranslate" translate="no">vec4</code> which
 represent 2 values, 3 values, and 4 values respectively. Similarly it has <code class="notranslate" translate="no">mat2</code>, <code class="notranslate" translate="no">mat3</code>
 and <code class="notranslate" translate="no">mat4</code> which represent 2x2, 3x3, and 4x4 matrices. You can do things like multiply
@@ -490,16 +513,19 @@ a <code class="notranslate" translate="no">vec</code> by a scalar.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 a = vec4(1, 2, 3, 4);
 vec4 b = a * 2.0;
 // b is now vec4(2, 4, 6, 8);
-</code></pre><p>Similarly it can do matrix multiplication and vector to matrix multiplication</p>
+</code></pre>
+<p>Similarly it can do matrix multiplication and vector to matrix multiplication</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">mat4 a = ???
 mat4 b = ???
 mat4 c = a * b;
 
 vec4 v = ???
 vec4 y = c * v;
-</code></pre><p>It also has various selectors for the parts of a vec. For a vec4</p>
+</code></pre>
+<p>It also has various selectors for the parts of a vec. For a vec4</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 v;
-</code></pre><ul>
+</code></pre>
+<ul>
 <li><code class="notranslate" translate="no">v.x</code> is the same as <code class="notranslate" translate="no">v.s</code> and <code class="notranslate" translate="no">v.r</code> and <code class="notranslate" translate="no">v[0]</code>.</li>
 <li><code class="notranslate" translate="no">v.y</code> is the same as <code class="notranslate" translate="no">v.t</code> and <code class="notranslate" translate="no">v.g</code> and <code class="notranslate" translate="no">v[1]</code>.</li>
 <li><code class="notranslate" translate="no">v.z</code> is the same as <code class="notranslate" translate="no">v.p</code> and <code class="notranslate" translate="no">v.b</code> and <code class="notranslate" translate="no">v[2]</code>.</li>
@@ -507,53 +533,66 @@ vec4 y = c * v;
 </ul>
 <p>It is able to <em>swizzle</em> vec components which means you can swap or repeat components.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v.yyyy
-</code></pre><p>is the same as</p>
+</code></pre>
+<p>is the same as</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4(v.y, v.y, v.y, v.y)
-</code></pre><p>Similarly</p>
+</code></pre>
+<p>Similarly</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v.bgra
-</code></pre><p>is the same as</p>
+</code></pre>
+<p>is the same as</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4(v.b, v.g, v.r, v.a)
-</code></pre><p>When constructing a vec or a mat you can supply multiple parts at once. So for example</p>
+</code></pre>
+<p>When constructing a vec or a mat you can supply multiple parts at once. So for example</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4(v.rgb, 1)
-</code></pre><p>Is the same as</p>
+</code></pre>
+<p>Is the same as</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4(v.r, v.g, v.b, 1)
-</code></pre><p>One thing you&#39;ll likely get caught up on is that GLSL is very type strict.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">float f = 1;  // ERROR 1 is an int. You can&#39;t assign an int to a float
-</code></pre><p>The correct way is one of these</p>
+</code></pre>
+<p>One thing you’ll likely get caught up on is that GLSL is very type strict.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">float f = 1;  // ERROR 1 is an int. You can't assign an int to a float
+</code></pre>
+<p>The correct way is one of these</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">float f = 1.0;      // use float
 float f = float(1)  // cast the integer to a float
-</code></pre><p>The example above of <code class="notranslate" translate="no">vec4(v.rgb, 1)</code> doesn&#39;t complain about the <code class="notranslate" translate="no">1</code> because <code class="notranslate" translate="no">vec4</code> is
+</code></pre>
+<p>The example above of <code class="notranslate" translate="no">vec4(v.rgb, 1)</code> doesn’t complain about the <code class="notranslate" translate="no">1</code> because <code class="notranslate" translate="no">vec4</code> is
 casting the things inside just like <code class="notranslate" translate="no">float(1)</code>.</p>
 <p>GLSL has a bunch of built in functions. Many of them operate on multiple components at once.
 So for example</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">T sin(T angle)
-</code></pre><p>Means T can be <code class="notranslate" translate="no">float</code>, <code class="notranslate" translate="no">vec2</code>, <code class="notranslate" translate="no">vec3</code> or <code class="notranslate" translate="no">vec4</code>. If you pass in <code class="notranslate" translate="no">vec4</code> you get <code class="notranslate" translate="no">vec4</code> back
+</code></pre>
+<p>Means T can be <code class="notranslate" translate="no">float</code>, <code class="notranslate" translate="no">vec2</code>, <code class="notranslate" translate="no">vec3</code> or <code class="notranslate" translate="no">vec4</code>. If you pass in <code class="notranslate" translate="no">vec4</code> you get <code class="notranslate" translate="no">vec4</code> back
 which the sine of each of the components. In other words if <code class="notranslate" translate="no">v</code> is a <code class="notranslate" translate="no">vec4</code> then</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 s = sin(v);
-</code></pre><p>is the same as</p>
+</code></pre>
+<p>is the same as</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 s = vec4(sin(v.x), sin(v.y), sin(v.z), sin(v.w));
-</code></pre><p>Sometimes one argument is a float and the rest is <code class="notranslate" translate="no">T</code>. That means that float will be applied
+</code></pre>
+<p>Sometimes one argument is a float and the rest is <code class="notranslate" translate="no">T</code>. That means that float will be applied
 to all the components. For example if <code class="notranslate" translate="no">v1</code> and <code class="notranslate" translate="no">v2</code> are <code class="notranslate" translate="no">vec4</code> and <code class="notranslate" translate="no">f</code> is a float then</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 m = mix(v1, v2, f);
-</code></pre><p>is the same as</p>
+</code></pre>
+<p>is the same as</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 m = vec4(
   mix(v1.x, v2.x, f),
   mix(v1.y, v2.y, f),
   mix(v1.z, v2.z, f),
   mix(v1.w, v2.w, f));
-</code></pre><p>You can see a list of all the GLSL functions on the last 3 pages of <a href="https://www.khronos.org/files/opengles3-quick-reference-card.pdf">the OpenGL ES 3.0
+</code></pre>
+<p>You can see a list of all the GLSL functions on the last 3 pages of <a href="https://www.khronos.org/files/opengles3-quick-reference-card.pdf">the OpenGL ES 3.0
 Reference Card</a>
 If you like really dry and verbose stuff you can try
 <a href="https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf">the GLSL ES 3.00 spec</a>.</p>
 <h2 id="putting-it-all-together">Putting it all together</h2>
-<p>That&#39;s the point of this entire series of posts. WebGL is all about creating various shaders, supplying
+<p>That’s the point of this entire series of posts. WebGL is all about creating various shaders, supplying
 the data to those shaders and then calling <code class="notranslate" translate="no">gl.drawArrays</code>, <code class="notranslate" translate="no">gl.drawElements</code>, etc to have WebGL process
 the vertices by calling the current vertex shader for each vertex and then render pixels by calling the current fragment shader for each pixel.</p>
 <p>Actually creating the shaders requires several lines of code. Since those lines are the same in
 most WebGL programs and since once written you can pretty much ignore them <a href="webgl-boilerplate.html">how to compile GLSL shaders
 and link them into a shader program is covered here</a>.</p>
-<p>If you&#39;re just starting from here you can go in 2 directions. If you are interested in image processing
-I&#39;ll show you <a href="webgl-image-processing.html">how to do some 2D image processing</a>.
+<p>If you’re just starting from here you can go in 2 directions. If you are interested in image processing
+I’ll show you <a href="webgl-image-processing.html">how to do some 2D image processing</a>.
 If you are interesting in learning about translation,
 rotation and scale then <a href="webgl-2d-translation.html">start here</a>.</p>
 

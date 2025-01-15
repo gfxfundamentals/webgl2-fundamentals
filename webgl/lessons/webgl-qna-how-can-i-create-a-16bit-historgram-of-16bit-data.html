@@ -236,25 +236,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="question-">Question:</h2>
+      <h2 id="question">Question:</h2>
 <!-- begin snippet: js hide: false console: true babel: false -->
 <!-- language: lang-js -->
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var gl, utils, pseudoImg, vertices;
 var img = null;
-document.addEventListener(&#39;DOMContentLoaded&#39;, () =&gt; {
+document.addEventListener('DOMContentLoaded', () =&gt; {
     utils = new WebGLUtils();
     vertices = utils.prepareVec2({x1 : -1.0, y1 : -1.0, x2 : 1.0, y2 : 1.0});
-    gl = utils.getGLContext(document.getElementById(&#39;canvas&#39;));
-    var program = utils.getProgram(gl, &#39;render-vs&#39;, &#39;render16bit-fs&#39;);
-    var histogramProgram = utils.getProgram(gl, &#39;histogram-vs&#39;, &#39;histogram-fs&#39;);
-    var sortProgram = utils.getProgram(gl, &#39;sorting-vs&#39;, &#39;sorting-fs&#39;);
-    var showProgram = utils.getProgram(gl, &#39;showhistogram-vs&#39;, &#39;showhistogram-fs&#39;);
-    utils.activateTextureByIndex(gl, showProgram, &#39;histTex&#39;, 3);
-    utils.activateTextureByIndex(gl, showProgram, &#39;maxTex&#39;, 4);
-    utils.activateTextureByIndex(gl, sortProgram, &#39;tex3&#39;, 2);
-    utils.activateTextureByIndex(gl, histogramProgram, &#39;tex2&#39;, 1);
-    utils.activateTextureByIndex(gl, program, &#39;u_texture&#39;, 0);
-
+    gl = utils.getGLContext(document.getElementById('canvas'));
+    var program = utils.getProgram(gl, 'render-vs', 'render16bit-fs');
+    var histogramProgram = utils.getProgram(gl, 'histogram-vs', 'histogram-fs');
+    var sortProgram = utils.getProgram(gl, 'sorting-vs', 'sorting-fs');
+    var showProgram = utils.getProgram(gl, 'showhistogram-vs', 'showhistogram-fs');
+    utils.activateTextureByIndex(gl, showProgram, 'histTex', 3);
+    utils.activateTextureByIndex(gl, showProgram, 'maxTex', 4);
+    utils.activateTextureByIndex(gl, sortProgram, 'tex3', 2);
+    utils.activateTextureByIndex(gl, histogramProgram, 'tex2', 1);
+    utils.activateTextureByIndex(gl, program, 'u_texture', 0);
+    
     var vertexBuffer = utils.createAndBindBuffer(gl, vertices);
     var imageTexture;
     computeHistogram = (AR, myFB) =&gt; {
@@ -280,8 +280,8 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, () =&gt; {
         var pixelBuffer = utils.createAndBindBuffer(gl, pixelIds, true);
         gl.blendFunc(gl.ONE, gl.ONE);
         gl.enable(gl.BLEND);
-        utils.linkAndSendDataToGPU(gl, histogramProgram, &#39;pixelIds&#39;, pixelBuffer, 1);
-        gl.uniform2fv(gl.getUniformLocation(histogramProgram, &#39;imageDimensions&#39;), [width, height]);
+        utils.linkAndSendDataToGPU(gl, histogramProgram, 'pixelIds', pixelBuffer, 1);
+        gl.uniform2fv(gl.getUniformLocation(histogramProgram, 'imageDimensions'), [width, height]);
         utils.sendTextureToGPU(gl, myFB.tex, 1);
         gl.drawArrays(gl.POINTS, 0, numOfPixels);
 
@@ -292,7 +292,7 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, () =&gt; {
 
     sortHistogram = (histogramFbObj) =&gt; {
         gl.useProgram(sortProgram);
-        utils.linkAndSendDataToGPU(gl, sortProgram, &#39;vertices&#39;, vertexBuffer, 2);
+        utils.linkAndSendDataToGPU(gl, sortProgram, 'vertices', vertexBuffer, 2);
         var sortFbObj = utils.createTextureAndFramebuffer(gl, {
             format : gl.RED,
             internalFormat : gl.R32F,
@@ -311,10 +311,10 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, () =&gt; {
 
     showHistogram = (histFb, sortFb) =&gt; {
         gl.useProgram(showProgram);
-        utils.linkAndSendDataToGPU(gl, showProgram, &#39;vertices&#39;, vertexBuffer, 2);
+        utils.linkAndSendDataToGPU(gl, showProgram, 'vertices', vertexBuffer, 2);
         utils.sendTextureToGPU(gl, histFb.tex, 3);
         utils.sendTextureToGPU(gl, sortFb.tex, 4);
-        gl.uniform2fv(gl.getUniformLocation(showProgram, &#39;imageDimensions&#39;), [gl.canvas.width, gl.canvas.height]);
+        gl.uniform2fv(gl.getUniformLocation(showProgram, 'imageDimensions'), [gl.canvas.width, gl.canvas.height]);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     };
 
@@ -342,8 +342,8 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, () =&gt; {
         });
         gl.bindFramebuffer(gl.FRAMEBUFFER, myFB.fb);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-        utils.linkAndSendDataToGPU(gl, program, &#39;vertices&#39;, vertexBuffer, 2);
-        gl.uniform1f(gl.getUniformLocation(program, &#39;flipY&#39;), 1.0);
+        utils.linkAndSendDataToGPU(gl, program, 'vertices', vertexBuffer, 2);
+        gl.uniform1f(gl.getUniformLocation(program, 'flipY'), 1.0);
         utils.sendTextureToGPU(gl, imageTexture, 0);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -370,7 +370,8 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, () =&gt; {
         height : h
     });
 });
-</code></pre><!-- language: lang-html -->
+</code></pre>
+<!-- language: lang-html -->
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;script id=&quot;render16bit-fs&quot; type=&quot;not-js&quot;&gt;
             #version 300 es
             precision highp float; 
@@ -476,17 +477,17 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, () =&gt; {
                 fcolor = vec4(color.rgb, 1);
             }
         &lt;/script&gt;
-
+        
         &lt;canvas id=&quot;canvas&quot;&gt;&lt;/canvas&gt;
         &lt;script type=&quot;text/javascript&quot;&gt;
         class WebGLUtils {
     getGLContext = (canvas, version) =&gt; {
         canvas.width = window.innerWidth * 0.99;
         canvas.height = window.innerHeight * 0.85;
-        var gl = canvas.getContext(version ? &#39;webgl&#39; : &#39;webgl2&#39;);
+        var gl = canvas.getContext(version ? 'webgl' : 'webgl2');
         const ext = gl.getExtension(&quot;EXT_color_buffer_float&quot;);
         if (!ext) {
-            console.log(&quot;sorry, can&#39;t render to floating point textures&quot;);
+            console.log(&quot;sorry, can't render to floating point textures&quot;);
         }
         gl.clearColor(0, 0, 0, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
@@ -535,7 +536,7 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, () =&gt; {
         } else {
             gl.texImage2D(gl.TEXTURE_2D, 0, _.internalFormat, _.width, _.height, 0, _.format, _.dataType, _.img);
         }
-        // set the filtering so we don&#39;t need mips
+        // set the filtering so we don't need mips
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, _.filter);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, _.filter);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, _.mipMapST);
@@ -588,7 +589,7 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, () =&gt; {
         var canvasAspectRatio = windowWidth / windowHeight;
         var renderableHeight, renderableWidth;
         var xStart, yStart;
-        /// If image&#39;s aspect ratio is less than canvas&#39;s we fit on height
+        /// If image's aspect ratio is less than canvas's we fit on height
         /// and place the image centrally along width
         if(imageAspectRatio &lt; canvasAspectRatio) {
             renderableHeight = windowHeight;
@@ -596,8 +597,8 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, () =&gt; {
             xStart = (windowWidth - renderableWidth) / 2;
             yStart = 0;
         }
-
-        /// If image&#39;s aspect ratio is greater than canvas&#39;s we fit on width
+    
+        /// If image's aspect ratio is greater than canvas's we fit on width
         /// and place the image centrally along height
         else if(imageAspectRatio &gt; canvasAspectRatio) {
             renderableWidth = windowWidth;
@@ -605,7 +606,7 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, () =&gt; {
             xStart = 0;
             yStart = ( windowHeight  - renderableHeight) / 2;
         }
-
+    
         ///keep aspect ratio
         else {
             renderableHeight =  windowHeight ;
@@ -638,7 +639,7 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, () =&gt; {
             y1 : -1 + _0To1.y1 * 2.0
         };
     };
-
+    
     //convert -1-&gt;+1 to 0.0-&gt;1.0
     convertVertexToTexCoords = (x1, y1, x2, y2) =&gt; {
         return {
@@ -662,7 +663,7 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, () =&gt; {
             _.x1, _.y2, 0.0, 1.0,
             _.x2, _.y2, 0.0, 1.0];
     };
-
+    
     prepareVec2 = (_) =&gt; {
         return [_.x1, _.y1,
             _.x2, _.y1, 
@@ -673,26 +674,33 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, () =&gt; {
     };
 };
         &lt;/script&gt;
-</code></pre><!-- end snippet -->
+</code></pre>
+<!-- end snippet -->
 <p>I am able to render a 8 bit histogram in both WebGL1 and WebGL2 using <a href="https://jsfiddle.net/greggman/9amgpndt/">this code</a>. But I need to generate a 16 bit histogram using 16 bit texture.</p>
-<p>Here&#39;s how am sending the texture to GPU:</p>
-<p> var tex = gl.createTexture(); // create empty texture
- gl.bindTexture(gl.TEXTURE_2D, tex);
- gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
- gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
- gl.texImage2D(
-  gl.TEXTURE_2D, // target
-  0, // mip level
-  gl.RGBA16UI, // internal format -&gt; gl.RGBA16UI
-  w, h, // width and height
-  0, // border
-  gl.RGBA_INTEGER, //format -&gt; gl.RGBA_INTEGER
-  gl.UNSIGNED_SHORT, // type -&gt; gl.UNSIGNED_SHORT
-  img // texture data
- );</p>
+<p>Here’s how am sending the texture to GPU:</p>
+<p>var tex = gl.createTexture(); // create empty texture
+gl.bindTexture(gl.TEXTURE_2D, tex);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+gl.texImage2D(
+gl.TEXTURE_2D, // target
+0, // mip level
+gl.RGBA16UI, // internal format -&gt; gl.RGBA16UI
+w, h, // width and height
+0, // border
+gl.RGBA_INTEGER, //format -&gt; gl.RGBA_INTEGER
+gl.UNSIGNED_SHORT, // type -&gt; gl.UNSIGNED_SHORT
+img // texture data
+);</p>
 <p>So, take the working <a href="https://jsfiddle.net/greggman/9amgpndt/">example</a> in mind, I am stuck with few things :</p>
-<p>1) How to create a 65536 X 1 framebuffer/texture to keep the 16 bit histogram as WebGL clearly says : <code class="notranslate" translate="no">WebGL: INVALID_VALUE: texImage2D: width or height out of range</code>. Can we try a 256 x 256 framebuffer? I tried but stuck in point no. 2 below.</p>
-<p>2) How to read through the pixels inside the vertex shader in case of 16 bit, below code is for 8-bit data, will it work for 16 bit as well? As I can&#39;t debug, so can&#39;t say whether it works or not: </p>
+<ol>
+<li>
+<p>How to create a 65536 X 1 framebuffer/texture to keep the 16 bit histogram as WebGL clearly says : <code class="notranslate" translate="no">WebGL: INVALID_VALUE: texImage2D: width or height out of range</code>. Can we try a 256 x 256 framebuffer? I tried but stuck in point no. 2 below.</p>
+</li>
+<li>
+<p>How to read through the pixels inside the vertex shader in case of 16 bit, below code is for 8-bit data, will it work for 16 bit as well? As I can’t debug, so can’t say whether it works or not:</p>
+</li>
+</ol>
  <script id="hist-vs" type="not-js">
  attribute float pixelId;
 
@@ -719,22 +727,22 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, () =&gt; {
  gl_PointSize = 1.0;
  }
  </script>
-
-
-
-
-<h2 id="answer-">Answer:</h2>
+<h2 id="answer">Answer:</h2>
 <p>If you just want answers to your 2 questions then</p>
 <blockquote>
-<p>1) How to create a 65536 X 1 framebuffer/texture to keep the 16 bit histogram as WebGL clearly says : WebGL: INVALID_VALUE: texImage2D: width or height out of range. Can we try a 256 x 256 framebuffer? </p>
+<ol>
+<li>How to create a 65536 X 1 framebuffer/texture to keep the 16 bit histogram as WebGL clearly says : WebGL: INVALID_VALUE: texImage2D: width or height out of range. Can we try a 256 x 256 framebuffer?</li>
+</ol>
 </blockquote>
-<p>yes, you&#39;d make 256x256 texture if you want to know the totals for each of the 65536 possible values </p>
+<p>yes, you’d make 256x256 texture if you want to know the totals for each of the 65536 possible values</p>
 <blockquote>
-<p>2) How to read through the pixels inside the vertex shader in case of 16 bit, below code is for 8-bit data, will it work for 16 bit as well? As I can&#39;t debug, so can&#39;t say whether it works or not:</p>
+<ol start="2">
+<li>How to read through the pixels inside the vertex shader in case of 16 bit, below code is for 8-bit data, will it work for 16 bit as well? As I can’t debug, so can’t say whether it works or not:</li>
+</ol>
 </blockquote>
-<p>Of course you can debug. You try it and see if the results are correct. If they aren&#39;t you look at your code and or the error messages and try to figure out why. That&#39;s called debugging. Make a 1x1 texture, call your function, check if the histogram has the correct count of 1 for that 1x1 pixel input by calling <code class="notranslate" translate="no">gl.readPixels</code>. Then try 2x1 or 2x2.</p>
-<p>In any case you can&#39;t read <code class="notranslate" translate="no">gl.RGBA16UI</code> textures with GLSL 1.0 es. You have to use version 300 es so if you actually want to create a separate bucket for all 65536 values then</p>
-<p>Here&#39;s some a WebGL2 GLSL 3.00 ES shader that will fill out the totals for values from 0 to 65535 in a 256x256 texture</p>
+<p>Of course you can debug. You try it and see if the results are correct. If they aren’t you look at your code and or the error messages and try to figure out why. That’s called debugging. Make a 1x1 texture, call your function, check if the histogram has the correct count of 1 for that 1x1 pixel input by calling <code class="notranslate" translate="no">gl.readPixels</code>. Then try 2x1 or 2x2.</p>
+<p>In any case you can’t read <code class="notranslate" translate="no">gl.RGBA16UI</code> textures with GLSL 1.0 es. You have to use version 300 es so if you actually want to create a separate bucket for all 65536 values then</p>
+<p>Here’s some a WebGL2 GLSL 3.00 ES shader that will fill out the totals for values from 0 to 65535 in a 256x256 texture</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 uniform usampler2D u_texture;
@@ -750,10 +758,10 @@ void main() {
      gl_VertexID % size.x,
      gl_VertexID / size.x);
 
-  // get the pixels but 0 out channels we don&#39;t want
+  // get the pixels but 0 out channels we don't want
   uvec4 color = texelFetch(u_texture, pixel, mipLevel) * u_colorMult;
 
-  // add up all the channels. Since 3 are zeroed out we&#39;ll get just one channel
+  // add up all the channels. Since 3 are zeroed out we'll get just one channel
   uint colorSum = color.r + color.g + color.b + color.a;
 
   vec2 outputPixel = vec2(
@@ -765,20 +773,27 @@ void main() {
 
   gl_PointSize = 1.0;
 }
-</code></pre><p><a href="https://jsfiddle.net/greggman/sawx4507/">Example</a></p>
+</code></pre>
+<p><a href="https://jsfiddle.net/greggman/sawx4507/">Example</a></p>
 <p>Notes:</p>
 <ul>
-<li><p>In WebGL2 you don&#39;t need pixelID, you can use <code class="notranslate" translate="no">gl_VertexID</code> so no need to setup any buffers or attributes. Just call </p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  const numPixels = img.width * img.height;
-  gl.drawArrays(gl.POINTS, 0, numPixels);
-</code></pre></li>
-<li><p>You can use <code class="notranslate" translate="no">textureSize</code> to get the size of a texture so no need to pass it in. </p>
+<li>
+<p>In WebGL2 you don’t need pixelID, you can use <code class="notranslate" translate="no">gl_VertexID</code> so no need to setup any buffers or attributes. Just call</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const numPixels = img.width * img.height;
+gl.drawArrays(gl.POINTS, 0, numPixels);
+</code></pre>
 </li>
-<li><p>You can use <code class="notranslate" translate="no">texelFetch</code> to get a single texel(pixel) from a texture. It takes integer pixel coordinates.</p>
+<li>
+<p>You can use <code class="notranslate" translate="no">textureSize</code> to get the size of a texture so no need to pass it in.</p>
 </li>
-<li><p>To read an unsigned integer texture format like RGBA16UI you have to use a <code class="notranslate" translate="no">usampler2D</code> otherwise you&#39;ll get an error at draw time drawing to use an <code class="notranslate" translate="no">RGBA16UI</code> texture on a <code class="notranslate" translate="no">sampler2D</code> (this is how I know you weren&#39;t actually using a <code class="notranslate" translate="no">RGBA16UI</code> texture because you would have gotten an error in the JavaScript console telling you and leading you to change your shader.</p>
+<li>
+<p>You can use <code class="notranslate" translate="no">texelFetch</code> to get a single texel(pixel) from a texture. It takes integer pixel coordinates.</p>
 </li>
-<li><p>You still need to use a floating point texture as the target because the technique used requires blending but blending doesn&#39; work with integer textures (just in case you got the idea to try to use an integer based texture in the framebuffer)</p>
+<li>
+<p>To read an unsigned integer texture format like RGBA16UI you have to use a <code class="notranslate" translate="no">usampler2D</code> otherwise you’ll get an error at draw time drawing to use an <code class="notranslate" translate="no">RGBA16UI</code> texture on a <code class="notranslate" translate="no">sampler2D</code> (this is how I know you weren’t actually using a <code class="notranslate" translate="no">RGBA16UI</code> texture because you would have gotten an error in the JavaScript console telling you and leading you to change your shader.</p>
+</li>
+<li>
+<p>You still need to use a floating point texture as the target because the technique used requires blending but blending doesn’ work with integer textures (just in case you got the idea to try to use an integer based texture in the framebuffer)</p>
 </li>
 </ul>
 <div class="so">
