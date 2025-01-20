@@ -32,6 +32,22 @@ export function createTransformFeedbackDisplay(parent, name /*, transformFeedbac
   const tfElem = createTemplate(parent, '#transform-feedback-template');
   setName(tfElem, name);
   const tfNote = helpToMarkdown(`
+    A transform feedback is an object that contains a set of outputs from a vertex shader.
+    It is the opposite of a vertex array. A vertex array lists the inputs to a vertex shader.
+    A transform feedback lists the outputs.
+
+    In your shader you declare outputs. Before linking the shaders into a program
+    you call --gl.transformFeedbackVaryings-- to tell it which shader outputs will
+    be written. You then use a transform feedback to set which buffers the outputs
+    will be written to.
+
+    The current transform feedback is set with --gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, someTransformFeedback)--.
+
+    You create a transform feedback with --gl.createTransformFeedback()--
+
+    You bind it as above, and then use --gl.bufferBindBase-- or --gl.bufferBindRange-- to
+    tell it which buffers to write to and where in those buffers to write.
+
   `);
   const attrExpander = createExpander(tfElem.querySelector('.state-table'), 'varyings');
   expand(attrExpander);
@@ -46,7 +62,16 @@ export function createTransformFeedbackDisplay(parent, name /*, transformFeedbac
       textContent: '0',
       dataset: {
         help: helpToMarkdown(`
-        where in the buffer to start reading or writing data.
+        where in the buffer to start writing data.
+
+        ---js
+        gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, someTransformFeedback)
+        // if using the entire buffer (sets OFFSET to 0)
+        gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, ${i}, someBuffer)
+        // else, if using a portion of a buffer
+        gl.bindBufferRange(gl.TRANSFORM_FEEDBACK_BUFFER, ${i}, someBuffer, OFFSET, size);
+        ----
+
         ${tfNote}`),
       },
     });
@@ -55,6 +80,15 @@ export function createTransformFeedbackDisplay(parent, name /*, transformFeedbac
       dataset: {
         help: helpToMarkdown(`
         how much of the buffer to use
+
+        ---js
+        gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, someTransformFeedback)
+        // if using the entire buffer (sets SIZE to the size of someBuffer)
+        gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, ${i}, someBuffer)
+        // else, if using a portion of a buffer
+        gl.bindBufferRange(gl.TRANSFORM_FEEDBACK_BUFFER, ${i}, someBuffer, offset, SIZE);
+        ----
+
         ${tfNote}`),
       },
     });
@@ -63,6 +97,16 @@ export function createTransformFeedbackDisplay(parent, name /*, transformFeedbac
       dataset: {
         help: helpToMarkdown(`
         The buffer that will receive data
+
+        ---js
+        gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, someTransformFeedback)
+        // if using the entire buffer (sets BUFFER to someBuffer)
+        gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, ${i}, someBuffer)
+        // else, if using a portion of a BUFFER to someBuffer
+        gl.bindBufferRange(gl.TRANSFORM_FEEDBACK_BUFFER, ${i}, someBuffer, offset, size);
+        ----
+
+
         ${tfNote}`),
       },
     });
