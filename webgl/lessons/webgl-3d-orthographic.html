@@ -828,25 +828,26 @@ in vec4 a_color;
 <p>both of which are 'vec4' but when we tell WebGL how to take data out of our buffers we used</p>
 <pre class="prettyprint showlinemods">
 // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-var size = 3;          // 3 components per iteration
-var type = gl.FLOAT;   // the data is 32bit floats
-var normalize = false; // don't normalize the data
-var stride = 0;        // 0 = move forward size * sizeof(type) each
+var size &#x3D; 3;          // 3 components per iteration
+var type &#x3D; gl.FLOAT;   // the data is 32bit floats
+var normalize &#x3D; false; // don&#x27;t normalize the data
+var stride &#x3D; 0;        // 0 &#x3D; move forward size * sizeof(type) each
                        // iteration to get the next position
-var offset = 0;        // start at the beginning of the buffer
+var offset &#x3D; 0;        // start at the beginning of the buffer
 gl.vertexAttribPointer(
     positionAttributeLocation, size, type, normalize, stride, offset);
-<p>…
+
+...
 // Tell the attribute how to get data out of colorBuffer (ARRAY_BUFFER)
-var size = 3;          // 3 components per iteration
-var type = gl.UNSIGNED_BYTE;   // the data is 8bit unsigned bytes
-var normalize = true;  // convert from 0-255 to 0.0-1.0
-var stride = 0;        // 0 = move forward size * sizeof(type) each
-// iteration to get the next color
-var offset = 0;        // start at the beginning of the buffer
+var size &#x3D; 3;          // 3 components per iteration
+var type &#x3D; gl.UNSIGNED_BYTE;   // the data is 8bit unsigned bytes
+var normalize &#x3D; true;  // convert from 0-255 to 0.0-1.0
+var stride &#x3D; 0;        // 0 &#x3D; move forward size * sizeof(type) each
+                       // iteration to get the next color
+var offset &#x3D; 0;        // start at the beginning of the buffer
 gl.vertexAttribPointer(
-colorAttributeLocation, size, type, normalize, stride, offset);
-</pre></p>
+    colorAttributeLocation, size, type, normalize, stride, offset);
+</pre>
 <p>
 That '3' in each of those says only to pull 3 values out of the buffer per attribute
 per iteration of the vertex shader.
