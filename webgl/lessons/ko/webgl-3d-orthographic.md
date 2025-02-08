@@ -623,8 +623,8 @@ culling을 켰던것과 유사하게 이 기능을 켤 수 있습니다.
     var right = gl.canvas.clientWidth;
     var bottom = gl.canvas.clientHeight;
     var top = 0;
-    var near = 400;
-    var far = -400;
+    var near = 200;
+    var far = -200;
     m4.orthographic(left, right, bottom, top, near, far);
 
 다음 글에서는 [원근감을 갖도록 하는 방법](webgl-3d-perspective.html)에 대해 이야기하겠습니다.

@@ -569,8 +569,8 @@ gl.enable(gl.DEPTH_TEST)
     var right = gl.canvas.clientWidth;
     var bottom = gl.canvas.clientHeight;
     var top = 0;
-    var near = 400;
-    var far = -400;
+    var near = 200;
+    var far = -200;
     m4.orthographic(left, right, bottom, top, near, far);
 
 下一篇将讲述[如何实现透视投影](webgl-3d-perspective.html)。
