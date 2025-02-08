@@ -667,7 +667,7 @@ in vec4 a_position;
 in vec4 a_color;
 </pre>
 <p>both of which are 'vec4' but when we tell WebGL how to take data out of our buffers we used</p>
-<pre class="prettyprint showlinemods">
+<pre class="prettyprint showlinemods">{{#escapehtml}}
 // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
 var size = 3;          // 3 components per iteration
 var type = gl.FLOAT;   // the data is 32bit floats
@@ -688,7 +688,7 @@ var stride = 0;        // 0 = move forward size * sizeof(type) each
 var offset = 0;        // start at the beginning of the buffer
 gl.vertexAttribPointer(
     colorAttributeLocation, size, type, normalize, stride, offset);
-</pre>
+{{/escapehtml}}</pre>
 <p>
 That '3' in each of those says only to pull 3 values out of the buffer per attribute
 per iteration of the vertex shader.
