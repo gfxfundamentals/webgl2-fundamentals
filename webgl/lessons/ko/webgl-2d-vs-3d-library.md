@@ -164,8 +164,8 @@ WebGL버전이 하는일도 "우리가 작성한" GLSL 코드에 있는 계산�
 물론 x,y,z,w를 제공하면 렌더링을 수행하기 이전에 W로 나누어 주긴 하지만 그 정도를 가지고 3D 라이브러리라고 하기에는 부족합니다.
 3D 라이브러리에서는 3D 데이터를 제공하면 클립 공간 좌표를 계산하는 것까지 해줍니다.
 
-몇 가지 참고자료를 더하자면 [emscripten](https://emscripten.org/)에서는 WebGL을 가지고 예전 버전의 OpenGL을 에뮬레이션을 제공합니다. 코드는 [여기](https://github.com/emscripten-core/emscripten/blob/master/src/library_glemu.js) 있습니다.
-살펴보다 보면 상당량의 코드가 예전 OpenGL의 3D 기능을 에뮬레이팅하기 위해 OpenGL ES 2.0에서는 사라진 셰이더 생성 기능을 위한 것을 알 수 있습니다. [Regal](https://github.com/p3/regal/blob/184c62b7d7761481609ef1c1484ada659ae181b9/src/regal/RegalIff.cpp)에서도 동일한 것을 볼 수 있는데, 이 프로젝트는 3D가 포함되지 않은 모던 OpenGL을 가지고 3D가 포함된 예전 OpenGL을 에뮬레이팅하는 NVidia의 프로젝트입니다.
+몇 가지 참고자료를 더하자면 [emscripten](https://emscripten.org/)에서는 WebGL을 가지고 예전 버전의 OpenGL을 에뮬레이션을 제공합니다. 코드는 [여기](https://github.com/emscripten-core/emscripten/blob/main/src/lib/libglemu.js) 있습니다.
+살펴보다 보면 상당량의 코드가 예전 OpenGL의 3D 기능을 에뮬레이팅하기 위해 OpenGL ES 2.0에서는 사라진 셰이더 생성 기능을 위한 것을 알 수 있습니다. [Regal](https://chromium.googlesource.com/external/p3/regal/+/refs/heads/master/src/regal/RegalIff.cpp)에서도 동일한 것을 볼 수 있는데, 이 프로젝트는 3D가 포함되지 않은 모던 OpenGL을 가지고 3D가 포함된 예전 OpenGL을 에뮬레이팅하는 NVidia의 프로젝트입니다.
 마지막으로 [여기에 three.js에서 3D를 위해 사용하는 셰이더가 있습니다](https://gist.github.com/greggman/41d93c00649cba78abdbfc1231c9158c).
 예시들을 보다보면 많은 일들이 벌어지고 있는것을 볼 수 있습니다. 예시와 코드들에서 제공하는 기능들은 라이브러리에서 제공하는 것이지 WebGL이 제공하는 것이 아님을 알 수 있습니다.
 
