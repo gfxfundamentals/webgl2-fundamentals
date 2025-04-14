@@ -55,7 +55,7 @@ const src = [1, 2, 3, 4, 5, 6];
 // dst is now [2, 4, 6, 8, 10, 12];
 ```
 
-## Shader's don't return a value they set an `out` variable
+## Shaders don't return a value they set an `out` variable
 
 That's pretty easy to simulate
 
@@ -558,7 +558,7 @@ const bBuffer = makeBufferAndSetAttribute(gl, new Float32Array(b), bLoc);
 ```
 
 Then we need to setup a "transform feedback". A "transform feedback" is an object
-that contains the state of the buffers we will write to. Where as an [vertex array](webgl-attributes.html)
+that contains the state of the buffers we will write to. Whereas an [vertex array](webgl-attributes.html)
 specifies the state of all the input attributes, a "transform feedback" contains the
 state of all the output attributes.
 
@@ -769,7 +769,7 @@ const drawParticlesProgram = createProgram(
     gl, [drawParticlesVS, drawParticlesFS]);
 ```
 
-A usual we need to lookup locations
+As usual we need to lookup locations
 
 ```js
 const updatePositionPrgLocs = {
@@ -819,8 +819,8 @@ const velocityBuffer = makeBuffer(gl, velocities, gl.STATIC_DRAW);
 ```
 
 Note that we passed in `gl.DYNAMIC_DRAW` to `gl.bufferData` for the 2 position buffers
-since we'll be updating them often. This is just hint to WebGL for optimization.
-Whether it has any affect on performance is up to WebGL.
+since we'll be updating them often. This is just a hint to WebGL for optimization.
+Whether it has any effect on performance is up to WebGL.
 
 We need 4 vertex arrays. 
 
@@ -2069,7 +2069,7 @@ is happening on the GPU
   * compute stuff on GPU
   * read result
 
-  where as via creative solutions it would be much faster if you could
+  whereas via creative solutions it would be much faster if you could
 
   * compute stuff on GPU
   * prep result for next step using GPU
