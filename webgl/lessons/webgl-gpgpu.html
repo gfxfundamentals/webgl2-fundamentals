@@ -278,7 +278,7 @@ const src = [1, 2, 3, 4, 5, 6];
 
 // dst is now [2, 4, 6, 8, 10, 12];
 </code></pre>
-<h2 id="shaders-dont-return-a-value-they-set-an-out-variable">Shader’s don’t return a value they set an <code class="notranslate" translate="no">out</code> variable</h2>
+<h2 id="shaders-dont-return-a-value-they-set-an-out-variable">Shaders don’t return a value they set an <code class="notranslate" translate="no">out</code> variable</h2>
 <p>That’s pretty easy to simulate</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">+let outColor;
 
@@ -724,7 +724,7 @@ const aBuffer = makeBufferAndSetAttribute(gl, new Float32Array(a), aLoc);
 const bBuffer = makeBufferAndSetAttribute(gl, new Float32Array(b), bLoc);
 </code></pre>
 <p>Then we need to setup a “transform feedback”. A “transform feedback” is an object
-that contains the state of the buffers we will write to. Where as an <a href="webgl-attributes.html">vertex array</a>
+that contains the state of the buffers we will write to. Whereas an <a href="webgl-attributes.html">vertex array</a>
 specifies the state of all the input attributes, a “transform feedback” contains the
 state of all the output attributes.</p>
 <p>Here is the code to set ours up</p>
@@ -898,7 +898,7 @@ varying.</p>
 const drawParticlesProgram = createProgram(
     gl, [drawParticlesVS, drawParticlesFS]);
 </code></pre>
-<p>A usual we need to lookup locations</p>
+<p>As usual we need to lookup locations</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const updatePositionPrgLocs = {
   oldPosition: gl.getAttribLocation(updatePositionProgram, 'oldPosition'),
   velocity: gl.getAttribLocation(updatePositionProgram, 'velocity'),
@@ -939,8 +939,8 @@ const position2Buffer = makeBuffer(gl, positions, gl.DYNAMIC_DRAW);
 const velocityBuffer = makeBuffer(gl, velocities, gl.STATIC_DRAW);
 </code></pre>
 <p>Note that we passed in <code class="notranslate" translate="no">gl.DYNAMIC_DRAW</code> to <code class="notranslate" translate="no">gl.bufferData</code> for the 2 position buffers
-since we’ll be updating them often. This is just hint to WebGL for optimization.
-Whether it has any affect on performance is up to WebGL.</p>
+since we’ll be updating them often. This is just a hint to WebGL for optimization.
+Whether it has any effect on performance is up to WebGL.</p>
 <p>We need 4 vertex arrays.</p>
 <ul>
 <li>1 for using <code class="notranslate" translate="no">position1Buffer</code> and <code class="notranslate" translate="no">velocity</code> when updating positions</li>
@@ -2058,7 +2058,7 @@ like</p>
 <li>compute stuff on GPU</li>
 <li>read result</li>
 </ul>
-<p>where as via creative solutions it would be much faster if you could</p>
+<p>whereas via creative solutions it would be much faster if you could</p>
 <ul>
 <li>compute stuff on GPU</li>
 <li>prep result for next step using GPU</li>
