@@ -4,7 +4,7 @@ TOC: How to render large scale images like 32000x32000
 
 ## Question:
 
-I want to get a snapshot of my webgl canvas and I want a high resolution capture so I increased my canvas size. This automatically changes `gl.draingBufferWidth` and `gl.draingBufferWidth`. I then set viewport and then render the scene.
+I want to get a snapshot of my webgl canvas and I want a high resolution capture so I increased my canvas size. This automatically changes `gl.drawingBufferWidth` and `gl.drawingBufferWidth`. I then set viewport and then render the scene.
 
 My code works correctly in low resolution (under 4000*4000) but in higher resolutions there are many problems.
 
