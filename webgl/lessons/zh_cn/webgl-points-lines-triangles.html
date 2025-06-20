@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/zh_cn/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/zh_cn/webgl-points-lines-triangles.md. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of GFXFundamentals. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,25 +36,77 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL2 Points, Lines, and Triangles" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="Details on drawing Points, Lines, and Triangles" />
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-points-lines-triangles.html" />
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL2 Points, Lines, and Triangles" />
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-points-lines-triangles.html" />
-<meta name="twitter:description" content="Details on drawing Points, Lines, and Triangles" />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="description" content="WebGL2 中点、线段与三角形的绘制详解">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-points-lines-triangles_zh-cn.jpg">
+
+<meta property="og:title" content="WebGL2 点、线段与三角形">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-points-lines-triangles_zh-cn.jpg">
+<meta property="og:description" content="WebGL2 中点、线段与三角形的绘制详解">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-points-lines-triangles.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 点、线段与三角形">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-points-lines-triangles.html">
+<meta name="twitter:description" content="WebGL2 中点、线段与三角形的绘制详解">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-points-lines-triangles_zh-cn.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-points-lines-triangles.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-points-lines-triangles_zh-cn.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-points-lines-triangles.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-points-lines-triangles.html",
+      "inLanguage":"zh-cn",
+      "name":"WebGL2 点、线段与三角形",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-points-lines-triangles.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL2 Points, Lines, and Triangles</title>
+<title>WebGL2 点、线段与三角形</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-points-lines-triangles.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-points-lines-triangles.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-points-lines-triangles.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-points-lines-triangles.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-points-lines-triangles.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-points-lines-triangles.html">
+
+
+
+
 </head>
 <body>
 <div class="webgl_navbar">
@@ -178,12 +232,98 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 Points, Lines, and Triangles</h1>
+    <h1>WebGL2 点、线段与三角形</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>还没有简体中文版翻译哦  (~￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">欢迎翻译</a>!</p>
-<p><a href="/webgl/lessons/webgl-points-lines-triangles.html">英文原版地址</a>.</p>
+      <p>这个网站的大部分内容都是用三角形来绘制所有图形的。可以说，这是 99% 的 WebGL 程序的常规做法。不过，为了内容的完整性，我们再来讨论一些其他情况。</p>
+<p>正如<a href="webgl-fundamentals.html">第一篇文章</a>所述，WebGL 能够绘制点、线段和三角形。
+当我们调用<code class="notranslate" translate="no">gl.drawArrays</code>或<code class="notranslate" translate="no">gl.drawElements</code>方法时就会执行这种绘制操作。
+我们提供的顶点着色器会输出裁剪空间坐标，然后 WebGL 会根据<code class="notranslate" translate="no">gl.drawArrays</code>或<code class="notranslate" translate="no">gl.drawElements</code>的第一个参数来决定是绘制点、线段还是三角形。</p>
+<p><code class="notranslate" translate="no">gl.drawArrays</code>和<code class="notranslate" translate="no">gl.drawElements</code>方法的第一个参数有效取值包括：</p>
+<ul>
+<li>
+<p><code class="notranslate" translate="no">点 POINTS</code></p>
+<p>对于顶点着色器输出的每个裁剪空间顶点，WebGL会以该点为中心绘制一个正方形。正方形的大小通过在顶点着色器中设置特殊变量<code class="notranslate" translate="no">gl_PointSize</code>来指定，其数值表示该正方形的像素尺寸。</p>
+<p>注意：正方形（纹理/渲染缓冲）的最大（及最小）尺寸取决于具体实现，您可以通过以下方式查询：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  const [minSize, maxSize] = gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE);
+</code></pre>
+<p>另请参阅<a href="../webgl-drawing-without-data.html#pointsissues">此处</a>的另一个问题。</p>
+</li>
+<li>
+<p><code class="notranslate" translate="no">线 LINES</code></p>
+<p>对于顶点着色器输出的每2个裁剪空间顶点，将绘制一条连接这2个点的线段。如果存在点A、B、C、D、E、F，则会生成3条线。</p>
+ <div class="webgl_center"><img src="../resources/gl-lines.svg" style="width: 400px;"></div>
+<p>规范说明可通过调用<code class="notranslate" translate="no">gl.lineWidth</code>并指定像素值来设置线宽， 但实际上最大线宽取决于具体实现，且绝大多数设备仅支持1像素的最大线宽。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  const [minSize, maxSize] = gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE);
+</code></pre>
+<blockquote>
+<p>这主要是因为大于1像素的线宽值在核心版桌面OpenGL中已被弃用。</p>
+</blockquote>
+</li>
+<li>
+<p><code class="notranslate" translate="no">折线 LINE_STRIP</code></p>
+<p>对于顶点着色器输出的每个裁剪空间顶点，将从该顶点到前一个顶点绘制一条线段。</p>
+<p>因此，如果顶点着色器依次输出裁剪空间顶点 A、B、C、D、E、F，使用 LINE_STRIP 模式将会生成 5 条连接的线段。</p>
+ <div class="webgl_center"><img src="../resources/gl-line-strip.svg" style="width: 400px;"></div>
+</li>
+<li>
+<p><code class="notranslate" translate="no">闭合折线 LINE_LOOP</code></p>
+<p><code class="notranslate" translate="no">LINE_LOOP</code>的绘制逻辑与<code class="notranslate" translate="no">LINE_STRIP</code>相同，但会额外增加一条从末尾顶点返回到起始顶点的线段，形成闭合轮廓。</p>
+ <div class="webgl_center"><img src="../resources/gl-line-loop.svg" style="width: 400px;"></div>
+</li>
+<li>
+<p><code class="notranslate" translate="no">三角形 TRIANGLES</code></p>
+<p>对于顶点着色器输出的每3个裁剪空间顶点，系统将绘制一个由这3个点构成的三角形。这是最常用的图元渲染模式。</p>
+ <div class="webgl_center"><img src="../resources/gl-triangles.svg" style="width: 400px;"></div>
+</li>
+<li>
+<p><code class="notranslate" translate="no">三角形带 TRIANGLE_STRIP</code></p>
+<p>对于顶点着色器输出的每个裁剪空间顶点，系统将基于最后3个顶点绘制一个三角形。具体而言：
+若输出6个顶点A、B、C、D、E、F，则会依次绘制以下4个三角形：</p>
+<ul>
+<li>
+<p>△ABC（由前3个顶点构成）</p>
+</li>
+<li>
+<p>△BCD（复用B、C，新增D）</p>
+</li>
+<li>
+<p>△CDE（复用C、D，新增E）</p>
+</li>
+<li>
+<p>△DEF（复用D、E，新增F）</p>
+   <div class="webgl_center"><img src="../resources/gl-triangle-strip.svg" style="width: 400px;"></div>
+</li>
+</ul>
+</li>
+<li>
+<p><code class="notranslate" translate="no">三角形扇区 TRIANGLE_FAN</code></p>
+<p>对于顶点着色器输出的每个裁剪空间顶点，系统将使用第一个顶点和最后两个顶点绘制三角形。具体而言：
+若输出6个顶点A、B、C、D、E、F，则会依次生成以下4个三角形：</p>
+<ul>
+<li>△ABC（首个三角形：顶点A+B+C）</li>
+<li>△ACD（固定A，复用C，新增D）</li>
+<li>△ADE（固定A，复用D，新增E）</li>
+<li>△AEF（固定A，复用E，新增F）</li>
+</ul>
+ <div class="webgl_center"><img src="../resources/gl-triangle-fan.svg" style="width: 400px;" align="center"></div>
+</li>
+</ul>
+<p>尽管可能有人持不同意见，但根据我的实际开发经验，最好避免使用<code class="notranslate" translate="no">TRIANGLE_FAN（三角扇）</code>和<code class="notranslate" translate="no">TRIANGLE_STRIP（三角带）</code>。
+它们仅适用于少数特殊场景，而为这些例外情况编写额外的处理代码，其代价往往超过了直接统一使用<code class="notranslate" translate="no">TRIANGLES（独立三角形）</code>模式的收益。
+尤其是当你需要处理顶点数据的法线生成、纹理坐标计算或其他复杂操作时，统一使用 TRIANGLES（独立三角形）模式能让所有工具函数直接兼容，无需针对特殊模式适配。
+特别地，当您需要构建法线（normals）、生成纹理坐标（texture coordinates）或执行其他顶点数据处理操作时，严格采用 <code class="notranslate" translate="no">TRIANGLES（三角形）</code>模式可确保所有功能函数无需适配即可正常运行。</p>
+<p>一旦引入 <code class="notranslate" translate="no">TRIANGLE_FAN（三角扇）</code>和 <code class="notranslate" translate="no">TRIANGLE_STRIP（三角带）</code>模式，就必须编写更多分支函数来处理额外情况。
+当然，你完全可以持不同意见并自主选择方案。此处仅陈述个人经验，以及我咨询过的多位3A级游戏开发者的共同实践认知。</p>
+<p>同样的，<code class="notranslate" translate="no">LINE_LOOP（线环）</code>和<code class="notranslate" translate="no">LINE_STRIP（线带）</code>模式也不实用，也存在类似问题。
+与<code class="notranslate" translate="no">TRIANGLE_FAN</code>和<code class="notranslate" translate="no">TRIANGLE_STRIP</code>相同，它们的适用场景极为罕见。
+例如，您可能认为需要绘制由4个点组成的4条连续线段（注：此处指误用场景，实际应使用 LINES 模式）。</p>
+<div class="webgl_center"><img src="../resources/4-lines-4-points.svg" style="width: 400px;" align="center"></div>
+<p>如果使用<code class="notranslate" translate="no">LINE_STRIP</code>，需要调用4次<code class="notranslate" translate="no">gl.drawArrays</code>，并且要为每条线设置属性而进行更多调用。而如果直接使用<code class="notranslate" translate="no">LINES</code>，就可以通过单次<code class="notranslate" translate="no">gl.drawArrays</code>调用插入绘制全部4组线所需的所有点。
+这样会快得多。</p>
+<p>此外，<code class="notranslate" translate="no">LINES（线段）</code>模式虽然适用于调试或简单效果，但由于大多数平台上限宽仅为1像素，它往往并非最佳选择。如需绘制图表网格或3D建模程序中的多边形轮廓，使用<code class="notranslate" translate="no">LINES</code>可能很合适。
+但若要绘制SVG或Adobe Illustrator等结构化图形，则必须改用其他渲染方式（<a href="https://mattdesl.svbtle.com/drawing-lines-is-hard">通常基于三角形绘制线条</a>）。</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -197,7 +337,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>基础概念</li>
+        <div id="toc">
+          <ul>  <li>基础概念</li>
         <ul>
           <li><a href="/webgl/lessons/zh_cn/webgl-getting-webgl2.html">怎样使用WebGL2</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-fundamentals.html">基本原理</a></li>
@@ -314,7 +455,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <li><a href="/webgl/lessons/zh_cn/webgl-animation.html">Animation</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-points-lines-triangles.html">Points, Lines, and Triangles</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-multiple-views.html">Multiple Views, Multiple Canvases</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-visualizing-the-camera.html">Visualizing the Camera</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-visualizing-the-camera.html">可视化相机</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-and-alpha.html">WebGL2 and Alpha</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html">2D vs 3D libraries</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-anti-patterns.html">Anti-Patterns</a></li>
@@ -340,13 +481,47 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://twgljs.org">TWGL，一个轻量级WebGL辅助库</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>有意见或建议? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">在GitHub上提issue</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 点、线段与三角形';
+            var disqus_title = 'WebGL2 点、线段与三角形';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: "感谢 <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>的 <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} 个贡献</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 <script>
 </script>
 
