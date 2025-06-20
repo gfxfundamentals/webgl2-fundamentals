@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/zh_cn/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/zh_cn/webgl-multiple-views.md. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of GFXFundamentals. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,25 +36,77 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL2 Multiple Views, Multiple Canvases" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="Drawing multiple views" />
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-multiple-views.html" />
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL2 Multiple Views, Multiple Canvases" />
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-multiple-views.html" />
-<meta name="twitter:description" content="Drawing multiple views" />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="description" content="绘制多个视图">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-multiple-views_zh-cn.jpg">
+
+<meta property="og:title" content="WebGL2 多视图与多画布">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-multiple-views_zh-cn.jpg">
+<meta property="og:description" content="绘制多个视图">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-multiple-views.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 多视图与多画布">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-multiple-views.html">
+<meta name="twitter:description" content="绘制多个视图">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-multiple-views_zh-cn.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-multiple-views.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-multiple-views_zh-cn.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-multiple-views.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-multiple-views.html",
+      "inLanguage":"zh-cn",
+      "name":"WebGL2 多视图与多画布",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-multiple-views.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL2 Multiple Views, Multiple Canvases</title>
+<title>WebGL2 多视图与多画布</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-multiple-views.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-multiple-views.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-multiple-views.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-multiple-views.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-multiple-views.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-multiple-views.html">
+
+
+
+
 </head>
 <body>
 <div class="webgl_navbar">
@@ -178,12 +232,536 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 Multiple Views, Multiple Canvases</h1>
+    <h1>WebGL2 多视图与多画布</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>还没有简体中文版翻译哦  (~￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">欢迎翻译</a>!</p>
-<p><a href="/webgl/lessons/webgl-multiple-views.html">英文原版地址</a>.</p>
+      <p>本文假设你已经阅读过<a href="webgl-less-code-more-fun.html">码少趣多</a>一文，
+因为我们将使用其中提到的库来简化示例。
+如果你不理解缓冲区（buffers）、顶点数组（vertex arrays）、属性（attributes）是什么，
+或者不明白像 <code class="notranslate" translate="no">twgl.setUniforms</code> 这样的函数如何设置 uniform 变量，
+那么你可能需要先回顾<a href="webgl-fundamentals.html">基本原理</a>。</p>
+<p>假设你想绘制同一场景的多个视图，该如何实现？
+一种方法是将场景<a href="webgl-render-to-texture.html">渲染到纹理</a>，然后将这些纹理绘制到画布上。
+这确实是一种可行的方法，而且在某些情况下可能是最合适的解决方案。
+但这种方式需要我们额外分配纹理，先将场景渲染到这些纹理上，然后再把纹理绘制到画布上。
+这意味着我们实际上进行了双重渲染。
+这种方案在某些场景下是合理的，比如在赛车游戏中，当我们需要渲染后视镜视野时，
+可以先将车后方的场景渲染到纹理上，再用这个纹理来绘制后视镜画面。</p>
+<p>另一种方法是设置视口并启用剪刀测试。
+这种方法特别适合视图互不重叠的场景，更棒的是它完全避免了上述方案中的双重渲染问题。</p>
+<p>在<a href="webgl-fundamentals.html">首篇文章</a>中已经提到，我们可以通过调用以下方法来设置WebGL如何将裁剪空间(clip space)转换到像素空间(pixel space)：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.viewport(left, bottom, width, height);
+</code></pre>
+<p>最常见的做法是将这些参数分别设置为 <code class="notranslate" translate="no">0</code>、<code class="notranslate" translate="no">0</code>、<code class="notranslate" translate="no">gl.canvas.width</code> 和 <code class="notranslate" translate="no">gl.canvas.height</code>，这样就能覆盖整个画布。</p>
+<p>但我们可以将视口设置为画布的一部分，这样绘制操作就只会影响画布的指定区域。
+WebGL会在裁剪空间(clip space)中对顶点进行裁剪。
+如前所述，我们在顶点着色器中设置的<code class="notranslate" translate="no">gl_Position</code>值在x、y、z轴上范围都是-1到+1。
+WebGL会在这个范围内对我们传入的三角形和线条进行裁剪。完成裁剪后，<code class="notranslate" translate="no">gl.viewport</code>的设置才会生效。
+举个例子，如果我们这样设置：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.viewport(
+   10,   // left
+   20,   // bottom
+   30,   // width
+   40,   // height
+);
+</code></pre>
+<p>此时，裁剪空间中x=-1的值将对应像素坐标x=10的位置，
+而x=+1则对应像素坐标x=40的位置（即左边界10加上宽度30）。(不过这种对应关系实际上是个简化的描述，<a href="#pixel-coords">更精确的解释见下文</a>。)</p>
+<p>因此，经过裁剪处理后，我们绘制的三角形将完全呈现在视口范围内。
+现在让我们来绘制<a href="webgl-3d-perspective.html">之前文章</a>中使用过的&quot;F&quot;模型。</p>
+<p>这里使用的顶点着色器和片段着色器与我们在<a href="webgl-3d-orthographic.html">正交投影</a>和<a href="webgl-3d-perspective.html">透视投影</a>文章中采用的完全相同。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+// vertex shader
+in vec4 a_position;
+in vec4 a_color;
+
+uniform mat4 u_matrix;
+
+out vec4 v_color;
+
+void main() {
+  // Multiply the position by the matrix.
+  gl_Position = u_matrix * a_position;
+
+  // Pass the vertex color to the fragment shader.
+  v_color = a_color;
+}
+</code></pre>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+// fragment shader
+precision highp float;
+
+// Passed in from the vertex shader.
+in vec4 v_color;
+
+out vec4 outColor;
+
+void main() {
+  outColor = v_color;
+}
+</code></pre>
+<p>在初始化阶段，我们需要为这个&quot;F&quot;模型创建着色器程序(program)、缓冲区(buffers)和顶点数组对象(vertex array)。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// setup GLSL programs
+// compiles shaders, links program, looks up locations
+const programInfo = twgl.createProgramInfo(gl, [vs, fs]);
+
+// Tell the twgl to match position with a_position,
+// normal with a_normal etc..
+twgl.setAttributePrefix(&quot;a_&quot;);
+
+// create buffers and fill with data for a 3D 'F'
+const bufferInfo = twgl.primitives.create3DFBufferInfo(gl);
+const vao = twgl.createVAOFromBufferInfo(gl, programInfo, bufferInfo);
+</code></pre>
+<p>接下来我们创建一个绘制函数，该函数可接收三个矩阵参数：投影矩阵(projection matrix)、相机矩阵(camera matrix)和世界矩阵(world matrix)。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function drawScene(projectionMatrix, cameraMatrix, worldMatrix) {
+  // Make a view matrix from the camera matrix.
+  const viewMatrix = m4.inverse(cameraMatrix);
+
+  let mat = m4.multiply(projectionMatrix, viewMatrix);
+  mat = m4.multiply(mat, worldMatrix);
+
+  gl.useProgram(programInfo.program);
+
+  // ------ Draw the F --------
+
+  // Setup all the needed attributes.
+  gl.bindVertexArray(vao);
+
+  // Set the uniforms
+  twgl.setUniforms(programInfo, {
+    u_matrix: mat,
+  });
+
+  // calls gl.drawArrays or gl.drawElements
+  twgl.drawBufferInfo(gl, bufferInfo);
+}
+</code></pre>
+<p>接下来我们调用这个函数来绘制&quot;F&quot;模型。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function degToRad(d) {
+  return d * Math.PI / 180;
+}
+
+const settings = {
+  rotation: 150,  // in degrees
+};
+const fieldOfViewRadians = degToRad(120);
+
+function render() {
+  twgl.resizeCanvasToDisplaySize(gl.canvas);
+
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+  gl.enable(gl.CULL_FACE);
+  gl.enable(gl.DEPTH_TEST);
+
+  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  const near = 1;
+  const far = 2000;
+
+  // Compute a perspective projection matrix
+  const perspectiveProjectionMatrix =
+      m4.perspective(fieldOfViewRadians, aspect, near, far);
+
+  // Compute the camera's matrix using look at.
+  const cameraPosition = [0, 0, -75];
+  const target = [0, 0, 0];
+  const up = [0, 1, 0];
+  const cameraMatrix = m4.lookAt(cameraPosition, target, up);
+
+  // rotate the F in world space
+  let worldMatrix = m4.yRotation(degToRad(settings.rotation));
+  worldMatrix = m4.xRotate(worldMatrix, degToRad(settings.rotation));
+  // center the 'F' around its origin
+  worldMatrix = m4.translate(worldMatrix, -35, -75, -5);
+
+  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+}
+render();
+</code></pre>
+<p>这基本上与<a href="webgl-3d-perspective.html">透视投影</a>文章中的最终示例相同。
+唯一不同的是，这里我们使用了<a href="webgl-less-code-more-fun.html">简化库</a>来保持代码更简洁。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-views-one-view.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-views-one-view.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+
+现在，我们将使用<code class="notranslate" translate="no">gl.viewport</code>方法，在画布上并排绘制两个&quot;F&quot;模型的视图。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render() {
+  twgl.resizeCanvasToDisplaySize(gl.canvas);
+
+-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+  gl.enable(gl.CULL_FACE);
+  gl.enable(gl.DEPTH_TEST);
+
+  // we're going to split the view in 2
+-  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
++  const effectiveWidth = gl.canvas.clientWidth / 2;
++  const aspect = effectiveWidth / gl.canvas.clientHeight;
+  const near = 1;
+  const far = 2000;
+
+  // Compute a perspective projection matrix
+  const perspectiveProjectionMatrix =
+      m4.perspective(fieldOfViewRadians, aspect, near, far);
+
++  // Compute an orthographic projection matrix
++  const halfHeightUnits = 120;
++  const orthographicProjectionMatrix = m4.orthographic(
++      -halfHeightUnits * aspect,  // left
++       halfHeightUnits * aspect,  // right
++      -halfHeightUnits,           // bottom
++       halfHeightUnits,           // top
++       -75,                       // near
++       2000);                     // far
+
+  // Compute the camera's matrix using look at.
+  const cameraPosition = [0, 0, -75];
+  const target = [0, 0, 0];
+  const up = [0, 1, 0];
+  const cameraMatrix = m4.lookAt(cameraPosition, target, up);
+
+  let worldMatrix = m4.yRotation(degToRad(settings.rotation));
+  worldMatrix = m4.xRotate(worldMatrix, degToRad(settings.rotation));
+  // center the 'F' around its origin
+  worldMatrix = m4.translate(worldMatrix, -35, -75, -5);
+
++  const {width, height} = gl.canvas;
++  const leftWidth = width / 2 | 0;
++
++  // draw on the left with orthographic camera
++  gl.viewport(0, 0, leftWidth, height);
++
++  drawScene(orthographicProjectionMatrix, cameraMatrix, worldMatrix);
+
++  // draw on the right with perspective camera
++  const rightWidth = width - leftWidth;
++  gl.viewport(leftWidth, 0, rightWidth, height);
+
+  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+}
+</code></pre>
+<p>如您所见，我们首先将视口(viewport)设置为覆盖画布左半部分并绘制，然后再设置为覆盖右半部分进行绘制。
+虽然两侧绘制的是相同内容，但区别在于我们使用了不同的投影矩阵(projection matrix)。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-views.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-views.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>现在让我们为两侧设置不同的清除颜色。
+首先，在<code class="notranslate" translate="no">drawScene</code>函数中调用<code class="notranslate" translate="no">gl.clear</code>方法：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  function drawScene(projectionMatrix, cameraMatrix, worldMatrix) {
++    // Clear the canvas AND the depth buffer.
++    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    ...
+</code></pre>
+<p>接下来，在调用<code class="notranslate" translate="no">drawScene</code>之前，我们需要先设置清除颜色：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  const {width, height} = gl.canvas;
+  const leftWidth = width / 2 | 0;
+
+  // draw on left with orthographic camera
+  gl.viewport(0, 0, leftWidth, height);
++  gl.clearColor(1, 0, 0, 1);  // red
+
+  drawScene(orthographicProjectionMatrix, cameraMatrix, worldMatrix);
+
+  // draw on left with orthographic camera
+  const rightWidth = width - leftWidth;
+  gl.viewport(leftWidth, 0, rightWidth, height);
+  gl.clearColor(0, 0, 1, 1);  // blue
+
++  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-views-clear-issue.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-views-clear-issue.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>哎呀，出什么问题了？为什么左侧什么都没有显示？</p>
+<p>原来，<code class="notranslate" translate="no">gl.clear</code>操作并不受视口(<code class="notranslate" translate="no">viewport</code>)设置的影响。要解决这个问题，我们可以使用<em>裁剪测试(scissor test)</em>。裁剪测试允许我们定义一个矩形区域，当启用时，该区域外的任何内容都不会受到影响。</p>
+<p>裁剪测试默认是关闭的。我们可以通过调用以下方法来启用它：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.enable(gl.SCISSOR_TEST);
+</code></pre>
+<p>与视口(viewport)类似，裁剪测试(scissor test)默认使用画布的初始尺寸。
+但我们可以通过调用<code class="notranslate" translate="no">gl.scissor</code>方法来设置自定义范围，其参数格式与gl.viewport完全相同，例如：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.scissor(
+   10,   // left
+   20,   // bottom
+   30,   // width
+   40,   // height
+);
+</code></pre>
+<p>现在让我们将剪裁测试的相关设置添加到代码中：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render() {
+  twgl.resizeCanvasToDisplaySize(gl.canvas);
+
+  gl.enable(gl.CULL_FACE);
+  gl.enable(gl.DEPTH_TEST);
++  gl.enable(gl.SCISSOR_TEST);
+
+  ...
+
+  const {width, height} = gl.canvas;
+  const leftWidth = width / 2 | 0;
+
+  // draw on left with orthographic camera
+  gl.viewport(0, 0, leftWidth, height);
++  gl.scissor(0, 0, leftWidth, height);
+  gl.clearColor(1, 0, 0, 1);  // red
+
+  drawScene(orthographicProjectionMatrix, cameraMatrix, worldMatrix);
+
+  // draw on left with orthographic camera
+  const rightWidth = width - leftWidth;
+  gl.viewport(leftWidth, 0, rightWidth, height);
++  gl.scissor(leftWidth, 0, rightWidth, height);
+  gl.clearColor(0, 0, 1, 1);  // blue
+
+  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+}
+</code></pre>
+<p>现在，这样的设置应该就能正常工作了。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-views-clear-fixed.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-views-clear-fixed.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>当然，并不局限于在每个视图中绘制相同的内容。
+通过合理设置视口和剪裁区域，你可以在每个独立视图中自由绘制完全不同的场景元素。</p>
+<h2 id="多画布渲染方案">多画布渲染方案</h2>
+<p>这是模拟多画布场景的理想解决方案。
+例如，当您需要为游戏开发角色选择界面时，可以在列表中展示每个角色的3D头部模型供用户选择。
+再比如，假设您要开发一个电商网站，希望在页面中同时展示多个商品的3D模型。
+最直观的实现方式是在每个需要展示3D元素的位置都放置一个<code class="notranslate" translate="no">&lt;canvas&gt;</code>元素。但这种方式会带来一系列技术问题：</p>
+<p>首先，每个<code class="notranslate" translate="no">&lt;canvas&gt;</code>元素都需要独立的WebGL上下文。由于WebGL上下文之间无法共享资源，因此您必须：</p>
+<p>为每个画布单独编译着色器(shaders)</p>
+<p>为每个画布重复加载纹理(textures)</p>
+<p>为每个画布重新上传几何数据(geometry)</p>
+<p>另一个关键限制是：多数浏览器对同时活跃的WebGL画布数量有严格限制，通常最多支持8个上下文。这意味着当您在第9个<code class="notranslate" translate="no">&lt;canvas&gt;</code>上创建WebGL上下文时，第一个创建的上下文会被自动释放。</p>
+<p>我们可以通过以下方案解决这些问题：
+只需创建一个覆盖整个窗口的主画布，然后在需要绘制3D内容的位置放置占位<code class="notranslate" translate="no">&lt;div&gt;</code>元素。
+通过调用<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect"><code class="notranslate" translate="no">element.getBoundingClientRect</code></a>方法获取这些占位元素的精确位置信息，
+据此设置视口(viewport)和剪裁区域(scissor area)来实现精准绘制。</p>
+<p>这一方案可完美解决上述所有问题：仅需维护单个WebGL上下文，既能实现资源共享，又能彻底规避上下文数量限制。</p>
+<p>让我们通过一个具体示例来说明实现方式。</p>
+<p>首先创建基础HTML结构，包含背景层画布和前景内容层：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-html">&lt;body&gt;
+  &lt;canvas id=&quot;canvas&quot;&gt;&lt;/canvas&gt;
+  &lt;div id=&quot;content&quot;&gt;&lt;/div&gt;
+&lt;/body&gt;
+</code></pre>
+<p>接下来配置CSS样式</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-css">body {
+  margin: 0;
+}
+#content {
+  margin: 10px;
+}
+#canvas {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  display: block;
+}
+</code></pre>
+<p>现在让我们创建几个要绘制的对象。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// create buffers and fill with data for various things.
+const bufferInfosAndVAOs = [
+  twgl.primitives.createCubeBufferInfo(
+      gl,
+      1,  // width
+      1,  // height
+      1,  // depth
+  ),
+  twgl.primitives.createSphereBufferInfo(
+      gl,
+      0.5,  // radius
+      8,    // subdivisions around
+      6,    // subdivisions down
+  ),
+  twgl.primitives.createTruncatedConeBufferInfo(
+      gl,
+      0.5,  // bottom radius
+      0,    // top radius
+      1,    // height
+      6,    // subdivisions around
+      1,    // subdivisions down
+  ),
+].map((bufferInfo) =&gt; {
+  return {
+    bufferInfo,
+    vao: twgl.createVAOFromBufferInfo(gl, programInfo, bufferInfo),
+  };
+});
+</code></pre>
+<p>现在让我们创建100个HTML项。每个项包含一个容器<code class="notranslate" translate="no">div</code>，内部包含一个视图<code class="notranslate" translate="no">div</code>和一个标签<code class="notranslate" translate="no">div</code>。
+其中视图<code class="notranslate" translate="no">div</code>是空容器，用于后续绘制3D内容。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function createElem(type, parent, className) {
+  const elem = document.createElement(type);
+  parent.appendChild(elem);
+  if (className) {
+    elem.className = className;
+  }
+  return elem;
+}
+
+function randArrayElement(array) {
+  return array[Math.random() * array.length | 0];
+}
+
+function rand(min, max) {
+  if (max === undefined) {
+    max = min;
+    min = 0;
+  }
+  return Math.random() * (max - min) + min;
+}
+
+const contentElem = document.querySelector('#content');
+const items = [];
+const numItems = 100;
+for (let i = 0; i &lt; numItems; ++i) {
+  const outerElem = createElem('div', contentElem, 'item');
+  const viewElem = createElem('div', outerElem, 'view');
+  const labelElem = createElem('div', outerElem, 'label');
+  labelElem.textContent = `Item ${i + 1}`;
+  const {bufferInfo, vao} = randArrayElement(bufferInfosAndVAOs);
+  const color = [rand(1), rand(1), rand(1), 1];
+  items.push({
+    bufferInfo,
+    vao,
+    color,
+    element: viewElem,
+  });
+}
+</code></pre>
+<p>现在让我们为这些元素添加如下样式：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-css">.item {
+  display: inline-block;
+  margin: 1em;
+  padding: 1em;
+}
+.label {
+  margin-top: 0.5em;
+}
+.view {
+  width: 250px;
+  height: 250px;
+  border: 1px solid black;
+}
+</code></pre>
+<p><code class="notranslate" translate="no">items</code>数组中每个元素都包含<code class="notranslate" translate="no">bufferInfo</code>、<code class="notranslate" translate="no">vao</code>、<code class="notranslate" translate="no">color</code>和<code class="notranslate" translate="no">element</code>属性。
+我们逐个遍历所有元素，调用<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect"><code class="notranslate" translate="no">element.getBoundingClientRect</code></a>，使用返回的矩形区域判断该元素是否与画布相交。
+如果相交，就设置对应的视口和剪裁区域，然后绘制该对象。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render(time) {
+  time *= 0.001;  // convert to seconds
+
+  twgl.resizeCanvasToDisplaySize(gl.canvas);
+
+  gl.enable(gl.CULL_FACE);
+  gl.enable(gl.DEPTH_TEST);
+  gl.enable(gl.SCISSOR_TEST);
+
+  // move the canvas to top of the current scroll position
+  gl.canvas.style.transform = `translateY(${window.scrollY}px)`;
+
+  for (const {bufferInfo, vao, element, color} of items) {
+    const rect = element.getBoundingClientRect();
+    if (rect.bottom &lt; 0 || rect.top  &gt; gl.canvas.clientHeight ||
+        rect.right  &lt; 0 || rect.left &gt; gl.canvas.clientWidth) {
+      continue;  // it's off screen
+    }
+
+    const width  = rect.right - rect.left;
+    const height = rect.bottom - rect.top;
+    const left   = rect.left;
+    const bottom = gl.canvas.clientHeight - rect.bottom - 1;
+
+    gl.viewport(left, bottom, width, height);
+    gl.scissor(left, bottom, width, height);
+    gl.clearColor(...color);
+
+    const aspect = width / height;
+    const near = 1;
+    const far = 2000;
+
+    // Compute a perspective projection matrix
+    const perspectiveProjectionMatrix =
+        m4.perspective(fieldOfViewRadians, aspect, near, far);
+
+    // Compute the camera's matrix using look at.
+    const cameraPosition = [0, 0, -2];
+    const target = [0, 0, 0];
+    const up = [0, 1, 0];
+    const cameraMatrix = m4.lookAt(cameraPosition, target, up);
+
+    // rotate the item
+    const rTime = time * 0.2;
+    const worldMatrix = m4.xRotate(m4.yRotation(rTime), rTime);
+
+    drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix, bufferInfo, vao);
+  }
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+</code></pre>
+<p>我将上述代码改为使用<a href="webgl-animation.html">requestAnimationFrame 循环</a>以实现对象动画效果。
+同时向<code class="notranslate" translate="no">drawScene</code>函数传入需要绘制的bufferInfo参数。
+着色器仅使用法线数据作为颜色输出以保持简洁。若添加<a href="webgl-3d-lighting-spot.html">光照效果</a>将使代码复杂度大幅增加。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-views-items.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-views-items.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>当然，您可以为每个项目绘制完整的3D场景或其他任何内容。
+只要正确设置视口(viewport)和剪裁区域(scissor)，
+并配置与区域宽高比匹配的投影矩阵(projection matrix)，就能正常渲染。</p>
+<p>代码中另一个需要注意的地方是：我们通过这行指令移动画布：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.canvas.style.transform = `translateY(${window.scrollY}px)`;
+</code></pre>
+<p>之所以这样做，是因为若将画布设为 <code class="notranslate" translate="no">position: fixed;</code>，它将不再随页面滚动。
+这两种方式的差异很微妙：浏览器会尽可能流畅地滚动页面，其速度可能超过我们绘制对象的速度。
+因此我们有两种选择方案：</p>
+<ol>
+<li>
+<p>使用固定定位画布</p>
+<p>在这种情况下，若渲染速度跟不上，画布前方的HTML内容会正常滚动，而画布本身保持静止，将导致短暂的内容不同步现象。</p>
+<img src="../resources/multi-view-skew.gif" style="border: 1px solid black; width: 266px;" class="webgl_center">
+</li>
+<li>
+<p>将画布置于内容层下方移动</p>
+<p>在此方案下，若渲染速度不足，画布会与HTML保持同步滚动，但新进入视区的绘制区域将暂时空白，直至完成渲染绘制。</p>
+<img src="../resources/multi-view-fixed.gif" style="border: 1px solid black; width: 266px;" class="webgl_center">
+<p>这正是前文采用的解决方案。</p>
+</li>
+</ol>
+<p>希望本文为您提供了实现多视图渲染的思路。
+我们将在后续文章中运用这些技术，其中多视图展示将有助于理解相关概念。</p>
+<div class="webgl_bottombar" id="pixel-coords">
+<h3>像素坐标</h3>
+<p>在WebGL中，像素坐标以边缘为基准进行定位。举例来说，如果我们有一个3×2像素大小的画布，并设置视口如下：</p>
+<pre class="prettyprint"><code class="notranslate" translate="no">
+gl.viewport(
+  0, // left
+  0, // bottom
+  3, // width
+  2, // height
+);
+</code></pre>
+<p>此时我们实际定义的矩形区域将精确包围3×2个像素，其边界对应关系如下：</p>
+<div class="webgl_center"><img src="../resources/webgl-pixels.svg" style="width: 500px;"></div>
+<p>这意味着裁剪空间X = -1.0对应矩形的左边缘，X = 1.0对应右边缘。前文所述"X = -1.0对应最左像素"实际应理解为对应左边缘。</p>
+</div>
 
     </div>
     <div class="lesson-sidebar">
@@ -197,7 +775,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>基础概念</li>
+        <div id="toc">
+          <ul>  <li>基础概念</li>
         <ul>
           <li><a href="/webgl/lessons/zh_cn/webgl-getting-webgl2.html">怎样使用WebGL2</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-fundamentals.html">基本原理</a></li>
@@ -340,13 +919,47 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://twgljs.org">TWGL，一个轻量级WebGL辅助库</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>有意见或建议? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">在GitHub上提issue</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 多视图与多画布';
+            var disqus_title = 'WebGL2 多视图与多画布';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: "感谢 <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>的 <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} 个贡献</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 <script>
 </script>
 
