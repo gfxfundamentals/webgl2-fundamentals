@@ -1,6 +1,6 @@
 Title: WebGL2 点、线段与三角形
 Description: WebGL2 中点、线段与三角形的绘制详解
-TOC: Points, Lines, and Triangles
+TOC: 点、线段与三角形
 
 这个网站的大部分内容都是用三角形来绘制所有图形的。可以说，这是 99% 的 WebGL 程序的常规做法。不过，为了内容的完整性，我们再来讨论一些其他情况。
 
