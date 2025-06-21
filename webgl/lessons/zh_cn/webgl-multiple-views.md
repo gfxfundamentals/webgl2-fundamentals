@@ -1,6 +1,6 @@
 Title: WebGL2 多视图与多画布
 Description: 绘制多个视图
-TOC: Multiple Views, Multiple Canvases
+TOC: 多视图与多画布
 
 本文假设你已经阅读过[码少趣多](webgl-less-code-more-fun.html)一文，
 因为我们将使用其中提到的库来简化示例。
