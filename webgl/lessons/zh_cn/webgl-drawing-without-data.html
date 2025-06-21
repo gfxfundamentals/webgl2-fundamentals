@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/zh_cn/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/zh_cn/webgl-drawing-without-data.md. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of GFXFundamentals. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,25 +36,77 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL2 Drawing Without Data" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="Creative Coding - Drawing Without Data" />
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-drawing-without-data.html" />
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL2 Drawing Without Data" />
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-drawing-without-data.html" />
-<meta name="twitter:description" content="Creative Coding - Drawing Without Data" />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="description" content="创意编程 - 无数据绘制技术">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-drawing-without-data_zh-cn.jpg">
+
+<meta property="og:title" content="WebGL2 无数据绘制">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-drawing-without-data_zh-cn.jpg">
+<meta property="og:description" content="创意编程 - 无数据绘制技术">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-drawing-without-data.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 无数据绘制">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-drawing-without-data.html">
+<meta name="twitter:description" content="创意编程 - 无数据绘制技术">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-drawing-without-data_zh-cn.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-drawing-without-data.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-drawing-without-data_zh-cn.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-drawing-without-data.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-drawing-without-data.html",
+      "inLanguage":"zh-cn",
+      "name":"WebGL2 无数据绘制",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-drawing-without-data.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL2 Drawing Without Data</title>
+<title>WebGL2 无数据绘制</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-drawing-without-data.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-drawing-without-data.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-drawing-without-data.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-drawing-without-data.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-drawing-without-data.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-drawing-without-data.html">
+
+
+
+
 </head>
 <body>
 <div class="webgl_navbar">
@@ -178,12 +232,399 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 Drawing Without Data</h1>
+    <h1>WebGL2 无数据绘制</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>还没有简体中文版翻译哦  (~￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">欢迎翻译</a>!</p>
-<p><a href="/webgl/lessons/webgl-drawing-without-data.html">英文原版地址</a>.</p>
+      <p>本文假设您已阅读从<a href="webgl-fundamentals.html">基础教程</a>开始的多篇相关文章。若尚未阅读，请先查阅。</p>
+<p>在<a href="webgl-smallest-programs.html">WebGL2 最小的程序</a>一文中，
+我们演示了极简代码的绘制示例。本文将实现无数据绘制。</p>
+<p>传统WebGL应用将几何数据存入缓冲区，通过属性(attribute)从缓冲区提取顶点数据到着色器，
+最终转换为裁剪空间坐标。</p>
+<p>需注意<strong>传统</strong>一词仅表示惯例做法，并非强制要求。
+WebGL仅关注顶点着色器向 <code class="notranslate" translate="no">gl_Position</code> 赋值裁剪空间坐标，并不关心如何实现。</p>
+<p>GLSL ES 3.0为顶点着色器提供了 <code class="notranslate" translate="no">gl_VertexID</code> 特殊变量，可对顶点进行计数。
+我们将基于此变量计算圆形顶点坐标，实现无数据绘制。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+uniform int numVerts;
+
+#define PI radians(180.0)
+
+void main() {
+  float u = float(gl_VertexID) / float(numVerts);  // 0 到 1
+  float angle = u * PI * 2.0;                      // 0 到 2π
+  float radius = 0.8;
+
+  vec2 pos = vec2(cos(angle), sin(angle)) * radius;
+  
+  gl_Position = vec4(pos, 0, 1);
+  gl_PointSize = 5.0;
+}
+</code></pre>
+<p>上述代码逻辑应较为直观： <code class="notranslate" translate="no">gl_VertexID</code> 将从0开始计数至我们指定的顶点数量（通过 <code class="notranslate" translate="no">numVerts</code> 传递）。基于此生成圆形顶点坐标。</p>
+<p>若止步于此，圆形将显示为椭圆——因为裁剪空间在画布横纵方向上采用归一化坐标（-1到1范围）。
+通过传入分辨率参数，可解决横向-1到1与纵向-1到1实际表示空间比例不一致的问题。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+uniform int numVerts;
++uniform vec2 resolution;
+
+#define PI radians(180.0)
+
+void main() {
+  float u = float(gl_VertexID) / float(numVerts);  // goes from 0 to 1
+  float angle = u * PI * 2.0;                      // goes from 0 to 2PI
+  float radius = 0.8;
+
+  vec2 pos = vec2(cos(angle), sin(angle)) * radius;
+  
++  float aspect = resolution.y / resolution.x;
++  vec2 scale = vec2(aspect, 1);
+  
++  gl_Position = vec4(pos * scale, 0, 1);
+  gl_PointSize = 5.0;
+}
+</code></pre>
+<p>而片段着色器仅需输出一个纯色。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+precision highp float;
+
+out vec4 outColor;
+
+void main() {
+  outColor = vec4(1, 0, 0, 1);
+}
+</code></pre>
+<p>在JavaScript初始化阶段，我们将编译着色器并获取uniform变量的位置。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// setup GLSL program
+const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
+const numVertsLoc = gl.getUniformLocation(program, 'numVerts');
+const resolutionLoc = gl.getUniformLocation(program, 'resolution');
+</code></pre>
+<p>渲染时我们将使用着色器程序，设置 <code class="notranslate" translate="no">resolution</code> 和 <code class="notranslate" translate="no">numVerts</code> uniform变量并绘制顶点。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.useProgram(program);
+
+const numVerts = 20;
+
+// tell the shader the number of verts
+gl.uniform1i(numVertsLoc, numVerts);
+// tell the shader the resolution
+gl.uniform2f(resolutionLoc, gl.canvas.width, gl.canvas.height);
+
+const offset = 0;
+gl.drawArrays(gl.POINTS, offset, numVerts);
+</code></pre>
+<p>最终将呈现点阵构成的圆形。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-no-data-point-circle.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-no-data-point-circle.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>该技术是否实用？通过创造性编码，我们几乎无需数据且仅用单次绘制调用即可实现星空或简单降雨效果。</p>
+<p>以下以降雨效果为例。首先修改顶点着色器</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+uniform int numVerts;
+uniform float time;
+
+void main() {
+  float u = float(gl_VertexID) / float(numVerts);  // goes from 0 to 1
+  float x = u * 2.0 - 1.0;                         // -1 to 1
+  float y = fract(time + u) * -2.0 + 1.0;          // 1.0 -&gt;  -1.0
+
+  gl_Position = vec4(x, y, 0, 1);
+  gl_PointSize = 5.0;
+}
+</code></pre>
+<p>此场景无需分辨率参数。</p>
+<p>我们添加了 <code class="notranslate" translate="no">time</code> uniform变量，表示从页面加载完成后的秒数。</p>
+<p>x坐标设置为-1到1范围。</p>
+<p>y坐标通过 <code class="notranslate" translate="no">time + u</code> 计算，但 <code class="notranslate" translate="no">fract</code> 仅返回小数部分（0.0到1.0）。
+将其扩展至1.0到-1.0范围，可获得随时间不断循环但各点偏移不同的y坐标。</p>
+<p>将片段着色器中的颜色改为蓝色。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">precision highp float;
+
+out vec4 outColor;
+
+void main() {
+-  outColor = vec4(1, 0, 0, 1);
++  outColor = vec4(0, 0, 1, 1);
+}
+</code></pre>
+<p>随后在JavaScript中需获取 <code class="notranslate" translate="no">time</code> uniform变量的位置。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// setup GLSL program
+const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
+const numVertsLoc = gl.getUniformLocation(program, 'numVerts');
+-const resolutionLoc = gl.getUniformLocation(program, 'resolution');
++const timeLoc = gl.getUniformLocation(program, 'time');
+</code></pre>
+<p>通过创建渲染循环并设置 <code class="notranslate" translate="no">time</code> uniform变量，将代码改为<a href="webgl-animation.html">动画</a>。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">+function render(time) {
++  time *= 0.001;  // convert to seconds
+
++  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
++  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+  gl.useProgram(program);
+
+  const numVerts = 20;
+
+  // tell the shader the number of verts
+  gl.uniform1i(numVertsLoc, numVerts);
++  // tell the shader the time
++  gl.uniform1f(timeLoc, time);
+
+  const offset = 0;
+  gl.drawArrays(gl.POINTS, offset, numVerts);
+
++  requestAnimationFrame(render);
++}
++requestAnimationFrame(render);
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-no-data-point-rain-linear.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-no-data-point-rain-linear.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>当前效果为顺序下落的点阵，需添加随机性。GLSL没有随机数生成器，但可使用伪随机函数实现近似效果。</p>
+<p>如下所示：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">// hash function from https://www.shadertoy.com/view/4djSRW
+// given a value between 0 and 1
+// returns a value between 0 and 1 that *appears* kind of random
+float hash(float p) {
+  vec2 p2 = fract(vec2(p * 5.3983, p * 5.4427));
+  p2 += dot(p2.yx, p2.xy + vec2(21.5351, 14.3137));
+  return fract(p2.x * p2.y * 95.4337);
+}
+</code></pre>
+<p>我们可以这样使用</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">void main() {
+  float u = float(gl_VertexID) / float(numVerts);  // goes from 0 to 1
+-  float x = u * 2.0 - 1.0;                         // -1 to 1
++  float x = hash(u) * 2.0 - 1.0;                   // random position
+  float y = fract(time + u) * -2.0 + 1.0;          // 1.0 -&gt;  -1.0
+
+  gl_Position = vec4(x, y, 0, 1);
+  gl_PointSize = 5.0;
+}
+</code></pre>
+<p>向<code class="notranslate" translate="no">hash</code>函数传入0到1区间的值，将返回对应的伪随机0到1区间值。</p>
+<p>同时缩小点尺寸。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">  gl_Position = vec4(x, y, 0, 1);
+-  gl_PointSize = 5.0;
++  gl_PointSize = 2.0;
+</code></pre>
+<p>并增加绘制点的数量。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-const numVerts = 20;
++const numVerts = 400;
+</code></pre>
+<p>最终实现效果如下：</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-no-data-point-rain.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-no-data-point-rain.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>仔细观察可发现降雨存在重复模式。注意特定点群从底部消失后又在顶部重现。若背景存在更多元素（如3D游戏场景），这种循环可能不易察觉。</p>
+<p>我们可通过增加一点随机性来修正这种重复感。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">void main() {
+  float u = float(gl_VertexID) / float(numVerts);  // goes from 0 to 1
++  float off = floor(time + u) / 1000.0;           // changes once per second per vertex
+-  float x = hash(u) * 2.0 - 1.0;                  // random position
++  float x = hash(u + off) * 2.0 - 1.0;            // random position
+  float y = fract(time + u) * -2.0 + 1.0;         // 1.0 -&gt;  -1.0
+
+  gl_Position = vec4(x, y, 0, 1);
+  gl_PointSize = 2.0;
+}
+</code></pre>
+<p>上述代码通过添加 <code class="notranslate" translate="no">off</code> 变量，利用 <code class="notranslate" translate="no">floor(time + u)</code> 为每个顶点生成每秒变化一次的次级计时器。
+该偏移量与点下移逻辑同步：当点从屏幕底部跳回顶部时，<code class="notranslate" translate="no">hash</code>函数将获得新输入值，从而使该点获得新的水平随机位置。</p>
+<p>最终实现无重复模式的降雨效果。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-no-data-point-rain-less-repeat.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-no-data-point-rain-less-repeat.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>能否实现比<code class="notranslate" translate="no">gl.POINTS</code>更复杂的绘制？当然可以！</p>
+<p>让我们绘制圆形：这需要围绕中心点构建三角形扇面（类似披萨切片）。
+我们可以将每个三角形想象成饼图边缘上的两个点，以及中心上的一个点。
+然后，我们对饼图的每一片重复上述步骤。</p>
+<div class="webgl_center"><img src="../resources/circle-points.svg" style="width: 400px;"></div>
+<p>首先需要构建一个计数器，该计数器在每处理一个切片时递增。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">int sliceId = gl_VertexID / 3;
+</code></pre>
+<p>其次需要构建圆周边缘的顶点计数器，其数值范围</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">0, 1, ?, 1, 2, ?, 2, 3, ?, ...
+</code></pre>
+<p>该?值实际无关紧要——如图所示，第三个顶点始终位于中心点(0,0)，因此可直接乘以0忽略其值。</p>
+<p>要实现上述模式，可采用如下方案：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">int triVertexId = gl_VertexID % 3;
+int edge = triVertexId + sliceId;
+</code></pre>
+<p>顶点分布需遵循此模式：2个边缘点后接1个中心点，如此循环往复。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">1, 1, 0, 1, 1, 0, 1, 1, 0, ...
+</code></pre>
+<p>可通过以下模式实现：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">float radius = step(1.5, float(triVertexId));
+</code></pre>
+<p><code class="notranslate" translate="no">step(a, b)</code>函数在a&lt;b时返回0，否则返回1。可理解为：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function step(a, b) {
+  return a &lt; b ? 0 : 1;
+}
+</code></pre>
+<p>当1.5小于<code class="notranslate" translate="no">triVertexId</code>时，<code class="notranslate" translate="no">step(1.5, float(triVertexId))</code>返回1。该条件在每个三角形的前2个顶点成立，最后一个顶点不成立。</p>
+<p>圆形三角形顶点可通过如下方式生成：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">int numSlices = 8;
+int sliceId = gl_VertexID / 3;
+int triVertexId = gl_VertexID % 3;
+int edge = triVertexId + sliceId;
+float angleU = float(edge) / float(numSlices);  // 0.0 to 1.0
+float angle = angleU * PI * 2.0;
+float radius = step(float(triVertexId), 1.5);
+vec2 pos = vec2(cos(angle), sin(angle)) * radius;
+</code></pre>
+<p>将上面所有内容整合起来，绘制一个圆</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+uniform int numVerts;
+uniform vec2 resolution;
+
+#define PI radians(180.0)
+
+void main() {
+  int numSlices = 8;
+  int sliceId = gl_VertexID / 3;
+  int triVertexId = gl_VertexID % 3;
+  int edge = triVertexId + sliceId;
+  float angleU = float(edge) / float(numSlices);  // 0.0 to 1.0
+  float angle = angleU * PI * 2.0;
+  float radius = step(float(triVertexId), 1.5);
+  vec2 pos = vec2(cos(angle), sin(angle)) * radius;
+
+  float aspect = resolution.y / resolution.x;
+  vec2 scale = vec2(aspect, 1);
+  
+  gl_Position = vec4(pos * scale, 0, 1);
+}
+</code></pre>
+<p>注意我们已重新引入<code class="notranslate" translate="no">resolution</code>参数以避免得到一个椭圆。</p>
+<p>对于一个8切片的圆，需要 8 * 3 个顶点
+For a 8 slice circle we need 8 * 3 vertices</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-const numVerts = 400;
++const numVerts = 8 * 3;
+</code></pre>
+<p>绘制需要使用 <code class="notranslate" translate="no">TRIANGLES</code> 而不是 <code class="notranslate" translate="no">POINTS</code></p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const offset = 0;
+-gl.drawArrays(gl.POINTS, offset, numVerts);
++gl.drawArrays(gl.TRIANGLES, offset, numVerts);
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-no-data-triangles-circle.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-no-data-triangles-circle.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>如果想绘制多个圆呢？</p>
+<p>只需生成<code class="notranslate" translate="no">circleId</code>，用于为每个圆形确定位置，对于圆内的顶点都是一样的。</p>
+<p>All we need to do is come up with a <code class="notranslate" translate="no">circleId</code> which we
+can use to pick some position for each circle that is
+the same for all vertices in the circle.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">int numVertsPerCircle = numSlices * 3;
+int circleId = gl_VertexID / numVertsPerCircle;
+</code></pre>
+<p>例如，现绘制由圆形组成的环形图案。</p>
+<p>首先把上面的代码封装到一个函数。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">vec2 computeCircleTriangleVertex(int vertexId) {
+  int numSlices = 8;
+  int sliceId = vertexId / 3;
+  int triVertexId = vertexId % 3;
+  int edge = triVertexId + sliceId;
+  float angleU = float(edge) / float(numSlices);  // 0.0 to 1.0
+  float angle = angleU * PI * 2.0;
+  float radius = step(float(triVertexId), 1.5);
+  return vec2(cos(angle), sin(angle)) * radius;
+}
+</code></pre>
+<p>以下是本文开头绘制点阵圆形的原始代码：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">float u = float(gl_VertexID) / float(numVerts);  // goes from 0 to 1
+float angle = u * PI * 2.0;                      // goes from 0 to 2PI
+float radius = 0.8;
+
+vec2 pos = vec2(cos(angle), sin(angle)) * radius;
+
+float aspect = resolution.y / resolution.x;
+vec2 scale = vec2(aspect, 1);
+
+gl_Position = vec4(pos * scale, 0, 1);
+</code></pre>
+<p>只需将<code class="notranslate" translate="no">vertexId</code>替换为<code class="notranslate" translate="no">circleId</code>，并将除数改为圆圈数量而非顶点数量。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">void main() {
++  int circleId = gl_VertexID / numVertsPerCircle;
++  int numCircles = numVerts / numVertsPerCircle;
+
+-  float u = float(gl_VertexID) / float(numVerts);  // goes from 0 to 1
++  float u = float(circleId) / float(numCircles);  // goes from 0 to 1
+  float angle = u * PI * 2.0;                     // goes from 0 to 2PI
+  float radius = 0.8;
+
+  vec2 pos = vec2(cos(angle), sin(angle)) * radius;
+
++  vec2 triPos = computeCircleTriangleVertex(gl_VertexID) * 0.1;
+  
+  float aspect = resolution.y / resolution.x;
+  vec2 scale = vec2(aspect, 1);
+  
+-  gl_Position = vec4(pos * scale, 0, 1);
++  gl_Position = vec4((pos + triPos) * scale, 0, 1);
+}
+</code></pre>
+<p>随后只需增加顶点数量</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-const numVerts = 8 * 3;
++const numVerts = 8 * 3 * 20;
+</code></pre>
+<p>在得到由20个圆形组成的环形结构。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-no-data-triangles-circles.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-no-data-triangles-circles.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>当然，我们可以应用前文的降雨效果逻辑来实现&quot;圆形雨&quot;，尽管这缺乏实用价值故不展开说明，但确实演示了无数据情况下在顶点着色器生成三角形的技术。</p>
+<p>上述技术可拓展应用于矩形/正方形的生成。
+通过创建UV坐标并传递至片段着色器，实现生成几何体的纹理映射。
+结合<a href="webgl-3d-perspective.html">3D透视</a>文章中的三维技术，
+该方案特别适合模拟3D场景中翻转的雪花或落叶效果。</p>
+<p>需要强调的是，<strong>此类技术</strong>并非主流方案。虽然简易粒子系统（如前述降雨效果）或有使用场景，但过于复杂的计算将损害性能。通用准则是：为追求性能，应尽可能减少实时计算量——所有可预计算的数据，都应在初始化阶段以某种形式预置并传入着色器。</p>
+<p>例如，这是一个计算立方体群的极端顶点着色器示例（注意，有声音）。</p>
+<iframe width="700" height="400" src="https://www.vertexshaderart.com/art/zd2E5vCZduc5JeoFz" frameborder="0" allowfullscreen></iframe>
+<p>作为&quot;仅凭顶点ID能否绘制有趣图形&quot;的智力探索，这种方案颇具巧思。
+事实上<a href="https://www.vertexshaderart.com">该网站</a>就专注于此类挑战。
+但就性能而言，传统方案——通过缓冲区传入立方体顶点数据并用属性读取，或其他我们将介绍的技术——效率会高出许多。</p>
+<p>需要权衡取舍：若需实现上文降雨效果，所述代码已相当高效。
+两种方案的性能边界存在于某处中间地带——通常传统方案兼具更高灵活性，但具体采用何种方式仍需根据实际场景判断。</p>
+<p>本文主要目的是介绍这些创新理念，并强调理解WebGL实际工作原理的不同视角。重申：WebGL仅要求您在着色器中设置gl_Position并输出颜色值，具体实现方式无关紧要。</p>
+<div class="webgl_bottombar" id="pointsissues">
+<h3>关于<code class="notranslate" translate="no">gl.POINTS</code>的一个问题</h3>
+<p>
+此类技术的一个实用场景是模拟<code class="notranslate" translate="no">gl.POINTS</code>的绘制效果。
+</p>
+<p><code class="notranslate" translate="no">gl.POINTS</code>存在两个主要问题：</p>
+<ol>
+<li>存在最大尺寸限制<br/><br/>多数开发者使用<code class="notranslate" translate="no">gl.POINTS</code>时选择较小尺寸，但若所需尺寸超过其上限，则需采用替代方案。
+</li>
+<li>屏幕外裁剪行为不一致问题：<br/><br/>
+当点中心位于画布左边缘外1像素处，而<code class="notranslate" translate="no">gl_PointSize</code>设为32.0。
+<div class="webgl_center"><img src="../resources/point-outside-canvas.svg" style="width: 400px"></div>
+根据OpenGL ES 3.0规范：当32x32像素点中有15列仍处于画布内时，应予以绘制。但OpenGL(非ES版本)规范却完全相反——只要点中心位于画布外就完全不绘制。
+更糟的是，OpenGL长期缺乏充分测试，导致不同驱动实现不一：有的驱动会绘制这些像素，有的则不会。😭
+</li>
+</ol>
+<p>因此，若这两个问题影响您的需求，解决方案是改用<code class="notranslate" translate="no">gl.TRIANGLES</code>绘制自定义四边形而非使用<code class="notranslate" translate="no">gl.POINTS</code>。如此可同时解决：<br>
+1. 最大尺寸限制问题<br>
+2. 裁剪不一致问题<br>
+绘制大量四边形的方法有多种，<a href="https://jsgist.org/?src=6306857bfd65adbdcd54b0051d441935">其中之一便是采用本文所述技术</a>。</p>
+</div>
 
     </div>
     <div class="lesson-sidebar">
@@ -197,7 +638,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>基础概念</li>
+        <div id="toc">
+          <ul>  <li>基础概念</li>
         <ul>
           <li><a href="/webgl/lessons/zh_cn/webgl-getting-webgl2.html">怎样使用WebGL2</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-fundamentals.html">基本原理</a></li>
@@ -297,7 +739,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li>技巧</li>
         <ul>
           <li><a href="/webgl/lessons/zh_cn/webgl-smallest-programs.html">最小的程序</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-drawing-without-data.html">Drawing Without Data</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-drawing-without-data.html">无数据绘制</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-shadertoy.html">Shadertoy</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-pulling-vertices.html">Pulling Vertices</a></li>
         </ul>
@@ -311,9 +753,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <li><a href="/webgl/lessons/zh_cn/webgl-setup-and-installation.html">设置和安装</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-boilerplate.html">样板</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-resizing-the-canvas.html">重置画布尺寸</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-animation.html">Animation</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-points-lines-triangles.html">Points, Lines, and Triangles</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-multiple-views.html">Multiple Views, Multiple Canvases</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-animation.html">动画</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-points-lines-triangles.html">点、线段与三角形</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-multiple-views.html">多视图与多画布</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-visualizing-the-camera.html">可视化相机</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-and-alpha.html">WebGL2 and Alpha</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html">2D vs 3D libraries</a></li>
@@ -340,13 +782,47 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://twgljs.org">TWGL，一个轻量级WebGL辅助库</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>有意见或建议? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">在GitHub上提issue</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 无数据绘制';
+            var disqus_title = 'WebGL2 无数据绘制';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: "感谢 <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>的 <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} 个贡献</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 <script>
 </script>
 
