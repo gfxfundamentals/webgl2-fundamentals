@@ -6,9 +6,7 @@ TOC: 顶点拉取
 
 传统上，WebGL应用会将几何数据放入缓冲区中，然后通过属性（attributes）自动将这些缓冲区中的顶点数据传递给顶点着色器，由程序员编写代码将其转换为裁剪空间（clip space）坐标。
 
-这里的 **“传统上”** 非常重要。  
-这只是一种**传统做法**，并不是必须如此。  
-WebGL 并不关心我们是如何处理的，它只关心顶点着色器是否为 `gl_Position` 赋予了裁剪空间坐标。
+这里的 **“传统上”** 非常重要。这只是一种**传统做法**，并不是必须如此。WebGL 并不关心我们是如何处理的，它只关心顶点着色器是否为 `gl_Position` 赋予了裁剪空间坐标。
 
 让我们使用类似于 [纹理](webgl-3d-textures.html) 中示例的方式，绘制一个带纹理映射的立方体。我们通常会说需要至少 24 个唯一顶点，这是因为虽然立方体只有 8 个角点位置，但每个角点会出现在立方体的 3 个不同面上，而每个面又需要不同的纹理坐标。
 
@@ -17,7 +15,6 @@ WebGL 并不关心我们是如何处理的，它只关心顶点着色器是否�
 在上面的图示中，我们可以看到左侧面的角点 3 需要的纹理坐标是 (1,1)，而右侧面对角点 3 的使用则需要纹理坐标 (0,1)。顶部面则会需要另一组不同的纹理坐标。
 
 通常，我们是通过将 8 个角点位置扩展为 24 个顶点来实现这一点的。
-
 
 ```js
   // front
@@ -156,15 +153,13 @@ const texcoordTexture = makeDataTexture(gl, uvs, 2);
 
 接着，我们会创建一个顶点数组对象（vertex array）来保存我们的属性状态。
 
-
 ```js
 // create a vertex array object to hold attribute state
 const vao = gl.createVertexArray();
 gl.bindVertexArray(vao);
 ```
 
-
-Next we need upload the position and texcoord indices to a buffer.
+接下来，我们需要将位置索引和纹理坐标索引上传到缓冲区。
 
 ```js
 // Create a buffer for the position and UV indices
@@ -220,7 +215,6 @@ gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW)
 由于我们想要在立方体上绘制一张图像，因此还需要第三个纹理存储这张图像。  
 这里我们用一个 4x4 的数据纹理，内容是棋盘格图案。  
 纹理格式使用 `gl.LUMINANCE`，因为这样每个像素只需要一个字节。
-
 
 ```js
 // Create a checker texture.
