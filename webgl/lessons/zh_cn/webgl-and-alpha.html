@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/zh_cn/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/zh_cn/webgl-and-alpha.md. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of GFXFundamentals. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,25 +36,77 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL2 and Alpha" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="How alpha in WebGL is different than alpha in OpenGL" />
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-and-alpha.html" />
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL2 and Alpha" />
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-and-alpha.html" />
-<meta name="twitter:description" content="How alpha in WebGL is different than alpha in OpenGL" />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="description" content="WebGL 中的 Alpha 与 OpenGL 中的 Alpha 有何不同">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-and-alpha_zh-cn.jpg">
+
+<meta property="og:title" content="WebGL2 和 Alpha">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-and-alpha_zh-cn.jpg">
+<meta property="og:description" content="WebGL 中的 Alpha 与 OpenGL 中的 Alpha 有何不同">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-and-alpha.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 和 Alpha">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-and-alpha.html">
+<meta name="twitter:description" content="WebGL 中的 Alpha 与 OpenGL 中的 Alpha 有何不同">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-and-alpha_zh-cn.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-and-alpha.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-and-alpha_zh-cn.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-and-alpha.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-and-alpha.html",
+      "inLanguage":"zh-cn",
+      "name":"WebGL2 和 Alpha",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-and-alpha.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL2 and Alpha</title>
+<title>WebGL2 和 Alpha</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-and-alpha.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-and-alpha.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-and-alpha.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-and-alpha.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-and-alpha.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-and-alpha.html">
+
+
+
+
 </head>
 <body>
 <div class="webgl_navbar">
@@ -178,12 +232,74 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 and Alpha</h1>
+    <h1>WebGL2 和 Alpha</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>还没有简体中文版翻译哦  (~￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">欢迎翻译</a>!</p>
-<p><a href="/webgl/lessons/webgl-and-alpha.html">英文原版地址</a>.</p>
+      <p>我注意到一些 OpenGL 开发者在使用 WebGL 时遇到了关于后缓冲区（即画布）中 alpha 的问题，所以我觉得有必要讲一下 WebGL 和 OpenGL 在 alpha 处理上的一些差异。</p>
+<p>OpenGL 和 WebGL 最大的区别是，OpenGL 渲染到一个不会被任何东西合成的后缓冲区，或者说操作系统的窗口管理器实际上不会对它进行合成，所以无论 alpha 怎么设置都无所谓。</p>
+<p>而 WebGL 是由浏览器与网页内容合成的，默认使用预乘 alpha（premultiplied alpha），这和带透明通道的 PNG <code class="notranslate" translate="no">&lt;img&gt;</code> 标签以及 2D canvas 标签的行为相同。</p>
+<p>WebGL 有几种方式可以使其行为更像 OpenGL。</p>
+<h3 id="1-告诉-webgl-你希望使用非预乘-alpha-合成">#1) 告诉 WebGL 你希望使用非预乘 alpha 合成</h3>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl = canvas.getContext(&quot;webgl2&quot;, {
+  premultipliedAlpha: false  // Ask for non-premultiplied alpha
+});
+</code></pre>
+<p>默认值是 true。</p>
+<p>当然，结果仍会与画布下方的背景颜色合成（画布背景色、画布容器背景色、页面背景色，或者当画布 z-index 大于 0 时背后的内容），
+换句话说，是网页该区域 CSS 定义的颜色。</p>
+<p>判断是否存在 alpha 问题的一个好方法是将画布背景设置为鲜艳颜色，例如红色。你能立刻看到效果：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;canvas style=&quot;background: red;&quot;&gt;&lt;canvas&gt;
+</code></pre>
+<p>你也可以设置成黑色，黑色会掩盖任何 alpha 问题。</p>
+<h3 id="2-告诉-webgl-你不需要后缓冲区的-alpha">#2) 告诉 WebGL 你不需要后缓冲区的 alpha</h3>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl = canvas.getContext(&quot;webgl&quot;, { alpha: false }};
+</code></pre>
+<p>这样它的行为更像 OpenGL，因为后缓冲区只会有 RGB。 这可能是最好的选择，因为优秀的浏览器能检测到你不需要 alpha， 从而优化 WebGL 的合成方式。 但这也意味着后缓冲区实际上没有 alpha，如果你确实依赖它可能会不适用。 我所知道的应用中很少使用后缓冲区 alpha。 从某种角度看，我认为这应该是默认行为。</p>
+<h3 id="3-在渲染结束时清除-alpha-通道">#3) 在渲染结束时清除 alpha 通道</h3>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">..
+renderScene();
+..
+// Set the backbuffer's alpha to 1.0 by
+// Setting the clear color to 1
+gl.clearColor(1, 1, 1, 1);
+
+// Telling WebGL to only affect the alpha channel
+gl.colorMask(false, false, false, true);
+
+// clear
+gl.clear(gl.COLOR_BUFFER_BIT);
+</code></pre>
+<p>清除操作通常非常快，因为大多数硬件对此有特殊优化。 我在许多早期 WebGL 示例中都这么做过。 如果聪明的话，应该用上面方法 #2。 也许我发完这条就去改。 大多数 WebGL 库也应该默认采用这种方法。 真正使用 alpha 进行合成效果的开发者可以主动开启。 其余人则能获得最佳性能和最少意外。</p>
+<h3 id="4-清除-alpha-通道一次，之后不再渲染到该通道">#4) 清除 Alpha 通道一次，之后不再渲染到该通道</h3>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// At init time. Clear the back buffer.
+gl.clearColor(1,1,1,1);
+gl.clear(gl.COLOR_BUFFER_BIT);
+
+// Turn off rendering to alpha
+gl.colorMask(true, true, true, false);
+</code></pre>
+<p>当然如果你在渲染自定义的帧缓冲区时， 可能需要重新开启 alpha 渲染， 然后切回渲染画布时再关闭。</p>
+<h3 id="5-处理带-alpha-的图片">#5) 处理带 alpha 的图片</h3>
+<p>默认情况下，加载带 alpha 的图片到 WebGL，WebGL 会提供文件中的原始颜色值， 且颜色值未做预乘。 这一般符合我对 OpenGL 程序的使用习惯， 因为未预乘是无损的，而预乘会有损失。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">1, 0.5, 0.5, 0  // RGBA
+</code></pre>
+<p>这是一个可能的未预乘值， 但预乘情况下不可能出现这种值， 因为 alpha = 0，r、g、b 必须都是 0。</p>
+<p>加载图像时，如果需要，可以让 WebGL 对 Alpha 进行预乘。
+你可以通过如下方式将 UNPACK_PREMULTIPLY_ALPHA_WEBGL 设置为 true 来实现。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+</code></pre>
+<p>默认情况下是不进行预乘的。</p>
+<p>请注意，大多数（如果不是全部的话）Canvas 2D 实现都使用预乘 alpha。 这意味着当你将它们传输到 WebGL 并且 UNPACK_PREMULTIPLY_ALPHA_WEBGL 设置为 false 时，WebGL 会将它们转换回非预乘状态。</p>
+<h3 id="6-使用与预乘-alpha-兼容的混合方程">#6) 使用与预乘 alpha 兼容的混合方程</h3>
+<p>我写过或参与过的几乎所有 OpenGL 应用， 默认都是这样设置混合函数。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+</code></pre>
+<p>这适用于非预乘 alpha 的纹理。</p>
+<p>如果你确实想使用预乘 alpha 纹理，那么你可能需要使用以下设置</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+</code></pre>
+<p>这些是我所知道的方法。如果你了解更多，请在下方分享。</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -197,7 +313,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>基础概念</li>
+        <div id="toc">
+          <ul>  <li>基础概念</li>
         <ul>
           <li><a href="/webgl/lessons/zh_cn/webgl-getting-webgl2.html">怎样使用WebGL2</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-fundamentals.html">基本原理</a></li>
@@ -280,7 +397,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <li><a href="/webgl/lessons/zh_cn/webgl-skybox.html">WebGL2 天空盒</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-skinning.html">WebGL2 蒙皮</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-fog.html">WebGL2 雾</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-picking.html">Picking (clicking on stuff)</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-picking.html">拾取（点击物体）</a></li>
         </ul>
   <li>文字</li>
         <ul>
@@ -291,7 +408,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </ul>
   <li>GPGPU</li>
         <ul>
-          <li><a href="/webgl/lessons/zh_cn/webgl-gpgpu.html">GPGPU</a></li>
+          <li><a href="/webgl/lessons/zh_cn/webgl-gpgpu.html">通用GPU计算(GPGPU)</a></li>
         </ul>
         </ul>
   <li>技巧</li>
@@ -299,7 +416,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <li><a href="/webgl/lessons/zh_cn/webgl-smallest-programs.html">最小的程序</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-drawing-without-data.html">无数据绘制</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-shadertoy.html">Shadertoy</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-pulling-vertices.html">Pulling Vertices</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-pulling-vertices.html">顶点拉取</a></li>
         </ul>
   <li>优化</li>
         <ul>
@@ -315,8 +432,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <li><a href="/webgl/lessons/zh_cn/webgl-points-lines-triangles.html">点、线段与三角形</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-multiple-views.html">多视图与多画布</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-visualizing-the-camera.html">可视化相机</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-and-alpha.html">WebGL2 and Alpha</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html">2D vs 3D libraries</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-and-alpha.html">WebGL2 和 Alpha</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html">2D vs 3D 库</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-anti-patterns.html">Anti-Patterns</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-matrix-vs-math.html">WebGL2 Matrices vs Math Matrices</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-precision-issues.html">Precision Issues</a></li>
@@ -340,13 +457,47 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://twgljs.org">TWGL，一个轻量级WebGL辅助库</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>有意见或建议? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">在GitHub上提issue</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 和 Alpha';
+            var disqus_title = 'WebGL2 和 Alpha';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: "感谢 <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>的 <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} 个贡献</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 <script>
 </script>
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/zh_cn/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/zh_cn/webgl-pulling-vertices.md. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of GFXFundamentals. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,25 +36,77 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL2 Pulling Vertices" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="Using independent indices" />
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-pulling-vertices.html" />
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL2 Pulling Vertices" />
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-pulling-vertices.html" />
-<meta name="twitter:description" content="Using independent indices" />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="description" content="使用独立索引">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-pulling-vertices_zh-cn.jpg">
+
+<meta property="og:title" content="WebGL2 顶点拉取">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-pulling-vertices_zh-cn.jpg">
+<meta property="og:description" content="使用独立索引">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-pulling-vertices.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 顶点拉取">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-pulling-vertices.html">
+<meta name="twitter:description" content="使用独立索引">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-pulling-vertices_zh-cn.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-pulling-vertices.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-pulling-vertices_zh-cn.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-pulling-vertices.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-pulling-vertices.html",
+      "inLanguage":"zh-cn",
+      "name":"WebGL2 顶点拉取",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-pulling-vertices.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL2 Pulling Vertices</title>
+<title>WebGL2 顶点拉取</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-pulling-vertices.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-pulling-vertices.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-pulling-vertices.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-pulling-vertices.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-pulling-vertices.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-pulling-vertices.html">
+
+
+
+
 </head>
 <body>
 <div class="webgl_navbar">
@@ -178,12 +232,357 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 Pulling Vertices</h1>
+    <h1>WebGL2 顶点拉取</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>还没有简体中文版翻译哦  (~￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">欢迎翻译</a>!</p>
-<p><a href="/webgl/lessons/webgl-pulling-vertices.html">英文原版地址</a>.</p>
+      <p>本文假设你已经阅读了其他许多文章，从 <a href="webgl-fundamentals.html">基础知识</a> 开始。如果你还没有阅读它们，请先从那里开始。</p>
+<p>传统上，WebGL应用会将几何数据放入缓冲区中，然后通过属性（attributes）自动将这些缓冲区中的顶点数据传递给顶点着色器，由程序员编写代码将其转换为裁剪空间（clip space）坐标。</p>
+<p>这里的 <strong>“传统上”</strong> 非常重要。这只是一种<strong>传统做法</strong>，并不是必须如此。WebGL 并不关心我们是如何处理的，它只关心顶点着色器是否为 <code class="notranslate" translate="no">gl_Position</code> 赋予了裁剪空间坐标。</p>
+<p>让我们使用类似于 <a href="webgl-3d-textures.html">纹理</a> 中示例的方式，绘制一个带纹理映射的立方体。我们通常会说需要至少 24 个唯一顶点，这是因为虽然立方体只有 8 个角点位置，但每个角点会出现在立方体的 3 个不同面上，而每个面又需要不同的纹理坐标。</p>
+<div class="webgl_center"><img src="../resources/cube-vertices-uv.svg" style="width: 400px;"></div>
+<p>在上面的图示中，我们可以看到左侧面的角点 3 需要的纹理坐标是 (1,1)，而右侧面对角点 3 的使用则需要纹理坐标 (0,1)。顶部面则会需要另一组不同的纹理坐标。</p>
+<p>通常，我们是通过将 8 个角点位置扩展为 24 个顶点来实现这一点的。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  // front
+  { pos: [-1, -1,  1], uv: [0, 1], }, // 0
+  { pos: [ 1, -1,  1], uv: [1, 1], }, // 1
+  { pos: [-1,  1,  1], uv: [0, 0], }, // 2
+  { pos: [ 1,  1,  1], uv: [1, 0], }, // 3
+  // right
+  { pos: [ 1, -1,  1], uv: [0, 1], }, // 4
+  { pos: [ 1, -1, -1], uv: [1, 1], }, // 5
+  { pos: [ 1,  1,  1], uv: [0, 0], }, // 6
+  { pos: [ 1,  1, -1], uv: [1, 0], }, // 7
+  // back
+  { pos: [ 1, -1, -1], uv: [0, 1], }, // 8
+  { pos: [-1, -1, -1], uv: [1, 1], }, // 9
+  { pos: [ 1,  1, -1], uv: [0, 0], }, // 10
+  { pos: [-1,  1, -1], uv: [1, 0], }, // 11
+  // left
+  { pos: [-1, -1, -1], uv: [0, 1], }, // 12
+  { pos: [-1, -1,  1], uv: [1, 1], }, // 13
+  { pos: [-1,  1, -1], uv: [0, 0], }, // 14
+  { pos: [-1,  1,  1], uv: [1, 0], }, // 15
+  // top
+  { pos: [ 1,  1, -1], uv: [0, 1], }, // 16
+  { pos: [-1,  1, -1], uv: [1, 1], }, // 17
+  { pos: [ 1,  1,  1], uv: [0, 0], }, // 18
+  { pos: [-1,  1,  1], uv: [1, 0], }, // 19
+  // bottom
+  { pos: [ 1, -1,  1], uv: [0, 1], }, // 20
+  { pos: [-1, -1,  1], uv: [1, 1], }, // 21
+  { pos: [ 1, -1, -1], uv: [0, 0], }, // 22
+  { pos: [-1, -1, -1], uv: [1, 0], }, // 23
+</code></pre>
+<p>这些位置和纹理坐标通常会被放入缓冲区中，并通过属性传递给顶点着色器。</p>
+<p>但我们真的需要以这种方式来做吗？如果我们实际上只想保留 8 个角点和 4 个纹理坐标，会怎样？<br>
+类似于下面这样：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">positions = [
+  -1, -1,  1,  // 0
+   1, -1,  1,  // 1
+  -1,  1,  1,  // 2
+   1,  1,  1,  // 3
+  -1, -1, -1,  // 4
+   1, -1, -1,  // 5
+  -1,  1, -1,  // 6
+   1,  1, -1,  // 7
+];
+uvs = [
+  0, 0,  // 0
+  1, 0,  // 1
+  0, 1,  // 2
+  1, 1,  // 3
+];
+</code></pre>
+<p>然后，对于这 24 个顶点中的每一个，我们指定要使用哪一个位置和哪一个纹理坐标。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">positionIndexUVIndex = [
+  // front
+  0, 1, // 0
+  1, 3, // 1
+  2, 0, // 2
+  3, 2, // 3
+  // right
+  1, 1, // 4
+  5, 3, // 5
+  3, 0, // 6
+  7, 2, // 7
+  // back
+  5, 1, // 8
+  4, 3, // 9
+  7, 0, // 10
+  6, 2, // 11
+  // left
+  4, 1, // 12
+  0, 3, // 13
+  6, 0, // 14
+  2, 2, // 15
+  // top
+  7, 1, // 16
+  6, 3, // 17
+  3, 0, // 18
+  2, 2, // 19
+  // bottom
+  1, 1, // 20
+  0, 3, // 21
+  5, 0, // 22
+  4, 2, // 23
+];
+</code></pre>
+<p>我们能在 GPU 上使用这种方式吗？为什么不可以！</p>
+<p>我们会将位置和纹理坐标分别上传到各自的纹理中，就像我们在 <a href="webgl-data-textures.html">数据纹理</a> 中讲到的那样。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function makeDataTexture(gl, data, numComponents) {
+  // expand the data to 4 values per pixel.
+  const numElements = data.length / numComponents;
+  const expandedData = new Float32Array(numElements * 4);
+  for (let i = 0; i &lt; numElements; ++i) {
+    const srcOff = i * numComponents;
+    const dstOff = i * 4;
+    for (let j = 0; j &lt; numComponents; ++j) {
+      expandedData[dstOff + j] = data[srcOff + j];
+    }
+  }
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,            // mip level
+      gl.RGBA32F,   // format
+      numElements,  // width
+      1,            // height
+      0,            // border
+      gl.RGBA,      // format
+      gl.FLOAT,     // type
+      expandedData,
+  );
+  // we don't need any filtering
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  return tex;
+}
+
+const positionTexture = makeDataTexture(gl, positions, 3);
+const texcoordTexture = makeDataTexture(gl, uvs, 2);
+</code></pre>
+<p>由于纹理每个像素最多可以存储 4 个值，<code class="notranslate" translate="no">makeDataTexture</code> 会将我们提供的数据扩展为每像素 4 个值。</p>
+<p>接着，我们会创建一个顶点数组对象（vertex array）来保存我们的属性状态。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// create a vertex array object to hold attribute state
+const vao = gl.createVertexArray();
+gl.bindVertexArray(vao);
+</code></pre>
+<p>接下来，我们需要将位置索引和纹理坐标索引上传到缓冲区。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Create a buffer for the position and UV indices
+const positionIndexUVIndexBuffer = gl.createBuffer();
+// Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+gl.bindBuffer(gl.ARRAY_BUFFER, positionIndexUVIndexBuffer);
+// Put the position and texcoord indices in the buffer
+gl.bufferData(gl.ARRAY_BUFFER, new Uint32Array(positionIndexUVIndex), gl.STATIC_DRAW);
+</code></pre>
+<p>接下来，我们需要将位置索引和纹理坐标索引上传到一个缓冲区。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Turn on the position index attribute
+gl.enableVertexAttribArray(posTexIndexLoc);
+
+// Tell the position/texcoord index attribute how to get data out
+// of positionIndexUVIndexBuffer (ARRAY_BUFFER)
+{
+  const size = 2;                // 2 components per iteration
+  const type = gl.INT;           // the data is 32bit integers
+  const stride = 0;              // 0 = move forward size * sizeof(type) each iteration to get the next position
+  const offset = 0;              // start at the beginning of the buffer
+  gl.vertexAttribIPointer(
+      posTexIndexLoc, size, type, stride, offset);
+}
+</code></pre>
+<p>注意这里调用的是 <code class="notranslate" translate="no">gl.vertexAttribIPointer</code>，而不是 <code class="notranslate" translate="no">gl.vertexAttribPointer</code>。<br>
+其中的 <code class="notranslate" translate="no">I</code> 表示整数，用于整数和无符号整数类型的属性。<br>
+另外，<code class="notranslate" translate="no">size</code> 设置为 2，因为每个顶点包含 1 个位置索引和 1 个纹理坐标索引。</p>
+<p>虽然我们只需要 24 个顶点，但绘制 6 个面，每个面 12 个三角形，每个三角形 3 个顶点，总共 36 个顶点。
+为了指定每个面使用哪 6 个顶点，我们将使用 <a href="webgl-indexed-vertices.html">顶点索引</a>。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const indices = [
+   0,  1,  2,   2,  1,  3,  // front
+   4,  5,  6,   6,  5,  7,  // right
+   8,  9, 10,  10,  9, 11,  // back
+  12, 13, 14,  14, 13, 15,  // left
+  16, 17, 18,  18, 17, 19,  // top
+  20, 21, 22,  22, 21, 23,  // bottom
+];
+// Create an index buffer
+const indexBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+// Put the indices in the buffer
+gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+</code></pre>
+<p>由于我们想要在立方体上绘制一张图像，因此还需要第三个纹理存储这张图像。<br>
+这里我们用一个 4x4 的数据纹理，内容是棋盘格图案。<br>
+纹理格式使用 <code class="notranslate" translate="no">gl.LUMINANCE</code>，因为这样每个像素只需要一个字节。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Create a checker texture.
+const checkerTexture = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, checkerTexture);
+// Fill the texture with a 4x4 gray checkerboard.
+gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.LUMINANCE,
+    4,
+    4,
+    0,
+    gl.LUMINANCE,
+    gl.UNSIGNED_BYTE,
+    new Uint8Array([
+      0xDD, 0x99, 0xDD, 0xAA,
+      0x88, 0xCC, 0x88, 0xDD,
+      0xCC, 0x88, 0xCC, 0xAA,
+      0x88, 0xCC, 0x88, 0xCC,
+    ]),
+);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+</code></pre>
+<p>接下来是顶点着色器……<br>
+我们可以像这样从纹理中查找一个像素：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">vec4 color = texelFetch(sampler2D tex, ivec2 pixelCoord, int mipLevel);
+</code></pre>
+<p>因此，给定一个整数像素坐标，上述代码将提取出对应的像素值。</p>
+<p>使用 <code class="notranslate" translate="no">texelFetch</code> 函数，我们可以将一维数组索引转换为二维纹理坐标，并从二维纹理中查找对应的值，方式如下：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">vec4 getValueByIndexFromTexture(sampler2D tex, int index) {
+  int texWidth = textureSize(tex, 0).x;
+  int col = index % texWidth;
+  int row = index / texWidth;
+  return texelFetch(tex, ivec2(col, row), 0);
+}
+</code></pre>
+<p>有了这个函数，我们的着色器如下所示：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+in ivec2 positionAndTexcoordIndices;
+
+uniform sampler2D positionTexture;
+uniform sampler2D texcoordTexture;
+
+uniform mat4 u_matrix;
+
+out vec2 v_texcoord;
+
+vec4 getValueByIndexFromTexture(sampler2D tex, int index) {
+  int texWidth = textureSize(tex, 0).x;
+  int col = index % texWidth;
+  int row = index / texWidth;
+  return texelFetch(tex, ivec2(col, row), 0);
+}
+
+void main() {
+  int positionIndex = positionAndTexcoordIndices.x;
+  vec3 position = getValueByIndexFromTexture(
+      positionTexture, positionIndex).xyz;
+ 
+  // Multiply the position by the matrix.
+  gl_Position = u_matrix * vec4(position, 1);
+
+  int texcoordIndex = positionAndTexcoordIndices.y;
+  vec2 texcoord = getValueByIndexFromTexture(
+      texcoordTexture, texcoordIndex).xy;
+
+  // Pass the texcoord to the fragment shader.
+  v_texcoord = texcoord;
+}
+</code></pre>
+<p>在底部，它实际上和我们在 <a href="webgl-3d-textures.html">纹理</a> 中使用的着色器是一样的。我们将 <code class="notranslate" translate="no">position</code> 与 <code class="notranslate" translate="no">u_matrix</code> 相乘，并将纹理坐标输出到 <code class="notranslate" translate="no">v_texcoord</code>，以传递给片元着色器。</p>
+<p>不同之处仅在于我们获取 <code class="notranslate" translate="no">position</code> 和 <code class="notranslate" translate="no">texcoord</code> 的方式。我们使用传入的索引，从各自的纹理中提取这些值。</p>
+<p>要使用这个着色器，我们需要查找所有相关的变量位置。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// setup GLSL program
+const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
+
++// look up where the vertex data needs to go.
++const posTexIndexLoc = gl.getAttribLocation(
++    program, &quot;positionAndTexcoordIndices&quot;);
++
++// lookup uniforms
++const matrixLoc = gl.getUniformLocation(program, &quot;u_matrix&quot;);
++const positionTexLoc = gl.getUniformLocation(program, &quot;positionTexture&quot;);
++const texcoordTexLoc = gl.getUniformLocation(program, &quot;texcoordTexture&quot;);
++const u_textureLoc = gl.getUniformLocation(program, &quot;u_texture&quot;);
+</code></pre>
+<p>在渲染阶段，我们设置属性（attributes）。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Tell it to use our program (pair of shaders)
+gl.useProgram(program);
+
+// Set the buffer and attribute state
+gl.bindVertexArray(vao);
+</code></pre>
+<p>然后，我们需要绑定全部 3 个纹理，并设置所有的 uniform。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Set the matrix.
+gl.uniformMatrix4fv(matrixLoc, false, matrix);
+
+// put the position texture on texture unit 0
+gl.activeTexture(gl.TEXTURE0);
+gl.bindTexture(gl.TEXTURE_2D, positionTexture);
+// Tell the shader to use texture unit 0 for positionTexture
+gl.uniform1i(positionTexLoc, 0);
+
+// put the texcoord texture on texture unit 1
+gl.activeTexture(gl.TEXTURE0 + 1);
+gl.bindTexture(gl.TEXTURE_2D, texcoordTexture);
+// Tell the shader to use texture unit 1 for texcoordTexture
+gl.uniform1i(texcoordTexLoc, 1);
+
+// put the checkerboard texture on texture unit 2
+gl.activeTexture(gl.TEXTURE0 + 2);
+gl.bindTexture(gl.TEXTURE_2D, checkerTexture);
+// Tell the shader to use texture unit 2 for u_texture
+gl.uniform1i(u_textureLoc, 2);
+</code></pre>
+<p>最后，执行绘制操作。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Draw the geometry.
+gl.drawElements(gl.TRIANGLES, 6 * 6, gl.UNSIGNED_SHORT, 0);
+</code></pre>
+<p>最终，我们只使用了 8 个位置和 4 个纹理坐标，就得到了一个带贴图的立方体。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-pulling-vertices.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-pulling-vertices.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>有几点需要注意：代码实现较为简化，使用了 1D 纹理来存储位置和纹理坐标。<br>
+但纹理的宽度是有限的，<a href="https://web3dsurvey.com/webgl/parameters/MAX_TEXTURE_SIZE">具体有多宽依赖于硬件</a>，<br>
+你可以通过以下方式查询：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+</code></pre>
+<p>如果我们想处理比最大纹理宽度还多的数据，就需要选择一个合适的纹理尺寸，并将数据分布到多行中，可能还需要对最后一行进行填充以保持矩形结构。</p>
+<p>我们在这里还做了另一件事：使用了两张纹理，一张存储位置，另一张存储纹理坐标。<br>
+其实我们完全可以将这两类数据存储在同一张纹理中，例如交错（interleaved）存储。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">pos,uv,pos,uv,pos,uv...
+</code></pre>
+<p>或者将它们存储在纹理的不同区域。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">pos,pos,pos,...
+uv, uv, uv,...
+</code></pre>
+<p>我们只需要修改顶点着色器中的数学逻辑，以正确地从纹理中提取对应的数据。</p>
+<p>那么问题来了：是否应该用这种方式？<br>
+答案是“视情况而定”。具体效果可能因 GPU 而异，有些情况下这比传统方式还慢。</p>
+<p>本文的重点再次强调：<br>
+WebGL 并不在意你是如何为 <code class="notranslate" translate="no">gl_Position</code> 设置裁剪空间坐标的，也不在意你是如何输出颜色的。它只关心你是否设置了这些值。纹理，本质上只是可以随机访问的二维数组。</p>
+<p>当你在 WebGL 中遇到问题时，请记住，WebGL 只是运行一些着色器程序，而这些着色器可以通过以下方式访问数据。</p>
+<ul>
+<li>uniforms（全局变量）</li>
+<li>attributes（每个顶点着色器执行时接收的数据）</li>
+<li>textures（可以随机访问的二维数组）</li>
+</ul>
+<p>不要让传统的 WebGL 使用方式限制了你的思维。<br>
+WebGL 实际上具有极强的灵活性。</p>
+<p>当你想在 WebGL 中解决问题时，请记住 WebGL 只是运行着色器，
+这些着色器可以通过 uniforms（全局变量）、attributes（每次顶点着色器执行时传入的数据）
+以及 textures（可随机访问的二维数组）来访问数据。
+不要让传统的 WebGL 使用方式阻碍你发现它真正的灵活性。</p>
+<div class="webgl_bottombar">
+<h3>为什么叫做顶点拉取（Vertex Pulling）？</h3>
+<p>实际上我最近（2019年7月）才听到这个术语，  
+尽管我之前就用过这种技术。  
+它来源于  
+<a href='https://www.google.com/search?q=OpenGL+Insights+"Programmable+Vertex+Pulling"+article+by+Daniel+Rakos'>  
+OpenGL Insights 中 Daniel Rakos 撰写的“可编程顶点拉取”文章</a>。  
+</p>
+<p>之所以叫做顶点*拉取*，是因为顶点着色器决定读取哪个顶点数据，  
+而传统方式是通过属性自动提供顶点数据。  
+实际上，顶点着色器是在*拉取*内存中的数据。</p>
+</div>
 
     </div>
     <div class="lesson-sidebar">
@@ -197,7 +596,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>基础概念</li>
+        <div id="toc">
+          <ul>  <li>基础概念</li>
         <ul>
           <li><a href="/webgl/lessons/zh_cn/webgl-getting-webgl2.html">怎样使用WebGL2</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-fundamentals.html">基本原理</a></li>
@@ -280,7 +680,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <li><a href="/webgl/lessons/zh_cn/webgl-skybox.html">WebGL2 天空盒</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-skinning.html">WebGL2 蒙皮</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-fog.html">WebGL2 雾</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-picking.html">Picking (clicking on stuff)</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-picking.html">拾取（点击物体）</a></li>
         </ul>
   <li>文字</li>
         <ul>
@@ -291,7 +691,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </ul>
   <li>GPGPU</li>
         <ul>
-          <li><a href="/webgl/lessons/zh_cn/webgl-gpgpu.html">GPGPU</a></li>
+          <li><a href="/webgl/lessons/zh_cn/webgl-gpgpu.html">通用GPU计算(GPGPU)</a></li>
         </ul>
         </ul>
   <li>技巧</li>
@@ -299,7 +699,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <li><a href="/webgl/lessons/zh_cn/webgl-smallest-programs.html">最小的程序</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-drawing-without-data.html">无数据绘制</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-shadertoy.html">Shadertoy</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-pulling-vertices.html">Pulling Vertices</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-pulling-vertices.html">顶点拉取</a></li>
         </ul>
   <li>优化</li>
         <ul>
@@ -315,8 +715,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <li><a href="/webgl/lessons/zh_cn/webgl-points-lines-triangles.html">点、线段与三角形</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-multiple-views.html">多视图与多画布</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-visualizing-the-camera.html">可视化相机</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-and-alpha.html">WebGL2 and Alpha</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html">2D vs 3D libraries</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-and-alpha.html">WebGL2 和 Alpha</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html">2D vs 3D 库</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-anti-patterns.html">Anti-Patterns</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-matrix-vs-math.html">WebGL2 Matrices vs Math Matrices</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-precision-issues.html">Precision Issues</a></li>
@@ -340,13 +740,47 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://twgljs.org">TWGL，一个轻量级WebGL辅助库</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>有意见或建议? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">在GitHub上提issue</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 顶点拉取';
+            var disqus_title = 'WebGL2 顶点拉取';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: "感谢 <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>的 <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} 个贡献</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 <script>
 </script>
 

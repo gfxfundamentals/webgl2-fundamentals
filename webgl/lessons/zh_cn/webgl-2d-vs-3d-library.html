@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/zh_cn/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/zh_cn/webgl-2d-vs-3d-library.md. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of GFXFundamentals. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,25 +36,77 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL2 - Rasterization vs 3D libraries" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="Why WebGL is not a 3D library and why it matters." />
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html" />
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL2 - Rasterization vs 3D libraries" />
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html" />
-<meta name="twitter:description" content="Why WebGL is not a 3D library and why it matters." />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="description" content="为什么 WebGL 不是 3D 库以及这点为什么重要。">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-2d-vs-3d-library_zh-cn.jpg">
+
+<meta property="og:title" content="WebGL2 - 光栅化 vs 3D 库">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-2d-vs-3d-library_zh-cn.jpg">
+<meta property="og:description" content="为什么 WebGL 不是 3D 库以及这点为什么重要。">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 - 光栅化 vs 3D 库">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html">
+<meta name="twitter:description" content="为什么 WebGL 不是 3D 库以及这点为什么重要。">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-2d-vs-3d-library_zh-cn.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-2d-vs-3d-library_zh-cn.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html",
+      "inLanguage":"zh-cn",
+      "name":"WebGL2 - 光栅化 vs 3D 库",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL2 - Rasterization vs 3D libraries</title>
+<title>WebGL2 - 光栅化 vs 3D 库</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-2d-vs-3d-library.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-2d-vs-3d-library.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-2d-vs-3d-library.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-2d-vs-3d-library.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-2d-vs-3d-library.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html">
+
+
+
+
 </head>
 <body>
 <div class="webgl_navbar">
@@ -178,12 +232,164 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 - Rasterization vs 3D libraries</h1>
+    <h1>WebGL2 - 光栅化 vs 3D 库</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>还没有简体中文版翻译哦  (~￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">欢迎翻译</a>!</p>
-<p><a href="/webgl/lessons/webgl-2d-vs-3d-library.html">英文原版地址</a>.</p>
+      <p>这篇文章是关于 WebGL 系列文章的一个旁支话题。<br>
+第一篇是 <a href="webgl-fundamentals.html">基础知识介绍</a></p>
+<p>我写这篇文章是因为我说 WebGL 是一个光栅化 API，而不是一个 3D API，这句话触到了某些人的神经。
+我不太清楚为什么他们会觉得被威胁，或者是什么让他们对我称 WebGL 为光栅化 API 这件事如此反感。</p>
+<p>可以说，一切都是视角问题。我可能会说刀是一种餐具，别人可能会说刀是工具，还有人可能会说刀是武器。</p>
+<p>但在 WebGL 的情况下，我认为将 WebGL 称为光栅化 API 是重要的，这是有原因的——那就是你需要掌握大量的 3D 数学知识，才能用 WebGL 绘制出任何 3D 内容。</p>
+<p>我认为，任何自称为 3D 库的东西，都应该替你处理好 3D 的部分。你只需提供一些 3D 数据、材质参数、灯光信息，它就应该能够帮你完成 3D 渲染。
+WebGL（以及 OpenGL ES 2.0+）虽然都可以用来绘制 3D 图形，但它们都不符合这个定义。</p>
+<p>个比方，C++ 并不能“原生处理文字”。尽管可以用 C++ 编写文字处理器，但我们不会把 C++ 称作“文字处理器”。
+同样，WebGL 并不能直接绘制 3D 图形。你可以基于 WebGL 编写一个绘制 3D 图形的库，但 WebGL 本身并不具备 3D 绘图功能。</p>
+<p>进一步举个例子，假设我们想要绘制一个带有灯光效果的 3D 立方体。</p>
+<p>以下是使用 three.js 来显示这个代码。</p>
+<pre class="prettyprint showlinemods">
+  // Setup.
+  renderer &#x3D; new THREE.WebGLRenderer({canvas: document.querySelector(&quot;#canvas&quot;)});
+  c.appendChild(renderer.domElement);
+
+  // Make and setup a camera.
+  camera &#x3D; new THREE.PerspectiveCamera(70, 1, 1, 1000);
+  camera.position.z &#x3D; 400;
+
+  // Make a scene
+  scene &#x3D; new THREE.Scene();
+
+  // Make a cube.
+  var geometry &#x3D; new THREE.BoxGeometry(200, 200, 200);
+
+  // Make a material
+  var material &#x3D; new THREE.MeshPhongMaterial({
+    ambient: 0x555555,
+    color: 0x555555,
+    specular: 0xffffff,
+    shininess: 50,
+    shading: THREE.SmoothShading
+  });
+
+  // Create a mesh based on the geometry and material
+  mesh &#x3D; new THREE.Mesh(geometry, material);
+  scene.add(mesh);
+
+  // Add 2 lights.
+  light1 &#x3D; new THREE.PointLight(0xff0040, 2, 0);
+  light1.position.set(200, 100, 300);
+  scene.add(light1);
+
+  light2 &#x3D; new THREE.PointLight(0x0040ff, 2, 0);
+  light2.position.set(-200, 100, 300);
+  scene.add(light2);
+</pre>
+<p>它显示如下。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/resources%2Fthree-js-cube-with-lights.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/resources/three-js-cube-with-lights.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>以下是在 OpenGL（非 ES 版本）中显示一个带有两个光源的立方体的类似代码。</p>
+<pre class="prettyprint showlinemods">
+  // Setup
+  glViewport(0, 0, width, height);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluPerspective(70.0, width / height, 1, 1000);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+
+  glClearColor(0.0, 0.0, 0.0, 0.0);
+  glEnable(GL_DEPTH_TEST);
+  glShadeModel(GL_SMOOTH);
+  glEnable(GL_LIGHTING);
+
+  // Setup 2 lights
+  glEnable(GL_LIGHT0);
+  glEnable(GL_LIGHT1);
+  float light0_position[] &#x3D; {  200, 100, 300, };
+  float light1_position[] &#x3D; { -200, 100, 300, };
+  float light0_color[] &#x3D; { 1, 0, 0.25, 1, };
+  float light1_color[] &#x3D; { 0, 0.25, 1, 1, };
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_color);
+  glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_color);
+  glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
+  glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
+...
+
+  // Draw a cube.
+  static int count &#x3D; 0;
+  ++count;
+
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glLoadIdentity();
+  double angle &#x3D; count * 0.1;
+  glTranslatef(0, 0, -400);
+  glRotatef(angle, 0, 1, 0);
+
+  glBegin(GL_TRIANGLES);
+  glNormal3f(0, 0, 1);
+  glVertex3f(-100, -100, 100);
+  glVertex3f( 100, -100, 100);
+  glVertex3f(-100,  100, 100);
+  glVertex3f(-100,  100, 100);
+  glVertex3f( 100, -100, 100);
+  glVertex3f( 100,  100, 100);
+
+  /*
+  ...
+  ... repeat for 5 more faces of cube
+  ...
+  */
+
+  glEnd();
+</pre>
+<p>请注意，在这两个示例中我们几乎不需要任何 3D 数学知识。对比来看，WebGL 就不是这样。我不会去写 WebGL 所需的完整代码——代码本身其实不会多很多。关键不在于代码行数的多少，而在于所需的知识量。</p>
+<p>在这两个 3D 库中，它们帮你处理了所有 3D 相关的事情。你只需要提供一个摄像机的位置和视野、几个光源以及一个立方体，其余的它们都会帮你搞定。换句话说：它们是真正的 3D 库。</p>
+<p>请注意，在这两个示例中我们几乎不需要任何 3D 数学知识。对比来看，WebGL 就不是这样。我不会去写 WebGL 所需的完整代码——代码本身其实不会多很多。关键不在于代码行数的多少，而在于所需的知识量。</p>
+<p>在这两个 3D 库中，它们帮你处理了所有 3D 相关的事情。你只需要提供一个摄像机的位置和视野、几个光源以及一个立方体，其余的它们都会帮你搞定。换句话说：它们是真正的 3D 库。</p>
+<p>请注意，在这两个示例中我们几乎不需要任何 3D 数学知识。对比来看，WebGL 就不是这样。我不会去写 WebGL 所需的完整代码——代码本身其实不会多很多。关键不在于代码行数的多少，而在于所需的知识量。</p>
+<p>在这两个 3D 库中，它们帮你处理了所有 3D 相关的事情。 你只需要提供一个摄像机的位置和视野、几个光源以及一个立方体，其余的它们都会帮你搞定。
+换句话说：它们是真正的 3D 库。</p>
+<p>而在 WebGL 中，你则需要掌握矩阵运算、归一化坐标、视锥体、叉积、点积、varying 插值、光照、高光计算等等一系列内容，而这些通常需要几个月甚至几年的时间才能真正理解和掌握。</p>
+<p>一个 3D 库的核心意义就在于它内部已经封装好了这些知识，因此你不需要自己去掌握它们，你只需要依赖这个库来帮你完成处理。正如上文所示，这一点在最初的 OpenGL 中就成立，对像 three.js 这样的其他 3D 库同样适用。但对于 OpenGL ES 2.0+ 或 WebGL 来说，这种封装是不存在的。</p>
+<p>称 WebGL 为一个 3D 库似乎是具有误导性的。一个初学者接触 WebGL 时可能会想：“哦，这是个 3D 库，太棒了，它会帮我处理 3D。”然而他们最终会痛苦地发现，事实根本不是这样。</p>
+<p>我们甚至可以更进一步。下面是使用 Canvas 绘制 3D 线框立方体的示例。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/resources%2F3d-in-canvas.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/resources/3d-in-canvas.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>下面是使用 WebGL 绘制线框立方体的示例。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/resources%2F3d-in-webgl.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/resources/3d-in-webgl.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>如果你检查这两段代码，就会发现它们在所需知识量或代码量方面并没有太大差异。归根结底，Canvas 版本是遍历顶点，使用我们提供的数学计算，然后在 2D 中绘制一些线条；而 WebGL 版本做的也是同样的事情，只不过这些数学计算是我们写在 GLSL 中，由 GPU 执行的。</p>
+<p>这最后一个演示的重点是说明 WebGL 本质上只是一个光栅化引擎，就像 Canvas 2D 一样。确实，WebGL 提供了一些有助于实现 3D 的功能，比如深度缓冲区，它让深度排序变得比没有深度的系统简单得多。
+WebGL 还内置了各种数学函数，非常适合用于 3D 数学计算，尽管严格来说，这些函数本身并不属于“3D”的范畴——它们只是数学库，无论你是用于一维、二维还是三维计算都可以使用。
+但归根结底，WebGL 只负责光栅化。你必须自己提供裁剪空间（clip space）坐标来表示你想绘制的内容。确实，你可以提供 x, y, z, w，WebGL 会在渲染前将其除以 w，但这远远不足以让 WebGL 被称为一个“3D 库”。
+在一个真正的 3D 库中，你只需提供 3D 数据，库会帮你完成从 3D 到裁剪空间坐标的全部计算。</p>
+<p>为了提供更多参考信息， <a href="https://emscripten.org/">emscripten</a> 在 WebGL 之上实现了旧版 OpenGL 的仿真。相关代码在<br>
+<a href="https://github.com/emscripten-core/emscripten/blob/main/src/lib/libglemu.js">这里</a>。</p>
+<p>如果你查看这段代码，你会发现其中很大一部分是在生成着色器，用来模拟 OpenGL ES 2.0 中被移除的旧版 OpenGL 的 3D 部分。</p>
+<p>你也可以在 <a href="https://chromium.googlesource.com/external/p3/regal/+/refs/heads/master/src/regal/RegalIff.cpp">Regal</a> 中看到类似的做法。<br>
+Regal 是 NVIDIA 发起的一个项目，旨在在现代 OpenGL 中仿真包含 3D 功能的旧版 OpenGL，而现代 OpenGL 已经不再内建这些 3D 功能。</p>
+<p>再举一个例子，<a href="https://gist.github.com/greggman/41d93c00649cba78abdbfc1231c9158c">three.js 所使用的着色器</a><br>
+就展示了如何在库内部提供 3D 功能。你可以看到这些例子中都做了大量工作。</p>
+<p>所有这些 3D 功能以及背后的支持代码，都是由这些库提供的，而不是由 WebGL 自身提供的。</p>
+<p>我希望你至少能理解我所说的“WebGL 不是一个 3D 库”是什么意思。我也希望你能意识到，一个真正的 3D 库应该为你处理好所有 3D 的相关部分。
+OpenGL 做到了这一点。Three.js 也做到了。而 OpenGL ES 2.0 和 WebGL 则没有。
+因此，可以说它们并不属于“3D 库”这个广义分类下。</p>
+<p>这一切的重点，是为了让刚接触 WebGL 的开发者理解 WebGL 的本质。
+了解 WebGL 并不是一个 3D 库，而是一个栅格化 API，意味着你需要自己掌握所有与 3D 相关的知识。这能帮助你明确接下来的学习方向——是深入学习 3D 数学知识，还是选择一个能为你处理好这些细节的 3D 库来简化开发。
+同时，这也能帮助你揭开 WebGL 工作原理背后的许多神秘面纱。</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -197,7 +403,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>基础概念</li>
+        <div id="toc">
+          <ul>  <li>基础概念</li>
         <ul>
           <li><a href="/webgl/lessons/zh_cn/webgl-getting-webgl2.html">怎样使用WebGL2</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-fundamentals.html">基本原理</a></li>
@@ -280,7 +487,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <li><a href="/webgl/lessons/zh_cn/webgl-skybox.html">WebGL2 天空盒</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-skinning.html">WebGL2 蒙皮</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-fog.html">WebGL2 雾</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-picking.html">Picking (clicking on stuff)</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-picking.html">拾取（点击物体）</a></li>
         </ul>
   <li>文字</li>
         <ul>
@@ -291,7 +498,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </ul>
   <li>GPGPU</li>
         <ul>
-          <li><a href="/webgl/lessons/zh_cn/webgl-gpgpu.html">GPGPU</a></li>
+          <li><a href="/webgl/lessons/zh_cn/webgl-gpgpu.html">通用GPU计算(GPGPU)</a></li>
         </ul>
         </ul>
   <li>技巧</li>
@@ -299,7 +506,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <li><a href="/webgl/lessons/zh_cn/webgl-smallest-programs.html">最小的程序</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-drawing-without-data.html">无数据绘制</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-shadertoy.html">Shadertoy</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-pulling-vertices.html">Pulling Vertices</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-pulling-vertices.html">顶点拉取</a></li>
         </ul>
   <li>优化</li>
         <ul>
@@ -315,8 +522,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <li><a href="/webgl/lessons/zh_cn/webgl-points-lines-triangles.html">点、线段与三角形</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-multiple-views.html">多视图与多画布</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-visualizing-the-camera.html">可视化相机</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-and-alpha.html">WebGL2 and Alpha</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html">2D vs 3D libraries</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-and-alpha.html">WebGL2 和 Alpha</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html">2D vs 3D 库</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-anti-patterns.html">Anti-Patterns</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-matrix-vs-math.html">WebGL2 Matrices vs Math Matrices</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-precision-issues.html">Precision Issues</a></li>
@@ -340,13 +547,47 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <li><a href="https://twgljs.org">TWGL，一个轻量级WebGL辅助库</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>有意见或建议? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">在GitHub上提issue</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 - 光栅化 vs 3D 库';
+            var disqus_title = 'WebGL2 - 光栅化 vs 3D 库';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: "感谢 <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>的 <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} 个贡献</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 <script>
 </script>
 
