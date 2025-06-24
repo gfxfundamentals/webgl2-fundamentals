@@ -1,6 +1,6 @@
 Title: WebGL2 小贴士
 Description: 使用 WebGL 时可能遇到的一些小问题
-TOC: 画布截屏
+TOC: #
 
 本文收集了一些你在使用 WebGL 时可能遇到的、看起来太小而不值得单独写一篇文章的问题。
 
@@ -8,7 +8,7 @@ TOC: 画布截屏
 
 <a id="screenshot" data-toc="Taking a screenshot"></a>
 
-# 对 Canvas 截图
+# 画布截屏
 
 在浏览器中，实际上有两种函数可以对画布进行截图。  
 一种旧方法是：
