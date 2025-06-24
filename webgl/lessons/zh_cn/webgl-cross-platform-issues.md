@@ -1,58 +1,55 @@
-Title: WebGL2 Cross Platform Issues
+Title: WebGL2 跨平台问题
 Description: Things to be aware of when trying to make your WebGL app work everywhere.
-TOC: Cross Platform Issues
+TOC: 跨平台问题
 
-I probably comes as no shock that not all WebGL programs work on all devices or
-browser. 
+你也许早就知道，并不所有 WebGL 程序都能在所有设备或浏览器上运行。
 
-Here's a list of most of the issues you might run into off the top of my head
+以下是我脑海中能想到的大多数可能遇到的问题列表。
 
-## Performance
+## 性能
 
-A top end GPU probably runs 100x faster than a low-end GPU. The only way around
-that that I know of is to either aim low, or else give the user options like
-most Desktop PC apps do where they can choose performance or fidelity.
+高端 GPU 的运行速度可能是低端 GPU 的 100 倍。
+我知道的唯一解决方法是要么把目标定得低一些，要么像大多数桌面程序那样提供性能与画质的选项供用户选择。
 
-## Memory
+## 内存
 
-Similarly a top end GPU might have 12 to 24 gig of ram where as a low end GPU
-probably has less than 1gig. (I'm old so it's amazing to me low end = 1gig since
-I started programming on machines with 16k to 64k of memory 😜)
+同样，高端 GPU 可能拥有 12 到 24 GB 的内存，  
+而低端 GPU 可能不到 1 GB。  
+（我年纪大了，觉得“低端 = 1GB”已经很神奇了，  
+因为我最初是在只有 16K 到 64K 内存的机器上编程的 😜）
 
-## Device Limits
+## 设备限制
 
-WebGL has various minimum supported features but your local device might support
-> than that minimum which means it will fail on other devices that support less.
+WebGL 规定了各种最低支持特性，但你本地的设备可能支持  
+> 高于这个最低标准的能力，这意味着代码可能会在其他支持较少的设备上运行失败。
 
-Examples include:
+一些示例包括：
 
-* The max texture size allowed
+* 允许的最大纹理尺寸
 
-  2048 or 4096 seems to be reasonable limits. At least as of 2020 it looks like
-  [99% of devices support 4096 but only 50% support > 4096](https://web3dsurvey.com/webgl/parameters/MAX_TEXTURE_SIZE).
+  2048 或 4096 被认为是比较合理的限制。至少截至 2020 年，  
+  看起来[99% 的设备支持 4096，但只有 50% 支持大于 4096 的尺寸](https://web3dsurvey.com/webgl/parameters/MAX_TEXTURE_SIZE)。
 
-  Note: the max texture size is the maximum dimension the GPU can process. It
-  doesn't mean that GPU has enough memory for that dimension squared (for a 2D
-  texture) or cubed (for a 3D texture). For example some GPUs have a max size of
-  16384. But a 3D texture 16384 on each side would require 16 terabytes of
-  memory!!!
+  注意：最大纹理尺寸是 GPU 可以处理的最大维度。  
+  它并不意味着 GPU 有足够的内存来存储该维度平方（对于 2D 纹理）或立方（对于 3D 纹理）大小的数据。  
+  例如，某些 GPU 最大尺寸为 16384，但一个每边都是 16384 的 3D 纹理将需要 16 TB 的内存！！！
 
-* The maximum number of vertex attributes in a single program
+* 单个程序中支持的最大顶点属性数量
 
-  In WebGL1 the minimum supported is 8. In WebGL2 it's 16. If you're using more than that
-  then your code will fail on a machine with only the minimum
+  在 WebGL1 中，最低支持为 8 个；在 WebGL2 中为 16 个。  
+  如果你使用的数量超过这些，那么在只有最小支持能力的设备上，代码就会失败。
 
-* The maximum number of uniform vectors
+* 支持的最大 uniform 向量数量
 
-  These are specified separately for vertex shaders and fragment shaders.
+  这些数量在顶点着色器和片段着色器中是分别指定的。
 
-  In WebGL1 it's 128 for vertex shaders and 16 for fragment shaders
-  In WebGL2 it's 256 for vertex shaders and 224 for fragment shaders
+  WebGL1 中，顶点着色器为 128，片段着色器为 16  
+  WebGL2 中，顶点着色器为 256，片段着色器为 224
 
-  Note that uniforms can be "packed" so the number above is how many `vec4`s
-  can be used. Theoretically you could have 4x the number of `float` uniforms.
-  but there is an algorithm that fits them in. You can imagine the space as
-  an array with 4 columns, one row for each of the maximum uniform vectors above.
+  注意，uniform 是可以被“打包(packed)”的，上面的数字表示你可以使用的 `vec4` 数量。  
+  理论上你可以使用 4 倍数量的 `float` 类型 uniform，  
+  但这依赖于打包算法。你可以将这个空间想象成一个 4 列的数组，  
+  每一行对应一个最大 uniform 向量。
 
      ```
      +-+-+-+-+
@@ -67,10 +64,10 @@ Examples include:
      ...
 
      ```
-  
-  First `vec4`s are allocated with a `mat4` being 4 `vec4`s. Then `vec3`s are
-  fit in the space left. Then `vec2`s followed by `float`s. So imagine we had 1
-  `mat4`, 2 `vec3`s, 2 `vec2`s and 3 `float`s
+
+  首先会分配 `vec4`，其中一个 `mat4` 占用 4 个 `vec4`。  
+  然后是将 `vec3` 填入剩余空间，接着是 `vec2`，最后是 `float`。
+  所以假设我们有：1 个 `mat4`，2 个 `vec3`，2 个 `vec2` 和 3 个 `float`
 
      ```
      +-+-+-+-+
@@ -86,156 +83,148 @@ Examples include:
 
      ```
 
-  Further, an array of uniforms is always vertical so for example if the maximum
-  allowed uniform vectors is 16 then you can not have a 17 element `float` array
-  and in fact if you had a single `vec4` that would take an entire row so there
-  are only 15 rows left meaning the largest array you can have would be 15
-  elements.
+  此外，uniform 数组总是按“垂直”方式分布的，例如如果最大允许的 uniform 向量是 16，那么你就不能拥有一个 17 元素的 `float` 数组。  
+  实际上，如果你有一个 `vec4`，它将占据整整一行，也就是说只剩下 15 行，因此你最多只能拥有 15 个元素的数组。
 
-  My advice though is don't count on perfect packing. Although the spec says the
-  algorithm above is required to pass there are too many combinations to test
-  that all drivers pass. Just be aware if you're getting close the limit.
+  不过我的建议是：不要指望完美的打包。尽管规范中说明上面那个打包算法是必须支持的，  
+  但组合太多，无法测试所有驱动都正确实现了它。  
+  只要你知道自己正在接近上限即可。
 
-  note: varyings and attributes can not be packed.
+  注意：varyings 和 attributes 是无法打包的。
 
-* The maximum varying vectors.
+* 最大 varying 向量数
 
-  WebGL1 the minimum is 8. WebGL2 it's 16.
+  WebGL1 的最小值是 8，WebGL2 是 16。
 
-  If you use more than your code will not work on a machine with only the minimum.
+  如果你使用的数量超过了这个限制，那么代码将在只支持最低值的设备上无法运行。
 
-* The maximum texture units
+* 最大纹理单元数
 
-  There are 3 values here.
+  这里有三个相关值：
 
-  1. How many texture units there are
-  2. How many texture units a vertex shader can reference
-  3. How many texture units a fragment shader can reference
+  1. 一共有多少个纹理单元
+  2. 顶点着色器最多可以引用多少个纹理单元
+  3. 片段着色器最多可以引用多少个纹理单元
 
   <table class="tabular-data">
     <thead>
       <tr><th></th><th>WebGL1</th><th>WebGL2</th></tr>
     </thead>
     <tbody>
-      <tr><td>min texture units that exist</td><td>8</td><td>32</td></tr>
-      <tr><td>min texture units a vertex shader can reference</td><th style="color: red;">0!</td><td>16</td></tr>
-      <tr><td>min texture units a fragment shader can reference</td><td>8</td><td>16</td></tr>
+      <tr><td>最少存在的纹理单元数量</td><td>8</td><td>32</td></tr>
+      <tr><td>顶点着色器最少可引用的纹理单元数量</td><th style="color: red;">0！</th><td>16</td></tr>
+      <tr><td>片段着色器最少可引用的纹理单元数量</td><td>8</td><td>16</td></tr>
     </tbody>
   </table>
 
-  It's important to note the **0** for a vertex shader in WebGL1. Note that that's probably not the end of the world.
-  Apparently [~97% of all devices support at least 4](https://web3dsurvey.com/webgl/parameters/MAX_VERTEX_TEXTURE_IMAGE_UNITS).
-  Still, you might want to check so you can either tell the user that your app is not going to work for them or
-  you can fallback to some other shaders.
+  需要特别注意的是，WebGL1 中顶点着色器的纹理单元数量是 **0**。  
+  不过这可能并不是什么致命问题。  
+  显然，[大约 97% 的设备至少支持 4 个](https://web3dsurvey.com/webgl/parameters/MAX_VERTEX_TEXTURE_IMAGE_UNITS)。  
+  尽管如此，你可能还是希望进行检测，以便在不兼容时提醒用户应用无法运行，  
+  或者退回到其他着色器方案。
 
-There are other limits as well. To look them up you call `gl.getParameter` with
-the following values. 
+此外还有其他一些限制。要查看这些限制，你可以使用以下参数调用 `gl.getParameter`。
 
-<div class="webgl_center">
-<table class="tabular-data">
-  <tbody>
-    <tr><td>MAX_TEXTURE_SIZE                </td><td>max size of a texture</td></tr>
-    <tr><td>MAX_VERTEX_ATTRIBS              </td><td>num attribs you can have</td></tr>
-    <tr><td>MAX_VERTEX_UNIFORM_VECTORS      </td><td>num vec4 uniforms a vertex shader can have</td></tr>
-    <tr><td>MAX_VARYING_VECTORS             </td><td>num varyings you have</td></tr>
-    <tr><td>MAX_COMBINED_TEXTURE_IMAGE_UNITS</td><td>num texture units that exist</td></tr>
-    <tr><td>MAX_VERTEX_TEXTURE_IMAGE_UNITS  </td><td>num texture units a vertex shader can reference</td></tr>
-    <tr><td>MAX_TEXTURE_IMAGE_UNITS         </td><td>num texture units a fragment shader can reference</td></tr>
-    <tr><td>MAX_FRAGMENT_UNIFORM_VECTORS    </td><td>num vec4 uniforms a fragment shader can have</td></tr>
-    <tr><td>MAX_CUBE_MAP_TEXTURE_SIZE       </td><td>max size of a cubemap</td></tr>
-    <tr><td>MAX_RENDERBUFFER_SIZE           </td><td>max size of a renderbuffer</td></tr>
-    <tr><td>MAX_VIEWPORT_DIMS               </td><td>max size of the viewport</td></tr>
-  </tbody>
-</table>
-</div>
-
-That is not the entire list. For example the max point size and max line thickness
-but you should basically assume the max line thickness is 1.0 and that POINTS
-are only useful for simple demos where you don't care about
-[the clipping issues](#points-lines-viewport-scissor-behavior).
-
-WebGL2 adds several more. A few common ones are
 
 <div class="webgl_center">
 <table class="tabular-data">
   <tbody>
-    <tr><td>MAX_3D_TEXTURE_SIZE                </td><td>max size of a 3D texture</td></tr>
-    <tr><td>MAX_DRAW_BUFFERS              </td><td>num color attachments you can have</td></tr>
-    <tr><td>MAX_ARRAY_TEXTURE_LAYERS      </td><td>max layers in a 2D texture array</td></tr>
-    <tr><td>MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS             </td><td>num varyings you can output to separate buffers when using transform feedback</td></tr>
-    <tr><td>MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS</td><td>num varyings you can output when sending them all to a single buffer</td></tr>
-    <tr><td>MAX_COMBINED_UNIFORM_BLOCKS  </td><td>num uniform blocks you can use overall</td></tr>
-    <tr><td>MAX_VERTEX_UNIFORM_BLOCKS         </td><td>num uniform blocks a vertex shader can use</td></tr>
-    <tr><td>MAX_FRAGMENT_UNIFORM_BLOCKS    </td><td>num uniform blocks a fragment shader can use</td></tr>
+    <tr><td>MAX_TEXTURE_SIZE                </td><td>纹理的最大尺寸</td></tr>
+    <tr><td>MAX_VERTEX_ATTRIBS              </td><td>可用的顶点属性数量</td></tr>
+    <tr><td>MAX_VERTEX_UNIFORM_VECTORS      </td><td>顶点着色器中可用的 vec4 uniform 数量</td></tr>
+    <tr><td>MAX_VARYING_VECTORS             </td><td>可用的 varying 数量</td></tr>
+    <tr><td>MAX_COMBINED_TEXTURE_IMAGE_UNITS</td><td>存在的纹理单元总数</td></tr>
+    <tr><td>MAX_VERTEX_TEXTURE_IMAGE_UNITS  </td><td>顶点着色器可引用的纹理单元数</td></tr>
+    <tr><td>MAX_TEXTURE_IMAGE_UNITS         </td><td>片段着色器可引用的纹理单元数</td></tr>
+    <tr><td>MAX_FRAGMENT_UNIFORM_VECTORS    </td><td>片段着色器中可用的 vec4 uniform 数量</td></tr>
+    <tr><td>MAX_CUBE_MAP_TEXTURE_SIZE       </td><td>立方体贴图的最大尺寸</td></tr>
+    <tr><td>MAX_RENDERBUFFER_SIZE           </td><td>渲染缓冲区的最大尺寸</td></tr>
+    <tr><td>MAX_VIEWPORT_DIMS               </td><td>视口的最大尺寸</td></tr>
   </tbody>
 </table>
 </div>
 
-## Depth Buffer resolution
 
-A few really old mobile devices use 16bit depth buffers. Otherwise, AFAICT 99%
-of devices use a 24bit depth buffer so you probably don't have to worry about
-this.
+这并不是完整的列表。例如最大点大小和最大线宽也有限制，但你基本可以假设最大线宽就是 1.0，而 POINTS 通常只适用于不在意[裁剪问题](#points-lines-viewport-scissor-behavior)的简单演示。
 
-## readPixels format/type combos
 
-Only certain format/type combos are guaranteed to work. Other combos are
-optional. This is covered in [this article](webgl-readpixels.html).
+WebGL2 增加了更多限制。几个常见的如下：
 
-## framebuffer attachment combos
+<div class="webgl_center">
+<table class="tabular-data">
+  <tbody>
+    <tr><td>MAX_3D_TEXTURE_SIZE                </td><td>3D 纹理的最大尺寸</td></tr>
+    <tr><td>MAX_DRAW_BUFFERS              </td><td>可用的颜色附件数量</td></tr>
+    <tr><td>MAX_ARRAY_TEXTURE_LAYERS      </td><td>2D 纹理数组中的最大图层数</td></tr>
+    <tr><td>MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS             </td><td>使用 transform feedback 时可输出到独立缓冲区的 varying 数量</td></tr>
+    <tr><td>MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS</td><td>当输出到单个缓冲区时可输出的 varying 总数</td></tr>
+    <tr><td>MAX_COMBINED_UNIFORM_BLOCKS  </td><td>所有着色器中可使用的 uniform block 总数</td></tr>
+    <tr><td>MAX_VERTEX_UNIFORM_BLOCKS         </td><td>顶点着色器中可用的 uniform block 数量</td></tr>
+    <tr><td>MAX_FRAGMENT_UNIFORM_BLOCKS    </td><td>片段着色器中可用的 uniform block 数量</td></tr>
+  </tbody>
+</table>
+</div>
 
-Framebuffers can have 1 or more attachments of textures and renderbuffers.
+## 深度缓冲区分辨率
 
-In WebGL1 only 3 combinations of attachments are guaranteed to work.
+一些非常老旧的移动设备使用 16 位深度缓冲区。除此之外，据我所知，99% 的设备都使用 24 位深度缓冲区，  
+所以你大概率无需担心这个问题。
 
-1. a single format = `RGBA`, type = `UNSIGNED_BYTE` texture as `COLOR_ATTACHMENT0`
-2. a format = `RGBA`, type = `UNSIGNED_BYTE` texture as `COLOR_ATTACHMENT0` and a
-   format = `DEPTH_COMPONENT` renderbuffer attached as `DEPTH_ATTACHMENT`
-3. a format = `RGBA`, type = `UNSIGNED_BYTE` texture as `COLOR_ATTACHMENT0` and a
-   format = `DEPTH_STENCIL` renderbuffer attached as `DEPTH_STENCIL_ATTACHMENT`
+## readPixels 的 format/type 组合
 
-All other combinations are up to the implementation which you check by calling
-`gl.checkFramebufferStatus` and seeing if it returned `FRAMEBUFFER_COMPLETE`.
+只有某些格式/类型组合是强制支持的，其他组合是可选的。  
+这个问题在[这篇文章](webgl-readpixels.html)中有详细介绍。
 
-WebGL2 guarantees to be able to write to many more formats but still has the
-limit in that **any combination can fail!** Your best bet might be if all the
-color attachments are the same format if you attach more than 1.
+## framebuffer 附件组合
 
-## Extensions
+帧缓冲可以附加一个或多个纹理和渲染缓冲对象作为附件。
 
-Many features of WebGL1 and WebGL2 are optional. The entire point of having an
-API called `getExtension` is that it can fail if the extension does not exist
-and so you should be checking for that failure and not blindly assuming it will
-succeed.
+在 WebGL1 中，只有以下三种附件组合是被保证支持的：
 
-Probably the most common missing extension on WebGL1 and WebGL2 is
-`OES_texture_float_linear` which is the ability to filter a floating point
-texture, meaning the ability to support setting `TEXTURE_MIN_FILTER` and
-`TEXTURE_MAX_FILTER` to anything except `NEAREST`. Many mobile devices do not
-support this.
+1. 将格式为RGBA、类型为UNSIGNED_BYTE的纹理附加为COLOR_ATTACHMENT0
+2. 将格式为RGBA、类型为UNSIGNED_BYTE的纹理附加为COLOR_ATTACHMENT0，同时将格式为DEPTH_COMPONENT的渲染缓冲区附加为DEPTH_ATTACHMENT
+3. 将格式为RGBA、类型为UNSIGNED_BYTE的纹理附加为COLOR_ATTACHMENT0，同时将格式为DEPTH_STENCIL的渲染缓冲区附加为DEPTH_STENCIL_ATTACHMENT
 
-In WebGL1 another often missing extension is `WEBGL_draw_buffers` which is the
-ability to attach more than 1 color attachment to a framebuffer is still at
-around 70% for desktop and almost none for smartphones (that seems wrong).
-Basically any device that can run WebGL2 should also support
-`WEBGL_draw_buffers` in WebGL1 but still, it's apparently still an issue. If you
-are needing to render to multiple textures at once it's likely your page needs a
-high end GPU period. Still, you should check if the user device supports it and
-if not provide a friendly explanation.
+所有其他组合都由具体实现决定是否支持。你可以通过调用
+`gl.checkFramebufferStatus` 并检查是否返回 `FRAMEBUFFER_COMPLETE` 来验证支持情况。
 
-For WebGL1 the following 3 extensions seem almost universally supported so while
-you might want to warn the user your page is not going to work if they are
-missing it's likely that user has an extremely old device that wasn't going to
-run your page well anyway.
+WebGL2 保证可以写入更多格式，但依然存在**任何组合都有可能失败！**的限制。  
+如果你附加了多个颜色附件，最稳妥的方法是确保它们都使用相同的格式。
 
-They are, `ANGLE_instance_arrays` (the ability to use [instanced drawing](webgl-instanced-drawing.html)),
-`OES_vertex_array_object` (the ability to store all the attribute state in an object so you can swap all
-that state with a single function call. See [this](webgl-attributes.html)), and `OES_element_index_uint`
-(the ability to use `UNSIGNED_INT` 32 bit indices with [`drawElements`](webgl-indexed-vertices.html)).
+## 扩展（Extensions）
 
-## attribute locations
+WebGL1 和 WebGL2 中的许多功能都是可选的。  
+`getExtension` 这个 API 的意义就在于它可能失败（如果扩展不存在），  
+所以你应该检查它是否返回了有效扩展，而不是盲目假设它总能成功。
 
-A semi common bug is not looking up attribute locations. For example you have a vertex shader like
+在 WebGL1 和 WebGL2 中，最常见缺失的扩展之一是  
+`OES_texture_float_linear`，它允许对浮点纹理进行过滤，  
+也就是说可以把 `TEXTURE_MIN_FILTER` 和 `TEXTURE_MAG_FILTER`  
+设置为除 `NEAREST` 之外的值。很多移动设备并不支持这个扩展。
+
+在 WebGL1 中另一个常缺失的扩展是 `WEBGL_draw_buffers`，  
+这个扩展允许将多个颜色附件绑定到一个帧缓冲上。  
+在桌面平台上支持率大约是 70%，而在智能手机上几乎没有支持（虽然这听起来不太对）。  
+基本上，任何能运行 WebGL2 的设备应该也支持 WebGL1 的 `WEBGL_draw_buffers`，  
+但这显然仍然是个潜在问题。  
+如果你需要一次性渲染到多个纹理，很可能你的网站就是为高端 GPU 设计的。  
+不过你仍应检测用户设备是否支持，并在不支持时给出友好的提示说明。
+
+对于 WebGL1，以下 3 个扩展几乎被所有设备支持，  
+所以即使你希望在缺失时警告用户页面无法正常运行，  
+这些用户通常是极其老旧的设备，原本也跑不动你的页面：
+
+- `ANGLE_instanced_arrays`：支持[实例化绘制](webgl-instanced-drawing.html)
+- `OES_vertex_array_object`：支持将所有 attribute 状态存入对象中，  
+  从而通过一次函数调用切换所有状态，见 [这里](webgl-attributes.html)
+- `OES_element_index_uint`：允许使用 `UNSIGNED_INT` 类型的 32 位索引，  
+  与 [`drawElements`](webgl-indexed-vertices.html) 配合使用
+
+## attribute 位置（attribute locations）
+
+一个较常见的 bug 是没有正确获取 attribute 的位置。
+
+例如你有一个顶点着色器如下：
 
 ```glsl
 attribute vec4 position;
@@ -251,17 +240,16 @@ void main() {
 }
 ```
 
-Your code assumes that `position` will be attribute 0 and `texcoord` will be
-attribute 1 but that is not guaranteed. So it runs for you but fails for someone
-else. Often this can be a bug in that you didn't do this intentionally but
-through an error in the code things work when the locations are one way but not
-another.
+你的代码假设 `position` 是 attribute 0，`texcoord` 是 attribute 1，  
+但这是**没有保证的**。所以它在你这能运行，在别人那可能就失败了。  
+这类问题往往是因为你没有明确这么指定位置，  
+但由于某些代码错误，恰好在你这里按预期的方式分配了位置。
 
-There are 3 solutions.
+有三种解决方案：
 
-1. Always look up the locations.
-2. Assign locations by calling `gl.bindAttribLocation` before calling `gl.linkProgram`
-3. WebGL2 only, set the locations in the shader as in
+1. 始终使用 `gl.getAttribLocation` 显式查询位置
+2. 在调用 `gl.linkProgram` 之前，使用 `gl.bindAttribLocation` 显式绑定位置
+3. 仅限 WebGL2：可以直接在 shader 中设置 attribute 的位置，例如：
 
    ```glsl
    #version 300 es
@@ -270,33 +258,32 @@ There are 3 solutions.
    ...
    ```
 
-   Solution 2 seems the most [D.R.Y.](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) where as solution 3
-   seems the most [W.E.T.](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself#DRY_vs_WET_solutions) unless
-   you're generating your textures at runtime.
+  方案 2 看起来是最符合 [D.R.Y. 原则](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) 的，  
+  而方案 3 则是最 [W.E.T.（重复）](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself#DRY_vs_WET_solutions) 的——  
+  除非你是在运行时生成 shader。
 
-## GLSL undefined behavior
+## GLSL 未定义行为
 
-Several GLSL functions have undefined behavior. For example `pow(x, y)` is
-undefined if `x < 0`. There is a longer list at [the bottom of the article on
-spot lighting](webgl-3d-lighting-spot.html).
+一些 GLSL 函数具有未定义行为。例如，当 `x < 0` 时，`pow(x, y)` 的结果是未定义的。  
+更详细的列表见[这篇关于聚光灯照明的文章底部](webgl-3d-lighting-spot.html)。
 
-## Shader precision issues
+## Shader 精度问题
 
-In 2020 the biggest issue here is if you use `mediump` or `lowp` in your shaders
-then on desktop the GPU will really use `highp` but on mobile they'll actually be
-`mediump` and or `lowp` and so you won't notice any issues when developing on desktop.
+截至 2020 年，这方面最大的问题是：  
+如果你在着色器中使用了 `mediump` 或 `lowp`，在桌面端 GPU 实际会使用 `highp`，  
+但在移动设备上它们真的就是 `mediump` 或 `lowp`。  
+这意味着你在桌面开发时可能不会发现任何问题。
 
-See [this article for more details](webgl-precision-issues.html).
+详细内容见[这篇文章](webgl-precision-issues.html)。
 
-## Points, Lines, Viewport, Scissor behavior
+## 点、线、视口和剪裁行为
 
-`POINTS` and `LINES` in WebGL can have a max size of 1 and in fact for `LINES`
-that is now the most common limit. Further whether points are clipped when their
-center is outside the viewport is implementation defined. See the bottom of
-[this article](webgl-drawing-without-data.html#pointissues).
+在 WebGL 中，`POINTS` 和 `LINES` 的最大尺寸可能就是 1，  
+实际上对于 `LINES` 来说，这已成为最常见的限制。  
+另外，当点的中心在视口外时是否会被裁剪，是由实现决定的，  
+见[这篇文章底部](webgl-drawing-without-data.html#pointissues)。
 
-Similarly, whether or not the viewport clips vertices only or also pixels is
-undefined. The scissor always clips pixels so turn on the scissor test and set
-the scissor size if you set the viewport smaller than the thing you're drawing
-to and you're drawing LINES or POINTS.
-
+类似地，视口是否只裁剪顶点、还是同时裁剪像素，也是未定义的。  
+但剪裁测试（scissor test）始终裁剪像素。  
+因此，如果你设置了比目标区域更小的视口，并且正在绘制 LINES 或 POINTS，  
+你应该开启剪裁测试并设置合适的剪裁区域。
