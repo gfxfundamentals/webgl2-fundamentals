@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/zh_cn/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/zh_cn/webgl-cross-platform-issues.md. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of GFXFundamentals. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,25 +36,77 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL2 Cross Platform Issues" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="Things to be aware of when trying to make your WebGL app work everywhere." />
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-cross-platform-issues.html" />
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL2 Cross Platform Issues" />
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-cross-platform-issues.html" />
-<meta name="twitter:description" content="Things to be aware of when trying to make your WebGL app work everywhere." />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="description" content="Things to be aware of when trying to make your WebGL app work everywhere.">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-cross-platform-issues_zh-cn.jpg">
+
+<meta property="og:title" content="WebGL2 跨平台问题">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-cross-platform-issues_zh-cn.jpg">
+<meta property="og:description" content="Things to be aware of when trying to make your WebGL app work everywhere.">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-cross-platform-issues.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 跨平台问题">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-cross-platform-issues.html">
+<meta name="twitter:description" content="Things to be aware of when trying to make your WebGL app work everywhere.">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-cross-platform-issues_zh-cn.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-cross-platform-issues.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-cross-platform-issues_zh-cn.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-cross-platform-issues.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-cross-platform-issues.html",
+      "inLanguage":"zh-cn",
+      "name":"WebGL2 跨平台问题",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-cross-platform-issues.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL2 Cross Platform Issues</title>
+<title>WebGL2 跨平台问题</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-cross-platform-issues.html">
+
+
+
+
 </head>
 <body>
 <div class="webgl_navbar">
@@ -178,12 +232,247 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 Cross Platform Issues</h1>
+    <h1>WebGL2 跨平台问题</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>还没有简体中文版翻译哦  (~￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">欢迎翻译</a>!</p>
-<p><a href="/webgl/lessons/webgl-cross-platform-issues.html">英文原版地址</a>.</p>
+      <p>你也许早就知道，并不所有 WebGL 程序都能在所有设备或浏览器上运行。</p>
+<p>以下是我脑海中能想到的大多数可能遇到的问题列表。</p>
+<h2 id="性能">性能</h2>
+<p>高端 GPU 的运行速度可能是低端 GPU 的 100 倍。
+我知道的唯一解决方法是要么把目标定得低一些，要么像大多数桌面程序那样提供性能与画质的选项供用户选择。</p>
+<h2 id="内存">内存</h2>
+<p>同样，高端 GPU 可能拥有 12 到 24 GB 的内存，<br>
+而低端 GPU 可能不到 1 GB。<br>
+（我年纪大了，觉得“低端 = 1GB”已经很神奇了，<br>
+因为我最初是在只有 16K 到 64K 内存的机器上编程的 😜）</p>
+<h2 id="设备限制">设备限制</h2>
+<p>WebGL 规定了各种最低支持特性，但你本地的设备可能支持</p>
+<blockquote>
+<p>高于这个最低标准的能力，这意味着代码可能会在其他支持较少的设备上运行失败。</p>
+</blockquote>
+<p>一些示例包括：</p>
+<ul>
+<li>
+<p>允许的最大纹理尺寸</p>
+<p>2048 或 4096 被认为是比较合理的限制。至少截至 2020 年，<br>
+看起来<a href="https://web3dsurvey.com/webgl/parameters/MAX_TEXTURE_SIZE">99% 的设备支持 4096，但只有 50% 支持大于 4096 的尺寸</a>。</p>
+<p>注意：最大纹理尺寸是 GPU 可以处理的最大维度。<br>
+它并不意味着 GPU 有足够的内存来存储该维度平方（对于 2D 纹理）或立方（对于 3D 纹理）大小的数据。<br>
+例如，某些 GPU 最大尺寸为 16384，但一个每边都是 16384 的 3D 纹理将需要 16 TB 的内存！！！</p>
+</li>
+<li>
+<p>单个程序中支持的最大顶点属性数量</p>
+<p>在 WebGL1 中，最低支持为 8 个；在 WebGL2 中为 16 个。<br>
+如果你使用的数量超过这些，那么在只有最小支持能力的设备上，代码就会失败。</p>
+</li>
+<li>
+<p>支持的最大 uniform 向量数量</p>
+<p>这些数量在顶点着色器和片段着色器中是分别指定的。</p>
+<p>WebGL1 中，顶点着色器为 128，片段着色器为 16<br>
+WebGL2 中，顶点着色器为 256，片段着色器为 224</p>
+<p>注意，uniform 是可以被“打包(packed)”的，上面的数字表示你可以使用的 <code class="notranslate" translate="no">vec4</code> 数量。<br>
+理论上你可以使用 4 倍数量的 <code class="notranslate" translate="no">float</code> 类型 uniform，<br>
+但这依赖于打包算法。你可以将这个空间想象成一个 4 列的数组，<br>
+每一行对应一个最大 uniform 向量。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+-+-+-+-+
+| | | | |   &lt;- one vec4
+| | | | |   |
+| | | | |   |
+| | | | |   V
+| | | | |   max uniform vectors rows
+| | | | |
+| | | | |  
+| | | | |
+...
+
+</code></pre>
+<p>首先会分配 <code class="notranslate" translate="no">vec4</code>，其中一个 <code class="notranslate" translate="no">mat4</code> 占用 4 个 <code class="notranslate" translate="no">vec4</code>。<br>
+然后是将 <code class="notranslate" translate="no">vec3</code> 填入剩余空间，接着是 <code class="notranslate" translate="no">vec2</code>，最后是 <code class="notranslate" translate="no">float</code>。
+所以假设我们有：1 个 <code class="notranslate" translate="no">mat4</code>，2 个 <code class="notranslate" translate="no">vec3</code>，2 个 <code class="notranslate" translate="no">vec2</code> 和 3 个 <code class="notranslate" translate="no">float</code></p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+-+-+-+-+
+|m|m|m|m|   &lt;- the mat4 takes 4 rows
+|m|m|m|m|
+|m|m|m|m|
+|m|m|m|m|
+|3|3|3| |   &lt;- the 2 vec3s take 2 rows
+|3|3|3| |
+|2|2|2|2|   &lt;- the 2 vec2s can squeeze into 1 row 
+|f|f|f| |   &lt;- the 3 floats fit in one row
+...
+
+</code></pre>
+<p>此外，uniform 数组总是按“垂直”方式分布的，例如如果最大允许的 uniform 向量是 16，那么你就不能拥有一个 17 元素的 <code class="notranslate" translate="no">float</code> 数组。<br>
+实际上，如果你有一个 <code class="notranslate" translate="no">vec4</code>，它将占据整整一行，也就是说只剩下 15 行，因此你最多只能拥有 15 个元素的数组。</p>
+<p>不过我的建议是：不要指望完美的打包。尽管规范中说明上面那个打包算法是必须支持的，<br>
+但组合太多，无法测试所有驱动都正确实现了它。<br>
+只要你知道自己正在接近上限即可。</p>
+<p>注意：varyings 和 attributes 是无法打包的。</p>
+</li>
+<li>
+<p>最大 varying 向量数</p>
+<p>WebGL1 的最小值是 8，WebGL2 是 16。</p>
+<p>如果你使用的数量超过了这个限制，那么代码将在只支持最低值的设备上无法运行。</p>
+</li>
+<li>
+<p>最大纹理单元数</p>
+<p>这里有三个相关值：</p>
+<ol>
+<li>一共有多少个纹理单元</li>
+<li>顶点着色器最多可以引用多少个纹理单元</li>
+<li>片段着色器最多可以引用多少个纹理单元</li>
+</ol>
+<table class="tabular-data">
+  <thead>
+    <tr><th></th><th>WebGL1</th><th>WebGL2</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>最少存在的纹理单元数量</td><td>8</td><td>32</td></tr>
+    <tr><td>顶点着色器最少可引用的纹理单元数量</td><th style="color: red;">0！</th><td>16</td></tr>
+    <tr><td>片段着色器最少可引用的纹理单元数量</td><td>8</td><td>16</td></tr>
+  </tbody>
+</table>
+<p>需要特别注意的是，WebGL1 中顶点着色器的纹理单元数量是 <strong>0</strong>。<br>
+不过这可能并不是什么致命问题。<br>
+显然，<a href="https://web3dsurvey.com/webgl/parameters/MAX_VERTEX_TEXTURE_IMAGE_UNITS">大约 97% 的设备至少支持 4 个</a>。<br>
+尽管如此，你可能还是希望进行检测，以便在不兼容时提醒用户应用无法运行，<br>
+或者退回到其他着色器方案。</p>
+</li>
+</ul>
+<p>此外还有其他一些限制。要查看这些限制，你可以使用以下参数调用 <code class="notranslate" translate="no">gl.getParameter</code>。</p>
+<div class="webgl_center">
+<table class="tabular-data">
+  <tbody>
+    <tr><td>MAX_TEXTURE_SIZE                </td><td>纹理的最大尺寸</td></tr>
+    <tr><td>MAX_VERTEX_ATTRIBS              </td><td>可用的顶点属性数量</td></tr>
+    <tr><td>MAX_VERTEX_UNIFORM_VECTORS      </td><td>顶点着色器中可用的 vec4 uniform 数量</td></tr>
+    <tr><td>MAX_VARYING_VECTORS             </td><td>可用的 varying 数量</td></tr>
+    <tr><td>MAX_COMBINED_TEXTURE_IMAGE_UNITS</td><td>存在的纹理单元总数</td></tr>
+    <tr><td>MAX_VERTEX_TEXTURE_IMAGE_UNITS  </td><td>顶点着色器可引用的纹理单元数</td></tr>
+    <tr><td>MAX_TEXTURE_IMAGE_UNITS         </td><td>片段着色器可引用的纹理单元数</td></tr>
+    <tr><td>MAX_FRAGMENT_UNIFORM_VECTORS    </td><td>片段着色器中可用的 vec4 uniform 数量</td></tr>
+    <tr><td>MAX_CUBE_MAP_TEXTURE_SIZE       </td><td>立方体贴图的最大尺寸</td></tr>
+    <tr><td>MAX_RENDERBUFFER_SIZE           </td><td>渲染缓冲区的最大尺寸</td></tr>
+    <tr><td>MAX_VIEWPORT_DIMS               </td><td>视口的最大尺寸</td></tr>
+  </tbody>
+</table>
+</div>
+<p>这并不是完整的列表。例如最大点大小和最大线宽也有限制，但你基本可以假设最大线宽就是 1.0，而 POINTS 通常只适用于不在意<a href="#points-lines-viewport-scissor-behavior">裁剪问题</a>的简单演示。</p>
+<p>WebGL2 增加了更多限制。几个常见的如下：</p>
+<div class="webgl_center">
+<table class="tabular-data">
+  <tbody>
+    <tr><td>MAX_3D_TEXTURE_SIZE                </td><td>3D 纹理的最大尺寸</td></tr>
+    <tr><td>MAX_DRAW_BUFFERS              </td><td>可用的颜色附件数量</td></tr>
+    <tr><td>MAX_ARRAY_TEXTURE_LAYERS      </td><td>2D 纹理数组中的最大图层数</td></tr>
+    <tr><td>MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS             </td><td>使用 transform feedback 时可输出到独立缓冲区的 varying 数量</td></tr>
+    <tr><td>MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS</td><td>当输出到单个缓冲区时可输出的 varying 总数</td></tr>
+    <tr><td>MAX_COMBINED_UNIFORM_BLOCKS  </td><td>所有着色器中可使用的 uniform block 总数</td></tr>
+    <tr><td>MAX_VERTEX_UNIFORM_BLOCKS         </td><td>顶点着色器中可用的 uniform block 数量</td></tr>
+    <tr><td>MAX_FRAGMENT_UNIFORM_BLOCKS    </td><td>片段着色器中可用的 uniform block 数量</td></tr>
+  </tbody>
+</table>
+</div>
+<h2 id="深度缓冲区分辨率">深度缓冲区分辨率</h2>
+<p>一些非常老旧的移动设备使用 16 位深度缓冲区。除此之外，据我所知，99% 的设备都使用 24 位深度缓冲区，<br>
+所以你大概率无需担心这个问题。</p>
+<h2 id="readpixels-的-formattype-组合">readPixels 的 format/type 组合</h2>
+<p>只有某些格式/类型组合是强制支持的，其他组合是可选的。<br>
+这个问题在<a href="webgl-readpixels.html">这篇文章</a>中有详细介绍。</p>
+<h2 id="framebuffer-附件组合">framebuffer 附件组合</h2>
+<p>帧缓冲可以附加一个或多个纹理和渲染缓冲对象作为附件。</p>
+<p>在 WebGL1 中，只有以下三种附件组合是被保证支持的：</p>
+<ol>
+<li>将格式为RGBA、类型为UNSIGNED_BYTE的纹理附加为COLOR_ATTACHMENT0</li>
+<li>将格式为RGBA、类型为UNSIGNED_BYTE的纹理附加为COLOR_ATTACHMENT0，同时将格式为DEPTH_COMPONENT的渲染缓冲区附加为DEPTH_ATTACHMENT</li>
+<li>将格式为RGBA、类型为UNSIGNED_BYTE的纹理附加为COLOR_ATTACHMENT0，同时将格式为DEPTH_STENCIL的渲染缓冲区附加为DEPTH_STENCIL_ATTACHMENT</li>
+</ol>
+<p>所有其他组合都由具体实现决定是否支持。你可以通过调用
+<code class="notranslate" translate="no">gl.checkFramebufferStatus</code> 并检查是否返回 <code class="notranslate" translate="no">FRAMEBUFFER_COMPLETE</code> 来验证支持情况。</p>
+<p>WebGL2 保证可以写入更多格式，但依然存在**任何组合都有可能失败！**的限制。<br>
+如果你附加了多个颜色附件，最稳妥的方法是确保它们都使用相同的格式。</p>
+<h2 id="扩展（extensions）">扩展（Extensions）</h2>
+<p>WebGL1 和 WebGL2 中的许多功能都是可选的。<br>
+<code class="notranslate" translate="no">getExtension</code> 这个 API 的意义就在于它可能失败（如果扩展不存在），<br>
+所以你应该检查它是否返回了有效扩展，而不是盲目假设它总能成功。</p>
+<p>在 WebGL1 和 WebGL2 中，最常见缺失的扩展之一是<br>
+<code class="notranslate" translate="no">OES_texture_float_linear</code>，它允许对浮点纹理进行过滤，<br>
+也就是说可以把 <code class="notranslate" translate="no">TEXTURE_MIN_FILTER</code> 和 <code class="notranslate" translate="no">TEXTURE_MAG_FILTER</code><br>
+设置为除 <code class="notranslate" translate="no">NEAREST</code> 之外的值。很多移动设备并不支持这个扩展。</p>
+<p>在 WebGL1 中另一个常缺失的扩展是 <code class="notranslate" translate="no">WEBGL_draw_buffers</code>，<br>
+这个扩展允许将多个颜色附件绑定到一个帧缓冲上。<br>
+在桌面平台上支持率大约是 70%，而在智能手机上几乎没有支持（虽然这听起来不太对）。<br>
+基本上，任何能运行 WebGL2 的设备应该也支持 WebGL1 的 <code class="notranslate" translate="no">WEBGL_draw_buffers</code>，<br>
+但这显然仍然是个潜在问题。<br>
+如果你需要一次性渲染到多个纹理，很可能你的网站就是为高端 GPU 设计的。<br>
+不过你仍应检测用户设备是否支持，并在不支持时给出友好的提示说明。</p>
+<p>对于 WebGL1，以下 3 个扩展几乎被所有设备支持，<br>
+所以即使你希望在缺失时警告用户页面无法正常运行，<br>
+这些用户通常是极其老旧的设备，原本也跑不动你的页面：</p>
+<ul>
+<li><code class="notranslate" translate="no">ANGLE_instanced_arrays</code>：支持<a href="webgl-instanced-drawing.html">实例化绘制</a></li>
+<li><code class="notranslate" translate="no">OES_vertex_array_object</code>：支持将所有 attribute 状态存入对象中，<br>
+从而通过一次函数调用切换所有状态，见 <a href="webgl-attributes.html">这里</a></li>
+<li><code class="notranslate" translate="no">OES_element_index_uint</code>：允许使用 <code class="notranslate" translate="no">UNSIGNED_INT</code> 类型的 32 位索引，<br>
+与 <a href="webgl-indexed-vertices.html"><code class="notranslate" translate="no">drawElements</code></a> 配合使用</li>
+</ul>
+<h2 id="attribute-位置（attribute-locations）">attribute 位置（attribute locations）</h2>
+<p>一个较常见的 bug 是没有正确获取 attribute 的位置。</p>
+<p>例如你有一个顶点着色器如下：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">attribute vec4 position;
+attribute vec2 texcoord;
+
+uniform mat4 matrix;
+
+varying vec2 v_texcoord;
+
+void main() {
+   gl_Position = matrix * position;
+   v_texcoord = texcoord;
+}
+</code></pre>
+<p>你的代码假设 <code class="notranslate" translate="no">position</code> 是 attribute 0，<code class="notranslate" translate="no">texcoord</code> 是 attribute 1，<br>
+但这是<strong>没有保证的</strong>。所以它在你这能运行，在别人那可能就失败了。<br>
+这类问题往往是因为你没有明确这么指定位置，<br>
+但由于某些代码错误，恰好在你这里按预期的方式分配了位置。</p>
+<p>有三种解决方案：</p>
+<ol>
+<li>
+<p>始终使用 <code class="notranslate" translate="no">gl.getAttribLocation</code> 显式查询位置</p>
+</li>
+<li>
+<p>在调用 <code class="notranslate" translate="no">gl.linkProgram</code> 之前，使用 <code class="notranslate" translate="no">gl.bindAttribLocation</code> 显式绑定位置</p>
+</li>
+<li>
+<p>仅限 WebGL2：可以直接在 shader 中设置 attribute 的位置，例如：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+layout(location = 0) vec4 position;
+latout(location = 1) vec2 texcoord;
+...
+</code></pre>
+</li>
+</ol>
+<p>方案 2 看起来是最符合 <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">D.R.Y. 原则</a> 的，<br>
+而方案 3 则是最 <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself#DRY_vs_WET_solutions">W.E.T.（重复）</a> 的——<br>
+除非你是在运行时生成 shader。</p>
+<h2 id="glsl-未定义行为">GLSL 未定义行为</h2>
+<p>一些 GLSL 函数具有未定义行为。例如，当 <code class="notranslate" translate="no">x &lt; 0</code> 时，<code class="notranslate" translate="no">pow(x, y)</code> 的结果是未定义的。<br>
+更详细的列表见<a href="webgl-3d-lighting-spot.html">这篇关于聚光灯照明的文章底部</a>。</p>
+<h2 id="shader-精度问题">Shader 精度问题</h2>
+<p>截至 2020 年，这方面最大的问题是：<br>
+如果你在着色器中使用了 <code class="notranslate" translate="no">mediump</code> 或 <code class="notranslate" translate="no">lowp</code>，在桌面端 GPU 实际会使用 <code class="notranslate" translate="no">highp</code>，<br>
+但在移动设备上它们真的就是 <code class="notranslate" translate="no">mediump</code> 或 <code class="notranslate" translate="no">lowp</code>。<br>
+这意味着你在桌面开发时可能不会发现任何问题。</p>
+<p>详细内容见<a href="webgl-precision-issues.html">这篇文章</a>。</p>
+<h2 id="点、线、视口和剪裁行为">点、线、视口和剪裁行为</h2>
+<p>在 WebGL 中，<code class="notranslate" translate="no">POINTS</code> 和 <code class="notranslate" translate="no">LINES</code> 的最大尺寸可能就是 1，<br>
+实际上对于 <code class="notranslate" translate="no">LINES</code> 来说，这已成为最常见的限制。<br>
+另外，当点的中心在视口外时是否会被裁剪，是由实现决定的，<br>
+见<a href="../webgl-drawing-without-data.html#pointissues">这篇文章底部</a>。</p>
+<p>类似地，视口是否只裁剪顶点、还是同时裁剪像素，也是未定义的。<br>
+但剪裁测试（scissor test）始终裁剪像素。<br>
+因此，如果你设置了比目标区域更小的视口，并且正在绘制 LINES 或 POINTS，<br>
+你应该开启剪裁测试并设置合适的剪裁区域。</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -197,7 +486,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>基础概念</li>
+        <div id="toc">
+          <ul>  <li>基础概念</li>
         <ul>
           <li><a href="/webgl/lessons/zh_cn/webgl-getting-webgl2.html">怎样使用WebGL2</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-fundamentals.html">基本原理</a></li>
@@ -317,36 +607,70 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <li><a href="/webgl/lessons/zh_cn/webgl-visualizing-the-camera.html">可视化相机</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-and-alpha.html">WebGL2 和 Alpha</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html">2D vs 3D 库</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-anti-patterns.html">Anti-Patterns</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-matrix-vs-math.html">WebGL2 Matrices vs Math Matrices</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-precision-issues.html">Precision Issues</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-anti-patterns.html">反模式</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-matrix-vs-math.html">WebGL2中的矩阵vs数学中的矩阵</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-precision-issues.html">精度问题</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-tips.html#screenshot">Taking a screenshot</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-tips.html#preservedrawingbuffer">Prevent the Canvas Being Cleared</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-tips.html#tabindex">Get Keyboard Input From a Canvas</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-tips.html#html-background">Use WebGL2 as Background in HTML</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-cross-platform-issues.html">跨平台问题</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>参考</li>
         <ul>
-          <li><a href="/webgl/lessons/zh_cn/webgl-attributes.html">Attributes</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-texture-units.html">Texture Units</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-framebuffers.html">Framebuffers</a></li>
+          <li><a href="/webgl/lessons/zh_cn/webgl-attributes.html">属性（Attributes）</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-texture-units.html">纹理单元（Texture Units）</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-framebuffers.html">帧缓冲区（Framebuffers）</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-readpixels.html">readPixels</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-references.html">References</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-references.html">参考资料</a></li>
         </ul></ul>
 <ul>
   <li><a href="/docs/">API帮助文档</a></li>
   <li><a href="https://twgljs.org">TWGL，一个轻量级WebGL辅助库</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>有意见或建议? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">在GitHub上提issue</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 跨平台问题';
+            var disqus_title = 'WebGL2 跨平台问题';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: "感谢 <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>的 <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} 个贡献</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 <script>
 </script>
 

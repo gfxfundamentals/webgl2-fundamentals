@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/zh_cn/langinfo.hanson. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/zh_cn/webgl-precision-issues.md. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,15 +8,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of GFXFundamentals. nor the names of his
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,25 +36,77 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="WebGL2 Precision Issues" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
-<meta property="og:description" content="Precision Issues in WebGL2" />
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-precision-issues.html" />
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="webgl2fundamentals.org" />
-<meta name="twitter:title" content="WebGL2 Precision Issues" />
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-precision-issues.html" />
-<meta name="twitter:description" content="Precision Issues in WebGL2" />
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta name="description" content="WebGL2里的各种精度问题">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-precision-issues_zh-cn.jpg">
+
+<meta property="og:title" content="WebGL2 精度问题">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-precision-issues_zh-cn.jpg">
+<meta property="og:description" content="WebGL2里的各种精度问题">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-precision-issues.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 精度问题">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-precision-issues.html">
+<meta name="twitter:description" content="WebGL2里的各种精度问题">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-precision-issues_zh-cn.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-precision-issues.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-precision-issues_zh-cn.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-precision-issues.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-precision-issues.html",
+      "inLanguage":"zh-cn",
+      "name":"WebGL2 精度问题",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-precision-issues.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
 
 
-<title>WebGL2 Precision Issues</title>
+<title>WebGL2 精度问题</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-precision-issues.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-precision-issues.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-precision-issues.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-precision-issues.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-precision-issues.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-precision-issues.html">
+
+
+
+
 </head>
 <body>
 <div class="webgl_navbar">
@@ -178,12 +232,183 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 Precision Issues</h1>
+    <h1>WebGL2 精度问题</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>还没有简体中文版翻译哦  (~￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">欢迎翻译</a>!</p>
-<p><a href="/webgl/lessons/webgl-precision-issues.html">英文原版地址</a>.</p>
+      <p>本文讨论 WebGL2 中的各种精度问题。</p>
+<h2 id="lowp-mediump-highp"><code class="notranslate" translate="no">lowp</code>, <code class="notranslate" translate="no">mediump</code>, <code class="notranslate" translate="no">highp</code></h2>
+<p>在<a href="webgl-fundamentals.html">本站的第一篇文章</a>中，我们创建了顶点着色器和片段着色器。
+在创建片段着色器时，顺带提到片段着色器没有默认的精度，所以我们需要通过添加这行代码来设置。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">precision highp float;
+</code></pre>
+<p>这到底是怎么回事？</p>
+<p><code class="notranslate" translate="no">lowp</code>、 <code class="notranslate" translate="no">mediump</code> 和 <code class="notranslate" translate="no">highp</code>是精度设置。
+这里的精度实际上指的是用多少位(bit)来存储一个值。
+JavaScript 中的数字使用 64 位，大多数 WebGL 中的数字只有 32 位。
+位数越少意味着速度越快，位数越多意味着精度越高和/或范围越大。</p>
+<p>我不确定自己是否能解释清楚。
+你可以搜索<a href="https://www.google.com/search?q=double+vs+float">double vs float</a>
+了解更多精度问题的示例，但一种简单的理解方法是将其比作字节和短整型，或者在 JavaScript 中的 Uint8Array 和 Uint16Array 的区别。</p>
+<ul>
+<li>Uint8Array 是一个无符号 8 位整数数组。8 位能表示 2<sup>8</sup>（256）个数，范围是 0 到 255。</li>
+<li>Uint16Array 是一个无符号 16 位整数数组。16 位能表示 2<sup>16</sup>（65536）个数，范围是 0 到 65535。</li>
+<li>Uint32Array 是一个无符号 32 位整数数组。32 位能表示 2<sup>32</sup>（约42亿）个数，范围是 0 到 4294967295。</li>
+</ul>
+<p><code class="notranslate" translate="no">lowp</code>、<code class="notranslate" translate="no">mediump</code> 和 <code class="notranslate" translate="no">highp</code> 也是类似的概念。</p>
+<ul>
+<li><code class="notranslate" translate="no">lowp</code> 至少是 9 位。对于浮点数，其值范围大致是 -2 到 +2，整数则类似于 <code class="notranslate" translate="no">Uint8Array</code> 或 <code class="notranslate" translate="no">Int8Array</code>。</li>
+<li><code class="notranslate" translate="no">mediump</code> 至少是 16 位。对于浮点数，其值范围大致是 -2<sup>14</sup> 到 +2<sup>14</sup>，整数类似于 <code class="notranslate" translate="no">Uint16Array</code> 或 <code class="notranslate" translate="no">Int16Array</code>。</li>
+<li><code class="notranslate" translate="no">highp</code> 至少是 32 位。对于浮点数，其值范围大致是 -2<sup>62</sup> 到 +2<sup>62</sup>，整数类似于 <code class="notranslate" translate="no">Uint32Array</code> 或 <code class="notranslate" translate="no">Int32Array</code>。</li>
+</ul>
+<p>需要注意的是，并非范围内的所有数值都能被表示。
+最容易理解的是 <code class="notranslate" translate="no">lowp</code>，它只有 9 位，因此只能表示 512 个唯一值。
+虽然它的范围是 -2 到 +2，但在这之间有无限多个值，比如 1.9999999 和 1.999998，这两个数值都不能被 <code class="notranslate" translate="no">lowp</code> 精确表示。
+例如，如果你用 <code class="notranslate" translate="no">lowp</code> 做颜色计算，可能会出现色带现象。颜色范围是 0 到 1，而 lowp 在 0 到 1 之间大约只有 128 个可表示值。
+这意味着如果你想加一个非常小的值（比如 1/512），它可能根本不会改变数值，因为无法被表示，实际上就像加了 0。</p>
+<p>理论上，我们可以在任何地方使用 <code class="notranslate" translate="no">highp</code> 完全避免这些问题，但在实际设备上，使用 <code class="notranslate" translate="no">lowp</code> 和 <code class="notranslate" translate="no">mediump</code> 通常会比 <code class="notranslate" translate="no">highp</code> 快很多，有时甚至显著更快。</p>
+<p>还有一点，和 <code class="notranslate" translate="no">Uint8Array</code>、<code class="notranslate" translate="no">Uint16Array</code> 不同的是，<code class="notranslate" translate="no">lowp</code>、<code class="notranslate" translate="no">mediump</code>、<code class="notranslate" translate="no">highp</code> 允许在内部使用更高的精度（更多位）。
+例如，在桌面 GPU 上，如果你在着色器中写了 <code class="notranslate" translate="no">mediump</code>，它很可能仍然使用 32 位精度。
+这导致在开发时很难测试 <code class="notranslate" translate="no">lowp</code> 或 <code class="notranslate" translate="no">mediump</code> 的真正表现。
+要确认你的着色器在低精度设备上能正常工作，必须在实际使用较低精度的设备上测试。</p>
+<p>如果你想用 <code class="notranslate" translate="no">mediump</code> 以提高速度，常见问题包括比如点光源的高光计算，它在世界空间或视图空间传递的值可能超出 <code class="notranslate" translate="no">mediump</code> 的范围。
+可能在某些设备上你只能舍弃高光计算。下面是将<a href="webgl-3d-lighting-point.html">点光源</a>示例的片段着色器改为 <code class="notranslate" translate="no">mediump</code> 的代码示例：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+
+-precision highp float;
++precision mediump float;
+
+// Passed in and varied from the vertex shader.
+in vec3 v_normal;
+in vec3 v_surfaceToLight;
+in vec3 v_surfaceToView;
+
+uniform vec4 u_color;
+uniform float u_shininess;
+
+// we need to declare an output for the fragment shader
+out vec4 outColor;
+
+void main() {
+  // because v_normal is a varying it's interpolated
+  // so it will not be a uint vector. Normalizing it
+  // will make it a unit vector again
+  vec3 normal = normalize(v_normal);
+
+  vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
+-  vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+-  vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);
+
+  // compute the light by taking the dot product
+  // of the normal to the light's reverse direction
+  float light = dot(normal, surfaceToLightDirection);
+-  float specular = 0.0;
+-  if (light &gt; 0.0) {
+-    specular = pow(dot(normal, halfVector), u_shininess);
+-  }
+
+  outColor = u_color;
+
+  // Lets multiply just the color portion (not the alpha)
+  // by the light
+  outColor.rgb *= light;
+
+-  // Just add in the specular
+-  outColor.rgb += specular;
+}
+</code></pre>
+<p>注意：即便如此还不够。在顶点着色器中我们有以下代码：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">  // compute the vector of the surface to the light
+  // and pass it to the fragment shader
+  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
+</code></pre>
+<p>假设光源距离表面有 1000 个单位。
+然后我们进入片段着色器，执行这一行代码：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">  vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
+</code></pre>
+<p>看起来似乎没问题。除了归一化向量的常规方法是除以其长度，而计算长度的标准方式是：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  float length = sqrt(v.x * v.x + v.y * v.y * v.z * v.z);
+</code></pre>
+<p>如果 x、y 或 z 中的某一个值是 1000，那么 1000×1000 就是 1000000。
+而 1000000 超出了 <code class="notranslate" translate="no">mediump</code> 的表示范围。</p>
+<p>这里的一个解决方案是在顶点着色器中进行归一化（normalize）。</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // compute the vector of the surface to the light
+  // and pass it to the fragment shader
+-  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
++  v_surfaceToLight = normalize(u_lightWorldPosition - surfaceWorldPosition);
+</code></pre>
+<p>现在赋值给 <code class="notranslate" translate="no">v_surfaceToLight</code> 的数值范围在 -1 到 +1 之间，这正好落在 <code class="notranslate" translate="no">mediump</code> 的有效范围内。</p>
+<p>请注意，在顶点着色器中进行归一化实际上不会得到完全相同的结果，但结果可能足够接近，以至于除非并排对比，否则没人会注意到差异。</p>
+<p>像 <code class="notranslate" translate="no">normalize</code>、<code class="notranslate" translate="no">length</code>、<code class="notranslate" translate="no">distance</code>、<code class="notranslate" translate="no">dot</code> 这样的函数都会面临一个问题：如果参与计算的值过大，那么在 <code class="notranslate" translate="no">mediump</code> 精度下就可能超出其表示范围。</p>
+<p>不过，你实际上需要在一个 <code class="notranslate" translate="no">mediump</code> 为 16 位的设备上进行测试。在桌面设备上，<code class="notranslate" translate="no">mediump</code> 实际上使用的是与 <code class="notranslate" translate="no">highp</code> 相同的 32 位精度，因此任何相关的问题在桌面上都不会显现出来。</p>
+<h2 id="检测对16位-mediump-的支持">检测对16位 <code class="notranslate" translate="no">mediump</code> 的支持</h2>
+<p>你调用 <code class="notranslate" translate="no">gl.getShaderPrecisionFormat</code>，传入着色器类型（<code class="notranslate" translate="no">VERTEX_SHADER</code> 或 <code class="notranslate" translate="no">FRAGMENT_SHADER</code>），以及以下精度类型之一：</p>
+<ul>
+<li><code class="notranslate" translate="no">LOW_FLOAT</code></li>
+<li><code class="notranslate" translate="no">MEDIUM_FLOAT</code></li>
+<li><code class="notranslate" translate="no">HIGH_FLOAT</code></li>
+<li><code class="notranslate" translate="no">LOW_INT</code></li>
+<li><code class="notranslate" translate="no">MEDIUM_INT</code></li>
+<li><code class="notranslate" translate="no">HIGH_INT</code></li>
+</ul>
+<p>它会[返回精度信息]。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-precision-lowp-mediump-highp.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-precision-lowp-mediump-highp.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p><code class="notranslate" translate="no">gl.getShaderPrecisionFormat</code> 会返回一个对象，包含三个属性：<code class="notranslate" translate="no">precision</code>、<code class="notranslate" translate="no">rangeMin</code> 和 <code class="notranslate" translate="no">rangeMax</code>。</p>
+<p>对于 <code class="notranslate" translate="no">LOW_FLOAT</code> 和 <code class="notranslate" translate="no">MEDIUM_FLOAT</code>，如果它们实际上就是 <code class="notranslate" translate="no">highp</code>，那么 <code class="notranslate" translate="no">precision</code> 将是 23。否则，它们通常分别是 8 和 15，或者至少会小于 23。对于 <code class="notranslate" translate="no">LOW_INT</code> 和 <code class="notranslate" translate="no">MEDIUM_INT</code>，如果它们等同于 <code class="notranslate" translate="no">highp</code>，那么 <code class="notranslate" translate="no">rangeMin</code> 会是 31。如果小于 31，则说明例如 <code class="notranslate" translate="no">mediump int</code> 比 <code class="notranslate" translate="no">highp int</code> 更高效。</p>
+<p>我的 Pixel 2 XL 对于 <code class="notranslate" translate="no">mediump</code> 和 <code class="notranslate" translate="no">lowp</code> 都使用 16 位。我不确定自己是否用过使用 9 位表示 <code class="notranslate" translate="no">lowp</code> 的设备，因此也不清楚在这种情况下通常会遇到哪些问题。</p>
+<p>在本文系列中，我们在片段着色器中通常会指定默认精度。我们也可以为每个变量单独指定精度，例如：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">uniform mediump vec4 color;  // a uniform
+in lowp vec4 normal;         // an attribute or varying input
+out lowp vec4 texcoord;      // a fragment shader output or varying output
+lowp float foo;              // a variable
+</code></pre>
+<h2 id="纹理格式">纹理格式</h2>
+<p>纹理是规范中另一个指出“实际使用的精度可能高于请求精度”的地方。</p>
+<p>例如，你可以请求一个每通道 4 位、总共 16 位的纹理，像这样：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texImage2D(
+  gl.TEXTURE_2D,               // target
+  0,                           // mip level
+  gl.RGBA4,                    // internal format
+  width,                       // width
+  height,                      // height
+  0,                           // border
+  gl.RGBA,                     // format
+  gl.UNSIGNED_SHORT_4_4_4_4,   // type
+  null,
+);
+</code></pre>
+<p>但实现上实际上可能在内部使用更高分辨率的格式。<br>
+我认为大多数桌面端会这样做，而大多数移动端 GPU 不会。</p>
+<p>我们可以做个测试。首先我们会像上面那样请求一个每通道 4 位的纹理。<br>
+然后我们会通过渲染一个 0 到 1 的渐变来<a href="webgl-render-to-texture.html">渲染到它</a>。</p>
+<p>接着我们会将该纹理渲染到画布上。如果纹理内部确实是每通道 4 位，<br>
+那么从我们绘制的渐变中只会有 16 个颜色级别。<br>
+如果纹理实际上是每通道 8 位，我们将看到 256 个颜色级别。</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-precision-textures.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-precision-textures.html" target="_blank">点此在新窗口中浏览</a>
+</div>
+
+</p>
+<p>在我的智能手机上运行时，我看到纹理使用的是每通道4位<br>
+（至少红色通道是4位，因为我没有测试其他通道）。</p>
+<div class="webgl_center"><img src="../resources/mobile-4-4-4-4-texture-no-dither.png" style="image-rendering: pixelated; width: 600px;"></div>
+<p>而在我的桌面上，我看到纹理实际上使用的是每通道8位，<br>
+尽管我只请求了4位。</p>
+<div class="webgl_center"><img src="../resources/desktop-4-4-4-4-texture-no-dither.png" style="image-rendering: pixelated; width: 600px;"></div>
+<p>需要注意的一点是，WebGL 默认会对结果进行抖动处理，<br>
+使这种渐变看起来更平滑。你可以通过以下方式关闭抖动：</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.disable(gl.DITHER);
+</code></pre>
+<p>如果我不关闭抖动处理，那么我的智能手机会产生这样的效果。</p>
+<div class="webgl_center"><img src="../resources/mobile-4-4-4-4-texture-dither.png" style="image-rendering: pixelated; width: 600px;"></div>
+<p>就我目前所知，这种情况通常只会在以下特定场景出现：当开发者将某种低比特精度的纹理格式用作渲染目标，却未在实际采用该低分辨率的设备上进行测试时。
+若仅通过桌面端设备进行测试，由此引发的问题很可能无法被发现。</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -197,7 +422,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </select>
 
 
-        <ul>  <li>基础概念</li>
+        <div id="toc">
+          <ul>  <li>基础概念</li>
         <ul>
           <li><a href="/webgl/lessons/zh_cn/webgl-getting-webgl2.html">怎样使用WebGL2</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-fundamentals.html">基本原理</a></li>
@@ -317,36 +543,70 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <li><a href="/webgl/lessons/zh_cn/webgl-visualizing-the-camera.html">可视化相机</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-and-alpha.html">WebGL2 和 Alpha</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-2d-vs-3d-library.html">2D vs 3D 库</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-anti-patterns.html">Anti-Patterns</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-matrix-vs-math.html">WebGL2 Matrices vs Math Matrices</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-precision-issues.html">Precision Issues</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-anti-patterns.html">反模式</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-matrix-vs-math.html">WebGL2中的矩阵vs数学中的矩阵</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-precision-issues.html">精度问题</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-tips.html#screenshot">Taking a screenshot</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-tips.html#preservedrawingbuffer">Prevent the Canvas Being Cleared</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-tips.html#tabindex">Get Keyboard Input From a Canvas</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-tips.html#html-background">Use WebGL2 as Background in HTML</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-cross-platform-issues.html">跨平台问题</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>参考</li>
         <ul>
-          <li><a href="/webgl/lessons/zh_cn/webgl-attributes.html">Attributes</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-texture-units.html">Texture Units</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-framebuffers.html">Framebuffers</a></li>
+          <li><a href="/webgl/lessons/zh_cn/webgl-attributes.html">属性（Attributes）</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-texture-units.html">纹理单元（Texture Units）</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-framebuffers.html">帧缓冲区（Framebuffers）</a></li>
 <li><a href="/webgl/lessons/zh_cn/webgl-readpixels.html">readPixels</a></li>
-<li><a href="/webgl/lessons/zh_cn/webgl-references.html">References</a></li>
+<li><a href="/webgl/lessons/zh_cn/webgl-references.html">参考资料</a></li>
         </ul></ul>
 <ul>
   <li><a href="/docs/">API帮助文档</a></li>
   <li><a href="https://twgljs.org">TWGL，一个轻量级WebGL辅助库</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>有意见或建议? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">在GitHub上提issue</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 精度问题';
+            var disqus_title = 'WebGL2 精度问题';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
+<script>
+const settings = {
+  contribTemplate: "感谢 <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>的 <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} 个贡献</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
 <script>
 </script>
 
