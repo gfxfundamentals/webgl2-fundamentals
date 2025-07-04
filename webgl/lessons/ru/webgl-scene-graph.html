@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/ru/webgl-scene-graph.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Что такое граф сцены и для чего он используется">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-scene-graph_ru.jpg">
+
+<meta property="og:title" content="WebGL2 - Граф сцены">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-scene-graph_ru.jpg">
+<meta property="og:description" content="Что такое граф сцены и для чего он используется">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-scene-graph.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 - Граф сцены">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-scene-graph.html">
+<meta name="twitter:description" content="Что такое граф сцены и для чего он используется">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-scene-graph_ru.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-scene-graph.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-scene-graph_ru.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-scene-graph.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-scene-graph.html",
+      "inLanguage":"ru",
+      "name":"WebGL2 - Граф сцены",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-scene-graph.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 - Граф сцены</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-scene-graph.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-scene-graph.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-scene-graph.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-scene-graph.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-scene-graph.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-scene-graph.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-scene-graph.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-scene-graph.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-scene-graph.html" >Deutsch</a>
+    <option value="/webgl/lessons/ja/webgl-scene-graph.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-scene-graph.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-scene-graph.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-scene-graph.html" selected>Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-scene-graph.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Содержание</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/ru/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 - Граф сцены</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Эта статья является продолжением <a href="webgl-fundamentals.html">предыдущих статей WebGL</a>.
+Предыдущая статья была о <a href="webgl-drawing-multiple-things.html">рисовании множественных объектов</a>.
+Если вы их не читали, я предлагаю начать с них.</p>
+<p>Я уверен, что какой-нибудь гуру CS или графики даст мне нагоняй, но…
+Граф сцены обычно представляет собой древовидную структуру, где каждый узел в дереве генерирует
+матрицу… хм, это не очень полезное определение. Может быть, несколько примеров будут
+полезны.</p>
+<p>Большинство 3D движков используют граф сцены. Вы помещаете объекты, которые хотите видеть в сцене,
+в граф сцены. Движок затем обходит граф сцены и составляет список объектов для рисования.
+Графы сцен иерархичны, поэтому, например, если вы хотели бы создать симуляцию вселенной,
+вы могли бы иметь граф, который выглядит так</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 400px; height: 500px;" src="/webgl/lessons/resources/planet-diagram.html"></iframe>
+</div>
+
+</p>
+<p>В чем смысл графа сцены? Главная особенность графа сцены заключается в том, что он обеспечивает
+родительско-дочерние отношения для матриц, как <a href="webgl-2d-matrices.html">мы обсуждали в 2D матричной математике</a>.
+Так, например, в простой (но нереалистичной) симуляции вселенной звезды (дети) движутся вместе со своей
+галактикой (родитель). Аналогично луна (ребенок) движется вместе со своей планетой (родитель).
+Если вы переместите Землю, луна будет двигаться с ней. Если вы переместите галактику,
+все звезды внутри будут двигаться с ней. Перетащите имена в диаграмме выше
+и, надеюсь, вы сможете увидеть их отношения.</p>
+<p>Если вы вернетесь к <a href="webgl-2d-matrices.html">2D матричной математике</a>, вы можете вспомнить, что мы
+умножаем много матриц для перемещения, поворота и масштабирования объектов. Граф
+сцены предоставляет структуру для помощи в решении, какую матричную математику применять к объекту.</p>
+<p>Обычно каждый <code class="notranslate" translate="no">Node</code> в графе сцены представляет <em>локальное пространство</em>. При правильной
+матричной математике все в этом <em>локальном пространстве</em> может игнорировать все выше него. Другой
+способ выразить то же самое - луна должна заботиться только об орбите вокруг Земли.
+Ей не нужно заботиться об орбите вокруг Солнца. Без этой структуры графа сцены
+вам пришлось бы делать гораздо более сложную математику для вычисления, как заставить луну
+орбитировать вокруг Солнца, потому что ее орбита вокруг Солнца выглядит примерно так</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/moon-orbit.html"></iframe>
+</div>
+
+</p>
+<p>С графом сцены вы просто делаете луну дочерним элементом Земли, а затем орбитируете
+вокруг Земли, что просто. Граф сцены заботится о том факте, что Земля
+орбитирует вокруг Солнца. Он делает это, обходя узлы и умножая
+матрицы по мере обхода</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">worldMatrix = greatGrandParent * grandParent * parent * self(localMatrix)
+</code></pre>
+<p>В конкретных терминах нашей симуляции вселенной это было бы</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">worldMatrixForMoon = galaxyMatrix * starMatrix * planetMatrix * moonMatrix;
+</code></pre>
+<p>Мы можем сделать это очень просто с рекурсивной функцией, которая эффективно</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function computeWorldMatrix(currentNode, parentWorldMatrix) {
+    // вычисляем нашу мировую матрицу, умножая нашу локальную матрицу на
+    // мировую матрицу нашего родителя.
+    var worldMatrix = m4.multiply(parentWorldMatrix, currentNode.localMatrix);
+
+    // теперь делаем то же самое для всех наших детей
+    currentNode.children.forEach(function(child) {
+        computeWorldMatrix(child, worldMatrix);
+    });
+}
+</code></pre>
+<p>Это поднимает некоторую терминологию, которая довольно распространена для 3D графов сцен.</p>
+<ul>
+<li>
+<p><code class="notranslate" translate="no">localMatrix</code>: Локальная матрица для текущего узла. Она трансформирует его и его детей в локальном пространстве с
+самим собой в качестве начала координат.</p>
+</li>
+<li>
+<p><code class="notranslate" translate="no">worldMatrix</code>: Для данного узла она берет объекты в локальном пространстве этого узла
+и трансформирует их в пространство корневого узла графа сцены. Или другими словами, размещает их
+в мире. Если мы вычислим worldMatrix для луны, мы получим ту забавную орбиту, которую вы видите выше.</p>
+</li>
+</ul>
+<p>Граф сцены довольно легко создать. Давайте определим простой объект <code class="notranslate" translate="no">Node</code>.
+Есть миллион способов организовать граф сцены, и я не уверен, какой
+способ лучше. Самый распространенный - иметь опциональное поле объекта для рисования</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var node = {
+   localMatrix: ...,  // &quot;локальная&quot; матрица для этого узла
+   worldMatrix: ...,  // &quot;мировая&quot; матрица для этого узла
+   children: [],      // массив детей
+   thingToDraw: ??,   // объект для рисования в этом узле
+};
+</code></pre>
+<p>Давайте создадим граф сцены солнечной системы. Я не буду использовать причудливые текстуры или
+что-то подобное, так как это загромоздит пример. Сначала давайте создадим несколько функций
+для помощи в управлении узлами. Сначала мы создадим класс узла</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var Node = function() {
+  this.children = [];
+  this.localMatrix = m4.identity();
+  this.worldMatrix = m4.identity();
+};
+</code></pre>
+<p>Давайте дадим ему способ установить родителя узла.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">Node.prototype.setParent = function(parent) {
+  // удаляем нас из нашего родителя
+  if (this.parent) {
+    var ndx = this.parent.children.indexOf(this);
+    if (ndx &gt;= 0) {
+      this.parent.children.splice(ndx, 1);
+    }
+  }
+
+  // Добавляем нас к нашему новому родителю
+  if (parent) {
+    parent.children.push(this);
+  }
+  this.parent = parent;
+};
+</code></pre>
+<p>И вот код для вычисления мировых матриц из локальных матриц на основе их родительско-дочерних
+отношений. Если мы начнем с родителя и рекурсивно посетим детей, мы сможем вычислить
+их мировые матрицы. Если вы не понимаете матричную математику,
+<a href="webgl-2d-matrices.html">проверьте эту статью о них</a>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">Node.prototype.updateWorldMatrix = function(parentWorldMatrix) {
+  if (parentWorldMatrix) {
+    // была передана матрица, поэтому делаем математику и
+    // сохраняем результат в `this.worldMatrix`.
+    m4.multiply(parentWorldMatrix, this.localMatrix, this.worldMatrix);
+  } else {
+    // матрица не была передана, поэтому просто копируем.
+    m4.copy(this.localMatrix, this.worldMatrix);
+  }
+
+  // теперь обрабатываем всех детей
+  var worldMatrix = this.worldMatrix;
+  this.children.forEach(function(child) {
+    child.updateWorldMatrix(worldMatrix);
+  });
+};
+</code></pre>
+<p>Давайте просто сделаем Солнце, Землю и Луну, чтобы держать это простым. Мы, конечно, будем использовать
+фальшивые расстояния, чтобы вещи помещались на экране. Мы просто будем использовать одну модель сферы
+и окрасим ее желтоватой для Солнца, сине-зеленоватой для Земли и сероватой для Луны.
+Если <code class="notranslate" translate="no">drawInfo</code>, <code class="notranslate" translate="no">bufferInfo</code> и <code class="notranslate" translate="no">programInfo</code> вам не знакомы, <a href="webgl-drawing-multiple-things.html">см. предыдущую статью</a>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Давайте создадим все узлы
+var sunNode = new Node();
+sunNode.localMatrix = m4.translation(0, 0, 0);  // солнце в центре
+sunNode.drawInfo = {
+  uniforms: {
+    u_colorOffset: [0.6, 0.6, 0, 1], // желтый
+    u_colorMult:   [0.4, 0.4, 0, 1],
+  },
+  programInfo: programInfo,
+  bufferInfo: sphereBufferInfo,
+  vertexArray: sphereVAO,
+};
+
+var earthNode = new Node();
+earthNode.localMatrix = m4.translation(100, 0, 0);  // земля в 100 единицах от солнца
+earthNode.drawInfo = {
+  uniforms: {
+    u_colorOffset: [0.2, 0.5, 0.8, 1],  // сине-зеленый
+    u_colorMult:   [0.8, 0.5, 0.2, 1],
+  },
+  programInfo: programInfo,
+  bufferInfo: sphereBufferInfo,
+  vertexArray: sphereVAO,
+};
+
+var moonNode = new Node();
+moonNode.localMatrix = m4.translation(20, 0, 0);  // луна в 20 единицах от земли
+moonNode.drawInfo = {
+  uniforms: {
+    u_colorOffset: [0.6, 0.6, 0.6, 1],  // серый
+    u_colorMult:   [0.1, 0.1, 0.1, 1],
+  },
+  programInfo: programInfo,
+  bufferInfo: sphereBufferInfo,
+  vertexArray: sphereVAO,
+};
+</code></pre>
+<p>Теперь, когда мы создали узлы, давайте соединим их.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// соединяем небесные объекты
+moonNode.setParent(earthNode);
+earthNode.setParent(sunNode);
+</code></pre>
+<p>Мы снова создадим список объектов и список объектов для рисования.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var objects = [
+  sunNode,
+  earthNode,
+  moonNode,
+];
+
+var objectsToDraw = [
+  sunNode.drawInfo,
+  earthNode.drawInfo,
+  moonNode.drawInfo,
+];
+</code></pre>
+<p>Во время рендеринга мы будем обновлять локальную матрицу каждого объекта, слегка поворачивая его.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// обновляем локальные матрицы для каждого объекта.
+m4.multiply(m4.yRotation(0.01), sunNode.localMatrix  , sunNode.localMatrix);
+m4.multiply(m4.yRotation(0.01), earthNode.localMatrix, earthNode.localMatrix);
+m4.multiply(m4.yRotation(0.01), moonNode.localMatrix , moonNode.localMatrix);
+</code></pre>
+<p>Теперь, когда локальные матрицы обновлены, мы обновим все мировые матрицы</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">sunNode.updateWorldMatrix();
+</code></pre>
+<p>Наконец, теперь, когда у нас есть мировые матрицы, нам нужно умножить их, чтобы получить <a href="webgl-3d-perspective.html">матрицу worldViewProjection</a> для каждого объекта.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Вычисляем все матрицы для рендеринга
+objects.forEach(function(object) {
+  object.drawInfo.uniforms.u_matrix = m4.multiply(viewProjectionMatrix, object.worldMatrix);
+});
+</code></pre>
+<p>Рендеринг - это <a href="webgl-drawing-multiple-things.html">тот же цикл, который мы видели в нашей последней статье</a>.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-scene-graph-solar-system.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-scene-graph-solar-system.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Вы заметите, что все планеты одинакового размера. Давайте попробуем сделать Землю больше</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// земля в 100 единицах от солнца
+earthNode.localMatrix = m4.translation(100, 0, 0));
+
+// делаем землю в два раза больше
+earthNode.localMatrix = m4.scale(earthNode.localMatrix, 2, 2, 2);
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-scene-graph-solar-system-larger-earth.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-scene-graph-solar-system-larger-earth.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Упс. Луна тоже стала больше. Чтобы исправить это, мы могли бы вручную уменьшить луну. Лучшее решение, однако,
+заключается в добавлении большего количества узлов в наш граф сцены. Вместо просто</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  солнце
+   |
+  земля
+   |
+  луна
+</code></pre>
+<p>Мы изменим это на</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> солнечнаяСистема
+   |    |
+   |   солнце
+   |
+ орбитаЗемли
+   |    |
+   |  земля
+   |
+  орбитаЛуны
+      |
+     луна
+</code></pre>
+<p>Это позволит Земле вращаться вокруг солнечнойСистемы, но мы можем отдельно вращать и масштабировать Солнце, и это не будет
+влиять на Землю. Аналогично Земля может вращаться отдельно от Луны. Давайте создадим больше узлов для
+<code class="notranslate" translate="no">solarSystem</code>, <code class="notranslate" translate="no">earthOrbit</code> и <code class="notranslate" translate="no">moonOrbit</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var solarSystemNode = new Node();
+var earthOrbitNode = new Node();
+
+// орбита земли в 100 единицах от солнца
+earthOrbitNode.localMatrix = m4.translation(100, 0, 0);
+var moonOrbitNode = new Node();
+
+ // луна в 20 единицах от земли
+moonOrbitNode.localMatrix = m4.translation(20, 0, 0);
+</code></pre>
+<p>Те расстояния орбит были удалены из старых узлов</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var earthNode = new Node();
+-// земля в 100 единицах от солнца
+-earthNode.localMatrix = m4.translation(100, 0, 0));
+
+-// делаем землю в два раза больше
+-earthNode.localMatrix = m4.scale(earthNode.localMatrix, 2, 2, 2);
++earthNode.localMatrix = m4.scaling(2, 2, 2);
+
+var moonNode = new Node();
+-moonNode.localMatrix = m4.translation(20, 0, 0);  // луна в 20 единицах от земли
+</code></pre>
+<p>Соединение их теперь выглядит так</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// соединяем небесные объекты
+sunNode.setParent(solarSystemNode);
+earthOrbitNode.setParent(solarSystemNode);
+earthNode.setParent(earthOrbitNode);
+moonOrbitNode.setParent(earthOrbitNode);
+moonNode.setParent(moonOrbitNode);
+</code></pre>
+<p>И нам нужно обновлять только орбиты</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// обновляем локальные матрицы для каждого объекта.
+-m4.multiply(m4.yRotation(0.01), sunNode.localMatrix  , sunNode.localMatrix);
+-m4.multiply(m4.yRotation(0.01), earthNode.localMatrix, earthNode.localMatrix);
+-m4.multiply(m4.yRotation(0.01), moonNode.localMatrix , moonNode.localMatrix);
++m4.multiply(m4.yRotation(0.01), earthOrbitNode.localMatrix, earthOrbitNode.localMatrix);
++m4.multiply(m4.yRotation(0.01), moonOrbitNode.localMatrix, moonOrbitNode.localMatrix);
+
+// Обновляем все мировые матрицы в графе сцены
+-sunNode.updateWorldMatrix();
++solarSystemNode.updateWorldMatrix();
+</code></pre>
+<p>И теперь вы можете видеть, что Земля в два раза больше, а Луна нет.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-scene-graph-solar-system-larger-earth-fixed.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-scene-graph-solar-system-larger-earth-fixed.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Вы также можете заметить, что Солнце и Земля больше не вращаются на месте. Теперь это независимо.</p>
+<p>Давайте настроим еще несколько вещей.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">-sunNode.localMatrix = m4.translation(0, 0, 0);  // солнце в центре
++sunNode.localMatrix = m4.scaling(5, 5, 5);
+
+...
+
+*moonOrbitNode.localMatrix = m4.translation(30, 0, 0);
+
+...
+
++moonNode.localMatrix = m4.scaling(0.4, 0.4, 0.4);
+
+...
+// обновляем локальные матрицы для каждого объекта.
+m4.multiply(m4.yRotation(0.01), earthOrbitNode.localMatrix, earthOrbitNode.localMatrix);
+m4.multiply(m4.yRotation(0.01), moonOrbitNode.localMatrix, moonOrbitNode.localMatrix);
++// вращаем солнце
++m4.multiply(m4.yRotation(0.005), sunNode.localMatrix, sunNode.localMatrix);
++// вращаем землю
++m4.multiply(m4.yRotation(0.05), earthNode.localMatrix, earthNode.localMatrix);
++// вращаем луну
++m4.multiply(m4.yRotation(-0.01), moonNode.localMatrix, moonNode.localMatrix);
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-scene-graph-solar-system-adjusted.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-scene-graph-solar-system-adjusted.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>В настоящее время у нас есть <code class="notranslate" translate="no">localMatrix</code>, и мы модифицируем его каждый кадр. Однако есть проблема
+в том, что каждый кадр наша математика будет накапливать небольшую ошибку. Есть способ исправить математику,
+который называется <em>ортогональной нормализацией матрицы</em>, но даже это не всегда будет работать. Например, давайте
+представим, что мы масштабировали до нуля и обратно. Давайте просто сделаем это для одного значения <code class="notranslate" translate="no">x</code></p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">x = 246;       // кадр #0, x = 246
+
+scale = 1;
+x = x * scale  // кадр #1, x = 246
+
+scale = 0.5;
+x = x * scale  // кадр #2, x = 123
+
+scale = 0;
+x = x * scale  // кадр #3, x = 0
+
+scale = 0.5;
+x = x * scale  // кадр #4, x = 0  УПС!
+
+scale = 1;
+x = x * scale  // кадр #5, x = 0  УПС!
+</code></pre>
+<p>Мы потеряли наше значение. Мы можем исправить это, добавив какой-то другой класс, который обновляет матрицу из
+других значений. Давайте изменим определение <code class="notranslate" translate="no">Node</code>, чтобы иметь <code class="notranslate" translate="no">source</code>. Если он существует, мы будем
+просить <code class="notranslate" translate="no">source</code> дать нам локальную матрицу.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*var Node = function(source) {
+  this.children = [];
+  this.localMatrix = makeIdentity();
+  this.worldMatrix = makeIdentity();
++  this.source = source;
+};
+
+Node.prototype.updateWorldMatrix = function(matrix) {
+
++  var source = this.source;
++  if (source) {
++    source.getMatrix(this.localMatrix);
++  }
+
+  ...
+</code></pre>
+<p>Теперь мы можем создать источник. Общий источник - это тот, который предоставляет перемещение, поворот и масштаб
+что-то вроде этого</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var TRS = function() {
+  this.translation = [0, 0, 0];
+  this.rotation = [0, 0, 0];
+  this.scale = [1, 1, 1];
+};
+
+TRS.prototype.getMatrix = function(dst) {
+  dst = dst || new Float32Array(16);
+  var t = this.translation;
+  var r = this.rotation;
+  var s = this.scale;
+
+  // вычисляем матрицу из перемещения, поворота и масштаба
+  m4.translation(t[0], t[1], t[2], dst);
+  m4.xRotate(dst, r[0], dst);
+  m4.yRotate(dst, r[1], dst);
+  m4.zRotate(dst, r[2], dst);
+  m4.scale(dst, s[0], s[1], s[2]), dst);
+  return dst;
+};
+</code></pre>
+<p>И мы можем использовать это так</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// во время инициализации создаем узел с источником
+var someTRS  = new TRS();
+var someNode = new Node(someTRS);
+
+// во время рендеринга
+someTRS.rotation[2] += elapsedTime;
+</code></pre>
+<p>Теперь нет проблемы, потому что мы воссоздаем матрицу каждый раз.</p>
+<p>Вы можете думать, я не создаю солнечную систему, так в чем смысл? Ну, если вы хотели бы
+анимировать человека, вы могли бы иметь граф сцены, который выглядит так</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 400px; height: 400px;" src="/webgl/lessons/resources/person-diagram.html"></iframe>
+</div>
+
+</p>
+<p>Сколько суставов вы добавляете для пальцев и пальцев ног, зависит от вас. Чем больше суставов у вас есть,
+тем больше мощности требуется для вычисления анимаций и тем больше данных анимации требуется
+для предоставления информации для всех суставов. Старые игры, такие как Virtua Fighter, имели около 15 суставов.
+Игры в начале-середине 2000-х имели от 30 до 70 суставов. Если бы вы сделали каждый сустав в ваших руках,
+там по крайней мере 20 в каждой руке, так что только 2 руки - это 40 суставов. Многие игры, которые хотят
+анимировать руки, анимируют большой палец как один и 4 пальца как один большой палец, чтобы сэкономить
+время (как CPU/GPU, так и время художника) и память.</p>
+<p>В любом случае, вот блочный парень, которого я собрал. Он использует источник <code class="notranslate" translate="no">TRS</code> для каждого
+узла, упомянутого выше. Программистское искусство и программистская анимация FTW! 😂</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-scene-graph-block-guy.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-scene-graph-block-guy.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Если вы посмотрите практически на любую 3D библиотеку, вы найдете граф сцены, подобный этому.
+Что касается построения иерархий, обычно они создаются в каком-то пакете моделирования
+или пакете компоновки уровней.</p>
+<div class="webgl_bottombar">
+<h3>SetParent vs AddChild / RemoveChild</h3>
+<p>Многие графы сцен имеют функцию <code class="notranslate" translate="no">node.addChild</code> и функцию <code class="notranslate" translate="no">node.removeChild</code>,
+тогда как выше я создал функцию <code class="notranslate" translate="no">node.setParent</code>. Какой способ лучше
+спорно является вопросом стиля, но я бы утверждал, что есть одна объективно лучшая причина
+<code class="notranslate" translate="no">setParent</code> лучше, чем <code class="notranslate" translate="no">addChild</code>, заключается в том, что это делает код, подобный
+этому, невозможным.</p>
+<pre class="prettyprint">
+    someParent.addChild(someNode);
+    ...
+    someOtherParent.addChild(someNode);
+</pre>
+<p>Что это означает? Добавляется ли <code class="notranslate" translate="no">someNode</code> к обоим <code class="notranslate" translate="no">someParent</code> и <code class="notranslate" translate="no">someOtherParent</code>?
+В большинстве графов сцен это невозможно. Генерирует ли второй вызов ошибку?
+<code class="notranslate" translate="no">ERROR: Already have parent</code>. Магически ли он удаляет <code class="notranslate" translate="no">someNode</code> из <code class="notranslate" translate="no">someParent</code> перед
+добавлением к <code class="notranslate" translate="no">someOtherParent</code>? Если да, то это, конечно, не ясно из имени <code class="notranslate" translate="no">addChild</code>.
+</p>
+<p><code class="notranslate" translate="no">setParent</code> с другой стороны не имеет такой проблемы</p>
+<pre class="prettyprint">
+    someNode.setParent(someParent);
+    ...
+    someNode.setParent(someOtherParent);
+</pre>
+<p>
+В этом случае на 100% очевидно, что происходит. Нулевая неоднозначность.
+</p>
+</div> 
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-scene-graph.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-scene-graph.html" >Deutsch</a>
+    <option value="/webgl/lessons/ja/webgl-scene-graph.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-scene-graph.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-scene-graph.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-scene-graph.html" selected>Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-scene-graph.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Основы</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-getting-webgl2.html">Как использовать WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl-fundamentals.html">Основы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-how-it-works.html">Как это работает</a></li>
+<li><a href="/webgl/lessons/ru/webgl-shaders-and-glsl.html">Шейдеры и GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Диаграмма состояния</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl2-whats-new.html">Что нового в WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl1-to-webgl2.html">Переход с WebGL1 на WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl1-to-webgl2-fundamentals.html">Отличия от WebGLFundamentals.org до WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Обработка изображений</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-image-processing.html">Обработка изображений</a></li>
+<li><a href="/webgl/lessons/ru/webgl-image-processing-continued.html">Продвинутая обработка изображений</a></li>
+        </ul>
+  <li>2D трансформации, повороты, масштабирование и матричные операции</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-2d-translation.html">2D Трансляция</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-rotation.html">2D Вращение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-scale.html">2D Масштабирование</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-matrices.html">2D Матрицы</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-orthographic.html">Ортографическая 3D</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-perspective.html">3D Перспектива</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-camera.html">3D - Камеры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-matrix-naming.html">3D - Именование матриц</a></li>
+        </ul>
+  <li>Освещение</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-lighting-directional.html">Направленное освещение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-lighting-point.html">Точечное освещение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-lighting-spot.html">Прожекторное освещение</a></li>
+        </ul>
+  <li>Организация и рефакторинг</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-less-code-more-fun.html">Меньше кода, больше удовольствия</a></li>
+<li><a href="/webgl/lessons/ru/webgl-drawing-multiple-things.html">Рисование множественных объектов</a></li>
+<li><a href="/webgl/lessons/ru/webgl-scene-graph.html">Графы сцен</a></li>
+        </ul>
+  <li>Геометрия</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-geometry-lathe.html">3D Геометрия - Токарная обработка</a></li>
+<li><a href="/webgl/lessons/ru/webgl-load-obj.html">Загрузка .obj файлов</a></li>
+<li><a href="/webgl/lessons/ru/webgl-load-obj-w-mtl.html">Загрузка .obj с .mtl файлами</a></li>
+        </ul>
+  <li>Текстуры</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-textures.html">Текстуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-data-textures.html">Data Textures</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2-textures.html">Использование 2 или более текстур</a></li>
+<li><a href="/webgl/lessons/ru/webgl-cors-permission.html">Cross Origin Images</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-perspective-correct-texturemapping.html">Перспективно-корректное наложение текстур</a></li>
+<li><a href="/webgl/lessons/ru/webgl-planar-projection-mapping.html">Планарное и перспективное проекционное отображение</a></li>
+        </ul>
+  <li>Рендеринг в текстуру</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-render-to-texture.html">Рендеринг в текстуру</a></li>
+        </ul>
+  <li>Тени</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-shadows.html">Тени</a></li>
+        </ul>
+  <li>Техники</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-matrix-stack.html">2D - Стек Матриц</a></li>
+<li><a href="/webgl/lessons/ru/webgl-sprites.html">Спрайты</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-cube-maps.html">Кубические карты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-environment-maps.html">Карты окружения</a></li>
+<li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
+<li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+        </ul>
+  <li>Текст</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-text-html.html">Текст - HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-canvas2d.html">Текст - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-texture.html">Текст - Использование текстуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-glyphs.html">Текст - Использование текстуры глифов</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Советы</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-smallest-programs.html">Самые маленькие программы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-drawing-without-data.html">Рисование без данных</a></li>
+<li><a href="/webgl/lessons/ru/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/ru/webgl-pulling-vertices.html">Вытягивание вершин</a></li>
+        </ul>
+  <li>Оптимизация</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-indexed-vertices.html">Индексированные вершины (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-instanced-drawing.html">Инстансинг (Instanced Drawing)</a></li>
+        </ul>
+  <li>Разное</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-setup-and-installation.html">Настройка и установка</a></li>
+<li><a href="/webgl/lessons/ru/webgl-boilerplate.html">Boilerplate</a></li>
+<li><a href="/webgl/lessons/ru/webgl-resizing-the-canvas.html">Изменение размера Canvas</a></li>
+<li><a href="/webgl/lessons/ru/webgl-animation.html">Анимация</a></li>
+<li><a href="/webgl/lessons/ru/webgl-points-lines-triangles.html">Точки, линии и треугольники</a></li>
+<li><a href="/webgl/lessons/ru/webgl-multiple-views.html">Множественные виды, множественные canvas</a></li>
+<li><a href="/webgl/lessons/ru/webgl-visualizing-the-camera.html">Визуализация камеры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-and-alpha.html">WebGL2 и альфа-канал</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-vs-3d-library.html">2D против 3D библиотек</a></li>
+<li><a href="/webgl/lessons/ru/webgl-anti-patterns.html">Анти-паттерны</a></li>
+<li><a href="/webgl/lessons/ru/webgl-matrix-vs-math.html">WebGL2 Матрицы против математических матриц</a></li>
+<li><a href="/webgl/lessons/ru/webgl-precision-issues.html">Проблемы точности</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+        </ul>
+  <li>Справочник</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-attributes.html">Атрибуты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-texture-units.html">Текстурные юниты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/ru/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/ru/webgl-references.html">Ссылки</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">API документация</a></li>
+  <li><a href="https://twgljs.org">TWGL, легковесная библиотека-помощник для WebGL</a></li>
+  <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
+</ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Есть предложения или замечания? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Создайте issue на GitHub</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 - Граф сцены';
+            var disqus_title = 'WebGL2 - Граф сцены';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Спасибо <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>за <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} вкладов</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

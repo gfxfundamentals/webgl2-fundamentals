@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/ru/webgl-precision-issues.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Проблемы точности в WebGL2">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-precision-issues_ru.jpg">
+
+<meta property="og:title" content="WebGL2 Проблемы точности">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-precision-issues_ru.jpg">
+<meta property="og:description" content="Проблемы точности в WebGL2">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-precision-issues.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Проблемы точности">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-precision-issues.html">
+<meta name="twitter:description" content="Проблемы точности в WebGL2">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-precision-issues_ru.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-precision-issues.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-precision-issues_ru.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-precision-issues.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-precision-issues.html",
+      "inLanguage":"ru",
+      "name":"WebGL2 Проблемы точности",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-precision-issues.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Проблемы точности</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-precision-issues.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-precision-issues.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-precision-issues.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-precision-issues.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-precision-issues.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-precision-issues.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-precision-issues.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-precision-issues.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-precision-issues.html" >Deutsch</a>
+    <option value="/webgl/lessons/ja/webgl-precision-issues.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-precision-issues.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-precision-issues.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-precision-issues.html" selected>Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-precision-issues.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Содержание</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/ru/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Проблемы точности</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Эта статья о различных проблемах точности в WebGL2</p>
+<h2 id="lowp-mediump-highp"><code class="notranslate" translate="no">lowp</code>, <code class="notranslate" translate="no">mediump</code>, <code class="notranslate" translate="no">highp</code></h2>
+<p>В <a href="webgl-fundamentals.html">первой статье на этом сайте</a> мы создали
+вершинный шейдер и фрагментный шейдер. Когда мы создавали фрагментный
+шейдер, было упомянуто почти вскользь, что фрагментный шейдер
+не имеет точности по умолчанию, и поэтому нам нужно было установить одну, добавив
+строку</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">precision highp float;
+</code></pre>
+<p>Что это вообще было?</p>
+<p><code class="notranslate" translate="no">lowp</code>, <code class="notranslate" translate="no">mediump</code> и <code class="notranslate" translate="no">highp</code> - это настройки точности. Точность в данном случае
+эффективно означает, сколько битов используется для хранения значения. Число в
+JavaScript использует 64 бита. Большинство чисел в WebGL только 32 бита. Меньше битов =
+быстрее, больше битов = более точно и/или больший диапазон.</p>
+<p>Я не знаю, смогу ли я объяснить это хорошо. Вы можете поискать
+<a href="https://www.google.com/search?q=double+vs+float">double vs float</a>
+для других примеров проблем точности, но один способ объяснить это как разницу
+между байтом и шортом или в JavaScript <code class="notranslate" translate="no">Uint8Array</code> против
+<code class="notranslate" translate="no">Uint16Array</code>.</p>
+<ul>
+<li><code class="notranslate" translate="no">Uint8Array</code> - это массив беззнаковых 8-битных целых чисел. 8 бит могут содержать 2<sup>8</sup> значений от 0 до 255.</li>
+<li><code class="notranslate" translate="no">Uint16Array</code> - это массив беззнаковых 16-битных целых чисел. 16 бит могут содержать 2<sup>16</sup> значений от 0 до 65535.</li>
+<li><code class="notranslate" translate="no">Uint32Array</code> - это массив беззнаковых 32-битных целых чисел. 32 бита могут содержать 2<sup>32</sup> значений от 0 до 4294967295.</li>
+</ul>
+<p><code class="notranslate" translate="no">lowp</code>, <code class="notranslate" translate="no">mediump</code> и <code class="notranslate" translate="no">highp</code> похожи.</p>
+<ul>
+<li>
+<p><code class="notranslate" translate="no">lowp</code> - это как минимум 9-битное значение. Для значений с плавающей точкой они могут варьироваться
+от: -2 до +2, для целых значений они похожи на <code class="notranslate" translate="no">Uint8Array</code> или <code class="notranslate" translate="no">Int8Array</code></p>
+</li>
+<li>
+<p><code class="notranslate" translate="no">mediump</code> - это как минимум 16-битное значение. Для значений с плавающей точкой они могут варьироваться
+от: -2<sup>14</sup> до +2<sup>14</sup>, для целых значений они похожи на
+<code class="notranslate" translate="no">Uint16Array</code> или <code class="notranslate" translate="no">Int16Array</code></p>
+</li>
+<li>
+<p><code class="notranslate" translate="no">highp</code> - это как минимум 32-битное значение. Для значений с плавающей точкой они могут варьироваться
+от: -2<sup>62</sup> до +2<sup>62</sup>, для целых значений они похожи на
+<code class="notranslate" translate="no">Uint32Array</code> или <code class="notranslate" translate="no">Int32Array</code></p>
+</li>
+</ul>
+<p>Важно отметить, что не каждое значение внутри диапазона может быть представлено.
+Самый простой для понимания, вероятно, <code class="notranslate" translate="no">lowp</code>. Есть только 9 бит, и поэтому только
+512 уникальных значений могут быть представлены. Выше говорится, что диапазон от -2 до +2, но
+есть бесконечное количество значений между -2 и +2. Например, 1.9999999
+и 1.999998 - это 2 значения между -2 и +2. С только 9 битами <code class="notranslate" translate="no">lowp</code> не может
+представить эти 2 значения. Так, например, если вы хотите сделать какую-то математику с цветом и
+вы использовали <code class="notranslate" translate="no">lowp</code>, вы можете увидеть некоторую полосатость. Не вдаваясь в то, какие
+фактические значения могут быть представлены, мы знаем, что цвета идут от 0 до 1. Если <code class="notranslate" translate="no">lowp</code>
+идет от -2 до +2 и может представлять только 512 уникальных значений, то кажется вероятным,
+что только 128 из этих значений помещаются между 0 и 1. Это также предполагает, что если у вас есть
+значение, которое составляет 4/128, и я пытаюсь добавить к нему 1/512, ничего не произойдет,
+потому что 1/512 не может быть представлено <code class="notranslate" translate="no">lowp</code>, поэтому это эффективно 0.</p>
+<p>Мы могли бы просто использовать <code class="notranslate" translate="no">highp</code> везде и полностью игнорировать эту проблему,
+но на устройствах, которые действительно используют 9 бит для <code class="notranslate" translate="no">lowp</code> и/или 16 бит для
+<code class="notranslate" translate="no">mediump</code>, они обычно быстрее, чем <code class="notranslate" translate="no">highp</code>. Часто значительно быстрее.</p>
+<p>К последнему пункту, в отличие от значений в <code class="notranslate" translate="no">Uint8Array</code> или <code class="notranslate" translate="no">Uint16Array</code>, значение <code class="notranslate" translate="no">lowp</code>
+или <code class="notranslate" translate="no">mediump</code>, или, если на то пошло, даже значение <code class="notranslate" translate="no">highp</code>, может использовать
+более высокую точность (больше бит). Так, например, на настольном GPU, если вы поставите
+<code class="notranslate" translate="no">mediump</code> в ваш шейдер, он все равно, скорее всего, будет использовать 32 бита внутренне. Это
+имеет проблему, что трудно тестировать ваши шейдеры, если вы используете <code class="notranslate" translate="no">lowp</code> или
+<code class="notranslate" translate="no">mediump</code>. Чтобы увидеть, действительно ли ваши шейдеры работают правильно с <code class="notranslate" translate="no">lowp</code> или
+<code class="notranslate" translate="no">mediump</code>, вы должны тестировать на устройстве, которое действительно использует 8 бит для <code class="notranslate" translate="no">lowp</code> и
+16 бит для <code class="notranslate" translate="no">highp</code>.</p>
+<p>Если вы действительно хотите попытаться использовать <code class="notranslate" translate="no">mediump</code> для скорости, вот некоторые из проблем,
+которые возникают.</p>
+<p>Хороший пример, вероятно, пример <a href="webgl-3d-lighting-point.html">точечных источников света</a>,
+в частности, вычисление зеркального блика, передает значения в мировом или видовом пространстве в фрагментный шейдер,
+эти значения могут легко выйти за пределы диапазона для значения <code class="notranslate" translate="no">mediump</code>. Так что, может быть, на
+устройстве <code class="notranslate" translate="no">mediump</code> вы могли бы просто убрать зеркальные блики. Например, вот
+шейдер точечного света из <a href="webgl-3d-lighting-point.html">статьи о точечных источниках света</a>,
+измененный для <code class="notranslate" translate="no">mediump</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+
+-precision highp float;
++precision mediump float;
+
+// Переданный и измененный из вершинного шейдера.
+in vec3 v_normal;
+in vec3 v_surfaceToLight;
+in vec3 v_surfaceToView;
+
+uniform vec4 u_color;
+uniform float u_shininess;
+
+// нам нужно объявить выход для фрагментного шейдера
+out vec4 outColor;
+
+void main() {
+  // потому что v_normal - это varying, он интерполируется
+  // поэтому он не будет единичным вектором. Нормализация его
+  // сделает его снова единичным вектором
+  vec3 normal = normalize(v_normal);
+
+  vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
+-  vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+-  vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);
+
+  // вычисляем свет, взяв скалярное произведение
+  // нормали к обратному направлению света
+  float light = dot(normal, surfaceToLightDirection);
+-  float specular = 0.0;
+-  if (light &gt; 0.0) {
+-    specular = pow(dot(normal, halfVector), u_shininess);
+-  }
+
+  outColor = u_color;
+
+  // Давайте умножим только цветовую часть (не альфа)
+  // на свет
+  outColor.rgb *= light;
+
+-  // Просто добавляем блик
+-  outColor.rgb += specular;
+}
+</code></pre>
+<p>Примечание: Даже этого на самом деле недостаточно. В вершинном шейдере у нас есть</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">  // вычисляем вектор поверхности к свету
+  // и передаем его в фрагментный шейдер
+  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
+</code></pre>
+<p>Так что скажем, свет находится на расстоянии 1000 единиц от поверхности.
+Затем мы попадаем в фрагментный шейдер, и эта строка</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">  vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
+</code></pre>
+<p>выглядит достаточно невинно. За исключением того, что нормальный способ нормализовать вектор</p>
+<ul>
+<li>это разделить на его длину, а нормальный способ вычислить длину</li>
+</ul>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  float length = sqrt(v.x * v.x + v.y * v.y * v.z * v.z);
+</code></pre>
+<p>Если один из этих x, y или z равен 1000, то 1000*1000 = 1000000. 1000000
+выходит за пределы диапазона для <code class="notranslate" translate="no">mediump</code>.</p>
+<p>Одно решение здесь - нормализовать в вершинном шейдере.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // вычисляем вектор поверхности к свету
+  // и передаем его в фрагментный шейдер
+-  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
++  v_surfaceToLight = normalize(u_lightWorldPosition - surfaceWorldPosition);
+</code></pre>
+<p>Теперь значения, присвоенные <code class="notranslate" translate="no">v_surfaceToLight</code>, находятся между -1 и +1, что
+в пределах диапазона для <code class="notranslate" translate="no">mediump</code>.</p>
+<p>Обратите внимание, что нормализация в вершинном шейдере на самом деле не даст
+те же результаты, но они могут быть достаточно близкими, что никто не заметит,
+если не сравнивать бок о бок.</p>
+<p>Функции, такие как <code class="notranslate" translate="no">normalize</code>, <code class="notranslate" translate="no">length</code>, <code class="notranslate" translate="no">distance</code>, <code class="notranslate" translate="no">dot</code>, все имеют эту
+проблему, что если значения слишком большие, они выйдут за пределы диапазона
+для <code class="notranslate" translate="no">mediump</code>.</p>
+<p>Но вы действительно должны тестировать на устройстве, для которого <code class="notranslate" translate="no">mediump</code> составляет 16 бит.
+На настольном компьютере <code class="notranslate" translate="no">mediump</code> составляет 32 бита, то же самое, что и <code class="notranslate" translate="no">highp</code>, и поэтому любые проблемы
+не будут видны.</p>
+<h2 id="обнаружение-поддержки-16-битного-mediump">Обнаружение поддержки 16-битного <code class="notranslate" translate="no">mediump</code></h2>
+<p>Вы вызываете <code class="notranslate" translate="no">gl.getShaderPrecisionFormat</code>,
+вы передаете тип шейдера, <code class="notranslate" translate="no">VERTEX_SHADER</code> или <code class="notranslate" translate="no">FRAGMENT_SHADER</code>, и вы
+передаете один из <code class="notranslate" translate="no">LOW_FLOAT</code>, <code class="notranslate" translate="no">MEDIUM_FLOAT</code>, <code class="notranslate" translate="no">HIGH_FLOAT</code>,
+<code class="notranslate" translate="no">LOW_INT</code>, <code class="notranslate" translate="no">MEDIUM_INT</code>, <code class="notranslate" translate="no">HIGH_INT</code>, и он
+[возвращает информацию о точности].</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-precision-lowp-mediump-highp.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-precision-lowp-mediump-highp.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p><code class="notranslate" translate="no">gl.getShaderPrecisionFormat</code> возвращает объект с тремя значениями: <code class="notranslate" translate="no">precision</code>, <code class="notranslate" translate="no">rangeMin</code> и <code class="notranslate" translate="no">rangeMax</code>.</p>
+<p>Для <code class="notranslate" translate="no">LOW_FLOAT</code> и <code class="notranslate" translate="no">MEDIUM_FLOAT</code> <code class="notranslate" translate="no">precision</code> будет 23, если они действительно
+просто <code class="notranslate" translate="no">highp</code>. Иначе они, вероятно, будут 8 и 15 соответственно, или
+по крайней мере они будут меньше 23. Для <code class="notranslate" translate="no">LOW_INT</code> и <code class="notranslate" translate="no">MEDIUM_INT</code>
+если они такие же, как <code class="notranslate" translate="no">highp</code>, то <code class="notranslate" translate="no">rangeMin</code> будет 31. Если они
+меньше 31, то <code class="notranslate" translate="no">mediump int</code> на самом деле более эффективен, чем
+<code class="notranslate" translate="no">highp int</code>, например.</p>
+<p>Мой Pixel 2 XL использует 16 бит для <code class="notranslate" translate="no">mediump</code>, он также использует 16 бит для <code class="notranslate" translate="no">lowp</code>. Я не уверен, что когда-либо использовал устройство, которое использует 9 бит для <code class="notranslate" translate="no">lowp</code>, поэтому я не уверен, какие проблемы обычно возникают, если они есть.</p>
+<p>На протяжении этих статей мы указывали точность по умолчанию
+в фрагментном шейдере. Мы также можем указать точность любой отдельной
+переменной. Например</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">uniform mediump vec4 color;  // uniform
+in lowp vec4 normal;         // атрибут или varying вход
+out lowp vec4 texcoord;      // выход фрагментного шейдера или varying выход
+lowp float foo;              // переменная
+</code></pre>
+<h2 id="форматы-текстур">Форматы текстур</h2>
+<p>Текстуры - это еще одно место, где спецификация говорит, что фактическая точность,
+используемая, может быть больше, чем запрошенная точность.</p>
+<p>В качестве примера вы можете запросить 16-битную, 4-битную на канал текстуру, как это</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texImage2D(
+  gl.TEXTURE_2D,               // target
+  0,                           // mip level
+  gl.RGBA4,                    // internal format
+  width,                       // width
+  height,                      // height
+  0,                           // border
+  gl.RGBA,                     // format
+  gl.UNSIGNED_SHORT_4_4_4_4,   // type
+  null,
+);
+</code></pre>
+<p>Но реализация может на самом деле использовать формат более высокого разрешения внутренне.
+Я считаю, что большинство настольных компьютеров делают это, а большинство мобильных GPU - нет.</p>
+<p>Мы можем протестировать. Сначала мы запросим 4-битную на канал текстуру, как выше.
+Затем мы <a href="webgl-render-to-texture.html">отрендерим в нее</a>, рендеря
+некоторый градиент от 0 до 1.</p>
+<p>Затем мы отрендерим эту текстуру на холст. Если текстура действительно 4 бита
+на канал внутренне, будет только 16 уровней цвета из градиента,
+который мы нарисовали. Если текстура действительно 8 бит на канал, мы увидим 256 уровней
+цветов.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-precision-textures.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-precision-textures.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Запуская это на моем смартфоне, я вижу, что текстура использует 4 бита на канал
+(или по крайней мере 4 бита в красном, поскольку я не тестировал другие каналы).</p>
+<div class="webgl_center"><img src="../resources/mobile-4-4-4-4-texture-no-dither.png" style="image-rendering: pixelated; width: 600px;"></div>
+<p>Тогда как на моем настольном компьютере я могу видеть, что текстура на самом деле использует 8 бит на
+канал, даже though я только запросил 4.</p>
+<div class="webgl_center"><img src="../resources/desktop-4-4-4-4-texture-no-dither.png" style="image-rendering: pixelated; width: 600px;"></div>
+<p>Одна вещь для заметки в том, что по умолчанию WebGL может дизерить свои результаты, чтобы сделать
+градации, как эта, выглядеть более гладкими. Вы можете выключить дизеринг с</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.disable(gl.DITHER);
+</code></pre>
+<p>Если я не выключаю дизеринг, то мой смартфон производит это.</p>
+<div class="webgl_center"><img src="../resources/mobile-4-4-4-4-texture-dither.png" style="image-rendering: pixelated; width: 600px;"></div>
+<p>Сходу единственное место, где это действительно возникло бы, это если бы вы
+использовали некоторый формат текстуры с более низким битовым разрешением как цель рендеринга и не
+тестировали на устройстве, где эта текстура действительно имеет это более низкое разрешение.
+Если вы только тестировали на настольном компьютере, любые проблемы, которые это вызывает, могут не быть очевидными.</p>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-precision-issues.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-precision-issues.html" >Deutsch</a>
+    <option value="/webgl/lessons/ja/webgl-precision-issues.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-precision-issues.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-precision-issues.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-precision-issues.html" selected>Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-precision-issues.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Основы</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-getting-webgl2.html">Как использовать WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl-fundamentals.html">Основы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-how-it-works.html">Как это работает</a></li>
+<li><a href="/webgl/lessons/ru/webgl-shaders-and-glsl.html">Шейдеры и GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Диаграмма состояния</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl2-whats-new.html">Что нового в WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl1-to-webgl2.html">Переход с WebGL1 на WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl1-to-webgl2-fundamentals.html">Отличия от WebGLFundamentals.org до WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Обработка изображений</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-image-processing.html">Обработка изображений</a></li>
+<li><a href="/webgl/lessons/ru/webgl-image-processing-continued.html">Продвинутая обработка изображений</a></li>
+        </ul>
+  <li>2D трансформации, повороты, масштабирование и матричные операции</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-2d-translation.html">2D Трансляция</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-rotation.html">2D Вращение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-scale.html">2D Масштабирование</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-matrices.html">2D Матрицы</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-orthographic.html">Ортографическая 3D</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-perspective.html">3D Перспектива</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-camera.html">3D - Камеры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-matrix-naming.html">3D - Именование матриц</a></li>
+        </ul>
+  <li>Освещение</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-lighting-directional.html">Направленное освещение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-lighting-point.html">Точечное освещение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-lighting-spot.html">Прожекторное освещение</a></li>
+        </ul>
+  <li>Организация и рефакторинг</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-less-code-more-fun.html">Меньше кода, больше удовольствия</a></li>
+<li><a href="/webgl/lessons/ru/webgl-drawing-multiple-things.html">Рисование множественных объектов</a></li>
+<li><a href="/webgl/lessons/ru/webgl-scene-graph.html">Графы сцен</a></li>
+        </ul>
+  <li>Геометрия</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-geometry-lathe.html">3D Геометрия - Токарная обработка</a></li>
+<li><a href="/webgl/lessons/ru/webgl-load-obj.html">Загрузка .obj файлов</a></li>
+<li><a href="/webgl/lessons/ru/webgl-load-obj-w-mtl.html">Загрузка .obj с .mtl файлами</a></li>
+        </ul>
+  <li>Текстуры</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-textures.html">Текстуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-data-textures.html">Data Textures</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2-textures.html">Использование 2 или более текстур</a></li>
+<li><a href="/webgl/lessons/ru/webgl-cors-permission.html">Cross Origin Images</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-perspective-correct-texturemapping.html">Перспективно-корректное наложение текстур</a></li>
+<li><a href="/webgl/lessons/ru/webgl-planar-projection-mapping.html">Планарное и перспективное проекционное отображение</a></li>
+        </ul>
+  <li>Рендеринг в текстуру</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-render-to-texture.html">Рендеринг в текстуру</a></li>
+        </ul>
+  <li>Тени</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-shadows.html">Тени</a></li>
+        </ul>
+  <li>Техники</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-matrix-stack.html">2D - Стек Матриц</a></li>
+<li><a href="/webgl/lessons/ru/webgl-sprites.html">Спрайты</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-cube-maps.html">Кубические карты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-environment-maps.html">Карты окружения</a></li>
+<li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
+<li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+        </ul>
+  <li>Текст</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-text-html.html">Текст - HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-canvas2d.html">Текст - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-texture.html">Текст - Использование текстуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-glyphs.html">Текст - Использование текстуры глифов</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Советы</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-smallest-programs.html">Самые маленькие программы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-drawing-without-data.html">Рисование без данных</a></li>
+<li><a href="/webgl/lessons/ru/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/ru/webgl-pulling-vertices.html">Вытягивание вершин</a></li>
+        </ul>
+  <li>Оптимизация</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-indexed-vertices.html">Индексированные вершины (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-instanced-drawing.html">Инстансинг (Instanced Drawing)</a></li>
+        </ul>
+  <li>Разное</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-setup-and-installation.html">Настройка и установка</a></li>
+<li><a href="/webgl/lessons/ru/webgl-boilerplate.html">Boilerplate</a></li>
+<li><a href="/webgl/lessons/ru/webgl-resizing-the-canvas.html">Изменение размера Canvas</a></li>
+<li><a href="/webgl/lessons/ru/webgl-animation.html">Анимация</a></li>
+<li><a href="/webgl/lessons/ru/webgl-points-lines-triangles.html">Точки, линии и треугольники</a></li>
+<li><a href="/webgl/lessons/ru/webgl-multiple-views.html">Множественные виды, множественные canvas</a></li>
+<li><a href="/webgl/lessons/ru/webgl-visualizing-the-camera.html">Визуализация камеры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-and-alpha.html">WebGL2 и альфа-канал</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-vs-3d-library.html">2D против 3D библиотек</a></li>
+<li><a href="/webgl/lessons/ru/webgl-anti-patterns.html">Анти-паттерны</a></li>
+<li><a href="/webgl/lessons/ru/webgl-matrix-vs-math.html">WebGL2 Матрицы против математических матриц</a></li>
+<li><a href="/webgl/lessons/ru/webgl-precision-issues.html">Проблемы точности</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+        </ul>
+  <li>Справочник</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-attributes.html">Атрибуты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-texture-units.html">Текстурные юниты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/ru/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/ru/webgl-references.html">Ссылки</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">API документация</a></li>
+  <li><a href="https://twgljs.org">TWGL, легковесная библиотека-помощник для WebGL</a></li>
+  <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
+</ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Есть предложения или замечания? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Создайте issue на GitHub</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Проблемы точности';
+            var disqus_title = 'WebGL2 Проблемы точности';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Спасибо <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>за <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} вкладов</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

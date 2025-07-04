@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/ru/webgl-load-obj.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Как парсить и отображать .OBJ файл">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-load-obj_ru.jpg">
+
+<meta property="og:title" content="WebGL2 Загрузка Obj">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-load-obj_ru.jpg">
+<meta property="og:description" content="Как парсить и отображать .OBJ файл">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-load-obj.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Загрузка Obj">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-load-obj.html">
+<meta name="twitter:description" content="Как парсить и отображать .OBJ файл">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-load-obj_ru.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-load-obj.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-load-obj_ru.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-load-obj.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-load-obj.html",
+      "inLanguage":"ru",
+      "name":"WebGL2 Загрузка Obj",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-load-obj.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Загрузка Obj</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-load-obj.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-load-obj.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-load-obj.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-load-obj.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-load-obj.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-load-obj.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-load-obj.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-load-obj.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-load-obj.html" >Deutsch</a>
+    <option value="/webgl/lessons/ja/webgl-load-obj.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-load-obj.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-load-obj.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-load-obj.html" selected>Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-load-obj.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Содержание</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/ru/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Загрузка Obj</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Файлы Wavefront .obj являются одним из самых распространенных форматов
+3D файлов, которые вы можете найти в интернете. Они не так сложны для
+парсинга в самых распространенных формах, поэтому давайте разберем один. Это
+надеюсь, предоставит полезный пример для парсинга 3D форматов
+в общем.</p>
+<p><strong>Отказ от ответственности:</strong> Этот парсер .OBJ не предназначен для того, чтобы быть исчерпывающим или
+безупречным или обрабатывать каждый .OBJ файл. Скорее он предназначен как
+упражнение для прохождения через обработку того, с чем мы сталкиваемся по пути.
+Тем не менее, если вы столкнетесь с большими проблемами и решениями, комментарий
+внизу может быть полезен для других, если они решат
+использовать этот код.</p>
+<p>Лучшая документация, которую я нашел для формата .OBJ, находится
+<a href="http://paulbourke.net/dataformats/obj/">здесь</a>. Хотя
+<a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000507.shtml">эта страница</a>
+ссылается на многие другие документы, включая то, что кажется
+<a href="https://web.archive.org/web/20200324065233/http://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf">оригинальной документацией</a>.</p>
+<p>Давайте посмотрим на простой пример. Вот файл cube.obj, экспортированный из стандартной сцены blender.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-txt"># Blender v2.80 (sub 75) OBJ File: ''
+# www.blender.org
+mtllib cube.mtl
+o Cube
+v 1.000000 1.000000 -1.000000
+v 1.000000 -1.000000 -1.000000
+v 1.000000 1.000000 1.000000
+v 1.000000 -1.000000 1.000000
+v -1.000000 1.000000 -1.000000
+v -1.000000 -1.000000 -1.000000
+v -1.000000 1.000000 1.000000
+v -1.000000 -1.000000 1.000000
+vt 0.375000 0.000000
+vt 0.625000 0.000000
+vt 0.625000 0.250000
+vt 0.375000 0.250000
+vt 0.375000 0.250000
+vt 0.625000 0.250000
+vt 0.625000 0.500000
+vt 0.375000 0.500000
+vt 0.625000 0.750000
+vt 0.375000 0.750000
+vt 0.625000 0.750000
+vt 0.625000 1.000000
+vt 0.375000 1.000000
+vt 0.125000 0.500000
+vt 0.375000 0.500000
+vt 0.375000 0.750000
+vt 0.125000 0.750000
+vt 0.625000 0.500000
+vt 0.875000 0.500000
+vt 0.875000 0.750000
+vn 0.0000 1.0000 0.0000
+vn 0.0000 0.0000 1.0000
+vn -1.0000 0.0000 0.0000
+vn 0.0000 -1.0000 0.0000
+vn 1.0000 0.0000 0.0000
+vn 0.0000 0.0000 -1.0000
+usemtl Material
+s off
+f 1/1/1 5/2/1 7/3/1 3/4/1
+f 4/5/2 3/6/2 7/7/2 8/8/2
+f 8/8/3 7/7/3 5/9/3 6/10/3
+f 6/10/4 2/11/4 4/12/4 8/13/4
+f 2/14/5 1/15/5 3/16/5 4/17/5
+f 6/18/6 5/19/6 1/20/6 2/11/6
+</code></pre>
+<p>Даже не глядя на документацию, мы, вероятно, можем понять,
+что строки, начинающиеся с <code class="notranslate" translate="no">v</code>, являются позициями, строки, начинающиеся
+с <code class="notranslate" translate="no">vt</code>, являются координатами текстуры, и строки, начинающиеся
+с <code class="notranslate" translate="no">vn</code>, являются нормалями. Осталось разобраться с остальным.</p>
+<p>Похоже, что .OBJ файлы являются текстовыми файлами, поэтому первое, что нам нужно
+сделать, это загрузить текстовый файл. К счастью, в 2020 году это очень просто,
+если мы используем <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await">async/await</a>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">async function main() {
+  ...
+
+  const response = await fetch('resources/models/cube/cube.obj');
+  const text = await response.text();
+</code></pre>
+<p>Далее выглядит так, что мы можем парсить его построчно, и что
+каждая строка имеет форму</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">ключевое_слово данные данные данные данные ...
+</code></pre>
+<p>где первая вещь в строке - это ключевое слово, а данные
+разделены пробелами. Строки, начинающиеся с <code class="notranslate" translate="no">#</code>, являются комментариями.</p>
+<p>Итак, давайте настроим код для парсинга каждой строки, пропуска пустых строк
+и комментариев, а затем вызова некоторой функции на основе ключевого слова</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">+function parseOBJ(text) {
++
++  const keywords = {
++  };
++
++  const keywordRE = /(\w*)(?: )*(.*)/;
++  const lines = text.split('\n');
++  for (let lineNo = 0; lineNo &lt; lines.length; ++lineNo) {
++    const line = lines[lineNo].trim();
++    if (line === '' || line.startsWith('#')) {
++      continue;
++    }
++    const parts = line.split(/\s+/);
++    const m = keywordRE.exec(line);
++    if (!m) {
++      continue;
++    }
++    const [, keyword, unparsedArgs] = m;
++    const parts = line.split(/\s+/).slice(1);
++    const handler = keywords[keyword];
++    if (!handler) {
++      console.warn('unhandled keyword:', keyword, 'at line', lineNo + 1);
++      continue;
++    }
++    handler(parts, unparsedArgs);
++  }
+}
+</code></pre>
+<p>Некоторые вещи для заметки: Мы обрезаем каждую строку, чтобы удалить ведущие и завершающие
+пробелы. Я не знаю, нужно ли это, но думаю, что это не может навредить.
+Мы разделяем строку по пробелам, используя <code class="notranslate" translate="no">/\s+/</code>. Снова я не знаю, нужно ли это.
+Может ли быть больше одного пробела между данными? Могут ли
+быть табуляции? Не знаю, но казалось безопаснее предположить, что есть вариации
+там, учитывая, что это текстовый формат.</p>
+<p>В противном случае мы извлекаем первую часть как ключевое слово, а затем ищем функцию
+для этого ключевого слова и вызываем ее, передавая данные после ключевого слова. Итак, теперь нам
+просто нужно заполнить эти функции.</p>
+<p>Мы угадали данные <code class="notranslate" translate="no">v</code>, <code class="notranslate" translate="no">vt</code> и <code class="notranslate" translate="no">vn</code> выше. Документация говорит, что <code class="notranslate" translate="no">f</code>
+означает “face” или полигон, где каждый кусок данных является
+индексами в позиции, координаты текстуры и нормали.</p>
+<p>Индексы основаны на 1, если положительные, или относительны к количеству
+вершин, разобранных до сих пор, если отрицательные.
+Порядок индексов: позиция/текстурная_координата/нормаль, и
+что все, кроме позиции, являются необязательными, поэтому</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-txt">f 1 2 3              # индексы только для позиций
+f 1/1 2/2 3/3        # индексы для позиций и текстурных координат
+f 1/1/1 2/2/2 3/3/3  # индексы для позиций, текстурных координат и нормалей
+f 1//1 2//2 3//3     # индексы для позиций и нормалей
+</code></pre>
+<p><code class="notranslate" translate="no">f</code> может иметь больше 3 вершин, например 4 для четырехугольника
+Мы знаем, что WebGL может рисовать только треугольники, поэтому нам нужно конвертировать
+данные в треугольники. Не сказано, может ли грань иметь больше
+4 вершин, ни не сказано, должна ли грань быть выпуклой или
+может ли она быть вогнутой. Пока давайте предположим, что они вогнутые.</p>
+<p>Также, в общем, в WebGL мы не используем разные индексы для
+позиций, текстурных координат и нормалей. Вместо этого “webgl вершина”
+является комбинацией всех данных для этой вершины. Так, например,
+чтобы нарисовать куб, WebGL требует 36 вершин, каждая грань - это 2 треугольника,
+каждый треугольник - это 3 вершины. 6 граней * 2 треугольника * 3 вершины
+на треугольник = 36. Хотя есть только 8 уникальных позиций,
+6 уникальных нормалей и кто знает для текстурных координат. Итак, нам
+нужно будет прочитать индексы вершин грани и сгенерировать “webgl вершину”,
+которая является комбинацией данных всех 3 вещей. <a href="webgl-pulling-vertices.html">*</a></p>
+<p>Итак, учитывая все это, выглядит так, что мы можем парсить эти части следующим образом</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
++  // потому что индексы основаны на 1, давайте просто заполним 0-е данные
++  const objPositions = [[0, 0, 0]];
++  const objTexcoords = [[0, 0]];
++  const objNormals = [[0, 0, 0]];
++
++  // тот же порядок, что и индексы `f`
++  const objVertexData = [
++    objPositions,
++    objTexcoords,
++    objNormals,
++  ];
++
++  // тот же порядок, что и индексы `f`
++  let webglVertexData = [
++    [],   // позиции
++    [],   // текстурные координаты
++    [],   // нормали
++  ];
++
++  function addVertex(vert) {
++    const ptn = vert.split('/');
++    ptn.forEach((objIndexStr, i) =&gt; {
++      if (!objIndexStr) {
++        return;
++      }
++      const objIndex = parseInt(objIndexStr);
++      const index = objIndex + (objIndex &gt;= 0 ? 0 : objVertexData[i].length);
++      webglVertexData[i].push(...objVertexData[i][index]);
++    });
++  }
++
++  const keywords = {
++    v(parts) {
++      objPositions.push(parts.map(parseFloat));
++    },
++    vn(parts) {
++      objNormals.push(parts.map(parseFloat));
++    },
++    vt(parts) {
++      objTexcoords.push(parts.map(parseFloat));
++    },
++    f(parts) {
++      const numTriangles = parts.length - 2;
++      for (let tri = 0; tri &lt; numTriangles; ++tri) {
++        addVertex(parts[0]);
++        addVertex(parts[tri + 1]);
++        addVertex(parts[tri + 2]);
++      }
++    },
++  };
++
++  const keywordRE = /(\w*)(?: )*(.*)/;
++  const lines = text.split('\n');
++  for (let lineNo = 0; lineNo &lt; lines.length; ++lineNo) {
++    const line = lines[lineNo].trim();
++    if (line === '' || line.startsWith('#')) {
++      continue;
++    }
++    const m = keywordRE.exec(line);
++    if (!m) {
++      continue;
++    }
++    const [, keyword, unparsedArgs] = m;
++    const parts = line.split(/\s+/).slice(1);
++    const handler = keywords[keyword];
++    if (!handler) {
++      console.warn('unhandled keyword:', keyword, 'at line', lineNo + 1);
++      continue;
++    }
++    handler(parts, unparsedArgs);
++  }
+
+  return {
+    position: webglVertexData[0],
+    texcoord: webglVertexData[1],
+    normal: webglVertexData[2],
+  };
+}
+
+Код выше создает 3 массива для хранения позиций, текстурных координат и
+нормалей, разобранных из файла объекта. Он также создает 3 массива для хранения
+того же для WebGL. Они также помещены в массивы в том же порядке,
+что и индексы `f`, чтобы было легко ссылаться при парсинге `f`.
+
+Другими словами, строка `f` типа
+
+```txt
+f 1/2/3 4/5/6 7/8/9
+</code></pre>
+<p>Одна из этих частей <code class="notranslate" translate="no">4/5/6</code> говорит “используй позицию 4” для этой вершины грани, “используй
+текстурную координату 5” и “используй нормаль 6”, но помещая массивы позиций, текстурных координат и нормалей
+самих в массив, массив <code class="notranslate" translate="no">objVertexData</code>, мы можем упростить это до
+“используй элемент n из objData i для webglData i”, что позволяет нам сделать код проще.</p>
+<p>В конце нашей функции мы возвращаем данные, которые мы построили</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  ...
+
+  return {
+    position: webglVertexData[0],
+    texcoord: webglVertexData[1],
+    normal: webglVertexData[2],
+  };
+}
+</code></pre>
+<p>Все, что осталось сделать, это нарисовать данные. Сначала мы будем использовать вариацию
+шейдеров из <a href="webgl-3d-lighting-directional.html">статьи о направленном освещении</a>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
+  in vec4 a_position;
+  in vec3 a_normal;
+
+  uniform mat4 u_projection;
+  uniform mat4 u_view;
+  uniform mat4 u_world;
+
+  out vec3 v_normal;
+
+  void main() {
+    gl_Position = u_projection * u_view * u_world * a_position;
+    v_normal = mat3(u_world) * a_normal;
+  }
+`;
+
+const fs = `#version 300 es
+  precision highp float;
+
+  in vec3 v_normal;
+
+  uniform vec4 u_diffuse;
+  uniform vec3 u_lightDirection;
+
+  out vec4 outColor;
+
+  void main () {
+    vec3 normal = normalize(v_normal);
+    float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
+    outColor = vec4(u_diffuse.rgb * fakeLight, u_diffuse.a);
+  }
+`;
+</code></pre>
+<p>Затем, используя код из статьи о
+<a href="webgl-less-code-more-fun.html">меньше кода больше веселья</a>
+сначала мы загрузим наши данные</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">async function main() {
+  // Получаем WebGL контекст
+  /** @type {HTMLCanvasElement} */
+  const canvas = document.querySelector(&quot;#canvas&quot;);
+  const gl = canvas.getContext(&quot;webgl2&quot;);
+  if (!gl) {
+    return;
+  }
+
+  // Говорим twgl сопоставить position с a_position и т.д..
+  twgl.setAttributePrefix(&quot;a_&quot;);
+
+  ... шейдеры ...
+
+  // компилирует и связывает шейдеры, ищет расположения атрибутов и uniform'ов
+  const meshProgramInfo = twgl.createProgramInfo(gl, [vs, fs]);
+
+  const response = await fetch('resources/models/cube/cube.obj');
+  const text = await response.text();
+  const data = parseOBJ(text);
+
+  // Потому что data - это просто именованные массивы, как этот
+  //
+  // {
+  //   position: [...],
+  //   texcoord: [...],
+  //   normal: [...],
+  // }
+  //
+  // и потому что эти имена соответствуют атрибутам в нашем вершинном
+  // шейдере, мы можем передать это напрямую в `createBufferInfoFromArrays`
+  // из статьи &quot;меньше кода больше веселья&quot;.
+
+  // создаем буфер для каждого массива, вызывая
+  // gl.createBuffer, gl.bindBuffer, gl.bufferData
+  const bufferInfo = webglUtils.createBufferInfoFromArrays(gl, data);
+  // заполняет вершинный массив, вызывая gl.createVertexArray, gl.bindVertexArray
+  // затем gl.bindBuffer, gl.enableVertexAttribArray, и gl.vertexAttribPointer для каждого атрибута
+  const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
+</code></pre>
+<p>и затем мы нарисуем это</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  const cameraTarget = [0, 0, 0];
+  const cameraPosition = [0, 0, 4];
+  const zNear = 0.1;
+  const zFar = 50;
+
+  function degToRad(deg) {
+    return deg * Math.PI / 180;
+  }
+
+  function render(time) {
+    time *= 0.001;  // конвертируем в секунды
+
+    twgl.resizeCanvasToDisplaySize(gl.canvas);
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.CULL_FACE);
+
+    const fieldOfViewRadians = degToRad(60);
+    const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+    const projection = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
+
+    const up = [0, 1, 0];
+    // Вычисляем матрицу камеры, используя look at.
+    const camera = m4.lookAt(cameraPosition, cameraTarget, up);
+
+    // Делаем view матрицу из матрицы камеры.
+    const view = m4.inverse(camera);
+
+    const sharedUniforms = {
+      u_lightDirection: m4.normalize([-1, 3, 5]),
+      u_view: view,
+      u_projection: projection,
+    };
+
+    gl.useProgram(meshProgramInfo.program);
+
+    // вызывает gl.uniform
+    twgl.setUniforms(meshProgramInfo, sharedUniforms);
+
+    // устанавливаем атрибуты для этой части.
+    gl.bindVertexArray(vao);
+
+    // вызывает gl.uniform
+    twgl.setUniforms(meshProgramInfo, {
+      u_world: m4.yRotation(time),
+      u_diffuse: [1, 0.7, 0.5, 1],
+    });
+
+    // вызывает gl.drawArrays или gl.drawElements
+    twgl.drawBufferInfo(gl, bufferInfo);
+
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+}
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-load-obj.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-load-obj.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<h2 id="множество-заметок">Множество заметок</h2>
+<h3 id="загрузчик-выше-неполный">Загрузчик выше неполный</h3>
+<p>Вы можете <a href="http://paulbourke.net/dataformats/obj/">прочитать больше о формате .obj</a>.
+Есть тонны функций, которые код выше не поддерживает. Также код не был
+протестирован на очень многих .obj файлах, поэтому, возможно, есть скрытые ошибки. Тем не менее, я
+подозреваю, что большинство .obj файлов в интернете используют только функции, показанные выше, поэтому я подозреваю,
+что это, вероятно, полезный пример.</p>
+<h3 id="загрузчик-не-проверяет-ошибки">Загрузчик не проверяет ошибки</h3>
+<p>Пример: ключевое слово <code class="notranslate" translate="no">vt</code> может иметь 3 значения на запись вместо только 2. 3 значения
+были бы для 3D текстур, что не распространено, поэтому я не беспокоился. Если бы вы передали ему
+файл с 3D текстурными координатами, вам пришлось бы изменить шейдеры для обработки 3D
+текстур и код, который генерирует <code class="notranslate" translate="no">WebGLBuffers</code> (вызывает <code class="notranslate" translate="no">createBufferInfoFromArrays</code>),
+чтобы сказать ему, что это 3 компонента на UV координату.</p>
+<h3 id="он-предполагает-что-данные-однородны">Он предполагает, что данные однородны</h3>
+<p>Я не знаю, могут ли некоторые ключевые слова <code class="notranslate" translate="no">f</code> иметь 3 записи,
+а другие только 2 в том же файле. Если это возможно, код выше не
+обрабатывает это.</p>
+<p>Код также предполагает, что если позиции вершин имеют x, y, z, они все
+имеют x, y, z. Если есть файлы, где некоторые позиции вершин
+имеют x, y, z, другие имеют только x, y, а третьи имеют x, y, z, r, g, b,
+тогда нам пришлось бы рефакторить.</p>
+<h3 id="вы-могли-бы-поместить-все-данные-в-один-буфер">Вы могли бы поместить все данные в один буфер</h3>
+<p>Код выше помещает данные для позиции, текстурной координаты, нормали в отдельные буферы.
+Вы могли бы поместить их в один буфер, либо перемешивая их
+pos,uv,nrm,pos,uv,nrm,… но тогда вам нужно было бы изменить
+то, как настроены атрибуты, чтобы передать strides и offsets.</p>
+<p>Расширяя это, вы могли бы даже поместить данные для всех частей в те же
+буферы, где как в настоящее время это один буфер на тип данных на часть.</p>
+<p>Я оставил это, потому что не думаю, что это так важно, и потому что это загромоздило бы пример.</p>
+<h3 id="вы-могли-бы-переиндексировать-вершины">Вы могли бы переиндексировать вершины</h3>
+<p>Код выше расширяет вершины в плоские списки треугольников. Мы могли бы переиндексировать
+вершины. Особенно если мы поместим все данные вершин в один буфер или по крайней мере один
+буфер на тип, но разделенный между частями, тогда в основном для каждого ключевого слова <code class="notranslate" translate="no">f</code> вы конвертируете
+индексы в положительные числа (переводите отрицательные числа в правильный положительный индекс),
+и затем набор чисел является <em>id</em> для этой вершины. Так что вы можете хранить <em>карту id к индексу</em>
+для помощи в поиске индексов.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const idToIndexMap = {}
+const webglIndices = [];
+
+function addVertex(vert) {
+  const ptn = vert.split('/');
+  // сначала конвертируем все индексы в положительные индексы
+  const indices = ptn.forEach((objIndexStr, i) =&gt; {
+    if (!objIndexStr) {
+      return;
+    }
+    const objIndex = parseInt(objIndexStr);
+    return objIndex + (objIndex &gt;= 0 ? 0 : objVertexData[i].length);
+  });
+  // теперь посмотрим, что эта конкретная комбинация позиции,текстурной координаты,нормали
+  // уже существует
+  const id = indices.join(',');
+  let vertIndex = idToIndexMap[id];
+  if (!vertIndex) {
+    // Нет. Добавляем это.
+    vertIndex = webglVertexData[0].length / 3;
+    idToIndexMap[id] = vertexIndex;
+    indices.forEach((index, i) =&gt; {
+      if (index !== undefined) {
+        webglVertexData[i].push(...objVertexData[i][index]);
+      }
+    }
+  }
+  webglIndices.push(vertexIndex);
+}
+</code></pre>
+<p>Или вы могли бы просто вручную переиндексировать, если думаете, что это важно.</p>
+<h3 id="код-не-обрабатывает-только-позиции-или-только-позиции--текстурные-координаты">Код не обрабатывает только позиции или только позиции + текстурные координаты.</h3>
+<p>Код, как написано, предполагает, что нормали существуют. Как мы делали для
+<a href="webgl-3d-geometry-lathe.html">примера с токарным станком</a>, мы могли бы генерировать нормали,
+если они не существуют, принимая во внимание группы сглаживания, если мы хотим. Или мы
+могли бы также использовать разные шейдеры, которые либо не используют нормали, либо вычисляют нормали.</p>
+<h3 id="вы-не-должны-использовать-obj-файлы">Вы не должны использовать .OBJ файлы</h3>
+<p>Честно говоря, вы не должны использовать .OBJ файлы, по моему мнению. Я в основном написал это как пример.
+Если вы можете извлечь данные вершин из файла, вы можете написать импортеры для любого формата.</p>
+<p>Проблемы с .OBJ файлами включают</p>
+<ul>
+<li>
+<p>нет поддержки для света или камер</p>
+<p>Это может быть нормально, потому что, возможно, вы загружаете кучу частей
+(как деревья, кусты, камни для ландшафта), и вам не нужны камеры
+или свет. Тем не менее, приятно иметь опцию, если вы хотите загрузить целые сцены
+как их создал какой-то художник.</p>
+</li>
+<li>
+<p>Нет иерархии, Нет графа сцены</p>
+<p>Если вы хотите загрузить машину, идеально вы хотели бы иметь возможность поворачивать колеса
+и иметь их вращение вокруг их центров. Это невозможно с .OBJ,
+потому что .OBJ не содержит <a href="webgl-scene-graph.html">граф сцены</a>. Лучшие форматы
+включают эти данные, что намного более полезно, если вы хотите иметь возможность ориентировать
+части, сдвинуть окно, открыть дверь, двигать ноги персонажа и т.д…</p>
+</li>
+<li>
+<p>нет поддержки для анимации или скиннинга</p>
+<p>Мы прошли <a href="webgl-skinning.html">скиннинг</a> в другом месте, но .OBJ не предоставляет
+данных для скиннинга и нет данных для анимации. Снова это может быть нормально
+для ваших потребностей, но я бы предпочел один формат, который обрабатывает больше.</p>
+</li>
+<li>
+<p>.OBJ не поддерживает более современные материалы.</p>
+<p>Материалы обычно довольно специфичны для движка, но в последнее время есть по крайней мере
+некоторое соглашение о физически основанных рендеринговых материалах. .OBJ не поддерживает
+это, насколько я знаю.</p>
+</li>
+<li>
+<p>.OBJ требует парсинга</p>
+<p>Если вы не делаете универсальный просмотрщик для пользователей, чтобы загружать .OBJ файлы в него,
+лучшая практика - использовать формат, который требует как можно меньше парсинга.
+.GLTF - это формат, разработанный для WebGL. Он использует JSON, поэтому вы можете просто загрузить его.
+Для бинарных данных он использует форматы, которые готовы загружаться в GPU напрямую,
+нет необходимости парсить числа в массивы большую часть времени.</p>
+<p>Вы можете увидеть пример загрузки .GLTF файла в <a href="webgl-skinning.html">статье о скиннинге</a>.</p>
+<p>Если у вас есть .OBJ файлы, которые вы хотите использовать, лучшая практика - конвертировать их
+в какой-то другой формат сначала, офлайн, а затем использовать лучший формат на вашей странице.</p>
+</li>
+</ul>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-load-obj.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-load-obj.html" >Deutsch</a>
+    <option value="/webgl/lessons/ja/webgl-load-obj.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-load-obj.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-load-obj.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-load-obj.html" selected>Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-load-obj.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Основы</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-getting-webgl2.html">Как использовать WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl-fundamentals.html">Основы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-how-it-works.html">Как это работает</a></li>
+<li><a href="/webgl/lessons/ru/webgl-shaders-and-glsl.html">Шейдеры и GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Диаграмма состояния</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl2-whats-new.html">Что нового в WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl1-to-webgl2.html">Переход с WebGL1 на WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl1-to-webgl2-fundamentals.html">Отличия от WebGLFundamentals.org до WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Обработка изображений</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-image-processing.html">Обработка изображений</a></li>
+<li><a href="/webgl/lessons/ru/webgl-image-processing-continued.html">Продвинутая обработка изображений</a></li>
+        </ul>
+  <li>2D трансформации, повороты, масштабирование и матричные операции</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-2d-translation.html">2D Трансляция</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-rotation.html">2D Вращение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-scale.html">2D Масштабирование</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-matrices.html">2D Матрицы</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-orthographic.html">Ортографическая 3D</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-perspective.html">3D Перспектива</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-camera.html">3D - Камеры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-matrix-naming.html">3D - Именование матриц</a></li>
+        </ul>
+  <li>Освещение</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-lighting-directional.html">Направленное освещение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-lighting-point.html">Точечное освещение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-lighting-spot.html">Прожекторное освещение</a></li>
+        </ul>
+  <li>Организация и рефакторинг</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-less-code-more-fun.html">Меньше кода, больше удовольствия</a></li>
+<li><a href="/webgl/lessons/ru/webgl-drawing-multiple-things.html">Рисование множественных объектов</a></li>
+<li><a href="/webgl/lessons/ru/webgl-scene-graph.html">Графы сцен</a></li>
+        </ul>
+  <li>Геометрия</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-geometry-lathe.html">3D Геометрия - Токарная обработка</a></li>
+<li><a href="/webgl/lessons/ru/webgl-load-obj.html">Загрузка .obj файлов</a></li>
+<li><a href="/webgl/lessons/ru/webgl-load-obj-w-mtl.html">Загрузка .obj с .mtl файлами</a></li>
+        </ul>
+  <li>Текстуры</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-textures.html">Текстуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-data-textures.html">Data Textures</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2-textures.html">Использование 2 или более текстур</a></li>
+<li><a href="/webgl/lessons/ru/webgl-cors-permission.html">Cross Origin Images</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-perspective-correct-texturemapping.html">Перспективно-корректное наложение текстур</a></li>
+<li><a href="/webgl/lessons/ru/webgl-planar-projection-mapping.html">Планарное и перспективное проекционное отображение</a></li>
+        </ul>
+  <li>Рендеринг в текстуру</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-render-to-texture.html">Рендеринг в текстуру</a></li>
+        </ul>
+  <li>Тени</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-shadows.html">Тени</a></li>
+        </ul>
+  <li>Техники</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-matrix-stack.html">2D - Стек Матриц</a></li>
+<li><a href="/webgl/lessons/ru/webgl-sprites.html">Спрайты</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-cube-maps.html">Кубические карты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-environment-maps.html">Карты окружения</a></li>
+<li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
+<li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+        </ul>
+  <li>Текст</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-text-html.html">Текст - HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-canvas2d.html">Текст - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-texture.html">Текст - Использование текстуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-glyphs.html">Текст - Использование текстуры глифов</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Советы</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-smallest-programs.html">Самые маленькие программы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-drawing-without-data.html">Рисование без данных</a></li>
+<li><a href="/webgl/lessons/ru/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/ru/webgl-pulling-vertices.html">Вытягивание вершин</a></li>
+        </ul>
+  <li>Оптимизация</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-indexed-vertices.html">Индексированные вершины (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-instanced-drawing.html">Инстансинг (Instanced Drawing)</a></li>
+        </ul>
+  <li>Разное</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-setup-and-installation.html">Настройка и установка</a></li>
+<li><a href="/webgl/lessons/ru/webgl-boilerplate.html">Boilerplate</a></li>
+<li><a href="/webgl/lessons/ru/webgl-resizing-the-canvas.html">Изменение размера Canvas</a></li>
+<li><a href="/webgl/lessons/ru/webgl-animation.html">Анимация</a></li>
+<li><a href="/webgl/lessons/ru/webgl-points-lines-triangles.html">Точки, линии и треугольники</a></li>
+<li><a href="/webgl/lessons/ru/webgl-multiple-views.html">Множественные виды, множественные canvas</a></li>
+<li><a href="/webgl/lessons/ru/webgl-visualizing-the-camera.html">Визуализация камеры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-and-alpha.html">WebGL2 и альфа-канал</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-vs-3d-library.html">2D против 3D библиотек</a></li>
+<li><a href="/webgl/lessons/ru/webgl-anti-patterns.html">Анти-паттерны</a></li>
+<li><a href="/webgl/lessons/ru/webgl-matrix-vs-math.html">WebGL2 Матрицы против математических матриц</a></li>
+<li><a href="/webgl/lessons/ru/webgl-precision-issues.html">Проблемы точности</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+        </ul>
+  <li>Справочник</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-attributes.html">Атрибуты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-texture-units.html">Текстурные юниты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/ru/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/ru/webgl-references.html">Ссылки</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">API документация</a></li>
+  <li><a href="https://twgljs.org">TWGL, легковесная библиотека-помощник для WebGL</a></li>
+  <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
+</ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Есть предложения или замечания? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Создайте issue на GitHub</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Загрузка Obj';
+            var disqus_title = 'WebGL2 Загрузка Obj';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Спасибо <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>за <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} вкладов</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

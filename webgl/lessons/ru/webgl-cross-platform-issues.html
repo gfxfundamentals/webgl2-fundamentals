@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/ru/webgl-cross-platform-issues.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Вещи, о которых нужно знать при попытке сделать ваше WebGL приложение работающим везде.">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-cross-platform-issues_ru.jpg">
+
+<meta property="og:title" content="WebGL2 Cross Platform Issues">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-cross-platform-issues_ru.jpg">
+<meta property="og:description" content="Вещи, о которых нужно знать при попытке сделать ваше WebGL приложение работающим везде.">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-cross-platform-issues.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Cross Platform Issues">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-cross-platform-issues.html">
+<meta name="twitter:description" content="Вещи, о которых нужно знать при попытке сделать ваше WebGL приложение работающим везде.">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-cross-platform-issues_ru.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-cross-platform-issues.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-cross-platform-issues_ru.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-cross-platform-issues.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-cross-platform-issues.html",
+      "inLanguage":"ru",
+      "name":"WebGL2 Cross Platform Issues",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-cross-platform-issues.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Cross Platform Issues</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-cross-platform-issues.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-cross-platform-issues.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-cross-platform-issues.html" >Deutsch</a>
+    <option value="/webgl/lessons/ja/webgl-cross-platform-issues.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-cross-platform-issues.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-cross-platform-issues.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-cross-platform-issues.html" selected>Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-cross-platform-issues.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Содержание</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/ru/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Cross Platform Issues</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Вероятно, не будет шоком то, что не все WebGL программы работают на всех устройствах или
+браузерах.</p>
+<p>Вот список большинства проблем, с которыми вы можете столкнуться, с верхушки моей головы</p>
+<h2 id="производительность">Производительность</h2>
+<p>Топовый GPU, вероятно, работает в 100 раз быстрее, чем низкоуровневый GPU. Единственный способ обойти
+это, который я знаю, это либо целиться низко, либо давать пользователю опции, как
+делают большинство Desktop PC приложений, где они могут выбрать производительность или качество.</p>
+<h2 id="память">Память</h2>
+<p>Аналогично топовый GPU может иметь от 12 до 24 гигабайт оперативной памяти, тогда как низкоуровневый GPU
+вероятно имеет меньше 1 гигабайта. (Я старый, поэтому для меня удивительно, что низкоуровневый = 1 гигабайт, поскольку
+я начал программировать на машинах с 16k до 64k памяти 😜)</p>
+<h2 id="ограничения-устройства">Ограничения устройства</h2>
+<p>WebGL имеет различные минимально поддерживаемые функции, но ваше локальное устройство может поддерживать
+больше, чем этот минимум, что означает, что оно не сработает на других устройствах, которые поддерживают меньше.</p>
+<p>Примеры включают:</p>
+<ul>
+<li>
+<p>Максимальный размер текстуры</p>
+<p>2048 или 4096 кажутся разумными ограничениями. По крайней мере, по состоянию на 2020 год выглядит, что
+<a href="https://web3dsurvey.com/webgl/parameters/MAX_TEXTURE_SIZE">99% устройств поддерживают 4096, но только 50% поддерживают &gt; 4096</a>.</p>
+<p>Примечание: максимальный размер текстуры - это максимальное измерение, которое GPU может обработать. Это
+не означает, что у GPU достаточно памяти для этого измерения в квадрате (для 2D
+текстуры) или в кубе (для 3D текстуры). Например, некоторые GPU имеют максимальный размер
+16384. Но 3D текстура 16384 с каждой стороны потребовала бы 16 терабайт
+памяти!!!</p>
+</li>
+<li>
+<p>Максимальное количество вершинных атрибутов в одной программе</p>
+<p>В WebGL1 минимально поддерживается 8. В WebGL2 это 16. Если вы используете больше, чем это,
+то ваш код не сработает на машине только с минимумом</p>
+</li>
+<li>
+<p>Максимальное количество uniform векторов</p>
+<p>Они указаны отдельно для вершинных шейдеров и фрагментных шейдеров.</p>
+<p>В WebGL1 это 128 для вершинных шейдеров и 16 для фрагментных шейдеров
+В WebGL2 это 256 для вершинных шейдеров и 224 для фрагментных шейдеров</p>
+<p>Обратите внимание, что uniforms могут быть “упакованы”, поэтому число выше - это сколько <code class="notranslate" translate="no">vec4</code>
+можно использовать. Теоретически вы могли бы иметь в 4 раза больше <code class="notranslate" translate="no">float</code> uniforms.
+но есть алгоритм, который их помещает. Вы можете представить пространство как
+массив с 4 столбцами, одна строка для каждого из максимальных uniform векторов выше.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+-+-+-+-+
+| | | | |   &lt;- один vec4
+| | | | |   |
+| | | | |   |
+| | | | |   V
+| | | | |   максимальные uniform векторы строк
+| | | | |
+| | | | |  
+| | | | |
+...
+
+</code></pre>
+<p>Сначала выделяются <code class="notranslate" translate="no">vec4</code> с <code class="notranslate" translate="no">mat4</code> как 4 <code class="notranslate" translate="no">vec4</code>. Затем <code class="notranslate" translate="no">vec3</code> помещаются
+в оставшееся пространство. Затем <code class="notranslate" translate="no">vec2</code> с последующими <code class="notranslate" translate="no">float</code>. Так что представьте, что у нас было 1
+<code class="notranslate" translate="no">mat4</code>, 2 <code class="notranslate" translate="no">vec3</code>, 2 <code class="notranslate" translate="no">vec2</code> и 3 <code class="notranslate" translate="no">float</code></p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+-+-+-+-+
+|m|m|m|m|   &lt;- mat4 занимает 4 строки
+|m|m|m|m|
+|m|m|m|m|
+|m|m|m|m|
+|3|3|3| |   &lt;- 2 vec3 занимают 2 строки
+|3|3|3| |
+|2|2|2|2|   &lt;- 2 vec2 могут втиснуться в 1 строку 
+|f|f|f| |   &lt;- 3 float помещаются в одну строку
+...
+
+</code></pre>
+<p>Далее, массив uniforms всегда вертикальный, поэтому, например, если максимально
+разрешенные uniform векторы - 16, то вы не можете иметь 17-элементный <code class="notranslate" translate="no">float</code> массив
+и на самом деле, если у вас был один <code class="notranslate" translate="no">vec4</code>, это заняло бы целую строку, поэтому осталось
+только 15 строк, что означает, что самый большой массив, который вы можете иметь, будет 15
+элементов.</p>
+<p>Мой совет, однако, не рассчитывайте на идеальную упаковку. Хотя спецификация говорит, что
+алгоритм выше требуется для прохождения, слишком много комбинаций для тестирования,
+что все драйверы проходят. Просто будьте в курсе, если вы приближаетесь к лимиту.</p>
+<p>примечание: varyings и attributes не могут быть упакованы.</p>
+</li>
+<li>
+<p>Максимальные varying векторы.</p>
+<p>WebGL1 минимум 8. WebGL2 это 16.</p>
+<p>Если вы используете больше, ваш код не будет работать на машине только с минимумом.</p>
+</li>
+<li>
+<p>Максимальные texture units</p>
+<p>Здесь 3 значения.</p>
+<ol>
+<li>Сколько texture units существует</li>
+<li>Сколько texture units может ссылаться вершинный шейдер</li>
+<li>Сколько texture units может ссылаться фрагментный шейдер</li>
+</ol>
+<table class="tabular-data">
+  <thead>
+    <tr><th></th><th>WebGL1</th><th>WebGL2</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>мин texture units которые существуют</td><td>8</td><td>32</td></tr>
+    <tr><td>мин texture units на которые может ссылаться вершинный шейдер</td><th style="color: red;">0!</td><td>16</td></tr>
+    <tr><td>мин texture units на которые может ссылаться фрагментный шейдер</td><td>8</td><td>16</td></tr>
+  </tbody>
+</table>
+<p>Важно отметить <strong>0</strong> для вершинного шейдера в WebGL1. Обратите внимание, что это, вероятно, не конец света.
+По-видимому, <a href="https://web3dsurvey.com/webgl/parameters/MAX_VERTEX_TEXTURE_IMAGE_UNITS">~97% всех устройств поддерживают по крайней мере 4</a>.
+Тем не менее, вы можете захотеть проверить, чтобы вы могли либо сказать пользователю, что ваше приложение не будет работать для них, либо
+вы можете откатиться к каким-то другим шейдерам.</p>
+</li>
+</ul>
+<p>Есть и другие ограничения. Чтобы их посмотреть, вы вызываете <code class="notranslate" translate="no">gl.getParameter</code> с
+следующими значениями.</p>
+<div class="webgl_center">
+<table class="tabular-data">
+  <tbody>
+    <tr><td>MAX_TEXTURE_SIZE                </td><td>макс размер текстуры</td></tr>
+    <tr><td>MAX_VERTEX_ATTRIBS              </td><td>количество атрибутов которые вы можете иметь</td></tr>
+    <tr><td>MAX_VERTEX_UNIFORM_VECTORS      </td><td>количество vec4 uniforms которые может иметь вершинный шейдер</td></tr>
+    <tr><td>MAX_VARYING_VECTORS             </td><td>количество varyings которые у вас есть</td></tr>
+    <tr><td>MAX_COMBINED_TEXTURE_IMAGE_UNITS</td><td>количество texture units которые существуют</td></tr>
+    <tr><td>MAX_VERTEX_TEXTURE_IMAGE_UNITS  </td><td>количество texture units на которые может ссылаться вершинный шейдер</td></tr>
+    <tr><td>MAX_TEXTURE_IMAGE_UNITS         </td><td>количество texture units на которые может ссылаться фрагментный шейдер</td></tr>
+    <tr><td>MAX_FRAGMENT_UNIFORM_VECTORS    </td><td>количество vec4 uniforms которые может иметь фрагментный шейдер</td></tr>
+    <tr><td>MAX_CUBE_MAP_TEXTURE_SIZE       </td><td>макс размер cubemap</td></tr>
+    <tr><td>MAX_RENDERBUFFER_SIZE           </td><td>макс размер renderbuffer</td></tr>
+    <tr><td>MAX_VIEWPORT_DIMS               </td><td>макс размер viewport</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Это не весь список. Например, максимальный размер точки и максимальная толщина линии,
+но вы должны в основном предполагать, что максимальная толщина линии 1.0 и что POINTS
+полезны только для простых демо, где вам все равно на
+<a href="#points-lines-viewport-scissor-behavior">проблемы с обрезкой</a>.</p>
+<p>WebGL2 добавляет еще несколько. Несколько общих:</p>
+<div class="webgl_center">
+<table class="tabular-data">
+  <tbody>
+    <tr><td>MAX_3D_TEXTURE_SIZE                </td><td>макс размер 3D текстуры</td></tr>
+    <tr><td>MAX_DRAW_BUFFERS              </td><td>количество color attachments которые вы можете иметь</td></tr>
+    <tr><td>MAX_ARRAY_TEXTURE_LAYERS      </td><td>макс слоев в 2D texture array</td></tr>
+    <tr><td>MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS             </td><td>количество varyings которые вы можете выводить в отдельные буферы при использовании transform feedback</td></tr>
+    <tr><td>MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS</td><td>количество varyings которые вы можете выводить при отправке их всех в один буфер</td></tr>
+    <tr><td>MAX_COMBINED_UNIFORM_BLOCKS  </td><td>количество uniform blocks которые вы можете использовать в целом</td></tr>
+    <tr><td>MAX_VERTEX_UNIFORM_BLOCKS         </td><td>количество uniform blocks которые может использовать вершинный шейдер</td></tr>
+    <tr><td>MAX_FRAGMENT_UNIFORM_BLOCKS    </td><td>количество uniform blocks которые может использовать фрагментный шейдер</td></tr>
+  </tbody>
+</table>
+</div>
+<h2 id="разрешение-буфера-глубины">Разрешение буфера глубины</h2>
+<p>Несколько действительно старых мобильных устройств используют 16-битные буферы глубины. В противном случае, AFAICT 99%
+устройств используют 24-битный буфер глубины, поэтому вам, вероятно, не нужно беспокоиться об
+этом.</p>
+<h2 id="readpixels-formattype-комбинации">readPixels format/type комбинации</h2>
+<p>Только определенные format/type комбинации гарантированно работают. Другие комбинации
+опциональны. Это покрыто в <a href="webgl-readpixels.html">этой статье</a>.</p>
+<h2 id="framebuffer-attachment-комбинации">framebuffer attachment комбинации</h2>
+<p>Framebuffers могут иметь 1 или более attachments текстур и renderbuffers.</p>
+<p>В WebGL1 только 3 комбинации attachments гарантированно работают.</p>
+<ol>
+<li>один format = <code class="notranslate" translate="no">RGBA</code>, type = <code class="notranslate" translate="no">UNSIGNED_BYTE</code> texture как <code class="notranslate" translate="no">COLOR_ATTACHMENT0</code></li>
+<li>format = <code class="notranslate" translate="no">RGBA</code>, type = <code class="notranslate" translate="no">UNSIGNED_BYTE</code> texture как <code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> и
+format = <code class="notranslate" translate="no">DEPTH_COMPONENT</code> renderbuffer прикрепленный как <code class="notranslate" translate="no">DEPTH_ATTACHMENT</code></li>
+<li>format = <code class="notranslate" translate="no">RGBA</code>, type = <code class="notranslate" translate="no">UNSIGNED_BYTE</code> texture как <code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> и
+format = <code class="notranslate" translate="no">DEPTH_STENCIL</code> renderbuffer прикрепленный как <code class="notranslate" translate="no">DEPTH_STENCIL_ATTACHMENT</code></li>
+</ol>
+<p>Все другие комбинации зависят от реализации, которую вы проверяете, вызывая
+<code class="notranslate" translate="no">gl.checkFramebufferStatus</code> и видя, вернул ли он <code class="notranslate" translate="no">FRAMEBUFFER_COMPLETE</code>.</p>
+<p>WebGL2 гарантирует возможность записи во многие другие форматы, но все еще имеет
+ограничение в том, что <strong>любая комбинация может потерпеть неудачу!</strong> Ваша лучшая ставка может быть, если все
+color attachments одного формата, если вы прикрепляете больше 1.</p>
+<h2 id="расширения">Расширения</h2>
+<p>Многие функции WebGL1 и WebGL2 опциональны. Вся суть наличия
+API под названием <code class="notranslate" translate="no">getExtension</code> в том, что он может потерпеть неудачу, если расширение не существует,
+и поэтому вы должны проверять эту неудачу и не слепо предполагать, что это
+сработает.</p>
+<p>Вероятно, наиболее часто отсутствующее расширение в WebGL1 и WebGL2 - это
+<code class="notranslate" translate="no">OES_texture_float_linear</code>, что является способностью фильтровать floating point
+текстуру, что означает способность поддерживать установку <code class="notranslate" translate="no">TEXTURE_MIN_FILTER</code> и
+<code class="notranslate" translate="no">TEXTURE_MAX_FILTER</code> на что-либо, кроме <code class="notranslate" translate="no">NEAREST</code>. Многие мобильные устройства не
+поддерживают это.</p>
+<p>В WebGL1 другое часто отсутствующее расширение - это <code class="notranslate" translate="no">WEBGL_draw_buffers</code>, что является
+способностью прикреплять больше 1 color attachment к framebuffer, все еще около
+70% для десктопа и почти ни одного для смартфонов (это кажется неправильным).
+В основном любое устройство, которое может запускать WebGL2, должно также поддерживать
+<code class="notranslate" translate="no">WEBGL_draw_buffers</code> в WebGL1, но все же, это, по-видимому, все еще проблема. Если вы
+нуждаетесь рендерить в несколько текстур одновременно, вероятно, вашей странице нужен
+высокоуровневый GPU в целом. Тем не менее, вы должны проверить, поддерживает ли устройство пользователя это, и
+если нет, предоставить дружелюбное объяснение.</p>
+<p>Для WebGL1 следующие 3 расширения кажутся почти универсально поддерживаемыми, поэтому, хотя
+вы можете захотеть предупредить пользователя, что ваша страница не будет работать, если они
+отсутствуют, вероятно, что у этого пользователя крайне старое устройство, которое все равно не собиралось
+хорошо запускать вашу страницу.</p>
+<p>Это <code class="notranslate" translate="no">ANGLE_instance_arrays</code> (способность использовать <a href="webgl-instanced-drawing.html">instanced drawing</a>),
+<code class="notranslate" translate="no">OES_vertex_array_object</code> (способность хранить все состояние атрибута в объекте, чтобы вы могли поменять все
+это состояние одним вызовом функции. Смотрите <a href="webgl-attributes.html">это</a>), и <code class="notranslate" translate="no">OES_element_index_uint</code>
+(способность использовать <code class="notranslate" translate="no">UNSIGNED_INT</code> 32 битные индексы с <a href="webgl-indexed-vertices.html"><code class="notranslate" translate="no">drawElements</code></a>).</p>
+<h2 id="локации-атрибутов">локации атрибутов</h2>
+<p>Полу-общая ошибка - не искать локации атрибутов. Например, у вас есть вершинный шейдер вроде</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">attribute vec4 position;
+attribute vec2 texcoord;
+
+uniform mat4 matrix;
+
+varying vec2 v_texcoord;
+
+void main() {
+   gl_Position = matrix * position;
+   v_texcoord = texcoord;
+}
+</code></pre>
+<p>Ваш код предполагает, что <code class="notranslate" translate="no">position</code> будет атрибутом 0 и <code class="notranslate" translate="no">texcoord</code> будет
+атрибутом 1, но это не гарантировано. Поэтому он работает для вас, но не срабатывает для кого-то
+другого. Часто это может быть ошибкой в том, что вы не делали это намеренно, но
+через ошибку в коде вещи работают, когда локации одним способом, но не
+другим.</p>
+<p>Есть 3 решения.</p>
+<ol>
+<li>
+<p>Всегда искать локации.</p>
+</li>
+<li>
+<p>Назначать локации, вызывая <code class="notranslate" translate="no">gl.bindAttribLocation</code> перед вызовом <code class="notranslate" translate="no">gl.linkProgram</code></p>
+</li>
+<li>
+<p>Только WebGL2, устанавливать локации в шейдере как в</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+layout(location = 0) vec4 position;
+latout(location = 1) vec2 texcoord;
+...
+</code></pre>
+<p>Решение 2 кажется наиболее <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">D.R.Y.</a>, тогда как решение 3
+кажется наиболее <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself#DRY_vs_WET_solutions">W.E.T.</a>, если только
+вы не генерируете ваши текстуры во время выполнения.</p>
+</li>
+</ol>
+<h2 id="glsl-неопределенное-поведение">GLSL неопределенное поведение</h2>
+<p>Несколько GLSL функций имеют неопределенное поведение. Например, <code class="notranslate" translate="no">pow(x, y)</code> является
+неопределенным, если <code class="notranslate" translate="no">x &lt; 0</code>. Есть более длинный список в <a href="webgl-3d-lighting-spot.html">низу статьи о
+spot lighting</a>.</p>
+<h2 id="проблемы-точности-шейдеров">Проблемы точности шейдеров</h2>
+<p>В 2020 году самая большая проблема здесь в том, что если вы используете <code class="notranslate" translate="no">mediump</code> или <code class="notranslate" translate="no">lowp</code> в ваших шейдерах,
+то на десктопе GPU действительно будет использовать <code class="notranslate" translate="no">highp</code>, но на мобильных они действительно будут
+<code class="notranslate" translate="no">mediump</code> и или <code class="notranslate" translate="no">lowp</code>, и поэтому вы не заметите никаких проблем при разработке на десктопе.</p>
+<p>Смотрите <a href="webgl-precision-issues.html">эту статью для более подробной информации</a>.</p>
+<h2 id="поведение-points-lines-viewport-scissor">Поведение Points, Lines, Viewport, Scissor</h2>
+<p><code class="notranslate" translate="no">POINTS</code> и <code class="notranslate" translate="no">LINES</code> в WebGL могут иметь максимальный размер 1, и на самом деле для <code class="notranslate" translate="no">LINES</code>
+это теперь наиболее общее ограничение. Далее, обрезаются ли точки, когда их
+центр находится вне viewport, определяется реализацией. Смотрите низ
+<a href="../webgl-drawing-without-data.html#pointissues">этой статьи</a>.</p>
+<p>Аналогично, обрезает ли viewport только вершины или также пиксели, является
+неопределенным. Scissor всегда обрезает пиксели, поэтому включайте scissor test и устанавливайте
+размер scissor, если вы устанавливаете viewport меньше, чем то, что вы рисуете,
+и вы рисуете LINES или POINTS.</p>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-cross-platform-issues.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-cross-platform-issues.html" >Deutsch</a>
+    <option value="/webgl/lessons/ja/webgl-cross-platform-issues.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-cross-platform-issues.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-cross-platform-issues.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-cross-platform-issues.html" selected>Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-cross-platform-issues.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Основы</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-getting-webgl2.html">Как использовать WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl-fundamentals.html">Основы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-how-it-works.html">Как это работает</a></li>
+<li><a href="/webgl/lessons/ru/webgl-shaders-and-glsl.html">Шейдеры и GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Диаграмма состояния</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl2-whats-new.html">Что нового в WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl1-to-webgl2.html">Переход с WebGL1 на WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl1-to-webgl2-fundamentals.html">Отличия от WebGLFundamentals.org до WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Обработка изображений</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-image-processing.html">Обработка изображений</a></li>
+<li><a href="/webgl/lessons/ru/webgl-image-processing-continued.html">Продвинутая обработка изображений</a></li>
+        </ul>
+  <li>2D трансформации, повороты, масштабирование и матричные операции</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-2d-translation.html">2D Трансляция</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-rotation.html">2D Вращение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-scale.html">2D Масштабирование</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-matrices.html">2D Матрицы</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-orthographic.html">Ортографическая 3D</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-perspective.html">3D Перспектива</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-camera.html">3D - Камеры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-matrix-naming.html">3D - Именование матриц</a></li>
+        </ul>
+  <li>Освещение</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-lighting-directional.html">Направленное освещение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-lighting-point.html">Точечное освещение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-lighting-spot.html">Прожекторное освещение</a></li>
+        </ul>
+  <li>Организация и рефакторинг</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-less-code-more-fun.html">Меньше кода, больше удовольствия</a></li>
+<li><a href="/webgl/lessons/ru/webgl-drawing-multiple-things.html">Рисование множественных объектов</a></li>
+<li><a href="/webgl/lessons/ru/webgl-scene-graph.html">Графы сцен</a></li>
+        </ul>
+  <li>Геометрия</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-geometry-lathe.html">3D Геометрия - Токарная обработка</a></li>
+<li><a href="/webgl/lessons/ru/webgl-load-obj.html">Загрузка .obj файлов</a></li>
+<li><a href="/webgl/lessons/ru/webgl-load-obj-w-mtl.html">Загрузка .obj с .mtl файлами</a></li>
+        </ul>
+  <li>Текстуры</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-textures.html">Текстуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-data-textures.html">Data Textures</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2-textures.html">Использование 2 или более текстур</a></li>
+<li><a href="/webgl/lessons/ru/webgl-cors-permission.html">Cross Origin Images</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-perspective-correct-texturemapping.html">Перспективно-корректное наложение текстур</a></li>
+<li><a href="/webgl/lessons/ru/webgl-planar-projection-mapping.html">Планарное и перспективное проекционное отображение</a></li>
+        </ul>
+  <li>Рендеринг в текстуру</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-render-to-texture.html">Рендеринг в текстуру</a></li>
+        </ul>
+  <li>Тени</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-shadows.html">Тени</a></li>
+        </ul>
+  <li>Техники</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-matrix-stack.html">2D - Стек Матриц</a></li>
+<li><a href="/webgl/lessons/ru/webgl-sprites.html">Спрайты</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-cube-maps.html">Кубические карты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-environment-maps.html">Карты окружения</a></li>
+<li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
+<li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+        </ul>
+  <li>Текст</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-text-html.html">Текст - HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-canvas2d.html">Текст - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-texture.html">Текст - Использование текстуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-glyphs.html">Текст - Использование текстуры глифов</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Советы</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-smallest-programs.html">Самые маленькие программы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-drawing-without-data.html">Рисование без данных</a></li>
+<li><a href="/webgl/lessons/ru/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/ru/webgl-pulling-vertices.html">Вытягивание вершин</a></li>
+        </ul>
+  <li>Оптимизация</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-indexed-vertices.html">Индексированные вершины (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-instanced-drawing.html">Инстансинг (Instanced Drawing)</a></li>
+        </ul>
+  <li>Разное</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-setup-and-installation.html">Настройка и установка</a></li>
+<li><a href="/webgl/lessons/ru/webgl-boilerplate.html">Boilerplate</a></li>
+<li><a href="/webgl/lessons/ru/webgl-resizing-the-canvas.html">Изменение размера Canvas</a></li>
+<li><a href="/webgl/lessons/ru/webgl-animation.html">Анимация</a></li>
+<li><a href="/webgl/lessons/ru/webgl-points-lines-triangles.html">Точки, линии и треугольники</a></li>
+<li><a href="/webgl/lessons/ru/webgl-multiple-views.html">Множественные виды, множественные canvas</a></li>
+<li><a href="/webgl/lessons/ru/webgl-visualizing-the-camera.html">Визуализация камеры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-and-alpha.html">WebGL2 и альфа-канал</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-vs-3d-library.html">2D против 3D библиотек</a></li>
+<li><a href="/webgl/lessons/ru/webgl-anti-patterns.html">Анти-паттерны</a></li>
+<li><a href="/webgl/lessons/ru/webgl-matrix-vs-math.html">WebGL2 Матрицы против математических матриц</a></li>
+<li><a href="/webgl/lessons/ru/webgl-precision-issues.html">Проблемы точности</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+        </ul>
+  <li>Справочник</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-attributes.html">Атрибуты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-texture-units.html">Текстурные юниты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/ru/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/ru/webgl-references.html">Ссылки</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">API документация</a></li>
+  <li><a href="https://twgljs.org">TWGL, легковесная библиотека-помощник для WebGL</a></li>
+  <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
+</ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Есть предложения или замечания? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Создайте issue на GitHub</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Cross Platform Issues';
+            var disqus_title = 'WebGL2 Cross Platform Issues';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Спасибо <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>за <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} вкладов</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

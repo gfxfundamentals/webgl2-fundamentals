@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/ru/webgl-text-texture.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Отображение текста в WebGL с использованием текстур">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-text-texture_ru.jpg">
+
+<meta property="og:title" content="WebGL2 Текст - Текстуры">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-text-texture_ru.jpg">
+<meta property="og:description" content="Отображение текста в WebGL с использованием текстур">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-text-texture.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Текст - Текстуры">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-text-texture.html">
+<meta name="twitter:description" content="Отображение текста в WebGL с использованием текстур">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-text-texture_ru.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-text-texture.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-text-texture_ru.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-text-texture.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-text-texture.html",
+      "inLanguage":"ru",
+      "name":"WebGL2 Текст - Текстуры",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-text-texture.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Текст - Текстуры</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-text-texture.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-text-texture.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-text-texture.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-text-texture.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-text-texture.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-text-texture.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-text-texture.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-text-texture.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-text-texture.html" >Deutsch</a>
+    <option value="/webgl/lessons/ja/webgl-text-texture.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-text-texture.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-text-texture.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-text-texture.html" selected>Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-text-texture.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Содержание</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/ru/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Текст - Текстуры</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Эта статья является продолжением многих статей о WebGL. Последняя была о
+<a href="webgl-text-canvas2d.html">использовании Canvas 2D для рендеринга текста поверх WebGL canvas</a>.
+Если вы ее не читали, возможно, стоит сначала ознакомиться с ней.</p>
+<p>В последней статье мы рассмотрели <a href="webgl-text-canvas2d.html">как использовать 2D canvas для рисования текста поверх вашей WebGL
+сцены</a>. Эта техника работает и проста в реализации, но у нее есть
+ограничение - текст не может быть скрыт другими 3D объектами. Для этого нам
+действительно нужно рисовать текст в WebGL.</p>
+<p>Самый простой способ сделать это - создать текстуры с текстом в них. Вы могли бы, например,
+зайти в Photoshop или другую программу для рисования и нарисовать изображение с каким-то текстом.</p>
+<img class="webgl_center" src="../resources/my-awesme-text.png" />
+<p>Затем создать какую-то плоскую геометрию и отобразить ее. Это на самом деле то, как некоторые игры, над которыми я
+работал, делали весь свой текст. Например, Locoroco имела только около 270 строк. Она была
+локализована на 17 языков. У нас был Excel лист со всеми языками и скрипт,
+который запускал Photoshop и генерировал текстуру, одну для каждого сообщения на каждом языке.</p>
+<p>Конечно, вы также можете генерировать текстуры во время выполнения. Поскольку WebGL находится в браузере,
+мы снова можем полагаться на Canvas 2D API для помощи в генерации наших текстур.</p>
+<p>Начиная с примеров из <a href="webgl-text-canvas2d.html">предыдущей статьи</a>,
+давайте добавим функцию для заполнения 2D canvas каким-то текстом</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var textCtx = document.createElement(&quot;canvas&quot;).getContext(&quot;2d&quot;);
+
+// Помещает текст в центр canvas.
+function makeTextCanvas(text, width, height) {
+  textCtx.canvas.width  = width;
+  textCtx.canvas.height = height;
+  textCtx.font = &quot;20px monospace&quot;;
+  textCtx.textAlign = &quot;center&quot;;
+  textCtx.textBaseline = &quot;middle&quot;;
+  textCtx.fillStyle = &quot;black&quot;;
+  textCtx.clearRect(0, 0, textCtx.canvas.width, textCtx.canvas.height);
+  textCtx.fillText(text, width / 2, height / 2);
+  return textCtx.canvas;
+}
+</code></pre>
+<p>Теперь, когда нам нужно рисовать 2 разные вещи в WebGL, ‘F’ и наш текст, я переключусь на
+<a href="webgl-drawing-multiple-things.html">использование некоторых вспомогательных функций, как описано в предыдущей статье</a>.
+Если неясно, что такое <code class="notranslate" translate="no">programInfo</code>, <code class="notranslate" translate="no">bufferInfo</code> и т.д., см. ту статью.</p>
+<p>Итак, давайте создадим ‘F’ и единичный квадрат.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Создаем данные для 'F'
+var fBufferInfo = primitives.create3DFBufferInfo(gl);
+var fVAO = webglUtils.createVAOFromBufferInfo(
+    gl, fProgramInfo, fBufferInfo);
+
+// Создаем единичный квадрат для 'текста'
+var textBufferInfo = primitives.createXYQuadBufferInfo(gl, 1);
+var textVAO = webglUtils.createVAOFromBufferInfo(
+    gl, textProgramInfo, textBufferInfo);
+</code></pre>
+<p>XY квадрат - это квадрат размером в 1 единицу. Этот центрирован в начале координат. Будучи размером в 1 единицу,
+его границы -0.5, -0.5 и 0.5, 0.5</p>
+<p>Затем создаем 2 шейдера</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// настраиваем GLSL программы
+var fProgramInfo = webglUtils.createProgramInfo(
+    gl, [fVertexShaderSource, fFragmentShaderSource]);
+var textProgramInfo = webglUtils.createProgramInfo(
+    gl, [textVertexShaderSource, textFragmentShaderSource]);
+</code></pre>
+<p>И создаем нашу текстовую текстуру. Мы генерируем мипмапы, поскольку текст будет становиться маленьким</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// создаем текстовую текстуру.
+var textCanvas = makeTextCanvas(&quot;Привет!&quot;, 100, 26);
+var textWidth  = textCanvas.width;
+var textHeight = textCanvas.height;
+var textTex = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, textTex);
+gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textCanvas);
+gl.generateMipmap(gl.TEXTURE_2D);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+</code></pre>
+<p>Настраиваем uniforms для ‘F’ и текста</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var fUniforms = {
+  u_matrix: m4.identity(),
+};
+
+var textUniforms = {
+  u_matrix: m4.identity(),
+  u_texture: textTex,
+};
+</code></pre>
+<p>Теперь, когда мы вычисляем матрицы для F, мы начинаем с viewMatrix вместо
+viewProjectionMatrix, как в других примерах. Мы умножаем это на части,
+которые составляют ориентацию нашей F</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var fViewMatrix = m4.translate(viewMatrix,
+    translation[0] + xx * spread, translation[1] + yy * spread, translation[2]);
+fViewMatrix = m4.xRotate(fViewMatrix, rotation[0]);
+fViewMatrix = m4.yRotate(fViewMatrix, rotation[1] + yy * xx * 0.2);
+fViewMatrix = m4.zRotate(fViewMatrix, rotation[2] + now + (yy * 3 + xx) * 0.1);
+fViewMatrix = m4.scale(fViewMatrix, scale[0], scale[1], scale[2]);
+fViewMatrix = m4.translate(fViewMatrix, -50, -75, 0);
+</code></pre>
+<p>Затем наконец мы умножаем на projectionMatrix при установке нашего uniform значения.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">fUniforms.u_matrix = m4.multiply(projectionMatrix, fViewMatrix);
+</code></pre>
+<p>Важно отметить здесь, что <code class="notranslate" translate="no">projectionMatrix</code> находится слева. Это позволяет нам
+умножать на projectionMatrix, как будто это была первая матрица. Обычно
+мы умножаем справа.</p>
+<p>Рисование F выглядит так</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// настраиваем для рисования 'F'
+gl.useProgram(fProgramInfo.program);
+
+// настраиваем атрибуты и буферы для F
+gl.bindVertexArray(fVAO);
+
+fUniforms.u_matrix = m4.multiply(projectionMatrix, fViewMatrix);
+
+webglUtils.setUniforms(fProgramInfo, fUniforms);
+
+webglUtils.drawBufferInfo(gl, fBufferInfo);
+</code></pre>
+<p>Для текста мы начинаем с projectionMatrix и затем получаем только позицию
+из fViewMatrix, которую мы сохранили ранее. Это даст нам пространство перед видом.
+Нам также нужно масштабировать наш единичный квадрат, чтобы соответствовать размерам текстуры.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// используем только позицию вида 'F' для текста
+var textMatrix = m4.translate(projectionMatrix,
+    fViewMatrix[12], fViewMatrix[13], fViewMatrix[14]);
+// масштабируем F до нужного нам размера.
+textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
+</code></pre>
+<p>И затем рендерим текст</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// настраиваем для рисования текста.
+gl.useProgram(textProgramInfo.program);
+
+gl.bindVertexArray(textVAO);
+
+m4.copy(textMatrix, textUniforms.u_matrix);
+webglUtils.setUniforms(textProgramInfo, textUniforms);
+
+// Рисуем текст.
+webglUtils.drawBufferInfo(gl, textBufferInfo);
+</code></pre>
+<p>Итак, вот это</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Вы заметите, что иногда части нашего текста покрывают части наших F. Это потому, что
+мы рисуем квадрат. Цвет по умолчанию canvas - прозрачный черный (0,0,0,0), и
+мы рисуем этот цвет в квадрате. Мы могли бы вместо этого смешивать наши пиксели.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.enable(gl.BLEND);
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+</code></pre>
+<p>Это заставляет брать исходный пиксель (цвет из нашего фрагментного шейдера) и комбинировать его
+с целевым пикселем (цветом в canvas) согласно функции смешивания. Мы установили
+функцию смешивания на <code class="notranslate" translate="no">SRC_ALPHA</code> для источника и <code class="notranslate" translate="no">ONE_MINUS_SRC_ALPHA</code> для цели.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">result = dest * (1 - src_alpha) + src * src_alpha
+</code></pre>
+<p>так, например, если цель зеленая <code class="notranslate" translate="no">0,1,0,1</code>, а источник красный <code class="notranslate" translate="no">1,0,0,1</code>, у нас будет</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">src = [1, 0, 0, 1]
+dst = [0, 1, 0, 1]
+src_alpha = src[3]  // это 1
+result = dst * (1 - src_alpha) + src * src_alpha
+
+// что то же самое, что
+result = dst * 0 + src * 1
+
+// что то же самое, что
+result = src
+</code></pre>
+<p>Для частей текстуры с прозрачным черным <code class="notranslate" translate="no">0,0,0,0</code></p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">src = [0, 0, 0, 0]
+dst = [0, 1, 0, 1]
+src_alpha = src[3]  // это 0
+result = dst * (1 - src_alpha) + src * src_alpha
+
+// что то же самое, что
+result = dst * 1 + src * 0
+
+// что то же самое, что
+result = dst
+</code></pre>
+<p>Вот результат с включенным смешиванием.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-enable-blend.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-enable-blend.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Вы можете видеть, что это лучше, но все еще не идеально. Если вы посмотрите
+близко, иногда увидите эту проблему</p>
+<img class="webgl_center" src="../resources/text-zbuffer-issue.png" />
+<p>Что происходит? Мы сейчас рисуем F, затем его текст, затем следующий F,
+затем его текст повторяем. У нас все еще есть <a href="webgl-3d-orthographic.html">буфер глубины</a>, поэтому когда мы рисуем
+текст для F, даже хотя смешивание заставило некоторые пиксели остаться цветом фона,
+буфер глубины все еще был обновлен. Когда мы рисуем следующий F, если части этого F находятся
+за этими пикселями от какого-то ранее нарисованного текста, они не будут нарисованы.</p>
+<p>Мы только что столкнулись с одной из самых сложных проблем рендеринга 3D на GPU.
+<strong>Прозрачность имеет проблемы</strong>.</p>
+<p>Самое распространенное решение для практически всего прозрачного
+рендеринга - это рисовать все непрозрачные вещи сначала, затем после этого рисовать все прозрачные
+вещи, отсортированные по z расстоянию с тестированием буфера глубины включенным, но обновлением буфера глубины выключенным.</p>
+<p>Давайте сначала отделим рисование непрозрачных вещей (F) от прозрачных вещей (текст).
+Сначала мы объявим что-то для запоминания позиций текста.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var textPositions = [];
+</code></pre>
+<p>И в цикле для рендеринга F мы запомним эти позиции</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// запоминаем позицию для текста
+textPositions.push([fViewMatrix[12], fViewMatrix[13], fViewMatrix[14]]);
+</code></pre>
+<p>Перед тем как рисовать ‘F’, мы отключим смешивание и включим запись в буфер глубины</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.disable(gl.BLEND);
+gl.depthMask(true);
+</code></pre>
+<p>Для рисования текста мы включим смешивание и отключим запись в буфер глубины.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.enable(gl.BLEND);
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+gl.depthMask(false);
+</code></pre>
+<p>И затем рисуем текст во всех позициях, которые мы сохранили</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">textPositions.forEach(function(pos) {
+  // используем только позицию вида 'F' для текста
+  var textMatrix = m4.translate(projectionMatrix,
+      pos[0], pos[1], pos[2]);
+  // масштабируем F до нужного нам размера.
+  textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
+
+  // настраиваем для рисования текста.
+  gl.useProgram(textProgramInfo.program);
+
+  gl.bindVertexArray(textVAO);
+
+  m4.copy(textMatrix, textUniforms.u_matrix);
+  webglUtils.setUniforms(textProgramInfo, textUniforms);
+
+  // Рисуем текст.
+  webglUtils.drawBufferInfo(gl, textBufferInfo);
+});
+</code></pre>
+<p>И теперь это в основном работает</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-separate-opaque-from-transparent.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-separate-opaque-from-transparent.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Обратите внимание, мы не сортировали, как я упомянул выше. В данном случае, поскольку мы рисуем в основном непрозрачный текст,
+вероятно, не будет заметной разницы, если мы отсортируем, поэтому я оставлю это для какой-то
+другой статьи.</p>
+<p>Другая проблема в том, что текст пересекается со своей собственной ‘F’. Для этого действительно
+нет конкретного решения. Если бы вы делали MMO и хотели, чтобы текст каждого
+игрока всегда появлялся, вы могли бы попытаться заставить текст появляться над головой. Просто переместите
+его +Y на какое-то количество единиц, достаточно, чтобы убедиться, что он всегда был выше игрока.</p>
+<p>Вы также можете переместить его вперед к камере. Давайте сделаем это здесь просто так.
+Поскольку ‘pos’ находится в пространстве вида, это означает, что он относительно глаза (который находится в 0,0,0 в пространстве вида).
+Поэтому если мы нормализуем его, мы получим единичный вектор, указывающий от глаза к этой точке, который мы можем затем
+умножить на какое-то количество, чтобы переместить текст на определенное количество единиц к глазу или от него.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// потому что pos находится в пространстве вида, это означает, что это вектор от глаза к
+// какой-то позиции. Поэтому перемещаем вдоль этого вектора назад к глазу на какое-то расстояние
+var fromEye = m4.normalize(pos);
+var amountToMoveTowardEye = 150;  // потому что F длиной 150 единиц
+var viewX = pos[0] - fromEye[0] * amountToMoveTowardEye;
+var viewY = pos[1] - fromEye[1] * amountToMoveTowardEye;
+var viewZ = pos[2] - fromEye[2] * amountToMoveTowardEye;
+
+var textMatrix = m4.translate(projectionMatrix,
+    viewX, viewY, viewZ);
+// масштабируем F до нужного нам размера.
+textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
+</code></pre>
+<p>Вот это.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-moved-toward-view.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-moved-toward-view.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Вы все еще можете заметить проблему с краями букв.</p>
+<img class="webgl_center" src="../resources/text-gray-outline.png" />
+<p>Проблема здесь в том, что Canvas 2D API производит только предварительно умноженные альфа значения.
+Когда мы загружаем содержимое canvas в текстуру, WebGL пытается отменить предварительное умножение
+значений, но он не может сделать это идеально, потому что предварительно умноженная альфа теряет информацию.</p>
+<p>Чтобы исправить это, давайте скажем WebGL не отменять предварительное умножение</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+</code></pre>
+<p>Это говорит WebGL поставлять предварительно умноженные альфа значения в <code class="notranslate" translate="no">gl.texImage2D</code> и <code class="notranslate" translate="no">gl.texSubImage2D</code>.
+Если данные, переданные в <code class="notranslate" translate="no">gl.texImage2D</code>, уже предварительно умножены, как это есть для данных Canvas 2D, то
+WebGL может просто пропустить их.</p>
+<p>Нам также нужно изменить функцию смешивания</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+</code></pre>
+<p>Старая умножала исходный цвет на его альфа. Это то, что означает <code class="notranslate" translate="no">SRC_ALPHA</code>. Но
+теперь данные нашей текстуры уже были умножены на его альфа. Это то, что означает предварительно умноженная.
+Поэтому нам не нужно, чтобы GPU делал умножение. Установка на <code class="notranslate" translate="no">ONE</code> означает умножить на 1.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-premultiplied-alpha.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-premultiplied-alpha.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Края исчезли сейчас.</p>
+<p>Что, если вы хотите сохранить текст фиксированного размера, но все еще правильно сортировать? Ну, если вы помните
+из <a href="webgl-3d-perspective.html">статьи о перспективе</a>, наша матрица перспективы собирается
+масштабировать наш объект на <code class="notranslate" translate="no">-Z</code>, чтобы заставить его становиться меньше на расстоянии. Поэтому мы можем просто масштабировать
+на <code class="notranslate" translate="no">-Z</code> умножить на какой-то желаемый-масштаб, чтобы компенсировать.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
+// потому что pos находится в пространстве вида, это означает, что это вектор от глаза к
+// какой-то позиции. Поэтому перемещаем вдоль этого вектора назад к глазу на какое-то расстояние
+var fromEye = normalize(pos);
+var amountToMoveTowardEye = 150;  // потому что F длиной 150 единиц
+var viewX = pos[0] - fromEye[0] * amountToMoveTowardEye;
+var viewY = pos[1] - fromEye[1] * amountToMoveTowardEye;
+var viewZ = pos[2] - fromEye[2] * amountToMoveTowardEye;
+var desiredTextScale = -1 / gl.canvas.height;  // 1x1 пиксели
+var scale = viewZ * desiredTextScale;
+
+var textMatrix = m4.translate(projectionMatrix,
+    viewX, viewY, viewZ);
+// масштабируем F до нужного нам размера.
+textMatrix = m4.scale(textMatrix, textWidth * scale, textHeight * scale, 1);
+...
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-consistent-scale.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-consistent-scale.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Если вы хотите рисовать разный текст у каждого F, вы должны создать новую текстуру для каждого
+F и просто обновить текстовые uniforms для этого F.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// создаем текстовые текстуры, одну для каждого F
+var textTextures = [
+  &quot;анна&quot;,   // 0
+  &quot;коллин&quot;,  // 1
+  &quot;джеймс&quot;,  // 2
+  &quot;дэнни&quot;,  // 3
+  &quot;калин&quot;,  // 4
+  &quot;хиро&quot;,   // 5
+  &quot;эдди&quot;,  // 6
+  &quot;шу&quot;,    // 7
+  &quot;брайан&quot;,  // 8
+  &quot;тами&quot;,   // 9
+  &quot;рик&quot;,   // 10
+  &quot;джин&quot;,   // 11
+  &quot;натали&quot;,// 12,
+  &quot;эван&quot;,   // 13,
+  &quot;сакура&quot;, // 14,
+  &quot;кай&quot;,    // 15,
+].map(function(name) {
+  var textCanvas = makeTextCanvas(name, 100, 26);
+  var textWidth  = textCanvas.width;
+  var textHeight = textCanvas.height;
+  var textTex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, textTex);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textCanvas);
+  gl.generateMipmap(gl.TEXTURE_2D);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  return {
+    texture: textTex,
+    width: textWidth,
+    height: textHeight,
+  };
+});
+</code></pre>
+<p>Затем во время рендеринга выбираем текстуру</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">textPositions.forEach(function(pos, ndx) {
+
+  // выбираем текстуру
+  var tex = textTextures[ndx];
+</code></pre>
+<p>Используем размер этой текстуры в наших матричных вычислениях</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  var textMatrix = m4.translate(projectionMatrix,
+      pos[0], pos[1], pos[2]);
+  // масштабируем F до нужного нам размера.
+  textMatrix = m4.scale(textMatrix, tex.width * scale, tex.height * scale, 1);
+</code></pre>
+<p>и устанавливаем uniform для текстуры перед рисованием</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  textUniforms.u_texture = tex.texture;
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-different-text.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-different-text.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Мы использовали черный для рисования текста в canvas.
+Было бы более полезно, если бы мы рендерили текст белым. Тогда мы могли бы умножить
+текст на цвет и сделать его любым цветом, который мы хотим.</p>
+<p>Сначала мы изменим текстовый шейдер, чтобы умножать на цвет</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
+in vec2 v_texcoord;
+
+uniform sampler2D u_texture;
+uniform vec4 u_color;
+
+out vec4 outColor;
+
+void main() {
+  outColor = texture2D(u_texture, v_texcoord) * u_color;
+}
+</code></pre>
+<p>И когда мы рисуем текст в canvas, используем белый</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">textCtx.fillStyle = &quot;white&quot;;
+</code></pre>
+<p>Затем мы сделаем некоторые цвета</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// цвета, 1 для каждого F
+var colors = [
+  [0.0, 0.0, 0.0, 1], // 0
+  [1.0, 0.0, 0.0, 1], // 1
+  [0.0, 1.0, 0.0, 1], // 2
+  [1.0, 1.0, 0.0, 1], // 3
+  [0.0, 0.0, 1.0, 1], // 4
+  [1.0, 0.0, 1.0, 1], // 5
+  [0.0, 1.0, 1.0, 1], // 6
+  [0.5, 0.5, 0.5, 1], // 7
+  [0.5, 0.0, 0.0, 1], // 8
+  [0.0, 0.0, 0.0, 1], // 9
+  [0.5, 5.0, 0.0, 1], // 10
+  [0.0, 5.0, 0.0, 1], // 11
+  [0.5, 0.0, 5.0, 1], // 12,
+  [0.0, 0.0, 5.0, 1], // 13,
+  [0.5, 5.0, 5.0, 1], // 14,
+  [0.0, 5.0, 5.0, 1], // 15,
+];
+</code></pre>
+<p>Во время рисования мы выбираем цвет</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// устанавливаем цвет uniform
+textUniforms.u_color = colors[ndx];
+</code></pre>
+<p>Цвета</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-different-colors.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-different-colors.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Эта техника на самом деле является техникой, которую большинство браузеров используют, когда они ускорены GPU.
+Они генерируют текстуры с вашим HTML содержимым и всеми различными стилями, которые вы применили,
+и пока это содержимое не изменяется, они могут просто рендерить текстуру
+снова, когда вы прокручиваете и т.д. Конечно, если вы обновляете вещи все время, то
+эта техника может стать немного медленной, потому что перегенерация текстур и их повторная загрузка
+в GPU - это относительно медленная операция.</p>
+<p>В <a href="webgl-text-glyphs.html">следующей статье мы рассмотрим технику, которая, вероятно, лучше для случаев, когда
+вещи обновляются часто</a>.</p>
+<div class="webgl_bottombar">
+<h3>Масштабирование текста без пикселизации</h3>
+<p>
+Вы можете заметить в примерах до того, как мы начали использовать постоянный размер,
+текст становится очень пикселизированным, когда он приближается к камере. Как мы это исправляем?
+</p>
+<p>
+Ну, честно говоря, не очень распространено масштабировать 2D текст в 3D. Посмотрите на большинство игр
+или 3D редакторов, и вы увидите, что текст почти всегда одного постоянного размера
+независимо от того, насколько далеко или близко к камере он находится. На самом деле часто этот текст
+может быть нарисован в 2D вместо 3D, так что даже если кто-то или что-то находится
+за чем-то другим, как товарищ по команде за стеной, вы все еще можете читать текст.
+</p>
+<p>Если вы действительно хотите масштабировать 2D текст в 3D, я не знаю никаких легких вариантов.
+Несколько сходу:</p>
+<ul>
+<li>Создайте разные размеры текстур с шрифтами при разных разрешениях. Вы затем
+используете текстуры более высокого разрешения, когда текст становится больше. Это называется
+LODing (использование разных Уровней Детализации).</li>
+<li>Другой был бы рендеринг текстур с точным правильным размером
+текста каждый кадр. Это, вероятно, было бы действительно медленно.</li>
+<li>Еще один был бы сделать 2D текст из геометрии. Другими словами, вместо
+рисования текста в текстуру, сделать текст из множества и множества треугольников. Это
+работает, но у этого есть другие проблемы в том, что маленький текст не будет рендериться хорошо, а большой
+текст вы начнете видеть треугольники.</li>
+<li>Еще один - это <a href="https://www.google.com/search?q=loop+blinn+curve+rendering">использовать очень специальные шейдеры, которые рендерят кривые</a>. Это очень круто,
+но далеко за пределами того, что я могу объяснить здесь.</li>
+</ul>
+</div> 
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-text-texture.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-text-texture.html" >Deutsch</a>
+    <option value="/webgl/lessons/ja/webgl-text-texture.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-text-texture.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-text-texture.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-text-texture.html" selected>Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-text-texture.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Основы</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-getting-webgl2.html">Как использовать WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl-fundamentals.html">Основы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-how-it-works.html">Как это работает</a></li>
+<li><a href="/webgl/lessons/ru/webgl-shaders-and-glsl.html">Шейдеры и GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Диаграмма состояния</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl2-whats-new.html">Что нового в WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl1-to-webgl2.html">Переход с WebGL1 на WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl1-to-webgl2-fundamentals.html">Отличия от WebGLFundamentals.org до WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Обработка изображений</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-image-processing.html">Обработка изображений</a></li>
+<li><a href="/webgl/lessons/ru/webgl-image-processing-continued.html">Продвинутая обработка изображений</a></li>
+        </ul>
+  <li>2D трансформации, повороты, масштабирование и матричные операции</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-2d-translation.html">2D Трансляция</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-rotation.html">2D Вращение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-scale.html">2D Масштабирование</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-matrices.html">2D Матрицы</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-orthographic.html">Ортографическая 3D</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-perspective.html">3D Перспектива</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-camera.html">3D - Камеры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-matrix-naming.html">3D - Именование матриц</a></li>
+        </ul>
+  <li>Освещение</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-lighting-directional.html">Направленное освещение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-lighting-point.html">Точечное освещение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-lighting-spot.html">Прожекторное освещение</a></li>
+        </ul>
+  <li>Организация и рефакторинг</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-less-code-more-fun.html">Меньше кода, больше удовольствия</a></li>
+<li><a href="/webgl/lessons/ru/webgl-drawing-multiple-things.html">Рисование множественных объектов</a></li>
+<li><a href="/webgl/lessons/ru/webgl-scene-graph.html">Графы сцен</a></li>
+        </ul>
+  <li>Геометрия</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-geometry-lathe.html">3D Геометрия - Токарная обработка</a></li>
+<li><a href="/webgl/lessons/ru/webgl-load-obj.html">Загрузка .obj файлов</a></li>
+<li><a href="/webgl/lessons/ru/webgl-load-obj-w-mtl.html">Загрузка .obj с .mtl файлами</a></li>
+        </ul>
+  <li>Текстуры</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-textures.html">Текстуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-data-textures.html">Data Textures</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2-textures.html">Использование 2 или более текстур</a></li>
+<li><a href="/webgl/lessons/ru/webgl-cors-permission.html">Cross Origin Images</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-perspective-correct-texturemapping.html">Перспективно-корректное наложение текстур</a></li>
+<li><a href="/webgl/lessons/ru/webgl-planar-projection-mapping.html">Планарное и перспективное проекционное отображение</a></li>
+        </ul>
+  <li>Рендеринг в текстуру</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-render-to-texture.html">Рендеринг в текстуру</a></li>
+        </ul>
+  <li>Тени</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-shadows.html">Тени</a></li>
+        </ul>
+  <li>Техники</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-matrix-stack.html">2D - Стек Матриц</a></li>
+<li><a href="/webgl/lessons/ru/webgl-sprites.html">Спрайты</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-cube-maps.html">Кубические карты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-environment-maps.html">Карты окружения</a></li>
+<li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
+<li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+        </ul>
+  <li>Текст</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-text-html.html">Текст - HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-canvas2d.html">Текст - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-texture.html">Текст - Использование текстуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-glyphs.html">Текст - Использование текстуры глифов</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Советы</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-smallest-programs.html">Самые маленькие программы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-drawing-without-data.html">Рисование без данных</a></li>
+<li><a href="/webgl/lessons/ru/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/ru/webgl-pulling-vertices.html">Вытягивание вершин</a></li>
+        </ul>
+  <li>Оптимизация</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-indexed-vertices.html">Индексированные вершины (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-instanced-drawing.html">Инстансинг (Instanced Drawing)</a></li>
+        </ul>
+  <li>Разное</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-setup-and-installation.html">Настройка и установка</a></li>
+<li><a href="/webgl/lessons/ru/webgl-boilerplate.html">Boilerplate</a></li>
+<li><a href="/webgl/lessons/ru/webgl-resizing-the-canvas.html">Изменение размера Canvas</a></li>
+<li><a href="/webgl/lessons/ru/webgl-animation.html">Анимация</a></li>
+<li><a href="/webgl/lessons/ru/webgl-points-lines-triangles.html">Точки, линии и треугольники</a></li>
+<li><a href="/webgl/lessons/ru/webgl-multiple-views.html">Множественные виды, множественные canvas</a></li>
+<li><a href="/webgl/lessons/ru/webgl-visualizing-the-camera.html">Визуализация камеры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-and-alpha.html">WebGL2 и альфа-канал</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-vs-3d-library.html">2D против 3D библиотек</a></li>
+<li><a href="/webgl/lessons/ru/webgl-anti-patterns.html">Анти-паттерны</a></li>
+<li><a href="/webgl/lessons/ru/webgl-matrix-vs-math.html">WebGL2 Матрицы против математических матриц</a></li>
+<li><a href="/webgl/lessons/ru/webgl-precision-issues.html">Проблемы точности</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+        </ul>
+  <li>Справочник</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-attributes.html">Атрибуты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-texture-units.html">Текстурные юниты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/ru/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/ru/webgl-references.html">Ссылки</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">API документация</a></li>
+  <li><a href="https://twgljs.org">TWGL, легковесная библиотека-помощник для WebGL</a></li>
+  <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
+</ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Есть предложения или замечания? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Создайте issue на GitHub</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Текст - Текстуры';
+            var disqus_title = 'WebGL2 Текст - Текстуры';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Спасибо <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>за <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} вкладов</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

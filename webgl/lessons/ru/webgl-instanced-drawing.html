@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/ru/webgl-instanced-drawing.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Рисование нескольких экземпляров одного объекта">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-instanced-drawing_ru.jpg">
+
+<meta property="og:title" content="WebGL2 Оптимизация — Инстансинг (Instanced Drawing)">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-instanced-drawing_ru.jpg">
+<meta property="og:description" content="Рисование нескольких экземпляров одного объекта">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-instanced-drawing.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Оптимизация — Инстансинг (Instanced Drawing)">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-instanced-drawing.html">
+<meta name="twitter:description" content="Рисование нескольких экземпляров одного объекта">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-instanced-drawing_ru.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-instanced-drawing.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-instanced-drawing_ru.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-instanced-drawing.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-instanced-drawing.html",
+      "inLanguage":"ru",
+      "name":"WebGL2 Оптимизация — Инстансинг (Instanced Drawing)",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-instanced-drawing.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Оптимизация — Инстансинг (Instanced Drawing)</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-instanced-drawing.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-instanced-drawing.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-instanced-drawing.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-instanced-drawing.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-instanced-drawing.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-instanced-drawing.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-instanced-drawing.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-instanced-drawing.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-instanced-drawing.html" >Deutsch</a>
+    <option value="/webgl/lessons/ja/webgl-instanced-drawing.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-instanced-drawing.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-instanced-drawing.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-instanced-drawing.html" selected>Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-instanced-drawing.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Содержание</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/ru/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Оптимизация — Инстансинг (Instanced Drawing)</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>В WebGL есть возможность, называемая <em>инстансинг</em> (instanced drawing).
+Это способ нарисовать несколько одинаковых объектов быстрее, чем рисовать каждый по отдельности.</p>
+<p>Для начала сделаем пример, который рисует несколько экземпляров одного и того же объекта.</p>
+<p>Начнём с кода, <em>похожего</em> на тот, что был в конце
+<a href="webgl-3d-orthographic.html">статьи про ортографическую проекцию</a>:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vertexShaderSource = `#version 300 es
+in vec4 a_position;
+uniform mat4 matrix;
+
+void main() {
+  // Умножаем позицию на матрицу
+  gl_Position = matrix * a_position;
+}
+`;
+
+const fragmentShaderSource = `#version 300 es
+precision highp float;
+
+uniform vec4 color;
+
+out vec4 outColor;
+
+void main() {
+  outColor = color;
+}
+`;
+</code></pre>
+<p>Вершинный шейдер умножает каждую вершину на одну матрицу (см.
+<a href="webgl-3d-orthographic.html">ту статью</a>), что довольно гибко. Фрагментный шейдер просто использует
+цвет, который мы передаём через uniform.</p>
+<p>Чтобы рисовать, нужно скомпилировать шейдеры, связать их вместе
+и получить локации атрибутов и uniform’ов.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const program = webglUtils.createProgramFromSources(gl,
+    [vertexShaderSource, fragmentShaderSource]);
+
+const positionLoc = gl.getAttribLocation(program, 'a_position');
+const colorLoc = gl.getUniformLocation(program, 'color');
+const matrixLoc = gl.getUniformLocation(program, 'matrix');
+</code></pre>
+<p>Создаём vertex array object для хранения состояния атрибутов:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Создаём vertex array object (состояние атрибутов)
+const vao = gl.createVertexArray();
+
+// и делаем его активным
+gl.bindVertexArray(vao);
+</code></pre>
+<p>Далее нужно передать данные позиций через буфер.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const positionBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+    -0.1,  0.4,
+    -0.1, -0.4,
+     0.1, -0.4,
+    -0.1,  0.4,
+     0.1, -0.4,
+     0.1,  0.4,
+    -0.4, -0.1,
+     0.4, -0.1,
+    -0.4,  0.1,
+    -0.4,  0.1,
+     0.4, -0.1,
+     0.4,  0.1,
+  ]), gl.STATIC_DRAW);
+const numVertices = 12;
+
+// настраиваем атрибут позиции
+gl.enableVertexAttribArray(positionLoc);
+gl.vertexAttribPointer(
+    positionLoc,  // location
+    2,            // размер (сколько значений брать из буфера за итерацию)
+    gl.FLOAT,     // тип данных в буфере
+    false,        // нормализовать
+    0,            // шаг (0 = вычислять из size и type выше)
+    0,            // смещение в буфере
+);
+</code></pre>
+<p>Нарисуем 5 экземпляров. Сделаем 5 матриц и 5 цветов для каждого экземпляра.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const numInstances = 5;
+const matrices = [
+  m4.identity(),
+  m4.identity(),
+  m4.identity(),
+  m4.identity(),
+  m4.identity(),
+];
+
+const colors = [
+  [ 1, 0, 0, 1, ],  // красный
+  [ 0, 1, 0, 1, ],  // зелёный
+  [ 0, 0, 1, 1, ],  // синий
+  [ 1, 0, 1, 1, ],  // маджента
+  [ 0, 1, 1, 1, ],  // циан
+];
+</code></pre>
+<p>Для отрисовки используем шейдерную программу, настраиваем атрибуты,
+и затем в цикле по 5 экземплярам вычисляем новую матрицу для каждого,
+устанавливаем uniform’ы матрицы и цвета, и рисуем.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render(time) {
+  time *= 0.001; // секунды
+
+  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
+  // Говорим WebGL, как преобразовывать из clip space в пиксели
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+  gl.useProgram(program);
+
+  // настраиваем все атрибуты
+  gl.bindVertexArray(vao);
+
+  matrices.forEach((mat, ndx) =&gt; {
+    m4.translation(-0.5 + ndx * 0.25, 0, 0, mat);
+    m4.zRotate(mat, time * (0.1 + 0.1 * ndx), mat);
+
+    const color = colors[ndx];
+
+    gl.uniform4fv(colorLoc, color);
+    gl.uniformMatrix4fv(matrixLoc, false, mat);
+
+    gl.drawArrays(
+        gl.TRIANGLES,
+        0,             // offset
+        numVertices,   // количество вершин на экземпляр
+    );
+  });
+
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+</code></pre>
+<p>Обратите внимание, что библиотека матриц принимает необязательную матрицу-назначение
+в конце каждой функции. В большинстве статей мы не использовали эту возможность и просто
+давали библиотеке создавать новую матрицу, но здесь мы хотим, чтобы результат
+сохранялся в уже созданных матрицах.</p>
+<p>Это работает, и мы получаем 5 вращающихся плюсов разного цвета.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-instanced-drawing-not-instanced.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-instanced-drawing-not-instanced.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Это потребовало 5 вызовов <code class="notranslate" translate="no">gl.uniform4v</code>, 5 вызовов <code class="notranslate" translate="no">gl.uniformMatrix4fv</code>
+и 5 вызовов <code class="notranslate" translate="no">gl.drawArrays</code>, всего 15 вызовов WebGL. Если бы наши шейдеры были сложнее,
+например, как в <a href="webgl-3d-lighting-spot.html">статье про spot lighting</a>,
+было бы минимум 7 вызовов на объект: 6 к <code class="notranslate" translate="no">gl.uniformXXX</code> и один к <code class="notranslate" translate="no">gl.drawArrays</code>.
+Если бы мы рисовали 400 объектов, это было бы 2800 вызовов WebGL.</p>
+<p>Инстансинг позволяет уменьшить количество вызовов. Он работает так:
+вы указываете WebGL, сколько раз нужно нарисовать один и тот же объект (количество экземпляров).
+Для каждого атрибута вы указываете, будет ли он переходить к <em>следующему значению</em> из буфера
+каждый раз при вызове вершинного шейдера (по умолчанию), или только раз в N экземпляров (обычно N=1).</p>
+<p>Например, вместо передачи <code class="notranslate" translate="no">matrix</code> и <code class="notranslate" translate="no">color</code> через uniform, мы передадим их через атрибуты.
+Положим матрицы и цвета для каждого экземпляра в буфер, настроим атрибуты для чтения из этих буферов
+и скажем WebGL, чтобы он переходил к следующему значению только раз на экземпляр.</p>
+<p>Давайте сделаем это!</p>
+<p>Сначала изменим шейдеры, чтобы использовать атрибуты для <code class="notranslate" translate="no">matrix</code> и <code class="notranslate" translate="no">color</code> вместо uniform’ов.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vertexShaderSource = `#version 300 es
+in vec4 a_position;
+uniform mat4 matrix;
+
+void main() {
+  // Умножаем позицию на матрицу
+  gl_Position = matrix * a_position;
+}
+`;
+
+const fragmentShaderSource = `#version 300 es
+precision highp float;
+
+uniform vec4 color;
+
+out vec4 outColor;
+
+void main() {
+  outColor = color;
+}
+`;
+</code></pre>
+<hr>
+<p>Теперь нам нужно реализовать инстансинг через атрибуты и буферы:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// настраиваем матрицы, по одной на экземпляр
+const numInstances = 5;
+// создаём типизированный массив с одним view на матрицу
+const matrixData = new Float32Array(numInstances * 16);
+const matrices = [];
+for (let i = 0; i &lt; numInstances; ++i) {
+  const byteOffsetToMatrix = i * 16 * 4;
+  const numFloatsForView = 16;
+  matrices.push(new Float32Array(
+      matrixData.buffer,
+      byteOffsetToMatrix,
+      numFloatsForView));
+}
+
+const matrixBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, matrixBuffer);
+gl.bufferData(gl.ARRAY_BUFFER, matrixData.byteLength, gl.DYNAMIC_DRAW);
+
+const bytesPerMatrix = 4 * 16;
+for (let i = 0; i &lt; 4; ++i) {
+  const loc = matrixLoc + i;
+  gl.enableVertexAttribArray(loc);
+  // stride и offset
+  const offset = i * 16;
+  gl.vertexAttribPointer(
+      loc,
+      4,
+      gl.FLOAT,
+      false,
+      bytesPerMatrix,
+      offset,
+  );
+  gl.vertexAttribDivisor(loc, 1);
+}
+
+// настраиваем цвета, по одному на экземпляр
+const colorBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+gl.bufferData(gl.ARRAY_BUFFER,
+    new Float32Array([
+        1, 0, 0, 1,  // красный
+        0, 1, 0, 1,  // зелёный
+        0, 0, 1, 1,  // синий
+        1, 0, 1, 1,  // маджента
+        0, 1, 1, 1,  // циан
+      ]),
+    gl.STATIC_DRAW);
+gl.enableVertexAttribArray(colorLoc);
+gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 0, 0);
+gl.vertexAttribDivisor(colorLoc, 1);
+
+// В рендере:
+function render(time) {
+  time *= 0.001;
+  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  gl.useProgram(program);
+  gl.bindVertexArray(vao);
+
+  // обновляем все матрицы
+  matrices.forEach((mat, ndx) =&gt; {
+    m4.translation(-0.5 + ndx * 0.25, 0, 0, mat);
+    m4.zRotate(mat, time * (0.1 + 0.1 * ndx), mat);
+  });
+  // загружаем все матрицы в буфер
+  gl.bindBuffer(gl.ARRAY_BUFFER, matrixBuffer);
+  gl.bufferSubData(gl.ARRAY_BUFFER, 0, matrixData);
+
+  // рисуем все экземпляры одной командой
+  gl.drawArraysInstanced(
+      gl.TRIANGLES,
+      0,           // offset
+      numVertices, // количество вершин на экземпляр
+      numInstances // количество экземпляров
+  );
+
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+</code></pre>
+<p>Теперь мы вызываем только одну команду отрисовки, и WebGL сам перебирает экземпляры, используя данные из буферов для каждого экземпляра.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-instanced-drawing.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-instanced-drawing.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Инстансинг — мощный способ ускорить отрисовку множества одинаковых объектов с разными параметрами.</p>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-instanced-drawing.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-instanced-drawing.html" >Deutsch</a>
+    <option value="/webgl/lessons/ja/webgl-instanced-drawing.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-instanced-drawing.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-instanced-drawing.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-instanced-drawing.html" selected>Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-instanced-drawing.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Основы</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-getting-webgl2.html">Как использовать WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl-fundamentals.html">Основы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-how-it-works.html">Как это работает</a></li>
+<li><a href="/webgl/lessons/ru/webgl-shaders-and-glsl.html">Шейдеры и GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Диаграмма состояния</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl2-whats-new.html">Что нового в WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl1-to-webgl2.html">Переход с WebGL1 на WebGL2</a></li>
+<li><a href="/webgl/lessons/ru/webgl1-to-webgl2-fundamentals.html">Отличия от WebGLFundamentals.org до WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Обработка изображений</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-image-processing.html">Обработка изображений</a></li>
+<li><a href="/webgl/lessons/ru/webgl-image-processing-continued.html">Продвинутая обработка изображений</a></li>
+        </ul>
+  <li>2D трансформации, повороты, масштабирование и матричные операции</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-2d-translation.html">2D Трансляция</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-rotation.html">2D Вращение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-scale.html">2D Масштабирование</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-matrices.html">2D Матрицы</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-orthographic.html">Ортографическая 3D</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-perspective.html">3D Перспектива</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-camera.html">3D - Камеры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-matrix-naming.html">3D - Именование матриц</a></li>
+        </ul>
+  <li>Освещение</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-lighting-directional.html">Направленное освещение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-lighting-point.html">Точечное освещение</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-lighting-spot.html">Прожекторное освещение</a></li>
+        </ul>
+  <li>Организация и рефакторинг</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-less-code-more-fun.html">Меньше кода, больше удовольствия</a></li>
+<li><a href="/webgl/lessons/ru/webgl-drawing-multiple-things.html">Рисование множественных объектов</a></li>
+<li><a href="/webgl/lessons/ru/webgl-scene-graph.html">Графы сцен</a></li>
+        </ul>
+  <li>Геометрия</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-geometry-lathe.html">3D Геометрия - Токарная обработка</a></li>
+<li><a href="/webgl/lessons/ru/webgl-load-obj.html">Загрузка .obj файлов</a></li>
+<li><a href="/webgl/lessons/ru/webgl-load-obj-w-mtl.html">Загрузка .obj с .mtl файлами</a></li>
+        </ul>
+  <li>Текстуры</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-3d-textures.html">Текстуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-data-textures.html">Data Textures</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2-textures.html">Использование 2 или более текстур</a></li>
+<li><a href="/webgl/lessons/ru/webgl-cors-permission.html">Cross Origin Images</a></li>
+<li><a href="/webgl/lessons/ru/webgl-3d-perspective-correct-texturemapping.html">Перспективно-корректное наложение текстур</a></li>
+<li><a href="/webgl/lessons/ru/webgl-planar-projection-mapping.html">Планарное и перспективное проекционное отображение</a></li>
+        </ul>
+  <li>Рендеринг в текстуру</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-render-to-texture.html">Рендеринг в текстуру</a></li>
+        </ul>
+  <li>Тени</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-shadows.html">Тени</a></li>
+        </ul>
+  <li>Техники</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-matrix-stack.html">2D - Стек Матриц</a></li>
+<li><a href="/webgl/lessons/ru/webgl-sprites.html">Спрайты</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-cube-maps.html">Кубические карты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-environment-maps.html">Карты окружения</a></li>
+<li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
+<li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+        </ul>
+  <li>Текст</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-text-html.html">Текст - HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-canvas2d.html">Текст - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-texture.html">Текст - Использование текстуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-text-glyphs.html">Текст - Использование текстуры глифов</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Советы</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-smallest-programs.html">Самые маленькие программы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-drawing-without-data.html">Рисование без данных</a></li>
+<li><a href="/webgl/lessons/ru/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/ru/webgl-pulling-vertices.html">Вытягивание вершин</a></li>
+        </ul>
+  <li>Оптимизация</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-indexed-vertices.html">Индексированные вершины (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-instanced-drawing.html">Инстансинг (Instanced Drawing)</a></li>
+        </ul>
+  <li>Разное</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-setup-and-installation.html">Настройка и установка</a></li>
+<li><a href="/webgl/lessons/ru/webgl-boilerplate.html">Boilerplate</a></li>
+<li><a href="/webgl/lessons/ru/webgl-resizing-the-canvas.html">Изменение размера Canvas</a></li>
+<li><a href="/webgl/lessons/ru/webgl-animation.html">Анимация</a></li>
+<li><a href="/webgl/lessons/ru/webgl-points-lines-triangles.html">Точки, линии и треугольники</a></li>
+<li><a href="/webgl/lessons/ru/webgl-multiple-views.html">Множественные виды, множественные canvas</a></li>
+<li><a href="/webgl/lessons/ru/webgl-visualizing-the-camera.html">Визуализация камеры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-and-alpha.html">WebGL2 и альфа-канал</a></li>
+<li><a href="/webgl/lessons/ru/webgl-2d-vs-3d-library.html">2D против 3D библиотек</a></li>
+<li><a href="/webgl/lessons/ru/webgl-anti-patterns.html">Анти-паттерны</a></li>
+<li><a href="/webgl/lessons/ru/webgl-matrix-vs-math.html">WebGL2 Матрицы против математических матриц</a></li>
+<li><a href="/webgl/lessons/ru/webgl-precision-issues.html">Проблемы точности</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+        </ul>
+  <li>Справочник</li>
+        <ul>
+          <li><a href="/webgl/lessons/ru/webgl-attributes.html">Атрибуты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-texture-units.html">Текстурные юниты</a></li>
+<li><a href="/webgl/lessons/ru/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/ru/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/ru/webgl-references.html">Ссылки</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">API документация</a></li>
+  <li><a href="https://twgljs.org">TWGL, легковесная библиотека-помощник для WebGL</a></li>
+  <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
+</ul>
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Есть предложения или замечания? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Создайте issue на GitHub</a>.</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Оптимизация — Инстансинг (Instanced Drawing)';
+            var disqus_title = 'WebGL2 Оптимизация — Инстансинг (Instanced Drawing)';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Спасибо <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>за <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} вкладов</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+
