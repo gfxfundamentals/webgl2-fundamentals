@@ -197,4 +197,197 @@ v_color, который мы объявили.
 
       // ищем, куда должны идти данные вершин.
       var positionLocation = gl.getAttribLocation(program, "a_position");
-    +  var colorLocation = gl.getAttribLocation(program, "a_color"); 
+    +  var colorLocation = gl.getAttribLocation(program, "a_color");
+      ...
+    +  // Создаем буфер для цветов.
+    +  var buffer = gl.createBuffer();
+    +  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    +
+    +  // Устанавливаем цвета.
+    +  setColors(gl);
+
+      // настраиваем атрибуты
+      ...
+    +  // говорим атрибуту цвета, как извлекать данные из текущего ARRAY_BUFFER
+    +  gl.enableVertexAttribArray(colorLocation);
+    +  var size = 4;
+    +  var type = gl.FLOAT;
+    +  var normalize = false;
+    +  var stride = 0;
+    +  var offset = 0;
+    +  gl.vertexAttribPointer(colorLocation, size, type, normalize, stride, offset);
+
+      ...
+
+    +// Заполняем буфер цветами для 2 треугольников
+    +// которые составляют прямоугольник.
+    +function setColors(gl) {
+    +  // Выбираем 2 случайных цвета.
+    +  var r1 = Math.random();
+    +  var b1 = Math.random();
+    +  var g1 = Math.random();
+    +
+    +  var r2 = Math.random();
+    +  var b2 = Math.random();
+    +  var g2 = Math.random();
+    +
+    +  gl.bufferData(
+    +      gl.ARRAY_BUFFER,
+    +      new Float32Array(
+    +        [ r1, b1, g1, 1,
+    +          r1, b1, g1, 1,
+    +          r1, b1, g1, 1,
+    +          r2, b2, g2, 1,
+    +          r2, b2, g2, 1,
+    +          r2, b2, g2, 1]),
+    +      gl.STATIC_DRAW);
+    +}
+
+И вот результат.
+
+{{{example url="../webgl-2d-rectangle-with-2-colors.html" }}}
+
+Обратите внимание, что у нас есть 2 треугольника сплошного цвета. Тем не менее, мы передаем значения
+в *varying*, поэтому они варьируются или интерполируются по
+треугольнику. Просто мы использовали тот же цвет на каждой из 3 вершин
+каждого треугольника. Если мы сделаем каждый цвет разным, мы увидим
+интерполяцию.
+
+    // Заполняем буфер цветами для 2 треугольников
+    // которые составляют прямоугольник.
+    function setColors(gl) {
+      // Делаем каждую вершину разным цветом.
+      gl.bufferData(
+          gl.ARRAY_BUFFER,
+          new Float32Array(
+    *        [ Math.random(), Math.random(), Math.random(), 1,
+    *          Math.random(), Math.random(), Math.random(), 1,
+    *          Math.random(), Math.random(), Math.random(), 1,
+    *          Math.random(), Math.random(), Math.random(), 1,
+    *          Math.random(), Math.random(), Math.random(), 1,
+    *          Math.random(), Math.random(), Math.random(), 1]),
+          gl.STATIC_DRAW);
+    }
+
+И теперь мы видим интерполированный *varying*.
+
+{{{example url="../webgl-2d-rectangle-with-random-colors.html" }}}
+
+Не очень захватывающе, я полагаю, но это демонстрирует использование более чем одного
+атрибута и передачу данных от вершинного шейдера к фрагментному шейдеру. Если
+вы посмотрите на [примеры обработки изображений](webgl-image-processing.html),
+вы увидите, что они также используют дополнительный атрибут для передачи координат текстуры.
+
+## Что делают эти команды буфера и атрибута?
+
+Буферы - это способ получения данных вершин и других данных на вершину на
+GPU. `gl.createBuffer` создает буфер.
+`gl.bindBuffer` устанавливает этот буфер как буфер для работы.
+`gl.bufferData` копирует данные в текущий буфер.
+
+Как только данные находятся в буфере, нам нужно сказать WebGL, как извлекать данные из
+него и предоставлять их атрибутам вершинного шейдера.
+
+Для этого сначала мы спрашиваем WebGL, какие локации он назначил
+атрибутам. Например, в коде выше у нас есть
+
+    // ищем, куда должны идти данные вершин.
+    var positionLocation = gl.getAttribLocation(program, "a_position");
+    var colorLocation = gl.getAttribLocation(program, "a_color");
+
+Как только мы знаем локацию атрибута, мы выдаем 2 команды.
+
+    gl.enableVertexAttribArray(location);
+
+Эта команда говорит WebGL, что мы хотим предоставить данные из буфера.
+
+    gl.vertexAttribPointer(
+        location,
+        numComponents,
+        typeOfData,
+        normalizeFlag,
+        strideToNextPieceOfData,
+        offsetIntoBuffer);
+
+И эта команда говорит WebGL получать данные из буфера, который был последним
+привязан с gl.bindBuffer, сколько компонентов на вершину (1 - 4), какой
+тип данных (`BYTE`, `FLOAT`, `INT`, `UNSIGNED_SHORT`, и т.д.), шаг
+который означает, сколько байт пропустить, чтобы получить от одного куска данных к
+следующему куску данных, и смещение для того, как далеко в буфере находятся наши данные.
+
+Количество компонентов всегда от 1 до 4.
+
+Если вы используете 1 буфер на тип данных, то и шаг, и смещение могут
+всегда быть 0. 0 для шага означает "использовать шаг, который соответствует типу и
+размеру". 0 для смещения означает начать с начала буфера. Установка
+их в значения, отличные от 0, более сложна, и хотя это может иметь некоторые
+преимущества с точки зрения производительности, это не стоит усложнения, если только
+вы не пытаетесь довести WebGL до его абсолютных пределов.
+
+Я надеюсь, что это проясняет буферы и атрибуты.
+
+Вы можете взглянуть на эту
+[интерактивную диаграмму состояния](/webgl/lessons/resources/webgl-state-diagram.html)
+для другого способа понимания того, как работает WebGL.
+
+Далее давайте пройдемся по [шейдерам и GLSL](webgl-shaders-and-glsl.html).
+
+<div class="webgl_bottombar"><h3>Для чего нужен normalizeFlag в vertexAttribPointer?</h3>
+<p>
+Флаг нормализации предназначен для всех не-плавающих типов. Если вы передаете
+false, то значения будут интерпретироваться как тип, которым они являются. BYTE идет
+от -128 до 127, UNSIGNED_BYTE идет от 0 до 255, SHORT идет от -32768 до 32767 и т.д...
+</p>
+<p>
+Если вы устанавливаете флаг нормализации в true, то значения BYTE (-128 до 127)
+представляют значения -1.0 до +1.0, UNSIGNED_BYTE (0 до 255) становятся 0.0 до +1.0.
+Нормализованный SHORT также идет от -1.0 до +1.0, просто у него больше разрешения, чем у BYTE.
+</p>
+<p>
+Самое распространенное использование нормализованных данных - для цветов. Большую часть времени цвета
+идут только от 0.0 до 1.0. Использование полного float для каждого красного, зеленого, синего и альфа
+использовало бы 16 байт на вершину на цвет. Если у вас сложная геометрия, это
+может сложиться в много байт. Вместо этого вы могли бы конвертировать ваши цвета в UNSIGNED_BYTE,
+где 0 представляет 0.0, а 255 представляет 1.0. Теперь вам понадобилось бы только 4 байта на цвет
+на вершину, экономия 75%.
+</p>
+<p>Давайте изменим наш код, чтобы делать это. Когда мы говорим WebGL, как извлекать наши цвета, мы бы использовали</p>
+<pre class="prettyprint showlinemods">
+  var size = 4;
+*  var type = gl.UNSIGNED_BYTE;
+*  var normalize = true;
+  var stride = 0;
+  var offset = 0;
+  gl.vertexAttribPointer(colorLocation, size, type, normalize, stride, offset);
+</pre>
+<p>И когда мы заполняем наш буфер цветами, мы бы использовали</p>
+<pre class="prettyprint showlinemods">
+// Заполняем буфер цветами для 2 треугольников
+// которые составляют прямоугольник.
+function setColors(gl) {
+  // Выбираем 2 случайных цвета.
+  var r1 = Math.random() * 256; // 0 до 255.99999
+  var b1 = Math.random() * 256; // эти значения
+  var g1 = Math.random() * 256; // будут обрезаны
+  var r2 = Math.random() * 256; // когда сохранены в
+  var b2 = Math.random() * 256; // Uint8Array
+  var g2 = Math.random() * 256;
+
+  gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Uint8Array(   // Uint8Array
+        [ r1, b1, g1, 255,
+          r1, b1, g1, 255,
+          r1, b1, g1, 255,
+          r2, b2, g2, 255,
+          r2, b2, g2, 255,
+          r2, b2, g2, 255]),
+      gl.STATIC_DRAW);
+}
+</pre>
+<p>
+Вот этот пример.
+</p>
+
+{{{example url="../webgl-2d-rectangle-with-2-byte-colors.html" }}}
+</div> 

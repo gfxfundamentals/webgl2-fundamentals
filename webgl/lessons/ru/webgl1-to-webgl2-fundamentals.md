@@ -77,4 +77,8 @@ Vertex Array Objects — это опциональная функция в WebGL
        webglUtils.createProgramFromSources(...);
 
    Я надеюсь, это делает более ясным, что это за функции
-   и где их найти. 
+   и где их найти.
+
+
+
+ 

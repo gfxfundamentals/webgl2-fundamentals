@@ -190,5 +190,140 @@ in vec2 v_texCoord;
 out vec4 outColor;
 
 void main() {
-+  vec2 onePixel = vec2(1) / vec2(textureSize(u_image, 0));
-``` 
+  vec2 onePixel = vec2(1) / vec2(textureSize(u_image, 0));
+
+  // усредняем левый, средний и правый пиксели
+  outColor = (
+      texture(u_image, v_texCoord) +
+      texture(u_image, v_texCoord + vec2( onePixel.x, 0.0)) +
+      texture(u_image, v_texCoord + vec2(-onePixel.x, 0.0))) / 3.0;
+}
+```
+
+Сравните с неразмытым изображением выше.
+
+{{{example url="../webgl-2d-image-blend.html" }}}
+
+Теперь, когда мы знаем, как ссылаться на другие пиксели, давайте используем свёрточное ядро
+для выполнения множества распространённых операций обработки изображений. В этом случае мы будем использовать ядро 3x3.
+Свёрточное ядро — это просто матрица 3x3, где каждый элемент матрицы представляет
+насколько умножить 8 пикселей вокруг пикселя, который мы рендерим. Затем мы
+делим результат на вес ядра (сумма всех значений в ядре)
+или 1.0, в зависимости от того, что больше. [Вот довольно хорошая статья об этом](https://docs.gimp.org/2.6/en/plug-in-convmatrix.html).
+И [вот ещё одна статья, показывающая реальный код, если бы
+вы писали это вручную на C++](https://www.codeproject.com/KB/graphics/ImageConvolution.aspx).
+
+В нашем случае мы будем делать эту работу в шейдере, так что вот новый фрагментный шейдер:
+
+```
+#version 300 es
+
+// фрагментные шейдеры не имеют точности по умолчанию, поэтому нужно
+// выбрать одну. highp — хороший выбор по умолчанию. Это "высокая точность"
+precision highp float;
+
+// наша текстура
+uniform sampler2D u_image;
+
+// данные свёрточного ядра
+uniform float u_kernel[9];
+uniform float u_kernelWeight;
+
+// координаты текстуры, переданные из вершинного шейдера
+in vec2 v_texCoord;
+
+// объявляем выход для фрагментного шейдера
+out vec4 outColor;
+
+void main() {
+  vec2 onePixel = vec2(1) / vec2(textureSize(u_image, 0));
+
+  vec4 colorSum =
+      texture(u_image, v_texCoord + onePixel * vec2(-1, -1)) * u_kernel[0] +
+      texture(u_image, v_texCoord + onePixel * vec2( 0, -1)) * u_kernel[1] +
+      texture(u_image, v_texCoord + onePixel * vec2( 1, -1)) * u_kernel[2] +
+      texture(u_image, v_texCoord + onePixel * vec2(-1,  0)) * u_kernel[3] +
+      texture(u_image, v_texCoord + onePixel * vec2( 0,  0)) * u_kernel[4] +
+      texture(u_image, v_texCoord + onePixel * vec2( 1,  0)) * u_kernel[5] +
+      texture(u_image, v_texCoord + onePixel * vec2(-1,  1)) * u_kernel[6] +
+      texture(u_image, v_texCoord + onePixel * vec2( 0,  1)) * u_kernel[7] +
+      texture(u_image, v_texCoord + onePixel * vec2( 1,  1)) * u_kernel[8] ;
+  outColor = vec4((colorSum / u_kernelWeight).rgb, 1);
+}
+```
+
+В JavaScript нам нужно предоставить свёрточное ядро и его вес:
+
+     function computeKernelWeight(kernel) {
+       var weight = kernel.reduce(function(prev, curr) {
+           return prev + curr;
+       });
+       return weight <= 0 ? 1 : weight;
+     }
+
+     ...
+     var kernelLocation = gl.getUniformLocation(program, "u_kernel[0]");
+     var kernelWeightLocation = gl.getUniformLocation(program, "u_kernelWeight");
+     ...
+     var edgeDetectKernel = [
+         -1, -1, -1,
+         -1,  8, -1,
+         -1, -1, -1
+     ];
+
+     // задаём ядро и его вес
+     gl.uniform1fv(kernelLocation, edgeDetectKernel);
+     gl.uniform1f(kernelWeightLocation, computeKernelWeight(edgeDetectKernel));
+     ...
+
+И вуаля... Используйте выпадающий список для выбора разных ядер.
+
+{{{example url="../webgl-2d-image-3x3-convolution.html" }}}
+
+Я надеюсь, что эта статья убедила вас, что обработка изображений в WebGL довольно проста. Далее
+я расскажу [как применить более одного эффекта к изображению](webgl-image-processing-continued.html).
+
+<div class="webgl_bottombar">
+<h3>Что такое текстурные юниты?</h3>
+Когда вы вызываете <code>gl.draw???</code> ваш шейдер может ссылаться на текстуры. Текстуры привязаны
+к текстурным юнитам. Хотя машина пользователя может поддерживать больше, все реализации WebGL2
+обязаны поддерживать как минимум 16 текстурных юнитов. К какому текстурному юниту ссылается каждый sampler uniform,
+устанавливается путём поиска местоположения этого sampler uniform и затем установки
+индекса текстурного юнита, на который вы хотите, чтобы он ссылался.
+
+Например:
+<pre class="prettyprint showlinemods">
+var textureUnitIndex = 6; // используем текстурный юнит 6.
+var u_imageLoc = gl.getUniformLocation(
+    program, "u_image");
+gl.uniform1i(u_imageLoc, textureUnitIndex);
+</pre>
+
+Чтобы установить текстуры на разных юнитах, вы вызываете gl.activeTexture и затем привязываете текстуру, которую хотите на этом юните. Пример:
+
+<pre class="prettyprint showlinemods">
+// Привязываем someTexture к текстурному юниту 6.
+gl.activeTexture(gl.TEXTURE6);
+gl.bindTexture(gl.TEXTURE_2D, someTexture);
+</pre>
+
+Это тоже работает:
+
+<pre class="prettyprint showlinemods">
+var textureUnitIndex = 6; // используем текстурный юнит 6.
+// Привязываем someTexture к текстурному юниту 6.
+gl.activeTexture(gl.TEXTURE0 + textureUnitIndex);
+gl.bindTexture(gl.TEXTURE_2D, someTexture);
+</pre>
+</div>
+
+<div class="webgl_bottombar">
+<h3>Что означают префиксы a_, u_, и v_ перед переменными в GLSL?</h3>
+<p>
+Это просто соглашение об именовании. Они не обязательны, но для меня это делает легче увидеть с первого взгляда,
+откуда приходят значения. a_ для атрибутов, которые являются данными, предоставленными буферами. u_ для uniform'ов,
+которые являются входами в шейдеры, v_ для varying'ов, которые являются значениями, переданными из вершинного шейдера во
+фрагментный шейдер и интерполированными (или изменёнными) между вершинами для каждого нарисованного пикселя.
+Смотрите <a href="webgl-how-it-works.html">Как это работает</a> для более подробной информации.
+</p>
+</div> 

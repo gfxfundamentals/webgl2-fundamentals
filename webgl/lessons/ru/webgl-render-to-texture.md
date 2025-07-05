@@ -252,80 +252,14 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
 В противном случае она не работает, и вам придется сделать что-то еще, например, сказать пользователю, что ему не повезло,
 или переключиться на какой-то другой метод.
 
-Если вы еще не проверили [упрощение WebGL с меньшим количеством кода больше веселья](webgl-less-code-more-fun.html).
+Если вы еще не проверили [упрощение WebGL с меньшим количеством кода, больше веселья](webgl-less-code-more-fun.html).
 
 <div class="webgl_bottombar">
 <h3>Сам Canvas на самом деле является текстурой</h3>
 <p>
 Это просто мелочь, но браузеры используют техники выше для реализации самого canvas.
-За кулисами они создают цветную текстуру, буфер глубины, framebuffer, а затем они
-привязывают его как текущий framebuffer. Вы делаете свой рендеринг, который рисует в эту текстуру.
-Они затем используют эту текстуру для рендеринга вашего canvas в веб-страницу.
-</p>
-</div>
-
-```
-// создаем текстуру глубины
-const depthTexture = gl.createTexture();
-gl.bindTexture(gl.TEXTURE_2D, depthTexture);
-
-// делаем буфер глубины того же размера, что и targetTexture
-{
-  // определяем размер и формат уровня 0
-  const level = 0;
-  const internalFormat = gl.DEPTH_COMPONENT24;
-  const border = 0;
-  const format = gl.DEPTH_COMPONENT;
-  const type = gl.UNSIGNED_INT;
-  const data = null;
-  gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
-                targetTextureWidth, targetTextureHeight, border,
-                format, type, data);
-
-  // устанавливаем фильтрацию, чтобы нам не нужны были мипмапы
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-  // прикрепляем текстуру глубины к framebuffer
-  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depthTexture, level);
-}
-```
-
-И с этим вот результат.
-
-{{{example url="../webgl-render-to-texture-3-cubes-with-depth-buffer.html" }}}
-
-Теперь, когда у нас есть буфер глубины, прикрепленный к нашему framebuffer, внутренние кубы правильно пересекаются.
-
-<img class="webgl_center" src="resources/cubes-with-depth-buffer.jpg" width="100%" height="100%" />
-
-Важно отметить, что WebGL гарантирует работу только определенных комбинаций вложений.
-[Согласно спецификации](https://www.khronos.org/registry/webgl/specs/latest/1.0/#FBO_ATTACHMENTS)
-единственные гарантированные комбинации вложений:
-
-* `COLOR_ATTACHMENT0` = `RGBA/UNSIGNED_BYTE` текстура
-* `COLOR_ATTACHMENT0` = `RGBA/UNSIGNED_BYTE` текстура + `DEPTH_ATTACHMENT` = `DEPTH_COMPONENT16` renderbuffer
-* `COLOR_ATTACHMENT0` = `RGBA/UNSIGNED_BYTE` текстура + `DEPTH_STENCIL_ATTACHMENT` = `DEPTH_STENCIL` renderbuffer
-
-Для любых других комбинаций вы должны проверить, поддерживает ли система/GPU/драйвер/браузер пользователя эту комбинацию.
-Для проверки вы создаете свой framebuffer, создаете и прикрепляете вложения, затем вызываете
-
-    var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-
-Если статус `FRAMEBUFFER_COMPLETE`, то эта комбинация вложений работает для этого пользователя.
-В противном случае она не работает, и вам придется сделать что-то еще, например, сказать пользователю, что ему не повезло,
-или переключиться на какой-то другой метод.
-
-Если вы еще не ознакомились с [упрощением WebGL с меньше кода больше веселья](webgl-less-code-more-fun.html).
-
-<div class="webgl_bottombar">
-<h3>Canvas сам по себе на самом деле текстура</h3>
-<p>
-Это просто мелочь, но браузеры используют техники выше для реализации самого canvas.
-За кулисами они создают цветную текстуру, буфер глубины, framebuffer, а затем они
-привязывают его как текущий framebuffer. Вы делаете свой рендеринг, который рисует в эту текстуру.
-Они затем используют эту текстуру для рендеринга вашего canvas в веб-страницу.
+За кулисами они создают цветную текстуру, буфер глубины, framebuffer, а затем привязывают
+его как текущий framebuffer. Вы делаете свой рендеринг, который рисует в эту текстуру.
+Затем они используют эту текстуру для рендеринга вашего canvas в веб-страницу.
 </p>
 </div> 

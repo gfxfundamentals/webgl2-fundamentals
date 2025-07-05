@@ -205,14 +205,53 @@ void main() {
 `;
 ```
 
----
-
-Теперь нам нужно реализовать инстансинг через атрибуты и буферы:
+Теперь нам нужно изменить шейдеры, чтобы использовать атрибуты вместо uniform'ов:
 
 ```js
-// настраиваем матрицы, по одной на экземпляр
-const numInstances = 5;
-// создаём типизированный массив с одним view на матрицу
+const vertexShaderSource = `#version 300 es
+in vec4 a_position;
+in vec4 color;
+in mat4 matrix;
+
+out vec4 v_color;
+
+void main() {
+  // Умножаем позицию на матрицу
+  gl_Position = matrix * a_position;
+
+  // Передаём цвет вершины во фрагментный шейдер
+  v_color = color;
+}
+`;
+
+const fragmentShaderSource = `#version 300 es
+precision highp float;
+
+in vec4 v_color;
+
+out vec4 outColor;
+
+void main() {
+  outColor = v_color;
+}
+`;
+```
+
+Теперь нам нужно получить локации атрибутов вместо uniform'ов:
+
+```js
+const program = webglUtils.createProgramFromSources(gl,
+    [vertexShaderSource, fragmentShaderSource]);
+
+const positionLoc = gl.getAttribLocation(program, 'a_position');
+const colorLoc = gl.getAttribLocation(program, 'color');
+const matrixLoc = gl.getAttribLocation(program, 'matrix');
+```
+
+Теперь нам нужно создать буферы для матриц и цветов. Для матриц мы создадим один большой буфер:
+
+```js
+// Создаём буфер для всех матриц
 const matrixData = new Float32Array(numInstances * 16);
 const matrices = [];
 for (let i = 0; i < numInstances; ++i) {
@@ -223,29 +262,64 @@ for (let i = 0; i < numInstances; ++i) {
       byteOffsetToMatrix,
       numFloatsForView));
 }
+```
 
+Таким образом, когда мы хотим ссылаться на данные всех матриц,
+мы можем использовать `matrixData`, но когда мы хотим любую отдельную матрицу,
+мы можем использовать `matrices[ndx]`.
+
+Нам также нужно создать буфер на GPU для этих данных.
+Нам нужно только выделить буфер в этот момент, нам не нужно
+предоставлять данные, поэтому 2-й параметр для `gl.bufferData`
+- это размер, который просто выделяет буфер.
+
+```js
 const matrixBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, matrixBuffer);
+// просто выделяем буфер
 gl.bufferData(gl.ARRAY_BUFFER, matrixData.byteLength, gl.DYNAMIC_DRAW);
+```
 
+Обратите внимание, что мы передали `gl.DYNAMIC_DRAW` как последний параметр. Это *подсказка*
+для WebGL, что мы будем часто изменять эти данные.
+
+Теперь нам нужно настроить атрибуты для матриц.
+Атрибут матрицы - это `mat4`. `mat4` фактически использует
+4 последовательных слота атрибутов.
+
+```js
 const bytesPerMatrix = 4 * 16;
 for (let i = 0; i < 4; ++i) {
   const loc = matrixLoc + i;
   gl.enableVertexAttribArray(loc);
-  // stride и offset
-  const offset = i * 16;
+  // обратите внимание на stride и offset
+  const offset = i * 16;  // 4 float на строку, 4 байта на float
   gl.vertexAttribPointer(
-      loc,
-      4,
-      gl.FLOAT,
-      false,
-      bytesPerMatrix,
-      offset,
+      loc,              // location
+      4,                // размер (сколько значений брать из буфера за итерацию)
+      gl.FLOAT,         // тип данных в буфере
+      false,            // нормализовать
+      bytesPerMatrix,   // stride, количество байт для перехода к следующему набору значений
+      offset,           // смещение в буфере
   );
+  // эта строка говорит, что этот атрибут изменяется только раз в 1 экземпляр
   gl.vertexAttribDivisor(loc, 1);
 }
+```
 
-// настраиваем цвета, по одному на экземпляр
+Самая важная точка относительно инстансированного рисования - это
+вызов `gl.vertexAttribDivisor`. Он устанавливает, что этот
+атрибут переходит к следующему значению только раз в экземпляр.
+Это означает, что атрибуты `matrix` будут использовать первую матрицу для
+каждой вершины первого экземпляра, вторую матрицу для
+второго экземпляра и так далее.
+
+Далее нам нужны цвета также в буфере. Эти данные не будут
+изменяться, по крайней мере в этом примере, поэтому мы просто загрузим
+данные.
+
+```js
+// настраиваем цвета, один на экземпляр
 const colorBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 gl.bufferData(gl.ARRAY_BUFFER,
@@ -257,42 +331,109 @@ gl.bufferData(gl.ARRAY_BUFFER,
         0, 1, 1, 1,  // циан
       ]),
     gl.STATIC_DRAW);
-gl.enableVertexAttribArray(colorLoc);
-gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 0, 0);
-gl.vertexAttribDivisor(colorLoc, 1);
-
-// В рендере:
-function render(time) {
-  time *= 0.001;
-  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-  gl.useProgram(program);
-  gl.bindVertexArray(vao);
-
-  // обновляем все матрицы
-  matrices.forEach((mat, ndx) => {
-    m4.translation(-0.5 + ndx * 0.25, 0, 0, mat);
-    m4.zRotate(mat, time * (0.1 + 0.1 * ndx), mat);
-  });
-  // загружаем все матрицы в буфер
-  gl.bindBuffer(gl.ARRAY_BUFFER, matrixBuffer);
-  gl.bufferSubData(gl.ARRAY_BUFFER, 0, matrixData);
-
-  // рисуем все экземпляры одной командой
-  gl.drawArraysInstanced(
-      gl.TRIANGLES,
-      0,           // offset
-      numVertices, // количество вершин на экземпляр
-      numInstances // количество экземпляров
-  );
-
-  requestAnimationFrame(render);
-}
-requestAnimationFrame(render);
 ```
 
-Теперь мы вызываем только одну команду отрисовки, и WebGL сам перебирает экземпляры, используя данные из буферов для каждого экземпляра.
+Нам также нужно настроить атрибут цвета:
+
+```js
+// устанавливаем атрибут для цвета
+gl.enableVertexAttribArray(colorLoc);
+gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 0, 0);
+// эта строка говорит, что этот атрибут изменяется только раз в 1 экземпляр
+gl.vertexAttribDivisor(colorLoc, 1);
+```
+
+Во время отрисовки вместо цикла по каждому экземпляру,
+установки uniform'ов матрицы и цвета, а затем вызова draw,
+мы сначала вычислим матрицу для каждого экземпляра.
+
+```js
+// обновляем все матрицы
+matrices.forEach((mat, ndx) => {
+  m4.translation(-0.5 + ndx * 0.25, 0, 0, mat);
+  m4.zRotate(mat, time * (0.1 + 0.1 * ndx), mat);
+});
+```
+
+Поскольку наша библиотека матриц принимает необязательную матрицу назначения
+и поскольку наши матрицы - это просто представления `Float32Array` в
+большем `Float32Array`, когда мы закончили, все данные матриц
+готовы для прямой загрузки на GPU.
+
+```js
+// загружаем новые данные матриц
+gl.bindBuffer(gl.ARRAY_BUFFER, matrixBuffer);
+gl.bufferSubData(gl.ARRAY_BUFFER, 0, matrixData);
+```
+
+Наконец мы можем нарисовать все экземпляры одним вызовом draw.
+
+```js
+gl.drawArraysInstanced(
+  gl.TRIANGLES,
+  0,             // offset
+  numVertices,   // количество вершин на экземпляр
+  numInstances,  // количество экземпляров
+);
+```
 
 {{{example url="../webgl-instanced-drawing.html"}}}
 
-Инстансинг — мощный способ ускорить отрисовку множества одинаковых объектов с разными параметрами. 
+В примере выше у нас было 3 вызова WebGL на фигуру * 5 фигур,
+что составляло 15 вызовов всего. Теперь у нас всего 2 вызова для всех 5 фигур,
+один для загрузки матриц, другой для рисования.
+
+Я думаю, это должно быть очевидно, но, возможно,
+это очевидно только мне, потому что я делал это слишком много. Код
+выше не учитывает соотношение сторон canvas.
+Он не использует [матрицу проекции](webgl-3d-orthographic.html)
+или [матрицу вида](webgl-3d-camera.html). Он был предназначен только
+для демонстрации инстансированного рисования. Если бы вы хотели проекцию и/или
+матрицу вида, мы могли бы добавить вычисление в JavaScript. Это означало бы
+больше работы для JavaScript. Более очевидный способ - добавить
+один или два uniform'а в вершинный шейдер.
+
+```js
+const vertexShaderSource = `#version 300 es
+in vec4 a_position;
+in vec4 color;
+in mat4 matrix;
+uniform mat4 projection;
+uniform mat4 view;
+
+out vec4 v_color;
+
+void main() {
+  // Умножаем позицию на матрицу
+  gl_Position = projection * view * matrix * a_position;
+
+  // Передаём цвет вершины во фрагментный шейдер
+  v_color = color;
+}
+`;
+```
+
+и затем найти их локации во время инициализации:
+
+```js
+const positionLoc = gl.getAttribLocation(program, 'a_position');
+const colorLoc = gl.getAttribLocation(program, 'color');
+const matrixLoc = gl.getAttribLocation(program, 'matrix');
+const projectionLoc = gl.getUniformLocation(program, 'projection');
+const viewLoc = gl.getUniformLocation(program, 'view');
+```
+
+и установить их соответствующим образом во время рендеринга.
+
+```js
+gl.useProgram(program);
+
+// устанавливаем матрицы вида и проекции, поскольку
+// они используются всеми экземплярами
+const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+gl.uniformMatrix4fv(projectionLoc, false,
+    m4.orthographic(-aspect, aspect, -1, 1, -1, 1));
+gl.uniformMatrix4fv(viewLoc, false, m4.zRotation(time * .1));
+```
+
+{{{example url="../webgl-instanced-drawing-projection-view.html"}}} 
