@@ -179,77 +179,77 @@ f 1//1 2//2 3//3     # индексы для позиций и нормалей
 
 ```js
 function parseOBJ(text) {
-+  // потому что индексы основаны на 1, давайте просто заполним 0-е данные
-+  const objPositions = [[0, 0, 0]];
-+  const objTexcoords = [[0, 0]];
-+  const objNormals = [[0, 0, 0]];
-+
-+  // тот же порядок, что и индексы `f`
-+  const objVertexData = [
-+    objPositions,
-+    objTexcoords,
-+    objNormals,
-+  ];
-+
-+  // тот же порядок, что и индексы `f`
-+  let webglVertexData = [
-+    [],   // позиции
-+    [],   // текстурные координаты
-+    [],   // нормали
-+  ];
-+
-+  function addVertex(vert) {
-+    const ptn = vert.split('/');
-+    ptn.forEach((objIndexStr, i) => {
-+      if (!objIndexStr) {
-+        return;
-+      }
-+      const objIndex = parseInt(objIndexStr);
-+      const index = objIndex + (objIndex >= 0 ? 0 : objVertexData[i].length);
-+      webglVertexData[i].push(...objVertexData[i][index]);
-+    });
-+  }
-+
-+  const keywords = {
-+    v(parts) {
-+      objPositions.push(parts.map(parseFloat));
-+    },
-+    vn(parts) {
-+      objNormals.push(parts.map(parseFloat));
-+    },
-+    vt(parts) {
-+      objTexcoords.push(parts.map(parseFloat));
-+    },
-+    f(parts) {
-+      const numTriangles = parts.length - 2;
-+      for (let tri = 0; tri < numTriangles; ++tri) {
-+        addVertex(parts[0]);
-+        addVertex(parts[tri + 1]);
-+        addVertex(parts[tri + 2]);
-+      }
-+    },
-+  };
-+
-+  const keywordRE = /(\w*)(?: )*(.*)/;
-+  const lines = text.split('\n');
-+  for (let lineNo = 0; lineNo < lines.length; ++lineNo) {
-+    const line = lines[lineNo].trim();
-+    if (line === '' || line.startsWith('#')) {
-+      continue;
-+    }
-+    const m = keywordRE.exec(line);
-+    if (!m) {
-+      continue;
-+    }
-+    const [, keyword, unparsedArgs] = m;
-+    const parts = line.split(/\s+/).slice(1);
-+    const handler = keywords[keyword];
-+    if (!handler) {
-+      console.warn('unhandled keyword:', keyword, 'at line', lineNo + 1);
-+      continue;
-+    }
-+    handler(parts, unparsedArgs);
-+  }
+  // потому что индексы основаны на 1, давайте просто заполним 0-е данные
+  const objPositions = [[0, 0, 0]];
+  const objTexcoords = [[0, 0]];
+  const objNormals = [[0, 0, 0]];
+
+  // тот же порядок, что и индексы `f`
+  const objVertexData = [
+    objPositions,
+    objTexcoords,
+    objNormals,
+  ];
+
+  // тот же порядок, что и индексы `f`
+  let webglVertexData = [
+    [],   // позиции
+    [],   // текстурные координаты
+    [],   // нормали
+  ];
+
+  function addVertex(vert) {
+    const ptn = vert.split('/');
+    ptn.forEach((objIndexStr, i) => {
+      if (!objIndexStr) {
+        return;
+      }
+      const objIndex = parseInt(objIndexStr);
+      const index = objIndex + (objIndex >= 0 ? 0 : objVertexData[i].length);
+      webglVertexData[i].push(...objVertexData[i][index]);
+    });
+  }
+
+  const keywords = {
+    v(parts) {
+      objPositions.push(parts.map(parseFloat));
+    },
+    vn(parts) {
+      objNormals.push(parts.map(parseFloat));
+    },
+    vt(parts) {
+      objTexcoords.push(parts.map(parseFloat));
+    },
+    f(parts) {
+      const numTriangles = parts.length - 2;
+      for (let tri = 0; tri < numTriangles; ++tri) {
+        addVertex(parts[0]);
+        addVertex(parts[tri + 1]);
+        addVertex(parts[tri + 2]);
+      }
+    },
+  };
+
+  const keywordRE = /(\w*)(?: )*(.*)/;
+  const lines = text.split('\n');
+  for (let lineNo = 0; lineNo < lines.length; ++lineNo) {
+    const line = lines[lineNo].trim();
+    if (line === '' || line.startsWith('#')) {
+      continue;
+    }
+    const m = keywordRE.exec(line);
+    if (!m) {
+      continue;
+    }
+    const [, keyword, unparsedArgs] = m;
+    const parts = line.split(/\s+/).slice(1);
+    const handler = keywords[keyword];
+    if (!handler) {
+      console.warn('unhandled keyword:', keyword, 'at line', lineNo + 1);
+      continue;
+    }
+    handler(parts, unparsedArgs);
+  }
 
   return {
     position: webglVertexData[0],
@@ -569,4 +569,256 @@ function addVertex(vert) {
   Вы можете увидеть пример загрузки .GLTF файла в [статье о скиннинге](webgl-skinning.html).
 
   Если у вас есть .OBJ файлы, которые вы хотите использовать, лучшая практика - конвертировать их
-  в какой-то другой формат сначала, офлайн, а затем использовать лучший формат на вашей странице. 
+  в какой-то другой формат сначала, офлайн, а затем использовать лучший формат на вашей странице.
+
+## Загрузка .OBJ с цветами вершин
+
+Некоторые .OBJ файлы содержат цвета вершин. Это данные, которые хранятся в каждой вершине,
+а не в материале. Давайте добавим поддержку для этого.
+
+Сначала нужно обновить парсер, чтобы он обрабатывал ключевое слово `vc` (vertex color):
+
+```js
+function parseOBJ(text) {
+  const objPositions = [];
+  const objTexcoords = [];
+  const objNormals = [];
+  const objColors = [];
+  const objVertexData = [
+    objPositions,
+    objTexcoords,
+    objNormals,
+    objColors,
+  ];
+
+  // индексы для webgl используют 0 как базу
+  const webglIndices = [];
+  let geometry;
+  let material = 'default';
+  let object = 'default';
+
+  const noop = () => {};
+
+  const keywords = {
+    v(parts) {
+      // если есть 4 значения, то это позиция + цвет
+      if (parts.length === 6) {
+        objPositions.push(parts[0], parts[1], parts[2]);
+        objColors.push(parts[3], parts[4], parts[5]);
+      } else {
+        objPositions.push(parts[0], parts[1], parts[2]);
+      }
+    },
+    vn(parts) {
+      objNormals.push(parts[0], parts[1], parts[2]);
+    },
+    vt(parts) {
+      objTexcoords.push(parts[0], parts[1]);
+    },
+    f(parts) {
+      setGeometry();
+      addFace(parts);
+    },
+    s: noop, // smoothing group
+    mtllib(parts, unparsedArgs) {
+      // материал библиотека
+      materialLib = unparsedArgs;
+    },
+    usemtl(parts, unparsedArgs) {
+      material = unparsedArgs;
+      setGeometry();
+    },
+    g(parts, unparsedArgs) {
+      object = unparsedArgs;
+      setGeometry();
+    },
+    o(parts, unparsedArgs) {
+      object = unparsedArgs;
+      setGeometry();
+    },
+  };
+
+  function setGeometry() {
+    if (geometry) {
+      geometry = undefined;
+    }
+  }
+
+  function addFace(parts) {
+    const numTriangles = parts.length - 2;
+    for (let tri = 0; tri < numTriangles; ++tri) {
+      addVertex(parts[0]);
+      addVertex(parts[tri + 1]);
+      addVertex(parts[tri + 2]);
+    }
+  }
+
+  const keywordRE = /(\w*)(?: )*(.*)/;
+  const lines = text.split('\n');
+  for (let lineNo = 0; lineNo < lines.length; ++lineNo) {
+    const line = lines[lineNo].trim();
+    if (line === '' || line.startsWith('#')) {
+      continue;
+    }
+    const m = keywordRE.exec(line);
+    if (!m) {
+      continue;
+    }
+    const [, keyword, unparsedArgs] = m;
+    const parts = line.split(/\s+/).slice(1);
+    const handler = keywords[keyword];
+    if (!handler) {
+      console.warn('unhandled keyword:', keyword);
+      continue;
+    }
+    handler(parts, unparsedArgs);
+  }
+
+  for (const geometry of Object.values(geometries)) {
+    geometry.data = {};
+    if (geometry.objVertexData[0].length > 0) {
+      geometry.data.position = geometry.objVertexData[0];
+    }
+    if (geometry.objVertexData[1].length > 0) {
+      geometry.data.texcoord = geometry.objVertexData[1];
+    }
+    if (geometry.objVertexData[2].length > 0) {
+      geometry.data.normal = geometry.objVertexData[2];
+    }
+    if (geometry.objVertexData[3].length > 0) {
+      geometry.data.color = geometry.objVertexData[3];
+    }
+  }
+
+  return {
+    geometries: Object.values(geometries),
+  };
+}
+```
+
+Затем нужно обновить шейдеры, чтобы они использовали цвета вершин:
+
+```js
+const vs = `#version 300 es
+in vec4 a_position;
+in vec3 a_normal;
+in vec2 a_texcoord;
+in vec3 a_color;
+
+uniform mat4 u_projection;
+uniform mat4 u_view;
+uniform mat4 u_world;
+uniform vec3 u_viewWorldPosition;
+
+out vec3 v_normal;
+out vec3 v_surfaceToView;
+out vec2 v_texcoord;
+out vec3 v_color;
+
+void main() {
+  vec4 worldPosition = u_world * a_position;
+  gl_Position = u_projection * u_view * worldPosition;
+  v_surfaceToView = u_viewWorldPosition - worldPosition.xyz;
+
+  v_normal = mat3(u_world) * a_normal;
+  v_texcoord = a_texcoord;
+  v_color = a_color;
+}
+`;
+
+const fs = `#version 300 es
+precision highp float;
+
+in vec3 v_normal;
+in vec3 v_surfaceToView;
+in vec2 v_texcoord;
+in vec3 v_color;
+
+uniform vec3 diffuse;
+uniform sampler2D diffuseMap;
+uniform vec3 ambient;
+uniform vec3 emissive;
+uniform vec3 specular;
+uniform sampler2D specularMap;
+uniform float shininess;
+uniform float opacity;
+uniform vec3 u_lightDirection;
+uniform vec3 u_ambientLight;
+
+out vec4 outColor;
+
+void main () {
+  vec3 normal = normalize(v_normal);
+
+  vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+  vec3 halfVector = normalize(u_lightDirection + surfaceToViewDirection);
+
+  float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
+  float specularLight = clamp(dot(normal, halfVector), 0.0, 1.0);
+  vec4 specularMapColor = texture(specularMap, v_texcoord);
+  vec3 effectiveSpecular = specular * specularMapColor.rgb;
+
+  vec4 diffuseMapColor = texture(diffuseMap, v_texcoord);
+  vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb * v_color;
+  float effectiveOpacity = opacity * diffuseMapColor.a;
+
+  outColor = vec4(
+      emissive +
+      ambient * u_ambientLight +
+      effectiveDiffuse * fakeLight +
+      effectiveSpecular * pow(specularLight, shininess),
+      effectiveOpacity);
+}
+`;
+```
+
+Также нужно обновить код, который создаёт буферы, чтобы он обрабатывал цвета вершин.
+Наша [вспомогательная библиотека](webgl-less-code-more-fun.html) обрабатывает это для нас, если
+мы установим данные для этого атрибута как `{value: [1, 2, 3, 4]}`. Итак, мы можем
+проверить, если нет цветов вершин, то если так, установить атрибут цвета вершины
+как константный белый.
+
+```js
+const parts = obj.geometries.map(({data}) => {
+  // Потому что data - это просто именованные массивы, как это
+  //
+  // {
+  //   position: [...],
+  //   texcoord: [...],
+  //   normal: [...],
+  // }
+  //
+  // и потому что эти имена соответствуют атрибутам в нашем вершинном
+  // шейдере, мы можем передать это напрямую в `createBufferInfoFromArrays`
+  // из статьи "less code more fun".
+
+  if (data.color) {
+      if (data.position.length === data.color.length) {
+        // это 3. Наша вспомогательная библиотека предполагает 4, поэтому нам нужно
+        // сказать ей, что их только 3.
+        data.color = { numComponents: 3, data: data.color };
+      }
+  } else {
+    // нет цветов вершин, поэтому просто используем константный белый
+    data.color = { value: [1, 1, 1, 1] };
+  }
+
+  // создаём буфер для каждого массива, вызывая
+  // gl.createBuffer, gl.bindBuffer, gl.bufferData
+  const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
+  const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
+  return {
+    material: {
+      u_diffuse: [1, 1, 1, 1],
+    },
+    bufferInfo,
+    vao,
+  };
+});
+```
+
+И с этим мы можем загрузить .OBJ файл с цветами вершин.
+
+{{{example url="../webgl-load-obj-w-vertex-colors.html"}}}
+
+Что касается парсинга и использования материалов, [см. следующую статью](webgl-load-obj-w-mtl.html) 

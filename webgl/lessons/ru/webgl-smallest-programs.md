@@ -184,17 +184,118 @@ const [minSize, maxSize] = gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE);
 // фрагментный шейдер
 precision highp float;
 
-+uniform sampler tex;
+uniform sampler tex;
 
 out vec4 outColor;
 
 void main() {
--  outColor = vec4(1, 0, 0, 1);  // красный
-+  outColor = texture(tex, gl_PointCoord.xy);
+  outColor = texture(tex, gl_PointCoord.xy);
 }
 ```
 
 Теперь, чтобы держать это простым, давайте сделаем текстуру с сырыми данными, как мы покрыли в
 [статье о текстурах данных](webgl-data-textures.html).
 
-```js 
+```js
+// 2x2 пиксельные данные
+const pixels = new Uint8Array([
+  0xFF, 0x00, 0x00, 0xFF,  // красный
+  0x00, 0xFF, 0x00, 0xFF,  // зеленый
+  0x00, 0x00, 0xFF, 0xFF,  // синий
+  0xFF, 0x00, 0xFF, 0xFF,  // пурпурный
+]);
+const tex = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, tex);
+gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,                 // уровень
+    gl.RGBA,           // внутренний формат
+    2,                 // ширина
+    2,                 // высота
+    0,                 // граница
+    gl.RGBA,           // формат
+    gl.UNSIGNED_BYTE,  // тип
+    pixels,            // данные
+);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+```
+
+Поскольку WebGL по умолчанию использует текстуру 0 и поскольку uniforms
+по умолчанию равны 0, больше ничего настраивать не нужно
+
+{{{example url="../webgl-simple-point-w-texture.html"}}}
+
+Это может быть отличным способом тестирования проблем, связанных с текстурами.
+Мы все еще не используем буферы, атрибуты, и нам не пришлось
+искать и устанавливать никаких uniforms. Например, если мы загрузили изображение,
+оно не отображается. Что если мы попробуем шейдер выше, показывает ли он
+изображение на точке? Мы рендерили в текстуру, а затем
+хотим просмотреть текстуру. Обычно мы бы настроили некоторую геометрию
+через буферы и атрибуты, но мы можем рендерить текстуру просто
+показывая её на этой единственной точке.
+
+## Использование множественных одиночных `POINTS`
+
+Еще одно простое изменение к примеру выше. Мы можем изменить вершинный
+шейдер на этот
+
+```glsl
+#version 300 es
+// вершинный шейдер
+
+in vec4 position;
+
+void main() {
+  gl_Position = position;
+  gl_PointSize = 120.0;
+}
+```
+
+атрибуты имеют значение по умолчанию `0, 0, 0, 1`, поэтому с этим изменением
+примеры выше все еще будут продолжать работать. Но теперь
+мы получаем возможность установить позицию, если захотим.
+
+```js
+const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
+const positionLoc = gl.getAttribLocation(program, 'position');
+const colorLoc = gl.getUniformLocation(program, 'color');
+```
+
+И использовать их
+
+```
+gl.useProgram(program);
+
+const numPoints = 5;
+for (let i = 0; i < numPoints; ++i) {
+  const u = i / (numPoints - 1);    // 0 до 1
+  const clipspace = u * 1.6 - 0.8;  // -0.8 до +0.8
+  gl.vertexAttrib2f(positionLoc, clipspace, clipspace);
+
+  gl.uniform4f(colorLoc, u, 0, 1 - u, 1);
+
+  const offset = 0;
+  const count = 1;
+  gl.drawArrays(gl.POINTS, offset, count);
+}
+```
+
+И теперь мы получаем 5 точек с 5 цветами
+и мы все еще не должны были настраивать никакие буферы или
+атрибуты.
+
+{{{example url="../webgl-simple-points.html"}}}
+
+Конечно, это **НЕ** способ, которым вы должны
+рисовать много точек в WebGL. Если вы хотите рисовать много
+точек, вы должны сделать что-то вроде настройки атрибута с позицией
+для каждой точки и цветом для каждой точки и рисовать все точки
+в одном вызове отрисовки.
+
+НО!, для тестирования, для отладки, для создания [MCVE](https://meta.stackoverflow.com/a/349790/128511) это отличный способ **минимизировать**
+код. Как другой пример, допустим, мы рисуем в текстуры для постобработки
+эффекта, и мы хотим их визуализировать. Мы могли бы просто нарисовать одну большую
+точку для каждой, используя комбинацию этого примера и
+предыдущего с текстурой. Никаких сложных шагов буферов
+и атрибутов не нужно, отлично для отладки. 

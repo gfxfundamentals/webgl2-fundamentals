@@ -272,7 +272,7 @@ function render() {
 
   // рисуем объект для представления первой камеры
   {
-    // Создаём view matrix из матрицы второй камеры.
+    // Создаём матрицу вида из матрицы второй камеры.
     const viewMatrix = m4.inverse(cameraMatrix2);
 
     let mat = m4.multiply(perspectiveProjectionMatrix2, viewMatrix);
@@ -300,16 +300,16 @@ function render() {
 render();
 ```
 
-И теперь мы можем видеть камеру, используемую для рендера левой сцены, в сцене справа.
+И теперь мы можем видеть камеру, используемую для рендеринга левой сцены, в сцене справа.
 
 {{{example url="../webgl-visualize-camera.html"}}}
 
 Давайте также нарисуем что-то для представления frustum камеры.
 
-Поскольку frustum представляет преобразование в clip space, мы можем сделать куб, представляющий clip space,
+Поскольку frustum представляет преобразование в clip space, мы можем создать куб, который представляет clip space,
 и использовать обратную матрицу проекции для размещения его в сцене.
 
-Сначала нужен куб линий clip space:
+Сначала нам нужен куб линий clip space.
 
 ```js
 function createClipspaceCubeBufferInfo(gl) {
@@ -340,7 +340,7 @@ function createClipspaceCubeBufferInfo(gl) {
 }
 ```
 
-Затем можем создать один и нарисовать его:
+Затем мы можем создать один и нарисовать его:
 
 ```js
 const cameraScale = 20;
@@ -351,10 +351,14 @@ const cameraVAO = twgl.createVAOFromBufferInfo(
 const clipspaceCubeBufferInfo = createClipspaceCubeBufferInfo(gl);
 const clipspaceCubeVAO = twgl.createVAOFromBufferInfo(
     gl, solidColorProgramInfo, clipspaceCubeBufferInfo);
+```
 
+И в коде рендеринга:
+
+```js
   // рисуем объект для представления первой камеры
   {
-    // Создаём view matrix из матрицы камеры.
+    // Создаём матрицу вида из матрицы камеры.
     const viewMatrix = m4.inverse(cameraMatrix2);
 
     let mat = m4.multiply(perspectiveProjectionMatrix2, viewMatrix);
@@ -394,10 +398,9 @@ const clipspaceCubeVAO = twgl.createVAOFromBufferInfo(
     // вызывает gl.drawArrays или gl.drawElements
     twgl.drawBufferInfo(gl, clipspaceCubeBufferInfo, gl.LINES);
   }
-}
 ```
 
-Давайте также сделаем так, чтобы можно было настраивать near и far параметры первой камеры:
+Давайте также сделаем так, чтобы мы могли настраивать near и far параметры первой камеры:
 
 ```js
 const settings = {
@@ -410,26 +413,24 @@ const settings = {
   cam1Far: 500,
 };
 
-...
-
-  // Вычисляем матрицу перспективной проекции
-  const perspectiveProjectionMatrix =
-      m4.perspective(degToRad(settings.cam1FieldOfView),
-      aspect,
-      settings.cam1Near,
-      settings.cam1Far);
+// Вычисляем матрицу перспективной проекции
+const perspectiveProjectionMatrix =
+    m4.perspective(degToRad(settings.cam1FieldOfView),
+    aspect,
+    settings.cam1Near,
+    settings.cam1Far);
 ```
 
-и теперь мы можем видеть frustum тоже:
+И теперь мы можем видеть frustum тоже:
 
 {{{example url="../webgl-visualize-camera-with-frustum.html"}}}
 
 Если вы настроите near или far плоскости или поле зрения так, чтобы они обрезали F, вы увидите,
 что представление frustum совпадает.
 
-Будем ли мы использовать перспективную или ортографическую проекцию для камеры слева — это будет работать в любом случае,
-потому что матрица проекции всегда преобразует в clip space, поэтому её обратная всегда возьмёт наш куб от +1 до -1
-и исказит его соответствующим образом.
+Будем ли мы использовать перспективную проекцию или ортографическую проекцию для камеры слева,
+это будет работать в любом случае, потому что матрица проекции всегда преобразует в clip space,
+поэтому её обратная всегда будет брать наш куб от +1 до -1 и искажать его соответствующим образом.
 
 ```js
 const settings = {
@@ -443,8 +444,6 @@ const settings = {
   cam1Ortho: true,
   cam1OrthoUnits: 120,
 };
-
-...
 
 // Вычисляем матрицу проекции
 const perspectiveProjectionMatrix = settings.cam1Ortho
@@ -461,4 +460,9 @@ const perspectiveProjectionMatrix = settings.cam1Ortho
         settings.cam1Far);
 ```
 
-{{{example url="../webgl-visualize-camera-with-orthographic.html"}}} 
+{{{example url="../webgl-visualize-camera-with-orthographic.html"}}}
+
+Такой тип визуализации должен быть знаком любому, кто использовал 3D пакет моделирования, как [Blender](https://blender.org),
+или 3D игровой движок с инструментами редактирования сцены, как [Unity](https://unity.com) или [Godot](https://godotengine.org/).
+
+Это также может быть довольно полезно для отладки. 

@@ -377,7 +377,7 @@ void main() {
 const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
 const positionLoc = gl.getAttribLocation(program, 'position');
 const srcTexLoc = gl.getUniformLocation(program, 'srcTex');
-+const dstDimensionsLoc = gl.getUniformLocation(program, 'dstDimensions');
+const dstDimensionsLoc = gl.getUniformLocation(program, 'dstDimensions');
 ```
 
 и установить его
@@ -385,15 +385,14 @@ const srcTexLoc = gl.getUniformLocation(program, 'srcTex');
 ```js
 gl.useProgram(program);
 gl.uniform1i(srcTexLoc, 0);  // говорим шейдеру, что исходная текстура находится на texture unit 0
-+gl.uniform2f(dstDimensionsLoc, dstWidth, dstHeight);
+gl.uniform2f(dstDimensionsLoc, dstWidth, dstHeight);
 ```
 
 и нам нужно изменить размер назначения (canvas)
 
 ```js
 const dstWidth = 3;
--const dstHeight = 2;
-+const dstHeight = 1;
+const dstHeight = 1;
 ```
 
 и с этим у нас теперь есть результирующий массив, способный выполнять математику
@@ -980,4 +979,1006 @@ for each point
   minDistanceSoFar = MAX_VALUE
   for each line segment
     compute distance from point to line segment
-``` 
+    if distance is < minDistanceSoFar
+       minDistanceSoFar = distance
+       closestLine = line segment
+```
+
+Для 500 точек, каждая проверяющая 1000 линий, это 500,000 проверок.
+Современные GPU имеют сотни или тысячи ядер, поэтому если мы могли бы сделать это на
+GPU, мы могли бы потенциально работать в сотни или тысячи раз быстрее.
+
+На этот раз, хотя мы можем поместить точки в буфер, как мы делали для частиц,
+мы не можем поместить отрезки линий в буфер. Буферы предоставляют свои данные через
+атрибуты. Это означает, что мы не можем случайно обращаться к любому значению по требованию, вместо
+этого значения присваиваются атрибуту вне контроля шейдера.
+
+Итак, нам нужно поместить позиции линий в текстуру, которая, как мы указали
+выше, является другим словом для 2D массива, хотя мы все еще можем обращаться с этим 2D
+массивом как с 1D массивом, если хотим.
+
+Вот вершинный шейдер, который находит ближайшую линию для одной точки.
+Это точно алгоритм перебора, как выше
+
+```js
+  const closestLineVS = `#version 300 es
+  in vec3 point;
+
+  uniform sampler2D linesTex;
+  uniform int numLineSegments;
+
+  flat out int closestNdx;
+
+  vec4 getAs1D(sampler2D tex, ivec2 dimensions, int index) {
+    int y = index / dimensions.x;
+    int x = index % dimensions.x;
+    return texelFetch(tex, ivec2(x, y), 0);
+  }
+
+  // из https://stackoverflow.com/a/6853926/128511
+  // a - это точка, b,c - это отрезок линии
+  float distanceFromPointToLine(in vec3 a, in vec3 b, in vec3 c) {
+    vec3 ba = a - b;
+    vec3 bc = c - b;
+    float d = dot(ba, bc);
+    float len = length(bc);
+    float param = 0.0;
+    if (len != 0.0) {
+      param = clamp(d / (len * len), 0.0, 1.0);
+    }
+    vec3 r = b + bc * param;
+    return distance(a, r);
+  }
+
+  void main() {
+    ivec2 linesTexDimensions = textureSize(linesTex, 0);
+    
+    // находим ближайший отрезок линии
+    float minDist = 10000000.0; 
+    int minIndex = -1;
+    for (int i = 0; i < numLineSegments; ++i) {
+      vec3 lineStart = getAs1D(linesTex, linesTexDimensions, i * 2).xyz;
+      vec3 lineEnd = getAs1D(linesTex, linesTexDimensions, i * 2 + 1).xyz;
+      float dist = distanceFromPointToLine(point, lineStart, lineEnd);
+      if (dist < minDist) {
+        minDist = dist;
+        minIndex = i;
+      }
+    }
+    
+    closestNdx = minIndex;
+  }
+  `;
+```
+
+Я переименовал `getValueFrom2DTextureAs1DArray` в `getAs1D` просто чтобы сделать
+некоторые строки короче и более читаемыми.
+В противном случае это довольно прямолинейная реализация алгоритма перебора,
+который мы написали выше.
+
+`point` - это текущая точка. `linesTex` содержит точки для
+отрезка линии парами, первая точка, за которой следует вторая точка.
+
+Сначала давайте создадим некоторые тестовые данные. Вот 2 точки и 5 линий. Они
+дополнены 0, 0, потому что каждая будет храниться в RGBA текстуре.
+
+```js
+const points = [
+  100, 100,
+  200, 100,
+];
+const lines = [
+   25,  50,
+   25, 150,
+   90,  50,
+   90, 150,
+  125,  50,
+  125, 150,
+  185,  50,
+  185, 150,
+  225,  50,
+  225, 150,
+];
+const numPoints = points.length / 2;
+const numLineSegments = lines.length / 2 / 2;
+```
+
+Если мы нанесем их на график, они будут выглядеть так
+
+<img src="resources/line-segments-points.svg" style="width: 500px;" class="webgl_center">
+
+Линии пронумерованы от 0 до 4 слева направо,
+поэтому если наш код работает, первая точка (<span style="color: red;">красная</span>)
+должна получить значение 1 как ближайшая линия, вторая точка
+(<span style="color: green;">зеленая</span>), должна получить значение 3.
+
+Давайте поместим точки в буфер, а также создадим буфер для хранения вычисленного
+ближайшего индекса для каждого
+
+```js
+const closestNdxBuffer = makeBuffer(gl, points.length * 4, gl.STATIC_DRAW);
+const pointsBuffer = makeBuffer(gl, new Float32Array(points), gl.DYNAMIC_DRAW);
+```
+
+и давайте создадим текстуру для хранения всех конечных точек линий.
+
+```js
+function createDataTexture(gl, data, numComponents, internalFormat, format, type) {
+  const numElements = data.length / numComponents;
+
+  // вычисляем размер, который будет содержать все наши данные
+  const width = Math.ceil(Math.sqrt(numElements));
+  const height = Math.ceil(numElements / width);
+
+  const bin = new Float32Array(width * height * numComponents);
+  bin.set(data);
+
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,        // mip level
+      internalFormat,
+      width,
+      height,
+      0,        // border
+      format,
+      type,
+      bin,
+  );
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  return {tex, dimensions: [width, height]};
+}
+
+const {tex: linesTex, dimensions: linesTexDimensions} =
+    createDataTexture(gl, lines, 2, gl.RG32F, gl.RG, gl.FLOAT);
+```
+
+В данном случае мы позволяем коду выбрать размеры текстуры
+и позволяем ему дополнить текстуру. Например, если мы дадим ему массив
+с 7 записями, он поместит это в текстуру 3x3. Он возвращает
+и текстуру, и размеры, которые он выбрал. Почему мы позволяем ему выбрать
+размер? Потому что текстуры имеют максимальный размер.
+
+В идеале мы хотели бы просто смотреть на наши данные как на 1-мерный массив
+позиций, 1-мерный массив точек линий и т.д. Поэтому мы могли бы просто
+объявить текстуру как Nx1. К сожалению, GPU имеют максимальный
+размер, и это может быть всего 1024 или 2048. Если лимит
+был 1024 и нам нужно было 1025 значений в нашем массиве, нам пришлось бы поместить данные
+в текстуру, скажем, 512x2. Помещая данные в квадрат, мы не
+достигнем лимита, пока не достигнем максимального размера текстуры в квадрате.
+Для лимита размера 1024 это позволило бы массивы более 1 миллиона значений.
+
+Далее компилируем шейдер и находим локации
+
+```js
+const closestLinePrg = createProgram(
+    gl, [closestLineVS, closestLineFS], ['closestNdx']);
+
+const closestLinePrgLocs = {
+  point: gl.getAttribLocation(closestLinePrg, 'point'),
+  linesTex: gl.getUniformLocation(closestLinePrg, 'linesTex'),
+  numLineSegments: gl.getUniformLocation(closestLinePrg, 'numLineSegments'),
+};
+```
+
+И создаем вершинный массив
+
+```js
+const closestLineVA = makeVertexArray(gl, [
+  [pointsBuffer, closestLinePrgLocs.point],
+]);
+```
+
+И создаем transform feedback
+
+```js
+const closestLineTF = makeTransformFeedback(gl, closestNdxBuffer);
+```
+
+Теперь мы можем запустить вычисление
+
+```js
+gl.useProgram(closestLinePrg);
+gl.bindVertexArray(closestLineVA);
+gl.uniform1i(closestLinePrgLocs.linesTex, 0);
+gl.uniform1f(closestLinePrgLocs.numLineSegments, numLineSegments);
+
+gl.activeTexture(gl.TEXTURE0);
+gl.bindTexture(gl.TEXTURE_2D, linesTex);
+
+gl.enable(gl.RASTERIZER_DISCARD);
+gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, closestLineTF);
+gl.beginTransformFeedback(gl.POINTS);
+gl.drawArrays(gl.POINTS, 0, numPoints);
+gl.endTransformFeedback();
+gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, null);
+gl.disable(gl.RASTERIZER_DISCARD);
+```
+
+И читаем результаты
+
+```js
+const results = new Int32Array(numPoints);
+gl.bindBuffer(gl.ARRAY_BUFFER, closestNdxBuffer);
+gl.getBufferSubData(gl.ARRAY_BUFFER, 0, results);
+console.log('results:', results);
+```
+
+Результаты должны быть `[1, 3]`, что означает, что точка 0 ближе всего к линии 1,
+а точка 1 ближе всего к линии 3.
+
+{{{example url="../webgl-gpgpu-closest-line.html"}}}
+
+## Следующий пример: Динамический transform feedback
+
+В предыдущем примере мы использовали transform feedback для записи результатов
+в буфер. Но что, если мы хотим использовать эти результаты в следующем кадре?
+
+Вот пример, где мы используем transform feedback для создания анимации.
+Мы создаем частицы, которые движутся по кругу, и используем transform feedback
+для обновления их позиций каждый кадр.
+
+```js
+const vs = `#version 300 es
+in vec4 position;
+in vec4 velocity;
+in float age;
+
+uniform float u_time;
+uniform float u_deltaTime;
+
+out vec4 v_position;
+out vec4 v_velocity;
+out float v_age;
+
+void main() {
+  v_position = position;
+  v_velocity = velocity;
+  v_age = age;
+}
+`;
+
+const fs = `#version 300 es
+precision highp float;
+
+in vec4 v_position;
+in vec4 v_velocity;
+in float v_age;
+
+uniform float u_time;
+uniform float u_deltaTime;
+
+out vec4 outColor;
+
+void main() {
+  // обновляем позицию
+  vec4 newPosition = v_position + v_velocity * u_deltaTime;
+  
+  // обновляем скорость (добавляем небольшое ускорение)
+  vec4 newVelocity = v_velocity + vec4(0.0, -9.8, 0.0, 0.0) * u_deltaTime;
+  
+  // увеличиваем возраст
+  float newAge = v_age + u_deltaTime;
+  
+  // если частица слишком старая, сбрасываем её
+  if (newAge > 5.0) {
+    newPosition = vec4(0.0, 0.0, 0.0, 1.0);
+    newVelocity = vec4(
+      sin(u_time + gl_FragCoord.x * 0.01) * 100.0,
+      cos(u_time + gl_FragCoord.y * 0.01) * 100.0,
+      0.0, 0.0
+    );
+    newAge = 0.0;
+  }
+  
+  outColor = vec4(newPosition.xyz, newAge);
+}
+`;
+
+const numParticles = 1000;
+const positions = new Float32Array(numParticles * 4);
+const velocities = new Float32Array(numParticles * 4);
+const ages = new Float32Array(numParticles);
+
+// инициализируем частицы
+for (let i = 0; i < numParticles; ++i) {
+  const angle = (i / numParticles) * Math.PI * 2;
+  const radius = 100 + Math.random() * 50;
+  
+  positions[i * 4 + 0] = Math.cos(angle) * radius;
+  positions[i * 4 + 1] = Math.sin(angle) * radius;
+  positions[i * 4 + 2] = 0;
+  positions[i * 4 + 3] = 1;
+  
+  velocities[i * 4 + 0] = Math.cos(angle) * 50;
+  velocities[i * 4 + 1] = Math.sin(angle) * 50;
+  velocities[i * 4 + 2] = 0;
+  velocities[i * 4 + 3] = 0;
+  
+  ages[i] = Math.random() * 5;
+}
+
+const positionBuffer = makeBuffer(gl, positions, gl.DYNAMIC_DRAW);
+const velocityBuffer = makeBuffer(gl, velocities, gl.DYNAMIC_DRAW);
+const ageBuffer = makeBuffer(gl, ages, gl.DYNAMIC_DRAW);
+
+const updateProgram = createProgram(gl, [vs, fs], ['v_position', 'v_velocity', 'v_age']);
+
+const updateProgramLocs = {
+  position: gl.getAttribLocation(updateProgram, 'position'),
+  velocity: gl.getAttribLocation(updateProgram, 'velocity'),
+  age: gl.getAttribLocation(updateProgram, 'age'),
+  time: gl.getUniformLocation(updateProgram, 'u_time'),
+  deltaTime: gl.getUniformLocation(updateProgram, 'u_deltaTime'),
+};
+
+const updateVA = makeVertexArray(gl, [
+  [positionBuffer, updateProgramLocs.position],
+  [velocityBuffer, updateProgramLocs.velocity],
+  [ageBuffer, updateProgramLocs.age],
+]);
+
+const updateTF = makeTransformFeedback(gl, positionBuffer);
+
+let then = 0;
+function render(time) {
+  time *= 0.001;
+  const deltaTime = time - then;
+  then = time;
+
+  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  // обновляем частицы
+  gl.useProgram(updateProgram);
+  gl.bindVertexArray(updateVA);
+  gl.uniform1f(updateProgramLocs.time, time);
+  gl.uniform1f(updateProgramLocs.deltaTime, deltaTime);
+
+  gl.enable(gl.RASTERIZER_DISCARD);
+  gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, updateTF);
+  gl.beginTransformFeedback(gl.POINTS);
+  gl.drawArrays(gl.POINTS, 0, numParticles);
+  gl.endTransformFeedback();
+  gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, null);
+  gl.disable(gl.RASTERIZER_DISCARD);
+
+  // рисуем частицы
+  gl.useProgram(drawProgram);
+  gl.bindVertexArray(drawVA);
+  gl.uniformMatrix4fv(
+      drawProgramLocs.matrix,
+      false,
+      m4.orthographic(-gl.canvas.width/2, gl.canvas.width/2, 
+                      -gl.canvas.height/2, gl.canvas.height/2, -1, 1));
+  gl.drawArrays(gl.POINTS, 0, numParticles);
+
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+```
+
+{{{example url="../webgl-gpgpu-particles-dynamic-transformfeedback.html"}}}
+
+## Следующий пример: Визуализация результатов
+
+В предыдущем примере мы вычислили, какая линия ближе всего к каждой точке,
+но мы только вывели результаты в консоль. Давайте создадим визуализацию,
+которая покажет точки, линии и соединит каждую точку с ближайшей к ней линией.
+
+Сначала нам нужны шейдеры для рисования линий и точек:
+
+```js
+const drawLinesVS = `#version 300 es
+in vec4 position;
+void main() {
+  gl_Position = position;
+}
+`;
+
+const drawLinesFS = `#version 300 es
+precision highp float;
+out vec4 outColor;
+void main() {
+  outColor = vec4(0.5, 0.5, 0.5, 1);  // серый цвет для всех линий
+}
+`;
+
+const drawClosestLinesVS = `#version 300 es
+in int closestNdx;
+
+uniform sampler2D linesTex;
+uniform mat4 matrix;
+uniform float numPoints;
+
+out vec4 v_color;
+
+vec3 hsv2rgb(vec3 c) {
+  vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+  vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
+void main() {
+  // получаем координаты линии из текстуры
+  ivec2 texelCoord = ivec2(closestNdx, 0);
+  vec4 lineData = texelFetch(linesTex, texelCoord, 0);
+  
+  // выбираем начальную или конечную точку линии
+  int linePointId = closestNdx * 2 + gl_VertexID % 2;
+  vec2 linePoint = mix(lineData.xy, lineData.zw, gl_VertexID % 2);
+  
+  gl_Position = matrix * vec4(linePoint, 0, 1);
+  
+  // вычисляем цвет на основе ID точки
+  float hue = float(gl_InstanceID) / numPoints;
+  v_color = vec4(hsv2rgb(vec3(hue, 1, 1)), 1);
+}
+`;
+
+const drawClosestLinesPointsFS = `#version 300 es
+precision highp float;
+in vec4 v_color;
+out vec4 outColor;
+void main() {
+  outColor = v_color;
+}
+`;
+
+const drawPointsVS = `#version 300 es
+in vec2 point;
+
+uniform mat4 matrix;
+uniform float numPoints;
+
+out vec4 v_color;
+
+vec3 hsv2rgb(vec3 c) {
+  vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+  vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
+void main() {
+  gl_Position = matrix * vec4(point, 0, 1);
+  gl_PointSize = 10.0;
+  
+  // вычисляем цвет на основе ID точки
+  float hue = float(gl_VertexID) / numPoints;
+  v_color = vec4(hsv2rgb(vec3(hue, 1, 1)), 1);
+}
+`;
+```
+
+Мы передаем `closestNdx` как атрибут. Это результаты, которые мы сгенерировали.
+Используя это, мы можем найти конкретную линию. Нам нужно нарисовать 2 точки на линию,
+поэтому мы будем использовать [инстансированное рисование](webgl-instanced-drawing.html)
+для рисования 2 точек на `closestNdx`. Затем мы можем использовать `gl_VertexID % 2`
+для выбора начальной или конечной точки.
+
+Наконец, мы вычисляем цвет, используя тот же метод, который мы использовали при рисовании точек,
+чтобы они соответствовали своим точкам.
+
+Нам нужно скомпилировать все эти новые программы шейдеров и найти местоположения:
+
+```js
+const closestLinePrg = createProgram(
+    gl, [closestLineVS, closestLineFS], ['closestNdx']);
+const drawLinesPrg = createProgram(
+    gl, [drawLinesVS, drawLinesFS]);
+const drawClosestLinesPrg = createProgram(
+    gl, [drawClosestLinesVS, drawClosestLinesPointsFS]);
+const drawPointsPrg = createProgram(
+    gl, [drawPointsVS, drawClosestLinesPointsFS]);
+
+const closestLinePrgLocs = {
+  point: gl.getAttribLocation(closestLinePrg, 'point'),
+  linesTex: gl.getUniformLocation(closestLinePrg, 'linesTex'),
+  numLineSegments: gl.getUniformLocation(closestLinePrg, 'numLineSegments'),
+};
+const drawLinesPrgLocs = {
+  linesTex: gl.getUniformLocation(drawLinesPrg, 'linesTex'),
+  matrix: gl.getUniformLocation(drawLinesPrg, 'matrix'),
+};
+const drawClosestLinesPrgLocs = {
+  closestNdx: gl.getAttribLocation(drawClosestLinesPrg, 'closestNdx'),
+  linesTex: gl.getUniformLocation(drawClosestLinesPrg, 'linesTex'),
+  matrix: gl.getUniformLocation(drawClosestLinesPrg, 'matrix'),
+  numPoints: gl.getUniformLocation(drawClosestLinesPrg, 'numPoints'),
+};
+const drawPointsPrgLocs = {
+  point: gl.getAttribLocation(drawPointsPrg, 'point'),
+  matrix: gl.getUniformLocation(drawPointsPrg, 'matrix'),
+  numPoints: gl.getUniformLocation(drawPointsPrg, 'numPoints'),
+};
+```
+
+Нам нужны массивы вершин для рисования точек и ближайших линий:
+
+```js
+const closestLinesVA = makeVertexArray(gl, [
+  [pointsBuffer, closestLinePrgLocs.point],
+]);
+
+const drawClosestLinesVA = gl.createVertexArray();
+gl.bindVertexArray(drawClosestLinesVA);
+gl.bindBuffer(gl.ARRAY_BUFFER, closestNdxBuffer);
+gl.enableVertexAttribArray(drawClosestLinesPrgLocs.closestNdx);
+gl.vertexAttribIPointer(drawClosestLinesPrgLocs.closestNdx, 1, gl.INT, 0, 0);
+gl.vertexAttribDivisor(drawClosestLinesPrgLocs.closestNdx, 1);
+
+const drawPointsVA = makeVertexArray(gl, [
+  [pointsBuffer, drawPointsPrgLocs.point],
+]);
+```
+
+Итак, во время рендеринга мы вычисляем результаты, как мы делали раньше, но
+мы не ищем результаты с помощью `getBufferSubData`. Вместо этого мы просто
+передаем их в соответствующие шейдеры.
+
+Сначала рисуем все линии серым цветом:
+
+```js
+// рисуем все линии серым цветом
+gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+gl.bindVertexArray(null);
+gl.useProgram(drawLinesPrg);
+
+// привязываем текстуру линий к текстуре unit 0
+gl.activeTexture(gl.TEXTURE0);
+gl.bindTexture(gl.TEXTURE_2D, linesTex);
+
+// Говорим шейдеру использовать текстуру на текстуре unit 0
+gl.uniform1i(drawLinesPrgLocs.linesTex, 0);
+gl.uniformMatrix4fv(drawLinesPrgLocs.matrix, false, matrix);
+
+gl.drawArrays(gl.LINES, 0, numLineSegments * 2);
+```
+
+Затем рисуем все ближайшие линии:
+
+```js
+gl.bindVertexArray(drawClosestLinesVA);
+gl.useProgram(drawClosestLinesPrg);
+
+gl.activeTexture(gl.TEXTURE0);
+gl.bindTexture(gl.TEXTURE_2D, linesTex);
+
+gl.uniform1i(drawClosestLinesPrgLocs.linesTex, 0);
+gl.uniform1f(drawClosestLinesPrgLocs.numPoints, numPoints);
+gl.uniformMatrix4fv(drawClosestLinesPrgLocs.matrix, false, matrix);
+
+gl.drawArraysInstanced(gl.LINES, 0, 2, numPoints);
+```
+
+и наконец рисуем каждую точку:
+
+```js
+gl.bindVertexArray(drawPointsVA);
+gl.useProgram(drawPointsPrg);
+
+gl.uniform1f(drawPointsPrgLocs.numPoints, numPoints);
+gl.uniformMatrix4fv(drawPointsPrgLocs.matrix, false, matrix);
+
+gl.drawArrays(gl.POINTS, 0, numPoints);
+```
+
+Прежде чем запустить, давайте сделаем еще одну вещь. Добавим больше точек и линий:
+
+```js
+function createPoints(numPoints, ranges) {
+  const points = [];
+  for (let i = 0; i < numPoints; ++i) {
+    points.push(...ranges.map(range => r(...range)));
+  }
+  return points;
+}
+
+const r = (min, max) => min + Math.random() * (max - min);
+
+const points = createPoints(8, [[0, gl.canvas.width], [0, gl.canvas.height]]);
+const lines = createPoints(125 * 2, [[0, gl.canvas.width], [0, gl.canvas.height]]);
+const numPoints = points.length / 2;
+const numLineSegments = lines.length / 2 / 2;
+```
+
+и если мы запустим это:
+
+{{{example url="../webgl-gpgpu-closest-line-transformfeedback.html"}}}
+
+Вы можете увеличить количество точек и линий,
+но в какой-то момент вы не сможете сказать, какие
+точки соответствуют каким линиям, но с меньшим числом
+вы можете хотя бы визуально проверить, что это работает.
+
+Просто для удовольствия, давайте объединим пример с частицами и этот
+пример. Мы будем использовать техники, которые мы использовали для обновления
+позиций частиц, чтобы обновить точки. Для
+обновления конечных точек линий мы сделаем то, что мы делали в
+начале, и запишем результаты в текстуру.
+
+Для этого мы копируем `updatePositionFS` вершинный шейдер
+из примера с частицами. Для линий, поскольку их значения
+хранятся в текстуре, нам нужно переместить их точки в
+фрагментном шейдере:
+
+```js
+const updateLinesVS = `#version 300 es
+in vec4 position;
+void main() {
+  gl_Position = position;
+}
+`;
+
+const updateLinesFS = `#version 300 es
+precision highp float;
+
+uniform sampler2D linesTex;
+uniform sampler2D velocityTex;
+uniform vec2 canvasDimensions;
+uniform float deltaTime;
+
+out vec4 outColor;
+
+vec2 euclideanModulo(vec2 n, vec2 m) {
+	return mod(mod(n, m) + m, m);
+}
+
+void main() {
+  // вычисляем координаты текселя из gl_FragCoord;
+  ivec2 texelCoord = ivec2(gl_FragCoord.xy);
+  
+  // получаем данные линии
+  vec4 lineData = texelFetch(linesTex, texelCoord, 0);
+  
+  // получаем скорость для этой линии
+  vec2 velocity = texelFetch(velocityTex, texelCoord, 0).xy;
+  
+  // обновляем позиции
+  vec2 newStart = euclideanModulo(lineData.xy + velocity * deltaTime, canvasDimensions);
+  vec2 newEnd = euclideanModulo(lineData.zw + velocity * deltaTime, canvasDimensions);
+  
+  outColor = vec4(newStart, newEnd);
+}
+`;
+```
+
+Теперь нам нужны буферы для хранения скоростей линий и программа для их обновления:
+
+```js
+const lineVelocities = new Float32Array(numLineSegments * 2);
+for (let i = 0; i < numLineSegments; ++i) {
+  lineVelocities[i * 2 + 0] = (Math.random() - 0.5) * 100;
+  lineVelocities[i * 2 + 1] = (Math.random() - 0.5) * 100;
+}
+
+const lineVelocityBuffer = makeBuffer(gl, lineVelocities, gl.DYNAMIC_DRAW);
+const lineVelocityTex = makeDataTexture(gl, lineVelocities, numLineSegments, 1);
+
+const updateLinesPrg = createProgram(gl, [updateLinesVS, updateLinesFS]);
+
+const updateLinesPrgLocs = {
+  linesTex: gl.getUniformLocation(updateLinesPrg, 'linesTex'),
+  velocityTex: gl.getUniformLocation(updateLinesPrg, 'velocityTex'),
+  canvasDimensions: gl.getUniformLocation(updateLinesPrg, 'canvasDimensions'),
+  deltaTime: gl.getUniformLocation(updateLinesPrg, 'deltaTime'),
+};
+```
+
+Теперь в нашем цикле рендеринга мы обновляем линии, затем точки, затем рисуем все:
+
+```js
+function render(time) {
+  time *= 0.001;
+  const deltaTime = time - then;
+  then = time;
+
+  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  // обновляем линии
+  gl.bindFramebuffer(gl.FRAMEBUFFER, linesFramebuffer);
+  gl.viewport(0, 0, numLineSegments, 1);
+  
+  gl.useProgram(updateLinesPrg);
+  gl.bindVertexArray(null);
+  
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, linesTex);
+  gl.uniform1i(updateLinesPrgLocs.linesTex, 0);
+  
+  gl.activeTexture(gl.TEXTURE1);
+  gl.bindTexture(gl.TEXTURE_2D, lineVelocityTex);
+  gl.uniform1i(updateLinesPrgLocs.velocityTex, 1);
+  
+  gl.uniform2f(updateLinesPrgLocs.canvasDimensions, gl.canvas.width, gl.canvas.height);
+  gl.uniform1f(updateLinesPrgLocs.deltaTime, deltaTime);
+  
+  gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+  // обновляем точки
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  
+  gl.useProgram(updateProgram);
+  gl.bindVertexArray(updateVA);
+  gl.uniform1f(updateProgramLocs.time, time);
+  gl.uniform1f(updateProgramLocs.deltaTime, deltaTime);
+
+  gl.enable(gl.RASTERIZER_DISCARD);
+  gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, updateTF);
+  gl.beginTransformFeedback(gl.POINTS);
+  gl.drawArrays(gl.POINTS, 0, numPoints);
+  gl.endTransformFeedback();
+  gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, null);
+  gl.disable(gl.RASTERIZER_DISCARD);
+
+  // вычисляем ближайшие линии
+  gl.bindFramebuffer(gl.FRAMEBUFFER, closestLineFramebuffer);
+  gl.viewport(0, 0, numPoints, 1);
+  
+  gl.useProgram(closestLinePrg);
+  gl.bindVertexArray(closestLinesVA);
+  gl.uniform1i(closestLinePrgLocs.linesTex, 0);
+  gl.uniform1f(closestLinePrgLocs.numLineSegments, numLineSegments);
+  
+  gl.enable(gl.RASTERIZER_DISCARD);
+  gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, closestLineTF);
+  gl.beginTransformFeedback(gl.POINTS);
+  gl.drawArrays(gl.POINTS, 0, numPoints);
+  gl.endTransformFeedback();
+  gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, null);
+  gl.disable(gl.RASTERIZER_DISCARD);
+
+  // рисуем все
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+  // рисуем все линии серым цветом
+  gl.bindVertexArray(null);
+  gl.useProgram(drawLinesPrg);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, linesTex);
+  gl.uniform1i(drawLinesPrgLocs.linesTex, 0);
+  gl.uniformMatrix4fv(drawLinesPrgLocs.matrix, false, matrix);
+  gl.drawArrays(gl.LINES, 0, numLineSegments * 2);
+
+  // рисуем ближайшие линии
+  gl.bindVertexArray(drawClosestLinesVA);
+  gl.useProgram(drawClosestLinesPrg);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, linesTex);
+  gl.uniform1i(drawClosestLinesPrgLocs.linesTex, 0);
+  gl.uniform1f(drawClosestLinesPrgLocs.numPoints, numPoints);
+  gl.uniformMatrix4fv(drawClosestLinesPrgLocs.matrix, false, matrix);
+  gl.drawArraysInstanced(gl.LINES, 0, 2, numPoints);
+
+  // рисуем точки
+  gl.bindVertexArray(drawPointsVA);
+  gl.useProgram(drawPointsPrg);
+  gl.uniform1f(drawPointsPrgLocs.numPoints, numPoints);
+  gl.uniformMatrix4fv(drawPointsPrgLocs.matrix, false, matrix);
+  gl.drawArrays(gl.POINTS, 0, numPoints);
+
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+```
+
+{{{example url="../webgl-gpgpu-closest-line-dynamic-transformfeedback.html"}}}
+
+## Важные замечания
+
+* GPGPU в WebGL1 в основном ограничен использованием 2D массивов в качестве вывода (текстуры).
+  WebGL2 добавляет возможность просто обрабатывать 1D массив произвольного размера через
+  transform feedback.
+  
+  Если вам интересно, посмотрите [ту же статью для webgl1](https://webglfundamentals.org/webgl/lessons/webgl-gpgpu.html), чтобы увидеть, как все это было сделано, используя только возможность
+  вывода в текстуры. Конечно, с небольшим размышлением это должно быть очевидно.
+
+  Версии WebGL2, использующие текстуры вместо transform feedback, также доступны,
+  поскольку использование `texelFetch` и наличие большего количества форматов текстур немного изменяет
+  их реализации.
+  
+  * [частицы](../webgl-gpgpu-particles.html)
+  * [результаты ближайших линий](../webgl-gpgpu-closest-line-results.html)
+  * [визуализация ближайших линий](../webgl-gpgpu-closest-line.html)
+  * [динамические ближайшие линии](../webgl-gpgpu-closest-line-dynamic.html)
+
+* Ошибка Firefox<a id="firefox-bug"></a>
+
+  Firefox начиная с версии 84 имеет [ошибку](https://bugzilla.mozilla.org/show_bug.cgi?id=1677552) в том,
+  что он неправильно требует наличия по крайней мере одного активного атрибута, который использует делитель 0 при вызове
+  `drawArraysIndexed`. Это означает, что пример выше, где мы рисуем ближайшие линии, используя
+  `drawArraysIndexed`, не работает.
+
+  Чтобы обойти это, мы можем создать буфер, который просто содержит `[0, 1]` в нем, и использовать его
+  на атрибуте для того, как мы использовали `gl_VertexID % 2`. Вместо этого мы будем использовать
+
+  ```glsl
+  in int endPoint;  // нужно для firefox
+
+  ...
+  -int linePointId = closestNdx * 2 + gl_VertexID % 2;
+  +int linePointId = closestNdx * 2 + endPoint;
+  ...
+  ```
+
+  что [сделает это работающим в firefox](../webgl/webgl-gpgpu-closest-line-dynamic-transformfeedback-ff.html).
+
+* GPU не имеют той же точности, что и CPU.
+
+  Проверьте ваши результаты и убедитесь, что они приемлемы.
+
+* Есть накладные расходы на GPGPU.
+
+  В первых нескольких примерах выше мы вычислили некоторые
+  данные, используя WebGL, а затем прочитали результаты. Настройка буферов и текстур,
+  установка атрибутов и uniform переменных занимает время. Достаточно времени, чтобы для чего-либо
+  меньше определенного размера было бы лучше просто сделать это в JavaScript.
+  Фактические примеры умножения 6 чисел или сложения 3 пар чисел
+  слишком малы для того, чтобы GPGPU был полезен. Где находится эта граница
+  не определено. Экспериментируйте, но просто догадка, что если вы не делаете по крайней мере
+  1000 или больше вещей, оставьте это в JavaScript.
+
+* `readPixels` и `getBufferSubData` медленные
+
+  Чтение результатов из WebGL медленное, поэтому важно избегать этого
+  как можно больше. В качестве примера ни система частиц выше, ни
+  пример динамических ближайших линий никогда
+  не читают результаты обратно в JavaScript. Где можете, держите результаты
+  на GPU как можно дольше. Другими словами, вы могли бы сделать что-то
+  вроде
+
+  * вычисляем что-то на GPU
+  * читаем результат
+  * подготавливаем результат для следующего шага
+  * загружаем подготовленный результат на GPU
+  * вычисляем что-то на GPU
+  * читаем результат
+  * подготавливаем результат для следующего шага
+  * загружаем подготовленный результат на GPU
+  * вычисляем что-то на GPU
+  * читаем результат
+
+  тогда как через творческие решения было бы намного быстрее, если бы вы могли
+
+  * вычисляем что-то на GPU
+  * подготавливаем результат для следующего шага, используя GPU
+  * вычисляем что-то на GPU
+  * подготавливаем результат для следующего шага, используя GPU
+  * вычисляем что-то на GPU
+  * читаем результат
+
+  Наш пример динамических ближайших линий делал это. Результаты никогда не покидают
+  GPU.
+
+  В качестве другого примера я однажды написал шейдер для вычисления гистограммы. Затем я прочитал
+  результаты обратно в JavaScript, вычислил минимальные и максимальные значения,
+  затем нарисовал изображение обратно на canvas, используя эти минимальные и максимальные значения
+  как uniform переменные для автоматического выравнивания изображения.
+
+  Но оказалось, что вместо чтения гистограммы обратно в JavaScript
+  я мог вместо этого запустить шейдер на самой гистограмме, который генерировал
+  2-пиксельную текстуру с минимальными и максимальными значениями в текстуре.
+
+  Я мог затем передать эту 2-пиксельную текстуру в 3-й шейдер, который
+  мог читать для минимальных и максимальных значений. Нет необходимости читать их из
+  GPU для установки uniform переменных.
+
+  Аналогично для отображения самой гистограммы я сначала читал данные гистограммы
+  из GPU, но позже я вместо этого написал шейдер, который мог
+  визуализировать данные гистограммы напрямую, убрав необходимость читать их
+  обратно в JavaScript.
+
+  Делая это, весь процесс оставался на GPU и, вероятно, был намного
+  быстрее.
+
+* GPU могут делать много вещей параллельно, но большинство не могут многозадачно так же, как
+  CPU может. GPU обычно не могут делать "[вытесняющую многозадачность](https://www.google.com/search?q=preemptive+multitasking)".
+  Это означает, что если вы дадите им очень сложный шейдер, который, скажем, занимает 5 минут для
+  выполнения, они потенциально заморозят всю вашу машину на 5 минут.
+  Большинство хорошо сделанных ОС справляются с этим, заставляя CPU проверять, сколько времени прошло
+  с тех пор, как они дали последнюю команду GPU. Если прошло слишком много времени (5-6 секунд)
+  и GPU не ответил, то их единственный вариант - сбросить GPU.
+  
+  Это одна из причин, почему WebGL может *потерять контекст* и вы получите сообщение "Aw, rats!"
+  или подобное.
+
+  Легко дать GPU слишком много работы, но в графике это не *так*
+  часто доводить до уровня 5-6 секунд. Обычно это больше похоже на уровень 0.1
+  секунды, что все еще плохо, но обычно вы хотите, чтобы графика работала быстро
+  и поэтому программист, надеюсь, оптимизирует или найдет другую технику
+  для поддержания отзывчивости их приложения.
+
+  GPGPU, с другой стороны, вы можете действительно захотеть дать GPU тяжелую задачу
+  для выполнения. Здесь нет простого решения. Мобильный телефон имеет гораздо менее мощный
+  GPU, чем топовый ПК. Помимо собственного тайминга, нет способа
+  точно знать, сколько работы вы можете дать GPU, прежде чем это "слишком медленно"
+
+  У меня нет решения для предложения. Только предупреждение, что в зависимости от того, что вы
+  пытаетесь сделать, вы можете столкнуться с этой проблемой.
+
+* Мобильные устройства обычно не поддерживают рендеринг в текстуры с плавающей точкой
+
+  Есть различные способы обойти эту проблему. Один из способов - вы можете
+  использовать функции GLSL `floatBitsToInt`, `floatBitsToUint`, `IntBitsToFloat`,
+  и `UintBitsToFloat`.
+
+  В качестве примера, [версия на основе текстур примера с частицами](../webgl-gpgpu-particles.html)
+  должна записывать в текстуры с плавающей точкой. Мы могли бы исправить это так, чтобы это не требовало их, объявив
+  нашу текстуру как тип `RG32I` (32-битные целочисленные текстуры), но все еще
+  загружать float значения.
+
+  В шейдере нам нужно будет читать текстуры как целые числа и декодировать их
+  в float, а затем кодировать результат обратно в целые числа. Например:
+
+  ```glsl
+  #version 300 es
+  precision highp float;
+
+  -uniform highp sampler2D positionTex;
+  -uniform highp sampler2D velocityTex;
+  +uniform highp isampler2D positionTex;
+  +uniform highp isampler2D velocityTex;
+  uniform vec2 canvasDimensions;
+  uniform float deltaTime;
+
+  out ivec4 outColor;
+
+  vec2 euclideanModulo(vec2 n, vec2 m) {
+  	return mod(mod(n, m) + m, m);
+  }
+
+  void main() {
+    // будет одна скорость на позицию
+    // поэтому текстура скорости и текстура позиции
+    // имеют одинаковый размер.
+
+    // кроме того, мы генерируем новые позиции
+    // поэтому мы знаем, что наше назначение того же размера
+    // что и наш источник
+
+    // вычисляем координаты текстуры из gl_FragCoord;
+    ivec2 texelCoord = ivec2(gl_FragCoord.xy);
+    
+  -  vec2 position = texelFetch(positionTex, texelCoord, 0).xy;
+  -  vec2 velocity = texelFetch(velocityTex, texelCoord, 0).xy;
+  +  vec2 position = intBitsToFloat(texelFetch(positionTex, texelCoord, 0).xy);
+  +  vec2 velocity = intBitsToFloat(texelFetch(velocityTex, texelCoord, 0).xy);
+    vec2 newPosition = euclideanModulo(position + velocity * deltaTime, canvasDimensions);
+
+  -  outColor = vec4(newPosition, 0, 1);
+  +  outColor = ivec4(floatBitsToInt(newPosition), 0, 1);
+  }
+  ```
+
+  [Вот рабочий пример](../webgl-gpgpu-particles-no-floating-point-textures.html)
+
+Я надеюсь, что эти примеры помогли вам понять ключевую идею GPGPU в WebGL
+- это просто тот факт, что WebGL читает из и записывает в массивы **данных**,
+а не пикселей.
+
+Шейдеры работают аналогично функциям `map` в том, что функция, которая вызывается
+для каждого значения, не может решить, где будет храниться ее значение.
+Скорее это решается извне функции. В случае WebGL
+это решается тем, как вы настраиваете то, что рисуете. Как только вы вызываете `gl.drawXXX`
+шейдер будет вызван для каждого нужного значения с вопросом "какое значение я должен
+сделать этим?"
+
+И это действительно все.
+
+---
+
+Поскольку мы создали некоторые частицы через GPGPU, есть [это замечательное видео](https://www.youtube.com/watch?v=X-iSQQgOd1A), которое во второй половине
+использует compute шейдеры для симуляции "слизи".
+
+Используя техники выше <a href="https://jsgist.org/?src=94e9058c7ef1a4f124eccab4e7fdcd1d">вот это переведено в WebGL2</a>. 
