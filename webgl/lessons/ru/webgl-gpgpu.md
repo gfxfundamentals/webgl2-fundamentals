@@ -1211,7 +1211,7 @@ console.log('results:', results);
 Результаты должны быть `[1, 3]`, что означает, что точка 0 ближе всего к линии 1,
 а точка 1 ближе всего к линии 3.
 
-{{{example url="../webgl-gpgpu-closest-line.html"}}}
+{{{example url="../webgl-gpgpu-closest-line-results-transformfeedback.html"}}}
 
 ## Следующий пример: Динамический transform feedback
 
@@ -1362,8 +1362,6 @@ function render(time) {
 }
 requestAnimationFrame(render);
 ```
-
-{{{example url="../webgl-gpgpu-particles-dynamic-transformfeedback.html"}}}
 
 ## Следующий пример: Визуализация результатов
 
