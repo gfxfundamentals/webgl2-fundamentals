@@ -265,236 +265,79 @@ void main () {
 `;
 ```
 
-Теперь у нас есть текстуры!
+И теперь мы получаем normal maps. Примечание: я приблизил камеру, чтобы их было легче увидеть.
 
-{{{example url="../webgl-load-obj-w-mtl-w-textures.html"}}}
+{{{example url="../webgl-load-obj-w-mtl-w-normal-maps.html"}}}
 
-Если посмотреть на .MTL-файл, можно увидеть `map_Ks` — это чёрно-белая текстура, которая определяет, насколько поверхность блестящая, или, иначе говоря, сколько specular-отражения используется.
+Уверен, что в .MTL-файле есть гораздо больше возможностей, которые мы могли бы поддержать.
+Например, ключевое слово `refl` указывает карты отражения, что является другим словом
+для [environment map](webgl-environment-maps.html). Также показано, что различные
+ключевые слова `map_` принимают множество опциональных аргументов. Несколько из них:
 
-<div class="webgl_center"><img src="../resources/models/windmill/windmill_001_base_SPEC.jpg" style="width: 512px;"></div>
+* `-clamp on | off` указывает, повторяется ли текстура
+* `-mm base gain` указывает смещение и множитель для значений текстуры
+* `-o u v w` указывает смещение для координат текстуры. Вы бы применили их, используя матрицу текстуры, аналогично тому, что мы делали в [статье про drawImage](webgl-2d-drawimage.html)
+* `-s u v w` указывает масштаб для координат текстуры. Как и выше, вы бы поместили их в матрицу текстуры
 
-Чтобы использовать её, нужно обновить шейдер, ведь мы уже загружаем все текстуры.
+Я не знаю, сколько .MTL-файлов используют эти настройки.
 
-```js
-const fs = `#version 300 es
-precision highp float;
+Более важный момент заключается в том, что добавление поддержки каждой функции делает
+шейдеры больше и сложнее. Выше у нас есть форма *uber shader*,
+шейдер, который пытается обработать все случаи. Чтобы заставить его работать, мы передали различные
+значения по умолчанию. Например, мы установили `diffuseMap` как белую текстуру, чтобы если мы
+загружаем что-то без текстур, это всё равно отображалось. Diffuse цвет будет
+умножен на белый, что равно 1.0, поэтому мы просто получим diffuse цвет.
+Аналогично мы передали белый цвет вершины по умолчанию на случай, если нет
+цветов вершин.
 
-in vec3 v_normal;
-in vec3 v_surfaceToView;
-in vec2 v_texcoord;
-in vec4 v_color;
+Это распространённый способ заставить вещи работать, и если это работает достаточно быстро для ваших
+потребностей, то нет причин это менять. Но более распространено генерировать
+шейдеры, которые включают/выключают эти функции. Если нет цветов вершин, то
+генерируйте шейдер, как в манипуляции со строками шейдеров, чтобы у них не было атрибута
+`a_color` и всего связанного кода. Аналогично, если у материала нет diffuse map, то
+генерируйте шейдер, у которого нет `uniform sampler2D diffuseMap` и удалите весь связанный код.
+Если у него нет никаких карт, то нам не нужны координаты текстуры, поэтому мы их тоже оставим.
 
-uniform vec3 diffuse;
-uniform sampler2D diffuseMap;
-uniform vec3 ambient;
-uniform vec3 emissive;
-uniform vec3 specular;
-uniform sampler2D specularMap;
-uniform float shininess;
-uniform float opacity;
-uniform vec3 u_lightDirection;
-uniform vec3 u_ambientLight;
+Когда вы сложите все комбинации, может быть тысячи вариаций шейдеров.
+Только с тем, что у нас есть выше, есть:
 
-out vec4 outColor;
+* diffuseMap да/нет
+* specularMap да/нет
+* normalMap да/нет
+* цвета вершин да/нет
+* ambientMap да/нет (мы не поддерживали это, но .MTL файл поддерживает)
+* reflectionMap да/нет (мы не поддерживали это, но .MTL файл поддерживает)
 
-void main () {
-  vec3 normal = normalize(v_normal);
+Только эти представляют 64 комбинации. Если мы добавим, скажем, от 1 до 4 источников света, и эти
+источники света могут быть spot, или point, или directional, мы получим 8192 возможных
+комбинации функций шейдера.
 
-  vec3 surfaceToViewDirection = normalize(v_surfaceToView);
-  vec3 halfVector = normalize(u_lightDirection + surfaceToViewDirection);
+Управление всем этим — это много работы. Это одна из причин, почему многие люди
+выбирают 3D движок, такой как [three.js](https://threejs.org), вместо того, чтобы делать это
+всё самим. Но, по крайней мере, надеюсь, эта статья даёт некоторое представление о
+типах вещей, связанных с отображением произвольного 3D контента.
 
-  float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
-  float specularLight = clamp(dot(normal, halfVector), 0.0, 1.0);
-  vec4 specularMapColor = texture(specularMap, v_texcoord);
-  vec3 effectiveSpecular = specular * specularMapColor.rgb;
+<div class="webgl_bottombar">
+<h3>Избегайте условных операторов в шейдерах где возможно</h3>
+<p>Традиционный совет — избегать условных операторов в шейдерах. В качестве примера
+мы могли бы сделать что-то вроде этого</p>
+<pre class="prettyprint"><code>{{#escapehtml}}
+uniform bool hasDiffuseMap;
+uniform vec4 diffuse;
+uniform sampler2D diffuseMap
 
-  vec4 diffuseMapColor = texture(diffuseMap, v_texcoord);
-  vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb * v_color.rgb;
-  float effectiveOpacity = opacity * diffuseMapColor.a * v_color.a;
-
-  outColor = vec4(
-      emissive +
-      ambient * u_ambientLight +
-      effectiveDiffuse * fakeLight +
-      effectiveSpecular * pow(specularLight, shininess),
-      effectiveOpacity);
-``` 
-
-Также стоит добавить значение по умолчанию для материалов без карты specular:
-
-```js
-const defaultMaterial = {
-  diffuse: [1, 1, 1],
-  diffuseMap: textures.defaultWhite,
-  ambient: [0, 0, 0],
-  specular: [1, 1, 1],
-  specularMap: textures.defaultWhite,
-  shininess: 400,
-  opacity: 1,
-};
-```
-
-В .MTL-файле значения specular могут быть не очень наглядными, поэтому для наглядности можно «взломать» параметры specular:
-
-```js
-// хак: делаем specular заметнее
-Object.values(materials).forEach(m => {
-  m.shininess = 25;
-  m.specular = [3, 2, 1];
-});
-```
-
-Теперь видно, что только окна и лопасти отражают свет.
-
-{{{example url="../webgl-load-obj-w-mtl-w-specular-map.html"}}}
-
-Меня удивило, что лопасти отражают свет. Если посмотреть на .MTL-файл, там shininess `Ns` = 0.0, что означает очень сильные specular-блики. Но illum = 1 для обоих материалов. По документации illum 1 означает:
-
-```
-color = KaIa + Kd { SUM j=1..ls, (N * Lj)Ij }
-```
-
-То есть:
-
-```
-color = ambientColor * lightAmbient + diffuseColor * sumOfLightCalculations
-```
-
-Как видно, specular тут не участвует, но в файле всё равно есть specular map! ¯\_(ツ)_/¯ Для specular-бликов нужен illum 2 или выше. Это типичная ситуация с .OBJ/.MTL: часто приходится вручную дорабатывать материалы. Как исправлять — решать вам: можно править .MTL, можно добавить код. Мы выбрали второй путь.
-
-Последняя карта в этом .MTL — `map_Bump` (bump map). На самом деле файл — это normal map.
-
-<div class="webgl_center"><img src="../resources/models/windmill/windmill_001_base_NOR.jpg" style="width: 512px;"></div>
-
-В .MTL нет опции явно указать normal map или что bump map — это normal map. Можно использовать эвристику: если в имени файла есть 'nor', или просто считать, что все `map_Bump` — это normal map (по крайней мере в 2020+). Так и поступим.
-
-Для генерации тангенсов используем код из [статьи про normal mapping](webgl-3d-lighting-normal-mapping.html):
-
-```js
-const parts = obj.geometries.map(({material, data}) => {
-  ...
-
-  // генерируем тангенсы, если есть данные
-  if (data.texcoord && data.normal) {
-    data.tangent = generateTangents(data.position, data.texcoord);
-  } else {
-    // Нет тангенсов
-    data.tangent = { value: [1, 0, 0] };
+...
+  vec4 effectiveDiffuse = diffuse;
+  if (hasDiffuseMap) {
+    effectiveDiffuse *= texture2D(diffuseMap, texcoord);
   }
-
-  // создаём буфер для каждого массива
-  const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
-  const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
-  return {
-    material: {
-      ...defaultMaterial,
-      ...materials[material],
-    },
-    bufferInfo,
-    vao,
-  };
-});
-```
-
-Также добавим normal map по умолчанию для материалов, у которых его нет:
-
-```js
-const textures = {
-  defaultWhite: twgl.createTexture(gl, {src: [255, 255, 255, 255]}),
-  defaultNormal: twgl.createTexture(gl, {src: [127, 127, 255, 0]}),
-};
-
 ...
-
-const defaultMaterial = {
-  diffuse: [1, 1, 1],
-  diffuseMap: textures.defaultWhite,
-  normalMap: textures.defaultNormal,
-  ambient: [0, 0, 0],
-  specular: [1, 1, 1],
-  specularMap: textures.defaultWhite,
-  shininess: 400,
-  opacity: 1,
-};
-...
-```
-
-И, наконец, вносим изменения в шейдеры, как в [статье про normal mapping](webgl-3d-lighting-normal-mapping.html):
-
-```js
-const vs = `#version 300 es
-in vec4 a_position;
-in vec3 a_normal;
-in vec3 a_tangent;
-in vec2 a_texcoord;
-in vec4 a_color;
-
-uniform mat4 u_projection;
-uniform mat4 u_view;
-uniform mat4 u_world;
-uniform vec3 u_viewWorldPosition;
-
-out vec3 v_normal;
-out vec3 v_tangent;
-out vec3 v_surfaceToView;
-out vec2 v_texcoord;
-out vec4 v_color;
-
-void main() {
-  vec4 worldPosition = u_world * a_position;
-  gl_Position = u_projection * u_view * worldPosition;
-  v_surfaceToView = u_viewWorldPosition - worldPosition.xyz;
-
-  mat3 normalMat = mat3(u_world);
-  v_normal = normalize(normalMat * a_normal);
-  v_tangent = normalize(normalMat * a_tangent);
-
-  v_texcoord = a_texcoord;
-  v_color = a_color;
-}
-`;
-
-const fs = `#version 300 es
-precision highp float;
-
-in vec3 v_normal;
-in vec3 v_tangent;
-in vec3 v_surfaceToView;
-in vec2 v_texcoord;
-in vec4 v_color;
-
-uniform vec3 diffuse;
-uniform sampler2D diffuseMap;
-uniform vec3 ambient;
-uniform vec3 emissive;
-uniform vec3 specular;
-uniform sampler2D specularMap;
-uniform float shininess;
-uniform sampler2D normalMap;
-uniform float opacity;
-uniform vec3 u_lightDirection;
-uniform vec3 u_ambientLight;
-
-out vec4 outColor;
-
-void main () {
-  vec3 normal = normalize(v_normal);
-  vec3 tangent = normalize(v_tangent);
-  vec3 bitangent = normalize(cross(normal, tangent));
-
-  mat3 tbn = mat3(tangent, bitangent, normal);
-  normal = texture(normalMap, v_texcoord).rgb * 2. - 1.;
-  normal = normalize(tbn * normal);
-
-  vec3 surfaceToViewDirection = normalize(v_surfaceToView);
-  vec3 halfVector = normalize(u_lightDirection + surfaceToViewDirection);
-
-  float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
-  float specularLight = clamp(dot(normal, halfVector), 0.0, 1.0);
-  vec4 specularMapColor = texture(specularMap, v_texcoord);
-  vec3 effectiveSpecular = specular * specularMapColor.rgb;
-
-  vec4 diffuseMapColor = texture(diffuseMap, v_texcoord);
-  vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb * v_color.rgb;
-  float effectiveOpacity = opacity * diffuseMapColor.a * v_color.a;
-``` 
+{{/escapehtml}}</code></pre>
+<p>Условные операторы, такие как этот, обычно не рекомендуются, потому что в зависимости от
+GPU/драйвера они часто не очень производительны.</p>
+<p>Либо делайте, как мы сделали выше, и попытайтесь сделать код без условных операторов. Мы использовали
+один 1x1 белый пиксель текстуры, когда нет текстуры, чтобы наша математика работала
+без условного оператора.</p>
+<p>Или используйте разные шейдеры. Один, у которого нет функции, и один, у которого есть,
+и выбирайте правильный для каждой ситуации.</p>
+</div> 
