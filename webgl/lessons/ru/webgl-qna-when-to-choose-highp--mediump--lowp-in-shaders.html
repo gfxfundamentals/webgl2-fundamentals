@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/ru/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.md. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/ru/langinfo.hanson. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,17 +8,15 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-*   Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-
-*   Redistributions in binary form must reproduce the above
-    copyright notice, this list of conditions and the following disclaimer
-    in the documentation and/or other materials provided with the
-    distribution.
-
-*   Neither the name of GFXFundamentals. nor the names of his
-    contributors may be used to endorse or promote products derived from
-    this software without specific prior written permission.
+    * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+    * Neither the name of GFXFundamentals. nor the names of his
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -36,78 +34,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta property="og:title" content="When to choose highp, mediump, lowp in shaders" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta property="og:description" content="When to choose highp, mediump, lowp in shaders" />
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.html" />
 
-<meta name="description" content="Когда выбирать highp, mediump, lowp в шейдерах">
-<meta name="keywords" content="webgl webgl2 graphics">
-<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders_ru.jpg">
-
-<meta property="og:title" content="Когда выбирать highp, mediump, lowp в шейдерах">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders_ru.jpg">
-<meta property="og:description" content="Когда выбирать highp, mediump, lowp в шейдерах">
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.html">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@greggman">
-<meta name="twitter:creator" content="@greggman">
-<meta name="twitter:domain" content="webgl2fundamentals.org">
-<meta name="twitter:title" content="Когда выбирать highp, mediump, lowp в шейдерах">
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.html">
-<meta name="twitter:description" content="Когда выбирать highp, mediump, lowp в шейдерах">
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders_ru.jpg">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@graph":[
-    {
-      "@type":"WebSite",
-      "@id":"https://webgl2fundamentals.org/#website",
-      "url":"https://webgl2fundamentals.org/",
-      "name":"Webgl2Fundamentals"
-    },
-    {
-      "@type":"ImageObject",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.html#primaryimage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders_ru.jpg",
-      "width":1200,
-      "height":630
-    },
-    {
-      "@type":"WebPage",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.html#webpage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.html",
-      "inLanguage":"ru",
-      "name":"Когда выбирать highp, mediump, lowp в шейдерах",
-      "keywords":"webgl webgl2 graphics programming",
-      "isPartOf":{
-        "@id":"https://webgl2fundamentals.org/#website"
-      },
-      "primaryImageOfPage":{
-        "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.html#primaryimage"
-      }
-    }
-  ]
-}
-</script>
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@greggman" />
+<meta name="twitter:creator" content="@greggman" />
+<meta name="twitter:domain" content="webgl2fundamentals.org" />
+<meta name="twitter:title" content="When to choose highp, mediump, lowp in shaders" />
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.html" />
+<meta name="twitter:description" content="When to choose highp, mediump, lowp in shaders" />
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>Когда выбирать highp, mediump, lowp в шейдерах</title>
+<title>When to choose highp, mediump, lowp in shaders</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/lang.css">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
-
-  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.html">
-  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.html">
-  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.html">
-  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.html">
-  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.html">
-  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.html">
-  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.html">
-
-
-
-
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
 <body>
 <div class="webgl_navbar">
@@ -234,64 +179,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>Когда выбирать highp, mediump, lowp в шейдерах</h1>
+    <h1>When to choose highp, mediump, lowp in shaders</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="вопрос">Вопрос:</h2>
-<p>Какие лучшие практики для них? Есть ли разница в производительности?</p>
-<h2 id="ответ">Ответ:</h2>
-<blockquote>
-<p>Какие лучшие практики для них?</p>
-</blockquote>
-<p>В основном это важно только на мобильных устройствах. Спецификация говорит, что реализация может всегда использовать более высокую точность, поэтому на десктопе и вершинный шейдер, и фрагментный шейдер всегда работают в highp. (Я не знаю десктопных GPU, для которых это не так)</p>
-<p>Из <a href="https://www.khronos.org/files/opengles_shading_language.pdf">спецификации</a> раздел 4.5.2:</p>
-<blockquote>
-<h2 id="452-precision-qualifiers">4.5.2 Precision Qualifiers</h2>
-<p>…</p>
-<p>Precision qualifiers declare a minimum range and precision that the underlying implementation must use
-when storing these variables. Implementations may use greater range and precision than requested, but
-not less.</p>
-</blockquote>
-<p>Для мобильных устройств и планшетов есть несколько ответов. Нет лучшего. Это зависит от вас:</p>
-<ol>
-<li>
-<p>используйте самую низкую точность, которую можете, но которая всё ещё делает то, что вам нужно.</p>
-</li>
-<li>
-<p>используйте highp и игнорируйте проблемы производительности и старые телефоны, где это не работает</p>
-</li>
-<li>
-<p>используйте mediump и игнорируйте баги (см. ниже)</p>
-</li>
-<li>
-<p>проверьте, поддерживает ли устройство пользователя highp, если нет — используйте разные шейдеры с меньшим количеством функций.</p>
-</li>
-</ol>
-<p>WebGL по умолчанию использует highp для вершинных шейдеров, а фрагментные шейдеры не имеют значения по умолчанию, и вы должны указать одно. Более того, highp во фрагментном шейдере — это опциональная функция, и некоторые мобильные GPU её не поддерживают. Я не знаю, какой это процент в 2019 году. Насколько я знаю, большинство или даже все телефоны, выпущенные в 2019 году, поддерживают highp, но старые телефоны (2011, 2012, 2013) не поддерживают.</p>
-<p>Из спецификации:</p>
-<blockquote>
-<p>The vertex language requires any uses of <code class="notranslate" translate="no">lowp</code>, <code class="notranslate" translate="no">mediump</code> and <code class="notranslate" translate="no">highp</code> to compile and link without error.
-The fragment language requires any uses of <code class="notranslate" translate="no">lowp</code> and <code class="notranslate" translate="no">mediump</code> to compile without error. <strong>Support for
-<code class="notranslate" translate="no">highp</code> is optional</strong>.</p>
-</blockquote>
-<p>Примеры мест, где обычно нужен highp. Точечные источники света с затенением по Фонгу обычно нуждаются в highp. Так что, например, вы можете использовать только направленные источники света на системе, которая не поддерживает highp, ИЛИ вы можете использовать только направленные источники света на мобильных для производительности.</p>
-<blockquote>
-<p>Есть ли разница в производительности?</p>
-</blockquote>
-<p>Да, но как сказано выше, реализация может использовать более высокую точность. Так что если вы используете mediump на десктопном GPU, вы не увидите разницы в производительности, поскольку он действительно всегда использует highp. На мобильных вы увидите разницу в производительности, по крайней мере в 2019 году. Вы также можете увидеть, где вашим шейдерам действительно нужен highp.</p>
-<p>Вот шейдер Фонга, настроенный на использование mediump. На десктопе, поскольку mediump на самом деле highp, он работает:</p>
-<p><img src="https://user-images.githubusercontent.com/234804/43352753-6ed6b9f8-9263-11e8-9716-3819a8c92095.png" alt=""></p>
-<p>На мобильных, где mediump действительно mediump, он ломается:</p>
-<p><img src="https://user-images.githubusercontent.com/234804/43352759-7f9d1656-9263-11e8-8487-aa57d6092ff1.png" alt=""></p>
-<p>Пример, где mediump был бы хорош, по крайней мере во фрагментном шейдере — это большинство 2D игр.</p>
-<div class="so">
-  <div>Вопрос и цитируемые части взяты по лицензии CC BY-SA 4.0 у
-    <a data-href="https://stackoverflow.com/users/1435682">WayneNWayne</a>
-    с сайта
-    <a data-href="https://stackoverflow.com/questions/59100554">stackoverflow</a>
-  </div>
-</div> 
+      <p>Русский перевод пока не готов (￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Помогите с переводом</a>!</p>
+<p><a href="/webgl/lessons/webgl-qna-when-to-choose-highp--mediump--lowp-in-shaders.html">Оригинал на английском</a>.</p>
+
     </div>
     <div class="lesson-sidebar">
         <select class="language">
@@ -305,8 +199,7 @@ The fragment language requires any uses of <code class="notranslate" translate="
 </select>
 
 
-        <div id="toc">
-          <ul>  <li>Основы</li>
+        <ul>  <li>Основы</li>
         <ul>
           <li><a href="/webgl/lessons/ru/webgl-getting-webgl2.html">Как использовать WebGL2</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fundamentals.html">Основы</a></li>
@@ -389,7 +282,7 @@ The fragment language requires any uses of <code class="notranslate" translate="
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -432,9 +325,9 @@ The fragment language requires any uses of <code class="notranslate" translate="
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>
@@ -449,47 +342,13 @@ The fragment language requires any uses of <code class="notranslate" translate="
   <li><a href="https://twgljs.org">TWGL, легковесная библиотека-помощник для WebGL</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
-        </div>
-    </div>
-    <div class="lesson-comments">
-        
-<div>Есть предложения или замечания? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Создайте issue на GitHub</a>.</div>
-  
-
-        <div id="disqus_thread"></div>
-        <script>
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
-            var disqus_identifier = 'Когда выбирать highp, mediump, lowp в шейдерах';
-            var disqus_title = 'Когда выбирать highp, mediump, lowp в шейдерах';
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
-                    return;
-                }
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
-<script>
-const settings = {
-  contribTemplate: "Спасибо <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>за <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} вкладов</a>",
-  owner: "gfxfundamentals",
-  repo: "webgl2-fundamentals",
-};
-</script>
-<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script src="/webgl/lessons/resources/lesson.js"></script>
 <script>
 </script>
 

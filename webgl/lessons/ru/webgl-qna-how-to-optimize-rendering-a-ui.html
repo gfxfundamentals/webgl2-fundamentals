@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/ru/webgl-qna-how-to-optimize-rendering-a-ui.md. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/ru/langinfo.hanson. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,17 +8,15 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-*   Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-
-*   Redistributions in binary form must reproduce the above
-    copyright notice, this list of conditions and the following disclaimer
-    in the documentation and/or other materials provided with the
-    distribution.
-
-*   Neither the name of GFXFundamentals. nor the names of his
-    contributors may be used to endorse or promote products derived from
-    this software without specific prior written permission.
+    * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+    * Neither the name of GFXFundamentals. nor the names of his
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -36,78 +34,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta property="og:title" content="How to optimize rendering a UI" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta property="og:description" content="How to optimize rendering a UI" />
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-optimize-rendering-a-ui.html" />
 
-<meta name="description" content="Как оптимизировать рендеринг UI">
-<meta name="keywords" content="webgl webgl2 graphics">
-<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-optimize-rendering-a-ui_ru.jpg">
-
-<meta property="og:title" content="Как оптимизировать рендеринг UI">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-optimize-rendering-a-ui_ru.jpg">
-<meta property="og:description" content="Как оптимизировать рендеринг UI">
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-optimize-rendering-a-ui.html">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@greggman">
-<meta name="twitter:creator" content="@greggman">
-<meta name="twitter:domain" content="webgl2fundamentals.org">
-<meta name="twitter:title" content="Как оптимизировать рендеринг UI">
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-optimize-rendering-a-ui.html">
-<meta name="twitter:description" content="Как оптимизировать рендеринг UI">
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-optimize-rendering-a-ui_ru.jpg">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@graph":[
-    {
-      "@type":"WebSite",
-      "@id":"https://webgl2fundamentals.org/#website",
-      "url":"https://webgl2fundamentals.org/",
-      "name":"Webgl2Fundamentals"
-    },
-    {
-      "@type":"ImageObject",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-optimize-rendering-a-ui.html#primaryimage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-optimize-rendering-a-ui_ru.jpg",
-      "width":1200,
-      "height":630
-    },
-    {
-      "@type":"WebPage",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-optimize-rendering-a-ui.html#webpage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-optimize-rendering-a-ui.html",
-      "inLanguage":"ru",
-      "name":"Как оптимизировать рендеринг UI",
-      "keywords":"webgl webgl2 graphics programming",
-      "isPartOf":{
-        "@id":"https://webgl2fundamentals.org/#website"
-      },
-      "primaryImageOfPage":{
-        "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-optimize-rendering-a-ui.html#primaryimage"
-      }
-    }
-  ]
-}
-</script>
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@greggman" />
+<meta name="twitter:creator" content="@greggman" />
+<meta name="twitter:domain" content="webgl2fundamentals.org" />
+<meta name="twitter:title" content="How to optimize rendering a UI" />
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-optimize-rendering-a-ui.html" />
+<meta name="twitter:description" content="How to optimize rendering a UI" />
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>Как оптимизировать рендеринг UI</title>
+<title>How to optimize rendering a UI</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/lang.css">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
-
-  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-qna-how-to-optimize-rendering-a-ui.html">
-  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-qna-how-to-optimize-rendering-a-ui.html">
-  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-qna-how-to-optimize-rendering-a-ui.html">
-  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-qna-how-to-optimize-rendering-a-ui.html">
-  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-qna-how-to-optimize-rendering-a-ui.html">
-  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-qna-how-to-optimize-rendering-a-ui.html">
-  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-qna-how-to-optimize-rendering-a-ui.html">
-
-
-
-
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
 <body>
 <div class="webgl_navbar">
@@ -234,109 +179,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>Как оптимизировать рендеринг UI</h1>
+    <h1>How to optimize rendering a UI</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="вопрос">Вопрос:</h2>
-<p>Я только начинаю с WebGL. Я следовал простому руководству для начинающих на YouTube. Теперь я пытаюсь создать простую 2D игру.</p>
-<p>В этой игре я хочу рендерить простой инвентарь с изображениями. Когда я это делаю, мой FPS падает до 2 после 10 секунд. Если я убираю код для рендеринга инвентаря, он остаётся на 60.</p>
-<p>Я знаю, что моя проблема в строке 82 в <code class="notranslate" translate="no">game/js/engine/inventory/inventory.js</code>. Там я рендерю 35 изображений с классом sprite, который я сделал, смотря руководство. Я думаю, что поскольку я смотрел простое руководство, код, который рендерит изображение, не оптимизирован и, вероятно, не лучший способ это делать. Класс sprite находится в <code class="notranslate" translate="no">game/js/engine/material.js:127</code>. В классе sprite я настраиваю простые переменные, которые можно передать в мой вершинный и фрагментный шейдер.</p>
-<h2 id="настройка-sprite">Настройка Sprite</h2>
-<p>В методе setup я настраиваю все параметры для моего изображения.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.useProgram(this.material.program);
+      <p>Русский перевод пока не готов (￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Помогите с переводом</a>!</p>
+<p><a href="/webgl/lessons/webgl-qna-how-to-optimize-rendering-a-ui.html">Оригинал на английском</a>.</p>
 
-this.gl_tex = gl.createTexture();
-
-gl.bindTexture(gl.TEXTURE_2D, this.gl_tex);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.image);
-gl.bindTexture(gl.TEXTURE_2D, null);
-
-this.uv_x = this.size.x / this.image.width;
-this.uv_y = this.size.y / this.image.height;
-
-this.tex_buff = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, this.tex_buff);
-gl.bufferData(gl.ARRAY_BUFFER, Sprite.createRenderRectArray(0, 0, this.uv_x, this.uv_y), gl.STATIC_DRAW);
-
-this.geo_buff = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, this.geo_buff);
-gl.bufferData(gl.ARRAY_BUFFER, Sprite.createRectArray(0, 0, this.size.x, this.size.y), gl.STATIC_DRAW);
-
-gl.useProgram(null);
-</code></pre>
-<h2 id="рендеринг-sprite">Рендеринг Sprite</h2>
-<p>В методе render я сначала привязываю текстуру. Затем привязываю буфер текстурных координат, геометрический буфер и некоторые смещения для моего мира. Наконец, рисую массивы.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">let frame_x = Math.floor(frames.x) * this.uv_x;
-let frame_y = Math.floor(frames.y) * this.uv_y;
-
-let oMat = new M3x3().transition(position.x, position.y);
-gl.useProgram(this.material.program);
-
-this.material.set(&quot;u_color&quot;, 1, 1, 1, 1);
-
-gl.activeTexture(gl.TEXTURE0);
-gl.bindTexture(gl.TEXTURE_2D, this.gl_tex);
-this.material.set(&quot;u_image&quot;, 0);
-
-gl.bindBuffer(gl.ARRAY_BUFFER, this.tex_buff);
-this.material.set(&quot;a_texCoord&quot;);
-
-gl.bindBuffer(gl.ARRAY_BUFFER, this.geo_buff);
-this.material.set(&quot;a_position&quot;);
-
-this.material.set(&quot;u_texeloffset&quot;, 0.5 / (this.image.width * scale.x), 0.5 / (this.image.height * scale.y));
-this.material.set(&quot;u_frame&quot;, frame_x, frame_y);
-this.material.set(&quot;u_world&quot;, worldSpaceMatrix.getFloatArray());
-this.material.set(&quot;u_object&quot;, oMat.getFloatArray());
-
-gl.drawArrays(gl.TRIANGLE_STRIP, 0, 6);
-gl.useProgram(null);
-</code></pre>
-<p>Github: <a href="https://github.com/DJ1TJOO/2DGame/">https://github.com/DJ1TJOO/2DGame/</a></p>
-<p>У кого-нибудь есть идея, как я могу исправить/оптимизировать это?
-Или может быть есть лучший способ рендерить инвентарь?</p>
-<p>Если вы найдёте любой другой способ улучшить мой WebGL или JavaScript, пожалуйста, скажите.</p>
-<h2 id="ответ">Ответ:</h2>
-<blockquote>
-<p>есть лучший способ рендерить инвентарь?</p>
-</blockquote>
-<p>Есть несколько способов оптимизации, которые приходят в голову.</p>
-<ol>
-<li>
-<p>Может быть быстрее просто использовать HTML для вашего инвентаря</p>
-<p>Серьёзно: Вы также получаете простое международное рендеринг шрифтов, стили,
-отзывчивость с CSS и т.д… Много игр делают это.</p>
-</li>
-<li>
-<p>Обычно быстрее использовать texture atlas (одну текстуру с множеством разных изображений), затем генерировать вершины в vertex buffer для всех частей вашего инвентаря. Затем рисовать всё одним вызовом draw. Так работает, например, <a href="https://github.com/ocornut/imgui">Dear ImGUI</a>, чтобы делать <a href="https://github.com/ocornut/imgui/issues/3075">все эти удивительные GUI</a>. Он сам ничего не рисует, он просто генерирует vertex buffer с позициями и текстурными координатами для texture atlas.</p>
-</li>
-<li>
-<p>Делайте #2, но вместо генерации всего vertex buffer каждый кадр просто обновляйте части, которые изменяются.</p>
-<p>Так, например, допустим ваш инвентарь показывает</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> [gold  ] 123
- [silver] 54
- [copper] 2394
-</code></pre>
-<p>Допустим, вы всегда рисуете <code class="notranslate" translate="no">[gold  ]</code>, <code class="notranslate" translate="no">[silver]</code> и <code class="notranslate" translate="no">[copper]</code>, но только числа изменяются. Вы могли бы генерировать vertex buffers, которые содержат все позиции для каждой буквы как sprite, и затем сказать 6 placeholder’ов символов для каждого значения. Вам нужно обновлять только числа, когда они изменяются, помня, где они находятся в vertex buffers. Для любой цифры, которую вы не хотите рисовать, вы можете просто переместить её вершины за экран.</p>
-</li>
-<li>
-<p>Рисуйте инвентарь в текстуру (или части его). Затем рисуйте текстуру на экране. Обновляйте только части текстуры, которые изменяются.</p>
-<p>Это в основном <a href="https://www.html5rocks.com/en/tutorials/speed/layers/">то, что делает сам браузер</a>. На основе различных настроек CSS части страницы разделяются на текстуры. Когда какой-то HTML или CSS изменяется, только те текстуры, в которых что-то изменилось, перерисовываются, а затем все текстуры рисуются для рекомпозиции страницы.</p>
-</li>
-</ol>
-<div class="so">
-  <div>Вопрос и процитированные части являются 
-    CC BY-SA 4.0 от
-    <a data-href="https://stackoverflow.com/users/12973068">DJ1TJOO</a>
-    из
-    <a data-href="https://stackoverflow.com/questions/62330231">здесь</a>
-  </div>
-</div> 
     </div>
     <div class="lesson-sidebar">
         <select class="language">
@@ -350,8 +199,7 @@ gl.useProgram(null);
 </select>
 
 
-        <div id="toc">
-          <ul>  <li>Основы</li>
+        <ul>  <li>Основы</li>
         <ul>
           <li><a href="/webgl/lessons/ru/webgl-getting-webgl2.html">Как использовать WebGL2</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fundamentals.html">Основы</a></li>
@@ -434,7 +282,7 @@ gl.useProgram(null);
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -477,9 +325,9 @@ gl.useProgram(null);
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>
@@ -494,47 +342,13 @@ gl.useProgram(null);
   <li><a href="https://twgljs.org">TWGL, легковесная библиотека-помощник для WebGL</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
-        </div>
-    </div>
-    <div class="lesson-comments">
-        
-<div>Есть предложения или замечания? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Создайте issue на GitHub</a>.</div>
-  
-
-        <div id="disqus_thread"></div>
-        <script>
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
-            var disqus_identifier = 'Как оптимизировать рендеринг UI';
-            var disqus_title = 'Как оптимизировать рендеринг UI';
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
-                    return;
-                }
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
-<script>
-const settings = {
-  contribTemplate: "Спасибо <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>за <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} вкладов</a>",
-  owner: "gfxfundamentals",
-  repo: "webgl2-fundamentals",
-};
-</script>
-<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script src="/webgl/lessons/resources/lesson.js"></script>
 <script>
 </script>
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/ru/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.md. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/ru/langinfo.hanson. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,17 +8,15 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-*   Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-
-*   Redistributions in binary form must reproduce the above
-    copyright notice, this list of conditions and the following disclaimer
-    in the documentation and/or other materials provided with the
-    distribution.
-
-*   Neither the name of GFXFundamentals. nor the names of his
-    contributors may be used to endorse or promote products derived from
-    this software without specific prior written permission.
+    * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+    * Neither the name of GFXFundamentals. nor the names of his
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -36,78 +34,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta property="og:title" content="How to simulate a 3D texture in WebGL" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta property="og:description" content="How to simulate a 3D texture in WebGL" />
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.html" />
 
-<meta name="description" content="Как симулировать 3D текстуру в WebGL">
-<meta name="keywords" content="webgl webgl2 graphics">
-<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-simulate-a-3d-texture-in-webgl_ru.jpg">
-
-<meta property="og:title" content="Как симулировать 3D текстуру в WebGL">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-simulate-a-3d-texture-in-webgl_ru.jpg">
-<meta property="og:description" content="Как симулировать 3D текстуру в WebGL">
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.html">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@greggman">
-<meta name="twitter:creator" content="@greggman">
-<meta name="twitter:domain" content="webgl2fundamentals.org">
-<meta name="twitter:title" content="Как симулировать 3D текстуру в WebGL">
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.html">
-<meta name="twitter:description" content="Как симулировать 3D текстуру в WebGL">
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-simulate-a-3d-texture-in-webgl_ru.jpg">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@graph":[
-    {
-      "@type":"WebSite",
-      "@id":"https://webgl2fundamentals.org/#website",
-      "url":"https://webgl2fundamentals.org/",
-      "name":"Webgl2Fundamentals"
-    },
-    {
-      "@type":"ImageObject",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.html#primaryimage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-simulate-a-3d-texture-in-webgl_ru.jpg",
-      "width":1200,
-      "height":630
-    },
-    {
-      "@type":"WebPage",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.html#webpage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.html",
-      "inLanguage":"ru",
-      "name":"Как симулировать 3D текстуру в WebGL",
-      "keywords":"webgl webgl2 graphics programming",
-      "isPartOf":{
-        "@id":"https://webgl2fundamentals.org/#website"
-      },
-      "primaryImageOfPage":{
-        "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.html#primaryimage"
-      }
-    }
-  ]
-}
-</script>
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@greggman" />
+<meta name="twitter:creator" content="@greggman" />
+<meta name="twitter:domain" content="webgl2fundamentals.org" />
+<meta name="twitter:title" content="How to simulate a 3D texture in WebGL" />
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.html" />
+<meta name="twitter:description" content="How to simulate a 3D texture in WebGL" />
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>Как симулировать 3D текстуру в WebGL</title>
+<title>How to simulate a 3D texture in WebGL</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/lang.css">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
-
-  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.html">
-  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.html">
-  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.html">
-  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.html">
-  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.html">
-  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.html">
-  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.html">
-
-
-
-
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
 <body>
 <div class="webgl_navbar">
@@ -234,93 +179,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>Как симулировать 3D текстуру в WebGL</h1>
+    <h1>How to simulate a 3D texture in WebGL</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="вопрос">Вопрос:</h2>
-<p>Итак, в WebGL я могу хранить текстуру максимум в 2 измерениях и читать её в шейдере с помощью texture2D(whatever);</p>
-<p>Если я хочу хранить 3-мерную текстуру, чтобы читать 3-мерные данные в шейдере, как это сделать?</p>
-<p>Вот мои идеи — и я хочу знать, правильно ли я подхожу к этому:</p>
-<p>В JavaScript:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var info = [];
+      <p>Русский перевод пока не готов (￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Помогите с переводом</a>!</p>
+<p><a href="/webgl/lessons/webgl-qna-how-to-simulate-a-3d-texture-in-webgl.html">Оригинал на английском</a>.</p>
 
-for (var x = 0; x &lt; 1; x+=.1) {
-     for (var y = 0; y &lt; 1; y+=.1) {
-          for (var z = 0; z &lt; 1; z+=.1) {
-
-               info.push (x*y*z); 
-               info.push(0);
-               info.push(0);
-               info.push(0);
-
-          }
-     }
-}
-
-//bind texture here- whatever
-
-gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 10, 100, 0,
-                  gl.RGBA, gl.FLOAT, data_on_shader);
-
-//other texture stuff
-</code></pre>
-<p>В шейдере:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler data_on_shader;
-x= texture.r//
-y = texture.g//
-z = texture.b//
-
-xfixed = floor(x*10.)/10. + .5;
-yfixed = floor(y*10.)/10. + .5;
-zfixed = floor(z*10.)/10. + .5;
-
-float data_received = texture2D(data_on_shader, vec2(xfixed, yfixed*10. + zfixed)).r;
-</code></pre>
-<p>Что-то вроде использования row major order в 2D текстуре?
-Мысли?</p>
-<p>Спасибо заранее!</p>
-<h2 id="ответ">Ответ:</h2>
-<p>Вы можете симулировать 3D текстуру, сохраняя каждую плоскость 3D текстуры в 2D текстуре</p>
-<p>Затем функция вроде этой позволит вам использовать её как 3D текстуру:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 sampleAs3DTexture(sampler2D tex, vec3 texCoord, float size) {
-    float sliceSize = 1.0 / size;                         // пространство 1 среза
-    float slicePixelSize = sliceSize / size;              // пространство 1 пикселя
-    float sliceInnerSize = slicePixelSize * (size - 1.0); // пространство size пикселей
-    float zSlice0 = min(floor(texCoord.z * size), size - 1.0);
-    float zSlice1 = min(zSlice0 + 1.0, size - 1.0);
-    float xOffset = slicePixelSize * 0.5 + texCoord.x * sliceInnerSize;
-    float s0 = xOffset + (zSlice0 * sliceSize);
-    float s1 = xOffset + (zSlice1 * sliceSize);
-    vec4 slice0Color = texture2D(tex, vec2(s0, texCoord.y));
-    vec4 slice1Color = texture2D(tex, vec2(s1, texCoord.y));
-    float zOffset = mod(texCoord.z * size, 1.0);
-    return mix(slice0Color, slice1Color, zOffset);
- }
-</code></pre>
-<p>Если ваша 3D текстура была 8x8x8, то вы создаёте 2D текстуру 64x8 и помещаете каждую плоскость 3D текстуры в вашу 2D текстуру. Затем, зная, что изначально было 8x8x8, вы передаёте <code class="notranslate" translate="no">8.0</code> для размера в <code class="notranslate" translate="no">sampleAs3DTexture</code></p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">precision mediump float;
-uniform sampler2D u_my3DTexture;
-varying vec3 v_texCoord;
-
-...
-
-#define CUBE_SIZE 8.0
-
-void main() {
-  gl_FragColor = sampleAs3DTexture(u_my3DTexture, v_texCoord, CUBE_SIZE);
-}
-</code></pre>
-<p>Примечание: функция выше предполагает, что вы хотите билинейную фильтрацию между плоскостями. Если не хотите, можете упростить функцию.</p>
-<p>Есть <a href="http://www.youtube.com/watch?v=rfQ8rKGTVlg#t=26m00s">видео-объяснение этого кода здесь</a>, которое взято из <a href="http://webglsamples.googlecode.com/hg/color-adjust/color-adjust.html">этого примера</a>.</p>
-<div class="so">
-  <div>Вопрос и процитированные части являются 
-    CC BY-SA 3.0 от
-    <a data-href="https://stackoverflow.com/users/1840804">Skorpius</a>
-    из
-    <a data-href="https://stackoverflow.com/questions/19939557">здесь</a>
-  </div>
-</div> 
     </div>
     <div class="lesson-sidebar">
         <select class="language">
@@ -334,8 +199,7 @@ void main() {
 </select>
 
 
-        <div id="toc">
-          <ul>  <li>Основы</li>
+        <ul>  <li>Основы</li>
         <ul>
           <li><a href="/webgl/lessons/ru/webgl-getting-webgl2.html">Как использовать WebGL2</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fundamentals.html">Основы</a></li>
@@ -418,7 +282,7 @@ void main() {
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -461,9 +325,9 @@ void main() {
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>
@@ -478,47 +342,13 @@ void main() {
   <li><a href="https://twgljs.org">TWGL, легковесная библиотека-помощник для WebGL</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
-        </div>
-    </div>
-    <div class="lesson-comments">
-        
-<div>Есть предложения или замечания? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Создайте issue на GitHub</a>.</div>
-  
-
-        <div id="disqus_thread"></div>
-        <script>
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
-            var disqus_identifier = 'Как симулировать 3D текстуру в WebGL';
-            var disqus_title = 'Как симулировать 3D текстуру в WebGL';
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
-                    return;
-                }
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
-<script>
-const settings = {
-  contribTemplate: "Спасибо <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>за <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} вкладов</a>",
-  owner: "gfxfundamentals",
-  repo: "webgl2-fundamentals",
-};
-</script>
-<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script src="/webgl/lessons/resources/lesson.js"></script>
 <script>
 </script>
 

@@ -388,77 +388,77 @@ f 1//1 2//2 3//3     # индексы для позиций и нормалей
 которая является комбинацией данных всех 3 вещей. <a href="webgl-pulling-vertices.html">*</a></p>
 <p>Итак, учитывая все это, выглядит так, что мы можем парсить эти части следующим образом</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
-+  // потому что индексы основаны на 1, давайте просто заполним 0-е данные
-+  const objPositions = [[0, 0, 0]];
-+  const objTexcoords = [[0, 0]];
-+  const objNormals = [[0, 0, 0]];
-+
-+  // тот же порядок, что и индексы `f`
-+  const objVertexData = [
-+    objPositions,
-+    objTexcoords,
-+    objNormals,
-+  ];
-+
-+  // тот же порядок, что и индексы `f`
-+  let webglVertexData = [
-+    [],   // позиции
-+    [],   // текстурные координаты
-+    [],   // нормали
-+  ];
-+
-+  function addVertex(vert) {
-+    const ptn = vert.split('/');
-+    ptn.forEach((objIndexStr, i) =&gt; {
-+      if (!objIndexStr) {
-+        return;
-+      }
-+      const objIndex = parseInt(objIndexStr);
-+      const index = objIndex + (objIndex &gt;= 0 ? 0 : objVertexData[i].length);
-+      webglVertexData[i].push(...objVertexData[i][index]);
-+    });
-+  }
-+
-+  const keywords = {
-+    v(parts) {
-+      objPositions.push(parts.map(parseFloat));
-+    },
-+    vn(parts) {
-+      objNormals.push(parts.map(parseFloat));
-+    },
-+    vt(parts) {
-+      objTexcoords.push(parts.map(parseFloat));
-+    },
-+    f(parts) {
-+      const numTriangles = parts.length - 2;
-+      for (let tri = 0; tri &lt; numTriangles; ++tri) {
-+        addVertex(parts[0]);
-+        addVertex(parts[tri + 1]);
-+        addVertex(parts[tri + 2]);
-+      }
-+    },
-+  };
-+
-+  const keywordRE = /(\w*)(?: )*(.*)/;
-+  const lines = text.split('\n');
-+  for (let lineNo = 0; lineNo &lt; lines.length; ++lineNo) {
-+    const line = lines[lineNo].trim();
-+    if (line === '' || line.startsWith('#')) {
-+      continue;
-+    }
-+    const m = keywordRE.exec(line);
-+    if (!m) {
-+      continue;
-+    }
-+    const [, keyword, unparsedArgs] = m;
-+    const parts = line.split(/\s+/).slice(1);
-+    const handler = keywords[keyword];
-+    if (!handler) {
-+      console.warn('unhandled keyword:', keyword, 'at line', lineNo + 1);
-+      continue;
-+    }
-+    handler(parts, unparsedArgs);
-+  }
+  // потому что индексы основаны на 1, давайте просто заполним 0-е данные
+  const objPositions = [[0, 0, 0]];
+  const objTexcoords = [[0, 0]];
+  const objNormals = [[0, 0, 0]];
+
+  // тот же порядок, что и индексы `f`
+  const objVertexData = [
+    objPositions,
+    objTexcoords,
+    objNormals,
+  ];
+
+  // тот же порядок, что и индексы `f`
+  let webglVertexData = [
+    [],   // позиции
+    [],   // текстурные координаты
+    [],   // нормали
+  ];
+
+  function addVertex(vert) {
+    const ptn = vert.split('/');
+    ptn.forEach((objIndexStr, i) =&gt; {
+      if (!objIndexStr) {
+        return;
+      }
+      const objIndex = parseInt(objIndexStr);
+      const index = objIndex + (objIndex &gt;= 0 ? 0 : objVertexData[i].length);
+      webglVertexData[i].push(...objVertexData[i][index]);
+    });
+  }
+
+  const keywords = {
+    v(parts) {
+      objPositions.push(parts.map(parseFloat));
+    },
+    vn(parts) {
+      objNormals.push(parts.map(parseFloat));
+    },
+    vt(parts) {
+      objTexcoords.push(parts.map(parseFloat));
+    },
+    f(parts) {
+      const numTriangles = parts.length - 2;
+      for (let tri = 0; tri &lt; numTriangles; ++tri) {
+        addVertex(parts[0]);
+        addVertex(parts[tri + 1]);
+        addVertex(parts[tri + 2]);
+      }
+    },
+  };
+
+  const keywordRE = /(\w*)(?: )*(.*)/;
+  const lines = text.split('\n');
+  for (let lineNo = 0; lineNo &lt; lines.length; ++lineNo) {
+    const line = lines[lineNo].trim();
+    if (line === '' || line.startsWith('#')) {
+      continue;
+    }
+    const m = keywordRE.exec(line);
+    if (!m) {
+      continue;
+    }
+    const [, keyword, unparsedArgs] = m;
+    const parts = line.split(/\s+/).slice(1);
+    const handler = keywords[keyword];
+    if (!handler) {
+      console.warn('unhandled keyword:', keyword, 'at line', lineNo + 1);
+      continue;
+    }
+    handler(parts, unparsedArgs);
+  }
 
   return {
     position: webglVertexData[0],
@@ -748,6 +748,249 @@ function addVertex(vert) {
 в какой-то другой формат сначала, офлайн, а затем использовать лучший формат на вашей странице.</p>
 </li>
 </ul>
+<h2 id="загрузка-obj-с-цветами-вершин">Загрузка .OBJ с цветами вершин</h2>
+<p>Некоторые .OBJ файлы содержат цвета вершин. Это данные, которые хранятся в каждой вершине,
+а не в материале. Давайте добавим поддержку для этого.</p>
+<p>Сначала нужно обновить парсер, чтобы он обрабатывал ключевое слово <code class="notranslate" translate="no">vc</code> (vertex color):</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
+  const objPositions = [];
+  const objTexcoords = [];
+  const objNormals = [];
+  const objColors = [];
+  const objVertexData = [
+    objPositions,
+    objTexcoords,
+    objNormals,
+    objColors,
+  ];
+
+  // индексы для webgl используют 0 как базу
+  const webglIndices = [];
+  let geometry;
+  let material = 'default';
+  let object = 'default';
+
+  const noop = () =&gt; {};
+
+  const keywords = {
+    v(parts) {
+      // если есть 4 значения, то это позиция + цвет
+      if (parts.length === 6) {
+        objPositions.push(parts[0], parts[1], parts[2]);
+        objColors.push(parts[3], parts[4], parts[5]);
+      } else {
+        objPositions.push(parts[0], parts[1], parts[2]);
+      }
+    },
+    vn(parts) {
+      objNormals.push(parts[0], parts[1], parts[2]);
+    },
+    vt(parts) {
+      objTexcoords.push(parts[0], parts[1]);
+    },
+    f(parts) {
+      setGeometry();
+      addFace(parts);
+    },
+    s: noop, // smoothing group
+    mtllib(parts, unparsedArgs) {
+      // материал библиотека
+      materialLib = unparsedArgs;
+    },
+    usemtl(parts, unparsedArgs) {
+      material = unparsedArgs;
+      setGeometry();
+    },
+    g(parts, unparsedArgs) {
+      object = unparsedArgs;
+      setGeometry();
+    },
+    o(parts, unparsedArgs) {
+      object = unparsedArgs;
+      setGeometry();
+    },
+  };
+
+  function setGeometry() {
+    if (geometry) {
+      geometry = undefined;
+    }
+  }
+
+  function addFace(parts) {
+    const numTriangles = parts.length - 2;
+    for (let tri = 0; tri &lt; numTriangles; ++tri) {
+      addVertex(parts[0]);
+      addVertex(parts[tri + 1]);
+      addVertex(parts[tri + 2]);
+    }
+  }
+
+  const keywordRE = /(\w*)(?: )*(.*)/;
+  const lines = text.split('\n');
+  for (let lineNo = 0; lineNo &lt; lines.length; ++lineNo) {
+    const line = lines[lineNo].trim();
+    if (line === '' || line.startsWith('#')) {
+      continue;
+    }
+    const m = keywordRE.exec(line);
+    if (!m) {
+      continue;
+    }
+    const [, keyword, unparsedArgs] = m;
+    const parts = line.split(/\s+/).slice(1);
+    const handler = keywords[keyword];
+    if (!handler) {
+      console.warn('unhandled keyword:', keyword);
+      continue;
+    }
+    handler(parts, unparsedArgs);
+  }
+
+  for (const geometry of Object.values(geometries)) {
+    geometry.data = {};
+    if (geometry.objVertexData[0].length &gt; 0) {
+      geometry.data.position = geometry.objVertexData[0];
+    }
+    if (geometry.objVertexData[1].length &gt; 0) {
+      geometry.data.texcoord = geometry.objVertexData[1];
+    }
+    if (geometry.objVertexData[2].length &gt; 0) {
+      geometry.data.normal = geometry.objVertexData[2];
+    }
+    if (geometry.objVertexData[3].length &gt; 0) {
+      geometry.data.color = geometry.objVertexData[3];
+    }
+  }
+
+  return {
+    geometries: Object.values(geometries),
+  };
+}
+</code></pre>
+<p>Затем нужно обновить шейдеры, чтобы они использовали цвета вершин:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
+in vec4 a_position;
+in vec3 a_normal;
+in vec2 a_texcoord;
+in vec3 a_color;
+
+uniform mat4 u_projection;
+uniform mat4 u_view;
+uniform mat4 u_world;
+uniform vec3 u_viewWorldPosition;
+
+out vec3 v_normal;
+out vec3 v_surfaceToView;
+out vec2 v_texcoord;
+out vec3 v_color;
+
+void main() {
+  vec4 worldPosition = u_world * a_position;
+  gl_Position = u_projection * u_view * worldPosition;
+  v_surfaceToView = u_viewWorldPosition - worldPosition.xyz;
+
+  v_normal = mat3(u_world) * a_normal;
+  v_texcoord = a_texcoord;
+  v_color = a_color;
+}
+`;
+
+const fs = `#version 300 es
+precision highp float;
+
+in vec3 v_normal;
+in vec3 v_surfaceToView;
+in vec2 v_texcoord;
+in vec3 v_color;
+
+uniform vec3 diffuse;
+uniform sampler2D diffuseMap;
+uniform vec3 ambient;
+uniform vec3 emissive;
+uniform vec3 specular;
+uniform sampler2D specularMap;
+uniform float shininess;
+uniform float opacity;
+uniform vec3 u_lightDirection;
+uniform vec3 u_ambientLight;
+
+out vec4 outColor;
+
+void main () {
+  vec3 normal = normalize(v_normal);
+
+  vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+  vec3 halfVector = normalize(u_lightDirection + surfaceToViewDirection);
+
+  float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
+  float specularLight = clamp(dot(normal, halfVector), 0.0, 1.0);
+  vec4 specularMapColor = texture(specularMap, v_texcoord);
+  vec3 effectiveSpecular = specular * specularMapColor.rgb;
+
+  vec4 diffuseMapColor = texture(diffuseMap, v_texcoord);
+  vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb * v_color;
+  float effectiveOpacity = opacity * diffuseMapColor.a;
+
+  outColor = vec4(
+      emissive +
+      ambient * u_ambientLight +
+      effectiveDiffuse * fakeLight +
+      effectiveSpecular * pow(specularLight, shininess),
+      effectiveOpacity);
+}
+`;
+</code></pre>
+<p>Также нужно обновить код, который создаёт буферы, чтобы он обрабатывал цвета вершин.
+Наша <a href="webgl-less-code-more-fun.html">вспомогательная библиотека</a> обрабатывает это для нас, если
+мы установим данные для этого атрибута как <code class="notranslate" translate="no">{value: [1, 2, 3, 4]}</code>. Итак, мы можем
+проверить, если нет цветов вершин, то если так, установить атрибут цвета вершины
+как константный белый.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const parts = obj.geometries.map(({data}) =&gt; {
+  // Потому что data - это просто именованные массивы, как это
+  //
+  // {
+  //   position: [...],
+  //   texcoord: [...],
+  //   normal: [...],
+  // }
+  //
+  // и потому что эти имена соответствуют атрибутам в нашем вершинном
+  // шейдере, мы можем передать это напрямую в `createBufferInfoFromArrays`
+  // из статьи &quot;less code more fun&quot;.
+
+  if (data.color) {
+      if (data.position.length === data.color.length) {
+        // это 3. Наша вспомогательная библиотека предполагает 4, поэтому нам нужно
+        // сказать ей, что их только 3.
+        data.color = { numComponents: 3, data: data.color };
+      }
+  } else {
+    // нет цветов вершин, поэтому просто используем константный белый
+    data.color = { value: [1, 1, 1, 1] };
+  }
+
+  // создаём буфер для каждого массива, вызывая
+  // gl.createBuffer, gl.bindBuffer, gl.bufferData
+  const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
+  const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
+  return {
+    material: {
+      u_diffuse: [1, 1, 1, 1],
+    },
+    bufferInfo,
+    vao,
+  };
+});
+</code></pre>
+<p>И с этим мы можем загрузить .OBJ файл с цветами вершин.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-load-obj-w-vertex-colors.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-load-obj-w-vertex-colors.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Что касается парсинга и использования материалов, <a href="webgl-load-obj-w-mtl.html">см. следующую статью</a></p>
 
     </div>
     <div class="lesson-sidebar">
@@ -846,7 +1089,7 @@ function addVertex(vert) {
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -889,9 +1132,9 @@ function addVertex(vert) {
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>

@@ -424,7 +424,192 @@ image.src = &quot;resources/8x8-font.png&quot;;
 image.addEventListener('load', function() {
   // Теперь, когда изображение загружено, копируем его в текстуру.
   gl.bindTexture(gl.TEXTURE_2D, glyphTex);
-} </code></pre>
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+});
+</code></pre>
+<p>Теперь, когда у нас есть текстура с глифами в ней, нам нужно её использовать. Для этого мы будем
+строить вершины квадов на лету для каждого глифа. Эти вершины будут использовать координаты текстуры
+для выбора конкретного глифа</p>
+<p>Учитывая строку, давайте построим вершины</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function makeVerticesForString(fontInfo, s) {
+  var len = s.length;
+  var numVertices = len * 6;
+  var positions = new Float32Array(numVertices * 2);
+  var texcoords = new Float32Array(numVertices * 2);
+  var offset = 0;
+  var x = 0;
+  var maxX = fontInfo.textureWidth;
+  var maxY = fontInfo.textureHeight;
+  for (var ii = 0; ii &lt; len; ++ii) {
+    var letter = s[ii];
+    var glyphInfo = fontInfo.glyphInfos[letter];
+    if (glyphInfo) {
+      var x2 = x + glyphInfo.width;
+      var u1 = glyphInfo.x / maxX;
+      var v1 = (glyphInfo.y + fontInfo.letterHeight - 1) / maxY;
+      var u2 = (glyphInfo.x + glyphInfo.width - 1) / maxX;
+      var v2 = glyphInfo.y / maxY;
+
+      // 6 вершин на букву
+      positions[offset + 0] = x;
+      positions[offset + 1] = 0;
+      texcoords[offset + 0] = u1;
+      texcoords[offset + 1] = v1;
+
+      positions[offset + 2] = x2;
+      positions[offset + 3] = 0;
+      texcoords[offset + 2] = u2;
+      texcoords[offset + 3] = v1;
+
+      positions[offset + 4] = x;
+      positions[offset + 5] = fontInfo.letterHeight;
+      texcoords[offset + 4] = u1;
+      texcoords[offset + 5] = v2;
+
+      positions[offset + 6] = x;
+      positions[offset + 7] = fontInfo.letterHeight;
+      texcoords[offset + 6] = u1;
+      texcoords[offset + 7] = v2;
+
+      positions[offset + 8] = x2;
+      positions[offset + 9] = 0;
+      texcoords[offset + 8] = u2;
+      texcoords[offset + 9] = v1;
+
+      positions[offset + 10] = x2;
+      positions[offset + 11] = fontInfo.letterHeight;
+      texcoords[offset + 10] = u2;
+      texcoords[offset + 11] = v2;
+
+      x += glyphInfo.width + fontInfo.spacing;
+      offset += 12;
+    } else {
+      // у нас нет этого символа, поэтому просто продвигаемся
+      x += fontInfo.spaceWidth;
+    }
+  }
+
+  // возвращаем ArrayBufferViews для части TypedArrays
+  // которые фактически использовались.
+  return {
+    arrays: {
+      position: new Float32Array(positions.buffer, 0, offset),
+      texcoord: new Float32Array(texcoords.buffer, 0, offset),
+    },
+    numVertices: offset / 2,
+  };
+}
+</code></pre>
+<p>Чтобы использовать это, мы вручную создадим bufferInfo. (<a href="webgl-drawing-multiple-things.html">См. предыдущую статью, если вы не помните, что такое bufferInfo</a>).</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Вручную создаем bufferInfo
+var textBufferInfo = {
+  attribs: {
+    a_position: { buffer: gl.createBuffer(), numComponents: 2, },
+    a_texcoord: { buffer: gl.createBuffer(), numComponents: 2, },
+  },
+  numElements: 0,
+};
+</code></pre>
+<p>И затем для рендеринга текста мы обновим буферы. Мы также сделаем текст динамическим</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">textPositions.forEach(function(pos, ndx) {
+
+  var name = names[ndx];
++  var s = name + &quot;:&quot; + pos[0].toFixed(0) + &quot;,&quot; + pos[1].toFixed(0) + &quot;,&quot; + pos[2].toFixed(0);
++  var vertices = makeVerticesForString(fontInfo, s);
++
++  // обновляем буферы
++  textBufferInfo.attribs.a_position.numComponents = 2;
++  gl.bindBuffer(gl.ARRAY_BUFFER, textBufferInfo.attribs.a_position.buffer);
++  gl.bufferData(gl.ARRAY_BUFFER, vertices.arrays.position, gl.DYNAMIC_DRAW);
++  gl.bindBuffer(gl.ARRAY_BUFFER, textBufferInfo.attribs.a_texcoord.buffer);
++  gl.bufferData(gl.ARRAY_BUFFER, vertices.arrays.texcoord, gl.DYNAMIC_DRAW);
+
+  // используем только позицию вида 'F' для текста
+
+  // потому что pos в пространстве вида, это означает, что это вектор от глаза к
+  // некоторой позиции. Итак, перемещаемся вдоль этого вектора обратно к глазу на некоторое расстояние
+  var fromEye = m4.normalize(pos);
+  var amountToMoveTowardEye = 150;  // потому что F 150 единиц длиной
+  var viewX = pos[0] - fromEye[0] * amountToMoveTowardEye;
+  var viewY = pos[1] - fromEye[1] * amountToMoveTowardEye;
+  var viewZ = pos[2] - fromEye[2] * amountToMoveTowardEye;
+  var desiredTextScale = -1 / gl.canvas.height * 2;  // 1x1 пиксели
+  var scale = viewZ * desiredTextScale;
+
+  var textMatrix = m4.translate(projectionMatrix, viewX, viewY, viewZ);
+  textMatrix = m4.scale(textMatrix, scale, scale, 1);
+
+  // настройка для рисования текста.
+  gl.useProgram(textProgramInfo.program);
+
+  gl.bindVertexArray(textVAO);
+
+  m4.copy(textMatrix, textUniforms.u_matrix);
+  webglUtils.setUniforms(textProgramInfo, textUniforms);
+
+  // Рисуем текст.
+  gl.drawArrays(gl.TRIANGLES, 0, vertices.numVertices);
+});
+</code></pre>
+<p>И вот это</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-glyphs-texture-atlas.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-glyphs-texture-atlas.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Это основная техника использования текстуры-атласа глифов. Есть несколько
+очевидных вещей для добавления или способов улучшить это.</p>
+<ul>
+<li>
+<p>Переиспользовать те же массивы.</p>
+<p>В настоящее время <code class="notranslate" translate="no">makeVerticesForString</code> выделяет новые Float32Arrays каждый раз, когда вызывается.
+Это, вероятно, в конечном итоге вызовет икоту сборки мусора. Переиспользование
+тех же массивов, вероятно, будет лучше. Вы бы увеличили массив, если он недостаточно большой,
+и сохранили бы этот размер вокруг</p>
+</li>
+<li>
+<p>Добавить поддержку возврата каретки</p>
+<p>Проверять на <code class="notranslate" translate="no">\n</code> и переходить на новую строку при генерации вершин. Это сделало бы
+легко создавать абзацы текста.</p>
+</li>
+<li>
+<p>Добавить поддержку всех видов другого форматирования.</p>
+<p>Если вы хотите центрировать текст или выровнять его, вы могли бы добавить все это.</p>
+</li>
+<li>
+<p>Добавить поддержку цветов вершин.</p>
+<p>Тогда вы могли бы окрашивать текст в разные цвета на букву. Конечно, вам пришлось бы
+решить, как указать, когда менять цвета.</p>
+</li>
+<li>
+<p>Рассмотреть генерацию текстуры-атласа глифов во время выполнения, используя 2D canvas</p>
+</li>
+</ul>
+<p>Другая большая проблема, которую я не буду покрывать, заключается в том, что текстуры имеют ограниченный
+размер, но шрифты эффективно неограниченны. Если вы хотите поддерживать весь Unicode
+так, чтобы вы могли обрабатывать китайский и японский и арабский и все другие языки,
+ну, по состоянию на 2015 год в Unicode более 110 000 глифов! Вы не можете поместить все
+эти в текстуры. Просто недостаточно места.</p>
+<p>Способ, которым ОС и браузеры обрабатывают это, когда они ускорены GPU, заключается в использовании кэша текстуры глифов. Как
+выше, они могут помещать текстуры в текстуру-атлас, но они, вероятно, делают область
+для каждого глифа фиксированного размера. Они держат наиболее недавно использованные глифы в текстуре.
+Если им нужно нарисовать глиф, которого нет в текстуре, они заменяют наименее
+недавно использованный новым, который им нужен. Конечно, если этот глиф, который они
+собираются заменить, все еще ссылается на квад, который еще не нарисован, то им нужно
+рисовать с тем, что у них есть, прежде чем заменять глиф.</p>
+<p>Другая вещь, которую вы можете сделать, хотя я не рекомендую это, это объединить эту
+технику с <a href="webgl-text-texture.html">предыдущей техникой</a>. Вы можете
+рендерить глифы прямо в другую текстуру.</p>
+<p>Еще один способ рисовать текст в WebGL - это фактически использовать 3D текст. ‘F’ во
+всех примерах выше - это 3D буква. Вы бы сделали одну для каждой буквы. 3D буквы
+распространены для заголовков и логотипов фильмов, но не для многого другого.</p>
+<p>Я надеюсь, что это покрыло текст в WebGL.</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -523,7 +708,7 @@ image.addEventListener('load', function() {
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -566,9 +751,9 @@ image.addEventListener('load', function() {
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/ru/webgl-qna-how-to-make-a-smudge-brush-tool.md. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/ru/langinfo.hanson. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,17 +8,15 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-*   Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-
-*   Redistributions in binary form must reproduce the above
-    copyright notice, this list of conditions and the following disclaimer
-    in the documentation and/or other materials provided with the
-    distribution.
-
-*   Neither the name of GFXFundamentals. nor the names of his
-    contributors may be used to endorse or promote products derived from
-    this software without specific prior written permission.
+    * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+    * Neither the name of GFXFundamentals. nor the names of his
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -36,78 +34,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta property="og:title" content="How to make a smudge brush tool" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta property="og:description" content="How to make a smudge brush tool" />
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-make-a-smudge-brush-tool.html" />
 
-<meta name="description" content="Как сделать инструмент размазывающей кисти">
-<meta name="keywords" content="webgl webgl2 graphics">
-<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-make-a-smudge-brush-tool_ru.jpg">
-
-<meta property="og:title" content="Как сделать инструмент размазывающей кисти">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-make-a-smudge-brush-tool_ru.jpg">
-<meta property="og:description" content="Как сделать инструмент размазывающей кисти">
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-make-a-smudge-brush-tool.html">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@greggman">
-<meta name="twitter:creator" content="@greggman">
-<meta name="twitter:domain" content="webgl2fundamentals.org">
-<meta name="twitter:title" content="Как сделать инструмент размазывающей кисти">
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-make-a-smudge-brush-tool.html">
-<meta name="twitter:description" content="Как сделать инструмент размазывающей кисти">
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-make-a-smudge-brush-tool_ru.jpg">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@graph":[
-    {
-      "@type":"WebSite",
-      "@id":"https://webgl2fundamentals.org/#website",
-      "url":"https://webgl2fundamentals.org/",
-      "name":"Webgl2Fundamentals"
-    },
-    {
-      "@type":"ImageObject",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-make-a-smudge-brush-tool.html#primaryimage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-make-a-smudge-brush-tool_ru.jpg",
-      "width":1200,
-      "height":630
-    },
-    {
-      "@type":"WebPage",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-make-a-smudge-brush-tool.html#webpage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-make-a-smudge-brush-tool.html",
-      "inLanguage":"ru",
-      "name":"Как сделать инструмент размазывающей кисти",
-      "keywords":"webgl webgl2 graphics programming",
-      "isPartOf":{
-        "@id":"https://webgl2fundamentals.org/#website"
-      },
-      "primaryImageOfPage":{
-        "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-make-a-smudge-brush-tool.html#primaryimage"
-      }
-    }
-  ]
-}
-</script>
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@greggman" />
+<meta name="twitter:creator" content="@greggman" />
+<meta name="twitter:domain" content="webgl2fundamentals.org" />
+<meta name="twitter:title" content="How to make a smudge brush tool" />
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-make-a-smudge-brush-tool.html" />
+<meta name="twitter:description" content="How to make a smudge brush tool" />
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>Как сделать инструмент размазывающей кисти</title>
+<title>How to make a smudge brush tool</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/lang.css">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
-
-  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-qna-how-to-make-a-smudge-brush-tool.html">
-  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-qna-how-to-make-a-smudge-brush-tool.html">
-  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-qna-how-to-make-a-smudge-brush-tool.html">
-  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-qna-how-to-make-a-smudge-brush-tool.html">
-  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-qna-how-to-make-a-smudge-brush-tool.html">
-  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-qna-how-to-make-a-smudge-brush-tool.html">
-  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-qna-how-to-make-a-smudge-brush-tool.html">
-
-
-
-
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
 <body>
 <div class="webgl_navbar">
@@ -234,51 +179,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>Как сделать инструмент размазывающей кисти</h1>
+    <h1>How to make a smudge brush tool</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="вопрос">Вопрос:</h2>
-<p>Мне нужна идея, как я могу сделать кисть, которая может размазывать цвет.</p>
-<p>Пример на картинке: правая сторона - рисование базовой кистью с двумя разными цветами, слева также рисование, но дополнительно используется инструмент размазывания, <strong>результат должен быть чем-то вроде левой стороны</strong></p>
-<p><img src="http://i.stack.imgur.com/oyaBs.png" alt="enter image description here"></p>
-<p>Мне нужен совет, как я могу попробовать это сделать</p>
-<h2 id="ответ">Ответ:</h2>
-<p>Вот одна попытка</p>
-<ol>
-<li>
-<p>При mousedown захватить копию области под мышью в отдельный canvas</p>
-</li>
-<li>
-<p>При mousemove рисовать эту копию по одному пикселю за раз от предыдущей позиции мыши к текущей позиции мыши с 50% прозрачностью, захватывая новую копию после каждого движения.</p>
-</li>
-</ol>
-<p>В псевдокоде</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">on mouse down
-   grab copy of canvas at mouse position
-   prevMousePos = currentMousePos
+      <p>Русский перевод пока не готов (￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Помогите с переводом</a>!</p>
+<p><a href="/webgl/lessons/webgl-qna-how-to-make-a-smudge-brush-tool.html">Оригинал на английском</a>.</p>
 
-on mouse move
-  for (pos = prevMousePos to currentMousePos step 1 pixel) 
-    draw copy at pos with 50% alpha
-    grab new copy of canvas at pos
-  prevMousePos = currentMousePos
-</code></pre>
-<p>Кисть размывается путем рисования радиального градиента от rgba(0,0,0,0) до rgba(0,0,0,1) над ней, используя <code class="notranslate" translate="no">globalCompositeOperation = 'destination-out'</code>.</p>
-<p><div class="webgl_example_container">
-  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-make-a-smudge-brush-tool-example-1.html"></iframe>
-  <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-make-a-smudge-brush-tool-example-1.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
-</div>
-
-</p>
-<div class="so">
-  <div>Вопрос и процитированные части являются 
-    CC BY-SA 3.0 от
-    <a data-href="https://stackoverflow.com/users/4270436">Your choice</a>
-    из
-    <a data-href="https://stackoverflow.com/questions/28197378">здесь</a>
-  </div>
-</div> 
     </div>
     <div class="lesson-sidebar">
         <select class="language">
@@ -292,8 +199,7 @@ on mouse move
 </select>
 
 
-        <div id="toc">
-          <ul>  <li>Основы</li>
+        <ul>  <li>Основы</li>
         <ul>
           <li><a href="/webgl/lessons/ru/webgl-getting-webgl2.html">Как использовать WebGL2</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fundamentals.html">Основы</a></li>
@@ -376,7 +282,7 @@ on mouse move
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -419,9 +325,9 @@ on mouse move
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>
@@ -436,47 +342,13 @@ on mouse move
   <li><a href="https://twgljs.org">TWGL, легковесная библиотека-помощник для WebGL</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
-        </div>
-    </div>
-    <div class="lesson-comments">
-        
-<div>Есть предложения или замечания? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Создайте issue на GitHub</a>.</div>
-  
-
-        <div id="disqus_thread"></div>
-        <script>
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
-            var disqus_identifier = 'Как сделать инструмент размазывающей кисти';
-            var disqus_title = 'Как сделать инструмент размазывающей кисти';
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
-                    return;
-                }
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
-<script>
-const settings = {
-  contribTemplate: "Спасибо <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>за <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} вкладов</a>",
-  owner: "gfxfundamentals",
-  repo: "webgl2-fundamentals",
-};
-</script>
-<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script src="/webgl/lessons/resources/lesson.js"></script>
 <script>
 </script>
 

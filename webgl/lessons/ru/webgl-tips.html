@@ -336,12 +336,12 @@ elem.addEventListener('click', () =&gt; {
 +    var deltaTime = now - then;
 +    // Запоминаем время
 +    then = now;
-+
+
 +    // Каждый кадр увеличиваем вращение
 +    rotation[1] += rotationSpeed * deltaTime;
-+
+
 +    drawScene();
-+
+
 +    // Следующий кадр
 +    requestAnimationFrame(renderLoop);
 +  }
@@ -440,11 +440,11 @@ elem.addEventListener('click', () =&gt; {
   draw(canvas.id);
 
   canvas.addEventListener('focus', () =&gt; {
-    draw('есть фокус, нажмите клавишу');
+    draw('has focus press a key');
   });
 
   canvas.addEventListener('blur', () =&gt; {
-    draw('фокус потерян');
+    draw('lost focus');
   });
 
   canvas.addEventListener('keydown', (e) =&gt; {
@@ -452,8 +452,7 @@ elem.addEventListener('click', () =&gt; {
   });
 });
 </code></pre>
-<p>Обратите внимание: первый канвас не принимает ввод с клавиатуры.
-Второй — принимает, но с обводкой. Третий — и принимает, и без обводки.</p>
+<p>Обратите внимание: первый канвас не может принимать ввод с клавиатуры. Второй может, но получает обводку. У третьего применены оба решения.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-tips-tabindex.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-tips-tabindex.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
@@ -461,12 +460,12 @@ elem.addEventListener('click', () =&gt; {
 
 </p>
 <hr>
-<p><a id="html-background" data-toc="WebGL2 как фон HTML"></a></p>
-<h1 id="webgl-анимация-как-фон-страницы">WebGL-анимация как фон страницы</h1>
-<p>Частый вопрос — как сделать WebGL-анимацию фоном страницы?</p>
+<p><a id="html-background" data-toc="Использование WebGL2 как фона в HTML"></a></p>
+<h1 id="создание-webgl-анимации-как-фона">Создание WebGL-анимации как фона</h1>
+<p>Часто спрашивают, как сделать WebGL-анимацию фоном веб-страницы.</p>
 <p>Есть два очевидных способа:</p>
 <ul>
-<li>Задать канвасу CSS <code class="notranslate" translate="no">position: fixed</code>, например:</li>
+<li>Установить CSS <code class="notranslate" translate="no">position</code> канваса как <code class="notranslate" translate="no">fixed</code>:</li>
 </ul>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-css">#canvas {
  position: fixed;
@@ -476,19 +475,19 @@ elem.addEventListener('click', () =&gt; {
  ...
 }
 </code></pre>
-<p>и <code class="notranslate" translate="no">z-index: -1</code>.</p>
-<p>Минус: ваш JS должен интегрироваться со страницей, и если страница сложная, нужно следить, чтобы код WebGL не конфликтовал с остальным JS.</p>
+<p>и установить <code class="notranslate" translate="no">z-index</code> в -1.</p>
+<p>Небольшой недостаток этого решения: ваш JavaScript должен интегрироваться со страницей, и если у вас сложная страница, нужно убедиться, что JavaScript в WebGL-коде не конфликтует с JavaScript, который делает другие вещи на странице.</p>
 <ul>
 <li>Использовать <code class="notranslate" translate="no">iframe</code></li>
 </ul>
-<p>Так сделано <a href="/">на главной странице этого сайта</a>.</p>
-<p>Вставьте в страницу iframe, например:</p>
+<p>Это решение используется на <a href="/">главной странице этого сайта</a>.</p>
+<p>В вашей веб-странице просто вставьте iframe, например:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-html">&lt;iframe id=&quot;background&quot; src=&quot;background.html&quot;&gt;&lt;/iframe&gt;
 &lt;div&gt;
-  Ваш контент.
+  Ваш контент здесь.
 &lt;/div&gt;
 </code></pre>
-<p>Затем стилизуйте iframe, чтобы он занимал всё окно и был на заднем плане (почти как выше для канваса), плюс уберите рамку:</p>
+<p>Затем стилизуйте iframe, чтобы он заполнял окно и был на фоне — в основном тот же код, что мы использовали выше для канваса, но также нужно установить <code class="notranslate" translate="no">border</code> в <code class="notranslate" translate="no">none</code>, так как iframe по умолчанию имеют границу:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-css">#background {
     position: fixed;
     width: 100vw;
@@ -604,7 +603,7 @@ elem.addEventListener('click', () =&gt; {
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -647,9 +646,9 @@ elem.addEventListener('click', () =&gt; {
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>

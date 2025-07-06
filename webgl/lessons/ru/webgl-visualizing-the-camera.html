@@ -488,7 +488,7 @@ function render() {
 
   // рисуем объект для представления первой камеры
   {
-    // Создаём view matrix из матрицы второй камеры.
+    // Создаём матрицу вида из матрицы второй камеры.
     const viewMatrix = m4.inverse(cameraMatrix2);
 
     let mat = m4.multiply(perspectiveProjectionMatrix2, viewMatrix);
@@ -515,7 +515,7 @@ function render() {
 }
 render();
 </code></pre>
-<p>И теперь мы можем видеть камеру, используемую для рендера левой сцены, в сцене справа.</p>
+<p>И теперь мы можем видеть камеру, используемую для рендеринга левой сцены, в сцене справа.</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-visualize-camera.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-visualize-camera.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
@@ -523,9 +523,9 @@ render();
 
 </p>
 <p>Давайте также нарисуем что-то для представления frustum камеры.</p>
-<p>Поскольку frustum представляет преобразование в clip space, мы можем сделать куб, представляющий clip space,
+<p>Поскольку frustum представляет преобразование в clip space, мы можем создать куб, который представляет clip space,
 и использовать обратную матрицу проекции для размещения его в сцене.</p>
-<p>Сначала нужен куб линий clip space:</p>
+<p>Сначала нам нужен куб линий clip space.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function createClipspaceCubeBufferInfo(gl) {
   // сначала добавим куб. Он идёт от 1 до 3,
   // потому что камеры смотрят вниз по -Z, поэтому мы хотим,
@@ -553,7 +553,7 @@ render();
   });
 }
 </code></pre>
-<p>Затем можем создать один и нарисовать его:</p>
+<p>Затем мы можем создать один и нарисовать его:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const cameraScale = 20;
 const cameraBufferInfo = createCameraBufferInfo(gl, cameraScale);
 const cameraVAO = twgl.createVAOFromBufferInfo(
@@ -562,10 +562,11 @@ const cameraVAO = twgl.createVAOFromBufferInfo(
 const clipspaceCubeBufferInfo = createClipspaceCubeBufferInfo(gl);
 const clipspaceCubeVAO = twgl.createVAOFromBufferInfo(
     gl, solidColorProgramInfo, clipspaceCubeBufferInfo);
-
-  // рисуем объект для представления первой камеры
+</code></pre>
+<p>И в коде рендеринга:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  // рисуем объект для представления первой камеры
   {
-    // Создаём view matrix из матрицы камеры.
+    // Создаём матрицу вида из матрицы камеры.
     const viewMatrix = m4.inverse(cameraMatrix2);
 
     let mat = m4.multiply(perspectiveProjectionMatrix2, viewMatrix);
@@ -605,9 +606,8 @@ const clipspaceCubeVAO = twgl.createVAOFromBufferInfo(
     // вызывает gl.drawArrays или gl.drawElements
     twgl.drawBufferInfo(gl, clipspaceCubeBufferInfo, gl.LINES);
   }
-}
 </code></pre>
-<p>Давайте также сделаем так, чтобы можно было настраивать near и far параметры первой камеры:</p>
+<p>Давайте также сделаем так, чтобы мы могли настраивать near и far параметры первой камеры:</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const settings = {
   rotation: 150,  // в градусах
   cam1FieldOfView: 60,  // в градусах
@@ -618,16 +618,14 @@ const clipspaceCubeVAO = twgl.createVAOFromBufferInfo(
   cam1Far: 500,
 };
 
-...
-
-  // Вычисляем матрицу перспективной проекции
-  const perspectiveProjectionMatrix =
-      m4.perspective(degToRad(settings.cam1FieldOfView),
-      aspect,
-      settings.cam1Near,
-      settings.cam1Far);
+// Вычисляем матрицу перспективной проекции
+const perspectiveProjectionMatrix =
+    m4.perspective(degToRad(settings.cam1FieldOfView),
+    aspect,
+    settings.cam1Near,
+    settings.cam1Far);
 </code></pre>
-<p>и теперь мы можем видеть frustum тоже:</p>
+<p>И теперь мы можем видеть frustum тоже:</p>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-visualize-camera-with-frustum.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-visualize-camera-with-frustum.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
@@ -636,9 +634,9 @@ const clipspaceCubeVAO = twgl.createVAOFromBufferInfo(
 </p>
 <p>Если вы настроите near или far плоскости или поле зрения так, чтобы они обрезали F, вы увидите,
 что представление frustum совпадает.</p>
-<p>Будем ли мы использовать перспективную или ортографическую проекцию для камеры слева — это будет работать в любом случае,
-потому что матрица проекции всегда преобразует в clip space, поэтому её обратная всегда возьмёт наш куб от +1 до -1
-и исказит его соответствующим образом.</p>
+<p>Будем ли мы использовать перспективную проекцию или ортографическую проекцию для камеры слева,
+это будет работать в любом случае, потому что матрица проекции всегда преобразует в clip space,
+поэтому её обратная всегда будет брать наш куб от +1 до -1 и искажать его соответствующим образом.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const settings = {
   rotation: 150,  // в градусах
   cam1FieldOfView: 60,  // в градусах
@@ -650,8 +648,6 @@ const clipspaceCubeVAO = twgl.createVAOFromBufferInfo(
   cam1Ortho: true,
   cam1OrthoUnits: 120,
 };
-
-...
 
 // Вычисляем матрицу проекции
 const perspectiveProjectionMatrix = settings.cam1Ortho
@@ -673,6 +669,9 @@ const perspectiveProjectionMatrix = settings.cam1Ortho
 </div>
 
 </p>
+<p>Такой тип визуализации должен быть знаком любому, кто использовал 3D пакет моделирования, как <a href="https://blender.org">Blender</a>,
+или 3D игровой движок с инструментами редактирования сцены, как <a href="https://unity.com">Unity</a> или <a href="https://godotengine.org/">Godot</a>.</p>
+<p>Это также может быть довольно полезно для отладки.</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -771,7 +770,7 @@ const perspectiveProjectionMatrix = settings.cam1Ortho
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -814,9 +813,9 @@ const perspectiveProjectionMatrix = settings.cam1Ortho
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>

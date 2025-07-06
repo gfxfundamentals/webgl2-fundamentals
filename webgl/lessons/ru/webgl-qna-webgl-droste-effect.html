@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/ru/webgl-qna-webgl-droste-effect.md. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/ru/langinfo.hanson. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,17 +8,15 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-*   Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-
-*   Redistributions in binary form must reproduce the above
-    copyright notice, this list of conditions and the following disclaimer
-    in the documentation and/or other materials provided with the
-    distribution.
-
-*   Neither the name of GFXFundamentals. nor the names of his
-    contributors may be used to endorse or promote products derived from
-    this software without specific prior written permission.
+    * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+    * Neither the name of GFXFundamentals. nor the names of his
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -36,78 +34,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta property="og:title" content="WebGL Droste effect" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta property="og:description" content="WebGL Droste effect" />
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-webgl-droste-effect.html" />
 
-<meta name="description" content="Эффект Дросте в WebGL">
-<meta name="keywords" content="webgl webgl2 graphics">
-<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-webgl-droste-effect_ru.jpg">
-
-<meta property="og:title" content="Эффект Дросте в WebGL">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-webgl-droste-effect_ru.jpg">
-<meta property="og:description" content="Эффект Дросте в WebGL">
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-webgl-droste-effect.html">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@greggman">
-<meta name="twitter:creator" content="@greggman">
-<meta name="twitter:domain" content="webgl2fundamentals.org">
-<meta name="twitter:title" content="Эффект Дросте в WebGL">
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-webgl-droste-effect.html">
-<meta name="twitter:description" content="Эффект Дросте в WebGL">
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-webgl-droste-effect_ru.jpg">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@graph":[
-    {
-      "@type":"WebSite",
-      "@id":"https://webgl2fundamentals.org/#website",
-      "url":"https://webgl2fundamentals.org/",
-      "name":"Webgl2Fundamentals"
-    },
-    {
-      "@type":"ImageObject",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-webgl-droste-effect.html#primaryimage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-webgl-droste-effect_ru.jpg",
-      "width":1200,
-      "height":630
-    },
-    {
-      "@type":"WebPage",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-webgl-droste-effect.html#webpage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-webgl-droste-effect.html",
-      "inLanguage":"ru",
-      "name":"Эффект Дросте в WebGL",
-      "keywords":"webgl webgl2 graphics programming",
-      "isPartOf":{
-        "@id":"https://webgl2fundamentals.org/#website"
-      },
-      "primaryImageOfPage":{
-        "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-webgl-droste-effect.html#primaryimage"
-      }
-    }
-  ]
-}
-</script>
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@greggman" />
+<meta name="twitter:creator" content="@greggman" />
+<meta name="twitter:domain" content="webgl2fundamentals.org" />
+<meta name="twitter:title" content="WebGL Droste effect" />
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-webgl-droste-effect.html" />
+<meta name="twitter:description" content="WebGL Droste effect" />
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>Эффект Дросте в WebGL</title>
+<title>WebGL Droste effect</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/lang.css">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
-
-  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-qna-webgl-droste-effect.html">
-  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-qna-webgl-droste-effect.html">
-  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-qna-webgl-droste-effect.html">
-  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-qna-webgl-droste-effect.html">
-  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-qna-webgl-droste-effect.html">
-  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-qna-webgl-droste-effect.html">
-  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-qna-webgl-droste-effect.html">
-
-
-
-
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
 <body>
 <div class="webgl_navbar">
@@ -234,77 +179,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>Эффект Дросте в WebGL</h1>
+    <h1>WebGL Droste effect</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="вопрос">Вопрос:</h2>
-<p>Я пытаюсь использовать WebGL для создания <a href="https://en.wikipedia.org/wiki/Droste_effect">эффекта Дросте</a> на гранях куба. В viewport’е один меш — куб, и все его грани используют одну текстуру. Для создания эффекта Дросте я обновляю текстуру на каждом кадре, делая снимок <code class="notranslate" translate="no">canvas</code>, в WebGL-контекст которого рисую, что со временем даёт эффект Дросте, так как снимок содержит всё больше и больше вложенных прошлых кадров.</p>
-<p>Демо того, что у меня сейчас работает, здесь:</p>
-<p>https://tomashubelbauer.github.io/webgl-op-1/?cubeTextured</p>
-<p>Код выглядит так:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Set up fragment and vertex shader and attach them to a program, link the program
-// Create a vertex buffer, an index buffer and a texture coordinate buffer
-// Tesselate the cube's vertices and fill in the index and texture coordinate buffers
-const textureCanvas = document.createElement('canvas');
-textureCanvas.width = 256;
-textureCanvas.height = 256;
-const textureContext = textureCanvas.getContext('2d');
+      <p>Русский перевод пока не готов (￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Помогите с переводом</a>!</p>
+<p><a href="/webgl/lessons/webgl-qna-webgl-droste-effect.html">Оригинал на английском</a>.</p>
 
-// In every `requestAnimationFrame`:
-textureContext.drawImage(context.canvas, 0, 0);
-const texture = context.createTexture();
-context.bindTexture(context.TEXTURE_2D, texture);
-context.texImage2D(context.TEXTURE_2D, 0, context.RGBA, context.RGBA, context.UNSIGNED_BYTE, textureCanvas);
-context.generateMipmap(context.TEXTURE_2D);
-// Clear the viewport completely (depth and color buffers)
-// Set up attribute and uniform values, the projection and model view matrices
-context.activeTexture(context.TEXTURE0);
-context.bindTexture(context.TEXTURE_2D, texture);
-context.uniform1i(fragmentShaderTextureSamplerUniformLocation, 0);
-context.drawElements(context.TRIANGLES, 36, context.UNSIGNED_SHORT, 0)
-</code></pre>
-<p>Это основная часть. Есть отдельный canvas от WebGL, на который рисуется WebGL canvas перед каждым WebGL кадром, и этот canvas используется для создания текстуры для данного кадра, которая применяется к граням куба согласно буферу координат текстуры и uniform’у сэмплера текстуры, переданному во фрагментный шейдер, который просто использует <code class="notranslate" translate="no">gl_FragColor = texture2D(textureSampler, textureCoordinate)</code>, как и ожидается.</p>
-<p>Но это очень медленно (30 FPS на этом простом демо с одним кубом, тогда как все мои другие демо с порядком больше треугольников всё ещё держат 60 FPS <code class="notranslate" translate="no">requestAnimationFrame</code>).</p>
-<p>Также странно делать это “вне” WebGL, используя внешний canvas, когда кажется, что это должно быть достижимо только с помощью WebGL.</p>
-<p>Я знаю, что WebGL держит два буфера — один для активного кадра и back buffer для недавно нарисованного кадра, и они меняются местами с каждым кадром для мгновенного обновления экрана. Можно ли получить доступ к этому back buffer и использовать его как текстуру? Можете ли вы предоставить пример кода, как это сделать?</p>
-<h2 id="ответ">Ответ:</h2>
-<p>Из <a href="https://webglfundamentals.org/webgl/lessons/webgl-render-to-texture.html">этой статьи</a></p>
-<p>Обычный способ — рендерить в текстуру, прикрепив её к framebuffer.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const fb = gl.createFramebuffer();
-gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
-gl.framebufferTexture2D(
-    gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0 /* level */) 
-</code></pre>
-<p>Теперь для рендеринга в текстуру:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
-gl.viewport(0, 0, textureWidth, textureHeight);
-</code></pre>
-<p>Для рендеринга в canvas:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-</code></pre>
-<p>Для того, что вы хотите, нужны 2 текстуры, поскольку нельзя одновременно читать из и писать в одну текстуру, так что вы рисуете:</p>
-<ul>
-<li>Рисуете изображение в TextureA</li>
-<li>Рисуете предыдущий кадр (TextureB) в TextureA</li>
-<li>Рисуете куб с TextureA в TextureB</li>
-<li>Рисуете TextureB в Canvas</li>
-</ul>
-<p><div class="webgl_example_container">
-  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-webgl-droste-effect-example-1.html"></iframe>
-  <a class="webgl_center" href="/webgl/lessons/../webgl-qna-webgl-droste-effect-example-1.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
-</div>
-
-</p>
-<p>Что касается canvas и его 2 буферов — нет, нельзя напрямую использовать их как текстуры. Можно вызвать <code class="notranslate" translate="no">gl.copyTexImage2D</code> или <code class="notranslate" translate="no">gl.copyTexSubImage2D</code> для копирования части canvas в текстуру, так что это другое решение. Оно менее гибкое и, думаю, медленнее, чем метод framebuffer.</p>
-<div class="so">
-  <div>Вопрос и цитируемые части взяты по лицензии CC BY-SA 4.0 у
-    <a data-href="http://hubelbauer.net/">Tomáš Hübelbauer</a>
-    с сайта
-    <a data-href="https://stackoverflow.com/questions/56841018">stackoverflow</a>
-  </div>
-</div> 
     </div>
     <div class="lesson-sidebar">
         <select class="language">
@@ -318,8 +199,7 @@ gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 </select>
 
 
-        <div id="toc">
-          <ul>  <li>Основы</li>
+        <ul>  <li>Основы</li>
         <ul>
           <li><a href="/webgl/lessons/ru/webgl-getting-webgl2.html">Как использовать WebGL2</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fundamentals.html">Основы</a></li>
@@ -402,7 +282,7 @@ gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -445,9 +325,9 @@ gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>
@@ -462,47 +342,13 @@ gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   <li><a href="https://twgljs.org">TWGL, легковесная библиотека-помощник для WebGL</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
-        </div>
-    </div>
-    <div class="lesson-comments">
-        
-<div>Есть предложения или замечания? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Создайте issue на GitHub</a>.</div>
-  
-
-        <div id="disqus_thread"></div>
-        <script>
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
-            var disqus_identifier = 'Эффект Дросте в WebGL';
-            var disqus_title = 'Эффект Дросте в WebGL';
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
-                    return;
-                }
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
-<script>
-const settings = {
-  contribTemplate: "Спасибо <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>за <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} вкладов</a>",
-  owner: "gfxfundamentals",
-  repo: "webgl2-fundamentals",
-};
-</script>
-<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script src="/webgl/lessons/resources/lesson.js"></script>
 <script>
 </script>
 

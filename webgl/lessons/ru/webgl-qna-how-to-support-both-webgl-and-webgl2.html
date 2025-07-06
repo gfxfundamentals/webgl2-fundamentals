@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/ru/webgl-qna-how-to-support-both-webgl-and-webgl2.md. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/ru/langinfo.hanson. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,17 +8,15 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-*   Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-
-*   Redistributions in binary form must reproduce the above
-    copyright notice, this list of conditions and the following disclaimer
-    in the documentation and/or other materials provided with the
-    distribution.
-
-*   Neither the name of GFXFundamentals. nor the names of his
-    contributors may be used to endorse or promote products derived from
-    this software without specific prior written permission.
+    * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+    * Neither the name of GFXFundamentals. nor the names of his
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -36,78 +34,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta property="og:title" content="How to support both WebGL and WebGL2" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta property="og:description" content="How to support both WebGL and WebGL2" />
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-support-both-webgl-and-webgl2.html" />
 
-<meta name="description" content="Как поддерживать и WebGL, и WebGL2">
-<meta name="keywords" content="webgl webgl2 graphics">
-<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-support-both-webgl-and-webgl2_ru.jpg">
-
-<meta property="og:title" content="Как поддерживать и WebGL, и WebGL2">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-support-both-webgl-and-webgl2_ru.jpg">
-<meta property="og:description" content="Как поддерживать и WebGL, и WebGL2">
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-support-both-webgl-and-webgl2.html">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@greggman">
-<meta name="twitter:creator" content="@greggman">
-<meta name="twitter:domain" content="webgl2fundamentals.org">
-<meta name="twitter:title" content="Как поддерживать и WebGL, и WebGL2">
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-support-both-webgl-and-webgl2.html">
-<meta name="twitter:description" content="Как поддерживать и WebGL, и WebGL2">
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-support-both-webgl-and-webgl2_ru.jpg">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@graph":[
-    {
-      "@type":"WebSite",
-      "@id":"https://webgl2fundamentals.org/#website",
-      "url":"https://webgl2fundamentals.org/",
-      "name":"Webgl2Fundamentals"
-    },
-    {
-      "@type":"ImageObject",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-support-both-webgl-and-webgl2.html#primaryimage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-support-both-webgl-and-webgl2_ru.jpg",
-      "width":1200,
-      "height":630
-    },
-    {
-      "@type":"WebPage",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-support-both-webgl-and-webgl2.html#webpage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-support-both-webgl-and-webgl2.html",
-      "inLanguage":"ru",
-      "name":"Как поддерживать и WebGL, и WebGL2",
-      "keywords":"webgl webgl2 graphics programming",
-      "isPartOf":{
-        "@id":"https://webgl2fundamentals.org/#website"
-      },
-      "primaryImageOfPage":{
-        "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-support-both-webgl-and-webgl2.html#primaryimage"
-      }
-    }
-  ]
-}
-</script>
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@greggman" />
+<meta name="twitter:creator" content="@greggman" />
+<meta name="twitter:domain" content="webgl2fundamentals.org" />
+<meta name="twitter:title" content="How to support both WebGL and WebGL2" />
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-support-both-webgl-and-webgl2.html" />
+<meta name="twitter:description" content="How to support both WebGL and WebGL2" />
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>Как поддерживать и WebGL, и WebGL2</title>
+<title>How to support both WebGL and WebGL2</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/lang.css">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
-
-  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-qna-how-to-support-both-webgl-and-webgl2.html">
-  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-qna-how-to-support-both-webgl-and-webgl2.html">
-  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-qna-how-to-support-both-webgl-and-webgl2.html">
-  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-qna-how-to-support-both-webgl-and-webgl2.html">
-  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-qna-how-to-support-both-webgl-and-webgl2.html">
-  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-qna-how-to-support-both-webgl-and-webgl2.html">
-  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-qna-how-to-support-both-webgl-and-webgl2.html">
-
-
-
-
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
 <body>
 <div class="webgl_navbar">
@@ -234,75 +179,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>Как поддерживать и WebGL, и WebGL2</h1>
+    <h1>How to support both WebGL and WebGL2</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="вопрос">Вопрос:</h2>
-<p>У меня есть библиотека, которая использует WebGL1 для рендеринга.
-Она активно использует float-текстуры и instanced rendering.</p>
-<p>Сейчас поддержка WebGL1 довольно странная: некоторые устройства поддерживают, например, WebGL2 (где эти расширения встроены), но не поддерживают WebGL1, или поддерживают, но без нужных расширений.</p>
-<p>В то же время поддержка WebGL2 не идеальна. Возможно, когда-нибудь будет, но пока нет.</p>
-<p>Я начал думать, что потребуется для поддержки обеих версий.</p>
-<p>Для шейдеров, думаю, можно обойтись <code class="notranslate" translate="no">#define</code>-ами. Например, <code class="notranslate" translate="no">#define texture2D texture</code> и подобные вещи.</p>
-<p>С расширениями сложнее, так как объекты расширений больше не существуют.
-В качестве эксперимента я пробовал копировать методы расширения в сам контекст, например: <code class="notranslate" translate="no">gl.drawArraysInstanced = (...args) =&gt; ext.drawArraysInstancedANGLE(...args)</code>.</p>
-<p>С текстурами менять почти ничего не нужно, разве что добавить что-то вроде <code class="notranslate" translate="no">gl.RGBA8 = gl.RGBA</code> при запуске в WebGL1, чтобы код “просто работал” и в WebGL2.</p>
-<p>Вопрос: кто-нибудь пробовал так делать?
-Я опасаюсь, что это повредит производительности, особенно из-за лишней обёртки для вызова функций.
-Это также усложнит чтение кода, если предполагать, что он может работать в WebGL1. Ведь в WebGL1 нет <code class="notranslate" translate="no">drawArraysInstanced</code> или <code class="notranslate" translate="no">RGBA8</code>. Это также мешает типизации в Typescript и другим мелочам.</p>
-<p>Второй вариант — делать ветвления по всему коду. Две версии шейдеров (или <code class="notranslate" translate="no">#ifdef</code>-трюки), много ветвлений для каждого места, где нужны форматы текстур, и для каждого места, где используется instancing.
-Вот так по всему коду — не очень красиво:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">if (version === 1) {
-  instancedArrays.vertexAttribDivisorANGLE(m0, 1);
-  instancedArrays.vertexAttribDivisorANGLE(m1, 1);
-  instancedArrays.vertexAttribDivisorANGLE(m2, 1);
-  instancedArrays.vertexAttribDivisorANGLE(m3, 1);
-} else {
-  gl.vertexAttribDivisor(m0, 1);
-  gl.vertexAttribDivisor(m1, 1);
-  gl.vertexAttribDivisor(m2, 1);
-  gl.vertexAttribDivisor(m3, 1);
-}
-</code></pre>
-<p>Может, есть и третий способ, о котором я не подумал.</p>
-<p>Есть рекомендации?</p>
-<h2 id="ответ">Ответ:</h2>
-<p>К сожалению, большинство ответов тут будут субъективными.</p>
-<p>Первый вопрос — зачем поддерживать оба? Если ваша идея работает в WebGL1 — просто используйте WebGL1. Если вам обязательно нужны фичи WebGL2 — используйте WebGL2 и смиритесь, что на старых устройствах не будет поддержки.</p>
-<p>Если вы всё же хотите поддерживать оба, <a href="https://twgljs.org">twgl</a> пытается упростить это, <a href="http://twgljs.org/docs/module-twgl.html#.addExtensionsToContext">предлагая функцию, которая копирует все расширения WebGL1 в их WebGL2 API-позиции</a>. Как вы и упомянули, вместо</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">ext = gl.getExtension('ANGLE_instanced_arrays');
-ext.drawArraysInstancedANGLE(...)
-</code></pre>
-<p>Вы делаете</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">twgl.addExtensionsToContext(gl);
-gl.drawArraysInstanced(...);
-</code></pre>
-<p>Я не думаю, что будет заметная разница в производительности. Эти функции вызываются всего несколько сотен раз за кадр, и обёртка не станет узким местом.</p>
-<p>Но суть не в том, чтобы поддерживать WebGL1 и WebGL2 одновременно. Скорее, чтобы писать код одинаково для обоих API.</p>
-<p>Тем не менее, есть реальные различия между API. Например, чтобы использовать FLOAT RGBA текстуру в WebGL1:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texImage2D(target, level, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, ...)
-</code></pre>
-<p>В WebGL2:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texImage2D(target, level, gl.RGBA32F, width, height, 0, gl.RGBA, gl.FLOAT, ...)
-</code></pre>
-<p>WebGL2 выдаст ошибку, если вызвать его так же, как WebGL1. <a href="https://webgl2fundamentals.org/webgl/lessons/webgl1-to-webgl2.html">Есть и другие отличия</a>.</p>
-<p>Впрочем, вот такой вызов будет работать и в WebGL1, и в WebGL2. Спецификация прямо говорит, что такая комбинация даёт RGBA8 в WebGL2.</p>
-<p>Обратите внимание, что ваш пример с RGBA8 не совсем верен.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texImage2D(target, level, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, ...)
-</code></pre>
-<p>Главное отличие — нет смысла использовать WebGL2, если вам хватает WebGL1. Или наоборот: если вам нужен WebGL2, то откатиться на WebGL1 будет сложно.</p>
-<p>Вы упомянули define-ы для шейдеров, но что делать с фичами WebGL2, которых нет в WebGL1? Например, <code class="notranslate" translate="no">textureFetch</code>, оператор <code class="notranslate" translate="no">%</code>, integer attributes и т.д. Если они нужны — придётся писать отдельный шейдер только для WebGL2. Если не нужны — зачем тогда WebGL2?</p>
-<p>Конечно, если хочется, можно сделать более продвинутый рендерер для WebGL2 и попроще для WebGL1.</p>
-<p>TL;DR: На мой взгляд, выберите что-то одно.</p>
-<div class="so">
-  <div>Вопрос и процитированные части являются 
-    CC BY-SA 4.0 от
-    <a data-href="https://stackoverflow.com/users/2503048">user2503048</a>
-    из
-    <a data-href="https://stackoverflow.com/questions/59490319">здесь</a>
-  </div>
-</div> 
+      <p>Русский перевод пока не готов (￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Помогите с переводом</a>!</p>
+<p><a href="/webgl/lessons/webgl-qna-how-to-support-both-webgl-and-webgl2.html">Оригинал на английском</a>.</p>
+
     </div>
     <div class="lesson-sidebar">
         <select class="language">
@@ -316,8 +199,7 @@ gl.drawArraysInstanced(...);
 </select>
 
 
-        <div id="toc">
-          <ul>  <li>Основы</li>
+        <ul>  <li>Основы</li>
         <ul>
           <li><a href="/webgl/lessons/ru/webgl-getting-webgl2.html">Как использовать WebGL2</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fundamentals.html">Основы</a></li>
@@ -400,7 +282,7 @@ gl.drawArraysInstanced(...);
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -443,9 +325,9 @@ gl.drawArraysInstanced(...);
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>
@@ -460,47 +342,13 @@ gl.drawArraysInstanced(...);
   <li><a href="https://twgljs.org">TWGL, легковесная библиотека-помощник для WebGL</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
-        </div>
-    </div>
-    <div class="lesson-comments">
-        
-<div>Есть предложения или замечания? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Создайте issue на GitHub</a>.</div>
-  
-
-        <div id="disqus_thread"></div>
-        <script>
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
-            var disqus_identifier = 'Как поддерживать и WebGL, и WebGL2';
-            var disqus_title = 'Как поддерживать и WebGL, и WebGL2';
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
-                    return;
-                }
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
-<script>
-const settings = {
-  contribTemplate: "Спасибо <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>за <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} вкладов</a>",
-  owner: "gfxfundamentals",
-  repo: "webgl2-fundamentals",
-};
-</script>
-<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script src="/webgl/lessons/resources/lesson.js"></script>
 <script>
 </script>
 

@@ -414,6 +414,76 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     gl.drawArrays(primitiveType, offset, count);
   }
 </code></pre>
+<p>Вот рабочая версия с немного более гибким UI. Отметьте эффекты,
+чтобы включить их. Перетаскивайте эффекты, чтобы изменить порядок их применения.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-processing.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-processing.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Некоторые вещи, которые я должен объяснить.</p>
+<p>Вызов <code class="notranslate" translate="no">gl.bindFramebuffer</code> с <code class="notranslate" translate="no">null</code> говорит WebGL, что вы хотите рендерить
+на canvas вместо одного из ваших framebuffer’ов.</p>
+<p>Также framebuffer’ы могут работать или не работать в зависимости от того, какие привязки
+вы на них помещаете. Есть список того, какие типы и комбинации привязок
+должны всегда работать. Используемая здесь, одна текстура <code class="notranslate" translate="no">RGBA</code>/<code class="notranslate" translate="no">UNSIGNED_BYTE</code>,
+назначенная точке привязки <code class="notranslate" translate="no">COLOR_ATTACHMENT0</code>, должна всегда работать.
+Более экзотические форматы текстур и/или комбинации привязок могут не работать.
+В этом случае вы должны привязать framebuffer и затем вызвать
+<code class="notranslate" translate="no">gl.checkFramebufferStatus</code> и посмотреть, возвращает ли он <code class="notranslate" translate="no">gl.FRAMEBUFFER_COMPLETE</code>.
+Если да, то все в порядке. Если нет, вам нужно будет сказать пользователю использовать
+что-то другое. К счастью, WebGL2 поддерживает многие форматы и комбинации.</p>
+<p>WebGL должен преобразовывать из <a href="webgl-fundamentals.html">clip space</a> обратно в пиксели.
+Он делает это на основе настроек <code class="notranslate" translate="no">gl.viewport</code>. Поскольку framebuffer’ы,
+в которые мы рендерим, имеют другой размер, чем canvas, нам нужно установить
+viewport соответствующим образом в зависимости от того, рендерим ли мы в текстуру или canvas.</p>
+<p>Наконец, в <a href="webgl-fundamentals.html">оригинальном примере</a> мы переворачивали координату Y
+при рендеринге, потому что WebGL отображает canvas с 0,0 в левом нижнем углу
+вместо более традиционного для 2D левого верхнего угла. Это не нужно
+при рендеринге в framebuffer. Поскольку framebuffer никогда не отображается,
+какая часть является верхом и низом, не имеет значения. Все, что имеет значение,
+это то, что пиксель 0,0 в framebuffer соответствует 0,0 в наших вычислениях.
+Чтобы справиться с этим, я сделал возможным установить, переворачивать или нет, добавив
+еще один uniform вход в вызов шейдера <code class="notranslate" translate="no">u_flipY</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
++uniform float u_flipY;
+...
+
+void main() {
+  ...
++   gl_Position = vec4(clipSpace * vec2(1, u_flipY), 0, 1);
+  ...
+}
+</code></pre>
+<p>И затем мы можем установить это при рендеринге с помощью</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
++  var flipYLocation = gl.getUniformLocation(program, &quot;u_flipY&quot;);
+
+  ...
+
++  // не переворачиваем
++  gl.uniform1f(flipYLocation, 1);
+
+  ...
+
++  // переворачиваем
++  gl.uniform1f(flipYLocation, -1);
+</code></pre>
+<p>Я сохранил этот пример простым, используя одну GLSL программу, которая может достичь
+множественных эффектов. Если бы вы хотели делать полноценную обработку изображений, вам, вероятно,
+понадобилось бы много GLSL программ. Программа для настройки оттенка, насыщенности и яркости.
+Другая для яркости и контрастности. Одна для инвертирования, другая для настройки
+уровней и т.д. Вам нужно будет изменить код для переключения GLSL программ и обновления
+параметров для этой конкретной программы. Я рассматривал написание этого примера,
+но это упражнение лучше оставить читателю, потому что множественные GLSL программы, каждая
+со своими потребностями в параметрах, вероятно, означает серьезный рефакторинг, чтобы все
+не превратилось в большую путаницу спагетти-кода.</p>
+<p>Я надеюсь, что этот и предыдущие примеры сделали WebGL немного более
+доступным, и я надеюсь, что начало с 2D помогает сделать WebGL немного легче для
+понимания. Если я найду время, я попробую написать <a href="webgl-2d-translation.html">еще несколько статей</a>
+о том, как делать 3D, а также больше деталей о <a href="webgl-how-it-works.html">том, что WebGL действительно делает под капотом</a>.
+Для следующего шага рассмотрите изучение <a href="webgl-2-textures.html">как использовать 2 или более текстур</a>.</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -512,7 +582,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -555,9 +625,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>

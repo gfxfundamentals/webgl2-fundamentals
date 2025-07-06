@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/ru/webgl-qna-how-to-render-large-scale-images-like-32000x32000.md. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/ru/langinfo.hanson. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,17 +8,15 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-*   Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-
-*   Redistributions in binary form must reproduce the above
-    copyright notice, this list of conditions and the following disclaimer
-    in the documentation and/or other materials provided with the
-    distribution.
-
-*   Neither the name of GFXFundamentals. nor the names of his
-    contributors may be used to endorse or promote products derived from
-    this software without specific prior written permission.
+    * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+    * Neither the name of GFXFundamentals. nor the names of his
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -36,78 +34,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta property="og:title" content="How to render large scale images like 32000x32000" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta property="og:description" content="How to render large scale images like 32000x32000" />
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-render-large-scale-images-like-32000x32000.html" />
 
-<meta name="description" content="Как рендерить изображения большого масштаба как 32000x32000">
-<meta name="keywords" content="webgl webgl2 graphics">
-<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-render-large-scale-images-like-32000x32000_ru.jpg">
-
-<meta property="og:title" content="Как рендерить изображения большого масштаба как 32000x32000">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-render-large-scale-images-like-32000x32000_ru.jpg">
-<meta property="og:description" content="Как рендерить изображения большого масштаба как 32000x32000">
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-render-large-scale-images-like-32000x32000.html">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@greggman">
-<meta name="twitter:creator" content="@greggman">
-<meta name="twitter:domain" content="webgl2fundamentals.org">
-<meta name="twitter:title" content="Как рендерить изображения большого масштаба как 32000x32000">
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-render-large-scale-images-like-32000x32000.html">
-<meta name="twitter:description" content="Как рендерить изображения большого масштаба как 32000x32000">
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-render-large-scale-images-like-32000x32000_ru.jpg">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@graph":[
-    {
-      "@type":"WebSite",
-      "@id":"https://webgl2fundamentals.org/#website",
-      "url":"https://webgl2fundamentals.org/",
-      "name":"Webgl2Fundamentals"
-    },
-    {
-      "@type":"ImageObject",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-render-large-scale-images-like-32000x32000.html#primaryimage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-how-to-render-large-scale-images-like-32000x32000_ru.jpg",
-      "width":1200,
-      "height":630
-    },
-    {
-      "@type":"WebPage",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-render-large-scale-images-like-32000x32000.html#webpage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-render-large-scale-images-like-32000x32000.html",
-      "inLanguage":"ru",
-      "name":"Как рендерить изображения большого масштаба как 32000x32000",
-      "keywords":"webgl webgl2 graphics programming",
-      "isPartOf":{
-        "@id":"https://webgl2fundamentals.org/#website"
-      },
-      "primaryImageOfPage":{
-        "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-render-large-scale-images-like-32000x32000.html#primaryimage"
-      }
-    }
-  ]
-}
-</script>
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@greggman" />
+<meta name="twitter:creator" content="@greggman" />
+<meta name="twitter:domain" content="webgl2fundamentals.org" />
+<meta name="twitter:title" content="How to render large scale images like 32000x32000" />
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-how-to-render-large-scale-images-like-32000x32000.html" />
+<meta name="twitter:description" content="How to render large scale images like 32000x32000" />
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>Как рендерить изображения большого масштаба как 32000x32000</title>
+<title>How to render large scale images like 32000x32000</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/lang.css">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
-
-  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-qna-how-to-render-large-scale-images-like-32000x32000.html">
-  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-qna-how-to-render-large-scale-images-like-32000x32000.html">
-  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-qna-how-to-render-large-scale-images-like-32000x32000.html">
-  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-qna-how-to-render-large-scale-images-like-32000x32000.html">
-  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-qna-how-to-render-large-scale-images-like-32000x32000.html">
-  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-qna-how-to-render-large-scale-images-like-32000x32000.html">
-  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-qna-how-to-render-large-scale-images-like-32000x32000.html">
-
-
-
-
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
 <body>
 <div class="webgl_navbar">
@@ -234,104 +179,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>Как рендерить изображения большого масштаба как 32000x32000</h1>
+    <h1>How to render large scale images like 32000x32000</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="вопрос">Вопрос:</h2>
-<p>Я хочу получить снимок моего WebGL canvas, и я хочу высокое разрешение, поэтому я увеличил размер моего canvas. Это автоматически изменяет <code class="notranslate" translate="no">gl.drawingBufferWidth</code> и <code class="notranslate" translate="no">gl.drawingBufferHeight</code>. Затем я устанавливаю viewport и рендерю сцену.</p>
-<p>Мой код работает правильно в низком разрешении (под 4000*4000), но в более высоких разрешениях есть много проблем.</p>
-<p>Если разрешение немного выше, снимок не показывает полностью. См. прикреплённый файл. Если разрешение увеличивается больше, ничего не показывается. И наконец, при некоторых разрешениях мой экземпляр WebGL уничтожается, и мне приходится перезапускать браузер, чтобы снова запустить WebGL.</p>
-<p>Есть ли способ получить снимок с WebGL canvas с высоким разрешением? Могу ли я использовать другое решение?</p>
-<h2 id="ответ">Ответ:</h2>
-<p>4000x4000 пикселей - это 4000x4000x4 или 64 мегабайта памяти. 8000x8000 - это 256 мегабайт памяти. Браузеры не любят выделять такие большие куски памяти и часто устанавливают лимиты на страницу. Так, например, у вас есть WebGL canvas 8000x8000, который требует 2 буфера. Drawingbuffer И текстура, отображаемая на странице. Drawingbuffer может быть сглажен. Если это 4x MSAA, то потребуется гигабайт памяти только для этого буфера. Затем вы делаете скриншот, так что ещё 256 мегабайт памяти. Так что да, браузер по той или иной причине, скорее всего, убьёт вашу страницу.</p>
-<p>Помимо этого, WebGL имеет свои собственные лимиты в размере. Вы можете посмотреть этот лимит, который эффективно <a href="https://web3dsurvey.com/webgl/parameters/MAX_TEXTURE_SIZE"><code class="notranslate" translate="no">MAX_TEXTURE_SIZE</code></a> или <a href="https://web3dsurvey.com/webgl/parameters/MAX_VIEWPORT_DIMS"><code class="notranslate" translate="no">MAX_VIEWPORT_DIMS</code></a>. Вы можете увидеть из тех, что около 40% машин не могут рисовать больше 4096 (хотя если вы <a href="https://web3dsurvey.com/webgl/parameters/MAX_VIEWPORT_DIMS?platforms=0000ff03c02d20f201">отфильтруете только десктоп, это намного лучше</a>). Это число означает только то, что может делать оборудование. Оно всё ещё ограничено памятью.</p>
-<p>Один способ, который может решить эту проблему, - рисовать изображение по частям. Как вы это делаете, будет зависеть от вашего приложения. Если вы используете довольно стандартную матрицу перспективы для всего вашего рендеринга, вы можете использовать немного другую математику для рендеринга любой части вида. Большинство 3D математических библиотек имеют функцию <code class="notranslate" translate="no">perspective</code>, и большинство из них также имеют соответствующую функцию <code class="notranslate" translate="no">frustum</code>, которая немного более гибкая.</p>
-<p>Вот довольно стандартный стиль WebGL простой пример, который рисует куб, используя типичную функцию <code class="notranslate" translate="no">perspective</code></p>
-<p><div class="webgl_example_container">
-  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-render-large-scale-images-like-32000x32000-example-1.html"></iframe>
-  <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-render-large-scale-images-like-32000x32000-example-1.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
-</div>
+      <p>Русский перевод пока не готов (￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Помогите с переводом</a>!</p>
+<p><a href="/webgl/lessons/webgl-qna-how-to-render-large-scale-images-like-32000x32000.html">Оригинал на английском</a>.</p>
 
-</p>
-<p>И вот тот же код, рендерящий в 400x200 в восьми частях 100x100, используя типичную функцию <code class="notranslate" translate="no">frustum</code> вместо <code class="notranslate" translate="no">perspective</code></p>
-<p><div class="webgl_example_container">
-  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-render-large-scale-images-like-32000x32000-example-2.html"></iframe>
-  <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-render-large-scale-images-like-32000x32000-example-2.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
-</div>
-
-</p>
-<p>Если вы запустите фрагмент выше, вы увидите, что он генерирует 8 изображений</p>
-<p>Важные части - это</p>
-<p>Сначала нам нужно решить общий размер, который мы хотим</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const totalWidth = 400;
-const totalHeight = 200;
-</code></pre>
-<p>Затем мы создадим функцию, которая будет рендерить любую меньшую часть этого размера</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function renderPortion(totalWidth, totalHeight, partX, partY, partWidth, partHeight) {
-   ...
-</code></pre>
-<p>Мы установим canvas на размер части</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  gl.canvas.width = partWidth;
-  gl.canvas.height = partHeight;
-  
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-</code></pre>
-<p>И затем вычислим, что нам нужно передать в функцию <code class="notranslate" translate="no">frustum</code>. Сначала мы вычисляем прямоугольник на zNear, который матрица перспективы создала бы, учитывая наши значения field of view, aspect и zNear</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // углы на zNear для общего изображения
-  const zNearTotalTop = Math.tan(fov) * 0.5 * zNear;
-  const zNearTotalBottom = -zNearTotalTop;
-  const zNearTotalLeft = zNearTotalBottom * aspect;
-  const zNearTotalRight = zNearTotalTop * aspect;
-  
-  // ширина, высота на zNear для общего изображения
-  const zNearTotalWidth = zNearTotalRight - zNearTotalLeft;
-  const zNearTotalHeight = zNearTotalTop - zNearTotalBottom;
-</code></pre>
-<p>Затем мы вычисляем соответствующую область на zNear для части, которую мы хотим рендерить, и передаём их в <code class="notranslate" translate="no">frustum</code> для генерации матрицы проекции.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  const zNearPartLeft = zNearTotalLeft + partX * zNearTotalWidth / totalWidth;   const zNearPartRight = zNearTotalLeft + (partX + partWidth) * zNearTotalWidth / totalWidth;
-  const zNearPartBottom = zNearTotalBottom + partY * zNearTotalHeight / totalHeight;
-  const zNearPartTop = zNearTotalBottom + (partY + partHeight) * zNearTotalHeight / totalHeight;
-
-  const projection = m4.frustum(zNearPartLeft, zNearPartRight, zNearPartBottom, zNearPartTop, zNear, zFar);
-</code></pre>
-<p>Затем мы просто рендерим как обычно</p>
-<p>Наконец, снаружи у нас есть цикл для использования функции, которую мы только что сгенерировали, чтобы рендерить столько частей, сколько мы хотим, с любым разрешением, которое мы хотим.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const totalWidth = 400;
-const totalHeight = 200;
-const partWidth = 100;
-const partHeight = 100;
-
-for (let y = 0; y &lt; totalHeight; y += partHeight) {
-  for (let x = 0; x &lt; totalWidth; x += partWidth) {
-    renderPortion(totalWidth, totalHeight, x, y, partWidth, partHeight);
-    const img = new Image();
-    img.src = gl.canvas.toDataURL();
-    // сделать что-то с изображением.
-  }
-}
-</code></pre>
-<p>Это позволит вам рендерить в любой размер, который вы хотите, но вам понадобится другой способ собрать изображения в одно большее изображение. Вы можете или не можете сделать это в браузере. Вы можете попробовать создать гигантский 2D canvas и рисовать каждую часть в него (это предполагает, что 2D canvas не имеет тех же лимитов, что и WebGL). Для этого нет необходимости создавать изображения, просто рисуйте WebGL canvas в 2D canvas.</p>
-<p>В противном случае вам, возможно, придётся отправить их на сервер, который вы создадите, чтобы собрать изображение, или в зависимости от вашего случая использования позволить пользователю сохранить их и загрузить их все в программу редактирования изображений.</p>
-<p>Или если вы просто хотите отобразить их, браузер, вероятно, будет лучше работать с 16x16 изображениями 1024x1024, чем с одним изображением 16kx16k. В этом случае вы, вероятно, хотите вызвать <code class="notranslate" translate="no">canvas.toBlob</code> вместо использования dataURL и затем вызвать <code class="notranslate" translate="no">URL.createObjectURL</code> для каждого blob. Таким образом, у вас не будет этих гигантских строк dataURL.</p>
-<p>Пример:</p>
-<p><div class="webgl_example_container">
-  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-how-to-render-large-scale-images-like-32000x32000-example-3.html"></iframe>
-  <a class="webgl_center" href="/webgl/lessons/../webgl-qna-how-to-render-large-scale-images-like-32000x32000-example-3.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
-</div>
-
-</p>
-<p>Если вы хотите, чтобы пользователь мог скачать изображение 16386x16386 вместо 256 изображений 1024x1024, то ещё одно решение - использовать код рендеринга частей выше и для каждой строки (или строк) изображений записать их данные в blob для ручной генерации PNG. <a href="https://medium.com/the-guardian-mobile-innovation-lab/generating-images-in-javascript-without-using-the-canvas-api-77f3f4355fad">Этот пост в блоге</a> охватывает ручную генерацию PNG из данных, и <a href="https://stackoverflow.com/a/51247740/128511">этот ответ предлагает, как сделать это для очень больших данных</a>.</p>
-<h2 id="обновление">обновление:</h2>
-<p>Просто для развлечения я написал эту <a href="https://github.com/greggman/dekapng">библиотеку, чтобы помочь генерировать гигантские PNG в браузере</a>.</p>
-<div class="so">
-  <div>Вопрос и процитированные части являются 
-    CC BY-SA 4.0 от
-    <a data-href="https://stackoverflow.com/users/7784151">MHA15</a>
-    из
-    <a data-href="https://stackoverflow.com/questions/51232023">здесь</a>
-  </div>
-</div> 
     </div>
     <div class="lesson-sidebar">
         <select class="language">
@@ -345,8 +199,7 @@ for (let y = 0; y &lt; totalHeight; y += partHeight) {
 </select>
 
 
-        <div id="toc">
-          <ul>  <li>Основы</li>
+        <ul>  <li>Основы</li>
         <ul>
           <li><a href="/webgl/lessons/ru/webgl-getting-webgl2.html">Как использовать WebGL2</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fundamentals.html">Основы</a></li>
@@ -429,7 +282,7 @@ for (let y = 0; y &lt; totalHeight; y += partHeight) {
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -472,9 +325,9 @@ for (let y = 0; y &lt; totalHeight; y += partHeight) {
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>
@@ -489,47 +342,13 @@ for (let y = 0; y &lt; totalHeight; y += partHeight) {
   <li><a href="https://twgljs.org">TWGL, легковесная библиотека-помощник для WebGL</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
-        </div>
-    </div>
-    <div class="lesson-comments">
-        
-<div>Есть предложения или замечания? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Создайте issue на GitHub</a>.</div>
-  
-
-        <div id="disqus_thread"></div>
-        <script>
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
-            var disqus_identifier = 'Как рендерить изображения большого масштаба как 32000x32000';
-            var disqus_title = 'Как рендерить изображения большого масштаба как 32000x32000';
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
-                    return;
-                }
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
-<script>
-const settings = {
-  contribTemplate: "Спасибо <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>за <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} вкладов</a>",
-  owner: "gfxfundamentals",
-  repo: "webgl2-fundamentals",
-};
-</script>
-<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script src="/webgl/lessons/resources/lesson.js"></script>
 <script>
 </script>
 

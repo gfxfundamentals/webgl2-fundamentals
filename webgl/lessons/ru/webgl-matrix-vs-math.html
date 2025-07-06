@@ -383,6 +383,32 @@ Mat4x4 someTranslationMatrix = {
 </code></pre>
 <p>Итак, с этим соглашением называть строки “столбцами” некоторые вещи проще, но другие могут быть более запутанными, если вы математик.</p>
 <p>Я поднимаю все это, потому что эти статьи написаны с точки зрения программиста, а не математика. Это означает, что как и каждый другой одномерный массив, который обрабатывается как двумерный массив, строки идут поперек.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const someTranslationMatrix = [
+   1,  0,  0,  0,  // строка 0
+   0,  1,  0,  0,  // строка 1
+   0,  0,  1,  0,  // строка 2
+  tx, ty, tz,  1,  // строка 3
+];
+</code></pre>
+<p>точно так же, как</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// изображение смайлика
+const dataFor7x8OneChannelImage = [
+    0, 255, 255, 255, 255, 255,   0,  // строка 0
+  255,   0,   0,   0,   0,   0, 255,  // строка 1
+  255,   0, 255,   0, 255,   0, 255,  // строка 2
+  255,   0,   0,   0,   0,   0, 255,  // строка 3
+  255,   0, 255,   0, 255,   0, 255,  // строка 4
+  255,   0, 255, 255, 255,   0, 255,  // строка 5
+  255,   0,   0,   0,   0,   0, 255,  // строка 6
+    0, 255, 255, 255, 255, 255,   0,  // строка 7
+]
+</code></pre>
+<p>и поэтому эти статьи будут ссылаться на них как на строки.</p>
+<p>Если вы математик, вы можете найти это запутанным. Мне жаль, что у меня
+нет решения. Я мог бы назвать то, что явно является строкой 3, столбцом,
+но это также было бы запутанно, поскольку это не соответствует никакому другому программированию.</p>
+<p>В любом случае, надеюсь, это помогает прояснить, почему ни одно из объяснений не выглядит как что-то из математической книги. Вместо этого они выглядят как код и используют соглашения кода. Я надеюсь, что это помогает объяснить, что происходит,
+и это не слишком запутанно для тех, кто привык к математическим соглашениям.</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -481,7 +507,7 @@ Mat4x4 someTranslationMatrix = {
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -524,9 +550,9 @@ Mat4x4 someTranslationMatrix = {
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>

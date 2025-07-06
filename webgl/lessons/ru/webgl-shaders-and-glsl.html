@@ -405,6 +405,197 @@ void main() {
    outColor = doMathToMakeAColor;
 } 
 </code></pre>
+<p>Ваш фрагментный шейдер вызывается один раз для каждого пикселя. Каждый раз, когда он вызывается, вы обязаны
+установить вашу out переменную в какой-то цвет.</p>
+<p>Фрагментным шейдерам нужны данные. Они могут получить данные 3 способами</p>
+<ol>
+<li><a href="#uniforms">Uniforms</a> (значения, которые остаются одинаковыми для каждого пикселя одного вызова рисования)</li>
+<li><a href="#textures-in-fragment-shaders">Текстуры</a> (данные из пикселей/текселей)</li>
+<li><a href="#varyings">Varyings</a> (данные, передаваемые из вершинного шейдера и интерполированные)</li>
+</ol>
+<h3 id="uniforms-в-фрагментных-шейдерах">Uniforms в фрагментных шейдерах</h3>
+<p>См. <a href="#uniforms">Uniforms в вершинных шейдерах</a>.</p>
+<h3 id="текстуры-в-фрагментных-шейдерах">Текстуры в фрагментных шейдерах</h3>
+<p>Чтобы получить значение из текстуры в шейдере, мы создаем uniform <code class="notranslate" translate="no">sampler2D</code> и используем GLSL
+функцию <code class="notranslate" translate="no">texture</code> для извлечения значения из неё.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">precision highp float;
+
+uniform sampler2D u_texture;
+
+out vec4 outColor;
+
+void main() {
+   vec2 texcoord = vec2(0.5, 0.5);  // получить значение из середины текстуры
+   outColor = texture(u_texture, texcoord);
+}
+</code></pre>
+<p>Какие данные выходят из текстуры, <a href="webgl-3d-textures.html">зависит от многих настроек</a>.
+Как минимум нам нужно создать и поместить данные в текстуру, например</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var tex = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, tex);
+var level = 0;
+var internalFormat = gl.RGBA,
+var width = 2;
+var height = 1;
+var border = 0; // ВСЕГДА ДОЛЖЕН БЫТЬ НУЛЕМ
+var format = gl.RGBA;
+var type = gl.UNSIGNED_BYTE;
+var data = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255]);
+gl.texImage2D(gl.TEXTURE_2D,
+              level,
+              internalFormat,
+              width,
+              height,
+              border,
+              format,
+              type,
+              data);
+</code></pre>
+<p>Установить фильтрацию</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+</code></pre>
+<p>Затем найти местоположение uniform в шейдерной программе</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var someSamplerLoc = gl.getUniformLocation(someProgram, &quot;u_texture&quot;);
+</code></pre>
+<p>WebGL затем требует, чтобы вы привязали его к текстуре unit</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var unit = 5;  // Выберите какой-то текстуре unit
+gl.activeTexture(gl.TEXTURE0 + unit);
+gl.bindTexture(gl.TEXTURE_2D, tex);
+</code></pre>
+<p>И сказать шейдеру, к какому unit вы привязали текстуру</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.uniform1i(someSamplerLoc, unit);
+</code></pre>
+<h3 id="varyings">Varyings</h3>
+<p>Varying - это способ передать значение из вершинного шейдера в фрагментный шейдер, что мы
+покрыли в <a href="webgl-how-it-works.html">как это работает</a>.</p>
+<p>Чтобы использовать varying, нам нужно объявить соответствующие varyings в вершинном и фрагментном шейдере.
+Мы устанавливаем <em>out</em> varying в вершинном шейдере с некоторым значением для каждой вершины. Когда WebGL рисует пиксели,
+он будет опционально интерполировать между этими значениями и передавать их соответствующему <em>in</em> varying в
+фрагментном шейдере</p>
+<p>Вершинный шейдер</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+
+in vec4 a_position;
+
+uniform vec4 u_offset;
+
++out vec4 v_positionWithOffset;
+
+void main() {
+  gl_Position = a_position + u_offset;
++  v_positionWithOffset = a_position + u_offset;
+}
+</code></pre>
+<p>Фрагментный шейдер</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+precision highp float;
+
++in vec4 v_positionWithOffset;
+
+out vec4 outColor;
+
+void main() {
++  // конвертируем из clip space (-1 &lt;-&gt; +1) в цветовое пространство (0 -&gt; 1).
++  vec4 color = v_positionWithOffset * 0.5 + 0.5;
++  outColor = color;
+}
+</code></pre>
+<p>Пример выше - это в основном бессмысленный пример. Обычно не имеет смысла
+напрямую копировать значения clip space в фрагментный шейдер и использовать их как цвета. Тем не менее
+это будет работать и производить цвета.</p>
+<h2 id="glsl">GLSL</h2>
+<p>GLSL означает <a href="https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf">Graphics Library Shader Language</a>.
+Это язык, на котором написаны шейдеры. У него есть некоторые специальные полууникальные особенности, которые, конечно, не распространены в JavaScript.
+Он разработан для выполнения математики, которая обычно нужна для вычисления вещей для растеризации
+графики. Так, например, у него есть встроенные типы, такие как <code class="notranslate" translate="no">vec2</code>, <code class="notranslate" translate="no">vec3</code> и <code class="notranslate" translate="no">vec4</code>, которые
+представляют 2 значения, 3 значения и 4 значения соответственно. Аналогично у него есть <code class="notranslate" translate="no">mat2</code>, <code class="notranslate" translate="no">mat3</code>
+и <code class="notranslate" translate="no">mat4</code>, которые представляют матрицы 2x2, 3x3 и 4x4. Вы можете делать такие вещи, как умножать
+<code class="notranslate" translate="no">vec</code> на скаляр.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 a = vec4(1, 2, 3, 4);
+vec4 b = a * 2.0;
+// b теперь vec4(2, 4, 6, 8);
+</code></pre>
+<p>Аналогично он может делать умножение матриц и умножение вектора на матрицу</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">mat4 a = ???
+mat4 b = ???
+mat4 c = a * b;
+
+vec4 v = ???
+vec4 y = c * v;
+</code></pre>
+<p>У него также есть различные селекторы для частей vec. Для vec4</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 v;
+</code></pre>
+<ul>
+<li><code class="notranslate" translate="no">v.x</code> то же самое, что <code class="notranslate" translate="no">v.s</code> и <code class="notranslate" translate="no">v.r</code> и <code class="notranslate" translate="no">v[0]</code>.</li>
+<li><code class="notranslate" translate="no">v.y</code> то же самое, что <code class="notranslate" translate="no">v.t</code> и <code class="notranslate" translate="no">v.g</code> и <code class="notranslate" translate="no">v[1]</code>.</li>
+<li><code class="notranslate" translate="no">v.z</code> то же самое, что <code class="notranslate" translate="no">v.p</code> и <code class="notranslate" translate="no">v.b</code> и <code class="notranslate" translate="no">v[2]</code>.</li>
+<li><code class="notranslate" translate="no">v.w</code> то же самое, что <code class="notranslate" translate="no">v.q</code> и <code class="notranslate" translate="no">v.a</code> и <code class="notranslate" translate="no">v[3]</code>.</li>
+</ul>
+<p>Он способен <em>swizzle</em> компоненты vec, что означает, что вы можете поменять или повторить компоненты.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v.yyyy
+</code></pre>
+<p>то же самое, что</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4(v.y, v.y, v.y, v.y)
+</code></pre>
+<p>Аналогично</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v.bgra
+</code></pre>
+<p>то же самое, что</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4(v.b, v.g, v.r, v.a)
+</code></pre>
+<p>При конструировании vec или mat вы можете предоставить несколько частей сразу. Так, например</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4(v.rgb, 1)
+</code></pre>
+<p>То же самое, что</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4(v.r, v.g, v.b, 1)
+</code></pre>
+<p>Одна вещь, на которой вы, вероятно, застрянете, это то, что GLSL очень строго типизирован.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">float f = 1;  // ОШИБКА 1 это int. Вы не можете присвоить int к float
+</code></pre>
+<p>Правильный способ - один из этих</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">float f = 1.0;      // использовать float
+float f = float(1)  // привести целое число к float
+</code></pre>
+<p>Пример выше <code class="notranslate" translate="no">vec4(v.rgb, 1)</code> не жалуется на <code class="notranslate" translate="no">1</code>, потому что <code class="notranslate" translate="no">vec4</code> приводит
+вещи внутри, как <code class="notranslate" translate="no">float(1)</code>.</p>
+<p>GLSL имеет кучу встроенных функций. Многие из них работают с несколькими компонентами сразу.
+Так, например</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">T sin(T angle)
+</code></pre>
+<p>Означает, что T может быть <code class="notranslate" translate="no">float</code>, <code class="notranslate" translate="no">vec2</code>, <code class="notranslate" translate="no">vec3</code> или <code class="notranslate" translate="no">vec4</code>. Если вы передаете <code class="notranslate" translate="no">vec4</code>, вы получаете <code class="notranslate" translate="no">vec4</code> обратно,
+который является синусом каждого из компонентов. Другими словами, если <code class="notranslate" translate="no">v</code> это <code class="notranslate" translate="no">vec4</code>, то</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 s = sin(v);
+</code></pre>
+<p>то же самое, что</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 s = vec4(sin(v.x), sin(v.y), sin(v.z), sin(v.w));
+</code></pre>
+<p>Иногда один аргумент - это float, а остальные - <code class="notranslate" translate="no">T</code>. Это означает, что этот float будет применен
+ко всем компонентам. Например, если <code class="notranslate" translate="no">v1</code> и <code class="notranslate" translate="no">v2</code> это <code class="notranslate" translate="no">vec4</code>, а <code class="notranslate" translate="no">f</code> это float, то</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 m = mix(v1, v2, f);
+</code></pre>
+<p>то же самое, что</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 m = vec4(
+  mix(v1.x, v2.x, f),
+  mix(v1.y, v2.y, f),
+  mix(v1.z, v2.z, f),
+  mix(v1.w, v2.w, f));
+</code></pre>
+<p>Вы можете увидеть список всех GLSL функций на последних 3 страницах <a href="https://www.khronos.org/files/opengles3-quick-reference-card.pdf">OpenGL ES 3.0
+Reference Card</a>
+Если вам нравится действительно сухой и многословный материал, вы можете попробовать
+<a href="https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf">GLSL ES 3.00 spec</a>.</p>
+<h2 id="собираем-все-вместе">Собираем все вместе</h2>
+<p>В этом суть всей этой серии постов. WebGL - это все о создании различных шейдеров, предоставлении
+данных этим шейдерам и затем вызове <code class="notranslate" translate="no">gl.drawArrays</code>, <code class="notranslate" translate="no">gl.drawElements</code> и т.д., чтобы WebGL обработал
+вершины, вызывая текущий вершинный шейдер для каждой вершины, а затем рендерил пиксели, вызывая текущий фрагментный шейдер для каждого пикселя.</p>
+<p>Фактически создание шейдеров требует нескольких строк кода. Поскольку эти строки одинаковы в
+большинстве WebGL программ и поскольку однажды написанные, вы можете в значительной степени игнорировать их, <a href="webgl-boilerplate.html">как компилировать GLSL шейдеры
+и связывать их в шейдерную программу, покрыто здесь</a>.</p>
+<p>Если вы только начинаете отсюда, вы можете пойти в 2 направлениях. Если вас интересует обработка изображений,
+я покажу вам <a href="webgl-image-processing.html">как делать некоторую 2D обработку изображений</a>.
+Если вас интересует изучение перемещения,
+поворота и масштабирования, то <a href="webgl-2d-translation.html">начните здесь</a>.</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -503,7 +694,7 @@ void main() {
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -546,9 +737,9 @@ void main() {
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>

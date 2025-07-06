@@ -370,7 +370,62 @@ const fieldOfViewRadians = degToRad(120);
 function render() {
   twgl.resizeCanvasToDisplaySize(gl.canvas);
 
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  gl.enable(gl.CULL_FACE);
+  gl.enable(gl.DEPTH_TEST);
+
+  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  const near = 1;
+  const far = 2000;
+
+  // Вычисляем матрицу перспективной проекции
+  const perspectiveProjectionMatrix =
+      m4.perspective(fieldOfViewRadians, aspect, near, far);
+
+  // Вычисляем матрицу камеры, используя look at.
+  const cameraPosition = [0, 0, -75];
+  const target = [0, 0, 0];
+  const up = [0, 1, 0];
+  const cameraMatrix = m4.lookAt(cameraPosition, target, up);
+
+  // поворачиваем F в мировом пространстве
+  let worldMatrix = m4.yRotation(degToRad(settings.rotation));
+  worldMatrix = m4.xRotate(worldMatrix, degToRad(settings.rotation));
+  // центрируем 'F' вокруг его начала
+  worldMatrix = m4.translate(worldMatrix, -35, -75, -5);
+
+  // рисуем левый вид
+  const left = 0;
+  const bottom = 0;
+  const width = gl.canvas.width / 2;
+  const height = gl.canvas.height;
+
+  gl.viewport(left, bottom, width, height);
+  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+
+  // рисуем правый вид
+  const left2 = width;
+  const bottom2 = 0;
+  const width2 = width;
+  const height2 = height;
+
+  gl.viewport(left2, bottom2, width2, height2);
+  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+}
+render();
+</code></pre>
+<p>Это в основном то же самое, что и финальный пример из
+<a href="webgl-3d-perspective.html">статьи о перспективе</a>,
+за исключением того, что мы используем <a href="webgl-less-code-more-fun.html">нашу библиотеку</a>, чтобы держать код проще.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-views-one-view.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-views-one-view.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Теперь давайте сделаем так, чтобы он рисовал 2 вида ‘F’ бок о бок,
+используя <code class="notranslate" translate="no">gl.viewport</code></p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render() {
+  twgl.resizeCanvasToDisplaySize(gl.canvas);
 
   gl.enable(gl.CULL_FACE);
   gl.enable(gl.DEPTH_TEST);
@@ -395,21 +450,368 @@ function render() {
   // центрируем 'F' вокруг его начала
   worldMatrix = m4.translate(worldMatrix, -35, -75, -5);
 
+  // рисуем левый вид
+  const left = 0;
+  const bottom = 0;
+  const width = gl.canvas.width / 2;
+  const height = gl.canvas.height;
+
+  gl.viewport(left, bottom, width, height);
+  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+
+  // рисуем правый вид
+  const left2 = width;
+  const bottom2 = 0;
+  const width2 = width;
+  const height2 = height;
+
+  gl.viewport(left2, bottom2, width2, height2);
   drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
 }
 render();
 </code></pre>
-<p>Это в основном то же самое, что и финальный пример из
-<a href="webgl-3d-perspective.html">статьи о перспективе</a>,
-за исключением того, что мы используем <a href="webgl-less-code-more-fun.html">нашу библиотеку</a>, чтобы держать код проще.</p>
 <p><div class="webgl_example_container">
-  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-views-one-view.html"></iframe>
-  <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-views-one-view.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-views.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-views.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
 </div>
 
 </p>
-<p>Теперь давайте сделаем так, чтобы он рисовал 2 вида ‘F’ бок о бок,
-используя <code class="notranslate" translate="no">gl.viewport</code></p>
+<p>Теперь у нас есть 2 вида ‘F’ бок о бок. Каждый вид использует половину canvas.</p>
+<p>Давайте добавим еще один вид, чтобы у нас было 3 вида</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render() {
+  twgl.resizeCanvasToDisplaySize(gl.canvas);
+
+  gl.enable(gl.CULL_FACE);
+  gl.enable(gl.DEPTH_TEST);
+
+  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  const near = 1;
+  const far = 2000;
+
+  // Вычисляем матрицу перспективной проекции
+  const perspectiveProjectionMatrix =
+      m4.perspective(fieldOfViewRadians, aspect, near, far);
+
+  // Вычисляем матрицу камеры, используя look at.
+  const cameraPosition = [0, 0, -75];
+  const target = [0, 0, 0];
+  const up = [0, 1, 0];
+  const cameraMatrix = m4.lookAt(cameraPosition, target, up);
+
+  // поворачиваем F в мировом пространстве
+  let worldMatrix = m4.yRotation(degToRad(settings.rotation));
+  worldMatrix = m4.xRotate(worldMatrix, degToRad(settings.rotation));
+  // центрируем 'F' вокруг его начала
+  worldMatrix = m4.translate(worldMatrix, -35, -75, -5);
+
+  // рисуем левый вид
+  const left = 0;
+  const bottom = 0;
+  const width = gl.canvas.width / 3;
+  const height = gl.canvas.height;
+
+  gl.viewport(left, bottom, width, height);
+  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+
+  // рисуем средний вид
+  const left2 = width;
+  const bottom2 = 0;
+  const width2 = width;
+  const height2 = height;
+
+  gl.viewport(left2, bottom2, width2, height2);
+  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+
+  // рисуем правый вид
+  const left3 = width * 2;
+  const bottom3 = 0;
+  const width3 = width;
+  const height3 = height;
+
+  gl.viewport(left3, bottom3, width3, height3);
+  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+}
+render();
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-views-clear-fixed.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-views-clear-fixed.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Теперь у нас есть 3 вида. Каждый вид использует треть canvas.</p>
+<p>Обратите внимание, что каждый вид рисует ту же сцену. Это может быть полезно для отладки или для создания интерфейса с множественными видами.</p>
+<p>Давайте также добавим scissor тест, чтобы убедиться, что мы не рисуем за пределами каждого viewport</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render() {
+  twgl.resizeCanvasToDisplaySize(gl.canvas);
+
+  gl.enable(gl.CULL_FACE);
+  gl.enable(gl.DEPTH_TEST);
+  gl.enable(gl.SCISSOR_TEST);
+
+  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  const near = 1;
+  const far = 2000;
+
+  // Вычисляем матрицу перспективной проекции
+  const perspectiveProjectionMatrix =
+      m4.perspective(fieldOfViewRadians, aspect, near, far);
+
+  // Вычисляем матрицу камеры, используя look at.
+  const cameraPosition = [0, 0, -75];
+  const target = [0, 0, 0];
+  const up = [0, 1, 0];
+  const cameraMatrix = m4.lookAt(cameraPosition, target, up);
+
+  // поворачиваем F в мировом пространстве
+  let worldMatrix = m4.yRotation(degToRad(settings.rotation));
+  worldMatrix = m4.xRotate(worldMatrix, degToRad(settings.rotation));
+  // центрируем 'F' вокруг его начала
+  worldMatrix = m4.translate(worldMatrix, -35, -75, -5);
+
+  // рисуем левый вид
+  const left = 0;
+  const bottom = 0;
+  const width = gl.canvas.width / 3;
+  const height = gl.canvas.height;
+
+  gl.viewport(left, bottom, width, height);
+  gl.scissor(left, bottom, width, height);
+  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+
+  // рисуем средний вид
+  const left2 = width;
+  const bottom2 = 0;
+  const width2 = width;
+  const height2 = height;
+
+  gl.viewport(left2, bottom2, width2, height2);
+  gl.scissor(left2, bottom2, width2, height2);
+  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+
+  // рисуем правый вид
+  const left3 = width * 2;
+  const bottom3 = 0;
+  const width3 = width;
+  const height3 = height;
+
+  gl.viewport(left3, bottom3, width3, height3);
+  gl.scissor(left3, bottom3, width3, height3);
+  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+}
+render();
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-views-clear-issue.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-views-clear-issue.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Теперь у нас есть scissor тест, который гарантирует, что мы не рисуем за пределами каждого viewport.</p>
+<p>Давайте также добавим очистку для каждого viewport</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render() {
+  twgl.resizeCanvasToDisplaySize(gl.canvas);
+
+  gl.enable(gl.CULL_FACE);
+  gl.enable(gl.DEPTH_TEST);
+  gl.enable(gl.SCISSOR_TEST);
+
+  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  const near = 1;
+  const far = 2000;
+
+  // Вычисляем матрицу перспективной проекции
+  const perspectiveProjectionMatrix =
+      m4.perspective(fieldOfViewRadians, aspect, near, far);
+
+  // Вычисляем матрицу камеры, используя look at.
+  const cameraPosition = [0, 0, -75];
+  const target = [0, 0, 0];
+  const up = [0, 1, 0];
+  const cameraMatrix = m4.lookAt(cameraPosition, target, up);
+
+  // поворачиваем F в мировом пространстве
+  let worldMatrix = m4.yRotation(degToRad(settings.rotation));
+  worldMatrix = m4.xRotate(worldMatrix, degToRad(settings.rotation));
+  // центрируем 'F' вокруг его начала
+  worldMatrix = m4.translate(worldMatrix, -35, -75, -5);
+
+  // рисуем левый вид
+  const left = 0;
+  const bottom = 0;
+  const width = gl.canvas.width / 3;
+  const height = gl.canvas.height;
+
+  gl.viewport(left, bottom, width, height);
+  gl.scissor(left, bottom, width, height);
+  gl.clearColor(0.2, 0.2, 0.2, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+
+  // рисуем средний вид
+  const left2 = width;
+  const bottom2 = 0;
+  const width2 = width;
+  const height2 = height;
+
+  gl.viewport(left2, bottom2, width2, height2);
+  gl.scissor(left2, bottom2, width2, height2);
+  gl.clearColor(0.2, 0.2, 0.2, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+
+  // рисуем правый вид
+  const left3 = width * 2;
+  const bottom3 = 0;
+  const width3 = width;
+  const height3 = height;
+
+  gl.viewport(left3, bottom3, width3, height3);
+  gl.scissor(left3, bottom3, width3, height3);
+  gl.clearColor(0.2, 0.2, 0.2, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+}
+render();
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-views-clear-fixed.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-views-clear-fixed.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Теперь у нас есть очистка для каждого viewport, что гарантирует, что каждый вид имеет чистый фон.</p>
+<p>Давайте также добавим возможность рисовать разные сцены в каждом viewport</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render() {
+  twgl.resizeCanvasToDisplaySize(gl.canvas);
+
+  gl.enable(gl.CULL_FACE);
+  gl.enable(gl.DEPTH_TEST);
+  gl.enable(gl.SCISSOR_TEST);
+
+  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  const near = 1;
+  const far = 2000;
+
+  // Вычисляем матрицу перспективной проекции
+  const perspectiveProjectionMatrix =
+      m4.perspective(fieldOfViewRadians, aspect, near, far);
+
+  // Вычисляем матрицу камеры, используя look at.
+  const cameraPosition = [0, 0, -75];
+  const target = [0, 0, 0];
+  const up = [0, 1, 0];
+  const cameraMatrix = m4.lookAt(cameraPosition, target, up);
+
+  // поворачиваем F в мировом пространстве
+  let worldMatrix = m4.yRotation(degToRad(settings.rotation));
+  worldMatrix = m4.xRotate(worldMatrix, degToRad(settings.rotation));
+  // центрируем 'F' вокруг его начала
+  worldMatrix = m4.translate(worldMatrix, -35, -75, -5);
+
+  // рисуем левый вид
+  const left = 0;
+  const bottom = 0;
+  const width = gl.canvas.width / 3;
+  const height = gl.canvas.height;
+
+  gl.viewport(left, bottom, width, height);
+  gl.scissor(left, bottom, width, height);
+  gl.clearColor(0.2, 0.2, 0.2, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+
+  // рисуем средний вид с другой камерой
+  const left2 = width;
+  const bottom2 = 0;
+  const width2 = width;
+  const height2 = height;
+
+  gl.viewport(left2, bottom2, width2, height2);
+  gl.scissor(left2, bottom2, width2, height2);
+  gl.clearColor(0.2, 0.2, 0.2, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  // используем другую камеру для среднего вида
+  const cameraPosition2 = [0, 0, -50];
+  const cameraMatrix2 = m4.lookAt(cameraPosition2, target, up);
+  drawScene(perspectiveProjectionMatrix, cameraMatrix2, worldMatrix);
+
+  // рисуем правый вид с другой камерой
+  const left3 = width * 2;
+  const bottom3 = 0;
+  const width3 = width;
+  const height3 = height;
+
+  gl.viewport(left3, bottom3, width3, height3);
+  gl.scissor(left3, bottom3, width3, height3);
+  gl.clearColor(0.2, 0.2, 0.2, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  // используем другую камеру для правого вида
+  const cameraPosition3 = [0, 0, -100];
+  const cameraMatrix3 = m4.lookAt(cameraPosition3, target, up);
+  drawScene(perspectiveProjectionMatrix, cameraMatrix3, worldMatrix);
+}
+render();
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-multiple-views-items.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-multiple-views-items.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Теперь у нас есть 3 вида с разными камерами. Каждый вид показывает ту же сцену с разных ракурсов.</p>
+<p>Конечно, вы могли бы рисовать целые 3D сцены или что угодно для каждого элемента.
+Пока вы правильно устанавливаете viewport и scissor, а затем настраиваете
+вашу матрицу проекции, чтобы соответствовать аспекту области, это должно работать.</p>
+<p>Еще одна примечательная вещь о коде - мы перемещаем canvas
+с этой строкой</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.canvas.style.transform = `translateY(${window.scrollY}px)`;
+</code></pre>
+<p>Почему? Мы могли бы вместо этого установить canvas в <code class="notranslate" translate="no">position: fixed;</code>, в этом случае
+он не прокручивался бы со страницей. Разница была бы тонкой.
+Браузер пытается прокручивать страницу как можно более плавно. Это может быть
+быстрее, чем мы можем рисовать наши объекты. Из-за этого у нас есть 2 варианта.</p>
+<ol>
+<li>
+<p>Использовать canvas с фиксированной позицией</p>
+<p>В этом случае, если мы не можем обновляться достаточно быстро, HTML перед canvas будет прокручиваться, но сам canvas
+не будет, поэтому на несколько мгновений они будут не синхронизированы</p>
+<img src="../resources/multi-view-skew.gif" style="border: 1px solid black; width: 266px;" class="webgl_center">
+</li>
+<li>
+<p>Перемещать canvas под контентом</p>
+<p>В этом случае, если мы не можем обновляться достаточно быстро, canvas будет прокручиваться в синхронизации
+с HTML, но новые области, где мы хотим рисовать вещи, будут пустыми, пока мы не получим
+шанс нарисовать.</p>
+<img src="../resources/multi-view-fixed.gif" style="border: 1px solid black; width: 266px;" class="webgl_center">
+<p>Это решение, используемое выше</p>
+</li>
+</ol>
+<p>Надеюсь, эта статья дала вам некоторые идеи о том, как рисовать множественные виды.
+Мы будем использовать эти техники в нескольких будущих статьях, где
+возможность видеть множественные виды полезна для понимания.</p>
+<div class="webgl_bottombar" id="pixel-coords">
+<h3>Координаты пикселей</h3>
+<p>Координаты пикселей в WebGL
+ссылаются на их края. Так, например, если у нас был
+canvas размером 3x2 пикселя, и мы установили viewport
+как</p>
+<pre class="prettyprint"><code class="notranslate" translate="no">
+gl.viewport(
+  0, // left
+  0, // bottom
+  3, // width
+  2, // height
+);
+</code></pre>
+<p>Тогда мы действительно определяем этот прямоугольник, который окружает 3x2 пикселя</p>
+<div class="webgl_center"><img src="../resources/webgl-pixels.svg" style="width: 500px;"></div>
+<p>Это означает, что значение пространства отсечения X = -1.0 соответствует левому краю этого прямоугольника,
+а значение пространства отсечения X = 1.0 соответствует правому. Выше я сказал, что X = -1.0 соответствует самому левому пикселю,
+но на самом деле соответствует левому краю</p>
+</div>
 
     </div>
     <div class="lesson-sidebar">
@@ -508,7 +910,7 @@ render();
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -551,9 +953,9 @@ render();
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>

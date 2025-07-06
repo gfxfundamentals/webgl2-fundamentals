@@ -472,75 +472,14 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
 <p>Если статус <code class="notranslate" translate="no">FRAMEBUFFER_COMPLETE</code>, то эта комбинация вложений работает для этого пользователя.
 В противном случае она не работает, и вам придется сделать что-то еще, например, сказать пользователю, что ему не повезло,
 или переключиться на какой-то другой метод.</p>
-<p>Если вы еще не проверили <a href="webgl-less-code-more-fun.html">упрощение WebGL с меньшим количеством кода больше веселья</a>.</p>
+<p>Если вы еще не проверили <a href="webgl-less-code-more-fun.html">упрощение WebGL с меньшим количеством кода, больше веселья</a>.</p>
 <div class="webgl_bottombar">
 <h3>Сам Canvas на самом деле является текстурой</h3>
 <p>
 Это просто мелочь, но браузеры используют техники выше для реализации самого canvas.
-За кулисами они создают цветную текстуру, буфер глубины, framebuffer, а затем они
-привязывают его как текущий framebuffer. Вы делаете свой рендеринг, который рисует в эту текстуру.
-Они затем используют эту текстуру для рендеринга вашего canvas в веб-страницу.
-</p>
-</div>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// создаем текстуру глубины
-const depthTexture = gl.createTexture();
-gl.bindTexture(gl.TEXTURE_2D, depthTexture);
-
-// делаем буфер глубины того же размера, что и targetTexture
-{
-  // определяем размер и формат уровня 0
-  const level = 0;
-  const internalFormat = gl.DEPTH_COMPONENT24;
-  const border = 0;
-  const format = gl.DEPTH_COMPONENT;
-  const type = gl.UNSIGNED_INT;
-  const data = null;
-  gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
-                targetTextureWidth, targetTextureHeight, border,
-                format, type, data);
-
-  // устанавливаем фильтрацию, чтобы нам не нужны были мипмапы
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-  // прикрепляем текстуру глубины к framebuffer
-  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depthTexture, level);
-}
-</code></pre>
-<p>И с этим вот результат.</p>
-<p><div class="webgl_example_container">
-  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-render-to-texture-3-cubes-with-depth-buffer.html"></iframe>
-  <a class="webgl_center" href="/webgl/lessons/../webgl-render-to-texture-3-cubes-with-depth-buffer.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
-</div>
-
-</p>
-<p>Теперь, когда у нас есть буфер глубины, прикрепленный к нашему framebuffer, внутренние кубы правильно пересекаются.</p>
-<img class="webgl_center" src="../resources/cubes-with-depth-buffer.jpg" width="100%" height="100%" />
-<p>Важно отметить, что WebGL гарантирует работу только определенных комбинаций вложений.
-<a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/#FBO_ATTACHMENTS">Согласно спецификации</a>
-единственные гарантированные комбинации вложений:</p>
-<ul>
-<li><code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> = <code class="notranslate" translate="no">RGBA/UNSIGNED_BYTE</code> текстура</li>
-<li><code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> = <code class="notranslate" translate="no">RGBA/UNSIGNED_BYTE</code> текстура + <code class="notranslate" translate="no">DEPTH_ATTACHMENT</code> = <code class="notranslate" translate="no">DEPTH_COMPONENT16</code> renderbuffer</li>
-<li><code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> = <code class="notranslate" translate="no">RGBA/UNSIGNED_BYTE</code> текстура + <code class="notranslate" translate="no">DEPTH_STENCIL_ATTACHMENT</code> = <code class="notranslate" translate="no">DEPTH_STENCIL</code> renderbuffer</li>
-</ul>
-<p>Для любых других комбинаций вы должны проверить, поддерживает ли система/GPU/драйвер/браузер пользователя эту комбинацию.
-Для проверки вы создаете свой framebuffer, создаете и прикрепляете вложения, затем вызываете</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-</code></pre>
-<p>Если статус <code class="notranslate" translate="no">FRAMEBUFFER_COMPLETE</code>, то эта комбинация вложений работает для этого пользователя.
-В противном случае она не работает, и вам придется сделать что-то еще, например, сказать пользователю, что ему не повезло,
-или переключиться на какой-то другой метод.</p>
-<p>Если вы еще не ознакомились с <a href="webgl-less-code-more-fun.html">упрощением WebGL с меньше кода больше веселья</a>.</p>
-<div class="webgl_bottombar">
-<h3>Canvas сам по себе на самом деле текстура</h3>
-<p>
-Это просто мелочь, но браузеры используют техники выше для реализации самого canvas.
-За кулисами они создают цветную текстуру, буфер глубины, framebuffer, а затем они
-привязывают его как текущий framebuffer. Вы делаете свой рендеринг, который рисует в эту текстуру.
-Они затем используют эту текстуру для рендеринга вашего canvas в веб-страницу.
+За кулисами они создают цветную текстуру, буфер глубины, framebuffer, а затем привязывают
+его как текущий framebuffer. Вы делаете свой рендеринг, который рисует в эту текстуру.
+Затем они используют эту текстуру для рендеринга вашего canvas в веб-страницу.
 </p>
 </div> 
     </div>
@@ -640,7 +579,7 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -683,9 +622,9 @@ gl.bindTexture(gl.TEXTURE_2D, depthTexture);
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>

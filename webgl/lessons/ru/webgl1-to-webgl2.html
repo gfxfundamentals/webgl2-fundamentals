@@ -400,9 +400,249 @@ vec4 color2 = texture(u_someCubeTexture, ...);
 текстуры с плавающей точкой.</p>
 <p>Обратите внимание, что это также верно для прикреплений framebuffer <code class="notranslate" translate="no">HALF_FLOAT</code>.</p>
 <blockquote>
-<p>Если вам любопытно, это была <em>ошибка</em> в спецификации WebGL1. Что произошло, так это то, что WebGL1</p>
+<p>Если вам любопытно, это была <em>ошибка</em> в спецификации WebGL1. Что произошло, так это то, что WebGL1
+был выпущен и <code class="notranslate" translate="no">OES_texture_float</code> был добавлен, и просто предполагалось, что правильный
+способ использования его для рендеринга заключался в создании текстуры, прикреплении её к framebuffer
+и проверке её статуса. Позже кто-то указал, что согласно спецификации этого было
+недостаточно, потому что спецификация говорит, что цвета, записанные во фрагментном шейдере, всегда
+ограничиваются от 0 до 1. <code class="notranslate" translate="no">EXT_color_buffer_float</code> убирает это ограничение зажима,
+но поскольку WebGL уже был выпущен около года, это сломало бы многие веб-сайты, если бы
+ограничение было применено. Для WebGL2 они смогли исправить это, и теперь вы должны включить
+<code class="notranslate" translate="no">EXT_color_buffer_float</code>, чтобы использовать текстуры с плавающей точкой как прикрепления framebuffer.</p>
+<p>ПРИМЕЧАНИЕ: Насколько мне известно, по состоянию на март 2017 года очень немногие мобильные устройства
+поддерживают рендеринг в текстуры с плавающей точкой.</p>
 </blockquote>
+<h2 id="объекты-вершинных-массивов">Объекты вершинных массивов</h2>
+<p>Из всех функций выше та функция, которую я лично считаю, что вы должны
+всегда ВСЕГДА использовать - это объекты вершинных массивов. Все остальное действительно
+зависит от того, что вы пытаетесь сделать, но объекты вершинных массивов в частности
+кажутся базовой функцией, которую всегда следует использовать.</p>
+<p>В WebGL1 без объектов вершинных массивов все данные об атрибутах
+были глобальным состоянием WebGL. Вы можете представить это так</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var glState = {
+  attributeState: {
+    ELEMENT_ARRAY_BUFFER: null,
+    attributes: [
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+    ],
+  },
+}
+</code></pre>
+<p>Вызов функций типа <code class="notranslate" translate="no">gl.vertexAttribPointer</code>, <code class="notranslate" translate="no">gl.enableVertexAttribArray</code> и
+<code class="notranslate" translate="no">gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ??)</code> влиял на это глобальное состояние.
+Перед каждой вещью, которую вы хотели нарисовать, вам нужно было настроить все атрибуты, и если вы
+рисовали индексированные данные, вам нужно было установить <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code>.</p>
+<p>С объектами вершинных массивов все это <code class="notranslate" translate="no">attributeState</code> выше становится <em>Вершинным массивом</em>.</p>
+<p>Другими словами</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var someVAO = gl.createVertexArray();
+</code></pre>
+<p>Создает новый экземпляр вещи выше, называемой <code class="notranslate" translate="no">attributeState</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(someVAO);
+</code></pre>
+<p>Это эквивалентно</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">glState.attributeState = someVAO;
+</code></pre>
+<p>Что это означает, так это то, что вы должны настроить все ваши атрибуты во время инициализации сейчас.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// во время инициализации
+for each model / geometry / ...
+  var vao = gl.createVertexArray()
+  gl.bindVertexArray(vao);
+  for each attribute
+    gl.enableVertexAttribArray(...);
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufferForAttribute);
+    gl.vertexAttribPointer(...);
+  if indexed geometry
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+  gl.bindVertexArray(null);
+</code></pre>
+<p>Затем во время рендеринга для использования конкретной геометрии все, что вам нужно сделать,
+это</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(vaoForGeometry);
+</code></pre>
+<p>В WebGL1 цикл инициализации выше появился бы во время рендеринга.
+Это ОГРОМНОЕ ускорение!</p>
+<p>Есть несколько предостережений:</p>
+<ol>
+<li>
+<p>расположения атрибутов зависят от программы.</p>
+<p>Если вы собираетесь использовать одну и ту же геометрию с несколькими
+программами, рассмотрите ручное назначение расположений атрибутов.
+В GLSL 300 es вы можете сделать это в шейдере.</p>
+<p>Например:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">layout(location = 0) in vec4 a_position;
+layout(location = 1) in vec2 a_texcoord;
+layout(location = 2) in vec3 a_normal;
+layout(location = 3) in vec4 a_color;
+</code></pre>
+<p>Устанавливает расположения 4 атрибутов.</p>
+<p>Вы также можете все еще делать это способом WebGL1, вызывая
+<code class="notranslate" translate="no">gl.bindAttribLocation</code> перед вызовом <code class="notranslate" translate="no">gl.linkProgram</code>.</p>
+<p>Например:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindAttribLocation(someProgram, 0, &quot;a_position&quot;);
+gl.bindAttribLocation(someProgram, 1, &quot;a_texcoord&quot;);
+gl.bindAttribLocation(someProgram, 2, &quot;a_normal&quot;);
+gl.bindAttribLocation(someProgram, 3, &quot;a_color&quot;);
+</code></pre>
+<p>Это означает, что вы можете заставить их быть совместимыми между несколькими шейдерными
+программами. Если одной программе не нужны все атрибуты,
+атрибуты, которые им нужны, все еще будут назначены на
+те же расположения.</p>
+<p>Если вы не сделаете этого, вам понадобятся разные VAO для
+разных шейдерных программ при использовании одной и той же геометрии ИЛИ
+вам нужно будет просто делать вещь WebGL1 и не использовать
+VAO и всегда настраивать атрибуты во время рендеринга, что медленно.</p>
+<p>ПРИМЕЧАНИЕ: из 2 методов выше я склоняюсь к использованию
+<code class="notranslate" translate="no">gl.bindAttribLocation</code>, потому что легко иметь это в одном
+месте в моем коде, тогда как метод использования <code class="notranslate" translate="no">layout(location = ?)</code> должен
+быть во всех шейдерах, поэтому в интересах D.R.Y., <code class="notranslate" translate="no">gl.bindAttribLocation</code>
+кажется лучше. Может быть, если бы я использовал генератор шейдеров, то разницы бы не было.</p>
+</li>
+<li>
+<p>Всегда отвязывайте VAO, когда закончили</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(null);
+</code></pre>
+<p>Это просто из моего собственного опыта. Если вы посмотрите выше,
+состояние <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code> является частью вершинного массива.</p>
+<p>Итак, я столкнулся с этой проблемой. Я создал некоторую геометрию, затем
+я создал VAO для этой геометрии и настроил атрибуты
+и <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code>. Затем я создал еще немного
+геометрии. Когда эта геометрия настраивала свои индексы, потому что
+у меня все еще был привязан предыдущий VAO, индексы
+повлияли на привязку <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code> для предыдущего
+VAO. Мне потребовалось несколько часов для отладки.</p>
+<p>Итак, мое предложение - никогда не оставлять VAO привязанным, если вы закончили
+с ним. Либо немедленно привяжите следующий VAO, который собираетесь
+использовать, либо привяжите <code class="notranslate" translate="no">null</code>, если закончили.</p>
+</li>
+</ol>
+<p>Как упоминалось в начале, многие расширения из WebGL1 являются стандартными функциями
+WebGL2, поэтому если вы использовали расширения в WebGL1, вам нужно будет
+изменить ваш код, чтобы не использовать их как расширения в WebGL2. См. ниже.</p>
+<p>Два, которые требуют особого внимания:</p>
+<ol>
+<li>
+<p><code class="notranslate" translate="no">OES_texture_float</code> и текстуры с плавающей точкой.</p>
+<p>Текстуры с плавающей точкой являются стандартной функцией WebGL2, но:</p>
+<ul>
+<li>
+<p>Возможность фильтрации текстур с плавающей точкой все еще является расширением: <code class="notranslate" translate="no">OES_texture_float_linear</code>.</p>
+</li>
+<li>
+<p>Возможность рендеринга в текстуру с плавающей точкой является расширением: <code class="notranslate" translate="no">EXT_color_buffer_float</code>.</p>
+</li>
+<li>
+<p>Создание текстуры с плавающей точкой отличается. Вы должны использовать один из новых внутренних форматов WebGL2
+как <code class="notranslate" translate="no">RGBA32F</code>, <code class="notranslate" translate="no">R32F</code> и т.д. Это отличается от расширения WebGL1 <code class="notranslate" translate="no">OES_texture_float</code>,
+в котором внутренний формат выводился из <code class="notranslate" translate="no">type</code>, переданного в <code class="notranslate" translate="no">texImage2D</code>.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code class="notranslate" translate="no">WEBGL_depth_texture</code> и текстуры глубины.</p>
+<p>Аналогично предыдущему различию, для создания текстуры глубины в WebGL2 вы должны использовать один из
+внутренних форматов WebGL2: <code class="notranslate" translate="no">DEPTH_COMPONENT16</code>, <code class="notranslate" translate="no">DEPTH_COMPONENT24</code>,
+<code class="notranslate" translate="no">DEPTH_COMPONENT32F</code>, <code class="notranslate" translate="no">DEPTH24_STENCIL8</code> или <code class="notranslate" translate="no">DEPTH32F_STENCIL8</code>, тогда как расширение WebGL1
+<code class="notranslate" translate="no">WEBGL_depth_texture</code> использовало <code class="notranslate" translate="no">DEPTH_COMPONENT</code> и <code class="notranslate" translate="no">DEPTH_STENCIL_COMPONENT</code>.</p>
+</li>
+</ol>
+<p>Это мой личный короткий список вещей, о которых нужно знать при переходе
+с WebGL1 на WebGL2. <a href="webgl2-whats-new.html">Есть еще больше вещей, которые вы можете делать в WebGL2</a>.</p>
+<div class="webgl_bottombar">
+<h3>Заставляем расширения WebGL1 выглядеть как WebGL2</h3>
+<p>Функции, которые были в расширениях в WebGL1, теперь находятся в основном
+контексте в WebGL2. Например, в WebGL1</p>
+<pre class="prettyprint">
+var ext = gl.getExtension("OES_vertex_array_object");
+if (!ext) {
+  // сказать пользователю, что у него нет требуемого расширения или обойти это
+} else {
+  var someVAO = ext.createVertexArrayOES();
+}
+</pre>
+<p>
+против в webgl2
+</p>
+<pre class="prettyprint">
+var someVAO = gl.createVertexArray();
+</pre>
+<p>Как вы можете видеть, если вы хотите, чтобы ваш код работал как в WebGL1, так и в WebGL2, то
+это может представлять некоторые проблемы.</p>
+<p>Одним из обходных путей было бы копирование расширений WebGL1 в контекст WebGL во время инициализации.
+Таким образом, остальная часть вашего кода может остаться той же. Пример:</p>
+<pre class="prettyprint">
+const gl &#x3D; someCanvas.getContext(&quot;webgl&quot;);
+const haveVAOs &#x3D; getAndApplyExtension(gl, &quot;OES_vertex_array_object&quot;);
 
+function getAndApplyExtension(gl, name) {
+  const ext &#x3D; gl.getExtension(name);
+  if (!ext) {
+    return null;
+  }
+  const fnSuffix &#x3D; name.split(&quot;_&quot;)[0];
+  const enumSuffix &#x3D; &#x27;_&#x27; + fnSuffix;
+  for (const key in ext) {
+    const value &#x3D; ext[key];
+    const isFunc &#x3D; typeof (value) &#x3D;&#x3D;&#x3D; &#x27;function&#x27;;
+    const suffix &#x3D; isFunc ? fnSuffix : enumSuffix;
+    let name &#x3D; key;
+    // примеры, где это не так, это WEBGL_compressed_texture_s3tc
+    // и WEBGL_compressed_texture_pvrtc
+    if (key.endsWith(suffix)) {
+      name &#x3D; key.substring(0, key.length - suffix.length);
+    }
+    if (gl[name] !&#x3D;&#x3D; undefined) {
+      if (!isFunc &amp;&amp; gl[name] !&#x3D;&#x3D; value) {
+        console.warn(&quot;conflict:&quot;, name, gl[name], value, key);
+      }
+    } else {
+      if (isFunc) {
+        gl[name] &#x3D; function(origFn) {
+          return function() {
+            return origFn.apply(ext, arguments);
+          };
+        }(value);
+      } else {
+        gl[name] &#x3D; value;
+      }
+    }
+  }
+  return ext;
+}
+</pre>
+<p>Теперь ваш код может в основном просто работать одинаково на обоих. Пример:</p>
+<pre class="prettyprint">
+if (haveVAOs) {
+  var someVAO &#x3D; gl.createVertexArray();
+  ...
+} else {
+  ... делать что-то для отсутствия VAO.
+}
+</pre>
+<p>Альтернативой было бы делать что-то вроде этого</p>
+<pre class="prettyprint">
+if (haveVAOs) {
+  if (isWebGL2)
+     someVAO &#x3D; gl.createVertexArray();
+  } else {
+     someVAO &#x3D; vaoExt.createVertexArrayOES();
+  }
+  ...
+} else {
+  ... делать что-то для отсутствия VAO.
+}
+</pre>
+<p>Примечание: В случае объектов вершинных массивов в частности я предлагаю вам <a href="https://github.com/greggman/oes-vertex-array-object-polyfill">использовать полифилл</a>
+чтобы они были везде. VAO доступны на большинстве систем. На тех немногих системах
+где они недоступны, полифилл обработает это за вас, и ваш код
+может остаться простым.</p>
+</div> 
     </div>
     <div class="lesson-sidebar">
         <select class="language">
@@ -500,7 +740,7 @@ vec4 color2 = texture(u_someCubeTexture, ...);
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -543,9 +783,9 @@ vec4 color2 = texture(u_someCubeTexture, ...);
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>

@@ -41,7 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <meta name="keywords" content="webgl webgl2 graphics">
 <meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-picking_ru.jpg">
 
-<meta property="og:title" content="WebGL2 Пикинг (выбор объектов)">
+<meta property="og:title" content="WebGL2 Выбор объектов">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-picking_ru.jpg">
 <meta property="og:description" content="Как выбирать объекты в WebGL">
@@ -51,7 +51,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <meta name="twitter:site" content="@greggman">
 <meta name="twitter:creator" content="@greggman">
 <meta name="twitter:domain" content="webgl2fundamentals.org">
-<meta name="twitter:title" content="WebGL2 Пикинг (выбор объектов)">
+<meta name="twitter:title" content="WebGL2 Выбор объектов">
 <meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-picking.html">
 <meta name="twitter:description" content="Как выбирать объекты в WebGL">
 <meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-picking_ru.jpg">
@@ -78,7 +78,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-picking.html#webpage",
       "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-picking.html",
       "inLanguage":"ru",
-      "name":"WebGL2 Пикинг (выбор объектов)",
+      "name":"WebGL2 Выбор объектов",
       "keywords":"webgl webgl2 graphics programming",
       "isPartOf":{
         "@id":"https://webgl2fundamentals.org/#website"
@@ -92,7 +92,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </script>
 
 
-<title>WebGL2 Пикинг (выбор объектов)</title>
+<title>WebGL2 Выбор объектов</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/webgl/lessons/lang.css">
 <link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
@@ -234,50 +234,55 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>WebGL2 Пикинг (выбор объектов)</h1>
+    <h1>WebGL2 Выбор объектов</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <p>Эта статья о том, как использовать WebGL, чтобы позволить пользователю выбирать или выделять объекты.</p>
-<p>Если вы читали другие статьи на этом сайте, вы, вероятно, уже поняли,
-что сам WebGL — это просто библиотека растеризации. Он рисует треугольники,
-линии и точки на canvas, поэтому у него нет понятия «объекты для выбора».
-Он просто выводит пиксели через ваши шейдеры. Это значит,
-что любая концепция «пикинга» должна реализовываться в вашем коде. Вы должны
-определить, что это за объекты, которые пользователь может выбрать.
-То есть, хотя эта статья может охватить общие концепции, вам нужно будет
-самостоятельно решить, как применить их в вашем приложении.</p>
+      <p>Эта статья о том, как использовать WebGL для того, чтобы пользователь мог выбирать или выделять
+объекты.</p>
+<p>Если вы читали другие статьи на этом сайте, вы, надеюсь, поняли,
+что WebGL сам по себе - это просто библиотека растеризации. Он рисует треугольники,
+линии и точки на canvas, поэтому у него нет концепции “объектов для
+выбора”. Он просто выводит пиксели через шейдеры, которые вы предоставляете. Это означает,
+что любая концепция “выбора” чего-либо должна исходить из вашего кода. Вам нужно
+определить, что это за вещи, которые вы позволяете пользователю выбирать.
+Это означает, что хотя эта статья может охватывать общие концепции, вам нужно будет
+самостоятельно решить, как перевести то, что вы видите здесь, в применимые
+концепции в вашем собственном приложении.</p>
 <h2 id="клик-по-объекту">Клик по объекту</h2>
-<p>Один из самых простых способов определить, по какому объекту кликнул пользователь —
-присвоить каждому объекту числовой id, затем отрисовать
+<p>Один из самых простых способов выяснить, на какую вещь кликнул пользователь, это
+придумать числовой id для каждого объекта, затем мы можем нарисовать
 все объекты, используя их id как цвет, без освещения
-и текстур. Это даст нам изображение силуэтов
-каждого объекта. Буфер глубины сам отсортирует объекты.
-Затем мы можем считать цвет пикселя под мышью — это даст нам id объекта, который был отрисован в этой точке.</p>
-<p>Чтобы реализовать этот метод, нам нужно объединить несколько предыдущих
-статей. Первая — <a href="webgl-drawing-multiple-things.html">о рисовании множества объектов</a>,
-потому что она показывает, как рисовать много объектов, которые мы и будем выбирать.</p>
-<p>Обычно мы хотим рендерить эти id вне экрана —
-<a href="webgl-render-to-texture.html">рендеря в текстуру</a>, так что добавим и этот код.</p>
-<p>Начнем с последнего примера из
-<a href="webgl-drawing-multiple-things.html">статьи о рисовании множества объектов</a>,
-который рисует 200 объектов.</p>
-<p>Добавим к нему framebuffer с прикреплённой текстурой и depth-буфером из
-последнего примера в <a href="webgl-render-to-texture.html">статье о рендере в текстуру</a>.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Создаем текстуру для рендера
+и без текстур. Это даст нам изображение силуэтов
+каждого объекта. Буфер глубины будет обрабатывать сортировку за нас.
+Затем мы можем прочитать цвет пикселя под
+мышью, который даст нам id объекта, который был отрендерен там.</p>
+<p>Для реализации этой техники нам нужно будет объединить несколько предыдущих
+статей. Первая - это статья о <a href="webgl-drawing-multiple-things.html">рисовании множественных объектов</a>,
+которую мы будем использовать, потому что, учитывая, что она рисует множество вещей, мы можем попытаться
+выбрать их.</p>
+<p>Помимо этого, мы обычно хотим рендерить эти id вне экрана,
+<a href="webgl-render-to-texture.html">рендеря в текстуру</a>, поэтому мы
+также добавим этот код.</p>
+<p>Итак, давайте начнем с последнего примера из
+<a href="webgl-drawing-multiple-things.html">статьи о рисовании множественных вещей</a>,
+которая рисует 200 объектов.</p>
+<p>К нему давайте добавим framebuffer с присоединенной текстурой и буфером глубины из
+последнего примера в <a href="webgl-render-to-texture.html">статье о рендеринге в текстуру</a>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Создаем текстуру для рендеринга
 const targetTexture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, targetTexture);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-// создаем depth renderbuffer
+// создаем буфер глубины
 const depthBuffer = gl.createRenderbuffer();
 gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
 
 function setFramebufferAttachmentSizes(width, height) {
   gl.bindTexture(gl.TEXTURE_2D, targetTexture);
-  // задаем размер и формат уровня 0
+  // определяем размер и формат уровня 0
   const level = 0;
   const internalFormat = gl.RGBA;
   const border = 0;
@@ -292,36 +297,38 @@ function setFramebufferAttachmentSizes(width, height) {
   gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, width, height);
 }
 
-// Создаем и биндим framebuffer
+// Создаем и привязываем framebuffer
 const fb = gl.createFramebuffer();
 gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
 
-// прикрепляем текстуру как первый цветовой attachment
+// присоединяем текстуру как первое цветовое вложение
 const attachmentPoint = gl.COLOR_ATTACHMENT0;
 const level = 0;
 gl.framebufferTexture2D(gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, targetTexture, level);
 
-// создаем depth-буфер такого же размера, как targetTexture
+// делаем буфер глубины того же размера, что и targetTexture
 gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
 </code></pre>
-<p>Мы вынесли код установки размеров текстуры и depth renderbuffer в функцию, чтобы
-можно было вызывать её при изменении размера canvas.</p>
-<p>В рендер-цикле, если размер canvas изменился,
-мы подгоним текстуру и renderbuffer под новые размеры.</p>
+<p>Мы поместили код для установки размеров текстуры и
+буфера глубины в функцию, чтобы мы могли
+вызывать ее для изменения их размера в соответствии с размером
+canvas.</p>
+<p>В нашем коде рендеринга, если canvas изменяет размер,
+мы скорректируем текстуру и renderbuffer, чтобы они соответствовали.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function drawScene(time) {
   time *= 0.0005;
 
--  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
-+  if (webglUtils.resizeCanvasToDisplaySize(gl.canvas)) {
-+    // canvas изменился, подгоняем framebuffer attachments
-+    setFramebufferAttachmentSizes(gl.canvas.width, gl.canvas.height);
-+  }
+  if (webglUtils.resizeCanvasToDisplaySize(gl.canvas)) {
+    // canvas был изменен, делаем вложения framebuffer соответствующими
+    setFramebufferAttachmentSizes(gl.canvas.width, gl.canvas.height);
+  }
 
 ...
 </code></pre>
-<p>Далее нам нужен второй шейдер. В примере используется рендер по цветам вершин, но нам нужен
-шейдер, который будет рисовать сплошным цветом (id).
-Вот наш второй шейдер:</p>
+<p>Далее нам нужен второй шейдер. Шейдер в
+примере рендерит, используя цвета вершин, но нам нужен
+тот, который мы можем установить в сплошной цвет для рендеринга с id.
+Итак, сначала вот наш второй шейдер</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">const pickingVS = `#version 300 es
   in vec4 a_position;
   
@@ -345,11 +352,11 @@ const pickingFS = `#version 300 es
   }
 `;
 </code></pre>
-<p>И нам нужно скомпилировать, связать и найти локации
-используя наши <a href="webgl-less-code-more-fun.html">хелперы</a>.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// настройка GLSL программ
-// важно: нам нужно, чтобы атрибуты совпадали между программами
-// чтобы можно было использовать один и тот же vertex array для разных шейдеров
+<p>И нам нужно скомпилировать, связать и найти местоположения,
+используя наши <a href="webgl-less-code-more-fun.html">помощники</a>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// настройка GLSL программы
+// примечание: нам нужны позиции атрибутов, чтобы соответствовать между программами
+// чтобы нам нужен был только один vertex array на форму
 const options = {
   attribLocations: {
     a_position: 0,
@@ -359,23 +366,33 @@ const options = {
 const programInfo = twgl.createProgramInfo(gl, [vs, fs], options);
 const pickingProgramInfo = twgl.createProgramInfo(gl, [pickingVS, pickingFS], options);
 </code></pre>
-<p>В отличие от большинства примеров на сайте, здесь нам нужно рисовать одни и те же данные двумя разными шейдерами.
-Поэтому нам нужно, чтобы локации атрибутов совпадали между шейдерами. Это можно сделать двумя способами. Первый — явно указать их в GLSL:</p>
+<p>Одно отличие выше от большинства примеров на этом сайте, это один
+из немногих случаев, когда нам нужно было рисовать те же данные с 2 разными
+шейдерами. Из-за этого нам нужны местоположения атрибутов, чтобы соответствовать
+между шейдерами. Мы можем сделать это 2 способами. Один способ - установить их
+вручную в GLSL</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">layout (location = 0) in vec4 a_position;
 layout (location = 1) in vec4 a_color;
 </code></pre>
-<p>Второй — вызвать <code class="notranslate" translate="no">gl.bindAttribLocation</code> <strong>до</strong> линковки программы:</p>
+<p>Другой - вызвать <code class="notranslate" translate="no">gl.bindAttribLocation</code> <strong>до</strong> связывания
+шейдерной программы</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.bindAttribLocation(someProgram, 0, 'a_position');
 gl.bindAttribLocation(someProgram, 1, 'a_color');
 gl.linkProgram(someProgram);
 </code></pre>
-<p>Этот способ нечасто используется, но он более
+<p>Этот последний стиль необычен, но он более
 <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">D.R.Y.</a>.
-Наша хелпер-библиотека вызывает <code class="notranslate" translate="no">gl.bindAttribLocation</code> за нас,
-если мы передаем имена атрибутов и нужные локации — это и происходит выше.</p>
-<p>Это гарантирует, что атрибут <code class="notranslate" translate="no">a_position</code> будет использовать локацию 0 в обеих программах, так что мы можем использовать один и тот же vertex array.</p>
-<p>Далее нам нужно уметь рендерить все объекты дважды: сначала обычным шейдером, потом — только что написанным.
-Вынесем код рендера всех объектов в функцию.</p>
+Наша библиотека помощников вызовет <code class="notranslate" translate="no">gl.bindAttribLocation</code> для нас,
+если мы передадим имена атрибутов и местоположение, которое мы хотим,
+что и происходит выше.</p>
+<p>Это означает, что мы можем гарантировать, что атрибут <code class="notranslate" translate="no">a_position</code> использует
+местоположение 0 в обеих программах, поэтому мы можем использовать тот же vertex array
+с обеими программами.</p>
+<p>Далее нам нужно иметь возможность рендерить все объекты
+дважды. Один раз с любым шейдером, который мы назначили
+им, и снова с шейдером, который мы только что написали,
+поэтому давайте извлечем код, который в настоящее время рендерит
+все объекты в функцию.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">function drawObjects(objectsToDraw, overrideProgramInfo) {
   objectsToDraw.forEach(function(object) {
     const programInfo = overrideProgramInfo || object.programInfo;
@@ -385,7 +402,481 @@ gl.linkProgram(someProgram);
     gl.useProgram(programInfo.program);
 
     // Настраиваем все нужные атрибуты.
-    gl.bindVertexArray(vertexArray); </code></pre>
+    gl.bindVertexArray(vertexArray);
+
+    // Устанавливаем uniforms.
+    twgl.setUniforms(programInfo, object.uniforms);
+
+    // Рисуем (вызывает gl.drawArrays или gl.drawElements)
+    twgl.drawBufferInfo(gl, object.bufferInfo);
+  });
+}
+</code></pre>
+<p><code class="notranslate" translate="no">drawObjects</code> принимает опциональный <code class="notranslate" translate="no">overrideProgramInfo</code>,
+который мы можем передать, чтобы использовать наш picking шейдер вместо
+назначенного объекту шейдера.</p>
+<p>Давайте вызовем его один раз, чтобы нарисовать в текстуру с
+id, и снова, чтобы нарисовать сцену на canvas.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Рисуем сцену.
+function drawScene(time) {
+  time *= 0.0005;
+
+  ...
+
+  // Вычисляем матрицы для каждого объекта.
+  objects.forEach(function(object) {
+    object.uniforms.u_matrix = computeMatrix(
+        viewProjectionMatrix,
+        object.translation,
+        object.xRotationSpeed * time,
+        object.yRotationSpeed * time);
+  });
+
++  // ------ Рисуем объекты в текстуру --------
++
++  gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
++  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
++
++  gl.enable(gl.CULL_FACE);
++  gl.enable(gl.DEPTH_TEST);
++
++  // Очищаем canvas И буфер глубины.
++  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
++
++  drawObjects(objectsToDraw, pickingProgramInfo);
++
++  // ------ Рисуем объекты на canvas
+
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+  drawObjects(objectsToDraw);
+
+  requestAnimationFrame(drawScene);
+}
+</code></pre>
+<p>И с этим мы должны иметь возможность двигать мышью по
+сцене, и объект под мышью будет мигать</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-picking-w-gpu.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-picking-w-gpu.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Одна оптимизация, которую мы можем сделать, мы рендерим
+id в текстуру того же размера,
+что и canvas. Это концептуально самая простая
+вещь для выполнения.</p>
+<p>Но мы могли бы вместо этого просто рендерить пиксель
+под мышью. Для этого мы используем усеченную пирамиду,
+математика которой будет покрывать только пространство для этого
+1 пикселя.</p>
+<p>До сих пор для 3D мы использовали функцию под названием
+<code class="notranslate" translate="no">perspective</code>, которая принимает в качестве входных данных поле зрения, соотношение сторон и
+ближнее и дальнее значения для z-плоскостей и создает
+матрицу перспективной проекции, которая преобразует из
+усеченной пирамиды, определенной этими значениями, в clip space.</p>
+<p>Большинство 3D математических библиотек имеют другую функцию под названием
+<code class="notranslate" translate="no">frustum</code>, которая принимает 6 значений, левое, правое, верхнее,
+и нижнее значения для ближней z-плоскости, а затем
+z-ближнее и z-дальнее значения для z-плоскостей и генерирует
+матрицу перспективы, определенную этими значениями.</p>
+<p>Используя это, мы можем сгенерировать матрицу перспективы для
+одного пикселя под мышью</p>
+<p>Сначала мы вычисляем края и размер того, чем была бы наша ближняя плоскость,
+если бы мы использовали функцию <code class="notranslate" translate="no">perspective</code></p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// вычисляем прямоугольник, который покрывает ближняя плоскость нашей усеченной пирамиды
+const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+const top = Math.tan(fieldOfViewRadians * 0.5) * near;
+const bottom = -top;
+const left = aspect * bottom;
+const right = aspect * top;
+const width = Math.abs(right - left);
+const height = Math.abs(top - bottom);
+</code></pre>
+<p>Итак, <code class="notranslate" translate="no">left</code>, <code class="notranslate" translate="no">right</code>, <code class="notranslate" translate="no">width</code> и <code class="notranslate" translate="no">height</code> - это
+размер и позиция ближней плоскости. Теперь на этой
+плоскости мы можем вычислить размер и позицию
+одного пикселя под мышью и передать это в
+функцию <code class="notranslate" translate="no">frustum</code> для генерации матрицы проекции,
+которая покрывает только этот 1 пиксель</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// вычисляем часть ближней плоскости, которая покрывает 1 пиксель
+// под мышью.
+const pixelX = mouseX * gl.canvas.width / gl.canvas.clientWidth;
+const pixelY = gl.canvas.height - mouseY * gl.canvas.height / gl.canvas.clientHeight - 1;
+
+const subLeft = left + pixelX * width / gl.canvas.width;
+const subBottom = bottom + pixelY * height / gl.canvas.height;
+const subWidth = width / gl.canvas.width;
+const subHeight = height / gl.canvas.height;
+
+// делаем усеченную пирамиду для этого 1 пикселя
+const projectionMatrix = m4.frustum(
+    subLeft,
+    subLeft + subWidth,
+    subBottom,
+    subBottom + subHeight,
+    near,
+    far);
+</code></pre>
+<p>Для использования этого нам нужно внести некоторые изменения. Как сейчас наш шейдер
+просто принимает <code class="notranslate" translate="no">u_matrix</code>, что означает, что для рисования с другой
+матрицей проекции нам нужно будет пересчитывать матрицы для каждого объекта
+дважды каждый кадр, один раз с нашей нормальной матрицей проекции для рисования
+на canvas и снова для этой матрицы проекции 1 пикселя.</p>
+<p>Мы можем убрать эту ответственность из JavaScript, переместив это
+умножение в вершинные шейдеры.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-html">const vs = `#version 300 es
+
+in vec4 a_position;
+in vec4 a_color;
+
+-uniform mat4 u_matrix;
++uniform mat4 u_viewProjection;
++uniform mat4 u_world;
+
+out vec4 v_color;
+
+void main() {
+  // Умножаем позицию на матрицу.
+-  gl_Position = u_matrix * a_position;
++  gl_Position = u_viewProjection * u_world * a_position;
+
+  // Передаем цвет в фрагментный шейдер.
+  v_color = a_color;
+}
+`;
+
+...
+
+const pickingVS = `#version 300 es
+  in vec4 a_position;
+  
+-  uniform mat4 u_matrix;
++  uniform mat4 u_viewProjection;
++  uniform mat4 u_world;
+  
+  void main() {
+    // Умножаем позицию на матрицу.
+-   gl_Position = u_matrix * a_position;
++    gl_Position = u_viewProjection * u_world * a_position;
+  }
+`;
+</code></pre>
+<p>Затем мы можем сделать наш JavaScript <code class="notranslate" translate="no">viewProjectionMatrix</code> общим
+среди всех объектов.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const objectsToDraw = [];
+const objects = [];
+const viewProjectionMatrix = m4.identity();
+
+// Создаем информацию для каждого объекта для каждого объекта.
+const baseHue = rand(0, 360);
+const numObjects = 200;
+for (let ii = 0; ii &lt; numObjects; ++ii) {
+  const id = ii + 1;
+
+  // выбираем форму
+  const shape = shapes[rand(shapes.length) | 0];
+
+  const object = {
+    uniforms: {
+      u_colorMult: chroma.hsv(eMod(baseHue + rand(0, 120), 360), rand(0.5, 1), rand(0.5, 1)).gl(),
+      u_world: m4.identity(),
+      u_viewProjection: viewProjectionMatrix,
+      u_id: [
+        ((id &gt;&gt;  0) &amp; 0xFF) / 0xFF,
+        ((id &gt;&gt;  8) &amp; 0xFF) / 0xFF,
+        ((id &gt;&gt; 16) &amp; 0xFF) / 0xFF,
+        ((id &gt;&gt; 24) &amp; 0xFF) / 0xFF,
+      ],
+    },
+    translation: [rand(-100, 100), rand(-100, 100), rand(-150, -50)],
+    xRotationSpeed: rand(0.8, 1.2),
+    yRotationSpeed: rand(0.8, 1.2),
+  };
+  objects.push(object);
+
+  // Добавляем его в список вещей для рисования.
+  objectsToDraw.push({
+    programInfo: programInfo,
+    bufferInfo: shape.bufferInfo,
+    vertexArray: shape.vertexArray,
+    uniforms: object.uniforms,
+  });
+}
+</code></pre>
+<p>И где мы вычисляем матрицы для каждого объекта, нам больше не нужно
+включать матрицу проекции вида</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function computeMatrix(translation, xRotation, yRotation) {
+  let matrix = m4.translation(
+      translation[0],
+      translation[1],
+      translation[2]);
+  matrix = m4.xRotate(matrix, xRotation);
+  return m4.yRotate(matrix, yRotation);
+}
+</code></pre>
+<p>gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);</p>
+<p>drawObjects(objectsToDraw);</p>
+<p>requestAnimationFrame(drawScene);
+}</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">
+Нашему picking шейдеру нужен `u_id`, установленный в id, поэтому давайте
+добавим это к нашим данным uniform, где мы настраиваем наши объекты.
+
+```js
+// Создаем информацию для каждого объекта для каждого объекта.
+const baseHue = rand(0, 360);
+const numObjects = 200;
+for (let ii = 0; ii &lt; numObjects; ++ii) {
+  const id = ii + 1;
+
+  // выбираем форму
+  const shape = shapes[rand(shapes.length) | 0];
+
+  const object = {
+    uniforms: {
+      u_colorMult: chroma.hsv(eMod(baseHue + rand(0, 120), 360), rand(0.5, 1), rand(0.5, 1)).gl(),
+      u_matrix: m4.identity(),
+      u_id: [
+        ((id &gt;&gt;  0) &amp; 0xFF) / 0xFF,
+        ((id &gt;&gt;  8) &amp; 0xFF) / 0xFF,
+        ((id &gt;&gt; 16) &amp; 0xFF) / 0xFF,
+        ((id &gt;&gt; 24) &amp; 0xFF) / 0xFF,
+      ],
+    },
+    translation: [rand(-100, 100), rand(-100, 100), rand(-150, -50)],
+    xRotationSpeed: rand(0.8, 1.2),
+    yRotationSpeed: rand(0.8, 1.2),
+  };
+  objects.push(object);
+
+  // Добавляем его в список вещей для рисования.
+  objectsToDraw.push({
+    programInfo: programInfo,
+    bufferInfo: shape.bufferInfo,
+    vertexArray: shape.vertexArray,
+    uniforms: object.uniforms,
+  });
+}
+</code></pre>
+<p>Это будет работать, потому что наша <a href="webgl-less-code-more-fun.html">библиотека помощников</a>
+обрабатывает применение uniforms для нас.</p>
+<p>Нам пришлось разделить id по R, G, B и A. Потому что формат/тип нашей
+текстуры - <code class="notranslate" translate="no">gl.RGBA</code>, <code class="notranslate" translate="no">gl.UNSIGNED_BYTE</code>,
+мы получаем 8 бит на канал. 8 бит представляют только 256 значений,
+но, разделив id по 4 каналам, мы получаем 32 бита всего,
+что составляет &gt; 4 миллиарда значений.</p>
+<p>Мы добавляем 1 к id, потому что мы будем использовать 0 для обозначения
+“ничего под мышью”.</p>
+<p>Теперь давайте выделим объект под мышью.</p>
+<p>Сначала нам нужен код для получения позиции мыши относительно canvas.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// mouseX и mouseY находятся в CSS display space относительно canvas
+let mouseX = -1;
+let mouseY = -1;
+
+...
+
+gl.canvas.addEventListener('mousemove', (e) =&gt; {
+   const rect = canvas.getBoundingClientRect();
+   mouseX = e.clientX - rect.left;
+   mouseY = e.clientY - rect.top;
+});
+</code></pre>
+<p>Обратите внимание, что с кодом выше <code class="notranslate" translate="no">mouseX</code> и <code class="notranslate" translate="no">mouseY</code>
+находятся в CSS пикселях в display space. Это означает,
+что они находятся в пространстве, где отображается canvas,
+а не в пространстве того, сколько пикселей в canvas.
+Другими словами, если у вас был canvas как этот</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-html">&lt;canvas width=&quot;11&quot; height=&quot;22&quot; style=&quot;width:33px; height:44px;&quot;&gt;&lt;/canvas&gt;
+</code></pre>
+<p>тогда <code class="notranslate" translate="no">mouseX</code> будет идти от 0 до 33 по canvas и
+<code class="notranslate" translate="no">mouseY</code> будет идти от 0 до 44 по canvas. Смотрите <a href="webgl-resizing-the-canvas.html">это</a>
+для получения дополнительной информации.</p>
+<p>Теперь, когда у нас есть позиция мыши, давайте добавим код
+для поиска пикселя под мышью</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const pixelX = mouseX * gl.canvas.width / gl.canvas.clientWidth;
+const pixelY = gl.canvas.height - mouseY * gl.canvas.height / gl.canvas.clientHeight - 1;
+const data = new Uint8Array(4);
+gl.readPixels(
+    pixelX,            // x
+    pixelY,            // y
+    1,                 // width
+    1,                 // height
+    gl.RGBA,           // format
+    gl.UNSIGNED_BYTE,  // type
+    data);             // typed array to hold result
+const id = data[0] + (data[1] &lt;&lt; 8) + (data[2] &lt;&lt; 16) + (data[3] &lt;&lt; 24);
+</code></pre>
+<p>Код выше, который вычисляет <code class="notranslate" translate="no">pixelX</code> и <code class="notranslate" translate="no">pixelY</code>, преобразует
+из <code class="notranslate" translate="no">mouseX</code> и <code class="notranslate" translate="no">mouseY</code> в display space в пиксели в пространстве canvas.
+Другими словами, учитывая пример выше, где <code class="notranslate" translate="no">mouseX</code> шел от
+0 до 33 и <code class="notranslate" translate="no">mouseY</code> шел от 0 до 44. <code class="notranslate" translate="no">pixelX</code> будет идти от 0 до 11
+и <code class="notranslate" translate="no">pixelY</code> будет идти от 0 до 22.</p>
+<p>В нашем фактическом коде мы используем нашу утилитную функцию <code class="notranslate" translate="no">resizeCanvasToDisplaySize</code>
+и мы делаем нашу текстуру того же размера, что и canvas, поэтому display
+размер и размер canvas совпадают, но, по крайней мере, мы готовы к случаю,
+когда они не совпадают.</p>
+<p>Теперь, когда у нас есть id, чтобы фактически выделить выбранный объект,
+давайте изменим цвет, который мы используем для его рендеринга на canvas.
+Шейдер, который мы использовали, имеет uniform <code class="notranslate" translate="no">u_colorMult</code>,
+который мы можем использовать, поэтому если объект под мышью, мы найдем его,
+сохраним его значение <code class="notranslate" translate="no">u_colorMult</code>, заменим его цветом выделения,
+и восстановим его.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// mouseX и mouseY находятся в CSS display space относительно canvas
+let mouseX = -1;
+let mouseY = -1;
+let oldPickNdx = -1;
+let oldPickColor;
+let frameCount = 0;
+
+// Рисуем сцену.
+function drawScene(time) {
+  time *= 0.0005;
+  ++frameCount;
+
+  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+</code></pre>
+<p>Перед рендерингом id вне экрана мы устанавливаем матрицу проекции вида,
+используя нашу матрицу проекции для 1 пикселя, а при рисовании на canvas
+используем исходную матрицу проекции.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Вычисляем матрицу камеры с помощью lookAt.
+const cameraPosition = [0, 0, 100];
+const target = [0, 0, 0];
+const up = [0, 1, 0];
+const cameraMatrix = m4.lookAt(cameraPosition, target, up);
+
+// Создаём матрицу вида из матрицы камеры.
+const viewMatrix = m4.inverse(cameraMatrix);
+
+// Вычисляем матрицы для каждого объекта.
+objects.forEach(function(object) {
+  object.uniforms.u_world = computeMatrix(
+      object.translation,
+      object.xRotationSpeed * time,
+      object.yRotationSpeed * time);
+});
+
+// ------ Рисуем объекты в текстуру --------
+
+// Определяем, какой пиксель под мышью, и настраиваем
+// усечённую пирамиду для рендера только этого пикселя
+
+{
+  // вычисляем прямоугольник, который покрывает ближнюю плоскость нашей усечённой пирамиды
+  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  const top = Math.tan(fieldOfViewRadians * 0.5) * near;
+  const bottom = -top;
+  const left = aspect * bottom;
+  const right = aspect * top;
+  const width = Math.abs(right - left);
+  const height = Math.abs(top - bottom);
+
+  // вычисляем часть ближней плоскости, которая покрывает 1 пиксель под мышью
+  const pixelX = mouseX * gl.canvas.width / gl.canvas.clientWidth;
+  const pixelY = gl.canvas.height - mouseY * gl.canvas.height / gl.canvas.clientHeight - 1;
+
+  const subLeft = left + pixelX * width / gl.canvas.width;
+  const subBottom = bottom + pixelY * height / gl.canvas.height;
+  const subWidth = width / gl.canvas.width;
+  const subHeight = height / gl.canvas.height;
+
+  // создаём усечённую пирамиду для этого 1 пикселя
+  const projectionMatrix = m4.frustum(
+      subLeft,
+      subLeft + subWidth,
+      subBottom,
+      subBottom + subHeight,
+      near,
+      far);
+  m4.multiply(projectionMatrix, viewMatrix, viewProjectionMatrix);
+}
+
+gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+gl.viewport(0, 0, 1, 1);
+
+gl.enable(gl.CULL_FACE);
+gl.enable(gl.DEPTH_TEST);
+
+gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+drawObjects(objectsToDraw, pickingProgramInfo);
+
+// читаем 1 пиксель
+const data = new Uint8Array(4);
+gl.readPixels(
+    0,                 // x
+    0,                 // y
+    1,                 // width
+    1,                 // height
+    gl.RGBA,           // format
+    gl.UNSIGNED_BYTE,  // type
+    data);             // typed array to hold result
+const id = data[0] + (data[1] &lt;&lt; 8) + (data[2] &lt;&lt; 16) + (data[3] &lt;&lt; 24);
+
+// восстанавливаем цвет объекта
+if (oldPickNdx &gt;= 0) {
+  const object = objects[oldPickNdx];
+  object.uniforms.u_colorMult = oldPickColor;
+  oldPickNdx = -1;
+}
+
+// выделяем объект под мышью
+if (id &gt; 0) {
+  const pickNdx = id - 1;
+  oldPickNdx = pickNdx;
+  const object = objects[pickNdx];
+  oldPickColor = object.uniforms.u_colorMult;
+  object.uniforms.u_colorMult = (frameCount &amp; 0x8) ? [1, 0, 0, 1] : [1, 1, 0, 1];
+}
+
+// ------ Рисуем объекты на canvas
+
+{
+  // Вычисляем матрицу проекции
+  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  const projectionMatrix =
+      m4.perspective(fieldOfViewRadians, aspect, near, far);
+
+  m4.multiply(projectionMatrix, viewMatrix, viewProjectionMatrix);
+}
+
+gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+drawObjects(objectsToDraw);
+
+requestAnimationFrame(drawScene);
+}
+</code></pre>
+<p>Как видно, математика работает: мы рендерим только один пиксель
+и всё равно определяем, что находится под мышью.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-picking-w-gpu-1pixel.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-picking-w-gpu-1pixel.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Эта оптимизация может быть полезна, если у вас много объектов
+и вы хотите минимизировать использование памяти. Вместо создания
+текстуры размером с canvas, вы создаете текстуру размером 1x1 пиксель.</p>
+<p>Но есть компромисс. Теперь мы должны вычислять усеченную пирамиду
+для каждого пикселя, что может быть дороже, чем просто создание
+большей текстуры. Это зависит от вашего случая использования.</p>
+<p>Также обратите внимание, что мы больше не читаем пиксель из позиции
+мыши. Мы читаем пиксель из позиции (0,0), потому что теперь мы
+рендерим только 1 пиксель в позиции (0,0) нашей 1x1 текстуры.</p>
+<p>Это одна из многих техник, которые вы можете использовать для выбора
+объектов в WebGL. Другие включают:</p>
+<ol>
+<li><strong>Ray casting</strong> - бросание луча из позиции мыши в 3D пространство</li>
+<li><strong>Bounding box/sphere testing</strong> - проверка, находится ли точка внутри ограничивающего прямоугольника/сферы</li>
+<li><strong>GPU picking</strong> - то, что мы только что сделали</li>
+<li><strong>Hierarchical picking</strong> - выбор на основе иерархии объектов</li>
+</ol>
+<p>Каждая техника имеет свои преимущества и недостатки в зависимости
+от вашего случая использования.</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -484,7 +975,7 @@ gl.linkProgram(someProgram);
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -527,9 +1018,9 @@ gl.linkProgram(someProgram);
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>
@@ -555,8 +1046,8 @@ gl.linkProgram(someProgram);
         <script>
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
-            var disqus_identifier = 'WebGL2 Пикинг (выбор объектов)';
-            var disqus_title = 'WebGL2 Пикинг (выбор объектов)';
+            var disqus_identifier = 'WebGL2 Выбор объектов';
+            var disqus_title = 'WebGL2 Выбор объектов';
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
             (function() {

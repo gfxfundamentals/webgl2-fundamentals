@@ -415,11 +415,45 @@ void main() {
 }
 `;
 </code></pre>
-<hr>
-<p>Теперь нам нужно реализовать инстансинг через атрибуты и буферы:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// настраиваем матрицы, по одной на экземпляр
-const numInstances = 5;
-// создаём типизированный массив с одним view на матрицу
+<p>Теперь нам нужно изменить шейдеры, чтобы использовать атрибуты вместо uniform’ов:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vertexShaderSource = `#version 300 es
+in vec4 a_position;
+in vec4 color;
+in mat4 matrix;
+
+out vec4 v_color;
+
+void main() {
+  // Умножаем позицию на матрицу
+  gl_Position = matrix * a_position;
+
+  // Передаём цвет вершины во фрагментный шейдер
+  v_color = color;
+}
+`;
+
+const fragmentShaderSource = `#version 300 es
+precision highp float;
+
+in vec4 v_color;
+
+out vec4 outColor;
+
+void main() {
+  outColor = v_color;
+}
+`;
+</code></pre>
+<p>Теперь нам нужно получить локации атрибутов вместо uniform’ов:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const program = webglUtils.createProgramFromSources(gl,
+    [vertexShaderSource, fragmentShaderSource]);
+
+const positionLoc = gl.getAttribLocation(program, 'a_position');
+const colorLoc = gl.getAttribLocation(program, 'color');
+const matrixLoc = gl.getAttribLocation(program, 'matrix');
+</code></pre>
+<p>Теперь нам нужно создать буферы для матриц и цветов. Для матриц мы создадим один большой буфер:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Создаём буфер для всех матриц
 const matrixData = new Float32Array(numInstances * 16);
 const matrices = [];
 for (let i = 0; i &lt; numInstances; ++i) {
@@ -430,29 +464,54 @@ for (let i = 0; i &lt; numInstances; ++i) {
       byteOffsetToMatrix,
       numFloatsForView));
 }
-
-const matrixBuffer = gl.createBuffer();
+</code></pre>
+<p>Таким образом, когда мы хотим ссылаться на данные всех матриц,
+мы можем использовать <code class="notranslate" translate="no">matrixData</code>, но когда мы хотим любую отдельную матрицу,
+мы можем использовать <code class="notranslate" translate="no">matrices[ndx]</code>.</p>
+<p>Нам также нужно создать буфер на GPU для этих данных.
+Нам нужно только выделить буфер в этот момент, нам не нужно
+предоставлять данные, поэтому 2-й параметр для <code class="notranslate" translate="no">gl.bufferData</code></p>
+<ul>
+<li>это размер, который просто выделяет буфер.</li>
+</ul>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const matrixBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, matrixBuffer);
+// просто выделяем буфер
 gl.bufferData(gl.ARRAY_BUFFER, matrixData.byteLength, gl.DYNAMIC_DRAW);
-
-const bytesPerMatrix = 4 * 16;
+</code></pre>
+<p>Обратите внимание, что мы передали <code class="notranslate" translate="no">gl.DYNAMIC_DRAW</code> как последний параметр. Это <em>подсказка</em>
+для WebGL, что мы будем часто изменять эти данные.</p>
+<p>Теперь нам нужно настроить атрибуты для матриц.
+Атрибут матрицы - это <code class="notranslate" translate="no">mat4</code>. <code class="notranslate" translate="no">mat4</code> фактически использует
+4 последовательных слота атрибутов.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const bytesPerMatrix = 4 * 16;
 for (let i = 0; i &lt; 4; ++i) {
   const loc = matrixLoc + i;
   gl.enableVertexAttribArray(loc);
-  // stride и offset
-  const offset = i * 16;
+  // обратите внимание на stride и offset
+  const offset = i * 16;  // 4 float на строку, 4 байта на float
   gl.vertexAttribPointer(
-      loc,
-      4,
-      gl.FLOAT,
-      false,
-      bytesPerMatrix,
-      offset,
+      loc,              // location
+      4,                // размер (сколько значений брать из буфера за итерацию)
+      gl.FLOAT,         // тип данных в буфере
+      false,            // нормализовать
+      bytesPerMatrix,   // stride, количество байт для перехода к следующему набору значений
+      offset,           // смещение в буфере
   );
+  // эта строка говорит, что этот атрибут изменяется только раз в 1 экземпляр
   gl.vertexAttribDivisor(loc, 1);
 }
-
-// настраиваем цвета, по одному на экземпляр
+</code></pre>
+<p>Самая важная точка относительно инстансированного рисования - это
+вызов <code class="notranslate" translate="no">gl.vertexAttribDivisor</code>. Он устанавливает, что этот
+атрибут переходит к следующему значению только раз в экземпляр.
+Это означает, что атрибуты <code class="notranslate" translate="no">matrix</code> будут использовать первую матрицу для
+каждой вершины первого экземпляра, вторую матрицу для
+второго экземпляра и так далее.</p>
+<p>Далее нам нужны цвета также в буфере. Эти данные не будут
+изменяться, по крайней мере в этом примере, поэтому мы просто загрузим
+данные.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// настраиваем цвета, один на экземпляр
 const colorBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 gl.bufferData(gl.ARRAY_BUFFER,
@@ -464,47 +523,98 @@ gl.bufferData(gl.ARRAY_BUFFER,
         0, 1, 1, 1,  // циан
       ]),
     gl.STATIC_DRAW);
+</code></pre>
+<p>Нам также нужно настроить атрибут цвета:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// устанавливаем атрибут для цвета
 gl.enableVertexAttribArray(colorLoc);
 gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 0, 0);
+// эта строка говорит, что этот атрибут изменяется только раз в 1 экземпляр
 gl.vertexAttribDivisor(colorLoc, 1);
-
-// В рендере:
-function render(time) {
-  time *= 0.001;
-  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-  gl.useProgram(program);
-  gl.bindVertexArray(vao);
-
-  // обновляем все матрицы
-  matrices.forEach((mat, ndx) =&gt; {
-    m4.translation(-0.5 + ndx * 0.25, 0, 0, mat);
-    m4.zRotate(mat, time * (0.1 + 0.1 * ndx), mat);
-  });
-  // загружаем все матрицы в буфер
-  gl.bindBuffer(gl.ARRAY_BUFFER, matrixBuffer);
-  gl.bufferSubData(gl.ARRAY_BUFFER, 0, matrixData);
-
-  // рисуем все экземпляры одной командой
-  gl.drawArraysInstanced(
-      gl.TRIANGLES,
-      0,           // offset
-      numVertices, // количество вершин на экземпляр
-      numInstances // количество экземпляров
-  );
-
-  requestAnimationFrame(render);
-}
-requestAnimationFrame(render);
 </code></pre>
-<p>Теперь мы вызываем только одну команду отрисовки, и WebGL сам перебирает экземпляры, используя данные из буферов для каждого экземпляра.</p>
+<p>Во время отрисовки вместо цикла по каждому экземпляру,
+установки uniform’ов матрицы и цвета, а затем вызова draw,
+мы сначала вычислим матрицу для каждого экземпляра.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// обновляем все матрицы
+matrices.forEach((mat, ndx) =&gt; {
+  m4.translation(-0.5 + ndx * 0.25, 0, 0, mat);
+  m4.zRotate(mat, time * (0.1 + 0.1 * ndx), mat);
+});
+</code></pre>
+<p>Поскольку наша библиотека матриц принимает необязательную матрицу назначения
+и поскольку наши матрицы - это просто представления <code class="notranslate" translate="no">Float32Array</code> в
+большем <code class="notranslate" translate="no">Float32Array</code>, когда мы закончили, все данные матриц
+готовы для прямой загрузки на GPU.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// загружаем новые данные матриц
+gl.bindBuffer(gl.ARRAY_BUFFER, matrixBuffer);
+gl.bufferSubData(gl.ARRAY_BUFFER, 0, matrixData);
+</code></pre>
+<p>Наконец мы можем нарисовать все экземпляры одним вызовом draw.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.drawArraysInstanced(
+  gl.TRIANGLES,
+  0,             // offset
+  numVertices,   // количество вершин на экземпляр
+  numInstances,  // количество экземпляров
+);
+</code></pre>
 <p><div class="webgl_example_container">
   <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-instanced-drawing.html"></iframe>
   <a class="webgl_center" href="/webgl/lessons/../webgl-instanced-drawing.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
 </div>
 
 </p>
-<p>Инстансинг — мощный способ ускорить отрисовку множества одинаковых объектов с разными параметрами.</p>
+<p>В примере выше у нас было 3 вызова WebGL на фигуру * 5 фигур,
+что составляло 15 вызовов всего. Теперь у нас всего 2 вызова для всех 5 фигур,
+один для загрузки матриц, другой для рисования.</p>
+<p>Я думаю, это должно быть очевидно, но, возможно,
+это очевидно только мне, потому что я делал это слишком много. Код
+выше не учитывает соотношение сторон canvas.
+Он не использует <a href="webgl-3d-orthographic.html">матрицу проекции</a>
+или <a href="webgl-3d-camera.html">матрицу вида</a>. Он был предназначен только
+для демонстрации инстансированного рисования. Если бы вы хотели проекцию и/или
+матрицу вида, мы могли бы добавить вычисление в JavaScript. Это означало бы
+больше работы для JavaScript. Более очевидный способ - добавить
+один или два uniform’а в вершинный шейдер.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vertexShaderSource = `#version 300 es
+in vec4 a_position;
+in vec4 color;
+in mat4 matrix;
+uniform mat4 projection;
+uniform mat4 view;
+
+out vec4 v_color;
+
+void main() {
+  // Умножаем позицию на матрицу
+  gl_Position = projection * view * matrix * a_position;
+
+  // Передаём цвет вершины во фрагментный шейдер
+  v_color = color;
+}
+`;
+</code></pre>
+<p>и затем найти их локации во время инициализации:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const positionLoc = gl.getAttribLocation(program, 'a_position');
+const colorLoc = gl.getAttribLocation(program, 'color');
+const matrixLoc = gl.getAttribLocation(program, 'matrix');
+const projectionLoc = gl.getUniformLocation(program, 'projection');
+const viewLoc = gl.getUniformLocation(program, 'view');
+</code></pre>
+<p>и установить их соответствующим образом во время рендеринга.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.useProgram(program);
+
+// устанавливаем матрицы вида и проекции, поскольку
+// они используются всеми экземплярами
+const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+gl.uniformMatrix4fv(projectionLoc, false,
+    m4.orthographic(-aspect, aspect, -1, 1, -1, 1));
+gl.uniformMatrix4fv(viewLoc, false, m4.zRotation(time * .1));
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-instanced-drawing-projection-view.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-instanced-drawing-projection-view.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -603,7 +713,7 @@ requestAnimationFrame(render);
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -646,9 +756,9 @@ requestAnimationFrame(render);
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>

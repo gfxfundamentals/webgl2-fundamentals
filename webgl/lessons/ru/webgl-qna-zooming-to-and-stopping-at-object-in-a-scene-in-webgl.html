@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/ru/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.md. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/ru/langinfo.hanson. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,17 +8,15 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-*   Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-
-*   Redistributions in binary form must reproduce the above
-    copyright notice, this list of conditions and the following disclaimer
-    in the documentation and/or other materials provided with the
-    distribution.
-
-*   Neither the name of GFXFundamentals. nor the names of his
-    contributors may be used to endorse or promote products derived from
-    this software without specific prior written permission.
+    * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+    * Neither the name of GFXFundamentals. nor the names of his
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -36,78 +34,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta property="og:title" content="Zooming to and stopping at object in a scene in WebGL" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta property="og:description" content="Zooming to and stopping at object in a scene in WebGL" />
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.html" />
 
-<meta name="description" content="Как реализовать приближение к объекту и остановку перед ним в сцене WebGL">
-<meta name="keywords" content="webgl webgl2 graphics">
-<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl_ru.jpg">
-
-<meta property="og:title" content="Приближение и остановка у объекта в сцене WebGL">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl_ru.jpg">
-<meta property="og:description" content="Как реализовать приближение к объекту и остановку перед ним в сцене WebGL">
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.html">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@greggman">
-<meta name="twitter:creator" content="@greggman">
-<meta name="twitter:domain" content="webgl2fundamentals.org">
-<meta name="twitter:title" content="Приближение и остановка у объекта в сцене WebGL">
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.html">
-<meta name="twitter:description" content="Как реализовать приближение к объекту и остановку перед ним в сцене WebGL">
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl_ru.jpg">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@graph":[
-    {
-      "@type":"WebSite",
-      "@id":"https://webgl2fundamentals.org/#website",
-      "url":"https://webgl2fundamentals.org/",
-      "name":"Webgl2Fundamentals"
-    },
-    {
-      "@type":"ImageObject",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.html#primaryimage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl_ru.jpg",
-      "width":1200,
-      "height":630
-    },
-    {
-      "@type":"WebPage",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.html#webpage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.html",
-      "inLanguage":"ru",
-      "name":"Приближение и остановка у объекта в сцене WebGL",
-      "keywords":"webgl webgl2 graphics programming",
-      "isPartOf":{
-        "@id":"https://webgl2fundamentals.org/#website"
-      },
-      "primaryImageOfPage":{
-        "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.html#primaryimage"
-      }
-    }
-  ]
-}
-</script>
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@greggman" />
+<meta name="twitter:creator" content="@greggman" />
+<meta name="twitter:domain" content="webgl2fundamentals.org" />
+<meta name="twitter:title" content="Zooming to and stopping at object in a scene in WebGL" />
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.html" />
+<meta name="twitter:description" content="Zooming to and stopping at object in a scene in WebGL" />
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>Приближение и остановка у объекта в сцене WebGL</title>
+<title>Zooming to and stopping at object in a scene in WebGL</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/lang.css">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
-
-  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.html">
-  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.html">
-  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.html">
-  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.html">
-  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.html">
-  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.html">
-  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.html">
-
-
-
-
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
 <body>
 <div class="webgl_navbar">
@@ -234,54 +179,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>Приближение и остановка у объекта в сцене WebGL</h1>
+    <h1>Zooming to and stopping at object in a scene in WebGL</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="вопрос">Вопрос:</h2>
-<p>Мы создали WebGL-приложение, которое отображает сцену с несколькими объектами. Всю сцену можно вращать в разных направлениях. Требуется, чтобы пользователь мог приближаться к объекту, но НЕ проходить сквозь него. Я знаю, что такую функциональность можно реализовать с помощью фреймворков вроде Three.js и SceneJs. К сожалению, наше приложение не использует фреймворки. Можно ли реализовать описанное приближение только средствами WebGL? Примечание: object picking нам не подходит, так как пользователь не обязан выбирать объект в сцене. Спасибо за помощь.</p>
-<h2 id="ответ">Ответ:</h2>
-<p>Навскидку:</p>
-<p>Во-первых, нужно знать размер каждого объекта в мировом пространстве. Например, если один объект размером 10 единиц, а другой — 100, вероятно, вы захотите находиться на разном расстоянии от них. Под мировым пространством я также имею в виду, что если вы масштабируете объект 10 на 9, то в мире он будет 90 единиц, и снова потребуется другое расстояние.</p>
-<p>Обычно размер объекта в локальном пространстве вычисляют по экстентам его вершин. Просто проходите по всем вершинам и отслеживайте минимальные и максимальные значения по x, y и z. Хотите ли вы брать максимальное значение от центра или вычислять реальный центр — решайте сами.</p>
-<p>Зная размер, можно вычислить, на каком расстоянии нужно быть, чтобы видеть весь объект. Для стандартной перспективной матрицы можно просто посчитать это в обратную сторону. Если объект 10 единиц, нужно уместить 10 единиц в фрустуме. Обычно берут чуть больше, например, 14 (size * 1.4), чтобы был запас вокруг объекта.</p>
-<p><img src="http://i.stack.imgur.com/0axue.png" alt="enter image description here"></p>
-<p>Известны <code class="notranslate" translate="no">halfFovy</code>, <code class="notranslate" translate="no">halfSizeToFitOnScreen</code>, нужно вычислить <code class="notranslate" translate="no">distance</code>:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">sohcahtoa
-tangent = opposite / adjacent
-opposite = halfsizeToFitOnScreen
-adjacent = distance
-tangent  = Math.tan(halfFovY)
-</code></pre>
-<p>Следовательно:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">tangent = sizeToFitOnScreen / distance
-tangent * distance = sizeToFitOnScreen
-distance = sizeToFitOnScreen / tangent
-distance = sizeToFitOnScreen / Math.tan(halfFovY)
-</code></pre>
-<p>Теперь мы знаем, что камере нужно быть на расстоянии <code class="notranslate" translate="no">distance</code> от объекта. На этом расстоянии вокруг объекта есть целая сфера. Где именно на этой сфере — решать вам. Обычно берут текущее положение камеры и вычисляют направление от объекта к камере:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">direction = normalize(cameraPos - objectPos)
-</code></pre>
-<p>Теперь можно вычислить точку на расстоянии <code class="notranslate" translate="no">distance</code> в этом направлении:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">desiredCameraPosition = direction * distance
-</code></pre>
-<p>Теперь либо ставьте камеру туда с помощью lookAt:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">matrix = lookAt(desiredCameraPosition, objectPosition, up)
-</code></pre>
-<p>Либо плавно перемещайте камеру (lerp) между текущей позицией и новой:</p>
-<p><div class="webgl_example_container">
-  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl-example-1.html"></iframe>
-  <a class="webgl_center" href="/webgl/lessons/../webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl-example-1.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
-</div>
+      <p>Русский перевод пока не готов (￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Помогите с переводом</a>!</p>
+<p><a href="/webgl/lessons/webgl-qna-zooming-to-and-stopping-at-object-in-a-scene-in-webgl.html">Оригинал на английском</a>.</p>
 
-</p>
-<div class="so">
-  <div>Вопрос и цитируемые части взяты по лицензии CC BY-SA 3.0 у
-    <a data-href="https://stackoverflow.com/users/4730921">jfc615</a>
-    с сайта
-    <a data-href="https://stackoverflow.com/questions/29353242">stackoverflow</a>
-  </div>
-</div> 
     </div>
     <div class="lesson-sidebar">
         <select class="language">
@@ -295,8 +199,7 @@ distance = sizeToFitOnScreen / Math.tan(halfFovY)
 </select>
 
 
-        <div id="toc">
-          <ul>  <li>Основы</li>
+        <ul>  <li>Основы</li>
         <ul>
           <li><a href="/webgl/lessons/ru/webgl-getting-webgl2.html">Как использовать WebGL2</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fundamentals.html">Основы</a></li>
@@ -379,7 +282,7 @@ distance = sizeToFitOnScreen / Math.tan(halfFovY)
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -422,9 +325,9 @@ distance = sizeToFitOnScreen / Math.tan(halfFovY)
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>
@@ -439,47 +342,13 @@ distance = sizeToFitOnScreen / Math.tan(halfFovY)
   <li><a href="https://twgljs.org">TWGL, легковесная библиотека-помощник для WebGL</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
-        </div>
-    </div>
-    <div class="lesson-comments">
-        
-<div>Есть предложения или замечания? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Создайте issue на GitHub</a>.</div>
-  
-
-        <div id="disqus_thread"></div>
-        <script>
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
-            var disqus_identifier = 'Приближение и остановка у объекта в сцене WebGL';
-            var disqus_title = 'Приближение и остановка у объекта в сцене WebGL';
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
-                    return;
-                }
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
-<script>
-const settings = {
-  contribTemplate: "Спасибо <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>за <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} вкладов</a>",
-  owner: "gfxfundamentals",
-  repo: "webgl2-fundamentals",
-};
-</script>
-<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script src="/webgl/lessons/resources/lesson.js"></script>
 <script>
 </script>
 

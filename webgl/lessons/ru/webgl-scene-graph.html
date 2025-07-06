@@ -480,17 +480,17 @@ earthNode.localMatrix = m4.scale(earthNode.localMatrix, 2, 2, 2);
       |
      луна
 </code></pre>
-<p>Это позволит Земле вращаться вокруг солнечнойСистемы, но мы можем отдельно вращать и масштабировать Солнце, и это не будет
+<p>Это позволит Земле вращаться вокруг солнечной системы, но мы можем отдельно вращать и масштабировать Солнце, и это не будет
 влиять на Землю. Аналогично Земля может вращаться отдельно от Луны. Давайте создадим больше узлов для
 <code class="notranslate" translate="no">solarSystem</code>, <code class="notranslate" translate="no">earthOrbit</code> и <code class="notranslate" translate="no">moonOrbit</code>.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var solarSystemNode = new Node();
 var earthOrbitNode = new Node();
 
-// орбита земли в 100 единицах от солнца
+// орбита Земли в 100 единицах от Солнца
 earthOrbitNode.localMatrix = m4.translation(100, 0, 0);
 var moonOrbitNode = new Node();
 
- // луна в 20 единицах от земли
+ // луна в 20 единицах от Земли
 moonOrbitNode.localMatrix = m4.translation(20, 0, 0);
 </code></pre>
 <p>Те расстояния орбит были удалены из старых узлов</p>
@@ -513,7 +513,7 @@ earthNode.setParent(earthOrbitNode);
 moonOrbitNode.setParent(earthOrbitNode);
 moonNode.setParent(moonOrbitNode);
 </code></pre>
-<p>И нам нужно обновлять только орбиты</p>
+<p>И нам нужно только обновить орбиты</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// обновляем локальные матрицы для каждого объекта.
 -m4.multiply(m4.yRotation(0.01), sunNode.localMatrix  , sunNode.localMatrix);
 -m4.multiply(m4.yRotation(0.01), earthNode.localMatrix, earthNode.localMatrix);
@@ -562,9 +562,9 @@ m4.multiply(m4.yRotation(0.01), moonOrbitNode.localMatrix, moonOrbitNode.localMa
 </div>
 
 </p>
-<p>В настоящее время у нас есть <code class="notranslate" translate="no">localMatrix</code>, и мы модифицируем его каждый кадр. Однако есть проблема
+<p>В настоящее время у нас есть <code class="notranslate" translate="no">localMatrix</code>, и мы изменяем его каждый кадр. Однако есть проблема
 в том, что каждый кадр наша математика будет накапливать небольшую ошибку. Есть способ исправить математику,
-который называется <em>ортогональной нормализацией матрицы</em>, но даже это не всегда будет работать. Например, давайте
+который называется <em>ортогональная нормализация матрицы</em>, но даже это не всегда работает. Например, давайте
 представим, что мы масштабировали до нуля и обратно. Давайте просто сделаем это для одного значения <code class="notranslate" translate="no">x</code></p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">x = 246;       // кадр #0, x = 246
 
@@ -584,8 +584,8 @@ scale = 1;
 x = x * scale  // кадр #5, x = 0  УПС!
 </code></pre>
 <p>Мы потеряли наше значение. Мы можем исправить это, добавив какой-то другой класс, который обновляет матрицу из
-других значений. Давайте изменим определение <code class="notranslate" translate="no">Node</code>, чтобы иметь <code class="notranslate" translate="no">source</code>. Если он существует, мы будем
-просить <code class="notranslate" translate="no">source</code> дать нам локальную матрицу.</p>
+других значений. Давайте изменим определение <code class="notranslate" translate="no">Node</code>, чтобы иметь <code class="notranslate" translate="no">source</code>. Если он существует, мы
+попросим <code class="notranslate" translate="no">source</code> дать нам локальную матрицу.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*var Node = function(source) {
   this.children = [];
   this.localMatrix = makeIdentity();
@@ -602,7 +602,7 @@ Node.prototype.updateWorldMatrix = function(matrix) {
 
   ...
 </code></pre>
-<p>Теперь мы можем создать источник. Общий источник - это тот, который предоставляет перемещение, поворот и масштаб
+<p>Теперь мы можем создать источник. Общий источник - это тот, который предоставляет перемещение, поворот и масштабирование,
 что-то вроде этого</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var TRS = function() {
   this.translation = [0, 0, 0];
@@ -616,7 +616,7 @@ TRS.prototype.getMatrix = function(dst) {
   var r = this.rotation;
   var s = this.scale;
 
-  // вычисляем матрицу из перемещения, поворота и масштаба
+  // вычисляем матрицу из перемещения, поворота и масштабирования
   m4.translation(t[0], t[1], t[2], dst);
   m4.xRotate(dst, r[0], dst);
   m4.yRotate(dst, r[1], dst);
@@ -633,7 +633,7 @@ var someNode = new Node(someTRS);
 // во время рендеринга
 someTRS.rotation[2] += elapsedTime;
 </code></pre>
-<p>Теперь нет проблемы, потому что мы воссоздаем матрицу каждый раз.</p>
+<p>Теперь нет проблем, потому что мы воссоздаем матрицу каждый раз.</p>
 <p>Вы можете думать, я не создаю солнечную систему, так в чем смысл? Ну, если вы хотели бы
 анимировать человека, вы могли бы иметь граф сцены, который выглядит так</p>
 <p><div class="webgl_diagram_container">
@@ -645,7 +645,7 @@ someTRS.rotation[2] += elapsedTime;
 тем больше мощности требуется для вычисления анимаций и тем больше данных анимации требуется
 для предоставления информации для всех суставов. Старые игры, такие как Virtua Fighter, имели около 15 суставов.
 Игры в начале-середине 2000-х имели от 30 до 70 суставов. Если бы вы сделали каждый сустав в ваших руках,
-там по крайней мере 20 в каждой руке, так что только 2 руки - это 40 суставов. Многие игры, которые хотят
+их по крайней мере 20 в каждой руке, поэтому только 2 руки - это 40 суставов. Многие игры, которые хотят
 анимировать руки, анимируют большой палец как один и 4 пальца как один большой палец, чтобы сэкономить
 время (как CPU/GPU, так и время художника) и память.</p>
 <p>В любом случае, вот блочный парень, которого я собрал. Он использует источник <code class="notranslate" translate="no">TRS</code> для каждого
@@ -656,15 +656,15 @@ someTRS.rotation[2] += elapsedTime;
 </div>
 
 </p>
-<p>Если вы посмотрите практически на любую 3D библиотеку, вы найдете граф сцены, подобный этому.
+<p>Если вы посмотрите практически на любую 3D библиотеку, вы найдете граф сцены, похожий на этот.
 Что касается построения иерархий, обычно они создаются в каком-то пакете моделирования
 или пакете компоновки уровней.</p>
 <div class="webgl_bottombar">
 <h3>SetParent vs AddChild / RemoveChild</h3>
 <p>Многие графы сцен имеют функцию <code class="notranslate" translate="no">node.addChild</code> и функцию <code class="notranslate" translate="no">node.removeChild</code>,
 тогда как выше я создал функцию <code class="notranslate" translate="no">node.setParent</code>. Какой способ лучше
-спорно является вопросом стиля, но я бы утверждал, что есть одна объективно лучшая причина
-<code class="notranslate" translate="no">setParent</code> лучше, чем <code class="notranslate" translate="no">addChild</code>, заключается в том, что это делает код, подобный
+спорно является вопросом стиля, но я бы утверждал, что есть одна объективно лучшая причина,
+почему <code class="notranslate" translate="no">setParent</code> лучше, чем <code class="notranslate" translate="no">addChild</code>, заключается в том, что это делает код, подобный
 этому, невозможным.</p>
 <pre class="prettyprint">
     someParent.addChild(someNode);
@@ -673,8 +673,8 @@ someTRS.rotation[2] += elapsedTime;
 </pre>
 <p>Что это означает? Добавляется ли <code class="notranslate" translate="no">someNode</code> к обоим <code class="notranslate" translate="no">someParent</code> и <code class="notranslate" translate="no">someOtherParent</code>?
 В большинстве графов сцен это невозможно. Генерирует ли второй вызов ошибку?
-<code class="notranslate" translate="no">ERROR: Already have parent</code>. Магически ли он удаляет <code class="notranslate" translate="no">someNode</code> из <code class="notranslate" translate="no">someParent</code> перед
-добавлением к <code class="notranslate" translate="no">someOtherParent</code>? Если да, то это, конечно, не ясно из имени <code class="notranslate" translate="no">addChild</code>.
+<code class="notranslate" translate="no">ERROR: Already have parent</code>. Удаляет ли он магически <code class="notranslate" translate="no">someNode</code> из <code class="notranslate" translate="no">someParent</code> перед
+добавлением к <code class="notranslate" translate="no">someOtherParent</code>? Если да, то это, конечно, не ясно из названия <code class="notranslate" translate="no">addChild</code>.
 </p>
 <p><code class="notranslate" translate="no">setParent</code> с другой стороны не имеет такой проблемы</p>
 <pre class="prettyprint">
@@ -783,7 +783,7 @@ someTRS.rotation[2] += elapsedTime;
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -826,9 +826,9 @@ someTRS.rotation[2] += elapsedTime;
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>

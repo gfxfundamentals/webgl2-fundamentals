@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/ru/webgl-qna-apply-a-displacement-map-and-specular-map.md. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/ru/langinfo.hanson. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,17 +8,15 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-*   Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-
-*   Redistributions in binary form must reproduce the above
-    copyright notice, this list of conditions and the following disclaimer
-    in the documentation and/or other materials provided with the
-    distribution.
-
-*   Neither the name of GFXFundamentals. nor the names of his
-    contributors may be used to endorse or promote products derived from
-    this software without specific prior written permission.
+    * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+    * Neither the name of GFXFundamentals. nor the names of his
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -36,78 +34,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta property="og:title" content="Apply a displacement map and specular map" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta property="og:description" content="Apply a displacement map and specular map" />
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-apply-a-displacement-map-and-specular-map.html" />
 
-<meta name="description" content="Применение карты смещения и карты бликов">
-<meta name="keywords" content="webgl webgl2 graphics">
-<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-apply-a-displacement-map-and-specular-map_ru.jpg">
-
-<meta property="og:title" content="Применение карты смещения и карты бликов">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-apply-a-displacement-map-and-specular-map_ru.jpg">
-<meta property="og:description" content="Применение карты смещения и карты бликов">
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-apply-a-displacement-map-and-specular-map.html">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@greggman">
-<meta name="twitter:creator" content="@greggman">
-<meta name="twitter:domain" content="webgl2fundamentals.org">
-<meta name="twitter:title" content="Применение карты смещения и карты бликов">
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-apply-a-displacement-map-and-specular-map.html">
-<meta name="twitter:description" content="Применение карты смещения и карты бликов">
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-apply-a-displacement-map-and-specular-map_ru.jpg">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@graph":[
-    {
-      "@type":"WebSite",
-      "@id":"https://webgl2fundamentals.org/#website",
-      "url":"https://webgl2fundamentals.org/",
-      "name":"Webgl2Fundamentals"
-    },
-    {
-      "@type":"ImageObject",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-apply-a-displacement-map-and-specular-map.html#primaryimage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-apply-a-displacement-map-and-specular-map_ru.jpg",
-      "width":1200,
-      "height":630
-    },
-    {
-      "@type":"WebPage",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-apply-a-displacement-map-and-specular-map.html#webpage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-apply-a-displacement-map-and-specular-map.html",
-      "inLanguage":"ru",
-      "name":"Применение карты смещения и карты бликов",
-      "keywords":"webgl webgl2 graphics programming",
-      "isPartOf":{
-        "@id":"https://webgl2fundamentals.org/#website"
-      },
-      "primaryImageOfPage":{
-        "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-apply-a-displacement-map-and-specular-map.html#primaryimage"
-      }
-    }
-  ]
-}
-</script>
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@greggman" />
+<meta name="twitter:creator" content="@greggman" />
+<meta name="twitter:domain" content="webgl2fundamentals.org" />
+<meta name="twitter:title" content="Apply a displacement map and specular map" />
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-apply-a-displacement-map-and-specular-map.html" />
+<meta name="twitter:description" content="Apply a displacement map and specular map" />
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>Применение карты смещения и карты бликов</title>
+<title>Apply a displacement map and specular map</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/lang.css">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
-
-  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-qna-apply-a-displacement-map-and-specular-map.html">
-  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-qna-apply-a-displacement-map-and-specular-map.html">
-  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-qna-apply-a-displacement-map-and-specular-map.html">
-  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-qna-apply-a-displacement-map-and-specular-map.html">
-  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-qna-apply-a-displacement-map-and-specular-map.html">
-  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-qna-apply-a-displacement-map-and-specular-map.html">
-  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-qna-apply-a-displacement-map-and-specular-map.html">
-
-
-
-
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
 <body>
 <div class="webgl_navbar">
@@ -234,299 +179,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>Применение карты смещения и карты бликов</h1>
+    <h1>Apply a displacement map and specular map</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="вопрос">Вопрос:</h2>
-<p>Я пытаюсь применить как карту смещения, так и карту бликов для Земли, и только карту смещения для Луны.</p>
-<p>Я мог бы преобразовать карту высот в карту нормалей, но если я использую ту же карту высот для применения карты смещения, это не работает так, как я ожидал.</p>
-<p>Вот пример изображения:</p>
-<p><a href="https://i.stack.imgur.com/eJgLg.png"><img src="https://i.stack.imgur.com/eJgLg.png" alt="Пример 1"></a></p>
-<p>как вы можете видеть, неровности вокруг Земли и Луны, но нет реальных различий в высоте.</p>
-<p>Если я применяю карту бликов к Земле, Земля становится такой:</p>
-<p><a href="https://i.stack.imgur.com/zRSZu.png"><img src="https://i.stack.imgur.com/zRSZu.png" alt="Пример 2"></a></p>
-<p>Я хочу, чтобы только океан Земли блестел, но мой код превращает Землю в полностью черную, я вижу только некоторые белые точки на Земле…</p>
-<p>Эти текстуры взяты с этого <a href="http://planetpixelemporium.com/earth.html">сайта</a></p>
-<p>Вот мой код вершинного шейдера и фрагментного шейдера:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&quot;use strict&quot;;
-const loc_aPosition = 3;
-const loc_aNormal = 5;
-const loc_aTexture = 7;
-const VSHADER_SOURCE =
-`#version 300 es
-layout(location=${loc_aPosition}) in vec4 aPosition;
-layout(location=${loc_aNormal}) in vec4 aNormal;
-layout(location=${loc_aTexture}) in vec2 aTexCoord;
+      <p>Русский перевод пока не готов (￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Помогите с переводом</a>!</p>
+<p><a href="/webgl/lessons/webgl-qna-apply-a-displacement-map-and-specular-map.html">Оригинал на английском</a>.</p>
 
-
-uniform mat4 uMvpMatrix;
-uniform mat4 uModelMatrix;    // Матрица модели
-uniform mat4 uNormalMatrix;   // Матрица преобразования нормали
-
-uniform sampler2D earth_disp;
-uniform sampler2D moon_disp;
-
-//uniform float earth_dispScale;
-//uniform float moon_dispScale;
-
-//uniform float earth_dispBias;
-//uniform float moon_dispBias;
-
-uniform bool uEarth;
-uniform bool uMoon;
-
-
-out vec2 vTexCoord;
-out vec3 vNormal;
-out vec3 vPosition;
-
-
-void main() 
-{
-  
-  float disp;
-  
-  if(uEarth)
-    disp = texture(earth_disp, aTexCoord).r; //Извлечение цветовой информации из изображения
-  else if(uMoon)
-    disp = texture(moon_disp, aTexCoord).r; //Извлечение цветовой информации из изображения
-  
-  vec4 displace = aPosition;
-  
-  float displaceFactor = 2.0;
-  float displaceBias = 0.5;
-  
-  if(uEarth || uMoon) //Использование карты смещения
-  {
-    displace += (displaceFactor * disp - displaceBias) * aNormal;
-    gl_Position = uMvpMatrix * displace;
-  }
-  else //Не используем карту смещения
-    gl_Position = uMvpMatrix * aPosition;
-  
-  // Вычисляем позицию вершины в мировой системе координат
-  vPosition = vec3(uModelMatrix * aPosition);
-  
-  vNormal = normalize(vec3(uNormalMatrix * aNormal));
-  vTexCoord = aTexCoord;
-  
-}`;
-
-// Программа фрагментного шейдера
-const FSHADER_SOURCE =
-`#version 300 es
-precision mediump float;
-
-uniform vec3 uLightColor;     // Цвет света
-uniform vec3 uLightPosition;  // Позиция источника света
-uniform vec3 uAmbientLight;   // Цвет окружающего света
-
-uniform sampler2D sun_color;
-uniform sampler2D earth_color;
-uniform sampler2D moon_color;
-
-uniform sampler2D earth_bump;
-uniform sampler2D moon_bump;
-
-uniform sampler2D specularMap;
-
-
-in vec3 vNormal;
-in vec3 vPosition;
-in vec2 vTexCoord;
-out vec4 fColor;
-
-uniform bool uIsSun;
-uniform bool uIsEarth;
-uniform bool uIsMoon;
-
-
-
-vec2 dHdxy_fwd(sampler2D bumpMap, vec2 UV, float bumpScale)
-{
-    vec2 dSTdx = dFdx( UV );
-  vec2 dSTdy = dFdy( UV );
-  float Hll = bumpScale * texture( bumpMap, UV ).x;
-  float dBx = bumpScale * texture( bumpMap, UV + dSTdx ).x - Hll;
-  float dBy = bumpScale * texture( bumpMap, UV + dSTdy ).x - Hll;
-  return vec2( dBx, dBy );
-}
-
-vec3 pertubNormalArb(vec3 surf_pos, vec3 surf_norm, vec2 dHdxy)
-{
-    vec3 vSigmaX = vec3( dFdx( surf_pos.x ), dFdx( surf_pos.y ), dFdx( surf_pos.z ) );
-  vec3 vSigmaY = vec3( dFdy( surf_pos.x ), dFdy( surf_pos.y ), dFdy( surf_pos.z ) );
-  vec3 vN = surf_norm;  // нормализованная
-  vec3 R1 = cross( vSigmaY, vN );
-  vec3 R2 = cross( vN, vSigmaX );
-  float fDet = dot( vSigmaX, R1 );
-  fDet *= ( float( gl_FrontFacing ) * 2.0 - 1.0 );
-  vec3 vGrad = sign( fDet ) * ( dHdxy.x * R1 + dHdxy.y * R2 );
-  return normalize( abs( fDet ) * surf_norm - vGrad );
-}
-
-
-
-void main() 
-{
-    vec2 dHdxy;
-    vec3 bumpNormal;
-    float bumpness = 1.0;
-    if(uIsSun)
-      fColor = texture(sun_color, vTexCoord);
-    else if(uIsEarth)
-    {
-      fColor = texture(earth_color, vTexCoord);
-      dHdxy = dHdxy_fwd(earth_bump, vTexCoord, bumpness);
-    }
-    else if(uIsMoon)
-    {
-      fColor = texture(moon_color, vTexCoord);
-      dHdxy = dHdxy_fwd(moon_bump, vTexCoord, bumpness);
-    }
-
-
-
-    // Нормализуем нормаль, потому что она интерполируется и больше не имеет длину 1.0
-    vec3 normal = normalize(vNormal);
-
-    
-    // Вычисляем направление света и делаем его длину равной 1.
-    vec3 lightDirection = normalize(uLightPosition - vPosition);
-
-
-
-    // Скалярное произведение направления света и ориентации поверхности (нормали)
-    float nDotL;
-    if(uIsSun)
-      nDotL = 1.0;
-    else
-      nDotL = max(dot(lightDirection, normal), 0.0);
-
-
-
-    // Вычисляем финальный цвет из диффузного отражения и окружающего отражения
-    vec3 diffuse = uLightColor * fColor.rgb * nDotL;
-    vec3 ambient = uAmbientLight * fColor.rgb;
-    float specularFactor = texture(specularMap, vTexCoord).r; //Извлечение цветовой информации из изображения
-
-    
-    
-    
-    vec3 diffuseBump;
-    if(uIsEarth || uIsMoon)
-    {
-      bumpNormal = pertubNormalArb(vPosition, normal, dHdxy);
-      diffuseBump = min(diffuse + dot(bumpNormal, lightDirection), 1.1);
-    }
-
-    vec3 specular = vec3(0.0);
-    float shiness = 12.0;
-    vec3 lightSpecular = vec3(1.0);
-
-    if(uIsEarth &amp;&amp; nDotL &gt; 0.0)
-    {
-      vec3 v = normalize(-vPosition); // Позиция глаза
-      vec3 r = reflect(-lightDirection, bumpNormal); // Отражение от поверхности
-      specular = lightSpecular * specularFactor * pow(dot(r, v), shiness);
-    }
-    
-    //Обновляем финальный цвет
-    if(uIsEarth)
-      fColor = vec4( (diffuse * diffuseBump * specular) + ambient, fColor.a); // Блики
-    else if(uIsMoon)
-      fColor = vec4( (diffuse * diffuseBump) + ambient, fColor.a);
-    else if(uIsSun)
-      fColor = vec4(diffuse + ambient, fColor.a);
-}`;
-</code></pre>
-<p>Можете ли вы сказать мне, где мне нужно проверить?</p>
-<h2 id="ответ">Ответ:</h2>
-<p>Если бы это был я, я бы сначала упростил шейдер до самой простой вещи и посмотрел, получаю ли я то, что хочу. Вы хотите блики, так получаете ли вы блики только с расчетами бликов в ваших шейдерах?</p>
-<p>Обрезка ваших шейдеров до простого рисования плоского освещения по Фонгу не дала правильных результатов.</p>
-<p>Эта строка:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">fColor = vec4( (diffuse * specular) + ambient, fColor.a);
-</code></pre>
-<p>должна была быть:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">fColor = vec4( (diffuse + specular) + ambient, fColor.a);
-</code></pre>
-<p>Вы добавляете блики, а не умножаете на них.</p>
-<p><div class="webgl_example_container">
-  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-apply-a-displacement-map-and-specular-map-example-1.html"></iframe>
-  <a class="webgl_center" href="/webgl/lessons/../webgl-qna-apply-a-displacement-map-and-specular-map-example-1.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
-</div>
-
-</p>
-<p>Теперь мы можем добавить карту бликов:</p>
-<p><div class="webgl_example_container">
-  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-apply-a-displacement-map-and-specular-map-example-2.html"></iframe>
-  <a class="webgl_center" href="/webgl/lessons/../webgl-qna-apply-a-displacement-map-and-specular-map-example-2.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
-</div>
-
-</p>
-<p>Затем вам, возможно, не стоит использовать много булевых условий в вашем шейдере. Либо создайте разные шейдеры, либо найдите способ сделать это без булевых значений. Так, например, нам не нужны:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler2D earth_disp;
-uniform sampler2D moon_disp;
-
-uniform sampler2D sun_color;
-uniform sampler2D earth_color;
-uniform sampler2D moon_color;
-
-uniform sampler2D earth_bump;
-uniform sampler2D moon_bump;
-
-uniform bool uIsSun;
-uniform bool uIsEarth;
-uniform bool uIsMoon;
-</code></pre>
-<p>мы можем просто иметь:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler2D displacementMap;
-uniform sampler2D surfaceColor;
-uniform sampler2D bumpMap;
-</code></pre>
-<p>Затем мы можем установить <code class="notranslate" translate="no">displacementMap</code> и <code class="notranslate" translate="no">bumpMap</code> на текстуру одного пикселя 0,0,0,0, и не будет ни смещения, ни неровностей.</p>
-<p>Что касается разного освещения для солнца, учитывая, что солнце не использует ни карту неровностей, ни карту смещения, ни даже освещение вообще, возможно, было бы лучше использовать другой шейдер, но мы также можем просто добавить значение <code class="notranslate" translate="no">maxDot</code> так:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform float maxDot;
-
-...
-
-   nDotL = max(dot(lightDirection, normal), maxDot)
-</code></pre>
-<p>Если <code class="notranslate" translate="no">maxDot</code> равен нулю, мы получим нормальное скалярное произведение. Если <code class="notranslate" translate="no">maxDot</code> равен единице, мы не получим освещения.</p>
-<p><div class="webgl_example_container">
-  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-qna-apply-a-displacement-map-and-specular-map-example-3.html"></iframe>
-  <a class="webgl_center" href="/webgl/lessons/../webgl-qna-apply-a-displacement-map-and-specular-map-example-3.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
-</div>
-
-</p>
-<p>Что касается смещения, смещение работает только на вершинах, поэтому вам нужно много вершин в вашей сфере, чтобы увидеть любое смещение.</p>
-<p>Также была ошибка, связанная со смещением. Вы передаете нормали как vec4, и эта строка:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">displace += (displaceFactor * disp - displaceBias) * aNormal;
-</code></pre>
-<p>В итоге добавляет смещение vec4. Другими словами, допустим, вы начали с <code class="notranslate" translate="no">a_Position</code> равным <code class="notranslate" translate="no">vec4(1,0,0,1)</code>, что было бы на левой стороне сферы. <code class="notranslate" translate="no">aNormal</code>, потому что вы объявили его как <code class="notranslate" translate="no">vec4</code>, вероятно, тоже <code class="notranslate" translate="no">vec4(1,0,0,1)</code>. Предполагая, что вы фактически передаете данные vec3 нормали через атрибуты из вашего буфера, значение по умолчанию для W равно 1. Допустим, <code class="notranslate" translate="no">disp</code> равен 1, <code class="notranslate" translate="no">displaceFactor</code> равен 2, а <code class="notranslate" translate="no">displaceBias</code> равен 0.5, что у вас было. Вы получаете:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">displace = vec4(1,0,0,1) + (2 * 1 + 0.5) * vec4(1,0,0,1)
-displace = vec4(1,0,0,1) + (1.5) * vec4(1,0,0,1)
-displace = vec4(1,0,0,1) + vec4(1.5,0,0,1.5)
-displace = vec4(2.5,0,0,2.5)
-</code></pre>
-<p>Но вы не хотите, чтобы W был 2.5. Одно исправление - просто использовать xyz часть нормали:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">displace.xyz += (displaceFactor * disp - displaceBias) * aNormal.xyz;
-</code></pre>
-<p>Более нормальное исправление - объявить атрибут нормали только как vec3:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">in vec3 aNormal;
-
-displace.xyz += (displaceFactor * disp - displaceBias) * aNormal;
-</code></pre>
-<p>В моем примере выше сферы имеют только радиус = 1, поэтому мы хотим только немного скорректировать это смещение. Я установил <code class="notranslate" translate="no">displaceFactor</code> равным 0.1 и <code class="notranslate" translate="no">displaceBias</code> равным 0.</p>
-<div class="so">
-  <div>Вопрос и процитированные части являются 
-    CC BY-SA 4.0 от
-    <a data-href="https://stackoverflow.com/users/12203820">ZeroFive005</a>
-    из
-    <a data-href="https://stackoverflow.com/questions/59349723">здесь</a>
-  </div>
-</div> 
     </div>
     <div class="lesson-sidebar">
         <select class="language">
@@ -540,8 +199,7 @@ displace.xyz += (displaceFactor * disp - displaceBias) * aNormal;
 </select>
 
 
-        <div id="toc">
-          <ul>  <li>Основы</li>
+        <ul>  <li>Основы</li>
         <ul>
           <li><a href="/webgl/lessons/ru/webgl-getting-webgl2.html">Как использовать WebGL2</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fundamentals.html">Основы</a></li>
@@ -624,7 +282,7 @@ displace.xyz += (displaceFactor * disp - displaceBias) * aNormal;
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -667,9 +325,9 @@ displace.xyz += (displaceFactor * disp - displaceBias) * aNormal;
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>
@@ -684,47 +342,13 @@ displace.xyz += (displaceFactor * disp - displaceBias) * aNormal;
   <li><a href="https://twgljs.org">TWGL, легковесная библиотека-помощник для WebGL</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
-        </div>
-    </div>
-    <div class="lesson-comments">
-        
-<div>Есть предложения или замечания? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Создайте issue на GitHub</a>.</div>
-  
-
-        <div id="disqus_thread"></div>
-        <script>
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
-            var disqus_identifier = 'Применение карты смещения и карты бликов';
-            var disqus_title = 'Применение карты смещения и карты бликов';
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
-                    return;
-                }
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
-<script>
-const settings = {
-  contribTemplate: "Спасибо <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>за <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} вкладов</a>",
-  owner: "gfxfundamentals",
-  repo: "webgl2-fundamentals",
-};
-</script>
-<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script src="/webgl/lessons/resources/lesson.js"></script>
 <script>
 </script>
 

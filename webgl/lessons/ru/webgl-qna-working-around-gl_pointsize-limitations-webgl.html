@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from webgl/lessons/ru/webgl-qna-working-around-gl_pointsize-limitations-webgl.md. Do not edited directly -->
+<!-- this file is auto-generated from webgl/lessons/ru/langinfo.hanson. Do not edited directly -->
 <!--
 Copyright 2021, GFXFundamentals.
 All rights reserved.
@@ -8,17 +8,15 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-*   Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-
-*   Redistributions in binary form must reproduce the above
-    copyright notice, this list of conditions and the following disclaimer
-    in the documentation and/or other materials provided with the
-    distribution.
-
-*   Neither the name of GFXFundamentals. nor the names of his
-    contributors may be used to endorse or promote products derived from
-    this software without specific prior written permission.
+    * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+    * Neither the name of GFXFundamentals. nor the names of his
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -36,78 +34,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta property="og:title" content="Working around gl_PointSize limitations webGL" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
+<meta property="og:description" content="Working around gl_PointSize limitations webGL" />
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-working-around-gl_pointsize-limitations-webgl.html" />
 
-<meta name="description" content="Как обойти ограничения gl_PointSize в WebGL">
-<meta name="keywords" content="webgl webgl2 graphics">
-<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-working-around-gl_pointsize-limitations-webgl_ru.jpg">
-
-<meta property="og:title" content="Обход ограничений gl_PointSize в WebGL">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-working-around-gl_pointsize-limitations-webgl_ru.jpg">
-<meta property="og:description" content="Как обойти ограничения gl_PointSize в WebGL">
-<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-working-around-gl_pointsize-limitations-webgl.html">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@greggman">
-<meta name="twitter:creator" content="@greggman">
-<meta name="twitter:domain" content="webgl2fundamentals.org">
-<meta name="twitter:title" content="Обход ограничений gl_PointSize в WebGL">
-<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-working-around-gl_pointsize-limitations-webgl.html">
-<meta name="twitter:description" content="Как обойти ограничения gl_PointSize в WebGL">
-<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-working-around-gl_pointsize-limitations-webgl_ru.jpg">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@graph":[
-    {
-      "@type":"WebSite",
-      "@id":"https://webgl2fundamentals.org/#website",
-      "url":"https://webgl2fundamentals.org/",
-      "name":"Webgl2Fundamentals"
-    },
-    {
-      "@type":"ImageObject",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-working-around-gl_pointsize-limitations-webgl.html#primaryimage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-qna-working-around-gl_pointsize-limitations-webgl_ru.jpg",
-      "width":1200,
-      "height":630
-    },
-    {
-      "@type":"WebPage",
-      "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-working-around-gl_pointsize-limitations-webgl.html#webpage",
-      "url":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-working-around-gl_pointsize-limitations-webgl.html",
-      "inLanguage":"ru",
-      "name":"Обход ограничений gl_PointSize в WebGL",
-      "keywords":"webgl webgl2 graphics programming",
-      "isPartOf":{
-        "@id":"https://webgl2fundamentals.org/#website"
-      },
-      "primaryImageOfPage":{
-        "@id":"https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-working-around-gl_pointsize-limitations-webgl.html#primaryimage"
-      }
-    }
-  ]
-}
-</script>
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@greggman" />
+<meta name="twitter:creator" content="@greggman" />
+<meta name="twitter:domain" content="webgl2fundamentals.org" />
+<meta name="twitter:title" content="Working around gl_PointSize limitations webGL" />
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/ru/webgl-qna-working-around-gl_pointsize-limitations-webgl.html" />
+<meta name="twitter:description" content="Working around gl_PointSize limitations webGL" />
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/resources/webgl2fundamentals.jpg" />
 
 
-<title>Обход ограничений gl_PointSize в WebGL</title>
+<title>Working around gl_PointSize limitations webGL</title>
 <link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/webgl/lessons/lang.css">
-<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
-
-  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-qna-working-around-gl_pointsize-limitations-webgl.html">
-  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-qna-working-around-gl_pointsize-limitations-webgl.html">
-  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-qna-working-around-gl_pointsize-limitations-webgl.html">
-  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-qna-working-around-gl_pointsize-limitations-webgl.html">
-  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-qna-working-around-gl_pointsize-limitations-webgl.html">
-  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-qna-working-around-gl_pointsize-limitations-webgl.html">
-  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-qna-working-around-gl_pointsize-limitations-webgl.html">
-
-
-
-
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css" type="text/css" />
 </head>
 <body>
 <div class="webgl_navbar">
@@ -234,109 +179,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>Обход ограничений gl_PointSize в WebGL</h1>
+    <h1>Working around gl_PointSize limitations webGL</h1>
   </div>
   <div class="lesson">
     <div class="lesson-main">
-      <h2 id="вопрос">Вопрос:</h2>
-<p>Я использую three.js для создания интерактивной визуализации данных. В этой визуализации рендерится 68000 узлов, каждый из которых имеет свой размер и цвет.</p>
-<p>Сначала я пытался делать это через рендеринг мешей, но это оказалось слишком дорого по производительности. Сейчас я использую систему частиц three.js, где каждая точка — это узел визуализации.</p>
-<p>Я могу управлять цветом и размером точки, но только до определённого предела. На моей видеокарте максимальный размер точки gl равен 63. Когда я увеличиваю масштаб визуализации, точки становятся больше — до определённого момента, а затем остаются 63 пикселя.</p>
-<p>Я использую собственные vertex и fragment шейдеры:</p>
-<p>vertex shader:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">attribute float size;
-attribute vec3 ca;
-varying vec3 vColor;
+      <p>Русский перевод пока не готов (￣△￣)~<a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Помогите с переводом</a>!</p>
+<p><a href="/webgl/lessons/webgl-qna-working-around-gl_pointsize-limitations-webgl.html">Оригинал на английском</a>.</p>
 
-void main() {
-    vColor = ca;
-    vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-    gl_PointSize = size * ( 300.0 / length( mvPosition.xyz ) );
-    gl_Position = projectionMatrix * mvPosition;
-}
-</code></pre>
-<p>fragment shader:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform vec3 color;
-uniform sampler2D texture;
-
-varying vec3 vColor;
-
-void main() {
-    gl_FragColor = vec4( color * vColor, 1.0 );
-    gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
-}
-</code></pre>
-<p>Эти шейдеры почти дословно скопированы из одного из примеров three.js.</p>
-<p>Я совсем новичок в GLSL, но ищу способ рисовать точки больше 63 пикселей. Могу ли я, например, рисовать меш для точек больше определённого размера, а для остальных использовать gl_point? Есть ли другие способы обойти это ограничение и рисовать точки больше 63 пикселей?</p>
-<h2 id="ответ">Ответ:</h2>
-<p>Вы можете сделать свою собственную систему точек, используя массивы unit quad’ов + центральную точку, а затем масштабировать их по размеру в GLSL.</p>
-<p>То есть, у вас будет 2 буфера. Один буфер — это просто 2D unitQuad, повторённый столько раз, сколько точек вы хотите нарисовать.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var unitQuads = new Float32Array([
-  -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5,
-  -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5,
-  -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5,
-  -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5,
-  -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5,
-]);
-</code></pre>
-<p>Второй буфер — это ваши точки, но позиции каждой точки нужно повторить 4 раза:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var points = new Float32Array([
-  p1.x, p1.y, p1.z, p1.x, p1.y, p1.z, p1.x, p1.y, p1.z, p1.x, p1.y, p1.z,
-  p2.x, p2.y, p2.z, p2.x, p2.y, p2.z, p2.x, p2.y, p2.z, p2.x, p2.y, p2.z,
-  p3.x, p3.y, p3.z, p3.x, p3.y, p3.z, p3.x, p3.y, p3.z, p3.x, p3.y, p3.z,
-  p4.x, p4.y, p4.z, p4.x, p4.y, p4.z, p4.x, p4.y, p4.z, p4.x, p4.y, p4.z,
-  p5.x, p5.y, p5.z, p5.x, p5.y, p5.z, p5.x, p5.y, p5.z, p5.x, p5.y, p5.z,
-]);
-</code></pre>
-<p>Настройте ваши буферы и атрибуты:</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var buf = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-gl.bufferData(gl.ARRAY_BUFFER, unitQuads, gl.STATIC_DRAW);
-gl.enableVertexAttribArray(unitQuadLoc);
-gl.vertexAttribPointer(unitQuadLoc, 2, gl.FLOAT, false, 0, 0);
-
-var buf = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);
-gl.enableVertexAttribArray(pointLoc);
-gl.vertexAttribPointer(pointLoc, 3, gl.FLOAT, false, 0, 0);
-</code></pre>
-<p>В вашем GLSL-шейдере вычисляйте нужный gl_PointSize, затем умножайте unitQuad на этот размер в view space или screen space. Screen space будет вести себя как обычный gl_Point, но часто хочется, чтобы точки масштабировались в 3D, как обычные объекты — тогда используйте view space.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">attribute vec2 a_unitQuad;
-attribute vec4 a_position;
-uniform mat4 u_view;
-uniform mat4 u_viewProjection;
-
-void main() {
-   float fake_gl_pointsize = 150;
-   
-   // Получаем xAxis и yAxis во view space
-   // это unit-векторы, то есть направления, перпендикулярные взгляду
-   vec3 x_axis = view[0].xyz;
-   vec3 y_axis = view[1].xyz;
-   
-   // умножаем их на нужный размер
-   x_axis *= fake_gl_pointsize;
-   y_axis *= fake_gl_pointsize;
-
-   // умножаем на unitQuad, чтобы получить quad вокруг центра
-   vec3 local_point = vec3(x_axis * a_unitQuad.x + y_axis * a_unitQuad.y);
-
-   // добавляем позицию, где хотим разместить quad
-   local_point += a_position;
-
-   // обычная математика для шейдера
-   gl_Position = u_viewProjection * local_point;
-}
-</code></pre>
-<p>Возможно, это звучит сложно, но есть рабочий пример <a href="https://www.khronos.org/registry/webgl/sdk/demos/google/particles/">здесь</a></p>
-<div class="so">
-  <div>Вопрос и цитируемые части взяты по лицензии CC BY-SA 3.0 у
-    <a data-href="http://tech-foo.net">Thomi</a>
-    с сайта
-    <a data-href="https://stackoverflow.com/questions/15371940">stackoverflow</a>
-  </div>
-</div> 
     </div>
     <div class="lesson-sidebar">
         <select class="language">
@@ -350,8 +199,7 @@ void main() {
 </select>
 
 
-        <div id="toc">
-          <ul>  <li>Основы</li>
+        <ul>  <li>Основы</li>
         <ul>
           <li><a href="/webgl/lessons/ru/webgl-getting-webgl2.html">Как использовать WebGL2</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fundamentals.html">Основы</a></li>
@@ -434,7 +282,7 @@ void main() {
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -477,9 +325,9 @@ void main() {
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>
@@ -494,47 +342,13 @@ void main() {
   <li><a href="https://twgljs.org">TWGL, легковесная библиотека-помощник для WebGL</a></li>
   <li><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">GitHub</a></li>
 </ul>
-        </div>
-    </div>
-    <div class="lesson-comments">
-        
-<div>Есть предложения или замечания? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Создайте issue на GitHub</a>.</div>
-  
-
-        <div id="disqus_thread"></div>
-        <script>
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
-            var disqus_identifier = 'Обход ограничений gl_PointSize в WebGL';
-            var disqus_title = 'Обход ограничений gl_PointSize в WebGL';
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
-                    return;
-                }
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
   </div>
 </div>
 </body>
-<script>
-const settings = {
-  contribTemplate: "Спасибо <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>за <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} вкладов</a>",
-  owner: "gfxfundamentals",
-  repo: "webgl2-fundamentals",
-};
-</script>
-<script src="/contributors.js"></script>
 <script src="/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/webgl/lessons/resources/prettify.js"></script>
-<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script src="/webgl/lessons/resources/lesson.js"></script>
 <script>
 </script>
 

@@ -386,18 +386,111 @@ gl.drawArrays(gl.POINTS, offset, count);
 // фрагментный шейдер
 precision highp float;
 
-+uniform sampler tex;
+uniform sampler tex;
 
 out vec4 outColor;
 
 void main() {
--  outColor = vec4(1, 0, 0, 1);  // красный
-+  outColor = texture(tex, gl_PointCoord.xy);
+  outColor = texture(tex, gl_PointCoord.xy);
 }
 </code></pre>
 <p>Теперь, чтобы держать это простым, давайте сделаем текстуру с сырыми данными, как мы покрыли в
 <a href="webgl-data-textures.html">статье о текстурах данных</a>.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-js"></code></pre>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// 2x2 пиксельные данные
+const pixels = new Uint8Array([
+  0xFF, 0x00, 0x00, 0xFF,  // красный
+  0x00, 0xFF, 0x00, 0xFF,  // зеленый
+  0x00, 0x00, 0xFF, 0xFF,  // синий
+  0xFF, 0x00, 0xFF, 0xFF,  // пурпурный
+]);
+const tex = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, tex);
+gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,                 // уровень
+    gl.RGBA,           // внутренний формат
+    2,                 // ширина
+    2,                 // высота
+    0,                 // граница
+    gl.RGBA,           // формат
+    gl.UNSIGNED_BYTE,  // тип
+    pixels,            // данные
+);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+</code></pre>
+<p>Поскольку WebGL по умолчанию использует текстуру 0 и поскольку uniforms
+по умолчанию равны 0, больше ничего настраивать не нужно</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-simple-point-w-texture.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-simple-point-w-texture.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Это может быть отличным способом тестирования проблем, связанных с текстурами.
+Мы все еще не используем буферы, атрибуты, и нам не пришлось
+искать и устанавливать никаких uniforms. Например, если мы загрузили изображение,
+оно не отображается. Что если мы попробуем шейдер выше, показывает ли он
+изображение на точке? Мы рендерили в текстуру, а затем
+хотим просмотреть текстуру. Обычно мы бы настроили некоторую геометрию
+через буферы и атрибуты, но мы можем рендерить текстуру просто
+показывая её на этой единственной точке.</p>
+<h2 id="использование-множественных-одиночных-points">Использование множественных одиночных <code class="notranslate" translate="no">POINTS</code></h2>
+<p>Еще одно простое изменение к примеру выше. Мы можем изменить вершинный
+шейдер на этот</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+// вершинный шейдер
+
+in vec4 position;
+
+void main() {
+  gl_Position = position;
+  gl_PointSize = 120.0;
+}
+</code></pre>
+<p>атрибуты имеют значение по умолчанию <code class="notranslate" translate="no">0, 0, 0, 1</code>, поэтому с этим изменением
+примеры выше все еще будут продолжать работать. Но теперь
+мы получаем возможность установить позицию, если захотим.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
+const positionLoc = gl.getAttribLocation(program, 'position');
+const colorLoc = gl.getUniformLocation(program, 'color');
+</code></pre>
+<p>И использовать их</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.useProgram(program);
+
+const numPoints = 5;
+for (let i = 0; i &lt; numPoints; ++i) {
+  const u = i / (numPoints - 1);    // 0 до 1
+  const clipspace = u * 1.6 - 0.8;  // -0.8 до +0.8
+  gl.vertexAttrib2f(positionLoc, clipspace, clipspace);
+
+  gl.uniform4f(colorLoc, u, 0, 1 - u, 1);
+
+  const offset = 0;
+  const count = 1;
+  gl.drawArrays(gl.POINTS, offset, count);
+}
+</code></pre>
+<p>И теперь мы получаем 5 точек с 5 цветами
+и мы все еще не должны были настраивать никакие буферы или
+атрибуты.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-simple-points.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-simple-points.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Конечно, это <strong>НЕ</strong> способ, которым вы должны
+рисовать много точек в WebGL. Если вы хотите рисовать много
+точек, вы должны сделать что-то вроде настройки атрибута с позицией
+для каждой точки и цветом для каждой точки и рисовать все точки
+в одном вызове отрисовки.</p>
+<p>НО!, для тестирования, для отладки, для создания <a href="https://meta.stackoverflow.com/a/349790/128511">MCVE</a> это отличный способ <strong>минимизировать</strong>
+код. Как другой пример, допустим, мы рисуем в текстуры для постобработки
+эффекта, и мы хотим их визуализировать. Мы могли бы просто нарисовать одну большую
+точку для каждой, используя комбинацию этого примера и
+предыдущего с текстурой. Никаких сложных шагов буферов
+и атрибутов не нужно, отлично для отладки.</p>
 
     </div>
     <div class="lesson-sidebar">
@@ -496,7 +589,7 @@ void main() {
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -539,9 +632,9 @@ void main() {
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>

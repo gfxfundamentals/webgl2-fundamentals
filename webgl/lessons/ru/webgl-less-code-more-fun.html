@@ -416,8 +416,250 @@ var uniforms = {
 gl.useProgram(program);
 
 // Привязываем VAO, в котором уже все буферы и атрибуты
-</code></pre>
+gl.bindVertexArray(vao);
 
+// Устанавливаем все uniform'ы и текстуры
+twgl.setUniforms(uniformSetters, uniforms);
+
+gl.drawArrays(...);
+</code></pre>
+<p>Это кажется намного меньше, проще и с меньшим количеством кода.</p>
+<p>Вы даже можете использовать несколько JavaScript-объектов для uniform’ов, если это подходит. Например:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// При инициализации
+var uniformSetters = twgl.createUniformSetters(gl, program);
+var attribSetters  = twgl.createAttributeSetters(gl, program);
+
+// Настраиваем все буферы и атрибуты
+var attribs = {
+  a_position: { buffer: positionBuffer, numComponents: 3, },
+  a_normal:   { buffer: normalBuffer,   numComponents: 3, },
+  a_texcoord: { buffer: texcoordBuffer, numComponents: 2, },
+};
+var vao = twgl.createVAOAndSetAttributes(gl, attribSetters, attribs);
+
+// При инициализации или отрисовке
+var uniformsThatAreTheSameForAllObjects = {
+  u_lightWorldPos:         [100, 200, 300],
+  u_viewInverse:           computeInverseViewMatrix(),
+  u_lightColor:            [1, 1, 1, 1],
+};
+
+var uniformsThatAreComputedForEachObject = {
+  u_worldViewProjection:   perspective(...),
+  u_world:                 computeWorldMatrix(),
+  u_worldInverseTranspose: computeWorldInverseTransposeMatrix(),
+};
+
+var objects = [
+  { translation: [10, 50, 100],
+    materialUniforms: {
+      u_ambient:               [0.1, 0.1, 0.1, 1],
+      u_diffuse:               diffuseTexture,
+      u_specular:              [1, 1, 1, 1],
+      u_shininess:             60,
+      u_specularFactor:        1,
+    },
+  },
+  { translation: [-120, 20, 44],
+    materialUniforms: {
+      u_ambient:               [0.1, 0.2, 0.1, 1],
+      u_diffuse:               someOtherDiffuseTexture,
+      u_specular:              [1, 1, 0, 1],
+      u_shininess:             30,
+      u_specularFactor:        0.5,
+    },
+  },
+  { translation: [200, -23, -78],
+    materialUniforms: {
+      u_ambient:               [0.2, 0.2, 0.1, 1],
+      u_diffuse:               yetAnotherDiffuseTexture,
+      u_specular:              [1, 0, 0, 1],
+      u_shininess:             45,
+      u_specularFactor:        0.7,
+    },
+  },
+];
+
+// При отрисовке
+gl.useProgram(program);
+
+// Настраиваем части, общие для всех объектов
+gl.bindVertexArray(vao);
+twgl.setUniforms(uniformSetters, uniformsThatAreTheSameForAllObjects);
+
+objects.forEach(function(object) {
+  computeMatricesForObject(object, uniformsThatAreComputedForEachObject);
+  twgl.setUniforms(uniformSetters, uniformsThatAreComputedForEachObject);
+  twgl.setUniforms(uniformSetters, object.materialUniforms);
+  gl.drawArrays(...);
+});
+</code></pre>
+<p>Вот пример использования этих вспомогательных функций:</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-less-code-more-fun.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Давайте сделаем ещё один маленький шаг дальше. В коде выше мы настроили переменную <code class="notranslate" translate="no">attribs</code> с буферами, которые создали.
+Не показан код для настройки этих буферов. Например, если вы хотите создать позиции, нормали и координаты текстуры,
+вам может понадобиться такой код:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// один треугольник
+var positions = [0, -10, 0, 10, 10, 0, -10, 10, 0];
+var texcoords = [0.5, 0, 1, 1, 0, 1];
+var normals   = [0, 0, 1, 0, 0, 1, 0, 0, 1];
+
+var positionBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+var texcoordBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texcoords), gl.STATIC_DRAW);
+
+var normalBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
+</code></pre>
+<p>Похоже на паттерн, который мы тоже можем упростить:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// один треугольник
+var arrays = {
+   position: { numComponents: 3, data: [0, -10, 0, 10, 10, 0, -10, 10, 0], },
+   texcoord: { numComponents: 2, data: [0.5, 0, 1, 1, 0, 1],               },
+   normal:   { numComponents: 3, data: [0, 0, 1, 0, 0, 1, 0, 0, 1],        },
+};
+
+var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
+var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
+</code></pre>
+<p>Намного короче!</p>
+<p>Вот это:</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-triangle.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-less-code-more-fun-triangle.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Это будет работать даже если у нас есть индексы. <code class="notranslate" translate="no">createVAOFromBufferInfo</code>
+настроит все атрибуты и установит <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code>
+с вашими <code class="notranslate" translate="no">indices</code>, так что когда вы привяжете этот VAO, вы сможете вызвать
+<code class="notranslate" translate="no">gl.drawElements</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// индексированный квадрат
+var arrays = {
+   position: { numComponents: 3, data: [0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 10, 0], },
+   texcoord: { numComponents: 2, data: [0, 0, 0, 1, 1, 0, 1, 1],                 },
+   normal:   { numComponents: 3, data: [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],     },
+   indices:  { numComponents: 3, data: [0, 1, 2, 1, 2, 3],                       },
+};
+
+var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
+var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
+</code></pre>
+<p>и во время рендеринга мы можем вызвать <code class="notranslate" translate="no">gl.drawElements</code> вместо <code class="notranslate" translate="no">gl.drawArrays</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
+
+// Рисуем геометрию
+gl.drawElements(gl.TRIANGLES, bufferInfo.numElements, gl.UNSIGNED_SHORT, 0);
+</code></pre>
+<p>Вот это:</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-quad.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-less-code-more-fun-quad.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Наконец, мы можем пойти, как я считаю, возможно, слишком далеко. Учитывая, что <code class="notranslate" translate="no">position</code> почти всегда имеет 3 компонента (x, y, z),
+<code class="notranslate" translate="no">texcoords</code> почти всегда 2, индексы 3, а нормали 3, мы можем просто позволить системе угадать количество
+компонентов.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// индексированный квадрат
+var arrays = {
+   position: [0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 10, 0],
+   texcoord: [0, 0, 0, 1, 1, 0, 1, 1],
+   normal:   [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+   indices:  [0, 1, 2, 1, 2, 3],
+};
+</code></pre>
+<p>И эта версия:</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-quad-guess.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-less-code-more-fun-quad-guess.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Я не уверен, что лично мне нравится этот стиль. Угадывание меня беспокоит, потому что оно может угадать неправильно. Например,
+я могу решить добавить дополнительный набор координат текстуры в мой атрибут texcoord, и он
+угадает 2 и будет неправ. Конечно, если он угадает неправильно, вы можете просто указать это, как в примере выше.
+Я думаю, я беспокоюсь, что если код угадывания изменится, вещи людей могут сломаться. Это решать вам. Некоторым людям
+нравится, когда вещи максимально простые, как они считают.</p>
+<p>Почему бы нам не посмотреть на атрибуты в шейдерной программе, чтобы выяснить количество компонентов?
+Это потому, что часто предоставляют 3 компонента (x, y, z) из буфера, но используют <code class="notranslate" translate="no">vec4</code> в
+шейдере. Для атрибутов WebGL автоматически установит <code class="notranslate" translate="no">w = 1</code>. Но это означает, что мы не можем легко
+знать намерение пользователя, поскольку то, что они объявили в шейдере, может не соответствовать количеству
+компонентов, которые они предоставляют.</p>
+<p>Ища больше паттернов, есть это:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var program = twgl.createProgramFromSources(gl, [vs, fs]);
+var uniformSetters = twgl.createUniformSetters(gl, program);
+var attribSetters  = twgl.createAttributeSetters(gl, program);
+</code></pre>
+<p>Давайте упростим и это до просто:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var programInfo = twgl.createProgramInfo(gl, [&quot;vertexshader&quot;, &quot;fragmentshader&quot;]);
+</code></pre>
+<p>Который возвращает что-то вроде:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">programInfo = {
+   program: WebGLProgram,  // программа, которую мы только что скомпилировали
+   uniformSetters: ...,    // setters, как возвращённые из createUniformSetters
+   attribSetters: ...,     // setters, как возвращённые из createAttribSetters
+}
+</code></pre>
+<p>И это ещё одно небольшое упрощение. Это пригодится, когда мы начнём использовать
+несколько программ, поскольку это автоматически держит setters с программой, с которой они связаны.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-quad-programinfo.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-less-code-more-fun-quad-programinfo.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>Ещё одно, иногда у нас есть данные без индексов, и мы должны вызывать
+<code class="notranslate" translate="no">gl.drawArrays</code>. В других случаях есть индексы, и мы должны вызывать <code class="notranslate" translate="no">gl.drawElements</code>.
+Учитывая данные, которые у нас есть, мы можем легко проверить что именно, посмотрев на <code class="notranslate" translate="no">bufferInfo.indices</code>.
+Если он существует, нам нужно вызвать <code class="notranslate" translate="no">gl.drawElements</code>. Если нет, нам нужно вызвать <code class="notranslate" translate="no">gl.drawArrays</code>.
+Так что есть функция <code class="notranslate" translate="no">twgl.drawBufferInfo</code>, которая делает это. Она используется так:</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">twgl.drawBufferInfo(gl, bufferInfo);
+</code></pre>
+<p>Если вы не передаёте 3-й параметр для типа примитива для рисования, он предполагает
+<code class="notranslate" translate="no">gl.TRIANGLES</code>.</p>
+<p>Вот пример, где у нас есть неиндексированный треугольник и индексированный квадрат. Поскольку
+мы используем <code class="notranslate" translate="no">twgl.drawBufferInfo</code>, код не должен изменяться, когда мы
+переключаем данные.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-less-code-more-fun-drawbufferinfo.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-less-code-more-fun-drawbufferinfo.html" target="_blank">Нажмите, чтобы открыть в новом окне</a>
+</div>
+
+</p>
+<p>В любом случае, это стиль, в котором я пытаюсь писать свои собственные WebGL-программы.
+Для уроков в этих туториалах, однако, я чувствовал, что должен использовать стандартные <strong>многословные</strong>
+способы, чтобы люди не путались в том, что является WebGL, а что моим собственным стилем. В какой-то момент
+показ всех шагов мешает сути, поэтому в будущем некоторые уроки будут
+использовать этот стиль.</p>
+<p>Не стесняйтесь использовать этот стиль в своём собственном коде. Функции <code class="notranslate" translate="no">twgl.createProgramInfo</code>,
+<code class="notranslate" translate="no">twgl.createVAOAndSetAttributes</code>, <code class="notranslate" translate="no">twgl.createBufferInfoFromArrays</code> и <code class="notranslate" translate="no">twgl.setUniforms</code>
+и т.д. являются частью библиотеки, которую я написал на основе этих идей. <a href="https://twgljs.org">Она называется <code class="notranslate" translate="no">TWGL</code></a>.
+Она рифмуется с wiggle и означает <code class="notranslate" translate="no">Tiny WebGL</code>.</p>
+<p>Далее, <a href="webgl-drawing-multiple-things.html">рисование множественных объектов</a>.</p>
+<div class="webgl_bottombar">
+<h3>Можем ли мы использовать setters напрямую?</h3>
+<p>
+Для тех из вас, кто знаком с JavaScript, вы можете задаться вопросом, можете ли вы использовать setters
+напрямую, как это:
+</p>
+<pre class="prettyprint">
+// При инициализации
+var uniformSetters &#x3D; twgl.createUniformSetters(program);
+
+// При отрисовке
+uniformSetters.u_ambient([1, 0, 0, 1]); // установить цвет окружения в красный
+</pre> 
     </div>
     <div class="lesson-sidebar">
         <select class="language">
@@ -515,7 +757,7 @@ gl.useProgram(program);
 <li><a href="/webgl/lessons/ru/webgl-skybox.html">Скайбоксы</a></li>
 <li><a href="/webgl/lessons/ru/webgl-skinning.html">Скининг</a></li>
 <li><a href="/webgl/lessons/ru/webgl-fog.html">Fog</a></li>
-<li><a href="/webgl/lessons/ru/webgl-picking.html">Пикинг (клик по объектам)</a></li>
+<li><a href="/webgl/lessons/ru/webgl-picking.html">Выбор объектов (клик по объектам)</a></li>
         </ul>
   <li>Текст</li>
         <ul>
@@ -558,9 +800,9 @@ gl.useProgram(program);
 <li><a href="/webgl/lessons/ru/webgl-tips.html#screenshot">Скриншот канваса</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#preservedrawingbuffer">Как не очищать канвас</a></li>
 <li><a href="/webgl/lessons/ru/webgl-tips.html#tabindex">Получение ввода с клавиатуры</a></li>
-<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">WebGL2 как фон HTML</a></li>
+<li><a href="/webgl/lessons/ru/webgl-tips.html#html-background">Использование WebGL2 как фона в HTML</a></li>
 <li><a href="/webgl/lessons/ru/webgl-cross-platform-issues.html">Cross Platform Issues</a></li>
-<li><a href="/webgl/lessons/ru/webgl-qna.html">Вопросы и ответы</a></li>
+<li><a href="/webgl/lessons/ru/webgl-qna.html">Questions and Answers</a></li>
         </ul>
   <li>Справочник</li>
         <ul>
