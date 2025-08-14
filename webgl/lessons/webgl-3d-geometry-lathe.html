@@ -513,7 +513,7 @@ It would need to be able to add and remove points, lock and unlock control point
 It would need undo, etc… But there’s an easier way. We can just use any of the
 major editors mentioned above. <a href="https://svg-edit.github.io/svgedit/">I used this online editor</a>.</p>
 <p>Here’s the svg silhouette of a bowling pin I made.</p>
-<img class="webgl_center" src="resources/bowling-pin-silhouette.svg" width="50%" height="50%" />
+<img class="webgl_center" src="resources/bowling-pin-silhouette.svg" width="400" />
 <p>It’s made from 4 bezier curves. The data for that path looks like this</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;path fill=&quot;none&quot; stroke-width=&quot;5&quot; d=&quot;
    m44,434
@@ -730,11 +730,11 @@ and you need nice tools to enter that data.</p>
 <p>There’s still one other thing we should do and that’s add normals.</p>
 <p>We could compute a normal for each point on the curve. In fact if you go back to the examples
 on this page you can see the line formed by <code class="notranslate" translate="no">R1</code> and <code class="notranslate" translate="no">R2</code> are a line tangent to the curve.</p>
-<img class="webgl_center" src="resources/tangent-to-curve.png" width="50%" />
+<img class="webgl_center" src="resources/tangent-to-curve.png" width="400" />
 <p>A normal is perpendicular to the tangent so it would be easy to use the tangents
 to generate normals.</p>
 <p>But, lets imagine we wanted to make a candle holder with a silhouette like this</p>
-<img class="webgl_center" src="resources/candle-holder.svg" width="50%" />
+<img class="webgl_center" src="resources/candle-holder.svg" width="400" />
 <p>There are many smooth areas but also many hard corners. How do we decide which normals
 to use? Worse, when we want a sharp edge we need extra vertices. Because vertices
 have both a position and a normal if we need a different normal for something at the
@@ -980,7 +980,7 @@ same vertex. Unfortunately, because <code class="notranslate" translate="no">Mat
 are not equal they will not be considered the same vertex. That means when computing the normals
 they won't take into consideration all the faces and their normals will come out wrong.</p>
 <p>Here's the result when that happens</p>
-<img class="webgl_center" src="resources/lathe-normal-seam.png" width="50%" />
+<img class="webgl_center" src="resources/lathe-normal-seam.png" width="400" />
 <p>As you can see there is a seam where the vertices are not considered shared
 because they are not a 100% match</p>
 <p>My first thought was that I should change my solution so that when I check for matching

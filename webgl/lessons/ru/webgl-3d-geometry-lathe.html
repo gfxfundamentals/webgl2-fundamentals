@@ -517,7 +517,7 @@ P = P1 * invT^3 +
 Ему понадобился бы откат и т.д… Но есть более простой способ. Мы можем просто использовать любой из
 основных редакторов, упомянутых выше. <a href="https://svg-edit.github.io/svgedit/">Я использовал этот онлайн редактор</a>.</p>
 <p>Вот SVG силуэт кегли, который я сделал.</p>
-<img class="webgl_center" src="../resources/bowling-pin-silhouette.svg" width="50%" height="50%" />
+<img class="webgl_center" src="../resources/bowling-pin-silhouette.svg" width="400" />
 <p>Он сделан из 4 кривых Безье. Данные для этого пути выглядят так</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;path fill=&quot;none&quot; stroke-width=&quot;5&quot; d=&quot;
    m44,434
@@ -733,11 +733,11 @@ function lathePoints(points,
 <p>Есть еще одна вещь, которую мы должны сделать, и это добавить нормали.</p>
 <p>Мы могли бы вычислить нормаль для каждой точки на кривой. Фактически, если вы вернетесь к примерам
 на этой странице, вы можете увидеть, что линия, образованная <code class="notranslate" translate="no">R1</code> и <code class="notranslate" translate="no">R2</code>, является касательной к кривой.</p>
-<img class="webgl_center" src="../resources/tangent-to-curve.png" width="50%" />
+<img class="webgl_center" src="../resources/tangent-to-curve.png" width="400" />
 <p>Нормаль перпендикулярна касательной, поэтому было бы легко использовать касательные
 для генерации нормалей.</p>
 <p>Но давайте представим, что мы хотели сделать подсвечник с силуэтом, как этот</p>
-<img class="webgl_center" src="../resources/candle-holder.svg" width="50%" />
+<img class="webgl_center" src="../resources/candle-holder.svg" width="400" />
 <p>Есть много гладких областей, но также много острых углов. Как мы решаем, какие нормали
 использовать? Хуже того, когда мы хотим острый край, нам нужны дополнительные вершины. Потому что вершины
 имеют как позицию, так и нормаль, если нам нужна другая нормаль для чего-то в той же
@@ -984,7 +984,7 @@ for (let division = 0; division <= numDivisions; ++division) {
 не равны, они не будут считаться одной и той же вершиной. Это означает, что при вычислении нормалей
 они не будут учитывать все лица, и их нормали будут неправильными.</p>
 <p>Вот результат, когда это происходит</p>
-<img class="webgl_center" src="../resources/lathe-normal-seam.png" width="50%" />
+<img class="webgl_center" src="../resources/lathe-normal-seam.png" width="400" />
 <p>Как вы можете видеть, есть шов, где вершины не считаются общими,
 потому что они не являются 100% совпадением</p>
 <p>Моя первая мысль была, что я должен изменить мое решение так, чтобы когда я проверяю совпадающие
