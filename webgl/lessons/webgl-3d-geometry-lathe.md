@@ -284,7 +284,7 @@ major editors mentioned above. [I used this online editor](https://svg-edit.gith
 
 Here's the svg silhouette of a bowling pin I made.
 
-<img class="webgl_center" src="resources/bowling-pin-silhouette.svg" width="50%" height="50%" />
+<img class="webgl_center" src="resources/bowling-pin-silhouette.svg" width="400" />
 
 It's made from 4 bezier curves. The data for that path looks like this
 
@@ -509,14 +509,14 @@ There's still one other thing we should do and that's add normals.
 We could compute a normal for each point on the curve. In fact if you go back to the examples
 on this page you can see the line formed by `R1` and `R2` are a line tangent to the curve.
 
-<img class="webgl_center" src="resources/tangent-to-curve.png" width="50%" />
+<img class="webgl_center" src="resources/tangent-to-curve.png" width="400" />
 
 A normal is perpendicular to the tangent so it would be easy to use the tangents
 to generate normals.
 
 But, lets imagine we wanted to make a candle holder with a silhouette like this
 
-<img class="webgl_center" src="resources/candle-holder.svg" width="50%" />
+<img class="webgl_center" src="resources/candle-holder.svg" width="400" />
 
 There are many smooth areas but also many hard corners. How do we decide which normals
 to use? Worse, when we want a sharp edge we need extra vertices. Because vertices
@@ -773,7 +773,7 @@ same vertex. Unfortunately, because <code>Math.sin(0)</code> and <code>Math.sin(
 are not equal they will not be considered the same vertex. That means when computing the normals
 they won't take into consideration all the faces and their normals will come out wrong.</p>
 <p>Here's the result when that happens</p>
-<img class="webgl_center" src="resources/lathe-normal-seam.png" width="50%" />
+<img class="webgl_center" src="resources/lathe-normal-seam.png" width="400" />
 <p>As you can see there is a seam where the vertices are not considered shared
 because they are not a 100% match</p>
 <p>My first thought was that I should change my solution so that when I check for matching
