@@ -1,64 +1,64 @@
-Title: WebGL2 2D Translation
-Description: How to translate in 2D
-TOC: 2D Translation
+Title: Translation 2D en WebGL2
+Description: Comment effectuer une translation en 2D
+TOC: Translation 2D
 
-Before we move on to 3D let's stick with 2D for a little while longer.
-Bear with me please. This article might seem exceedingly obvious to
-some but I'll build up to a point in a few articles.
+Avant de passer à la 3D, restons encore un peu en 2D.
+Soyez patients s'il vous plaît. Cet article peut sembler extrêmement évident
+pour certains, mais je construis progressivement une démonstration sur plusieurs articles.
 
-This article is a continuation of a series starting with
-[WebGL Fundamentals](webgl-fundamentals.html). If you haven't read them
-I suggest you read at least the first one, then come back here.
+Cet article fait partie d'une série commençant par
+[Les bases de WebGL](webgl-fundamentals.html). Si vous ne les avez pas lus,
+je vous suggère de lire au moins le premier, puis de revenir ici.
 
-Translation is some fancy math name that basically means "to move"
-something. I suppose moving a sentence from English to Japanese fits
-as well but in this case we're talking about moving geometry. Using
-the sample code we ended up with in [the first post](webgl-fundamentals.html)
-you could easily translate our rectangle just by changing the values
-passed to `setRectangle` right? Here's a sample based on our
-[previous sample](webgl-fundamentals.html).
+La translation est un terme mathématique sophistiqué qui signifie simplement "déplacer"
+quelque chose. Je suppose que déplacer une phrase de l'anglais au japonais conviendrait
+également, mais dans notre cas, nous parlons de déplacer de la géométrie. En utilisant
+le code d'exemple que nous avions à la fin du [premier article](webgl-fundamentals.html),
+vous pourriez facilement translater notre rectangle simplement en changeant les valeurs
+passées à `setRectangle`, n'est-ce pas ? Voici un exemple basé sur notre
+[exemple précédent](webgl-fundamentals.html).
 
 ```
-+  // First let's make some variables
-+  // to hold the translation, width and height of the rectangle
++  // Créons d'abord quelques variables
++  // pour stocker la translation, la largeur et la hauteur du rectangle
 +  var translation = [0, 0];
 +  var width = 100;
 +  var height = 30;
 +  var color = [Math.random(), Math.random(), Math.random(), 1];
 
-+  // Then let's make a function to
-+  // re-draw everything. We can call this
-+  // function after we update the translation.
++  // Ensuite créons une fonction pour
++  // tout redessiner. Nous pourrons appeler cette
++  // fonction après avoir mis à jour la translation.
 
-+  // Draw a the scene.
++  // Dessiner la scène.
 +  function drawScene() {
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
-    // Tell WebGL how to convert from clip space to pixels
+    // Indique à WebGL comment convertir de l'espace de découpage en pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-    // Clear the canvas
+    // Efface le canvas
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // Tell it to use our program (pair of shaders)
+    // Indique d'utiliser notre programme (paire de shaders)
     gl.useProgram(program);
 
-    // Bind the attribute/buffer set we want.
+    // Lie l'ensemble attribut/tampon que nous voulons.
     gl.bindVertexArray(vao);
 
-    // Pass in the canvas resolution so we can convert from
-    // pixels to clip space in the shader
+    // Passe la résolution du canvas pour pouvoir convertir
+    // des pixels vers l'espace de découpage dans le shader
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
-    // Update the position buffer with rectangle positions
+    // Met à jour le tampon de position avec les positions du rectangle
 +    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 *    setRectangle(gl, translation[0], translation[1], width, height);
 
-    // Set the color.
+    // Définit la couleur.
     gl.uniform4fv(colorLocation, color);
 
-    // Draw the rectangle.
+    // Dessine le rectangle.
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
     var count = 6;
@@ -66,24 +66,24 @@ passed to `setRectangle` right? Here's a sample based on our
 +  }
 ```
 
-In the example below I've attached a couple of sliders that will update
-`translation[0]` and `translation[1]` and call `drawScene` anytime they change.
-Drag the sliders to translate the rectangle.
+Dans l'exemple ci-dessous, j'ai ajouté quelques curseurs qui mettront à jour
+`translation[0]` et `translation[1]` et appelleront `drawScene` à chaque changement.
+Faites glisser les curseurs pour translater le rectangle.
 
 {{{example url="../webgl-2d-rectangle-translate.html" }}}
 
-So far so good. But now imagine we wanted to do the same thing with a
-more complicated shape.
+Jusqu'ici tout va bien. Mais maintenant imaginons que nous voulions faire la même chose avec une
+forme plus compliquée.
 
-Let's say we wanted to draw an 'F' that consists of 6 triangles like this.
+Disons que nous voulons dessiner un 'F' constitué de 6 triangles comme ceci.
 
 <img src="../resources/polygon-f.svg" width="200" height="270" class="webgl_center">
 
-Well, following our current code we'd have to change `setRectangle`
-to something more like this.
+Eh bien, en suivant notre code actuel, nous devrions modifier `setRectangle`
+pour quelque chose qui ressemble plutôt à ceci.
 
 ```
-// Fill the current ARRAY_BUFFER buffer with the values that define a letter 'F'.
+// Remplit le tampon ARRAY_BUFFER actuel avec les valeurs qui définissent la lettre 'F'.
 function setGeometry(gl, x, y) {
   var width = 100;
   var height = 150;
@@ -91,7 +91,7 @@ function setGeometry(gl, x, y) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
       new Float32Array([
-          // left column
+          // colonne gauche
           x, y,
           x + thickness, y,
           x, y + height,
@@ -99,7 +99,7 @@ function setGeometry(gl, x, y) {
           x + thickness, y,
           x + thickness, y + height,
 
-          // top rung
+          // barre supérieure
           x + thickness, y,
           x + width, y,
           x + thickness, y + thickness,
@@ -107,7 +107,7 @@ function setGeometry(gl, x, y) {
           x + width, y,
           x + width, y + thickness,
 
-          // middle rung
+          // barre du milieu
           x + thickness, y + thickness * 2,
           x + width * 2 / 3, y + thickness * 2,
           x + thickness, y + thickness * 3,
@@ -118,58 +118,58 @@ function setGeometry(gl, x, y) {
 }
 ```
 
-You can hopefully see that's not going to scale well. If we want to
-draw some very complex geometry with hundreds or thousands of lines we'd
-have to write some pretty complex code. On top of that, every time we
-draw JavaScript has to update all the points.
+Vous pouvez probablement voir que cela ne passera pas bien à l'échelle. Si nous voulons
+dessiner une géométrie très complexe avec des centaines ou des milliers de lignes, nous devrions
+écrire du code assez complexe. De plus, chaque fois que nous
+dessinons, JavaScript doit mettre à jour tous les points.
 
-There's a simpler way. Just upload the geometry and do the translation
-in the shader.
+Il existe une façon plus simple. Il suffit de charger la géométrie et d'effectuer la translation
+dans le shader.
 
-Here's the new shader
+Voici le nouveau shader
 
 ```
 #version 300 es
 
-// an attribute is an input (in) to a vertex shader.
-// It will receive data from a buffer
+// un attribut est une entrée (in) pour un shader de sommet.
+// Il recevra des données depuis un tampon
 in vec2 a_position;
 
-// Used to pass in the resolution of the canvas
+// Utilisé pour passer la résolution du canvas
 uniform vec2 u_resolution;
 
-+// translation to add to position
++// translation à ajouter à la position
 +uniform vec2 u_translation;
 
-// all shaders have a main function
+// tous les shaders ont une fonction main
 void main() {
-+  // Add in the translation
++  // Ajoute la translation
 +  vec2 position = a_position + u_translation;
 
-  // convert the position from pixels to 0.0 to 1.0
+  // convertit la position de pixels vers 0.0 à 1.0
 *  vec2 zeroToOne = position / u_resolution;
 
-  // convert from 0->1 to 0->2
+  // convertit de 0->1 à 0->2
   vec2 zeroToTwo = zeroToOne * 2.0;
 
-  // convert from 0->2 to -1->+1 (clip space)
+  // convertit de 0->2 à -1->+1 (espace de découpage)
   vec2 clipSpace = zeroToTwo - 1.0;
 
   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 }
 ```
 
-and we'll restructure the code a little. For one we only need to set
-the geometry once.
+et nous allons restructurer un peu le code. D'une part, nous n'avons besoin de définir
+la géométrie qu'une seule fois.
 
 ```
-// Fill the current ARRAY_BUFFER buffer
-// with the values that define a letter 'F'.
+// Remplit le tampon ARRAY_BUFFER actuel
+// avec les valeurs qui définissent la lettre 'F'.
 function setGeometry(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
       new Float32Array([
-          // left column
+          // colonne gauche
           0, 0,
           30, 0,
           0, 150,
@@ -177,7 +177,7 @@ function setGeometry(gl) {
           30, 0,
           30, 150,
 
-          // top rung
+          // barre supérieure
           30, 0,
           100, 0,
           30, 30,
@@ -185,7 +185,7 @@ function setGeometry(gl) {
           100, 0,
           100, 30,
 
-          // middle rung
+          // barre du milieu
           30, 60,
           67, 60,
           30, 90,
@@ -196,8 +196,8 @@ function setGeometry(gl) {
 }
 ```
 
-Then we just need to update `u_translation` before we draw with the
-translation that we desire.
+Ensuite, nous devons simplement mettre à jour `u_translation` avant de dessiner avec la
+translation que nous souhaitons.
 
 ```
   ...
@@ -207,35 +207,35 @@ translation that we desire.
 
   ...
 
-+  // Set Geometry.
++  // Définit la géométrie.
 +  setGeometry(gl);
 
   ...
 
-  // Draw scene.
+  // Dessine la scène.
   function drawScene() {
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
-    // Tell WebGL how to convert from clip space to pixels
+    // Indique à WebGL comment convertir de l'espace de découpage en pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-    // Tell it to use our program (pair of shaders)
+    // Indique d'utiliser notre programme (paire de shaders)
     gl.useProgram(program);
 
-    // Bind the attribute/buffer set we want.
+    // Lie l'ensemble attribut/tampon que nous voulons.
     gl.bindVertexArray(vao);
 
-    // Pass in the canvas resolution so we can convert from
-    // pixels to clip space in the shader
+    // Passe la résolution du canvas pour pouvoir convertir
+    // des pixels vers l'espace de découpage dans le shader
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
-    // Set the color.
+    // Définit la couleur.
     gl.uniform4fv(colorLocation, color);
 
-+    // Set the translation.
++    // Définit la translation.
 +    gl.uniform2fv(translationLocation, translation);
 
-    // Draw the rectangle.
+    // Dessine le rectangle.
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
 *    var count = 18;
@@ -243,19 +243,19 @@ translation that we desire.
   }
 ```
 
-Notice `setGeometry` is called only once. It is no longer inside `drawScene`.
+Notez que `setGeometry` n'est appelé qu'une seule fois. Il n'est plus à l'intérieur de `drawScene`.
 
-And here's that example. Again, drag the sliders to update the translation.
+Et voici cet exemple. Encore une fois, faites glisser les curseurs pour mettre à jour la translation.
 
 {{{example url="../webgl-2d-geometry-translate-better.html" }}}
 
-Now when we draw, WebGL is doing practically everything. All we are doing is
-setting a translation and asking it to draw. Even if our geometry had tens
-of thousands of points the main code would stay the same.
+Maintenant, quand nous dessinons, WebGL fait pratiquement tout. Tout ce que nous faisons, c'est
+définir une translation et lui demander de dessiner. Même si notre géométrie avait des dizaines
+de milliers de points, le code principal resterait le même.
 
-If you want you can compare <a target="_blank" href="../webgl-2d-geometry-translate.html">
-the version that uses the complex JavaScript
-above to update all the points</a>.
+Si vous le souhaitez, vous pouvez comparer <a target="_blank" href="../webgl-2d-geometry-translate.html">
+la version qui utilise le JavaScript complexe
+ci-dessus pour mettre à jour tous les points</a>.
 
-I hope this example was too obvious. In the [next article we'll move
-on to rotation](webgl-2d-rotation.html).
+J'espère que cet exemple n'était pas trop évident. Dans le [prochain article, nous passerons
+à la rotation](webgl-2d-rotation.html).

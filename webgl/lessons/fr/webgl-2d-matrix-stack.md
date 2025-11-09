@@ -1,94 +1,94 @@
-Title: WebGL2 Implementing A Matrix Stack
-Description: How to implement canvas 2d's translate/rotate/scale functions in WebGL
-TOC: 2D - Matrix Stack
+Title: Implémentation d'une pile de matrices en WebGL2
+Description: Comment implémenter les fonctions translate/rotate/scale de canvas 2d dans WebGL
+TOC: 2D - Pile de matrices
 
 
-This article is a continuation of [WebGL 2D DrawImage](webgl-2d-drawimage.html).
-If you haven't read that I suggest [you start there](webgl-2d-drawimage.html).
+Cet article est la suite de [WebGL 2D DrawImage](webgl-2d-drawimage.html).
+Si vous ne l'avez pas lu, je vous suggère de [commencer par là](webgl-2d-drawimage.html).
 
-In that last article we implemented the WebGL equivalent of Canvas 2D's `drawImage` function
-including its ability to specify both the source rectangle and the destination rectangle.
+Dans cet article précédent, nous avons implémenté l'équivalent WebGL de la fonction `drawImage` de Canvas 2D
+y compris sa capacité à spécifier à la fois le rectangle source et le rectangle de destination.
 
-What we haven't done yet is let us rotate and/or scale it from any arbitrary point. We could do that
-by adding more arguments, at a minimum we'd need to specify a center point, a rotation and an x and y scale.
-Fortunately there's a more generic and useful way. The way the Canvas 2D API does that is with a matrix stack.
-The matrix stack functions of the Canvas 2D API are `save`, `restore`, `translate`, `rotate`, and `scale`.
+Ce que nous n'avons pas encore fait, c'est permettre de pivoter et/ou de mettre à l'échelle depuis n'importe quel point arbitraire. Nous pourrions le faire
+en ajoutant plus d'arguments, au minimum nous aurions besoin de spécifier un point central, une rotation et une échelle x et y.
+Heureusement, il existe une façon plus générique et utile. La façon dont l'API Canvas 2D fait cela est avec une pile de matrices.
+Les fonctions de pile de matrices de l'API Canvas 2D sont `save`, `restore`, `translate`, `rotate` et `scale`.
 
-A matrix stack is pretty simple to implement. We make a stack of matrices. We make functions to
-multiply the top matrix of the stack using by either a translation, rotation, or scale matrix
-[using the functions we created earlier](webgl-2d-matrices.html).
+Une pile de matrices est assez simple à implémenter. Nous créons une pile de matrices. Nous créons des fonctions pour
+multiplier la matrice en haut de la pile en utilisant soit une matrice de translation, de rotation ou d'échelle
+[en utilisant les fonctions que nous avons créées précédemment](webgl-2d-matrices.html).
 
-Here's the implementation
+Voici l'implémentation
 
-First the constructor and the `save` and `restore` functions
+D'abord le constructeur et les fonctions `save` et `restore`
 
 ```
 function MatrixStack() {
   this.stack = [];
 
-  // since the stack is empty this will put an initial matrix in it
+  // comme la pile est vide, cela y mettra une matrice initiale
   this.restore();
 }
 
-// Pops the top of the stack restoring the previously saved matrix
+// Dépile le sommet de la pile en restaurant la matrice précédemment sauvegardée
 MatrixStack.prototype.restore = function() {
   this.stack.pop();
-  // Never let the stack be totally empty
+  // Ne jamais laisser la pile complètement vide
   if (this.stack.length < 1) {
     this.stack[0] = m4.identity();
   }
 };
 
-// Pushes a copy of the current matrix on the stack
+// Empile une copie de la matrice actuelle sur la pile
 MatrixStack.prototype.save = function() {
   this.stack.push(this.getCurrentMatrix());
 };
 ```
 
-We also need functions for getting and setting the top matrix
+Nous avons également besoin de fonctions pour obtenir et définir la matrice du sommet
 
 ```
-// Gets a copy of the current matrix (top of the stack)
+// Obtient une copie de la matrice actuelle (sommet de la pile)
 MatrixStack.prototype.getCurrentMatrix = function() {
-  return this.stack[this.stack.length - 1].slice();  // makes a copy
+  return this.stack[this.stack.length - 1].slice();  // fait une copie
 };
 
-// Lets us set the current matrix
+// Nous permet de définir la matrice actuelle
 MatrixStack.prototype.setCurrentMatrix = function(m) {
   return this.stack[this.stack.length - 1] = m;
 };
 
 ```
 
-Finally we need to implement `translate`, `rotate`, and `scale` using our
-previous matrix functions.
+Enfin, nous devons implémenter `translate`, `rotate` et `scale` en utilisant nos
+fonctions de matrices précédentes.
 
 ```
-// Translates the current matrix
+// Translate la matrice actuelle
 MatrixStack.prototype.translate = function(x, y, z) {
   var m = this.getCurrentMatrix();
   this.setCurrentMatrix(m4.translate(m, x, y, z));
 };
 
-// Rotates the current matrix around Z
+// Effectue une rotation de la matrice actuelle autour de Z
 MatrixStack.prototype.rotateZ = function(angleInRadians) {
   var m = this.getCurrentMatrix();
   this.setCurrentMatrix(m4.zRotate(m, angleInRadians));
 };
 
-// Scales the current matrix
+// Met à l'échelle la matrice actuelle
 MatrixStack.prototype.scale = function(x, y, z) {
   var m = this.getCurrentMatrix();
   this.setCurrentMatrix(m4.scale(m, x, y, z));
 };
 ```
 
-Note we're using the 3d matrix math functions. We could just use `0` for `z` on translation and `1`
-for `z` on scale but I find that I'm so used to using the 2d functions from Canvas 2d
-that I often forget to specify `z` an then the code breaks so let's make `z` optional
+Notez que nous utilisons les fonctions mathématiques de matrices 3D. Nous pourrions simplement utiliser `0` pour `z` sur la translation et `1`
+pour `z` sur l'échelle, mais je trouve que je suis tellement habitué à utiliser les fonctions 2D de Canvas 2D
+que j'oublie souvent de spécifier `z` et alors le code casse, donc rendons `z` optionnel
 
 ```
-// Translates the current matrix
+// Translate la matrice actuelle
 MatrixStack.prototype.translate = function(x, y, z) {
 +  if (z === undefined) {
 +    z = 0;
@@ -99,7 +99,7 @@ MatrixStack.prototype.translate = function(x, y, z) {
 
 ...
 
-// Scales the current matrix
+// Met à l'échelle la matrice actuelle
 MatrixStack.prototype.scale = function(x, y, z) {
 +  if (z === undefined) {
 +    z = 1;
@@ -109,56 +109,56 @@ MatrixStack.prototype.scale = function(x, y, z) {
 };
 ```
 
-Using our [`drawImage` from the previous lesson](webgl-2d-drawimage.html) we had these lines
+En utilisant notre [`drawImage` de la leçon précédente](webgl-2d-drawimage.html), nous avions ces lignes
 
 ```
-// this matrix will convert from pixels to clip space
+// cette matrice convertira des pixels vers l'espace de découpage
 var matrix = m4.orthographic(
     0, gl.canvas.clientWidth, gl.canvas.clientHeight, 0, -1, 1);
 
-// translate our quad to dstX, dstY
+// translate notre quad vers dstX, dstY
 matrix = m4.translate(matrix, dstX, dstY, 0);
 
-// scale our 1 unit quad
-// from 1 unit to dstWidth, dstHeight units
+// met à l'échelle notre quad de 1 unité
+// de 1 unité vers dstWidth, dstHeight unités
 matrix = m4.scale(matrix, dstWidth, dstHeight, 1);
 ```
 
-We just need to create a matrix stack
+Nous devons simplement créer une pile de matrices
 
 ```
 var matrixStack = new MatrixStack();
 ```
 
-and multiply in the top matrix from our stack in
+et multiplier par la matrice du sommet de notre pile
 
 ```
-// this matrix will convert from pixels to clip space
+// cette matrice convertira des pixels vers l'espace de découpage
 var matrix = m4.orthographic(
     0, gl.canvas.clientWidth, gl.canvas.clientHeight, 0, -1, 1);
 
-+// The matrix stack is in pixels so it goes after the projection
-+// above which converted our space from clip space to pixel space
++// La pile de matrices est en pixels donc elle vient après la projection
++// ci-dessus qui a converti notre espace de l'espace de découpage vers l'espace en pixels
 +matrix = m4.multiply(matrix, matrixStack.getCurrentMatrix());
 
-// translate our quad to dstX, dstY
+// translate notre quad vers dstX, dstY
 matrix = m4.translate(matrix, dstX, dstY, 0);
 
-// scale our 1 unit quad
-// from 1 unit to dstWidth, dstHeight units
+// met à l'échelle notre quad de 1 unité
+// de 1 unité vers dstWidth, dstHeight unités
 matrix = m4.scale(matrix, dstWidth, dstHeight, 1);
 ```
 
-And now we can use it the same way we'd use it with the Canvas 2D API.
+Et maintenant nous pouvons l'utiliser de la même façon que nous l'utiliserions avec l'API Canvas 2D.
 
-If you're not aware of how to use the matrix stack you can think of it as
-moving and orientating the origin of the canvas. So for example by default in a 2D canvas the origin (0,0)
-is at the top left corner.
+Si vous ne savez pas comment utiliser la pile de matrices, vous pouvez la considérer comme
+déplaçant et orientant l'origine du canvas. Donc par exemple, par défaut dans un canvas 2D, l'origine (0,0)
+est dans le coin supérieur gauche.
 
-For example if we move the origin to the center of the canvas then drawing an image at 0,0
-will draw it starting at the center of the canvas
+Par exemple, si nous déplaçons l'origine au centre du canvas, alors dessiner une image en 0,0
+la dessinera à partir du centre du canvas
 
-Let's take [our previous example](webgl-2d-drawimage.html) and just draw a single image
+Prenons [notre exemple précédent](webgl-2d-drawimage.html) et dessinons simplement une seule image
 
 ```
 var textureInfo = loadImageAndCreateTextureInfo('resources/star.jpg');
@@ -180,15 +180,15 @@ function draw(time) {
 }
 ```
 
-And here it is.
+Et voici le résultat.
 
 {{{example url="../webgl-2d-matrixstack-01.html" }}}
 
-you can see even though we're passing `0, 0` to `drawImage` since we use
-`matrixStack.translate` to move the origin to the center of the canvas
-the image is drawn and rotates around that center.
+vous pouvez voir que même si nous passons `0, 0` à `drawImage`, puisque nous utilisons
+`matrixStack.translate` pour déplacer l'origine au centre du canvas,
+l'image est dessinée et tourne autour de ce centre.
 
-Let's move the center of rotation to center of the image
+Déplaçons le centre de rotation au centre de l'image
 
 ```
 matrixStack.translate(gl.canvas.width / 2, gl.canvas.height / 2);
@@ -196,11 +196,11 @@ matrixStack.rotateZ(time);
 +matrixStack.translate(textureInfo.width / -2, textureInfo.height / -2);
 ```
 
-And now it rotates around the center of the image in the center of the canvas
+Et maintenant elle tourne autour du centre de l'image au centre du canvas
 
 {{{example url="../webgl-2d-matrixstack-02.html" }}}
 
-Let's draw the same image at each corner rotating on different corners
+Dessinons la même image à chaque coin en tournant sur différents coins
 
 ```
 matrixStack.translate(gl.canvas.width / 2, gl.canvas.height / 2);
@@ -221,11 +221,11 @@ matrixStack.rotateZ(time);
 +
 +matrixStack.save();
 +{
-+  // We're at the center of the center image so go to the top/left corner
++  // Nous sommes au centre de l'image centrale donc allons au coin supérieur/gauche
 +  matrixStack.translate(textureInfo.width / -2, textureInfo.height / -2);
 +  matrixStack.rotateZ(Math.sin(time * 2.2));
 +  matrixStack.scale(0.2, 0.2);
-+  // Now we want the bottom/right corner of the image we're about to draw
++  // Maintenant nous voulons le coin inférieur/droit de l'image que nous allons dessiner
 +  matrixStack.translate(-textureInfo.width, -textureInfo.height);
 +
 +  drawImage(
@@ -239,11 +239,11 @@ matrixStack.rotateZ(time);
 +
 +matrixStack.save();
 +{
-+  // We're at the center of the center image so go to the top/right corner
++  // Nous sommes au centre de l'image centrale donc allons au coin supérieur/droit
 +  matrixStack.translate(textureInfo.width / 2, textureInfo.height / -2);
 +  matrixStack.rotateZ(Math.sin(time * 2.3));
 +  matrixStack.scale(0.2, 0.2);
-+  // Now we want the bottom/left corner of the image we're about to draw
++  // Maintenant nous voulons le coin inférieur/gauche de l'image que nous allons dessiner
 +  matrixStack.translate(0, -textureInfo.height);
 +
 +  drawImage(
@@ -257,11 +257,11 @@ matrixStack.rotateZ(time);
 +
 +matrixStack.save();
 +{
-+  // We're at the center of the center image so go to the bottom/left corner
++  // Nous sommes au centre de l'image centrale donc allons au coin inférieur/gauche
 +  matrixStack.translate(textureInfo.width / -2, textureInfo.height / 2);
 +  matrixStack.rotateZ(Math.sin(time * 2.4));
 +  matrixStack.scale(0.2, 0.2);
-+  // Now we want the top/right corner of the image we're about to draw
++  // Maintenant nous voulons le coin supérieur/droit de l'image que nous allons dessiner
 +  matrixStack.translate(-textureInfo.width, 0);
 +
 +  drawImage(
@@ -275,12 +275,12 @@ matrixStack.rotateZ(time);
 +
 +matrixStack.save();
 +{
-+  // We're at the center of the center image so go to the bottom/right corner
++  // Nous sommes au centre de l'image centrale donc allons au coin inférieur/droit
 +  matrixStack.translate(textureInfo.width / 2, textureInfo.height / 2);
 +  matrixStack.rotateZ(Math.sin(time * 2.5));
 +  matrixStack.scale(0.2, 0.2);
-+  // Now we want the top/left corner of the image we're about to draw
-+  matrixStack.translate(0, 0);  // 0,0 means this line is not really doing anything
++  // Maintenant nous voulons le coin supérieur/gauche de l'image que nous allons dessiner
++  matrixStack.translate(0, 0);  // 0,0 signifie que cette ligne ne fait rien en réalité
 +
 +  drawImage(
 +    textureInfo.texture,
@@ -292,39 +292,39 @@ matrixStack.rotateZ(time);
 +matrixStack.restore();
 ```
 
-And here's that
+Et voici le résultat
 
 {{{example url="../webgl-2d-matrixstack-03.html" }}}
 
-If you think of the various matrix stack functions, `translate`, `rotateZ`, and `scale`
-as moving the origin then the way I think of setting the center of rotation is
-*where would I have to move the origin so that when I call drawImage a certain part
-of the image is **at** the previous origin?*
+Si vous pensez aux différentes fonctions de pile de matrices, `translate`, `rotateZ` et `scale`
+comme déplaçant l'origine, alors ma façon de penser à la définition du centre de rotation est
+*où devrais-je déplacer l'origine pour que lorsque j'appelle drawImage, une certaine partie
+de l'image soit **à** l'origine précédente ?*
 
-In other words let's say on a 400x300 canvas I call `matrixStack.translate(210, 150)`.
-At that point the origin is at 210, 150 and all drawing will be relative that point.
-If we call `drawImage` with `0, 0` this is where the image will be drawn.
+En d'autres termes, disons que sur un canvas 400x300, j'appelle `matrixStack.translate(210, 150)`.
+À ce moment-là, l'origine est à 210, 150 et tout le dessin sera relatif à ce point.
+Si nous appelons `drawImage` avec `0, 0`, c'est là que l'image sera dessinée.
 
 <img class="webgl_center" width="400" src="resources/matrixstack-before.svg" />
 
-Lets say we want the center of rotation to be the bottom right. In that case
-where would be have to move the origin so that when we call `drawImage`
-the point we want to be the center of rotation is at the current origin?
-For the bottom right of the texture that would be `-textureWidth, -textureHeight`
-so now when we call `drawImage` with `0, 0` the texture would be drawn here
-and it's bottom right corner as at the previous origin.
+Disons que nous voulons que le centre de rotation soit en bas à droite. Dans ce cas,
+où devrions-nous déplacer l'origine pour que lorsque nous appelons `drawImage`,
+le point que nous voulons comme centre de rotation soit à l'origine actuelle ?
+Pour le coin inférieur droit de la texture, ce serait `-textureWidth, -textureHeight`.
+Donc maintenant, quand nous appelons `drawImage` avec `0, 0`, la texture serait dessinée ici
+et son coin inférieur droit serait à l'origine précédente.
 
 <img class="webgl_center" width="400" src="resources/matrixstack-after.svg" />
 
-At any point whatever we did before that on the matrix stack it doesn't matter. We did a bunch
-of stuff to move or scale or rotate the origin but just before we call
-`drawImage` wherever the origin happens to be at the moment is irrelevant.
-It's the new origin so we just have to decide where to move that origin
-relative where the texture would be drawn if we had nothing before it on the stack.
+À n'importe quel moment, quoi que nous ayons fait avant sur la pile de matrices, cela n'a pas d'importance. Nous avons fait un tas
+de choses pour déplacer ou mettre à l'échelle ou faire pivoter l'origine, mais juste avant d'appeler
+`drawImage`, où que l'origine se trouve à ce moment est sans importance.
+C'est la nouvelle origine, donc nous devons juste décider où déplacer cette origine
+par rapport à l'endroit où la texture serait dessinée si nous n'avions rien avant elle sur la pile.
 
-You might notice a matrix stack is very similar to a [scene graph that we
-covered before](webgl-scene-graph.html). A scene graph had a tree of nodes
-and as we walked the tree we multiplied each node by its parent's node.
-A matrix stack is effectively another version that same process.
+Vous pourriez remarquer qu'une pile de matrices est très similaire à un [graphe de scène que nous
+avons couvert précédemment](webgl-scene-graph.html). Un graphe de scène avait un arbre de nœuds
+et en parcourant l'arbre, nous multipliions chaque nœud par le nœud de son parent.
+Une pile de matrices est effectivement une autre version de ce même processus.
 
 

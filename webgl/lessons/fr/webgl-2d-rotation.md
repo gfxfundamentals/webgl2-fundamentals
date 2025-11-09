@@ -1,38 +1,38 @@
-Title: WebGL2 2D Rotation
-Description: How to rotate in 2D
-TOC: 2D Rotation
+Title: Rotation 2D en WebGL2
+Description: Comment effectuer une rotation en 2D
+TOC: Rotation 2D
 
 
-This post is a continuation of a series of posts about WebGL. The first
-[started with fundamentals](webgl-fundamentals.html) and the previous was
-[about translating geometry](webgl-2d-translation.html).
+Cet article fait partie d'une série d'articles sur WebGL. Le premier
+[a commencé par les bases](webgl-fundamentals.html) et le précédent portait sur
+[la translation de la géométrie](webgl-2d-translation.html).
 
-I'm going to admit right up front I have no idea if how I explain this
- will make sense but what the heck, might as well try.
+Je vais admettre d'emblée que je n'ai aucune idée si ma façon d'expliquer cela
+aura du sens, mais qu'importe, autant essayer.
 
-First I want to introduce you to what's called a "unit circle". If you
-remember your junior high school math (don't go to sleep on me!) a
-circle has a radius. The radius of a circle is the distance from the center
-of the circle to the edge. A unit circle is a circle with a radius of 1.0.
+D'abord, je veux vous présenter ce qu'on appelle un "cercle unité". Si vous
+vous souvenez de vos cours de maths au collège (ne vous endormez pas !), un
+cercle a un rayon. Le rayon d'un cercle est la distance du centre
+du cercle au bord. Un cercle unité est un cercle avec un rayon de 1.0.
 
-Here's a unit circle.
+Voici un cercle unité.
 
 {{{diagram url="../unit-circle.html" width="300" height="300" className="invertdark" }}}
 
-Notice as you drag the blue handle around the circle the X and Y positions
-change. Those represent the position of that point on the circle. At the
-top Y is 1 and X is 0. On the right X is 1 and Y is 0.
+Remarquez que lorsque vous faites glisser la poignée bleue autour du cercle, les positions X et Y
+changent. Elles représentent la position de ce point sur le cercle. En haut,
+Y est 1 et X est 0. À droite, X est 1 et Y est 0.
 
-If you remember from basic 3rd grade math if you multiply something by 1
-it stays the same. So 123 * 1 = 123. Pretty basic, right? Well, a unit circle,
-a circle with a radius of 1.0 is also a form of 1. It's a rotating 1.
-So you can multiply something by this unit circle and in a way it's kind
-of like multiplying by 1 except magic happens and things rotate.
+Si vous vous souvenez des maths de base de l'école primaire, si vous multipliez quelque chose par 1,
+cela reste identique. Donc 123 * 1 = 123. Plutôt simple, non ? Eh bien, un cercle unité,
+un cercle avec un rayon de 1.0 est aussi une forme de 1. C'est un 1 rotatif.
+Donc vous pouvez multiplier quelque chose par ce cercle unité et d'une certaine manière c'est un peu
+comme multiplier par 1 sauf que la magie opère et les choses tournent.
 
-We're going to take that X and Y value from any point on the unit circle
-and we'll multiply our geometry by them from [our previous sample](webgl-2d-translation.html).
+Nous allons prendre cette valeur X et Y de n'importe quel point sur le cercle unité
+et nous allons multiplier notre géométrie par elles depuis [notre exemple précédent](webgl-2d-translation.html).
 
-Here are the updates to our shader.
+Voici les mises à jour de notre shader.
 
     #version 300 es
 
@@ -43,17 +43,17 @@ Here are the updates to our shader.
     +uniform vec2 u_rotation;
 
     void main() {
-    + // Rotate the position
+    + // Effectue la rotation de la position
     +  vec2 rotatedPosition = vec2(
     +     a_position.x * u_rotation.y + a_position.y * u_rotation.x,
     +     a_position.y * u_rotation.y - a_position.x * u_rotation.x);
 
-      // Add in the translation.
+      // Ajoute la translation.
     * vec2 position = rotatedPosition + u_translation;
 
     ...
 
-And we update the JavaScript so that we can pass those 2 values in.
+Et nous mettons à jour le JavaScript pour pouvoir passer ces 2 valeurs.
 
 ```
   ...
@@ -66,37 +66,37 @@ And we update the JavaScript so that we can pass those 2 values in.
 
   ...
 
-  // Draw the scene.
+  // Dessine la scène.
   function drawScene() {
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
-    // Tell WebGL how to convert from clip space to pixels
+    // Indique à WebGL comment convertir de l'espace de découpage en pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-    // Clear the canvas
+    // Efface le canvas
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // Tell it to use our program (pair of shaders)
+    // Indique d'utiliser notre programme (paire de shaders)
     gl.useProgram(program);
 
-    // Bind the attribute/buffer set we want.
+    // Lie l'ensemble attribut/tampon que nous voulons.
     gl.bindVertexArray(vao);
 
-    // Pass in the canvas resolution so we can convert from
-    // pixels to clip space in the shader
+    // Passe la résolution du canvas pour pouvoir convertir
+    // des pixels vers l'espace de découpage dans le shader
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
-    // Set the color.
+    // Définit la couleur.
     gl.uniform4fv(colorLocation, color);
 
-    // Set the translation.
+    // Définit la translation.
     gl.uniform2fv(translationLocation, translation);
 
-+    // Set the rotation.
++    // Définit la rotation.
 +    gl.uniform2fv(rotationLocation, rotation);
 
-    // Draw the rectangle.
+    // Dessine le rectangle.
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
     var count = 18;
@@ -104,54 +104,54 @@ And we update the JavaScript so that we can pass those 2 values in.
   }
 ```
 
-And here's the result. Drag the handle on the circle to rotate
-or the sliders to translate.
+Et voici le résultat. Faites glisser la poignée sur le cercle pour effectuer une rotation
+ou les curseurs pour translater.
 
 {{{example url="../webgl-2d-geometry-rotation.html" }}}
 
-Why does it work? Well, look at the math.
+Pourquoi cela fonctionne-t-il ? Eh bien, regardez les mathématiques.
 
 <pre class="webgl_center">
     rotatedX = a_position.x * u_rotation.y + a_position.y * u_rotation.x;
     rotatedY = a_position.y * u_rotation.y - a_position.x * u_rotation.x;
 </pre>
 
-Let's say you have a rectangle and you want to rotate it.
-Before you start rotating it the top right corner is at 3.0, 9.0.
-Let's pick a point on the unit circle 30 degrees clockwise from 12 o'clock.
+Disons que vous avez un rectangle et que vous voulez le faire pivoter.
+Avant de commencer à le faire pivoter, le coin supérieur droit est en 3.0, 9.0.
+Choisissons un point sur le cercle unité à 30 degrés dans le sens horaire depuis midi.
 
 <img src="../resources/rotate-30.png" class="webgl_center invertdark" />
 
-The position on the circle there is 0.50 and 0.87
+La position sur le cercle est 0.50 et 0.87
 
 <pre class="webgl_center">
    3.0 * 0.87 + 9.0 * 0.50 = 7.1
    9.0 * 0.87 - 3.0 * 0.50 = 6.3
 </pre>
 
-That's exactly where we need it to be
+C'est exactement là où nous en avons besoin
 
 <img src="../resources/rotation-drawing.svg" width="500" class="webgl_center"/>
 
-The same for 60 degrees clockwise
+Pareil pour 60 degrés dans le sens horaire
 
 <img src="../resources/rotate-60.png" class="webgl_center invertdark" />
 
-The position on the circle there is 0.87 and 0.50
+La position sur le cercle est 0.87 et 0.50
 
 <pre class="webgl_center">
    3.0 * 0.50 + 9.0 * 0.87 = 9.3
    9.0 * 0.50 - 3.0 * 0.87 = 1.9
 </pre>
 
-You can see that as we rotate that point clockwise to the right the X
-value gets bigger and the Y gets smaller. If we kept going past 90 degrees
-X would start getting smaller again and Y would start getting bigger.
-That pattern gives us rotation.
+Vous pouvez voir que lorsque nous faisons pivoter ce point dans le sens horaire vers la droite, la valeur X
+devient plus grande et Y devient plus petite. Si nous continuions au-delà de 90 degrés,
+X commencerait à devenir plus petite à nouveau et Y commencerait à devenir plus grande.
+Ce schéma nous donne la rotation.
 
-There's another name for the points on a unit circle. They're called
-the sine and cosine. So for any given angle we can just look up the
-sine and cosine like this.
+Il y a un autre nom pour les points sur un cercle unité. Ils s'appellent
+le sinus et le cosinus. Donc pour n'importe quel angle donné, nous pouvons simplement rechercher le
+sinus et le cosinus comme ceci.
 
     function printSineAndCosineForAnAngle(angleInDegrees) {
       var angleInRadians = angleInDegrees * Math.PI / 180;
@@ -160,52 +160,52 @@ sine and cosine like this.
       console.log("s = " + s + " c = " + c);
     }
 
-If you copy and paste the code into your JavaScript console and
-type `printSineAndCosignForAngle(30)` you see it prints
-`s = 0.49 c = 0.87` (note: I rounded off the numbers.)
+Si vous copiez et collez le code dans votre console JavaScript et
+tapez `printSineAndCosignForAnAngle(30)`, vous voyez qu'il affiche
+`s = 0.49 c = 0.87` (note : j'ai arrondi les nombres.)
 
-If you put it all together you can rotate your geometry to any angle
-you desire. Just set the rotation to the sine and cosine of the angle
-you want to rotate to.
+Si vous assemblez tout cela, vous pouvez faire pivoter votre géométrie vers n'importe quel angle
+que vous désirez. Il suffit de définir la rotation au sinus et au cosinus de l'angle
+vers lequel vous voulez pivoter.
 
       ...
       var angleInRadians = angleInDegrees * Math.PI / 180;
       rotation[0] = Math.sin(angleInRadians);
       rotation[1] = Math.cos(angleInRadians);
 
-Here's a version that just has an angle setting. Drag the sliders
-to translate or rotate.
+Voici une version qui n'a qu'un réglage d'angle. Faites glisser les curseurs
+pour translater ou pivoter.
 
 {{{example url="../webgl-2d-geometry-rotation-angle.html" }}}
 
-I hope that made some sense. [Next up a simpler one. Scale](webgl-2d-scale.html).
+J'espère que cela a eu un certain sens. [Ensuite, un plus simple. La mise à l'échelle](webgl-2d-scale.html).
 
-<div class="webgl_bottombar"><h3>What are radians?</h3>
+<div class="webgl_bottombar"><h3>Que sont les radians ?</h3>
 <p>
-Radians are a unit of measurement used with circles, rotation and angles.
-Just like we can measure distance in inches, yards, meters, etc we can
-measure angles in degrees or radians.
+Les radians sont une unité de mesure utilisée avec les cercles, la rotation et les angles.
+Tout comme nous pouvons mesurer la distance en pouces, yards, mètres, etc., nous pouvons
+mesurer les angles en degrés ou en radians.
 </p>
 <p>
-You're probably aware that math with metric measurements is easier than
-math with imperial measurements. To go from inches to feet we divide by 12.
-To go from inches to yards we divide by 36. I don't know about you but I
-can't divide by 36 in my head. With metric it's much easier. To go from
-millimeters to centimeters we divide by 10. To go from millimeters to meters
-we divide by 1000. I **can** divide by 1000 in my head.
+Vous savez probablement que les calculs avec les mesures métriques sont plus faciles que
+les calculs avec les mesures impériales. Pour passer de pouces à pieds, nous divisons par 12.
+Pour passer de pouces à yards, nous divisons par 36. Je ne sais pas pour vous, mais je
+ne peux pas diviser par 36 de tête. Avec le système métrique, c'est beaucoup plus facile. Pour passer
+de millimètres à centimètres, nous divisons par 10. Pour passer de millimètres à mètres,
+nous divisons par 1000. Je **peux** diviser par 1000 de tête.
 </p>
 <p>
-Radians vs degrees are similar. Degrees make the math hard. Radians make
-the math easy. There are 360 degrees in a circle but there are only 2π radians.
-So a full turn is 2π radians. A half turn is 1π radian. A 1/4 turn, ie 90 degrees
-is 1/2π radians. So if you want to rotate something 90 degrees just use
-<code>Math.PI * 0.5</code>. If you want to rotate it 45 degrees use
+Les radians vs degrés sont similaires. Les degrés rendent les mathématiques difficiles. Les radians rendent
+les mathématiques faciles. Il y a 360 degrés dans un cercle mais il n'y a que 2π radians.
+Donc un tour complet fait 2π radians. Un demi-tour fait 1π radian. Un quart de tour, c'est-à-dire 90 degrés,
+fait 1/2π radians. Donc si vous voulez faire pivoter quelque chose de 90 degrés, utilisez simplement
+<code>Math.PI * 0.5</code>. Si vous voulez le faire pivoter de 45 degrés, utilisez
 <code>Math.PI * 0.25</code> etc.
 </p>
 <p>
-Nearly all math involving angles, circles or rotation works very simply
-if you start thinking in radians. So give it try. Use radians, not degrees
-except in UI displays.
+Presque toutes les mathématiques impliquant des angles, des cercles ou de la rotation fonctionnent très simplement
+si vous commencez à penser en radians. Alors essayez. Utilisez les radians, pas les degrés
+sauf dans les affichages de l'interface utilisateur.
 </p>
 </div>
 

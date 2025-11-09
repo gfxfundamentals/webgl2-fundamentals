@@ -1,87 +1,87 @@
-Title: WebGL2 3D Geometry - Lathe
-Description: How to lathe a bezier curve.
-TOC: 3D Geometry - Lathe
+Title: WebGL2 3D Géométrie - Tour
+Description: Comment tourner une courbe de Bézier.
+TOC: 3D Géométrie - Tour
 
 
-This is probably a kind of obscure topic but I found it interesting so I'm writing it up.
-It is not something I recommend you actually do. Rather, I think working through
-the topic will help illustrate some things about making 3d models for WebGL.
+C'est probablement un sujet un peu obscur mais je l'ai trouvé intéressant, donc je l'écris.
+Ce n'est pas quelque chose que je vous recommande de faire réellement. Plutôt, je pense que travailler sur
+ce sujet aidera à illustrer certaines choses sur la création de modèles 3D pour WebGL.
 
-Someone asked how to make a bowling pin shape in WebGL. The *smart* answer is
-"Use a 3D modeling package like [Blender](https://blender.org),
+Quelqu'un a demandé comment faire une forme de quille de bowling en WebGL. La réponse *intelligente* est
+"Utilisez un logiciel de modélisation 3D comme [Blender](https://blender.org),
 [Maya](https://www.autodesk.com/products/maya/overview),
 [3D Studio Max](https://www.autodesk.com/products/3ds-max/overview),
 [Cinema 4D](https://www.maxon.net/en/products/cinema-4d/overview/), etc.
-Use it to model a bowling pin, export, read the dat.
-([The OBJ format is relatively simple](https://en.wikipedia.org/wiki/Wavefront_.obj_file)).
+Utilisez-le pour modéliser une quille de bowling, exportez, lisez les données.
+([Le format OBJ est relativement simple](https://en.wikipedia.org/wiki/Wavefront_.obj_file)).
 
-But, that got me thinking, what if they wanted to make a modeling package?
+Mais, cela m'a fait réfléchir, que faire s'ils voulaient créer un logiciel de modélisation ?
 
-There's a few ideas. One is to make a cylinder and try to pinch it in
-the right places using sin waves applied in certain places. The problem
-with that idea you wouldn't get a smooth top. A standard cylinder
-is generated as a series of equally spaced rings but you'd need more
-rings where things are more curvy.
+Il y a quelques idées. L'une est de créer un cylindre et d'essayer de le pincer aux
+bons endroits en utilisant des ondes sinusoïdales appliquées à certains endroits. Le problème
+avec cette idée est que vous n'obtiendriez pas un sommet lisse. Un cylindre standard
+est généré comme une série d'anneaux régulièrement espacés mais vous auriez besoin de plus
+d'anneaux là où les choses sont plus courbées.
 
-In a modeling package you'd make a bowling pin by making a 2d silhouette or rather
-a curved line that matches the edge of a 2d silhouette. You'd then
-lathe that into a 3d shape. By *lathe* I mean you'd spin it around
-some axis and generate points as you do. This lets you easily make
-any round objects like a bowl, a glass, a baseball bat, bottles,
-light bulbs, etc.
+Dans un logiciel de modélisation, vous feriez une quille de bowling en créant une silhouette 2D ou plutôt
+une ligne courbe qui correspond au bord d'une silhouette 2D. Vous feriez ensuite
+tourner cela en une forme 3D. Par *tourner* je veux dire que vous la feriez pivoter autour
+d'un axe et générer des points au fur et à mesure. Cela vous permet de créer facilement
+n'importe quel objet rond comme un bol, un verre, une batte de baseball, des bouteilles,
+des ampoules, etc.
 
-So, how do we do that? Well first we need some way to make a curve.
-Then we'd need to compute points on that curve. We'd then rotate
-those points around some axis using [matrix math](webgl-2d-matrices.html)
-and build triangles from those points.
+Alors, comment faire cela ? Eh bien, d'abord nous avons besoin d'un moyen de créer une courbe.
+Ensuite, nous aurions besoin de calculer des points sur cette courbe. Nous ferions ensuite pivoter
+ces points autour d'un axe en utilisant [les mathématiques de matrices](webgl-2d-matrices.html)
+et construire des triangles à partir de ces points.
 
-The most common kind of curve in computer graphics seems to be
-a bezier curve. If you've ever edited a curve in
-[Adobe Illustrator](https://www.adobe.com/products/illustrator.html) or
-[Inkscape](https://inkscape.org/en/) or
+Le type de courbe le plus courant en infographie semble être
+une courbe de Bézier. Si vous avez déjà édité une courbe dans
+[Adobe Illustrator](https://www.adobe.com/products/illustrator.html) ou
+[Inkscape](https://inkscape.org/en/) ou
 [Affinity Designer](https://affinity.serif.com/en-us/designer/)
-or similar programs that's a bezier curve.
+ou des programmes similaires, c'est une courbe de Bézier.
 
-A bezier curve or rather a cubic bezier curve is formed by 4 points.
-2 points are the end points. 2 points are the "control points".
+Une courbe de Bézier ou plutôt une courbe de Bézier cubique est formée par 4 points.
+2 points sont les extrémités. 2 points sont les "points de contrôle".
 
-Here's 4 points
+Voici 4 points
 
 {{{diagram url="resources/bezier-curve-diagram.html?maxDepth=0" }}}
 
-We pick a number between 0 and 1 (called `t`) where 0 = the beginning
-and 1 = the end. We then compute the corresponding `t` point
-between each pair of points. `P1 P2`, `P2 P3`, `P3 P4`.
+Nous choisissons un nombre entre 0 et 1 (appelé `t`) où 0 = le début
+et 1 = la fin. Nous calculons ensuite le point `t` correspondant
+entre chaque paire de points. `P1 P2`, `P2 P3`, `P3 P4`.
 
 {{{diagram url="resources/bezier-curve-diagram.html?maxDepth=1" }}}
 
-In other words if `t = .25` then we compute a point 25% of the way
-going from `P1` to `P2`, another 25% of the way going from `P2` to `P3`
-and one more 25% of the way going from `P3` to `P4`.
+En d'autres termes, si `t = .25` alors nous calculons un point à 25% du chemin
+allant de `P1` à `P2`, un autre à 25% du chemin allant de `P2` à `P3`
+et un de plus à 25% du chemin allant de `P3` à `P4`.
 
-You can drag the slider to adjust `t` and you can also move points
-`P1`, `P2`, `P3`, and `P4`.
+Vous pouvez faire glisser le curseur pour ajuster `t` et vous pouvez également déplacer les points
+`P1`, `P2`, `P3`, et `P4`.
 
-We do the same for the resulting points. Compute `t` points between `Q1 Q2`
-and `Q2 Q3`.
+Nous faisons de même pour les points résultants. Calculer les points `t` entre `Q1 Q2`
+et `Q2 Q3`.
 
 {{{diagram url="resources/bezier-curve-diagram.html?maxDepth=2" }}}
 
-Finally we do the same for those 2 points and compute the `t` point between
+Finalement nous faisons de même pour ces 2 points et calculons le point `t` entre
 `R1 R2`.
 
 {{{diagram url="resources/bezier-curve-diagram.html?maxDepth=3" }}}
 
-The positions of that <span style="color: red;">red point</span> make a curve.
+Les positions de ce <span style="color: red;">point rouge</span> forment une courbe.
 
 {{{diagram url="resources/bezier-curve-diagram.html?maxDepth=4" }}}
 
-So this is a cubic bezier curve.
+Donc ceci est une courbe de Bézier cubique.
 
-Note that while the interpolation between points above and
-the process of making 3 points from 4, then 2 from 3, and finally 1
-point from 2 works that's not the normal way. Instead someone plugged
-in all the math and simplified it to a formula like this
+Notez que bien que l'interpolation entre les points ci-dessus et
+le processus de création de 3 points à partir de 4, puis 2 à partir de 3, et finalement 1
+point à partir de 2 fonctionne, ce n'est pas la façon normale. Au lieu de cela, quelqu'un a branché
+toutes les mathématiques et les a simplifiées en une formule comme celle-ci
 
 <div class="webgl_center">
 <pre class="webgl_math">
@@ -93,30 +93,30 @@ P = P1 * invT^3 +
 </pre>
 </div>
 
-Where `P1`, `P2`, `P3`, `P4` are the points like the examples above and `P`
-is the <span style="color: red;">red dot</span>.
+Où `P1`, `P2`, `P3`, `P4` sont les points comme dans les exemples ci-dessus et `P`
+est le <span style="color: red;">point rouge</span>.
 
-In a 2D vector art program like Adobe Illustrator
-when you make a longer curve it's actually made from many small 4 point
-curves like this. By default most apps lock the control points
-around a shared start/end point and make sure they are always
-opposite relative to the shared point.
+Dans un programme d'art vectoriel 2D comme Adobe Illustrator
+lorsque vous créez une courbe plus longue, elle est en fait composée de nombreuses petites courbes à 4 points
+comme celle-ci. Par défaut, la plupart des applications verrouillent les points de contrôle
+autour d'un point de début/fin partagé et s'assurent qu'ils sont toujours
+opposés par rapport au point partagé.
 
-See this example, move `P3` or `P5` and the code will move the other.
+Voyez cet exemple, déplacez `P3` ou `P5` et le code déplacera l'autre.
 
 {{{diagram url="resources/bezier-curve-edit.html" }}}
 
-Notice the curve made by `P1,P2,P3,P4` is a separate curve from
-the one made by `P4,P5,P6,P7`. It's just when `P3` and `P5` are on exact
-opposite sides of `P4` together they look like one continuous curve.
-Most apps will then usually give you the option to stop locking them
-together so you can get a sharp corner. Un-check the lock checkbox
-then drag `P3` or `P5` and it will become even more clear they are
-separate curves.
+Remarquez que la courbe créée par `P1,P2,P3,P4` est une courbe séparée de
+celle créée par `P4,P5,P6,P7`. C'est juste que lorsque `P3` et `P5` sont sur des côtés exactement
+opposés de `P4`, ensemble ils ressemblent à une courbe continue.
+La plupart des applications vous donneront ensuite généralement l'option d'arrêter de les verrouiller
+ensemble pour que vous puissiez obtenir un coin vif. Décochez la case de verrouillage
+puis faites glisser `P3` ou `P5` et il deviendra encore plus clair qu'elles sont
+des courbes séparées.
 
-Next up we need a way to generate points on a curve.
-Using the formula above we can generate a point for
-a given `t` value like this.
+Ensuite, nous avons besoin d'un moyen de générer des points sur une courbe.
+En utilisant la formule ci-dessus, nous pouvons générer un point pour
+une valeur `t` donnée comme ceci.
 
     function getPointOnBezierCurve(points, offset, t) {
       const invT = (1 - t);
@@ -126,7 +126,7 @@ a given `t` value like this.
                     v2.mult(points[offset + 3], t * t  *t));
     }
 
-And we can generate a set of points for the curve like this
+Et nous pouvons générer un ensemble de points pour la courbe comme ceci
 
     function getPointsOnBezierCurve(points, offset, numPoints) {
       const cpoints = [];
@@ -137,28 +137,28 @@ And we can generate a set of points for the curve like this
       return cpoints;
     }
 
-Note: `v2.mult` and `v2.add` are small JavaScript functions I included
-to help do math with points.
+Note : `v2.mult` et `v2.add` sont de petites fonctions JavaScript que j'ai incluses
+pour aider à faire des mathématiques avec des points.
 
 {{{diagram url="resources/bezier-curve-diagram.html?maxDepth=0&showCurve=true&showPoints=true" }}}
 
-In the diagram above you can choose a number of points. If the curve is sharp
-you'd want more points. If the curve is nearly a straight line though you'd
-probably want less points. One solution
-is to check how curvy a curve is. If it's too curvy then split it into
-2 curves.
+Dans le diagramme ci-dessus, vous pouvez choisir un nombre de points. Si la courbe est vive
+vous voudriez plus de points. Si la courbe est presque une ligne droite cependant vous voudriez
+probablement moins de points. Une solution
+est de vérifier à quel point une courbe est courbée. Si elle est trop courbée alors la diviser en
+2 courbes.
 
-The splitting part turns out to be easy. If we look at the various
-levels of interpolation again, the points `P1`, `Q1`, `R1`, RED make one
-curve and the points RED, `R2`, `Q3`, `P4` make the other for any value of t.
-In other words we can split the curve anywhere and get 2 curves
-that match the original.
+La partie division s'avère facile. Si nous regardons les différents
+niveaux d'interpolation à nouveau, les points `P1`, `Q1`, `R1`, ROUGE forment une
+courbe et les points ROUGE, `R2`, `Q3`, `P4` forment l'autre pour n'importe quelle valeur de t.
+En d'autres termes, nous pouvons diviser la courbe n'importe où et obtenir 2 courbes
+qui correspondent à l'originale.
 
 {{{diagram url="resources/bezier-curve-diagram.html?maxDepth=4&show2Curves=true" }}}
 
-The second part is deciding if a curve needs to be split or not. Looking
-around the net I found [this function](https://seant23.wordpress.com/2010/11/12/offset-bezier-curves/)
-that for a given curve decides how flat it is.
+La deuxième partie consiste à décider si une courbe doit être divisée ou non. En regardant
+autour du net, j'ai trouvé [cette fonction](https://seant23.wordpress.com/2010/11/12/offset-bezier-curves/)
+qui pour une courbe donnée décide à quel point elle est plate.
 
     function flatness(points, offset) {
       const p1 = points[offset + 0];
@@ -182,21 +182,21 @@ that for a given curve decides how flat it is.
       return ux + uy;
     }
 
-We can use that in our function that gets points for a curve.
-First we'll check if the curve is too curvy. If so we'll subdivide,
-if not we'll add the points in.
+Nous pouvons utiliser cela dans notre fonction qui obtient des points pour une courbe.
+D'abord nous vérifierons si la courbe est trop courbée. Si oui nous subdiviserons,
+sinon nous ajouterons les points.
 
     function getPointsOnBezierCurveWithSplitting(points, offset, tolerance, newPoints) {
       const outPoints = newPoints || [];
       if (flatness(points, offset) < tolerance) {
 
-        // just add the end points of this curve
+        // ajoute simplement les extrémités de cette courbe
         outPoints.push(points[offset + 0]);
         outPoints.push(points[offset + 3]);
 
       } else {
 
-        // subdivide
+        // subdivise
         const t = .5;
         const p1 = points[offset + 0];
         const p2 = points[offset + 1];
@@ -212,9 +212,9 @@ if not we'll add the points in.
 
         const red = v2.lerp(r1, r2, t);
 
-        // do 1st half
+        // fait la 1ère moitié
         getPointsOnBezierCurveWithSplitting([p1, q1, r1, red], 0, tolerance, outPoints);
-        // do 2nd half
+        // fait la 2ème moitié
         getPointsOnBezierCurveWithSplitting([red, r2, q3, p4], 0, tolerance, outPoints);
 
       }
@@ -223,23 +223,23 @@ if not we'll add the points in.
 
 {{{diagram url="resources/bezier-curve-diagram.html?maxDepth=0&showCurve=true&showTolerance=true" }}}
 
-This algorithm does a good job of making sure we have enough points but
-it doesn't do such a great job of getting rid of unneeded points.
+Cet algorithme fait un bon travail pour s'assurer que nous avons suffisamment de points mais
+il ne fait pas un si bon travail pour se débarrasser des points inutiles.
 
-For that we turn to the [Ramer Douglas Peucker algorithm](https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm)
-I found on the net.
+Pour cela nous nous tournons vers l'[algorithme de Ramer Douglas Peucker](https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm)
+que j'ai trouvé sur le net.
 
-In that algorithm we take a list of points.
-We find the furthest point from the line formed by the 2 end points.
-Then we check if that point is further away from the line than some distance.
-If it's less than than that distance we just keep the 2 end points and discard the rest
-Otherwise we run the algorithm again, once with the points from the start to the furthest
-point and again from the furthest point to the end point.
+Dans cet algorithme nous prenons une liste de points.
+Nous trouvons le point le plus éloigné de la ligne formée par les 2 extrémités.
+Ensuite nous vérifions si ce point est plus éloigné de la ligne qu'une certaine distance.
+S'il est inférieur à cette distance nous gardons simplement les 2 extrémités et jetons le reste
+Sinon nous exécutons l'algorithme à nouveau, une fois avec les points du début jusqu'au point le plus éloigné
+et à nouveau du point le plus éloigné à l'extrémité.
 
     function simplifyPoints(points, start, end, epsilon, newPoints) {
       const outPoints = newPoints || [];
 
-      // find the most distance point from the endpoints
+      // trouve le point le plus distant des extrémités
       const s = points[start];
       const e = points[end - 1];
       let maxDistSq = 0;
@@ -252,41 +252,41 @@ point and again from the furthest point to the end point.
         }
       }
 
-      // if that point is too far
+      // si ce point est trop loin
       if (Math.sqrt(maxDistSq) > epsilon) {
 
-        // split
+        // divise
         simplifyPoints(points, start, maxNdx + 1, epsilon, outPoints);
         simplifyPoints(points, maxNdx, end, epsilon, outPoints);
 
       } else {
 
-        // add the 2 end points
+        // ajoute les 2 extrémités
         outPoints.push(s, e);
       }
 
       return outPoints;
     }
 
-`v2.distanceToSegmentSq` is a function that computes the distance squared from a point
-to a line segment. We use the distance squared because it's faster to compute than
-the actual distance. Since we only care which point is furthest the distance squared
-will work just as well as the actual distance.
+`v2.distanceToSegmentSq` est une fonction qui calcule le carré de la distance d'un point
+à un segment de ligne. Nous utilisons le carré de la distance parce que c'est plus rapide à calculer que
+la distance réelle. Puisque nous nous soucions seulement de quel point est le plus éloigné, le carré de la distance
+fonctionnera tout aussi bien que la distance réelle.
 
-Here's that in action. Adjust the distance to see more points added or removed.
+Voici cela en action. Ajustez la distance pour voir plus de points ajoutés ou supprimés.
 
 {{{diagram url="resources/bezier-curve-diagram.html?maxDepth=0&showCurve=true&showDistance=true" }}}
 
-Back to our bowling pin. We could try to extend the code above into a full editor.
-It would need to be able to add and remove points, lock and unlock control points.
-It would need undo, etc... But there's an easier way. We can just use any of the
-major editors mentioned above. [I used this online editor](https://svg-edit.github.io/svgedit/).
+Revenons à notre quille de bowling. Nous pourrions essayer d'étendre le code ci-dessus en un éditeur complet.
+Il devrait pouvoir ajouter et supprimer des points, verrouiller et déverrouiller les points de contrôle.
+Il aurait besoin d'annulation, etc... Mais il y a un moyen plus facile. Nous pouvons simplement utiliser n'importe lequel des
+principaux éditeurs mentionnés ci-dessus. [J'ai utilisé cet éditeur en ligne](https://svg-edit.github.io/svgedit/).
 
-Here's the svg silhouette of a bowling pin I made.
+Voici la silhouette svg d'une quille de bowling que j'ai créée.
 
 <img class="webgl_center" src="resources/bowling-pin-silhouette.svg" width="400" />
 
-It's made from 4 bezier curves. The data for that path looks like this
+Elle est composée de 4 courbes de Bézier. Les données pour ce chemin ressemblent à ceci
 
     <path fill="none" stroke-width="5" d="
        m44,434
@@ -296,27 +296,27 @@ It's made from 4 bezier curves. The data for that path looks like this
        c5,-30 3,-63 -36,-63
     "/>
 
-[Interpreting that data](https://developer.mozilla.org/en/docs/Web/SVG/Tutorial/Paths) we get these points.
+[En interprétant ces données](https://developer.mozilla.org/en/docs/Web/SVG/Tutorial/Paths) nous obtenons ces points.
 
             ___
     44, 371,   |
-    62, 338,   | 1st curve
+    62, 338,   | 1ère courbe
     63, 305,___|__
     59, 260,___|  |
-    55, 215,      | 2nd curve
+    55, 215,      | 2ème courbe
     22, 156,______|__
     20, 128,______|  |
-    18, 100,         | 3rd curve
+    18, 100,         | 3ème courbe
     31,  77,_________|__
     36,  47,_________|  |
-    41,  17,            | 4th curve
+    41,  17,            | 4ème courbe
     39, -16,            |
      0, -16,____________|
 
-Now that we have the data for the curves we need to compute some points
-on them.
+Maintenant que nous avons les données pour les courbes, nous devons calculer certains points
+sur elles.
 
-    // gets points across all segments
+    // obtient des points à travers tous les segments
     function getPointsOnBezierCurves(points, tolerance) {
       const newPoints = [];
       const numSegments = (points.length - 1) / 3;
@@ -327,19 +327,19 @@ on them.
       return newPoints;
     }
 
-We'd call `simplifyPoints` on the result.
+Nous appellerions `simplifyPoints` sur le résultat.
 
-Now we need to spin them around. We decide how many divisions to make, for each division
-you use the [matrix math](webgl-2d-matrices.html) to rotate the points around the Y axis.
-Once we've made all the points we connect them with triangles using indices.
+Maintenant nous devons les faire pivoter autour. Nous décidons combien de divisions faire, pour chaque division
+vous utilisez les [mathématiques de matrices](webgl-2d-matrices.html) pour faire pivoter les points autour de l'axe Y.
+Une fois que nous avons créé tous les points, nous les connectons avec des triangles en utilisant des indices.
 
-    // rotates around Y axis.
+    // fait pivoter autour de l'axe Y.
     function lathePoints(points,
-                         startAngle,   // angle to start at (ie 0)
-                         endAngle,     // angle to end at (ie Math.PI * 2)
-                         numDivisions, // how many quads to make around
-                         capStart,     // true to cap the start
-                         capEnd) {     // true to cap the end
+                         startAngle,   // angle de départ (c'est-à-dire 0)
+                         endAngle,     // angle de fin (c'est-à-dire Math.PI * 2)
+                         numDivisions, // combien de quads faire autour
+                         capStart,     // true pour fermer le début
+                         capEnd) {     // true pour fermer la fin
       const positions = [];
       const texcoords = [];
       const indices = [];
@@ -348,13 +348,13 @@ Once we've made all the points we connect them with triangles using indices.
       const pointsPerColumn = points.length + vOffset + (capEnd ? 1 : 0);
       const quadsDown = pointsPerColumn - 1;
 
-      // generate points
+      // génère les points
       for (let division = 0; division <= numDivisions; ++division) {
         const u = division / numDivisions;
         const angle = lerp(startAngle, endAngle, u) % (Math.PI * 2);
         const mat = m4.yRotation(angle);
         if (capStart) {
-          // add point on Y axis at start
+          // ajoute un point sur l'axe Y au début
           positions.push(0, points[0][1], 0);
           texcoords.push(u, 0);
         }
@@ -365,13 +365,13 @@ Once we've made all the points we connect them with triangles using indices.
           texcoords.push(u, v);
         });
         if (capEnd) {
-          // add point on Y axis at end
+          // ajoute un point sur l'axe Y à la fin
           positions.push(0, points[points.length - 1][1], 0);
           texcoords.push(u, 1);
         }
       }
 
-      // generate indices
+      // génère les indices
       for (let division = 0; division < numDivisions; ++division) {
         const column1Offset = division * pointsPerColumn;
         const column2Offset = column1Offset + pointsPerColumn;
@@ -388,12 +388,12 @@ Once we've made all the points we connect them with triangles using indices.
       };
     }
 
-The code above generates positions and texcoords, it then generates indices to make triangles
-out of those. The `capStart` and `capEnd` specify whether or not generate cap points. Imagine
-we're making a can. These options would specify whether or not to close the ends.
+Le code ci-dessus génère des positions et des coordonnées de texture, il génère ensuite des indices pour créer des triangles
+à partir de ceux-ci. `capStart` et `capEnd` spécifient s'il faut générer ou non des points de fermeture. Imaginez
+que nous créons une canette. Ces options spécifieraient s'il faut fermer ou non les extrémités.
 
-Using our [simplified code](webgl-less-code-more-fun.html) we can generate WebGL buffers with
-this data like this
+En utilisant notre [code simplifié](webgl-less-code-more-fun.html) nous pouvons générer des tampons WebGL avec
+ces données comme ceci
 
     const tolerance = 0.15;
     const distance = .4;
@@ -410,28 +410,28 @@ this data like this
     if (!bufferInfo) {
       bufferInfo = webglUtils.createBufferInfoFromArrays(gl, arrays);
 
-Here's an example
+Voici un exemple
 
 {{{example url="../webgl-3d-lathe-step-01.html" }}}
 
-Play with the sliders to see how they effect the result.
+Jouez avec les curseurs pour voir comment ils affectent le résultat.
 
-There's an issue though. Turn on triangles and you'll see the texture is not evenly
-applied. This is because we based the `v` texture coordinate on the index of the
-points on the line. If they were evenly spaced that might work. They're not though
-so we need to do something else.
+Il y a un problème cependant. Activez les triangles et vous verrez que la texture n'est pas appliquée
+uniformément. C'est parce que nous avons basé la coordonnée de texture `v` sur l'indice des
+points sur la ligne. S'ils étaient régulièrement espacés, cela pourrait fonctionner. Ils ne le sont pas cependant
+donc nous devons faire autre chose.
 
-We can walk the points and compute the total length of the curve and each point's
-distance on that curve. We can then divide by the length and get a better value
-for `v`.
+Nous pouvons parcourir les points et calculer la longueur totale de la courbe et la distance de chaque point
+sur cette courbe. Nous pouvons ensuite diviser par la longueur et obtenir une meilleure valeur
+pour `v`.
 
-    // rotates around Y access.
+    // fait pivoter autour de l'axe Y.
     function lathePoints(points,
-                         startAngle,   // angle to start at (ie 0)
-                         endAngle,     // angle to end at (ie Math.PI * 2)
-                         numDivisions, // how many quads to make around
-                         capStart,     // true to cap the top
-                         capEnd) {     // true to cap the bottom
+                         startAngle,   // angle de départ (c'est-à-dire 0)
+                         endAngle,     // angle de fin (c'est-à-dire Math.PI * 2)
+                         numDivisions, // combien de quads faire autour
+                         capStart,     // true pour fermer le haut
+                         capEnd) {     // true pour fermer le bas
       const positions = [];
       const texcoords = [];
       const indices = [];
@@ -440,27 +440,27 @@ for `v`.
       const pointsPerColumn = points.length + vOffset + (capEnd ? 1 : 0);
       const quadsDown = pointsPerColumn - 1;
 
-    +  // generate v coordinates
+    +  // génère les coordonnées v
     +  let vcoords = [];
     +
-    +  // first compute the length of the points
+    +  // calcule d'abord la longueur des points
     +  let length = 0;
     +  for (let i = 0; i < points.length - 1; ++i) {
     +    vcoords.push(length);
     +    length += v2.distance(points[i], points[i + 1]);
     +  }
-    +  vcoords.push(length);  // the last point
+    +  vcoords.push(length);  // le dernier point
     +
-    +  // now divide each by the total length;
+    +  // divise maintenant chacun par la longueur totale;
     +  vcoords = vcoords.map(v => v / length);
 
-      // generate points
+      // génère les points
       for (let division = 0; division <= numDivisions; ++division) {
         const u = division / numDivisions;
         const angle = lerp(startAngle, endAngle, u) % (Math.PI * 2);
         const mat = m4.yRotation(angle);
         if (capStart) {
-          // add point on Y axis at start
+          // ajoute un point sur l'axe Y au début
           positions.push(0, points[0][1], 0);
           texcoords.push(u, 0);
         }
@@ -470,13 +470,13 @@ for `v`.
     *      texcoords.push(u, vcoords[ndx]);
         });
         if (capEnd) {
-          // add point on Y axis at end
+          // ajoute un point sur l'axe Y à la fin
           positions.push(0, points[points.length - 1][1], 0);
           texcoords.push(u, 1);
         }
       }
 
-      // generate indices
+      // génère les indices
       for (let division = 0; division < numDivisions; ++division) {
         const column1Offset = division * pointsPerColumn;
         const column2Offset = column1Offset + pointsPerColumn;
@@ -493,61 +493,61 @@ for `v`.
       };
     }
 
-And here's the result
+Et voici le résultat
 
 {{{example url="../webgl-3d-lathe-step-02.html" }}}
 
-Those texture coordinates are still not perfect. We haven't decided what to do for the caps.
-This is yet another reason why you should just use a modeling program. We could come up with
-different ideas about how to compute uv coordinates for the caps but they'd probably not be
-all that useful. If you [google for UV map a barrel](https://www.google.com/search?q=uv+map+a+barrel)
-you'll see that getting perfect UV coordinates is not so much a math problem as a data entry problem
-and you need nice tools to enter that data.
+Ces coordonnées de texture ne sont toujours pas parfaites. Nous n'avons pas décidé quoi faire pour les extrémités.
+C'est encore une autre raison pour laquelle vous devriez simplement utiliser un programme de modélisation. Nous pourrions proposer
+différentes idées sur comment calculer les coordonnées uv pour les extrémités mais elles ne seraient probablement pas
+très utiles. Si vous [cherchez sur Google comment mapper UV un tonneau](https://www.google.com/search?q=uv+map+a+barrel)
+vous verrez qu'obtenir des coordonnées UV parfaites n'est pas tant un problème de mathématiques qu'un problème de saisie de données
+et vous avez besoin de bons outils pour saisir ces données.
 
-There's still one other thing we should do and that's add normals.
+Il y a encore une autre chose que nous devrions faire et c'est d'ajouter des normales.
 
-We could compute a normal for each point on the curve. In fact if you go back to the examples
-on this page you can see the line formed by `R1` and `R2` are a line tangent to the curve.
+Nous pourrions calculer une normale pour chaque point sur la courbe. En fait, si vous revenez aux exemples
+sur cette page, vous pouvez voir que la ligne formée par `R1` et `R2` est une ligne tangente à la courbe.
 
 <img class="webgl_center" src="resources/tangent-to-curve.png" width="400" />
 
-A normal is perpendicular to the tangent so it would be easy to use the tangents
-to generate normals.
+Une normale est perpendiculaire à la tangente donc il serait facile d'utiliser les tangentes
+pour générer des normales.
 
-But, lets imagine we wanted to make a candle holder with a silhouette like this
+Mais, imaginons que nous voulions faire un bougeoir avec une silhouette comme celle-ci
 
 <img class="webgl_center" src="resources/candle-holder.svg" width="400" />
 
-There are many smooth areas but also many hard corners. How do we decide which normals
-to use? Worse, when we want a sharp edge we need extra vertices. Because vertices
-have both a position and a normal if we need a different normal for something at the
-same position then we need a different vertex. This is why if we're making a cube
-we actually need at least 24 vertices. Even though a cube only has 8 corners each
-face of the cube needs different normals at those corners.
+Il y a beaucoup de zones lisses mais aussi beaucoup de coins vifs. Comment décider quelles normales
+utiliser ? Pire, lorsque nous voulons une arête vive nous avons besoin de sommets supplémentaires. Parce que les sommets
+ont à la fois une position et une normale, si nous avons besoin d'une normale différente pour quelque chose à la
+même position alors nous avons besoin d'un sommet différent. C'est pourquoi si nous créons un cube
+nous avons en fait besoin d'au moins 24 sommets. Même si un cube n'a que 8 coins, chaque
+face du cube a besoin de normales différentes à ces coins.
 
-When generating a cube it's easy to just generate the correct normals but for a
-more complex shape there's no easy way to decide.
+Lors de la génération d'un cube, il est facile de simplement générer les bonnes normales mais pour une
+forme plus complexe il n'y a pas de moyen facile de décider.
 
-All modeling programs have various options to generate normals. A common way is for every
-single vertex they average the normals of all the polygons that share that vertex. Except, they
-let the user choose some maximum angle. If the angle between one polygon shared by
-a vertex is greater than that maximum angle then they generate a new vertex.
+Tous les programmes de modélisation ont diverses options pour générer des normales. Une façon courante est pour chaque
+sommet unique, ils calculent la moyenne des normales de tous les polygones qui partagent ce sommet. Sauf, ils
+laissent l'utilisateur choisir un angle maximum. Si l'angle entre un polygone partagé par
+un sommet est supérieur à cet angle maximum alors ils génèrent un nouveau sommet.
 
-Let's do that.
+Faisons cela.
 
     function generateNormals(arrays, maxAngle) {
       const positions = arrays.position;
       const texcoords = arrays.texcoord;
 
-      // first compute the normal of each face
+      // calcule d'abord la normale de chaque face
       let getNextIndex = makeIndiceIterator(arrays);
       const numFaceVerts = getNextIndex.numElements;
       const numVerts = arrays.position.length;
       const numFaces = numFaceVerts / 3;
       const faceNormals = [];
 
-      // Compute the normal for every face.
-      // While doing that, create a new vertex for every face vertex
+      // Calcule la normale pour chaque face.
+      // En faisant cela, crée un nouveau sommet pour chaque sommet de face
       for (let i = 0; i < numFaces; ++i) {
         const n1 = getNextIndex() * 3;
         const n2 = getNextIndex() * 3;
@@ -563,7 +563,7 @@ Let's do that.
       let tempVerts = {};
       let tempVertNdx = 0;
 
-      // this assumes vertex positions are an exact match
+      // cela suppose que les positions de sommets correspondent exactement
 
       function getVertIndex(x, y, z) {
 
@@ -577,22 +577,22 @@ Let's do that.
         return newNdx;
       }
 
-      // We need to figure out the shared vertices.
-      // It's not as simple as looking at the faces (triangles)
-      // because for example if we have a standard cylinder
+      // Nous devons trouver les sommets partagés.
+      // Ce n'est pas aussi simple que de regarder les faces (triangles)
+      // parce que par exemple si nous avons un cylindre standard
       //
       //
       //      3-4
       //     /   \
-      //    2     5   Looking down a cylinder starting at S
-      //    |     |   and going around to E, E and S are not
-      //    1     6   the same vertex in the data we have
-      //     \   /    as they don't share UV coords.
+      //    2     5   En regardant vers le bas un cylindre commençant à S
+      //    |     |   et en allant autour jusqu'à E, E et S ne sont pas
+      //    1     6   le même sommet dans les données que nous avons
+      //     \   /    car ils ne partagent pas les coordonnées UV.
       //      S/E
       //
-      // the vertices at the start and end do not share vertices
-      // since they have different UVs but if you don't consider
-      // them to share vertices they will get the wrong normals
+      // les sommets au début et à la fin ne partagent pas de sommets
+      // car ils ont des UV différentes mais si vous ne les considérez pas
+      // comme partageant des sommets ils obtiendront de mauvaises normales
 
       const vertIndices = [];
       for (let i = 0; i < numVerts; ++i) {
@@ -601,7 +601,7 @@ Let's do that.
         vertIndices.push(getVertIndex(vert));
       }
 
-      // go through every vertex and record which faces it's on
+      // parcourt chaque sommet et enregistre quelles faces il utilise
       const vertFaces = [];
       getNextIndex.reset();
       for (let i = 0; i < numFaces; ++i) {
@@ -617,11 +617,11 @@ Let's do that.
         }
       }
 
-      // now go through every face and compute the normals for each
-      // vertex of the face. Only include faces that aren't more than
-      // maxAngle different. Add the result to arrays of newPositions,
-      // newTexcoords and newNormals, discarding any vertices that
-      // are the same.
+      // maintenant parcourt chaque face et calcule les normales pour chaque
+      // sommet de la face. Inclut seulement les faces qui ne sont pas plus que
+      // maxAngle différentes. Ajoute le résultat aux tableaux de newPositions,
+      // newTexcoords et newNormals, en écartant tous les sommets qui
+      // sont les mêmes.
       tempVerts = {};
       tempVertNdx = 0;
       const newPositions = [];
@@ -649,18 +649,18 @@ Let's do that.
       const newVertIndices = [];
       getNextIndex.reset();
       const maxAngleCos = Math.cos(maxAngle);
-      // for each face
+      // pour chaque face
       for (let i = 0; i < numFaces; ++i) {
-        // get the normal for this face
+        // obtient la normale pour cette face
         const thisFaceNormal = faceNormals[i];
-        // for each vertex on the face
+        // pour chaque sommet de la face
         for (let j = 0; j < 3; ++j) {
           const ndx = getNextIndex();
           const sharedNdx = vertIndices[ndx];
           const faces = vertFaces[sharedNdx];
           const norm = [0, 0, 0];
           faces.forEach(faceNdx => {
-            // is this face facing the same way
+            // cette face est-elle orientée de la même manière
             const otherFaceNormal = faceNormals[faceNdx];
             const dot = m4.dot(thisFaceNormal, otherFaceNormal);
             if (dot > maxAngleCos) {
@@ -717,74 +717,74 @@ Let's do that.
           : makeUnindexedIndicesFn(arrays);
     }
 
-In the code above first we generate normals for each face (each triangle) from the original points.
-We then generate a set of vertex indices to find points that are the same. That's because as we rotated
-the points the first point and the last point should match up but they have different UV coordinates
-so they are not the same point. To compute the vertex normals we need them to be considered the same
+Dans le code ci-dessus, nous générons d'abord des normales pour chaque face (chaque triangle) à partir des points originaux.
+Nous générons ensuite un ensemble d'indices de sommets pour trouver les points qui sont les mêmes. C'est parce que lorsque nous avons fait pivoter
+les points, le premier point et le dernier point devraient correspondre mais ils ont des coordonnées UV différentes
+donc ils ne sont pas le même point. Pour calculer les normales de sommets, nous avons besoin qu'ils soient considérés comme le même
 point.
 
-Once that's done, for each vertex, we make a list of all the faces it's used by.
+Une fois cela fait, pour chaque sommet, nous faisons une liste de toutes les faces qu'il utilise.
 
-Finally we average the normals of all the faces each vertex uses excluding ones that are
-more than `maxAngle` different and generate a new set of vertices.
+Finalement nous faisons la moyenne des normales de toutes les faces que chaque sommet utilise en excluant celles qui sont
+plus que `maxAngle` différentes et générons un nouvel ensemble de sommets.
 
-Here's the result
+Voici le résultat
 
 {{{example url="../webgl-3d-lathe-step-03.html"}}}
 
-Notice we get sharp edges where we want them. Make the `maxAngle` bigger and you'll see those edges
-get smoothed out when the neighboring faces start getting included in the normal calculations.
-Also try adjusting the `divisions` to something like 5 or 6 then adjust the `maxAngle` until the
-edges around are hard but the parts you want smooth are still smooth. You can also set the `mode`
-to `lit` to see what the object would look like with lighting, the reason we needed normals.
+Remarquez que nous obtenons des arêtes vives là où nous les voulons. Augmentez le `maxAngle` et vous verrez ces arêtes
+devenir lissées lorsque les faces voisines commencent à être incluses dans les calculs de normales.
+Essayez également d'ajuster les `divisions` à quelque chose comme 5 ou 6 puis ajustez le `maxAngle` jusqu'à ce que les
+arêtes autour soient dures mais les parties que vous voulez lisses sont encore lisses. Vous pouvez également définir le `mode`
+à `lit` pour voir à quoi ressemblerait l'objet avec de l'éclairage, la raison pour laquelle nous avions besoin de normales.
 
-## So, what did we learn?
+## Alors, qu'avons-nous appris ?
 
-We learned if you want to make 3D data **USE A 3D MODELING PACKAGE!!!** 😝
+Nous avons appris que si vous voulez créer des données 3D **UTILISEZ UN LOGICIEL DE MODÉLISATION 3D !!!** 😝
 
-To do anything really useful you'd likely need a real [UV editor](https://www.google.com/search?q=uv+editor).
-Dealing with the caps as well is something a 3D editor would help with. Instead of using
-a limited set of options when lathing you'd use other features of the editor
-to add caps and generate easier UVs for the caps. 3d editors also support [extruding faces](https://www.google.com/search?q=extruding+model)
-and [extruding along a path](https://www.google.com/search?q=extruding+along+a+path) which if you take
-a look it should be pretty obvious how they work based on the lathe example above.
+Pour faire quoi que ce soit de vraiment utile, vous auriez probablement besoin d'un vrai [éditeur UV](https://www.google.com/search?q=uv+editor).
+Gérer les extrémités également est quelque chose qu'un éditeur 3D aiderait. Au lieu d'utiliser
+un ensemble limité d'options lors du tournage, vous utiliseriez d'autres fonctionnalités de l'éditeur
+pour ajouter des extrémités et générer des UV plus faciles pour les extrémités. Les éditeurs 3D supportent également [l'extrusion de faces](https://www.google.com/search?q=extruding+model)
+et [l'extrusion le long d'un chemin](https://www.google.com/search?q=extruding+along+a+path) qui si vous regardez
+il devrait être assez évident comment ils fonctionnent en se basant sur l'exemple de tour ci-dessus.
 
-## References
+## Références
 
-I wanted to mention I couldn't have done this without [this awesome page about bezier curves](https://pomax.github.io/bezierinfo/).
+Je voulais mentionner que je n'aurais pas pu faire cela sans [cette page géniale sur les courbes de bézier](https://pomax.github.io/bezierinfo/).
 
 <div class="webgl_bottombar">
-<h3>What's this modulo operator doing here?</h3>
-<p>If you look closely at the <code>lathePoints</code> function you'll see this modulo
-when computing the angle.</p>
+<h3>Que fait cet opérateur modulo ici ?</h3>
+<p>Si vous regardez attentivement la fonction <code>lathePoints</code> vous verrez ce modulo
+lors du calcul de l'angle.</p>
 <pre class="prettyprint showlinemods">
 for (let division = 0; division <= numDivisions; ++division) {
   const u = division / numDivisions;
 *  const angle = lerp(startAngle, endAngle, u) % (Math.PI * 2);
 </pre>
-<p>Why is that there?</p>
-<p>When we rotate the points all the way around a circle we really want the first
-and last points to match. <code>Math.sin(0)</code> and <code>Math.sin(Math.PI * 2)</code>
-should match but floating point math on a computer is not perfect and while they are close enough
-in general they are not actually 100% equal.</p>
-<p>That matters when we try to compute normals. We want to know all the faces a vertex
-uses. We compute that by comparing vertices. If 2 vertices are equal we assume they are the
-same vertex. Unfortunately, because <code>Math.sin(0)</code> and <code>Math.sin(Math.PI * 2)</code>
-are not equal they will not be considered the same vertex. That means when computing the normals
-they won't take into consideration all the faces and their normals will come out wrong.</p>
-<p>Here's the result when that happens</p>
+<p>Pourquoi est-il là ?</p>
+<p>Lorsque nous faisons pivoter les points tout autour d'un cercle, nous voulons vraiment que le premier
+et le dernier points correspondent. <code>Math.sin(0)</code> et <code>Math.sin(Math.PI * 2)</code>
+devraient correspondre mais les mathématiques en virgule flottante sur un ordinateur ne sont pas parfaites et bien qu'ils soient assez proches
+en général ils ne sont pas réellement égaux à 100%.</p>
+<p>Cela importe lorsque nous essayons de calculer les normales. Nous voulons connaître toutes les faces qu'un sommet
+utilise. Nous calculons cela en comparant les sommets. Si 2 sommets sont égaux nous supposons qu'ils sont le
+même sommet. Malheureusement, parce que <code>Math.sin(0)</code> et <code>Math.sin(Math.PI * 2)</code>
+ne sont pas égaux ils ne seront pas considérés comme le même sommet. Cela signifie que lors du calcul des normales
+ils ne prendront pas en considération toutes les faces et leurs normales seront incorrectes.</p>
+<p>Voici le résultat quand cela arrive</p>
 <img class="webgl_center" src="resources/lathe-normal-seam.png" width="400" />
-<p>As you can see there is a seam where the vertices are not considered shared
-because they are not a 100% match</p>
-<p>My first thought was that I should change my solution so that when I check for matching
-vertices I check if they are within some distance. If they are then they're the same vertex.
-Something like this.
+<p>Comme vous pouvez le voir il y a une couture où les sommets ne sont pas considérés comme partagés
+parce qu'ils ne correspondent pas à 100%</p>
+<p>Ma première pensée a été que je devrais changer ma solution pour que lorsque je vérifie les sommets correspondants
+je vérifie s'ils sont à une certaine distance. S'ils le sont alors ils sont le même sommet.
+Quelque chose comme ceci.
 <pre class="prettyprint">
 const epsilon = 0.0001;
 const tempVerts = [];
 function getVertIndex(position) {
   if (tempVerts.length) {
-    // find the closest existing vertex
+    // trouve le sommet existant le plus proche
     let closestNdx = 0;
     let closestDistSq = v2.distanceSq(position, tempVerts[0]);
     for (let i = 1; i < tempVerts.length; ++i) {
@@ -794,49 +794,49 @@ function getVertIndex(position) {
         closestNdx = i;
       }
     }
-    // was the closest vertex close enough?
+    // le sommet le plus proche était-il assez proche ?
     if (closestDistSq < epsilon) {
-      // yes, so just return that vertex's index.
+      // oui, donc retourne simplement l'indice de ce sommet.
       return closestNdx;
     }
   }
-  // no match, add the vertex as a new vertex and return its index.
+  // pas de correspondance, ajoute le sommet comme un nouveau sommet et retourne son indice.
   tempVerts.push(position);
   return tempVerts.length - 1;
 }
 </pre>
-<p>It worked! It got rid of the seam. Unfortunately it took several seconds to run and
-made the interface unusable. This is because it's a O^2 solution. If you slide the sliders
-for the most vertices(distance/divisions) in example above you can generate ~114000 vertices.
-For an O^2 that's up to 12 billion iterations that have to happen.
+<p>Ça a marché ! Ça s'est débarrassé de la couture. Malheureusement ça a pris plusieurs secondes à s'exécuter et
+a rendu l'interface inutilisable. C'est parce que c'est une solution en O^2. Si vous faites glisser les curseurs
+pour le plus de sommets (distance/divisions) dans l'exemple ci-dessus vous pouvez générer ~114000 sommets.
+Pour un O^2 c'est jusqu'à 12 milliards d'itérations qui doivent se produire.
 </p>
-<p>I searched the net for a easy solution. I didn't find one. I thought about putting all the points
-in an <a href="https://en.wikipedia.org/wiki/Octree">octree</a> to make finding matching points
-faster but that seems like a way too much for this article.
+<p>J'ai cherché sur le net une solution facile. Je n'en ai pas trouvé. J'ai pensé à mettre tous les points
+dans un <a href="https://en.wikipedia.org/wiki/Octree">octree</a> pour rendre la recherche de points correspondants
+plus rapide mais cela semble être beaucoup trop pour cet article.
 </p>
-<p>It was then I realized if the only issue is the end points maybe I could add a modulo
-to the math so that the points were actually the same. The original code was like this
+<p>C'est alors que j'ai réalisé que si le seul problème est les points de fin peut-être que je pourrais ajouter un modulo
+aux mathématiques pour que les points soient réellement les mêmes. Le code original était comme ceci
 </p>
 <pre class="prettyprint">
   const angle = lerp(startAngle, endAngle, u);
 </pre>
-And the new code like this
+Et le nouveau code comme ceci
 <pre class="prettyprint">
   const angle = lerp(startAngle, endAngle, u) % (Math.PI * 2);
 </pre>
-<p>Because of the modulo the <code>angle</code> when <code>endAngle</code> is <code>Math.PI * 2</code> becomes 0
-and so it's the same as the start. The seam went away. Problem solved!</p>
-<p>Still, even with the change if you set <code>distance</code> to 0.001
-and <code>divisions</code> to 60 it takes nearly a second on my machine to recompute the mesh. While
-there might be ways to optimize that I think the point is realizing that generating complex
-meshes is a generally slow operation. This just one example of why a 3d game can run at 60fps
-but a 3d modeling package often chugs at very slow frame rates.
+<p>À cause du modulo l'<code>angle</code> quand <code>endAngle</code> est <code>Math.PI * 2</code> devient 0
+et donc il est le même que le début. La couture a disparu. Problème résolu !</p>
+<p>Pourtant, même avec le changement si vous définissez <code>distance</code> à 0.001
+et <code>divisions</code> à 60 ça prend presque une seconde sur ma machine pour recalculer le maillage. Bien qu'il
+puisse y avoir des moyens d'optimiser cela je pense que le point est de réaliser que générer des
+maillages complexes est une opération généralement lente. C'est juste un exemple de pourquoi un jeu 3d peut tourner à 60fps
+mais un logiciel de modélisation 3D tourne souvent à des fréquences d'images très lentes.
 </p>
 </div>
 
 <div class="webgl_bottombar">
-<h3>Is matrix math is overkill here?</h3>
-<p>When we lathe the points there is this code to rotate with.</p>
+<h3>Les mathématiques de matrices sont-elles exagérées ici ?</h3>
+<p>Lorsque nous tournons les points il y a ce code pour faire pivoter.</p>
 <pre class="prettyprint">
 const mat = m4.yRotation(angle);
 ...
@@ -844,8 +844,8 @@ points.forEach((p, ndx) => {
   const tp = m4.transformPoint(mat, [...p, 0]);
   ...
 </pre>
-<p>Transforming an arbitrary 3d point by a 4x4 matrix requires 16 multiplies, 12 adds, and 3 divides.
-We could simplify by just using <a href="webgl-2d-rotation.html">unit circle style rotation math</a>.
+<p>Transformer un point 3D arbitraire par une matrice 4x4 nécessite 16 multiplications, 12 additions et 3 divisions.
+Nous pourrions simplifier en utilisant simplement <a href="webgl-2d-rotation.html">les mathématiques de rotation du cercle unité</a>.
 </p>
 <pre class="prettyprint">
 const s = Math.sin(angle);
@@ -863,18 +863,18 @@ points.forEach((p, ndx) => {
   ...
 </pre>
 <p>
-That's only 4 multiplies and 2 adds and no function call which is probably at least 6x faster.
+C'est seulement 4 multiplications et 2 additions et aucun appel de fonction ce qui est probablement au moins 6x plus rapide.
 </p>
 <p>
-Is that optimization worth it? Well, for this particular example I don't think we're doing enough
-for it to matter. My thinking was that you might want to let the user decide which axis
-to spin around. Using a matrix would make that easy to let the user pass an axis in
-and use something like
+Est-ce que cette optimisation en vaut la peine ? Eh bien, pour cet exemple particulier je ne pense pas que nous en fassions assez
+pour que cela importe. Ma pensée était que vous pourriez vouloir laisser l'utilisateur décider autour de quel axe
+pivoter. Utiliser une matrice rendrait facile de laisser l'utilisateur passer un axe
+et utiliser quelque chose comme
 </p>
 <pre class="prettyprint">
    const mat = m4.axisRotation(userSuppliedAxis, angle);
 </pre>
-<p>Which way is best is really up to you and your needs. I think I'd choose flexible first
-and only later optimize if something was too slow for whatever I was doing.</p>
+<p>Quelle méthode est la meilleure dépend vraiment de vous et de vos besoins. Je pense que je choisirais flexible d'abord
+et seulement optimiser plus tard si quelque chose était trop lent pour ce que je faisais.</p>
 </div>
 
