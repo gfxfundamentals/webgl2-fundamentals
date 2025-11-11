@@ -1,31 +1,31 @@
-Title: WebGL2 3D Perspective
-Description: How to display perspective in 3D in WebGL
-TOC: 3D Perspective
+Title: WebGL2 Perspective 3D
+Description: Comment afficher la perspective en 3D dans WebGL
+TOC: Perspective 3D
 
 
-This post is a continuation of a series of posts about WebGL.
-The first [started with fundamentals](webgl-fundamentals.html) and
-the previous was about [3D Basics](webgl-3d-orthographic.html).
-If you haven't read those please view them first.
+Cet article fait partie d'une série d'articles sur WebGL.
+Le premier [a commencé par les fondamentaux](webgl-fundamentals.html) et
+le précédent portait sur [les bases de la 3D](webgl-3d-orthographic.html).
+Si vous ne les avez pas lus, veuillez les consulter en premier.
 
-In the last post we went over how to do 3D but that 3D didn't have any perspective.
-It was using what's called an "orthographic" view which has its uses but it's
-generally not what people want when they say "3D".
+Dans le dernier article, nous avons vu comment faire de la 3D, mais cette 3D n'avait aucune perspective.
+Elle utilisait ce qu'on appelle une vue "orthographique" qui a son utilité, mais ce n'est
+généralement pas ce que les gens veulent quand ils disent "3D".
 
-Instead we need to add perspective. Just what is perspective?
-It's basically the feature that things that are further away appear
-smaller.
+Au lieu de cela, nous devons ajouter la perspective. Qu'est-ce que la perspective exactement ?
+C'est essentiellement la caractéristique selon laquelle les choses qui sont plus éloignées apparaissent
+plus petites.
 
 <div class="webgl_center noinvertdark"><img style="width: 500px;" src="resources/perspective-example.svg" /></div>
 
-Looking at the example above we see that things further away
-are drawn smaller. Given our current sample one easy way to
-make it so that things that are further away appear smaller
-would be to divide the clip space X and Y by Z.
+En regardant l'exemple ci-dessus, nous voyons que les choses plus éloignées
+sont dessinées plus petites. Étant donné notre exemple actuel, une façon simple de
+faire en sorte que les choses plus éloignées apparaissent plus petites
+serait de diviser X et Y de l'espace de découpage par Z.
 
-Think of it this way: If you have a line from (10, 15) to (20,15)
-it's 10 units long. In our current sample it would be drawn 10 pixels
-long. But if we divide by Z then for example if Z is 1
+Pensez-y de cette façon : Si vous avez une ligne de (10, 15) à (20,15),
+elle fait 10 unités de long. Dans notre exemple actuel, elle serait dessinée sur 10 pixels
+de long. Mais si nous divisons par Z, par exemple si Z vaut 1
 
 <pre class="webgl_center">
 10 / 1 = 10
@@ -33,7 +33,7 @@ long. But if we divide by Z then for example if Z is 1
 abs(10-20) = 10
 </pre>
 
-it would be 10 pixels long, If Z is 2 it would be
+elle ferait 10 pixels de long. Si Z vaut 2, elle ferait
 
 <pre class="webgl_center">
 10 / 2 = 5
@@ -41,7 +41,7 @@ it would be 10 pixels long, If Z is 2 it would be
 abs(5 - 10) = 5
 </pre>
 
-5 pixels long.  At Z = 3 it would be
+5 pixels de long. À Z = 3, elle ferait
 
 <pre class="webgl_center">
 10 / 3 = 3.333
@@ -49,34 +49,34 @@ abs(5 - 10) = 5
 abs(3.333 - 6.666) = 3.333
 </pre>
 
-You can see that as Z increases, as it gets further away, we'll end up drawing it smaller.
-If we divide in clip space we might get better results because Z will be a smaller number (-1 to +1).
-If we add a fudgeFactor to multiply Z before we divide we can adjust how much smaller things
-get for a given distance.
+Vous pouvez voir qu'à mesure que Z augmente, à mesure qu'il s'éloigne, nous finirons par le dessiner plus petit.
+Si nous divisons dans l'espace de découpage, nous pourrions obtenir de meilleurs résultats car Z sera un nombre plus petit (-1 à +1).
+Si nous ajoutons un facteur d'ajustement pour multiplier Z avant de diviser, nous pouvons ajuster à quel point les choses
+deviennent plus petites pour une distance donnée.
 
-Let's try it. First let's change the vertex shader to divide by Z after we've
-multiplied it by our "fudgeFactor".
+Essayons. D'abord, changeons le shader de sommet pour diviser par Z après l'avoir
+multiplié par notre "facteur d'ajustement".
 
 ```
 ...
 +uniform float u_fudgeFactor;
 ...
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplie la position par la matrice.
 *  vec4 position = u_matrix * a_position;
 
-  // Adjust the z to divide by
+  // Ajuste le z par lequel diviser
 +  float zToDivideBy = 1.0 + position.z * u_fudgeFactor;
 
-  // Divide x and y by z.
+  // Divise x et y par z.
 *  gl_Position = vec4(position.xy / zToDivideBy, position.zw);
 }
 ```
 
-Note, because Z in clip space goes from -1 to +1 I added 1 to get
-`zToDivideBy` to go from 0 to +2 * fudgeFactor
+Notez que, comme Z dans l'espace de découpage va de -1 à +1, j'ai ajouté 1 pour obtenir
+`zToDivideBy` allant de 0 à +2 * fudgeFactor
 
-We also need to update the code to let us set the fudgeFactor.
+Nous devons également mettre à jour le code pour nous permettre de définir le fudgeFactor.
 
 ```
   ...
@@ -87,53 +87,53 @@ We also need to update the code to let us set the fudgeFactor.
   ...
   function drawScene() {
     ...
-+    // Set the fudgeFactor
++    // Définit le fudgeFactor
 +    gl.uniform1f(fudgeLocation, fudgeFactor);
 
-    // Draw the geometry.
+    // Dessine la géométrie.
     gl.drawArrays(gl.TRIANGLES, 0, 16 * 6);
 ```
 
-And here's the result.
+Et voici le résultat.
 
 {{{example url="../webgl-3d-perspective.html" }}}
 
-If it's not clear drag the "fudgeFactor" slider from 1.0 to 0.0 to see
-what things used to look like before we added our divide by Z code.
+Si ce n'est pas clair, faites glisser le curseur "fudgeFactor" de 1.0 à 0.0 pour voir
+à quoi ressemblaient les choses avant que nous ajoutions notre code de division par Z.
 
 <div class="webgl_center"><img src="resources/orthographic-vs-perspective.png" /></div>
-<div class="webgl_center">orthographic vs perspective</div>
+<div class="webgl_center">orthographique vs perspective</div>
 
-It turns out WebGL takes the x,y,z,w value we assign to `gl_Position` in our vertex
-shader and divides it by w automatically.
+Il s'avère que WebGL prend la valeur x,y,z,w que nous assignons à `gl_Position` dans notre shader
+de sommet et la divise automatiquement par w.
 
-We can prove this very easily by changing the shader and instead of doing the
-division ourselves, put `zToDivideBy` in `gl_Position.w`.
+Nous pouvons le prouver très facilement en changeant le shader et au lieu de faire la
+division nous-mêmes, en mettant `zToDivideBy` dans `gl_Position.w`.
 
 ```
 ...
 uniform float u_fudgeFactor;
 ...
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplie la position par la matrice.
   vec4 position = u_matrix * a_position;
 
-  // Adjust the z to divide by
+  // Ajuste le z par lequel diviser
   float zToDivideBy = 1.0 + position.z * u_fudgeFactor;
 
-  // Divide x, y and z by zToDivideBy
+  // Divise x, y et z par zToDivideBy
   gl_Position = vec4(position.xyz,  zToDivideBy);
 }
 ```
 
-and see how it's exactly the same.
+et voir que c'est exactement pareil.
 
 {{{example url="../webgl-3d-perspective-w.html" }}}
 
-Why is the fact that WebGL automatically divides by W useful? Because now, using
-more matrix magic, we can just use yet another matrix to copy z to w.
+Pourquoi le fait que WebGL divise automatiquement par W est-il utile ? Parce que maintenant, en utilisant
+plus de magie matricielle, nous pouvons simplement utiliser encore une autre matrice pour copier z dans w.
 
-A Matrix like this
+Une matrice comme celle-ci
 
 <div class="webgl_math_center"><pre class="webgl_math">
 1, 0, 0, 0,
@@ -142,7 +142,7 @@ A Matrix like this
 0, 0, 0, 0,
 </pre></div>
 
-will copy z to w. You can look at each of those columns as
+copiera z dans w. Vous pouvez regarder chacune de ces colonnes comme
 
 <div class="webgl_math_center"><pre class="webgl_math">
 x_out = x_in * 1 +
@@ -166,7 +166,7 @@ w_out = x_in * 0 +
         w_in * 0 ;
 </pre></div>
 
-which when simplified is
+ce qui, une fois simplifié, donne
 
 <div class="webgl_math_center"><pre class="webgl_math">
 x_out = x_in;
@@ -175,7 +175,7 @@ z_out = z_in;
 w_out = z_in;
 </pre></div>
 
-We can add the plus 1 we had before with this matrix since we know `w_in` is always 1.0.
+Nous pouvons ajouter le plus 1 que nous avions avant avec cette matrice puisque nous savons que `w_in` vaut toujours 1.0.
 
 <div class="webgl_math_center"><pre class="webgl_math">
 1, 0, 0, 0,
@@ -184,7 +184,7 @@ We can add the plus 1 we had before with this matrix since we know `w_in` is alw
 0, 0, 0, 1,
 </pre></div>
 
-that will change the W calculation to
+cela changera le calcul de W en
 
 <div class="webgl_math_center"><pre class="webgl_math">
 w_out = x_in * 0 +
@@ -193,13 +193,13 @@ w_out = x_in * 0 +
         w_in * 1 ;
 </pre></div>
 
-and since we know `w_in` = 1.0 then that's really
+et puisque nous savons que `w_in` = 1.0, alors c'est vraiment
 
 <div class="webgl_math_center"><pre class="webgl_math">
 w_out = z_in + 1;
 </pre></div>
 
-Finally we can work our fudgeFactor back in if the matrix is this
+Enfin, nous pouvons réintégrer notre fudgeFactor si la matrice est celle-ci
 
 <div class="webgl_math_center"><pre class="webgl_math">
 1, 0, 0, 0,
@@ -208,7 +208,7 @@ Finally we can work our fudgeFactor back in if the matrix is this
 0, 0, 0, 1,
 </pre></div>
 
-which means
+ce qui signifie
 
 <div class="webgl_math_center"><pre class="webgl_math">
 w_out = x_in * 0 +
@@ -217,27 +217,27 @@ w_out = x_in * 0 +
         w_in * 1 ;
 </pre></div>
 
-and simplified that's
+et simplifié, c'est
 
 <div class="webgl_math_center"><pre class="webgl_math">
 w_out = z_in * fudgeFactor + 1;
 </pre></div>
 
-So, let's modify the program again to just use matrices.
+Donc, modifions à nouveau le programme pour utiliser simplement des matrices.
 
-First let's put the vertex shader back. It's simple again
+D'abord, remettons le shader de sommet. Il est à nouveau simple
 
 ```
 uniform mat4 u_matrix;
 
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplie la position par la matrice.
   gl_Position = u_matrix * a_position;
   ...
 }
 ```
 
-Next let's make a function to make our Z &rarr; W matrix.
+Ensuite, créons une fonction pour créer notre matrice Z &rarr; W.
 
 ```
 function makeZToWMatrix(fudgeFactor) {
@@ -250,12 +250,12 @@ function makeZToWMatrix(fudgeFactor) {
 }
 ```
 
-and we'll change the code to use it.
+et nous changerons le code pour l'utiliser.
 
 ```
     ...
 
-    // Compute the matrix
+    // Calcule la matrice
 +    var matrix = makeZToWMatrix(fudgeFactor);
 *    matrix = m4.multiply(matrix, m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 400));
     matrix = m4.translate(matrix, translation[0], translation[1], translation[2]);
@@ -267,29 +267,29 @@ and we'll change the code to use it.
     ...
 ```
 
-and note, again, it's exactly the same.
+et notez, encore une fois, c'est exactement pareil.
 
 {{{example url="../webgl-3d-perspective-w-matrix.html" }}}
 
-All that was basically just to show you that dividing by Z gives us perspective
-and that WebGL conveniently does this divide by Z for us.
+Tout cela était essentiellement juste pour vous montrer que diviser par Z nous donne la perspective
+et que WebGL fait commodément cette division par Z pour nous.
 
-But there are still some problems. For example if you set Z to around -100 you'll see something like
-the animation below
+Mais il y a encore quelques problèmes. Par exemple, si vous définissez Z à environ -100, vous verrez quelque chose comme
+l'animation ci-dessous
 
 <div class="webgl_center"><img src="resources/z-clipping.gif" style="border: 1px solid black;" /></div>
 
-What's going on? Why is the F disappearing early? Just like WebGL clips X and Y to
-values between +1 to -1 it also clips Z. What we're seeing here is where Z < -1.
+Que se passe-t-il ? Pourquoi le F disparaît-il prématurément ? Tout comme WebGL découpe X et Y
+aux valeurs entre +1 et -1, il découpe également Z. Ce que nous voyons ici, c'est où Z < -1.
 
-I could go into detail about the math to fix it but [you can derive it](https://stackoverflow.com/a/28301213/128511) the same way
-we did 2D projection. We need to take Z, add some amount and scale some amount and we can make any range we want
-get remapped to the -1 to +1.
+Je pourrais entrer dans les détails des mathématiques pour corriger cela, mais [vous pouvez le dériver](https://stackoverflow.com/a/28301213/128511) de la même manière
+que nous l'avons fait pour la projection 2D. Nous devons prendre Z, ajouter une certaine quantité et mettre à l'échelle une certaine quantité, et nous pouvons faire en sorte que n'importe quelle plage que nous voulons
+soit remappée vers -1 à +1.
 
-The cool thing is all of these steps can be done in 1 matrix. Even better, rather than a `fudgeFactor`
-we'll decide on a `fieldOfView` and compute the right values to make that happen.
+Ce qui est cool, c'est que toutes ces étapes peuvent être effectuées en 1 matrice. Mieux encore, plutôt qu'un `fudgeFactor`,
+nous allons décider d'un `fieldOfView` (champ de vision) et calculer les bonnes valeurs pour que cela se produise.
 
-Here's a function to build the matrix.
+Voici une fonction pour construire la matrice.
 
 ```
 var m4 = {
@@ -308,36 +308,36 @@ var m4 = {
   ...
 ```
 
-This matrix will do all our conversions for us. It will adjust the units so they are
-in clip space, it will do the math so that we can choose a field of view by angle
-and it will let us choose our Z-clipping space. It assumes there's an *eye* or *camera* at the
-origin (0, 0, 0) and given a `zNear` and a `fieldOfView` it computes what it would take so that
-stuff at `zNear` ends up at `Z = -1` and stuff at `zNear` that is half of `fieldOfView` above or below the center
-ends up with `Y = -1` and `Y = 1` respectively. It computes what to use for X by just multiplying by the `aspect` passed in.
-We'd normally set this to the `width / height` of the display area.
-Finally, it figures out how much to scale things in Z so that stuff at zFar ends up at `Z = 1`.
+Cette matrice fera toutes nos conversions pour nous. Elle ajustera les unités pour qu'elles soient
+dans l'espace de découpage, elle fera les calculs mathématiques pour que nous puissions choisir un champ de vision par angle
+et elle nous permettra de choisir notre espace de découpage en Z. Elle suppose qu'il y a un *œil* ou une *caméra* à
+l'origine (0, 0, 0) et étant donné un `zNear` et un `fieldOfView`, elle calcule ce qu'il faudrait pour que
+ce qui est à `zNear` finisse à `Z = -1` et ce qui est à `zNear` et qui est à la moitié de `fieldOfView` au-dessus ou en dessous du centre
+finisse avec `Y = -1` et `Y = 1` respectivement. Elle calcule quoi utiliser pour X en multipliant simplement par l'`aspect` passé.
+Nous définirions normalement cela sur la `largeur / hauteur` de la zone d'affichage.
+Enfin, elle détermine de combien mettre à l'échelle les choses en Z pour que ce qui est à zFar finisse à `Z = 1`.
 
-Here's a diagram of the matrix in action.
+Voici un diagramme de la matrice en action.
 
 {{{diagram url="../frustum-diagram.html" width="400" height="600" }}}
 
-That shape that looks like a 4 sided cone the cubes are spinning in is called a "frustum".
-The matrix takes the space inside the frustum and converts that to clip space. `zNear` defines where
-things will get clipped in the front and `zFar` defines where things get clipped in the back. Set `zNear` to 23 and
-you'll see the front of the spinning cubes get clipped. Set `zFar` to 24 and you'll see the back of the cubes
-get clipped.
+Cette forme qui ressemble à un cône à 4 côtés dans lequel les cubes tournent s'appelle un "frustum".
+La matrice prend l'espace à l'intérieur du frustum et le convertit en espace de découpage. `zNear` définit où
+les choses seront découpées à l'avant et `zFar` définit où les choses sont découpées à l'arrière. Définissez `zNear` à 23 et
+vous verrez l'avant des cubes tournants être découpé. Définissez `zFar` à 24 et vous verrez l'arrière des cubes
+être découpé.
 
-There's just one problem left. This matrix assumes there's a viewer at 0,0,0 and
-it assumes it's looking in the negative Z direction and that positive Y is up.
-Our matrices up to this point have done things in a different way. 
+Il ne reste plus qu'un problème. Cette matrice suppose qu'il y a un observateur à 0,0,0 et
+elle suppose qu'il regarde dans la direction Z négative et que Y positif est vers le haut.
+Nos matrices jusqu'à ce point ont fait les choses d'une manière différente.
 
-To make it appear we need to move it inside the frustum.
-We can do that by moving our F. We were drawing at (45, 150, 0). Let's move it to (-150, 0, -360)
-and let's set the rotation to something that makes it appear right side up.
+Pour le faire apparaître, nous devons le déplacer à l'intérieur du frustum.
+Nous pouvons faire cela en déplaçant notre F. Nous dessinions à (45, 150, 0). Déplaçons-le à (-150, 0, -360)
+et définissons la rotation sur quelque chose qui le fait apparaître à l'endroit.
 
-<div class="webgl_center"><img src="resources/f-right-side.svg" style="width: 500px;" caption="not to scale"></div>
+<div class="webgl_center"><img src="resources/f-right-side.svg" style="width: 500px;" caption="pas à l'échelle"></div>
 
-Now, to use it we just need to replace our old call to m4.projection with a call to
+Maintenant, pour l'utiliser, nous devons simplement remplacer notre ancien appel à m4.projection par un appel à
 m4.perspective
 
 ```
@@ -352,57 +352,56 @@ m4.perspective
    matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
 ```
 
-And here it is.
+Et voilà.
 
 {{{example url="../webgl-3d-perspective-matrix.html" }}}
 
-We're back to just a matrix multiply and we're getting both a field of view and we're able to choose our Z space.
-We're not done but this article is getting too long. Next up, [cameras](webgl-3d-camera.html).
+Nous sommes revenus à une simple multiplication de matrice et nous obtenons à la fois un champ de vision et nous pouvons choisir notre espace Z.
+Nous n'avons pas fini, mais cet article devient trop long. Prochainement, [les caméras](webgl-3d-camera.html).
 
 <div class="webgl_bottombar">
-<h3>Why did we move the F so far in Z (-360)?</h3>
+<h3>Pourquoi avons-nous déplacé le F si loin en Z (-360) ?</h3>
 <p>
 
-In the other samples we had the F at (45, 150, 0) but in the last sample
-it's been moved to (-150, 0, -360).  Why did it need to be moved so far
-away?
+Dans les autres exemples, nous avions le F à (45, 150, 0) mais dans le dernier exemple,
+il a été déplacé à (-150, 0, -360). Pourquoi devait-il être déplacé si loin ?
 
 </p>
 <p>
 
-The reason is up until this last sample our <code>m4.projection</code> function
-has made a projection from pixels to clip space.  That means the area we
-were displaying represented 400x300 pixels.  Using 'pixels' really doesn't
-make sense in 3D. 
+La raison est que jusqu'à ce dernier exemple, notre fonction <code>m4.projection</code>
+a fait une projection depuis les pixels vers l'espace de découpage. Cela signifie que la zone que nous
+affichions représentait 400x300 pixels. Utiliser des 'pixels' n'a vraiment pas
+de sens en 3D.
 
 </p>
 <p>
 
-In other words if we tried to draw with the F at 0,0,0 and not rotated we'd get this
+En d'autres termes, si nous essayions de dessiner avec le F à 0,0,0 et non tourné, nous obtiendrions ceci
 
 </p>
 
 <div class="webgl_center"><img src="resources/f-big-and-wrong-side.svg" style="width: 500px;"></div>
 
 <p>
-The F has its top left front corner at the origin. The projection
-looks toward negative Z but our F is built in positive Z. The projection has
-positive Y up but our F is built with positive Z down.
+Le F a son coin avant supérieur gauche à l'origine. La projection
+regarde vers Z négatif mais notre F est construit en Z positif. La projection a
+Y positif vers le haut mais notre F est construit avec Z positif vers le bas.
 </p>
 
 <p>
-Our new projection only sees what's in the blue frustum. With -zNear = 1 and with a field of view of 60 degrees
-then at Z = -1 the frustum is only 1.154 units tall and 1.154 * aspect units wide. At Z = -2000 (-zFar) its 2309 units tall.
-Since our F is 150 units big and the view can only see 1.154
-units when something is at <code>-zNear</code> we need to move it pretty far away from the origin to
-see all of it.
+Notre nouvelle projection ne voit que ce qui est dans le frustum bleu. Avec -zNear = 1 et avec un champ de vision de 60 degrés,
+alors à Z = -1 le frustum ne fait que 1.154 unités de haut et 1.154 * aspect unités de large. À Z = -2000 (-zFar), il fait 2309 unités de haut.
+Puisque notre F fait 150 unités de taille et que la vue ne peut voir que 1.154
+unités lorsque quelque chose est à <code>-zNear</code>, nous devons le déplacer assez loin de l'origine pour
+voir tout cela.
 </p>
 
 <p>
-Moving it -360 units in Z moves in inside the frustum. We also rotated it to be right side up.
+Le déplacer de -360 unités en Z le déplace à l'intérieur du frustum. Nous l'avons également tourné pour qu'il soit à l'endroit.
 </p>
 
-<div class="webgl_center"><img src="resources/f-right-side.svg" style="width: 500px;"><div>not to scale</div></div>
+<div class="webgl_center"><img src="resources/f-right-side.svg" style="width: 500px;"><div>pas à l'échelle</div></div>
 
 </div>
 

@@ -1,89 +1,89 @@
-Title: WebGL2 - Orthographic 3D
-Description: How to do 3D in WebGL starting with an orthographic projection.
-TOC: Orthographic 3D
+Title: WebGL2 - Projection Orthographique 3D
+Description: Comment faire de la 3D en WebGL en commençant par une projection orthographique.
+TOC: Projection Orthographique 3D
 
 
-This post is a continuation of a series of posts about WebGL.
-The first [started with fundamentals](webgl-fundamentals.html) and
-the previous was [about 2D matrices](webgl-2d-matrices.html).
-If you haven't read those please view them first.
+Cet article fait partie d'une série d'articles sur WebGL.
+Le premier [a commencé par les fondamentaux](webgl-fundamentals.html) et
+le précédent portait sur [les matrices 2D](webgl-2d-matrices.html).
+Si vous ne les avez pas lus, veuillez les consulter en premier.
 
-In the last post we went over how 2D matrices worked. We talked
-about how translation, rotation, scaling, and even projecting from
-pixels into clip space can all be done by 1 matrix and some magic
-matrix math. To do 3D is only a small step from there.
+Dans le dernier article, nous avons vu comment fonctionnaient les matrices 2D. Nous avons parlé
+de la façon dont la translation, la rotation, la mise à l'échelle, et même la projection depuis
+les pixels vers l'espace de découpage peuvent toutes être réalisées par 1 matrice et un peu de magie
+mathématique matricielle. Faire de la 3D n'est qu'un petit pas supplémentaire.
 
-In our previous 2D examples we had 2D points (x, y) that we multiplied by
-a 3x3 matrix. To do 3D we need 3D points (x, y, z) and a 4x4 matrix.
+Dans nos exemples 2D précédents, nous avions des points 2D (x, y) que nous multipliions par
+une matrice 3x3. Pour faire de la 3D, nous avons besoin de points 3D (x, y, z) et d'une matrice 4x4.
 
-Let's take our last example and change it to 3D. We'll use an F again
-but this time a 3D 'F'.
+Prenons notre dernier exemple et changeons-le en 3D. Nous utiliserons à nouveau un F,
+mais cette fois un 'F' 3D.
 
-The first thing we need to do is change the vertex shader to handle 3D.
-Here's the old vertex shader.
+La première chose à faire est de modifier le shader de sommet pour gérer la 3D.
+Voici l'ancien shader de sommet.
 
 ```js
 #version 300 es
 
-// an attribute is an input (in) to a vertex shader.
-// It will receive data from a buffer
+// un attribut est une entrée (in) pour un shader de sommet.
+// Il recevra des données depuis un tampon
 in vec2 a_position;
 
-// A matrix to transform the positions by
+// Une matrice pour transformer les positions
 uniform mat3 u_matrix;
 
-// all shaders have a main function
+// tous les shaders ont une fonction main
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplie la position par la matrice.
   gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
 }
 ```
 
-And here's the new one
+Et voici le nouveau
 
 ```glsl
-// an attribute is an input (in) to a vertex shader.
-// It will receive data from a buffer
+// un attribut est une entrée (in) pour un shader de sommet.
+// Il recevra des données depuis un tampon
 *in vec4 a_position;
 
-// A matrix to transform the positions by
+// Une matrice pour transformer les positions
 *uniform mat4 u_matrix;
 
-// all shaders have a main function
+// tous les shaders ont une fonction main
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplie la position par la matrice.
 *  gl_Position = u_matrix * a_position;
 }
 ```
 
-It got even simpler! Just like in 2d we provided `x` and `y` and then
-set `z` to 1, in 3d we will provide `x`, `y`, and `z` and we need `w`
-to be 1 but we can take advantage of the fact that for attributes
-`w` defaults to 1.
+C'est devenu encore plus simple ! Tout comme en 2D nous fournissions `x` et `y` puis
+définissions `z` à 1, en 3D nous fournirons `x`, `y`, et `z` et nous avons besoin que `w`
+soit 1, mais nous pouvons profiter du fait que pour les attributs
+`w` vaut 1 par défaut.
 
-Then we need to provide 3D data.
+Ensuite, nous devons fournir des données 3D.
 
 ```js
   ...
 
-  // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-*  var size = 3;          // 3 components per iteration
-  var type = gl.FLOAT;   // the data is 32bit floats
-  var normalize = false; // don't normalize the data
-  var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-  var offset = 0;        // start at the beginning of the buffer
+  // Indique à l'attribut comment extraire les données de positionBuffer (ARRAY_BUFFER)
+*  var size = 3;          // 3 composantes par itération
+  var type = gl.FLOAT;   // les données sont des floats 32 bits
+  var normalize = false; // ne pas normaliser les données
+  var stride = 0;        // 0 = avancer de size * sizeof(type) à chaque itération pour obtenir la position suivante
+  var offset = 0;        // commencer au début du tampon
   gl.vertexAttribPointer(
       positionAttributeLocation, size, type, normalize, stride, offset);
 
   ...
 
-  // Fill the current ARRAY_BUFFER buffer
-  // with the values that define a letter 'F'.
+  // Remplit le tampon ARRAY_BUFFER actuel
+  // avec les valeurs qui définissent la lettre 'F'.
   function setGeometry(gl) {
     gl.bufferData(
         gl.ARRAY_BUFFER,
         new Float32Array([
-            // left column
+            // colonne gauche
               0,   0,  0,
              30,   0,  0,
               0, 150,  0,
@@ -91,7 +91,7 @@ Then we need to provide 3D data.
              30,   0,  0,
              30, 150,  0,
 
-            // top rung
+            // barre supérieure
              30,   0,  0,
             100,   0,  0,
              30,  30,  0,
@@ -99,7 +99,7 @@ Then we need to provide 3D data.
             100,   0,  0,
             100,  30,  0,
 
-            // middle rung
+            // barre du milieu
              30,  60,  0,
              67,  60,  0,
              30,  90,  0,
@@ -110,9 +110,9 @@ Then we need to provide 3D data.
   }
 ```
 
-Next we need to change all the matrix functions from 2D to 3D
+Ensuite, nous devons changer toutes les fonctions matricielles de 2D à 3D
 
-Here are the 2D (before) versions of m3.translation, m3.rotation, and m3.scaling
+Voici les versions 2D (avant) de m3.translation, m3.rotation, et m3.scaling
 
 ```js
 var m3 = {
@@ -144,7 +144,7 @@ var m3 = {
 };
 ```
 
-And here are the updated 3D versions.
+Et voici les versions 3D mises à jour.
 
 ```js
 var m4 = {
@@ -204,38 +204,38 @@ var m4 = {
 };
 ```
 
-Notice we now have 3 rotation functions.  We only needed one in 2D as we
-were effectively only rotating around the Z axis.  Now though to do 3D we
-also want to be able to rotate around the X axis and Y axis as well.  You
-can see from looking at them they are all very similar.  If we were to
-work them out you'd see them simplify just like before
+Notez que nous avons maintenant 3 fonctions de rotation. Nous n'en avions besoin que d'une en 2D car nous
+effectuions effectivement une rotation uniquement autour de l'axe Z. Maintenant, pour faire de la 3D, nous
+voulons également pouvoir effectuer des rotations autour des axes X et Y. Vous
+pouvez voir en les regardant qu'elles sont toutes très similaires. Si nous devions les
+développer, vous les verriez se simplifier comme auparavant
 
-Z rotation
+Rotation Z
 
 <div class="webgl_center">
 <div>newX = x *  c + y * s;</div>
 <div>newY = x * -s + y * c;</div>
 </div>
 
-Y rotation
+Rotation Y
 
 <div class="webgl_center">
 <div>newX = x *  c + z * s;</div>
 <div>newZ = x * -s + z * c;</div>
 </div>
 
-X rotation
+Rotation X
 
 <div class="webgl_center">
 <div>newY = y *  c + z * s;</div>
 <div>newZ = y * -s + z * c;</div>
 </div>
 
-which gives you these rotations.
+ce qui vous donne ces rotations.
 
 <iframe class="external_diagram" src="resources/axis-diagram.html" style="width: 540px; height: 240px;"></iframe>
 
-Similarly we'll make our simplified functions
+De même, nous allons créer nos fonctions simplifiées
 
 ```js
   translate: function(m, tx, ty, tz) {
@@ -259,7 +259,7 @@ Similarly we'll make our simplified functions
   },
 ```
 
-And we need a 4x4 matrix multiplication function
+Et nous avons besoin d'une fonction de multiplication de matrices 4x4
 
 ```js
   multiply: function(a, b) {
@@ -317,11 +317,11 @@ And we need a 4x4 matrix multiplication function
   },
 ```
 
-We also need to update the projection function. Here's the old one
+Nous devons également mettre à jour la fonction de projection. Voici l'ancienne
 
 ```js
   projection: function (width, height) {
-    // Note: This matrix flips the Y axis so 0 is at the top.
+    // Note : Cette matrice inverse l'axe Y pour que 0 soit en haut.
     return [
       2 / width, 0, 0,
       0, -2 / height, 0,
@@ -331,12 +331,12 @@ We also need to update the projection function. Here's the old one
 }
 ```
 
-which converted from pixels to clip space. For our first attempt at
-expanding it to 3D let's try
+qui convertissait depuis les pixels vers l'espace de découpage. Pour notre première tentative pour
+l'étendre à la 3D, essayons
 
 ```js
   projection: function(width, height, depth) {
-    // Note: This matrix flips the Y axis so 0 is at the top.
+    // Note : Cette matrice inverse l'axe Y pour que 0 soit en haut.
     return [
        2 / width, 0, 0, 0,
        0, -2 / height, 0, 0,
@@ -346,16 +346,16 @@ expanding it to 3D let's try
   },
 ```
 
-Just like we needed to convert from pixels to clip space for X and Y, for
-Z we need to do the same thing.  In this case I'm making the Z axis pixel
-units as well.  I'll pass in some value similar to `width` for the `depth`
-so our space will be 0 to `width` pixels wide, 0 to `height` pixels tall, but
-for `depth` it will be `-depth / 2` to `+depth / 2`.
+Tout comme nous devions convertir depuis les pixels vers l'espace de découpage pour X et Y, pour
+Z nous devons faire la même chose. Dans ce cas, je fais également de l'axe Z des unités en pixels.
+Je vais passer une valeur similaire à `width` pour `depth`
+de sorte que notre espace sera large de 0 à `width` pixels, haut de 0 à `height` pixels, mais
+pour `depth` ce sera `-depth / 2` à `+depth / 2`.
 
-Finally we need to update the code that computes the matrix.
+Enfin, nous devons mettre à jour le code qui calcule la matrice.
 
 ```js
-  // Compute the matrix
+  // Calcule la matrice
 *  var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 400);
 *  matrix = m4.translate(matrix, translation[0], translation[1], translation[2]);
 *  matrix = m4.xRotate(matrix, rotation[0]);
@@ -363,82 +363,82 @@ Finally we need to update the code that computes the matrix.
 *  matrix = m4.zRotate(matrix, rotation[2]);
 *  matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
 
-  // Set the matrix.
+  // Définit la matrice.
 *  gl.uniformMatrix4fv(matrixLocation, false, matrix);
 ```
 
-And here's that sample.
+Et voici cet exemple.
 
 {{{example url="../webgl-3d-step1.html" }}}
 
-The first problem we have is that our geometry is a flat F which makes it
-hard to see any 3D.  To fix that let's expand the geometry to 3D.  Our
-current F is made of 3 rectangles, 2 triangles each.  To make it 3D will
-require a total of 16 rectangles.  the 3 rectangles on the front, 3 on the
-back, 1 on the left, 4 on the right, 2 on the tops, 3 on the bottoms.
+Le premier problème que nous avons est que notre géométrie est un F plat, ce qui rend difficile
+de voir toute 3D. Pour résoudre cela, étendons la géométrie en 3D. Notre
+F actuel est composé de 3 rectangles, 2 triangles chacun. Pour le rendre 3D, il faudra
+un total de 16 rectangles : les 3 rectangles à l'avant, 3 à
+l'arrière, 1 sur la gauche, 4 sur la droite, 2 en haut, 3 en bas.
 
 <img class="webgl_center noinvertdark" width="300" src="resources/3df.svg" />
 
-That's quite a few to list out here.
-16 rectangles with 2 triangles per rectangle and 3 vertices per triangle is 96
-vertices.  If you want to see all of them view the source of the sample.
+C'est un peu trop pour les lister tous ici.
+16 rectangles avec 2 triangles par rectangle et 3 sommets par triangle font 96
+sommets. Si vous voulez tous les voir, consultez le code source de l'exemple.
 
-We have to draw more vertices so
+Nous devons dessiner plus de sommets donc
 
 ```js
-    // Draw the geometry.
+    // Dessine la géométrie.
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
 *    var count = 16 * 6;
     gl.drawArrays(primitiveType, offset, count);
 ```
 
-And here's that version
+Et voici cette version
 
 {{{example url="../webgl-3d-step2.html" }}}
 
-Moving the sliders it's pretty hard to tell that it's 3D.  Let's try
-coloring each rectangle a different color.  To do this we will add another
-attribute to our vertex shader and a varying to pass it from the vertex
-shader to the fragment shader.
+En déplaçant les curseurs, il est assez difficile de voir que c'est en 3D. Essayons
+de colorer chaque rectangle d'une couleur différente. Pour ce faire, nous allons ajouter un autre
+attribut à notre shader de sommet et un varying pour le transmettre du shader de sommet
+au shader de fragment.
 
-Here's the new vertex shader
+Voici le nouveau shader de sommet
 
 ```glsl
 #version 300 es
 
-// an attribute is an input (in) to a vertex shader.
-// It will receive data from a buffer
+// un attribut est une entrée (in) pour un shader de sommet.
+// Il recevra des données depuis un tampon
 in vec4 a_position;
 +in vec4 a_color;
 
-// A matrix to transform the positions by
+// Une matrice pour transformer les positions
 uniform mat4 u_matrix;
 
-+// a varying the color to the fragment shader
++// un varying pour transmettre la couleur au shader de fragment
 +out vec4 v_color;
 
-// all shaders have a main function
+// tous les shaders ont une fonction main
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplie la position par la matrice.
   gl_Position = u_matrix * a_position;
 
-+  // Pass the color to the fragment shader.
++  // Transmet la couleur au shader de fragment.
 +  v_color = a_color;
 }
 ```
 
-And we need to use that color in the fragment shader
+Et nous devons utiliser cette couleur dans le shader de fragment
 
 ```glsl
 #version 300 es
 
 precision highp float;
 
-+// the varied color passed from the vertex shader
++// la couleur variée transmise depuis le shader de sommet
 +in vec4 v_color;
 
-// we need to declare an output for the fragment shader
+// nous devons déclarer une sortie pour le shader de fragment
 out vec4 outColor;
 
 void main() {
@@ -446,8 +446,8 @@ void main() {
 }
 ```
 
-We need to lookup the attribute location to supply the colors, then setup another
-buffer and attribute to give it the colors.
+Nous devons rechercher l'emplacement de l'attribut pour fournir les couleurs, puis configurer un autre
+tampon et attribut pour lui donner les couleurs.
 
 ```js
   ...
@@ -455,34 +455,34 @@ buffer and attribute to give it the colors.
 
   ...
 
-  // create the color buffer, make it the current ARRAY_BUFFER
-  // and copy in the color values
+  // crée le tampon de couleur, en fait le ARRAY_BUFFER actuel
+  // et copie les valeurs de couleur
   var colorBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
   setColors(gl);
 
-  // Turn on the attribute
+  // Active l'attribut
   gl.enableVertexAttribArray(colorAttributeLocation);
 
-  // Tell the attribute how to get data out of colorBuffer (ARRAY_BUFFER)
-  var size = 3;          // 3 components per iteration
-  var type = gl.UNSIGNED_BYTE;   // the data is 8bit unsigned bytes
-  var normalize = true;  // convert from 0-255 to 0.0-1.0
-  var stride = 0;        // 0 = move forward size * sizeof(type) each
-                         // iteration to get the next color
-  var offset = 0;        // start at the beginning of the buffer
+  // Indique à l'attribut comment extraire les données de colorBuffer (ARRAY_BUFFER)
+  var size = 3;          // 3 composantes par itération
+  var type = gl.UNSIGNED_BYTE;   // les données sont des octets non signés de 8 bits
+  var normalize = true;  // convertir de 0-255 à 0.0-1.0
+  var stride = 0;        // 0 = avancer de size * sizeof(type) à chaque
+                         // itération pour obtenir la couleur suivante
+  var offset = 0;        // commencer au début du tampon
   gl.vertexAttribPointer(
       colorAttributeLocation, size, type, normalize, stride, offset);
 
   ...
 
-// Fill the buffer with colors for the 'F'.
+// Remplit le tampon avec les couleurs pour le 'F'.
 
 function setColors(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
       new Uint8Array([
-          // left column front
+          // colonne gauche avant
         200,  70, 120,
         200,  70, 120,
         200,  70, 120,
@@ -490,7 +490,7 @@ function setColors(gl) {
         200,  70, 120,
         200,  70, 120,
 
-          // top rung front
+          // barre supérieure avant
         200,  70, 120,
         200,  70, 120,
         ...
@@ -499,64 +499,63 @@ function setColors(gl) {
 }
 ```
 
-Now we get this.
+Maintenant nous obtenons ceci.
 
 {{{example url="../webgl-3d-step3.html" }}}
 
-Uh oh, what's that mess?  Well, it turns out all the various parts of
-that 3D 'F', front, back, sides, etc get drawn in the order they appear in
-our geometry data.  That doesn't give us quite the desired results as sometimes
-the ones in the back get drawn after the ones in the front.
+Ouh là, c'est quoi ce désordre ? Eh bien, il s'avère que toutes les différentes parties de
+ce 'F' 3D, l'avant, l'arrière, les côtés, etc. sont dessinées dans l'ordre dans lequel elles apparaissent dans
+nos données de géométrie. Cela ne nous donne pas tout à fait les résultats souhaités car parfois
+celles de l'arrière sont dessinées après celles de l'avant.
 
 <img class="webgl_center" style="background-color: transparent;" width="163" height="190" src="resources/polygon-drawing-order.gif" />
 
-The <span style="background: rgb(200, 70, 120); color: white; padding: 0.25em">reddish part</span> is
-the **front** of the 'F'  but because it's the first part of our data
-it is drawn first and then the other triangles behind it get drawn
-after covering it up. For example the  <span style="background: rgb(80, 70, 200); color: white; padding: 0.25em">purple part</span>
-is actually the back of the 'F'. It gets drawn 2nd because it comes 2nd in our data.
+La <span style="background: rgb(200, 70, 120); color: white; padding: 0.25em">partie rougeâtre</span> est
+l'**avant** du 'F' mais comme c'est la première partie de nos données,
+elle est dessinée en premier, puis les autres triangles derrière elle sont dessinés
+après, la recouvrant. Par exemple, la <span style="background: rgb(80, 70, 200); color: white; padding: 0.25em">partie violette</span>
+est en fait l'arrière du 'F'. Elle est dessinée en 2ème position car elle vient en 2ème dans nos données.
 
-Triangles in WebGL have the concept of front facing and back facing.  By default a
-front facing triangle has its vertices go in a counter clockwise direction.  A
-back facing triangle has its vertices go in a clockwise direction.
+Les triangles en WebGL ont le concept de face avant et de face arrière. Par défaut, un
+triangle de face avant a ses sommets qui vont dans le sens antihoraire. Un
+triangle de face arrière a ses sommets qui vont dans le sens horaire.
 
 <img src="resources/triangle-winding.svg" class="webgl_center" width="400" />
 
-WebGL has the ability to draw only forward facing or back facing
-triangles.  We can turn that feature on with
+WebGL a la capacité de ne dessiner que les triangles de face avant ou de face arrière. Nous pouvons activer cette
+fonctionnalité avec
 
 ```js
   gl.enable(gl.CULL_FACE);
 ```
 
-Well put that in our `drawScene` function. With that
-feature turned on, WebGL defaults to "culling" back facing triangles.
-"Culling" in this case is a fancy word for "not drawing".
+Nous allons mettre cela dans notre fonction `drawScene`. Avec cette
+fonctionnalité activée, WebGL "élimine" par défaut les triangles de face arrière.
+"Éliminer" dans ce cas est un mot sophistiqué pour "ne pas dessiner".
 
-Note that as far as WebGL is concerned, whether or not a triangle is
-considered to be going clockwise or counter clockwise depends on the
-vertices of that triangle in clip space.  In other words, WebGL figures out
-whether a triangle is front or back AFTER you've applied math to the
-vertices in the vertex shader.  That means for example a clockwise
-triangle that is scaled in X by -1 becomes a counter clockwise triangle or
-a clockwise triangle rotated 180 degrees becomes a counter clockwise
-triangle.  Because we had CULL_FACE disabled we can see both
-clockwise(front) and counter clockwise(back) triangles.  Now that we've
-turned it on, any time a front facing triangle flips around either because
-of scaling or rotation or for whatever reason, WebGL won't draw it.
-That's a good thing since as your turn something around in 3D you
-generally want whichever triangles are facing you to be considered front
-facing.
+Notez que pour WebGL, qu'un triangle soit
+considéré comme allant dans le sens horaire ou antihoraire dépend des
+sommets de ce triangle dans l'espace de découpage. En d'autres termes, WebGL détermine
+si un triangle est avant ou arrière APRÈS que vous ayez appliqué des calculs mathématiques aux
+sommets dans le shader de sommet. Cela signifie par exemple qu'un triangle horaire
+qui est mis à l'échelle en X par -1 devient un triangle antihoraire ou
+qu'un triangle horaire tourné de 180 degrés devient un triangle antihoraire. Comme nous avions CULL_FACE désactivé, nous pouvions voir à la fois les
+triangles horaires (avant) et antihoraires (arrière). Maintenant que nous l'avons
+activé, chaque fois qu'un triangle de face avant se retourne, que ce soit à cause
+de la mise à l'échelle ou de la rotation ou pour quelque raison que ce soit, WebGL ne le dessinera pas.
+C'est une bonne chose car lorsque vous faites tourner quelque chose en 3D, vous
+voulez généralement que les triangles qui vous font face soient considérés comme de face
+avant.
 
-With CULL_FACE turned on this is what we get
+Avec CULL_FACE activé, voici ce que nous obtenons
 
 {{{example url="../webgl-3d-step4.html" }}}
 
-Hey!  Where did all the triangles go?  It turns out, many of them are
-facing the wrong way.  Rotate it and you'll see them appear when you look
-at the other side.  Fortunately it's easy to fix.  We just look at which
-ones are backward and exchange 2 of their vertices.  For example if one
-backward triangle is
+Hé ! Où sont passés tous les triangles ? Il s'avère que beaucoup d'entre eux
+font face dans le mauvais sens. Faites-le tourner et vous les verrez apparaître lorsque vous regarderez
+de l'autre côté. Heureusement, c'est facile à corriger. Nous regardons simplement lesquels
+vont dans le mauvais sens et échangeons 2 de leurs sommets. Par exemple, si un
+triangle orienté vers l'arrière est
 
 ```
            1,   2,   3,
@@ -564,7 +563,7 @@ backward triangle is
          700, 800, 900,
 ```
 
-we just swap the last 2 vertices to make it forward.
+nous échangeons simplement les 2 derniers sommets pour le faire aller vers l'avant.
 
 ```
            1,   2,   3,
@@ -572,61 +571,61 @@ we just swap the last 2 vertices to make it forward.
 *          40,  50,  60,
 ```
 
-Going through and fixing all the backward triangles gets us to this
+Après avoir parcouru et corrigé tous les triangles orientés vers l'arrière, nous obtenons ceci
 
 {{{example url="../webgl-3d-step5.html" }}}
 
-That's closer but there's still one more problem.  Even with all the
-triangles facing in the correct direction and with the back facing ones
-being culled we still have places where triangles that should be in the back
-are being drawn over triangles that should be in front.
+C'est mieux, mais il y a encore un autre problème. Même avec tous les
+triangles orientés dans la bonne direction et avec ceux de face arrière
+éliminés, nous avons encore des endroits où les triangles qui devraient être à l'arrière
+sont dessinés par-dessus les triangles qui devraient être à l'avant.
 
-Enter the DEPTH BUFFER.
+Entrez le TAMPON DE PROFONDEUR.
 
-A depth buffer, sometimes called a Z-Buffer, is a rectangle of *depth*
-pixels, one depth pixel for each color pixel used to make the image.  As
-WebGL draws each color pixel it can also draw a depth pixel.  It does this
-based on the values we return from the vertex shader for Z.  Just like we
-had to convert to clip space for X and Y, Z is also in clip space or (-1
-to +1).  That value is then converted into a depth space value (0 to +1).
-Before WebGL draws a color pixel it will check the corresponding depth
-pixel.  If the depth value for the pixel it's about to draw is greater
-than the value of the corresponding depth pixel then WebGL does not draw
-the new color pixel.  Otherwise it draws both the new color pixel with the
-color from your fragment shader AND it draws the depth pixel with the new
-depth value.  This means, pixels that are behind other pixels won't get
-drawn.
+Un tampon de profondeur, parfois appelé Z-Buffer, est un rectangle de pixels de *profondeur*,
+un pixel de profondeur pour chaque pixel de couleur utilisé pour créer l'image. Lorsque
+WebGL dessine chaque pixel de couleur, il peut également dessiner un pixel de profondeur. Il fait cela
+en fonction des valeurs que nous renvoyons depuis le shader de sommet pour Z. Tout comme nous
+devions convertir vers l'espace de découpage pour X et Y, Z est également dans l'espace de découpage ou (-1
+à +1). Cette valeur est ensuite convertie en une valeur d'espace de profondeur (0 à +1).
+Avant que WebGL ne dessine un pixel de couleur, il vérifiera le pixel de profondeur correspondant.
+Si la valeur de profondeur pour le pixel qu'il est sur le point de dessiner est supérieure
+à la valeur du pixel de profondeur correspondant, alors WebGL ne dessine pas
+le nouveau pixel de couleur. Sinon, il dessine à la fois le nouveau pixel de couleur avec la
+couleur de votre shader de fragment ET il dessine le pixel de profondeur avec la nouvelle
+valeur de profondeur. Cela signifie que les pixels qui sont derrière d'autres pixels ne seront pas
+dessinés.
 
-We can turn on this feature nearly as simply as we turned on culling with
+Nous pouvons activer cette fonctionnalité presque aussi simplement que nous avons activé l'élimination avec
 
 ```js
   gl.enable(gl.DEPTH_TEST);
 ```
 
 
-We also need to clear the depth buffer back to 1.0 before we start drawing.
+Nous devons également effacer le tampon de profondeur à 1.0 avant de commencer à dessiner.
 
 ```js
-  // Draw the scene.
+  // Dessine la scène.
   function drawScene() {
 
     ...
 
-    // Clear the canvas AND the depth buffer.
+    // Efface le canvas ET le tampon de profondeur.
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     ...
 ```
 
-And now we get
+Et maintenant nous obtenons
 
 {{{example url="../webgl-3d-step6.html" }}}
 
-which is 3D!
+ce qui est de la 3D !
 
-One minor thing. In most 3d math libraries there is no `projection` function to
-do our conversions from clip space to pixel space. Rather there's usually a function
-called `ortho` or `orthographic` that looks like this
+Un petit détail. Dans la plupart des bibliothèques mathématiques 3D, il n'y a pas de fonction `projection` pour
+effectuer nos conversions depuis l'espace de découpage vers l'espace en pixels. Il y a plutôt généralement une fonction
+appelée `ortho` ou `orthographic` qui ressemble à ceci
 
     var m4 = {
       orthographic: function(left, right, bottom, top, near, far) {
@@ -642,10 +641,10 @@ called `ortho` or `orthographic` that looks like this
         ];
       }
 
-Unlike our simplified `projection` function above which only had width, height, and depth
-parameters this more common orthographic projection function we can pass in left, right,
-bottom, top, near, and far which gives as more flexibility. To use it the same as
-our original projection function we'd call it with
+Contrairement à notre fonction `projection` simplifiée ci-dessus qui n'avait que les paramètres width, height, et depth,
+cette fonction de projection orthographique plus courante nous permet de passer left, right,
+bottom, top, near, et far, ce qui nous donne plus de flexibilité. Pour l'utiliser de la même manière que
+notre fonction de projection originale, nous l'appellerions avec
 
     var left = 0;
     var right = gl.canvas.clientWidth;
@@ -655,49 +654,49 @@ our original projection function we'd call it with
     var far = -200;
     m4.orthographic(left, right, bottom, top, near, far);
 
-In the next post I'll go over [how to make it have perspective](webgl-3d-perspective.html).
+Dans le prochain article, je vais expliquer [comment lui donner de la perspective](webgl-3d-perspective.html).
 
 <div class="webgl_bottombar">
-<h3>Why is the attribute vec4 but gl.vertexAttribPointer size 3</h3>
+<h3>Pourquoi l'attribut est vec4 mais gl.vertexAttribPointer size est 3</h3>
 <p>
-For those of you who are detail oriented you might have noticed we defined our 2 attributes as
+Pour ceux d'entre vous qui sont attentifs aux détails, vous avez peut-être remarqué que nous avons défini nos 2 attributs comme
 </p>
 <pre class="prettyprint showlinemods">
 in vec4 a_position;
 in vec4 a_color;
 </pre>
-<p>both of which are 'vec4' but when we tell WebGL how to take data out of our buffers we used</p>
+<p>tous deux sont des 'vec4' mais lorsque nous disons à WebGL comment extraire les données de nos tampons, nous avons utilisé</p>
 <pre class="prettyprint showlinemods">{{#escapehtml}}
-// Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-var size = 3;          // 3 components per iteration
-var type = gl.FLOAT;   // the data is 32bit floats
-var normalize = false; // don't normalize the data
-var stride = 0;        // 0 = move forward size * sizeof(type) each
-                       // iteration to get the next position
-var offset = 0;        // start at the beginning of the buffer
+// Indique à l'attribut comment extraire les données de positionBuffer (ARRAY_BUFFER)
+var size = 3;          // 3 composantes par itération
+var type = gl.FLOAT;   // les données sont des floats 32 bits
+var normalize = false; // ne pas normaliser les données
+var stride = 0;        // 0 = avancer de size * sizeof(type) à chaque
+                       // itération pour obtenir la position suivante
+var offset = 0;        // commencer au début du tampon
 gl.vertexAttribPointer(
     positionAttributeLocation, size, type, normalize, stride, offset);
 
 ...
-// Tell the attribute how to get data out of colorBuffer (ARRAY_BUFFER)
-var size = 3;          // 3 components per iteration
-var type = gl.UNSIGNED_BYTE;   // the data is 8bit unsigned bytes
-var normalize = true;  // convert from 0-255 to 0.0-1.0
-var stride = 0;        // 0 = move forward size * sizeof(type) each
-                       // iteration to get the next color
-var offset = 0;        // start at the beginning of the buffer
+// Indique à l'attribut comment extraire les données de colorBuffer (ARRAY_BUFFER)
+var size = 3;          // 3 composantes par itération
+var type = gl.UNSIGNED_BYTE;   // les données sont des octets non signés de 8 bits
+var normalize = true;  // convertir de 0-255 à 0.0-1.0
+var stride = 0;        // 0 = avancer de size * sizeof(type) à chaque
+                       // itération pour obtenir la couleur suivante
+var offset = 0;        // commencer au début du tampon
 gl.vertexAttribPointer(
     colorAttributeLocation, size, type, normalize, stride, offset);
 {{/escapehtml}}</pre>
 <p>
-That '3' in each of those says only to pull 3 values out of the buffer per attribute
-per iteration of the vertex shader.
-This works because in the vertex shader WebGL provides defaults for those
-values you don't supply.  The defaults are 0, 0, 0, 1 where x = 0, y = 0, z = 0
-and w = 1.  This is why in our old 2D vertex shader we had to explicitly
-supply the 1.  We were passing in x and y and we needed a 1 for z but
-because the default for z is 0 we had to explicitly supply a 1.  For 3D
-though, even though we don't supply a 'w' it defaults to 1 which is what
-we need for the matrix math to work.
+Ce '3' dans chacun de ceux-ci dit de n'extraire que 3 valeurs du tampon par attribut
+par itération du shader de sommet.
+Cela fonctionne car dans le shader de sommet, WebGL fournit des valeurs par défaut pour celles
+que vous ne fournissez pas. Les valeurs par défaut sont 0, 0, 0, 1 où x = 0, y = 0, z = 0
+et w = 1. C'est pourquoi dans notre ancien shader de sommet 2D, nous devions explicitement
+fournir le 1. Nous passions x et y et nous avions besoin d'un 1 pour z, mais
+comme la valeur par défaut pour z est 0, nous devions explicitement fournir un 1. Pour la 3D
+cependant, même si nous ne fournissons pas de 'w', sa valeur par défaut est 1, ce qui est ce dont
+nous avons besoin pour que les calculs matriciels fonctionnent.
 </p>
 </div>
