@@ -478,7 +478,7 @@ gl.transformFeedbackVaryings(
 );
 gl.linkProgram(program);
 if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-  throw new Error(gl.getProgramParameter(program));
+  throw new Error(gl.getProgramInfoLog(program));
 }
 ```
 
@@ -734,7 +734,7 @@ function createProgram(gl, shaderSources, transformFeedbackVaryings) {
   }
   gl.linkProgram(program);
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    throw new Error(gl.getProgramParameter(program));
+    throw new Error(gl.getProgramInfoLog(program));
   }
   return program;
 }
