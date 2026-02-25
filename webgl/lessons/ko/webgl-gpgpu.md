@@ -1883,25 +1883,6 @@ function updateLineEndPoints(deltaTime) {
     -   [가까운 선분 찾기 시각화](../webgl-gpgpu-closest-line.html)
     -   [동적인 버전](../webgl-gpgpu-closest-line-dynamic.html)
 
--   파이어폭스 버그<a id="firefox-bug"></a>
-
-    버전 84의 파이어폭스는 `drawArraysIndexed`가 호출 됐을때 최소 하나의 활성화된 attribute가 분모로 0을 사용하는
-    [버그](https://bugzilla.mozilla.org/show_bug.cgi?id=1677552)가 있다.
-    즉, 위의 예제에서 `drawArraysIndexed`으로 가까운 선분들을 그린다면 실패합니다.
-
-    이 문제를 해결하려면 `[0, 1]`만 있는 버퍼를 만들고 이것을 `gl_VertexID % 2`대신
-
-    ```glsl
-    in int endPoint;  // needed by firefox
-
-    ...
-    -int linePointId = closestNdx * 2 + gl_VertexID % 2;
-    +int linePointId = closestNdx * 2 + endPoint;
-    ...
-    ```
-
-    를 사용할때 attribute로 사용합니다. [이렇게 파이어폭스에서 동작 할 것입니다.](../webgl/webgl-gpgpu-closest-line-dynamic-transformfeedback-ff.html).
-
 -   GPU는 CPU와 같은 정밀도를 가지고 있지 않습니다.
 
     결과를 보고 받아들일지 결정해야합니다.

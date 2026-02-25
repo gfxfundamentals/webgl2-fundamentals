@@ -1938,26 +1938,6 @@ function updateLineEndPoints(deltaTime) {
   * [最近线段可视化](../webgl-gpgpu-closest-line.html)
   * [最近线段动态演示](../webgl-gpgpu-closest-line-dynamic.html)
 
-* Firefox Bug<a id="firefox-bug"></a>
-
-  截至 Firefox 84 版本，[存在一个 bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1677552)，  
-  要求在调用 `drawArraysInstanced` 时，必须至少存在一个使用除数为 0 的活动属性，否则调用会失败。 这意味着上述示例中使用 `drawArraysInstanced` 绘制最近线段的部分在 Firefox 中会失败。
-
-  为了解决这个问题，我们可以创建一个仅包含 `[0, 1]` 的缓冲区，  
-  并将其作为一个属性用于代替之前通过 `gl_VertexID % 2` 实现的逻辑。  
-  也就是说，我们不再依赖 `gl_VertexID`，而是使用这个属性来区分起点和终点。
-
-  ```glsl
-  in int endPoint;  // needed by firefox
-
-  ...
-  -int linePointId = closestNdx * 2 + gl_VertexID % 2;
-  +int linePointId = closestNdx * 2 + endPoint;
-  ...
-  ```
-
-  这样就可以 [让它在 Firefox 中正常工作](../webgl/webgl-gpgpu-closest-line-dynamic-transformfeedback-ff.html)。
-
 * GPU 的精度与 CPU 并不相同。
 
   请检查你的结果，确保它们在可接受的范围内。

@@ -1791,27 +1791,6 @@ requestAnimationFrame(render);
   * [визуализация ближайших линий](../webgl-gpgpu-closest-line.html)
   * [динамические ближайшие линии](../webgl-gpgpu-closest-line-dynamic.html)
 
-* Ошибка Firefox<a id="firefox-bug"></a>
-
-  Firefox начиная с версии 84 имеет [ошибку](https://bugzilla.mozilla.org/show_bug.cgi?id=1677552) в том,
-  что он неправильно требует наличия по крайней мере одного активного атрибута, который использует делитель 0 при вызове
-  `drawArraysIndexed`. Это означает, что пример выше, где мы рисуем ближайшие линии, используя
-  `drawArraysIndexed`, не работает.
-
-  Чтобы обойти это, мы можем создать буфер, который просто содержит `[0, 1]` в нем, и использовать его
-  на атрибуте для того, как мы использовали `gl_VertexID % 2`. Вместо этого мы будем использовать
-
-  ```glsl
-  in int endPoint;  // нужно для firefox
-
-  ...
-  -int linePointId = closestNdx * 2 + gl_VertexID % 2;
-  +int linePointId = closestNdx * 2 + endPoint;
-  ...
-  ```
-
-  что [сделает это работающим в firefox](../webgl/webgl-gpgpu-closest-line-dynamic-transformfeedback-ff.html).
-
 * GPU не имеют той же точности, что и CPU.
 
   Проверьте ваши результаты и убедитесь, что они приемлемы.
