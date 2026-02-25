@@ -638,7 +638,7 @@ gl.attachShader(program, fShader);
 gl.transformFeedbackVaryings(program, ['sum', 'difference', 'product'], gl.SEPARATE_ATTRIBS);
 gl.linkProgram(program);
 if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    throw new Error(gl.getProgramParameter(program));
+    throw new Error(gl.getProgramInfoLog(program));
 }
 </code></pre>
 <p><code class="notranslate" translate="no">gl.transformFeedbackVaryings</code> 은 3개의 인자를 가집니다. 첫번째와 두번째는 프로그램과 varring할 변수의 이름으로 이뤄진 배열(shader에 작성한 순서대로)입니다.
@@ -831,7 +831,7 @@ void main() {
     }
     gl.linkProgram(program);
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        throw new Error(gl.getProgramParameter(program));
+        throw new Error(gl.getProgramInfoLog(program));
     }
     return program;
 }

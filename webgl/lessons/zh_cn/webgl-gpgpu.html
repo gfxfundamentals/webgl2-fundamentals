@@ -644,7 +644,7 @@ gl.transformFeedbackVaryings(
 );
 gl.linkProgram(program);
 if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-  throw new Error(gl.getProgramParameter(program));
+  throw new Error(gl.getProgramInfoLog(program));
 }
 </code></pre>
 <p><code class="notranslate" translate="no">gl.transformFeedbackVaryings</code> 接受 3 个参数。<code class="notranslate" translate="no">程序program</code>,一个数组，其中包含我们想要写入的变量的名称，这些变量的名称按照您希望的顺序排列。
@@ -849,7 +849,7 @@ void main() {
   }
   gl.linkProgram(program);
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    throw new Error(gl.getProgramParameter(program));
+    throw new Error(gl.getProgramInfoLog(program));
   }
   return program;
 }

@@ -671,7 +671,7 @@ gl.transformFeedbackVaryings(
 );
 gl.linkProgram(program);
 if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-  throw new Error(gl.getProgramParameter(program));
+  throw new Error(gl.getProgramInfoLog(program));
 }
 </code></pre>
 <p><code class="notranslate" translate="no">gl.transformFeedbackVaryings</code> takes 3 arguments. The program, an array of the names
@@ -888,7 +888,7 @@ a function we can use for both shaders</p>
   }
   gl.linkProgram(program);
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    throw new Error(gl.getProgramParameter(program));
+    throw new Error(gl.getProgramInfoLog(program));
   }
   return program;
 }

@@ -654,7 +654,7 @@ gl.transformFeedbackVaryings(
 );
 gl.linkProgram(program);
 if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-  throw new Error(gl.getProgramParameter(program));
+  throw new Error(gl.getProgramInfoLog(program));
 }
 </code></pre>
 <p><code class="notranslate" translate="no">gl.transformFeedbackVaryings</code> принимает 3 аргумента. Программу, массив имен
@@ -871,7 +871,7 @@ void main() {
   }
   gl.linkProgram(program);
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    throw new Error(gl.getProgramParameter(program));
+    throw new Error(gl.getProgramInfoLog(program));
   }
   return program;
 }
