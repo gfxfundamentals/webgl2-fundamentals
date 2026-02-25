@@ -2013,27 +2013,6 @@ is happening on the GPU
   * [closest lines visualized](../webgl-gpgpu-closest-line.html)
   * [closest lines dynamic](../webgl-gpgpu-closest-line-dynamic.html)
 
-* Firefox Bug<a id="firefox-bug"></a>
-
-  Firefox as of version 84 has [a bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1677552) in that
-  it wrongly requires there to be at least one active attribute that uses a divisor of 0 when calling
-  `drawArraysIndexed`. That means the example above where we draw the closest lines using
-  `drawArraysIndexed` fails.
-
-  To work around it we can create a buffer that just has `[0, 1]` in it and use that
-  on an attribute for how we used `gl_VertexID % 2`. Instead we'd use
-
-  ```glsl
-  in int endPoint;  // needed by firefox
-
-  ...
-  -int linePointId = closestNdx * 2 + gl_VertexID % 2;
-  +int linePointId = closestNdx * 2 + endPoint;
-  ...
-  ```
-
-  which will [make it work in firefox](../webgl/webgl-gpgpu-closest-line-dynamic-transformfeedback-ff.html).
-
 * GPUs don't have the same precision as CPUs.
 
   Check your results and make sure they are acceptable.
