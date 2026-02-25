@@ -1885,21 +1885,6 @@ function updateLineEndPoints(deltaTime) {
 </ul>
 </li>
 <li>
-<p>파이어폭스 버그<a id="firefox-bug"></a></p>
-<p>버전 84의 파이어폭스는 <code class="notranslate" translate="no">drawArraysIndexed</code>가 호출 됐을때 최소 하나의 활성화된 attribute가 분모로 0을 사용하는
-<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1677552">버그</a>가 있다.
-즉, 위의 예제에서 <code class="notranslate" translate="no">drawArraysIndexed</code>으로 가까운 선분들을 그린다면 실패합니다.</p>
-<p>이 문제를 해결하려면 <code class="notranslate" translate="no">[0, 1]</code>만 있는 버퍼를 만들고 이것을 <code class="notranslate" translate="no">gl_VertexID % 2</code>대신</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">in int endPoint;  // needed by firefox
-
-...
--int linePointId = closestNdx * 2 + gl_VertexID % 2;
-+int linePointId = closestNdx * 2 + endPoint;
-...
-</code></pre>
-<p>를 사용할때 attribute로 사용합니다. <a href="../../webgl/webgl-gpgpu-closest-line-dynamic-transformfeedback-ff.html">이렇게 파이어폭스에서 동작 할 것입니다.</a>.</p>
-</li>
-<li>
 <p>GPU는 CPU와 같은 정밀도를 가지고 있지 않습니다.</p>
 <p>결과를 보고 받아들일지 결정해야합니다.</p>
 </li>

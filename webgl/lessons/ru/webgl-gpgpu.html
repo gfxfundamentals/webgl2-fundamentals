@@ -1825,23 +1825,6 @@ transform feedback.</p>
 </ul>
 </li>
 <li>
-<p>Ошибка Firefox<a id="firefox-bug"></a></p>
-<p>Firefox начиная с версии 84 имеет <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1677552">ошибку</a> в том,
-что он неправильно требует наличия по крайней мере одного активного атрибута, который использует делитель 0 при вызове
-<code class="notranslate" translate="no">drawArraysIndexed</code>. Это означает, что пример выше, где мы рисуем ближайшие линии, используя
-<code class="notranslate" translate="no">drawArraysIndexed</code>, не работает.</p>
-<p>Чтобы обойти это, мы можем создать буфер, который просто содержит <code class="notranslate" translate="no">[0, 1]</code> в нем, и использовать его
-на атрибуте для того, как мы использовали <code class="notranslate" translate="no">gl_VertexID % 2</code>. Вместо этого мы будем использовать</p>
-<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">in int endPoint;  // нужно для firefox
-
-...
--int linePointId = closestNdx * 2 + gl_VertexID % 2;
-+int linePointId = closestNdx * 2 + endPoint;
-...
-</code></pre>
-<p>что <a href="../../webgl/webgl-gpgpu-closest-line-dynamic-transformfeedback-ff.html">сделает это работающим в firefox</a>.</p>
-</li>
-<li>
 <p>GPU не имеют той же точности, что и CPU.</p>
 <p>Проверьте ваши результаты и убедитесь, что они приемлемы.</p>
 </li>

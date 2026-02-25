@@ -73,7 +73,7 @@ function main() {
   uniform highp isampler2D positionTex;
   uniform mat4 matrix;
 
-  ivec4 getValueFrom2DTextureAs1DArray(isampler2D tex, ivec2 dimensions, int index) {
+  ivec4 getValueFrom2DTextureAs1DArray(highp isampler2D tex, ivec2 dimensions, int index) {
     int y = index / dimensions.x;
     int x = index % dimensions.x;
     return texelFetch(tex, ivec2(x, y), 0);
