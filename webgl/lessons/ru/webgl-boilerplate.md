@@ -52,7 +52,7 @@ WebGL иногда кажется сложным для изучения, пот
     /**
      * Создает программу из 2 шейдеров.
      *
-     * @param {!WebGLRenderingContext) gl WebGL контекст.
+     * @param {!WebGLRenderingContext} gl WebGL контекст.
      * @param {!WebGLShader} vertexShader Вершинный шейдер.
      * @param {!WebGLShader} fragmentShader Фрагментный шейдер.
      * @return {!WebGLProgram} Программа.
