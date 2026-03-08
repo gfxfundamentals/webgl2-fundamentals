@@ -52,7 +52,7 @@ And the boilerplate code for linking 2 shaders into a program
     /**
      * Creates a program from 2 shaders.
      *
-     * @param {!WebGLRenderingContext) gl The WebGL context.
+     * @param {!WebGLRenderingContext} gl The WebGL context.
      * @param {!WebGLShader} vertexShader A vertex shader.
      * @param {!WebGLShader} fragmentShader A fragment shader.
      * @return {!WebGLProgram} A program.
