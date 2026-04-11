@@ -1,74 +1,74 @@
-Title: WebGL2 Pulling Vertices
-Description: Using independent indices
-TOC: Pulling Vertices
+Title: WebGL2 - Extraction de sommets
+Description: Utiliser des indices indépendants
+TOC: Extraction de sommets
 
-This article assumes you've read many of the other articles
-starting with [the fundamentals](webgl-fundamentals.html).
-If you have not read them please start there first.
+Cet article suppose que vous avez lu beaucoup des autres articles
+en commençant par [les bases](webgl-fundamentals.html).
+Si vous ne les avez pas lus, veuillez commencer par là d'abord.
 
-Traditionally, WebGL apps put geometry data in buffers.
-They then use attributes to automatically supply vertex data from those buffers
-to the vertex shader where the programmer provides code to convert them to clip space.
+Traditionnellement, les applications WebGL mettent des données de géométrie dans des buffers.
+Elles utilisent ensuite des attributs pour fournir automatiquement les données de sommets de ces buffers
+au vertex shader où le programmeur fournit du code pour les convertir en clip space.
 
-The word **traditionally** is important. It's only a **tradition**
-to do it this way. It is in no way a requirement. WebGL doesn't
-care how we do it, it only cares that our vertex shaders
-assign clip space coordinates to `gl_Position`.
+Le mot **traditionnellement** est important. C'est seulement une **tradition**
+de le faire ainsi. Ce n'est en aucun cas une obligation. WebGL se fiche
+de comment nous le faisons, il se soucie seulement que nos vertex shaders
+assignent des coordonnées en clip space à `gl_Position`.
 
-Let's draw a texture mapped cube using code like the examples in [the article on textures](webgl-3d-textures.html). 
-We're told we need at least 24 unique vertices. This is because even though there are only 8 corner
-positions the same corner gets used on 3 different faces of the
-cube and each face needs different texture coordinates.
+Dessinons un cube avec texture en utilisant du code similaire aux exemples de [l'article sur les textures](webgl-3d-textures.html).
+On nous dit que nous avons besoin d'au moins 24 sommets uniques. C'est parce que même s'il n'y a que 8 positions
+de coins, le même coin est utilisé sur 3 faces différentes du
+cube et chaque face a besoin de coordonnées de texture différentes.
 
 <div class="webgl_center"><img src="resources/cube-vertices-uv.svg" style="width: 400px;"></div>
 
-In the diagram above we can see that the left face's use of corner 3 needs
-texture coordinates 1,1 but the right face's use of corner 3 needs texture coordinates
-0,1. The top face would need different texture coordinates as well.
+Dans le diagramme ci-dessus, nous pouvons voir que l'utilisation du coin 3 par la face gauche nécessite
+des coordonnées de texture 1,1 mais l'utilisation du coin 3 par la face droite nécessite des coordonnées de texture
+0,1. La face du dessus aurait également besoin de coordonnées de texture différentes.
 
-This is usually accomplished by expanding from 8 corner positions
-to 24 vertices
+Cela est généralement accompli en passant de 8 positions de coins
+à 24 sommets
 
 ```js
-  // front
+  // avant
   { pos: [-1, -1,  1], uv: [0, 1], }, // 0
   { pos: [ 1, -1,  1], uv: [1, 1], }, // 1
   { pos: [-1,  1,  1], uv: [0, 0], }, // 2
   { pos: [ 1,  1,  1], uv: [1, 0], }, // 3
-  // right
+  // droite
   { pos: [ 1, -1,  1], uv: [0, 1], }, // 4
   { pos: [ 1, -1, -1], uv: [1, 1], }, // 5
   { pos: [ 1,  1,  1], uv: [0, 0], }, // 6
   { pos: [ 1,  1, -1], uv: [1, 0], }, // 7
-  // back
+  // arrière
   { pos: [ 1, -1, -1], uv: [0, 1], }, // 8
   { pos: [-1, -1, -1], uv: [1, 1], }, // 9
   { pos: [ 1,  1, -1], uv: [0, 0], }, // 10
   { pos: [-1,  1, -1], uv: [1, 0], }, // 11
-  // left
+  // gauche
   { pos: [-1, -1, -1], uv: [0, 1], }, // 12
   { pos: [-1, -1,  1], uv: [1, 1], }, // 13
   { pos: [-1,  1, -1], uv: [0, 0], }, // 14
   { pos: [-1,  1,  1], uv: [1, 0], }, // 15
-  // top
+  // dessus
   { pos: [ 1,  1, -1], uv: [0, 1], }, // 16
   { pos: [-1,  1, -1], uv: [1, 1], }, // 17
   { pos: [ 1,  1,  1], uv: [0, 0], }, // 18
   { pos: [-1,  1,  1], uv: [1, 0], }, // 19
-  // bottom
+  // dessous
   { pos: [ 1, -1,  1], uv: [0, 1], }, // 20
   { pos: [-1, -1,  1], uv: [1, 1], }, // 21
   { pos: [ 1, -1, -1], uv: [0, 0], }, // 22
   { pos: [-1, -1, -1], uv: [1, 0], }, // 23
 ```
 
-Those positions and texture coordinates are
-put into buffers and provided to the vertex shader
-via attributes.
+Ces positions et coordonnées de texture sont
+mises dans des buffers et fournies au vertex shader
+via des attributs.
 
-But do we really need to do it this way? What if
-we wanted to actually have just the 8 corners
-and 4 texture coordinates. Something like
+Mais avons-nous vraiment besoin de le faire ainsi ? Et si
+nous voulions avoir seulement les 8 coins
+et 4 coordonnées de texture. Quelque chose comme
 
 ```js
 positions = [
@@ -89,37 +89,37 @@ uvs = [
 ];
 ```
 
-And then for each of the 24 vertices we'd specify which of those
-to use.
+Et ensuite pour chacun des 24 sommets nous spécifierions lesquels
+utiliser.
 
 ```js
 positionIndexUVIndex = [
-  // front
+  // avant
   0, 1, // 0
   1, 3, // 1
   2, 0, // 2
   3, 2, // 3
-  // right
+  // droite
   1, 1, // 4
   5, 3, // 5
   3, 0, // 6
   7, 2, // 7
-  // back
+  // arrière
   5, 1, // 8
   4, 3, // 9
   7, 0, // 10
   6, 2, // 11
-  // left
+  // gauche
   4, 1, // 12
   0, 3, // 13
   6, 0, // 14
   2, 2, // 15
-  // top
+  // dessus
   7, 1, // 16
   6, 3, // 17
   3, 0, // 18
   2, 2, // 19
-  // bottom
+  // dessous
   1, 1, // 20
   0, 3, // 21
   5, 0, // 22
@@ -127,15 +127,15 @@ positionIndexUVIndex = [
 ];
 ```
 
-Could we use this on the GPU? Why not!?
+Pourrions-nous l'utiliser sur le GPU ? Pourquoi pas !?
 
-We'll upload the positions and texture coordinates
-each to their own textures like
-we covered in [the article on data textures](webgl-data-textures.html).
+Nous allons téléverser les positions et les coordonnées de texture
+chacune dans leur propre texture comme
+nous l'avons vu dans [l'article sur les textures de données](webgl-data-textures.html).
 
 ```js
 function makeDataTexture(gl, data, numComponents) {
-  // expand the data to 4 values per pixel.
+  // étendre les données à 4 valeurs par pixel.
   const numElements = data.length / numComponents;
   const expandedData = new Float32Array(numElements * 4);
   for (let i = 0; i < numElements; ++i) {
@@ -149,16 +149,16 @@ function makeDataTexture(gl, data, numComponents) {
   gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.texImage2D(
       gl.TEXTURE_2D,
-      0,            // mip level
+      0,            // niveau mip
       gl.RGBA32F,   // format
-      numElements,  // width
-      1,            // height
-      0,            // border
+      numElements,  // largeur
+      1,            // hauteur
+      0,            // bordure
       gl.RGBA,      // format
       gl.FLOAT,     // type
       expandedData,
   );
-  // we don't need any filtering
+  // nous n'avons pas besoin de filtrage
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
   return tex;
@@ -168,81 +168,81 @@ const positionTexture = makeDataTexture(gl, positions, 3);
 const texcoordTexture = makeDataTexture(gl, uvs, 2);
 ```
 
-Since textures have up to 4 values per pixel `makeDataTexture`
-expands whatever data we give it to 4 values per pixel. 
+Puisque les textures ont jusqu'à 4 valeurs par pixel, `makeDataTexture`
+étend toutes les données qu'on lui donne à 4 valeurs par pixel.
 
-Then we'll create a vertex array to hold our attribute state
+Ensuite, nous allons créer un vertex array pour contenir notre état d'attribut
 
 ```js
-// create a vertex array object to hold attribute state
+// créer un vertex array object pour contenir l'état des attributs
 const vao = gl.createVertexArray();
 gl.bindVertexArray(vao);
 ```
 
 
-Next we need upload the position and texcoord indices to a buffer.
+Ensuite, nous devons téléverser les indices de position et texcoord dans un buffer.
 
 ```js
-// Create a buffer for the position and UV indices
+// Créer un buffer pour les indices de position et UV
 const positionIndexUVIndexBuffer = gl.createBuffer();
-// Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+// Le lier à ARRAY_BUFFER (pensez-y comme ARRAY_BUFFER = positionBuffer)
 gl.bindBuffer(gl.ARRAY_BUFFER, positionIndexUVIndexBuffer);
-// Put the position and texcoord indices in the buffer
+// Mettre les indices de position et texcoord dans le buffer
 gl.bufferData(gl.ARRAY_BUFFER, new Uint32Array(positionIndexUVIndex), gl.STATIC_DRAW);
 ```
 
-and setup the attribute
+et configurer l'attribut
 
 ```js
-// Turn on the position index attribute
+// Activer l'attribut d'index de position
 gl.enableVertexAttribArray(posTexIndexLoc);
 
-// Tell the position/texcoord index attribute how to get data out
-// of positionIndexUVIndexBuffer (ARRAY_BUFFER)
+// Indiquer à l'attribut position/texcoord comment extraire les données
+// de positionIndexUVIndexBuffer (ARRAY_BUFFER)
 {
-  const size = 2;                // 2 components per iteration
-  const type = gl.INT;           // the data is 32bit integers
-  const stride = 0;              // 0 = move forward size * sizeof(type) each iteration to get the next position
-  const offset = 0;              // start at the beginning of the buffer
+  const size = 2;                // 2 composantes par itération
+  const type = gl.INT;           // les données sont des entiers 32 bits
+  const stride = 0;              // 0 = avancer de size * sizeof(type) à chaque itération pour obtenir la position suivante
+  const offset = 0;              // commencer au début du buffer
   gl.vertexAttribIPointer(
       posTexIndexLoc, size, type, stride, offset);
 }
 ```
 
-Notice we're calling `gl.vertexAttribIPointer` not `gl.vertexAttribPointer`.
-The `I` is for integer and is used for integer and unsigned integer attributes.
-Also note the size is 2, since there is 1 position index and 1 texcoord
-index per vertex.
+Notez que nous appelons `gl.vertexAttribIPointer` et non `gl.vertexAttribPointer`.
+Le `I` est pour entier et est utilisé pour les attributs entiers et entiers non signés.
+Notez également que la taille est 2, car il y a 1 index de position et 1 index texcoord
+par sommet.
 
-Even though we only need 24 vertices we still need draw 6 faces, 12 triangles
-each, 3 vertices per triangle for 36 vertices. To tell it which 6 vertices
-to use for each face we'll use [vertex indices](webgl-indexed-vertices.html).
+Même si nous n'avons besoin que de 24 sommets, nous devons quand même dessiner 6 faces, 12 triangles
+chacune, 3 sommets par triangle pour 36 sommets. Pour lui indiquer quels 6 sommets
+utiliser pour chaque face, nous allons utiliser des [indices de sommets](webgl-indexed-vertices.html).
 
 ```js
 const indices = [
-   0,  1,  2,   2,  1,  3,  // front
-   4,  5,  6,   6,  5,  7,  // right
-   8,  9, 10,  10,  9, 11,  // back
-  12, 13, 14,  14, 13, 15,  // left
-  16, 17, 18,  18, 17, 19,  // top
-  20, 21, 22,  22, 21, 23,  // bottom
+   0,  1,  2,   2,  1,  3,  // avant
+   4,  5,  6,   6,  5,  7,  // droite
+   8,  9, 10,  10,  9, 11,  // arrière
+  12, 13, 14,  14, 13, 15,  // gauche
+  16, 17, 18,  18, 17, 19,  // dessus
+  20, 21, 22,  22, 21, 23,  // dessous
 ];
-// Create an index buffer
+// Créer un buffer d'indices
 const indexBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-// Put the indices in the buffer
+// Mettre les indices dans le buffer
 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 ```
 
-As we want to draw an image on the cube itself we need a 3rd texture
-with that image. Let's just make another 4x4 data texture with a checkerboard.
-We'll use `gl.LUMINANCE` as the format since then we only need one byte per pixel.
+Comme nous voulons dessiner une image sur le cube lui-même, nous avons besoin d'une 3ème texture
+avec cette image. Créons juste une autre texture de données 4x4 en damier.
+Nous allons utiliser `gl.LUMINANCE` comme format car nous n'avons alors besoin que d'un octet par pixel.
 
 ```js
-// Create a checker texture.
+// Créer une texture en damier.
 const checkerTexture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, checkerTexture);
-// Fill the texture with a 4x4 gray checkerboard.
+// Remplir la texture avec un damier gris 4x4.
 gl.texImage2D(
     gl.TEXTURE_2D,
     0,
@@ -263,17 +263,17 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 ```
 
-On to the vertex shader... We can look up a pixel from the texture like
-this
+Pour le vertex shader... Nous pouvons récupérer un pixel depuis la texture comme
+ceci
 
 ```glsl
 vec4 color = texelFetch(sampler2D tex, ivec2 pixelCoord, int mipLevel);
 ```
 
-So given an integer pixel coordinate the code above will pull out a pixel value.
+Donc, étant donné une coordonnée de pixel entière, le code ci-dessus va extraire une valeur de pixel.
 
-Using the `texelFetch` function we can take a 1D array index
-and lookup a value out of a 2D texture like this
+En utilisant la fonction `texelFetch`, nous pouvons prendre un index de tableau 1D
+et récupérer une valeur dans une texture 2D comme ceci
 
 ```glsl
 vec4 getValueByIndexFromTexture(sampler2D tex, int index) {
@@ -284,7 +284,7 @@ vec4 getValueByIndexFromTexture(sampler2D tex, int index) {
 }
 ```
 
-So given that function here is our shader
+Avec cette fonction, voici notre shader
 
 ```glsl
 #version 300 es
@@ -309,148 +309,146 @@ void main() {
   vec3 position = getValueByIndexFromTexture(
       positionTexture, positionIndex).xyz;
  
-  // Multiply the position by the matrix.
+  // Multiplier la position par la matrice.
   gl_Position = u_matrix * vec4(position, 1);
 
   int texcoordIndex = positionAndTexcoordIndices.y;
   vec2 texcoord = getValueByIndexFromTexture(
       texcoordTexture, texcoordIndex).xy;
 
-  // Pass the texcoord to the fragment shader.
+  // Passer la texcoord au fragment shader.
   v_texcoord = texcoord;
 }
 ```
 
-At the bottom it's effectively the same shader we used
-in [the article on textures](webgl-3d-textures.html).
-We multiply a `position` by `u_matrix` and we output
-a texcoord to `v_texcoord` to pass on the fragment shader.
+En bas, c'est effectivement le même shader que nous avons utilisé
+dans [l'article sur les textures](webgl-3d-textures.html).
+Nous multiplions une `position` par `u_matrix` et nous sortons
+une texcoord vers `v_texcoord` pour la passer au fragment shader.
 
-The difference is only in how we get the position and
-texcoord. We're using the indices passed in and getting
-those values from their respective textures.
+La différence est seulement dans la façon dont nous obtenons la position et la
+texcoord. Nous utilisons les indices passés en entrée et obtenons
+ces valeurs depuis leurs textures respectives.
 
-To use the shader we need to lookup all the locations
+Pour utiliser le shader, nous devons rechercher tous les emplacements
 
 ```js
-// setup GLSL program
+// configurer le programme GLSL
 const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
 
-+// look up where the vertex data needs to go.
++// rechercher où les données de sommets doivent aller.
 +const posTexIndexLoc = gl.getAttribLocation(
 +    program, "positionAndTexcoordIndices");
 +
-+// lookup uniforms
++// rechercher les uniforms
 +const matrixLoc = gl.getUniformLocation(program, "u_matrix");
 +const positionTexLoc = gl.getUniformLocation(program, "positionTexture");
 +const texcoordTexLoc = gl.getUniformLocation(program, "texcoordTexture");
 +const u_textureLoc = gl.getUniformLocation(program, "u_texture");
 ```
 
-At render time we setup the attributes
+Au moment du rendu, nous configurons les attributs
 
 ```js
-// Tell it to use our program (pair of shaders)
+// Indiquer d'utiliser notre programme (paire de shaders)
 gl.useProgram(program);
 
-// Set the buffer and attribute state
+// Définir l'état du buffer et des attributs
 gl.bindVertexArray(vao);
 ```
 
-Then we need to bind all 3 textures and setup all the
+Ensuite, nous devons lier les 3 textures et configurer tous les
 uniforms
 
 ```js
-// Set the matrix.
+// Définir la matrice.
 gl.uniformMatrix4fv(matrixLoc, false, matrix);
 
-// put the position texture on texture unit 0
+// mettre la texture de position sur l'unité de texture 0
 gl.activeTexture(gl.TEXTURE0);
 gl.bindTexture(gl.TEXTURE_2D, positionTexture);
-// Tell the shader to use texture unit 0 for positionTexture
+// Indiquer au shader d'utiliser l'unité de texture 0 pour positionTexture
 gl.uniform1i(positionTexLoc, 0);
 
-// put the texcoord texture on texture unit 1
+// mettre la texture texcoord sur l'unité de texture 1
 gl.activeTexture(gl.TEXTURE0 + 1);
 gl.bindTexture(gl.TEXTURE_2D, texcoordTexture);
-// Tell the shader to use texture unit 1 for texcoordTexture
+// Indiquer au shader d'utiliser l'unité de texture 1 pour texcoordTexture
 gl.uniform1i(texcoordTexLoc, 1);
 
-// put the checkerboard texture on texture unit 2
+// mettre la texture en damier sur l'unité de texture 2
 gl.activeTexture(gl.TEXTURE0 + 2);
 gl.bindTexture(gl.TEXTURE_2D, checkerTexture);
-// Tell the shader to use texture unit 2 for u_texture
+// Indiquer au shader d'utiliser l'unité de texture 2 pour u_texture
 gl.uniform1i(u_textureLoc, 2);
 ```
 
-And finally draw
+Et finalement dessiner
 
 ```js
-// Draw the geometry.
+// Dessiner la géométrie.
 gl.drawElements(gl.TRIANGLES, 6 * 6, gl.UNSIGNED_SHORT, 0);
 ```
 
-And we get a textured cube using only 8 positions and
-4 texture coordinates
+Et nous obtenons un cube avec texture en utilisant seulement 8 positions et
+4 coordonnées de texture
 
 {{{example url="../webgl-pulling-vertices.html"}}}
 
-Some things to note. The code is lazy and uses 1D
-textures for the positions and texture coordinates.
-Textures can only be so wide. [How wide is machine
-specific](https://web3dsurvey.com/webgl/parameters/MAX_TEXTURE_SIZE) which you can query with 
+Quelques choses à noter. Le code est paresseux et utilise des
+textures 1D pour les positions et les coordonnées de texture.
+Les textures ne peuvent être que d'une certaine largeur. [Cette largeur dépend de la machine](https://web3dsurvey.com/webgl/parameters/MAX_TEXTURE_SIZE), ce que vous pouvez interroger avec
 
 ```js
 const maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
 ```
 
-If we wanted to handle more data than that we'd need
-to pick some texture size that fits our data, and spread
-the data across multiple rows possibly
-padding the last row to make a rectangle.
+Si nous voulions gérer plus de données que cela, nous devrions
+choisir une taille de texture qui convient à nos données et répartir
+les données sur plusieurs lignes en ajoutant éventuellement
+du rembourrage à la dernière ligne pour créer un rectangle.
 
-Another thing we're doing here is using 2 textures,
-one for positions, one for texture coordinates.
-There is no reason we couldn't put both data in the
-same texture either interleaved
+Une autre chose que nous faisons ici est d'utiliser 2 textures,
+une pour les positions, une pour les coordonnées de texture.
+Il n'y a aucune raison pour laquelle nous ne pourrions pas mettre les deux données dans la
+même texture, soit entrelacées
 
     pos,uv,pos,uv,pos,uv...
 
-or in different places in the texture
+soit à différents endroits dans la texture
 
     pos,pos,pos,...
     uv, uv, uv,...
 
-We'd just have to change the math in the vertex shader
-that computes how to pull them out of the texture.
+Il suffirait de modifier les calculs dans le vertex shader
+qui calcule comment les extraire de la texture.
 
-The question comes up, should you do things like this?
-The answer is "it depends". Depending on the GPU this
-might be slower than the more traditional way.
+La question se pose, devriez-vous faire ce genre de choses ?
+La réponse est "ça dépend". Selon le GPU,
+cela pourrait être plus lent que la façon plus traditionnelle.
 
-The point of this article was to point out yet again,
-WebGL doesn't care how you set `gl_Position` with
-clip space coordinates nor does it care how you
-output a color. All it cares is that you set them.
-Textures are really just 2D arrays of random access
-data.
+Le but de cet article était de souligner une fois de plus,
+WebGL se fiche de la façon dont vous définissez `gl_Position` avec
+des coordonnées en clip space, ni de la façon dont vous
+sortez une couleur. Tout ce qui compte est que vous les définissiez.
+Les textures sont vraiment juste des tableaux 2D de données à accès aléatoire.
 
-When you have a problem you want to solve in WebGL
-remember that WebGL just runs shaders and those shaders
-have access to data via uniforms (global variables),
-attributes (data that comes per vertex shader iteration),
-and textures (random access 2D arrays). Don't let the
-traditional ways of using WebGL prevent you from
-seeing the real flexibility that's there.
+Quand vous avez un problème à résoudre dans WebGL,
+rappelez-vous que WebGL exécute simplement des shaders et que ces shaders
+ont accès aux données via des uniforms (variables globales),
+des attributs (données qui arrivent par itération du vertex shader),
+et des textures (tableaux 2D à accès aléatoire). Ne laissez pas les
+façons traditionnelles d'utiliser WebGL vous empêcher de
+voir la vraie flexibilité qui s'y trouve.
 
 <div class="webgl_bottombar">
-<h3>Why is it called Vertex Pulling?</h3>
-<p>I'd actually only heard the term recently (July 2019)
-even though I'd used the technique before. It comes
-from <a href='https://www.google.com/search?q=OpenGL+Insights+"Programmable+Vertex+Pulling"+article+by+Daniel+Rakos'>OpenGL Insights "Programmable Vertex Pulling" article by Daniel Rakos</a>.
+<h3>Pourquoi s'appelle-t-il "Vertex Pulling" ?</h3>
+<p>Je n'avais en fait entendu le terme que récemment (juillet 2019)
+même si j'avais utilisé la technique auparavant. Il vient
+de <a href='https://www.google.com/search?q=OpenGL+Insights+"Programmable+Vertex+Pulling"+article+by+Daniel+Rakos'>OpenGL Insights "Programmable Vertex Pulling" article de Daniel Rakos</a>.
 </p>
-<p>It's called vertex *pulling* since it's the vertex shader
-that decides which vertex data to read vs the traditional way where
-vertex data is supplied automatically via attributes. Effectively
-the vertex shader is *pulling* data out of memory.</p>
+<p>On l'appelle vertex *pulling* car c'est le vertex shader
+qui décide quelles données de sommet lire, contrairement à la façon traditionnelle où
+les données de sommet sont fournies automatiquement via des attributs. Effectivement,
+le vertex shader *extrait* les données de la mémoire.</p>
 </div>

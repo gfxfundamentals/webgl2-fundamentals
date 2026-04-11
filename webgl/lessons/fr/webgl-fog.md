@@ -1,37 +1,37 @@
-Title: WebGL2 Fog
-Description: How to implement fog
-TOC: Fog
+Title: WebGL2 Brouillard
+Description: Comment implémenter le brouillard
+TOC: Brouillard
 
 
-This article is part of a series of articles about WebGL.
-[The first article starts with the fundamentals](webgl-fundamentals.html).
+Cet article fait partie d'une série d'articles sur WebGL.
+[Le premier article commence par les bases](webgl-fundamentals.html).
 
-Fog in WebGL is interesting to me because of how *fake* it seems when I think about how it works. Basically what you do is use some kind of depth or distance from the camera calculation in your shaders to make the color more or less the fog color.
+Le brouillard dans WebGL m'intéresse en raison du côté *artificiel* que cela semble être quand je réfléchis à son fonctionnement. En gros, ce qu'on fait c'est utiliser une sorte de calcul de profondeur ou de distance depuis la caméra dans les shaders pour rendre la couleur plus ou moins identique à la couleur du brouillard.
 
-In other words you start with a basic equation like this
+En d'autres termes, on commence avec une équation de base comme celle-ci
 
 ```glsl
 outColor = mix(originalColor, fogColor, fogAmount);
 ```
 
-Where `fogAmount` is a value from 0 to 1. The `mix` function mixes the first 2 values. When `fogAmount` is 0 `mix` returns `originalColor`. Then `fogAmount` is 1 `mix` returns `fogColor`. In between 0 and 1 you get a percentage of both colors. You could implement `mix` yourself like this
+Où `fogAmount` est une valeur de 0 à 1. La fonction `mix` mélange les 2 premières valeurs. Quand `fogAmount` est 0, `mix` retourne `originalColor`. Quand `fogAmount` est 1, `mix` retourne `fogColor`. Entre 0 et 1, on obtient un pourcentage des deux couleurs. On pourrait implémenter `mix` soi-même comme ça
 
 ```glsl
 outColor = originalColor + (fogColor - originalColor) * fogAmount;
 ```
 
-Let's make a shader that does this. We'll use a textured cube from [the article on textures](webgl-3d-textures.html).
+Créons un shader qui fait ça. Nous utiliserons un cube texturé de [l'article sur les textures](webgl-3d-textures.html).
 
-Let's add the mixing to the fragment shader
+Ajoutons le mélange au fragment shader
 
 ```glsl
 #version 300 es
 precision highp float;
 
-// Passed in from the vertex shader.
+// Passé depuis le vertex shader.
 in vec2 v_texcoord;
 
-// The texture.
+// La texture.
 uniform sampler2D u_texture;
 
 +uniform vec4 u_fogColor;
@@ -45,14 +45,14 @@ void main() {
 }
 ```
 
-Then at init time we need to look up the new uniform locations
+Ensuite, à l'initialisation, nous devons rechercher les emplacements des nouveaux uniforms
 
 ```js
 var fogColorLocation = gl.getUniformLocation(program, "u_fogColor");
 var fogAmountLocation = gl.getUniformLocation(program, "u_fogAmount");
 ```
 
-and at render time set them
+et au moment du rendu les définir
 
 ```js
 var fogColor = [0.8, 0.9, 1, 1];
@@ -65,14 +65,14 @@ var settings = {
 function drawScene(time) {
   ...
 
-  // Clear the canvas AND the depth buffer.
-  // Clear to the fog color
+  // Effacer le canvas ET le depth buffer.
+  // Effacer avec la couleur du brouillard
   gl.clearColor(...fogColor);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   ...
 
-  // set the fog color and amount
+  // définir la couleur du brouillard et sa quantité
   gl.uniform4fv(fogColorLocation, fogColor);
   gl.uniform1f(fogAmountLocation, settings.fogAmount);
 
@@ -80,15 +80,15 @@ function drawScene(time) {
 }
 ```
 
-And here you'll see if you drag the slider you can change between the texture and the fog color
+Et ici vous verrez que si vous déplacez le curseur, vous pouvez changer entre la texture et la couleur du brouillard
 
 {{{example url="../webgl-3d-fog-just-mix.html" }}}
 
-So now all we really need to do is instead of passing in the fog amount we compute it based on the something like the depth from the camera.
+Maintenant, tout ce qu'on a vraiment besoin de faire est, au lieu de passer la quantité de brouillard, de la calculer en fonction de quelque chose comme la profondeur depuis la caméra.
 
-Recall from the article on [cameras](webgl-3d-camera.html) that after we apply the view matrix all positions are relative to the camera. The camera looks down the -z axis so if we just look at the z position after multiplying by the world and view matrices we'll have a value that represents how far away something is from the z plane of the camera.
+Rappelons-nous de [l'article sur les caméras](webgl-3d-camera.html) qu'après avoir appliqué la matrice de vue, toutes les positions sont relatives à la caméra. La caméra regarde dans la direction -z, donc si on regarde juste la position z après avoir multiplié par les matrices world et view, on aura une valeur qui représente à quelle distance quelque chose se trouve du plan z de la caméra.
 
-Let's change the vertex shader to pass that data to the fragment shader so we can use it compute a fog amount. To do that let's split `u_matrix` into 2 parts. A projection matrix and a worldView matrix.
+Modifions le vertex shader pour passer ces données au fragment shader afin de pouvoir l'utiliser pour calculer une quantité de brouillard. Pour ce faire, divisons `u_matrix` en 2 parties : une matrice de projection et une matrice worldView.
 
 ```glsl
 #version 300 es
@@ -103,36 +103,36 @@ out vec2 v_texcoord;
 +out float v_fogDepth;
 
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplier la position par la matrice.
 -  gl_Position = u_matrix * a_position;
 +  gl_Position = u_projection * u_worldView * a_position;
 
-  // Pass the texcoord to the fragment shader.
+  // Passer les texcoords au fragment shader.
   v_texcoord = a_texcoord;
 
-+  // Pass just the negated z position relative to the camera.
-+  // the camera is looking in the -z direction so normally stuff
-+  // in front of the camera has a negative Z position
-+  // but by negating he we get a positive depth.
++  // Passer juste la position z négative relative à la caméra.
++  // la caméra regarde dans la direction -z donc normalement les choses
++  // devant la caméra ont une position Z négative
++  // mais en la négativant on obtient une profondeur positive.
 +  v_fogDepth = -(u_worldView * a_position).z;
 }
 ```
 
-Now in the fragment shader we want it to work that if the depth is less than some value, don't mix any fog (fogAmount = 0). If the depth is greater than some value then 100% fog (fogAmount = 1). Between those 2 values mix the colors.
+Maintenant dans le fragment shader, nous voulons que si la profondeur est inférieure à une certaine valeur, ne pas mélanger de brouillard (fogAmount = 0). Si la profondeur est supérieure à une certaine valeur, alors 100% de brouillard (fogAmount = 1). Entre ces 2 valeurs, mélanger les couleurs.
 
-We could write code to do that but GLSL has a function, `smoothstep` that does just that. You give it the min value, the max value, and the value to test. If the test value is less than or equal to the min value it returns 0. If the test value is greater than or equal to the max value it returns 1. If test is between those 2 values it returns something between 0 and 1 in proportion to where the test value is between min and max.
+On pourrait écrire du code pour faire ça, mais GLSL a une fonction, `smoothstep`, qui fait exactement ça. On lui donne la valeur min, la valeur max et la valeur à tester. Si la valeur de test est inférieure ou égale à la valeur min, elle retourne 0. Si la valeur de test est supérieure ou égale à la valeur max, elle retourne 1. Si le test est entre ces 2 valeurs, elle retourne quelque chose entre 0 et 1 proportionnellement à l'endroit où la valeur de test se trouve entre min et max.
 
-So, it should be pretty easy to use that in our fragment shader to compute a fog amount
+Donc, il devrait être assez simple d'utiliser ça dans notre fragment shader pour calculer une quantité de brouillard
 
 ```glsl
 #version 300 es
 precision highp float;
 
-// Passed in from the vertex shader.
+// Passé depuis le vertex shader.
 in vec2 v_texcoord;
 in float v_fogDepth;
 
-// The texture.
+// La texture.
 uniform sampler2D u_texture;
 uniform vec4 u_fogColor;
 -uniform float u_fogAmount;
@@ -151,10 +151,10 @@ void main() {
 }
 ```
 
-and of course we need to look up all these uniforms at init time
+et bien sûr nous devons rechercher tous ces uniforms à l'initialisation
 
 ```js
-// lookup uniforms
+// rechercher les uniforms
 +var projectionLocation = gl.getUniformLocation(program, "u_projection");
 +var worldViewLocation = gl.getUniformLocation(program, "u_worldView");
 var textureLocation = gl.getUniformLocation(program, "u_texture");
@@ -163,7 +163,7 @@ var fogColorLocation = gl.getUniformLocation(program, "u_fogColor");
 +var fogFarLocation = gl.getUniformLocation(program, "u_fogFar");
 ```
 
-and set them at render time 
+et les définir au moment du rendu
 
 ```js
 var fogColor = [0.8, 0.9, 1, 1];
@@ -173,11 +173,11 @@ var settings = {
 +  fogFar: 2.0,
 };
 
-// Draw the scene.
+// Dessiner la scène.
 function drawScene(time) {
   ...
 
-  // Compute the projection matrix
+  // Calculer la matrice de projection
   var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
   var projectionMatrix =
       m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
@@ -186,10 +186,10 @@ function drawScene(time) {
   var up = [0, 1, 0];
   var target = [0, 0, 0];
 
-  // Compute the camera's matrix using look at.
+  // Calculer la matrice de la caméra avec lookAt.
   var cameraMatrix = m4.lookAt(cameraPosition, target, up);
 
-  // Make a view matrix from the camera matrix.
+  // Créer une matrice de vue depuis la matrice de caméra.
   var viewMatrix = m4.inverse(cameraMatrix);
 
 -  var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
@@ -200,22 +200,22 @@ function drawScene(time) {
 +  var worldViewMatrix = m4.xRotate(viewMatrix, modelXRotationRadians);
 +  worldViewMatrix = m4.yRotate(worldViewMatrix, modelYRotationRadians);
 
-  // Set the matrices.
+  // Définir les matrices.
 -  gl.uniformMatrix4fv(matrixLocation, false, matrix);
 +  gl.uniformMatrix4fv(projectionLocation, false, projectionMatrix);
 +  gl.uniformMatrix4fv(worldViewLocation, false, worldViewMatrix);
 
-  // Tell the shader to use texture unit 0 for u_texture
+  // Indiquer au shader d'utiliser l'unité de texture 0 pour u_texture
   gl.uniform1i(textureLocation, 0);
 
-  // set the fog color and near, far settings
+  // définir la couleur du brouillard et les paramètres near, far
   gl.uniform4fv(fogColorLocation, fogColor);
 +  gl.uniform1f(fogNearLocation, settings.fogNear);
 +  gl.uniform1f(fogFarLocation, settings.fogFar);
 -  gl.uniform1f(fogAmountLocation, settings.fogAmount);
 ```
 
-While we're at it lets draw 40 cubes into the distance to make it easier to see the fog.
+Pendant qu'on y est, dessinons 40 cubes dans la distance pour rendre le brouillard plus visible.
 
 ```js
 var settings = {
@@ -235,45 +235,45 @@ for (let i = 0; i <= numCubes; ++i) {
 
   gl.uniformMatrix4fv(worldViewLocation, false, worldViewMatrix);
 
-  // Draw the geometry.
+  // Dessiner la géométrie.
   gl.drawArrays(gl.TRIANGLES, 0, 6 * 6);
 }
 ```
 
-And now we get depth based fog
+Et maintenant nous obtenons un brouillard basé sur la profondeur
 
 {{{example url="../webgl-3d-fog-depth-based.html" }}}
 
-Note: We didn't add any code to make sure `fogNear` is less then or equal to `fogFar` which are arguably invalid settings so be sure to set both appropriately.
+Note : Nous n'avons pas ajouté de code pour s'assurer que `fogNear` est inférieur ou égal à `fogFar`, ce qui sont des paramètres en quelque sorte invalides, donc assurez-vous de les définir tous les deux de manière appropriée.
 
-As I mentioned above it's feels like a trick to me. It works because the fog color we're fading to matches the background color. Change the background color and the illusion disappears.
+Comme je l'ai mentionné ci-dessus, cela ressemble à un tour de passe-passe. Ça fonctionne parce que la couleur du brouillard vers laquelle on s'estompe correspond à la couleur de fond. Changez la couleur de fond et l'illusion disparaît.
 
 ```js
 -gl.clearColor(...fogColor);
-+gl.clearColor(1, 0, 0, 1);  // red
++gl.clearColor(1, 0, 0, 1);  // rouge
 ```
 
-gets us
+nous donne
 
 <div class="webgl_center"><img src="resources/fog-background-color-mismatch.png"></div>
 
-so just remember to you need to set the background color to match the fog color.
+donc n'oubliez pas que vous devez définir la couleur de fond pour qu'elle corresponde à la couleur du brouillard.
 
-Using the depth works and it's cheap but there's a problem. Let's say you have a circle of objects around the camera. We're computing a fog amount based on the distance from the camera's z plane. That means as you turn the camera objects will appear to come into and out of the fog slightly as their view space Z value gets closer to 0
+Utiliser la profondeur fonctionne et c'est peu coûteux, mais il y a un problème. Supposons que vous ayez un cercle d'objets autour de la caméra. Nous calculons une quantité de brouillard basée sur la distance depuis le plan z de la caméra. Cela signifie que lorsque vous tournez la caméra, les objets sembleront entrer et sortir légèrement du brouillard car leur valeur Z dans l'espace de vue se rapproche de 0
 
 <div class="webgl_center"><img src="resources/fog-depth.svg" style="width: 600px;"></div>
 
-You can see the problem in this example
+Vous pouvez voir le problème dans cet exemple
 
 {{{example url="../webgl-3d-fog-depth-based-issue.html" }}}
 
-Above there is a ring of 8 cubes directly around the camera. The camera in spinning in place. That means the cubes are always the same distance from the camera but a different distance from the Z plane and so our fog amount calculation results in the cubes near the edge coming out of the fog.
- 
-The fix is to instead compute the distance from the camera which will be the same for all cubes
+Ci-dessus, il y a un anneau de 8 cubes directement autour de la caméra. La caméra tourne sur place. Cela signifie que les cubes sont toujours à la même distance de la caméra mais à une distance différente du plan Z, donc notre calcul de quantité de brouillard fait que les cubes près des bords sortent du brouillard.
+
+La solution est de calculer à la place la distance depuis la caméra, qui sera la même pour tous les cubes
 
 <div class="webgl_center"><img src="resources/fog-distance.svg" style="width: 600px;"></div>
 
-To do this we just need to pass the vertex position in view space from the vertex shader to the fragment shader
+Pour ce faire, nous avons juste besoin de passer la position du sommet dans l'espace de vue depuis le vertex shader au fragment shader
 
 ```glsl
 #version 300 es
@@ -288,34 +288,34 @@ out vec2 v_texcoord;
 +out vec3 v_position;
 
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplier la position par la matrice.
   gl_Position = u_projection * u_worldView * a_position;
 
-  // Pass the texcoord to the fragment shader.
+  // Passer les texcoords au fragment shader.
   v_texcoord = a_texcoord;
 
--  // Pass just the negated z position relative to the camera.
--  // the camera is looking in the -z direction so normally stuff
--  // in front of the camera has a negative Z position
--  // but by negating he we get a positive depth.
+-  // Passer juste la position z négative relative à la caméra.
+-  // la caméra regarde dans la direction -z donc normalement les choses
+-  // devant la caméra ont une position Z négative
+-  // mais en la négativant on obtient une profondeur positive.
 -  v_fogDepth = -(u_worldView * a_position).z;
-+  // Pass the view position to the fragment shader
++  // Passer la position de vue au fragment shader
 +  v_position = (u_worldView * a_position).xyz;
 }
 ```
 
-and then in the fragment shader we can use the position to compute the distance
+et ensuite dans le fragment shader nous pouvons utiliser la position pour calculer la distance
 
 ```
 #version 300 es
 precision highp float;
 
-// Passed in from the vertex shader.
+// Passé depuis le vertex shader.
 in vec2 v_texcoord;
 -in float v_fogDepth;
 +in vec3 v_position;
 
-// The texture.
+// La texture.
 uniform sampler2D u_texture;
 uniform vec4 u_fogColor;
 uniform float u_fogNear;
@@ -334,11 +334,11 @@ void main() {
 }
 ```
 
-And now the cubes no longer come out of the fog as the camera turns
+Et maintenant les cubes ne sortent plus du brouillard lorsque la caméra tourne
 
 {{{example url="../webgl-3d-fog-distance-based.html" }}}
 
-So far all of our fog has used a linear calculation. In other words the fog color gets applied linearly between near and far. Like many things in the real world fog apparently works exponentially. It gets thicker with the square of the distance from the viewer. A common equation for exponential fog is
+Jusqu'ici, tout notre brouillard a utilisé un calcul linéaire. En d'autres termes, la couleur du brouillard est appliquée linéairement entre near et far. Comme beaucoup de choses dans la vraie vie, le brouillard fonctionne apparemment de manière exponentielle. Il s'épaissit avec le carré de la distance depuis l'observateur. Une équation courante pour le brouillard exponentiel est
 
 ```glsl
 #define LOG2 1.442695
@@ -347,17 +347,17 @@ fogAmount = 1. - exp2(-fogDensity * fogDensity * fogDistance * fogDistance * LOG
 fogAmount = clamp(fogAmount, 0., 1.);
 ```
 
-To use this we'd change the fragment shader to something like
+Pour utiliser ça, nous modifierions le fragment shader en quelque chose comme
 
 ```glsl
 #version 300 es
 precision highp float;
 
-// Passed in from the vertex shader.
+// Passé depuis le vertex shader.
 in vec2 v_texcoord;
 in vec3 v_position;
 
-// The texture.
+// La texture.
 uniform sampler2D u_texture;
 uniform vec4 u_fogColor;
 -uniform float u_fogNear;
@@ -380,13 +380,12 @@ void main() {
 }
 ```
 
-And we get distance *exp2* density based fog
+Et nous obtenons un brouillard basé sur la distance *exp2* et la densité
 
 {{{example url="../webgl-3d-fog-distance-exp2.html" }}}
 
-One thing to notice about density based fog is there are no near and far settings. It might be more realistic but it also might not fit your aesthetic needs. Which one you prefer is an artistic decision.
+Une chose à noter avec le brouillard basé sur la densité est qu'il n'y a pas de paramètres near et far. Cela pourrait être plus réaliste, mais cela pourrait aussi ne pas correspondre à vos besoins esthétiques. Lequel vous préférez est une décision artistique.
 
-There are many other ways to compute fog. On a low powered GPU you might just use `gl_FragCoord.z`. `gl_FragCoord` is a global variable that WebGL sets. The `x` and `y` components are the coordinate of the pixel being drawn. The `z` coordinate is the depth of that pixel from 0 to 1. While not directly translatable into distance you can still get something that looks like fog by picking some values between 0 and 1 for near and far. Nothing has to be passed from the vertex shader to the fragment shader and no distance calculations are needed so this is one way to make a cheap fog effect on a low powered GPU.
+Il existe de nombreuses autres façons de calculer le brouillard. Sur un GPU peu puissant, vous pourriez simplement utiliser `gl_FragCoord.z`. `gl_FragCoord` est une variable globale que WebGL définit. Les composantes `x` et `y` sont les coordonnées du pixel dessiné. La coordonnée `z` est la profondeur de ce pixel de 0 à 1. Bien que pas directement traduisible en distance, vous pouvez quand même obtenir quelque chose qui ressemble à du brouillard en choisissant des valeurs entre 0 et 1 pour near et far. Rien n'a besoin d'être passé du vertex shader au fragment shader et aucun calcul de distance n'est nécessaire, c'est donc une façon de créer un effet de brouillard peu coûteux sur un GPU peu puissant.
 
 {{{example url="../webgl-3d-fog-depth-based-gl_FragCoord.html" }}}
-

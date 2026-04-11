@@ -1,69 +1,69 @@
-Title: WebGL2 Shaders and GLSL
-Description: What's a shader and what's GLSL
-TOC: Shaders and GLSL
+Title: WebGL2 Shaders et GLSL
+Description: Ce qu'est un shader et ce qu'est GLSL
+TOC: Shaders et GLSL
 
 
-This is a continuation from [WebGL Fundamentals](webgl-fundamentals.html).
-If you haven't read about how WebGL works you might want to [read this first](webgl-how-it-works.html).
+Ceci est la suite de [WebGL2 - Les bases](webgl-fundamentals.html).
+Si vous n'avez pas lu comment WebGL fonctionne, vous voudrez peut-être [lire ceci d'abord](webgl-how-it-works.html).
 
-We've talked about shaders and GLSL but haven't really given them any specific details.
-I think I was hoping it would be clear by example but let's try to make it clearer just in case.
+Nous avons parlé des shaders et de GLSL, mais sans entrer dans les détails spécifiques.
+Je pensais que ce serait clair par l'exemple, mais essayons de rendre les choses plus claires au cas où.
 
-As mentioned in [how it works](webgl-how-it-works.html) WebGL requires 2 shaders every time you
-draw something. A *vertex shader* and a *fragment shader*. Each shader is a *function*. A vertex
-shader and fragment shader are linked together into a shader program (or just program). A typical
-WebGL app will have many shader programs.
+Comme mentionné dans [comment ça marche](webgl-how-it-works.html), WebGL nécessite 2 shaders à chaque fois que vous
+dessinez quelque chose. Un *vertex shader* et un *fragment shader*. Chaque shader est une *fonction*. Un vertex
+shader et un fragment shader sont liés ensemble dans un programme shader (ou simplement programme). Une
+application WebGL typique aura de nombreux programmes shader.
 
 ## Vertex Shader
 
-A Vertex Shader's job is to generate clipspace coordinates. It always takes the form
+Le rôle d'un vertex shader est de générer des coordonnées en clip space. Il prend toujours la forme
 
     #version 300 es
     void main() {
        gl_Position = doMathToMakeClipspaceCoordinates
     }
 
-Your shader is called once per vertex. Each time it's called you are required to set the special global variable, `gl_Position` to some clipspace coordinates.
+Votre shader est appelé une fois par sommet. À chaque appel, vous devez définir la variable globale spéciale `gl_Position` avec des coordonnées de clip space.
 
-Vertex shaders need data. They can get that data in 3 ways.
+Les vertex shaders ont besoin de données. Ils peuvent obtenir ces données de 3 façons.
 
-1.  [Attributes](#attributes) (data pulled from buffers)
-2.  [Uniforms](#uniforms) (values that stay the same for all vertices of a single draw call)
-3.  [Textures](#textures-in-vertex-shaders) (data from pixels/texels)
+1.  [Attributs](#attributes) (données extraites de buffers)
+2.  [Uniforms](#uniforms) (valeurs qui restent les mêmes pour tous les sommets d'un seul appel de dessin)
+3.  [Textures](#textures-in-vertex-shaders) (données issues des pixels/texels)
 
-### Attributes
+### Attributs
 
-The most common way for a vertex shader to get data is through buffers and *attributes*.
-[How it works](webgl-how-it-works.html) covered buffers and
-attributes. You create buffers,
+La façon la plus courante pour un vertex shader d'obtenir des données est via des buffers et des *attributs*.
+[Comment ça marche](webgl-how-it-works.html) a couvert les buffers et
+les attributs. Vous créez des buffers,
 
     var buf = gl.createBuffer();
 
-put data in those buffers
+vous y mettez des données
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.bufferData(gl.ARRAY_BUFFER, someData, gl.STATIC_DRAW);
 
-Then, given a shader program you made you look up the location of its attributes,
+Ensuite, à partir d'un programme shader que vous avez créé, vous cherchez l'emplacement de ses attributs,
 
     var positionLoc = gl.getAttribLocation(someShaderProgram, "a_position");
 
-then tell WebGL how to pull data out of those buffers and into the attribute
+puis vous indiquez à WebGL comment extraire les données de ces buffers vers l'attribut
 
-    // turn on getting data out of a buffer for this attribute
+    // activer l'extraction de données depuis un buffer pour cet attribut
     gl.enableVertexAttribArray(positionLoc);
 
     var numComponents = 3;  // (x, y, z)
     var type = gl.FLOAT;
-    var normalize = false;  // leave the values as they are
-    var offset = 0;         // start at the beginning of the buffer
-    var stride = 0;         // how many bytes to move to the next vertex
-                            // 0 = use the correct stride for type and numComponents
+    var normalize = false;  // laisser les valeurs telles quelles
+    var offset = 0;         // commencer au début du buffer
+    var stride = 0;         // combien d'octets pour passer au prochain sommet
+                            // 0 = utiliser le stride correct pour le type et numComponents
 
     gl.vertexAttribPointer(positionLoc, numComponents, type, false, stride, offset);
 
-In [WebGL fundamentals](webgl-fundamentals.html) we showed that we can do no math
-in the shader and just pass the data directly through.
+Dans [WebGL - Les bases](webgl-fundamentals.html), nous avons montré que nous pouvons ne faire aucun calcul
+dans le shader et juste passer les données directement.
 
     #version 300 es
 
@@ -73,16 +73,16 @@ in the shader and just pass the data directly through.
        gl_Position = a_position;
     }
 
-If we put clipspace vertices into our buffers it will work.
+Si nous mettons des sommets en clip space dans nos buffers, cela fonctionnera.
 
-Attributes can use `float`, `vec2`, `vec3`, `vec4`, `mat2`, `mat3`, `mat4`,
-`int`, `ivec2`, `ivec3`, `ivec4`, `uint`, `uvec2`, `uvec3`, `uvec4` as types.
+Les attributs peuvent utiliser les types `float`, `vec2`, `vec3`, `vec4`, `mat2`, `mat3`, `mat4`,
+`int`, `ivec2`, `ivec3`, `ivec4`, `uint`, `uvec2`, `uvec3`, `uvec4`.
 
 ### Uniforms
 
-For a vertex shader uniforms are values passed to the vertex shader that stay the same
-for all vertices in a draw call. As a very simple example we could add an offset to
-the vertex shader above
+Pour un vertex shader, les uniforms sont des valeurs passées au vertex shader qui restent les mêmes
+pour tous les sommets d'un appel de dessin. Comme exemple très simple, nous pourrions ajouter un décalage au
+vertex shader ci-dessus
 
     #version 300 es
 
@@ -93,81 +93,81 @@ the vertex shader above
        gl_Position = a_position + u_offset;
     }
 
-And now we could offset every vertex by a certain amount. First we'd look up the
-location of the uniform
+Et maintenant nous pourrions décaler chaque sommet d'une certaine quantité. D'abord, nous cherchons
+l'emplacement de l'uniform
 
     var offsetLoc = gl.getUniformLocation(someProgram, "u_offset");
 
-And then before drawing we'd set the uniform
+Et ensuite, avant de dessiner, nous définissons l'uniform
 
-    gl.uniform4fv(offsetLoc, [1, 0, 0, 0]);  // offset it to the right half the screen
+    gl.uniform4fv(offsetLoc, [1, 0, 0, 0]);  // décaler vers la droite de la moitié de l'écran
 
-Uniforms can be many types. For each type you have to call the corresponding function to set it.
+Les uniforms peuvent être de nombreux types. Pour chaque type, vous devez appeler la fonction correspondante pour le définir.
 
-    gl.uniform1f (floatUniformLoc, v);                 // for float
-    gl.uniform1fv(floatUniformLoc, [v]);               // for float or float array
-    gl.uniform2f (vec2UniformLoc,  v0, v1);            // for vec2
-    gl.uniform2fv(vec2UniformLoc,  [v0, v1]);          // for vec2 or vec2 array
-    gl.uniform3f (vec3UniformLoc,  v0, v1, v2);        // for vec3
-    gl.uniform3fv(vec3UniformLoc,  [v0, v1, v2]);      // for vec3 or vec3 array
-    gl.uniform4f (vec4UniformLoc,  v0, v1, v2, v4);    // for vec4
-    gl.uniform4fv(vec4UniformLoc,  [v0, v1, v2, v4]);  // for vec4 or vec4 array
+    gl.uniform1f (floatUniformLoc, v);                 // pour float
+    gl.uniform1fv(floatUniformLoc, [v]);               // pour float ou tableau de float
+    gl.uniform2f (vec2UniformLoc,  v0, v1);            // pour vec2
+    gl.uniform2fv(vec2UniformLoc,  [v0, v1]);          // pour vec2 ou tableau de vec2
+    gl.uniform3f (vec3UniformLoc,  v0, v1, v2);        // pour vec3
+    gl.uniform3fv(vec3UniformLoc,  [v0, v1, v2]);      // pour vec3 ou tableau de vec3
+    gl.uniform4f (vec4UniformLoc,  v0, v1, v2, v4);    // pour vec4
+    gl.uniform4fv(vec4UniformLoc,  [v0, v1, v2, v4]);  // pour vec4 ou tableau de vec4
 
-    gl.uniformMatrix2fv(mat2UniformLoc, false, [  4x element array ])  // for mat2 or mat2 array
-    gl.uniformMatrix3fv(mat3UniformLoc, false, [  9x element array ])  // for mat3 or mat3 array
-    gl.uniformMatrix4fv(mat4UniformLoc, false, [ 16x element array ])  // for mat4 or mat4 array
+    gl.uniformMatrix2fv(mat2UniformLoc, false, [  tableau de 4 éléments ])  // pour mat2 ou tableau de mat2
+    gl.uniformMatrix3fv(mat3UniformLoc, false, [  tableau de 9 éléments ])  // pour mat3 ou tableau de mat3
+    gl.uniformMatrix4fv(mat4UniformLoc, false, [ tableau de 16 éléments ])  // pour mat4 ou tableau de mat4
 
-    gl.uniform1i (intUniformLoc,   v);                 // for int
-    gl.uniform1iv(intUniformLoc, [v]);                 // for int or int array
-    gl.uniform2i (ivec2UniformLoc, v0, v1);            // for ivec2
-    gl.uniform2iv(ivec2UniformLoc, [v0, v1]);          // for ivec2 or ivec2 array
-    gl.uniform3i (ivec3UniformLoc, v0, v1, v2);        // for ivec3
-    gl.uniform3iv(ivec3UniformLoc, [v0, v1, v2]);      // for ivec3 or ivec3 array
-    gl.uniform4i (ivec4UniformLoc, v0, v1, v2, v4);    // for ivec4
-    gl.uniform4iv(ivec4UniformLoc, [v0, v1, v2, v4]);  // for ivec4 or ivec4 array
+    gl.uniform1i (intUniformLoc,   v);                 // pour int
+    gl.uniform1iv(intUniformLoc, [v]);                 // pour int ou tableau de int
+    gl.uniform2i (ivec2UniformLoc, v0, v1);            // pour ivec2
+    gl.uniform2iv(ivec2UniformLoc, [v0, v1]);          // pour ivec2 ou tableau de ivec2
+    gl.uniform3i (ivec3UniformLoc, v0, v1, v2);        // pour ivec3
+    gl.uniform3iv(ivec3UniformLoc, [v0, v1, v2]);      // pour ivec3 ou tableau de ivec3
+    gl.uniform4i (ivec4UniformLoc, v0, v1, v2, v4);    // pour ivec4
+    gl.uniform4iv(ivec4UniformLoc, [v0, v1, v2, v4]);  // pour ivec4 ou tableau de ivec4
 
-    gl.uniform1u (intUniformLoc,   v);                 // for uint
-    gl.uniform1uv(intUniformLoc, [v]);                 // for uint or uint array
-    gl.uniform2u (ivec2UniformLoc, v0, v1);            // for uvec2
-    gl.uniform2uv(ivec2UniformLoc, [v0, v1]);          // for uvec2 or uvec2 array
-    gl.uniform3u (ivec3UniformLoc, v0, v1, v2);        // for uvec3
-    gl.uniform3uv(ivec3UniformLoc, [v0, v1, v2]);      // for uvec3 or uvec3 array
-    gl.uniform4u (ivec4UniformLoc, v0, v1, v2, v4);    // for uvec4
-    gl.uniform4uv(ivec4UniformLoc, [v0, v1, v2, v4]);  // for uvec4 or uvec4 array
+    gl.uniform1u (intUniformLoc,   v);                 // pour uint
+    gl.uniform1uv(intUniformLoc, [v]);                 // pour uint ou tableau de uint
+    gl.uniform2u (ivec2UniformLoc, v0, v1);            // pour uvec2
+    gl.uniform2uv(ivec2UniformLoc, [v0, v1]);          // pour uvec2 ou tableau de uvec2
+    gl.uniform3u (ivec3UniformLoc, v0, v1, v2);        // pour uvec3
+    gl.uniform3uv(ivec3UniformLoc, [v0, v1, v2]);      // pour uvec3 ou tableau de uvec3
+    gl.uniform4u (ivec4UniformLoc, v0, v1, v2, v4);    // pour uvec4
+    gl.uniform4uv(ivec4UniformLoc, [v0, v1, v2, v4]);  // pour uvec4 ou tableau de uvec4
 
-    // for sampler2D, sampler3D, samplerCube, samplerCubeShadow, sampler2DShadow,
+    // pour sampler2D, sampler3D, samplerCube, samplerCubeShadow, sampler2DShadow,
     // sampler2DArray, sampler2DArrayShadow
     gl.uniform1i (samplerUniformLoc,   v);
     gl.uniform1iv(samplerUniformLoc, [v]);
 
-There's also types `bool`, `bvec2`, `bvec3`, and `bvec4`. They use either the `gl.uniform?f?`, `gl.uniform?i?`,
-or `gl.uniform?u?` functions.
+Il existe aussi les types `bool`, `bvec2`, `bvec3`, et `bvec4`. Ils utilisent soit les fonctions `gl.uniform?f?`, `gl.uniform?i?`,
+soit `gl.uniform?u?`.
 
-Note that for an array you can set all the uniforms of the array at once. For example
+Notez que pour un tableau, vous pouvez définir tous les uniforms du tableau en une seule fois. Par exemple
 
-    // in shader
+    // dans le shader
     uniform vec2 u_someVec2[3];
 
-    // in JavaScript at init time
+    // en JavaScript lors de l'initialisation
     var someVec2Loc = gl.getUniformLocation(someProgram, "u_someVec2");
 
-    // at render time
-    gl.uniform2fv(someVec2Loc, [1, 2, 3, 4, 5, 6]);  // set the entire array of u_someVec2
+    // lors du rendu
+    gl.uniform2fv(someVec2Loc, [1, 2, 3, 4, 5, 6]);  // définir tout le tableau u_someVec2
 
-But if you want to set individual elements of the array you must look up the location of
-each element individually.
+Mais si vous voulez définir des éléments individuels du tableau, vous devez chercher l'emplacement de
+chaque élément individuellement.
 
-    // in JavaScript at init time
+    // en JavaScript lors de l'initialisation
     var someVec2Element0Loc = gl.getUniformLocation(someProgram, "u_someVec2[0]");
     var someVec2Element1Loc = gl.getUniformLocation(someProgram, "u_someVec2[1]");
     var someVec2Element2Loc = gl.getUniformLocation(someProgram, "u_someVec2[2]");
 
-    // at render time
-    gl.uniform2fv(someVec2Element0Loc, [1, 2]);  // set element 0
-    gl.uniform2fv(someVec2Element1Loc, [3, 4]);  // set element 1
-    gl.uniform2fv(someVec2Element2Loc, [5, 6]);  // set element 2
+    // lors du rendu
+    gl.uniform2fv(someVec2Element0Loc, [1, 2]);  // définir l'élément 0
+    gl.uniform2fv(someVec2Element1Loc, [3, 4]);  // définir l'élément 1
+    gl.uniform2fv(someVec2Element2Loc, [5, 6]);  // définir l'élément 2
 
-Similarly if you create a struct
+De même si vous créez une struct
 
     struct SomeStruct {
       bool active;
@@ -175,46 +175,46 @@ Similarly if you create a struct
     };
     uniform SomeStruct u_someThing;
 
-you have to look up each field individually
+vous devez chercher chaque champ individuellement
 
     var someThingActiveLoc = gl.getUniformLocation(someProgram, "u_someThing.active");
     var someThingSomeVec2Loc = gl.getUniformLocation(someProgram, "u_someThing.someVec2");
 
-### Textures in Vertex Shaders
+### Textures dans les Vertex Shaders
 
-See [Textures in Fragment Shaders](#textures-in-fragment-shaders).
+Voir [Textures dans les Fragment Shaders](#textures-in-fragment-shaders).
 
 ## Fragment Shader
 
-A Fragment Shader's job is to provide a color for the current pixel being rasterized.
-It always takes the form
+Le rôle d'un fragment shader est de fournir une couleur pour le pixel en cours de rastérisation.
+Il prend toujours la forme
 
     #version 300 es
     precision highp float;
 
-    out vec4 outColor;  // you can pick any name
+    out vec4 outColor;  // vous pouvez choisir n'importe quel nom
 
     void main() {
        outColor = doMathToMakeAColor;
     }
 
-Your fragment shader is called once per pixel. Each time it's called you are required
-to set your out variable to some color.
+Votre fragment shader est appelé une fois par pixel. À chaque appel, vous devez
+définir votre variable de sortie avec une couleur.
 
-Fragment shaders need data. They can get data in 3 ways
+Les fragment shaders ont besoin de données. Ils peuvent obtenir des données de 3 façons
 
-1.  [Uniforms](#uniforms) (values that stay the same for every pixel of a single draw call)
-2.  [Textures](#textures-in-fragment-shaders) (data from pixels/texels)
-3.  [Varyings](#varyings) (data passed from the vertex shader and interpolated)
+1.  [Uniforms](#uniforms) (valeurs qui restent les mêmes pour chaque pixel d'un seul appel de dessin)
+2.  [Textures](#textures-in-fragment-shaders) (données issues des pixels/texels)
+3.  [Varyings](#varyings) (données passées depuis le vertex shader et interpolées)
 
-### Uniforms in Fragment Shaders
+### Uniforms dans les Fragment Shaders
 
-See [Uniforms in Vertex Shaders](#uniforms).
+Voir [Uniforms dans les Vertex Shaders](#uniforms).
 
-### Textures in Fragment Shaders
+### Textures dans les Fragment Shaders
 
-Getting a value from a texture in a shader we create a `sampler2D` uniform and use the GLSL
-function `texture` to extract a value from it.
+Pour obtenir une valeur d'une texture dans un shader, nous créons un uniform `sampler2D` et utilisons la fonction GLSL
+`texture` pour en extraire une valeur.
 
     precision highp float;
 
@@ -223,12 +223,12 @@ function `texture` to extract a value from it.
     out vec4 outColor;
 
     void main() {
-       vec2 texcoord = vec2(0.5, 0.5);  // get a value from the middle of the texture
+       vec2 texcoord = vec2(0.5, 0.5);  // obtenir une valeur au centre de la texture
        outColor = texture(u_texture, texcoord);
     }
 
-What data comes out of the texture is [dependent on many settings](webgl-3d-textures.html).
-At a minimum we need to create and put data in the texture, for example
+Les données issues de la texture [dépendent de nombreux réglages](webgl-3d-textures.html).
+Au minimum, nous devons créer une texture et y mettre des données, par exemple
 
     var tex = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -236,7 +236,7 @@ At a minimum we need to create and put data in the texture, for example
     var internalFormat = gl.RGBA,
     var width = 2;
     var height = 1;
-    var border = 0; // MUST ALWAYS BE ZERO
+    var border = 0; // DOIT TOUJOURS ÊTRE ZÉRO
     var format = gl.RGBA;
     var type = gl.UNSIGNED_BYTE;
     var data = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255]);
@@ -250,33 +250,32 @@ At a minimum we need to create and put data in the texture, for example
                   type,
                   data);
 
-Set the filtering
+Définir le filtrage
 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
-Then look up the uniform location in the shader program
+Puis chercher l'emplacement de l'uniform dans le programme shader
 
     var someSamplerLoc = gl.getUniformLocation(someProgram, "u_texture");
 
-WebGL then requires you to bind it to a texture unit
+WebGL vous demande ensuite de la lier à une unité de texture
 
-    var unit = 5;  // Pick some texture unit
+    var unit = 5;  // Choisir une unité de texture
     gl.activeTexture(gl.TEXTURE0 + unit);
     gl.bindTexture(gl.TEXTURE_2D, tex);
 
-And tell the shader which unit you bound the texture to
+Et indiquer au shader à quelle unité vous avez lié la texture
 
     gl.uniform1i(someSamplerLoc, unit);
 
 ### Varyings
 
-A varying is a way to pass a value from a vertex shader to a fragment shader which we
-covered in [how it works](webgl-how-it-works.html).
+Un varying est un moyen de passer une valeur d'un vertex shader à un fragment shader, ce que nous avons
+couvert dans [comment ça marche](webgl-how-it-works.html).
 
-To use a varying we need to declare matching varyings in both a vertex and fragment shader.
-We set the *out* varying in the vertex shader with some value per vertex. When WebGL draws pixels
-it will optionally interpolate between those values and pass them to the corresponding *in* varying in
-the fragment shader
+Pour utiliser un varying, nous devons déclarer des varyings correspondants dans les deux shaders, vertex et fragment.
+Nous définissons le varying *out* dans le vertex shader avec une valeur par sommet. Quand WebGL dessine les pixels,
+il interpolera optionnellement entre ces valeurs et les passera au varying *in* correspondant dans le fragment shader.
 
 Vertex shader
 
@@ -303,31 +302,31 @@ Fragment shader
     out vec4 outColor;
 
     void main() {
-    +  // convert from clipsapce (-1 <-> +1) to color space (0 -> 1).
+    +  // convertir du clip space (-1 <-> +1) vers l'espace couleur (0 -> 1).
     +  vec4 color = v_positionWithOffset * 0.5 + 0.5;
     +  outColor = color;
     }
 
-The example above is a mostly nonsense example. It doesn't generally make sense to
-directly copy the clip space values to the fragment shader and use them as colors. Nevertheless
-it will work and produce colors.
+L'exemple ci-dessus est en grande partie un exemple artificiel. Il n'a généralement pas de sens de
+copier directement les valeurs de clip space vers le fragment shader et de les utiliser comme couleurs. Néanmoins
+cela fonctionnera et produira des couleurs.
 
 ## GLSL
 
-GLSL stands for [Graphics Library Shader Language](https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf).
-It's the language shaders are written
-in. It has some special semi unique features that are certainly not common in JavaScript.
-It's designed to do the math that is commonly needed to compute things for rasterizing
-graphics. So for example it has built in types like `vec2`, `vec3`, and `vec4` which
-represent 2 values, 3 values, and 4 values respectively. Similarly it has `mat2`, `mat3`
-and `mat4` which represent 2x2, 3x3, and 4x4 matrices. You can do things like multiply
-a `vec` by a scalar.
+GLSL signifie [Graphics Library Shader Language](https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf).
+C'est le langage dans lequel les shaders sont écrits.
+Il possède quelques fonctionnalités semi-uniques qui ne sont certainement pas communes en JavaScript.
+Il est conçu pour effectuer les calculs mathématiques généralement nécessaires au rendu graphique par rastérisation.
+Ainsi, il possède par exemple des types intégrés comme `vec2`, `vec3`, et `vec4` qui représentent
+respectivement 2 valeurs, 3 valeurs et 4 valeurs. De même, il possède `mat2`, `mat3`
+et `mat4` qui représentent des matrices 2x2, 3x3 et 4x4. Vous pouvez par exemple multiplier
+un `vec` par un scalaire.
 
     vec4 a = vec4(1, 2, 3, 4);
     vec4 b = a * 2.0;
-    // b is now vec4(2, 4, 6, 8);
+    // b vaut maintenant vec4(2, 4, 6, 8);
 
-Similarly it can do matrix multiplication and vector to matrix multiplication
+De même, il peut effectuer des multiplications de matrices et de vecteurs par des matrices
 
     mat4 a = ???
     mat4 b = ???
@@ -336,71 +335,71 @@ Similarly it can do matrix multiplication and vector to matrix multiplication
     vec4 v = ???
     vec4 y = c * v;
 
-It also has various selectors for the parts of a vec. For a vec4
+Il possède également divers sélecteurs pour les parties d'un vec. Pour un vec4
 
     vec4 v;
 
-*   `v.x` is the same as `v.s` and `v.r` and `v[0]`.
-*   `v.y` is the same as `v.t` and `v.g` and `v[1]`.
-*   `v.z` is the same as `v.p` and `v.b` and `v[2]`.
-*   `v.w` is the same as `v.q` and `v.a` and `v[3]`.
+*   `v.x` est identique à `v.s`, `v.r` et `v[0]`.
+*   `v.y` est identique à `v.t`, `v.g` et `v[1]`.
+*   `v.z` est identique à `v.p`, `v.b` et `v[2]`.
+*   `v.w` est identique à `v.q`, `v.a` et `v[3]`.
 
-It is able to *swizzle* vec components which means you can swap or repeat components.
+Il est capable de *swizzler* les composants d'un vec, ce qui signifie que vous pouvez échanger ou répéter des composants.
 
     v.yyyy
 
-is the same as
+est identique à
 
     vec4(v.y, v.y, v.y, v.y)
 
-Similarly
+De même
 
     v.bgra
 
-is the same as
+est identique à
 
     vec4(v.b, v.g, v.r, v.a)
 
-When constructing a vec or a mat you can supply multiple parts at once. So for example
+Lors de la construction d'un vec ou d'une mat, vous pouvez fournir plusieurs parties à la fois. Par exemple
 
     vec4(v.rgb, 1)
 
-Is the same as
+est identique à
 
     vec4(v.r, v.g, v.b, 1)
 
-One thing you'll likely get caught up on is that GLSL is very type strict.
+Une chose sur laquelle vous risquez de buter est que GLSL est très strict sur les types.
 
-    float f = 1;  // ERROR 1 is an int. You can't assign an int to a float
+    float f = 1;  // ERREUR : 1 est un int. Vous ne pouvez pas assigner un int à un float
 
-The correct way is one of these
+La façon correcte est l'une des suivantes
 
-    float f = 1.0;      // use float
-    float f = float(1)  // cast the integer to a float
+    float f = 1.0;      // utiliser un float
+    float f = float(1)  // caster l'entier en float
 
-The example above of `vec4(v.rgb, 1)` doesn't complain about the `1` because `vec4` is
-casting the things inside just like `float(1)`.
+L'exemple ci-dessus de `vec4(v.rgb, 1)` ne se plaint pas du `1` car `vec4` caste
+les éléments en interne, tout comme `float(1)`.
 
-GLSL has a bunch of built in functions. Many of them operate on multiple components at once.
-So for example
+GLSL possède un grand nombre de fonctions intégrées. Beaucoup d'entre elles opèrent sur plusieurs composants à la fois.
+Par exemple
 
     T sin(T angle)
 
-Means T can be `float`, `vec2`, `vec3` or `vec4`. If you pass in `vec4` you get `vec4` back
-which the sine of each of the components. In other words if `v` is a `vec4` then
+signifie que T peut être `float`, `vec2`, `vec3` ou `vec4`. Si vous passez un `vec4`, vous obtenez un `vec4` en retour
+qui est le sinus de chacun des composants. En d'autres termes, si `v` est un `vec4`, alors
 
     vec4 s = sin(v);
 
-is the same as
+est identique à
 
     vec4 s = vec4(sin(v.x), sin(v.y), sin(v.z), sin(v.w));
 
-Sometimes one argument is a float and the rest is `T`. That means that float will be applied
-to all the components. For example if `v1` and `v2` are `vec4` and `f` is a float then
+Parfois, un argument est un float et les autres sont de type `T`. Cela signifie que le float sera appliqué
+à tous les composants. Par exemple, si `v1` et `v2` sont des `vec4` et `f` est un float, alors
 
     vec4 m = mix(v1, v2, f);
 
-is the same as
+est identique à
 
     vec4 m = vec4(
       mix(v1.x, v2.x, f),
@@ -408,25 +407,21 @@ is the same as
       mix(v1.z, v2.z, f),
       mix(v1.w, v2.w, f));
 
-You can see a list of all the GLSL functions on the last 3 pages of [the OpenGL ES 3.0
-Reference Card](https://www.khronos.org/files/opengles3-quick-reference-card.pdf)
-If you like really dry and verbose stuff you can try
-[the GLSL ES 3.00 spec](https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf).
+Vous pouvez voir une liste de toutes les fonctions GLSL dans les 3 dernières pages de la [carte de référence OpenGL ES 3.0](https://www.khronos.org/files/opengles3-quick-reference-card.pdf).
+Si vous appréciez les documents techniques très détaillés, vous pouvez consulter
+[la spécification GLSL ES 3.00](https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf).
 
-## Putting it all together
+## Tout assembler
 
-That's the point of this entire series of posts. WebGL is all about creating various shaders, supplying
-the data to those shaders and then calling `gl.drawArrays`, `gl.drawElements`, etc to have WebGL process
-the vertices by calling the current vertex shader for each vertex and then render pixels by calling the current fragment shader for each pixel.
+C'est le but de toute cette série d'articles. WebGL consiste à créer divers shaders, à fournir
+des données à ces shaders, puis à appeler `gl.drawArrays`, `gl.drawElements`, etc. pour que WebGL traite
+les sommets en appelant le vertex shader courant pour chaque sommet, puis rende les pixels en appelant le fragment shader courant pour chaque pixel.
 
-Actually creating the shaders requires several lines of code. Since those lines are the same in
-most WebGL programs and since once written you can pretty much ignore them [how to compile GLSL shaders
-and link them into a shader program is covered here](webgl-boilerplate.html).
+La création réelle des shaders nécessite plusieurs lignes de code. Comme ces lignes sont les mêmes dans
+la plupart des programmes WebGL, et qu'une fois écrites vous pouvez pratiquement les ignorer, [comment compiler des shaders GLSL
+et les lier dans un programme shader est expliqué ici](webgl-boilerplate.html).
 
-If you're just starting from here you can go in 2 directions. If you are interested in image processing
-I'll show you [how to do some 2D image processing](webgl-image-processing.html).
-If you are interesting in learning about translation,
-rotation and scale then [start here](webgl-2d-translation.html).
-
-
-
+Si vous commencez depuis ici, vous pouvez aller dans 2 directions. Si vous êtes intéressé par le traitement d'images,
+je vous montrerai [comment faire du traitement d'images 2D](webgl-image-processing.html).
+Si vous êtes intéressé par l'apprentissage de la translation,
+de la rotation et de la mise à l'échelle, [commencez ici](webgl-2d-translation.html).

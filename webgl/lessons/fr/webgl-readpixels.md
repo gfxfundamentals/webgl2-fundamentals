@@ -1,36 +1,34 @@
 Title: WebGL2 readPixels
-Description: Details on readPixels
+Description: Détails sur readPixels
 TOC: readPixels
 
-In WebGL you pass a format/type pair to `readPixels`. For a given
-texture internal format (attached to a framebuffer), only 2 combinations
-of format/type are valid.
+Dans WebGL, vous passez une paire format/type à `readPixels`. Pour un format interne de texture donné
+(attaché à un framebuffer), seulement 2 combinaisons de format/type sont valides.
 
-From the spec:
+D'après la spécification :
 
-> For normalized fixed-point rendering surfaces, the combination format `RGBA` and type
-`UNSIGNED_BYTE` is accepted. For signed integer rendering surfaces, the combination
-format `RGBA_INTEGER` and type `INT` is accepted. For unsigned integer
-rendering surfaces, the combination format `RGBA_INTEGER` and type `UNSIGNED_INT`
-is accepted.
+> Pour les surfaces de rendu à virgule fixe normalisée, la combinaison format `RGBA` et type
+`UNSIGNED_BYTE` est acceptée. Pour les surfaces de rendu d'entiers signés, la combinaison
+format `RGBA_INTEGER` et type `INT` est acceptée. Pour les surfaces de rendu d'entiers non signés,
+la combinaison format `RGBA_INTEGER` et type `UNSIGNED_INT` est acceptée.
 
-The second combination is implementation defined
-<span style="color:red;">which probably means you shouldn't use it in WebGL if you want your code to be portable</span>.
-You can ask what the format/type combination is by querying
+La deuxième combinaison est définie par l'implémentation
+<span style="color:red;">ce qui signifie probablement que vous ne devriez pas l'utiliser dans WebGL si vous voulez que votre code soit portable</span>.
+Vous pouvez demander quelle est la combinaison format/type en interrogeant
 
 ```js
-// assuming a framebuffer is bound with the texture to read attached
+// en supposant qu'un framebuffer est lié avec la texture à lire attachée
 const format = gl.getParameter(gl.IMPLEMENTATION_COLOR_READ_FORMAT);
 const type = gl.getParameter(gl.IMPLEMENTATION_COLOR_READ_TYPE);
 ```
 
-Also note what texture formats that are renderable, meaning you can attach them to a framebuffer and render to them,
-are also somewhat implementation defined. 
-WebGL2 lists [many formats](webgl-data-textures.html) but some are optional (`LUMINANCE` for example) and some
-are not renderable by default but can maybe be made renderable by extension. (`RGBA32F` for example).
+Notez également que les formats de texture qui sont rendables, c'est-à-dire que vous pouvez les attacher à un framebuffer et y rendre,
+sont également quelque peu définis par l'implémentation.
+WebGL2 liste [de nombreux formats](webgl-data-textures.html) mais certains sont optionnels (`LUMINANCE` par exemple) et certains
+ne sont pas rendables par défaut mais peuvent éventuellement être rendus rendables par une extension. (`RGBA32F` par exemple).
 
-**The table below is live**. You may notice that it gives different results depending on the machine, OS, GPU, or even
-browser. I know on my machine Chrome and Firefox give different results for some of the implementation defined values.
+**Le tableau ci-dessous est en temps réel**. Vous remarquerez peut-être qu'il donne des résultats différents selon la machine, le système d'exploitation, le GPU, ou même
+le navigateur. Je sais que sur ma machine, Chrome et Firefox donnent des résultats différents pour certaines des valeurs définies par l'implémentation.
 
 <div class="webgl_center" data-diagram="formats"></div>
 

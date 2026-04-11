@@ -1,20 +1,19 @@
-Title: WebGL2 Resizing the Canvas.
-Description: How to resize a WebGL canvas and the issues involved
-TOC: Resizing the Canvas
+Title: WebGL2 - Redimensionner le Canvas
+Description: Comment redimensionner un canvas WebGL et les problèmes associés
+TOC: Redimensionner le Canvas
 
-Here's what you need to know to change the size of the canvas.
+Voici ce que vous devez savoir pour modifier la taille du canvas.
 
-Every canvas has 2 sizes. The size of its drawingbuffer. This is how many pixels are in the canvas.
-The second size is the size the canvas is displayed. CSS determines the size the canvas is
-displayed.
+Chaque canvas possède 2 tailles. La taille de son drawingbuffer, c'est-à-dire le nombre de pixels dans le canvas.
+La seconde est la taille à laquelle le canvas est affiché. Le CSS détermine la taille d'affichage du canvas.
 
-You can set the size of the canvas's drawingbuffer in 2 ways. One using HTML
+Vous pouvez définir la taille du drawingbuffer du canvas de 2 façons. La première en HTML
 
 ```html
 <canvas id="c" width="400" height="300"></canvas>
 ```
 
-The other using JavaScript
+La seconde en JavaScript
 
 ```html
 <canvas id="c"></canvas>
@@ -28,17 +27,17 @@ canvas.width = 400;
 canvas.height = 300;
 ```
 
-As for setting a canvas's display size if you don't have any CSS that affects the canvas's display size
-the display size will be the same size as its drawingbuffer. So in the 2 examples above the canvas's drawingbuffer is 400x300
-and its display size is also 400x300.
+En ce qui concerne la taille d'affichage du canvas, si vous n'avez pas de CSS qui affecte la taille d'affichage du canvas,
+la taille d'affichage sera la même que son drawingbuffer. Ainsi, dans les 2 exemples ci-dessus, le drawingbuffer du canvas est de 400x300
+et sa taille d'affichage est également de 400x300.
 
-Here's an example of a canvas whose drawingbuffer is 10x15 pixels that is displayed 400x300 pixels on the page
+Voici un exemple d'un canvas dont le drawingbuffer est de 10x15 pixels mais qui est affiché en 400x300 pixels sur la page
 
 ```html
 <canvas id="c" width="10" height="15" style="width: 400px; height: 300px;"></canvas>
 ```
 
-or for example like this
+ou par exemple comme ceci
 
 ```html
 <style>
@@ -50,15 +49,15 @@ or for example like this
 <canvas id="c" width="10" height="15"></canvas>
 ```
 
-If we draw a single pixel wide rotating line into that canvas we'll see something like this
+Si nous dessinons une ligne rotative d'un pixel de large dans ce canvas, nous verrons quelque chose comme ceci
 
 {{{example url="../webgl-10x15-canvas-400x300-css.html" }}}
 
-Why is it so blurry? Because the browser takes our 10x15 pixel canvas and stretches it to 400x300 pixels and
-generally it filters it when it stretches it.
+Pourquoi est-ce si flou ? Parce que le navigateur prend notre canvas de 10x15 pixels et l'étire à 400x300 pixels, et
+généralement il l'applique un filtrage lors de l'étirement.
 
-So, what do we do if, for example, we want the canvas to fill the window? Well, first we can get
-the browser to stretch the canvas to fill the window with CSS. Example
+Alors, que faire si, par exemple, nous voulons que le canvas remplisse la fenêtre ? Eh bien, d'abord nous pouvons demander
+au navigateur d'étirer le canvas pour remplir la fenêtre avec du CSS. Exemple
 
     <html>
       <head>
@@ -68,7 +67,7 @@ the browser to stretch the canvas to fill the window with CSS. Example
             height: 100%;
             margin: 0;
           }
-          /* make the canvas fill its container */
+          /* faire en sorte que le canvas remplisse son conteneur */
           #c {
             width: 100%;
             height: 100%;
@@ -81,33 +80,33 @@ the browser to stretch the canvas to fill the window with CSS. Example
       </body>
     </html>
 
-Now we just need to make the drawingbuffer match whatever size the browser has stretched the canvas. 
-This is unfortunately a complicated topic. Let's go over some different methods
+Nous devons maintenant faire correspondre le drawingbuffer à la taille que le navigateur a choisie pour le canvas.
+C'est malheureusement un sujet complexe. Passons en revue différentes méthodes.
 
-## Use `clientWidth` and `clientHeight`
+## Utiliser `clientWidth` et `clientHeight`
 
-This is the easiest way.
-`clientWidth` and `clientHeight` are properties every element in HTML has that tell us
-the size of the element in CSS pixels. 
+C'est la façon la plus simple.
+`clientWidth` et `clientHeight` sont des propriétés que tout élément HTML possède et qui nous indiquent
+la taille de l'élément en pixels CSS.
 
-> Note: The client rect includes any CSS padding so if you're using `clientWidth`
-and/or `clientHeight` it's best not to put any padding on your canvas element.
+> Note : Le rect client inclut tout padding CSS, donc si vous utilisez `clientWidth`
+et/ou `clientHeight`, il est préférable de ne pas mettre de padding sur votre élément canvas.
 
-Using JavaScript we can check what size that element is being displayed and then adjust
-its drawingbuffer size to match.
+En JavaScript, nous pouvons vérifier la taille à laquelle cet élément est affiché, puis ajuster
+sa taille de drawingbuffer pour correspondre.
 
 ```js
 function resizeCanvasToDisplaySize(canvas) {
-  // Lookup the size the browser is displaying the canvas in CSS pixels.
+  // Récupérer la taille à laquelle le navigateur affiche le canvas en pixels CSS.
   const displayWidth  = canvas.clientWidth;
   const displayHeight = canvas.clientHeight;
 
-  // Check if the canvas is not the same size.
+  // Vérifier si le canvas n'est pas à la même taille.
   const needResize = canvas.width  !== displayWidth ||
                      canvas.height !== displayHeight;
 
   if (needResize) {
-    // Make the canvas the same size
+    // Mettre le canvas à la même taille
     canvas.width  = displayWidth;
     canvas.height = displayHeight;
   }
@@ -116,8 +115,8 @@ function resizeCanvasToDisplaySize(canvas) {
 }
 ```
 
-Let's call this function just before we render
-so it will always adjust the canvas to our desired size just before drawing.
+Appelons cette fonction juste avant de faire le rendu
+pour qu'elle ajuste toujours le canvas à la taille souhaitée juste avant de dessiner.
 
 ```js
 function drawScene() {
@@ -126,20 +125,20 @@ function drawScene() {
    ...
 ```
 
-And here's that
+Et voilà le résultat
 
 {{{example url="../webgl-resize-canvas.html" }}}
 
-Hey, something is wrong? Why is the line not covering the entire area?
+Hé, quelque chose ne va pas ! Pourquoi la ligne ne couvre-t-elle pas toute la zone ?
 
-The reason is when we resize the canvas we also need to call `gl.viewport` to set the viewport.
-`gl.viewport` tells WebGL how to convert from clip space (-1 to +1) back to pixels and where to do
-it within the canvas. When you first create the WebGL context WebGL will set the viewport to match the size
-of the canvas but after that it's up to you to set it. If you change the size of the canvas
-you need to tell WebGL a new viewport setting.
+La raison est que lorsque nous redimensionnons le canvas, nous devons aussi appeler `gl.viewport` pour définir le viewport.
+`gl.viewport` indique à WebGL comment convertir le clip space (-1 à +1) vers les pixels et où le faire
+dans le canvas. Quand vous créez le contexte WebGL pour la première fois, WebGL définit le viewport pour correspondre à la taille
+du canvas, mais ensuite c'est à vous de le définir. Si vous changez la taille du canvas,
+vous devez indiquer à WebGL un nouveau réglage de viewport.
 
-Let's change the code to handle this. On top of that, since the WebGL context has a
-reference to the canvas let's pass that into resize.
+Modifions le code pour gérer cela. De plus, comme le contexte WebGL possède une
+référence au canvas, passons-la dans resize.
 
     function drawScene() {
        resizeCanvasToDisplaySize(gl.canvas);
@@ -147,56 +146,55 @@ reference to the canvas let's pass that into resize.
     +   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
        ...
 
-Now it's working.
+Maintenant ça fonctionne.
 
 {{{example url="../webgl-resize-canvas-viewport.html" }}}
 
-Open that in a separate window, size the window, notice it always fills the window.
+Ouvrez cela dans une fenêtre séparée, redimensionnez la fenêtre, remarquez qu'il remplit toujours la fenêtre.
 
-I can hear you asking, *why doesn't WebGL set the viewport for us automatically
-when we change the size of the canvas?* The reason is it doesn't know how or why
-you are using the viewport. You could be [rendering to a framebuffer](webgl-render-to-texture.html)
-or doing something else that requires a different viewport size. WebGL has no
-way of knowing your intent so it can't automatically set the viewport for you.
+Je vous entends vous demander, *pourquoi WebGL ne définit-il pas le viewport automatiquement
+quand nous changeons la taille du canvas ?* La raison est qu'il ne sait pas comment ni pourquoi
+vous utilisez le viewport. Vous pourriez [faire le rendu dans un framebuffer](webgl-render-to-texture.html)
+ou faire quelque chose d'autre qui nécessite une taille de viewport différente. WebGL n'a
+aucun moyen de connaître votre intention, donc il ne peut pas définir automatiquement le viewport pour vous.
 
 ---
 
-## Handling `devicePixelRatio` and Zoom
+## Gérer `devicePixelRatio` et le Zoom
 
-Why is that not the end of it? Well, This is where it gets complicated. 
+Pourquoi ce n'est pas la fin de l'histoire ? Eh bien, c'est là que ça se complique.
 
-The first thing to understand is that most sizes in the browser are in CSS pixel
-units. This is an attempt to make the sizes device independent. So for example
-at the top of this article we set the canvas's display size to 400x300 CSS
-pixels. Depending on if the user has an HD-DPI display, or is zoomed in or
-zoomed out, or has an OS zoom level set, how many actual pixels that becomes on
-the monitor will be different.
+La première chose à comprendre est que la plupart des tailles dans le navigateur sont en unités de pixels CSS.
+C'est une tentative de rendre les tailles indépendantes de l'appareil. Par exemple,
+en haut de cet article, nous avons défini la taille d'affichage du canvas à 400x300 pixels CSS.
+Selon que l'utilisateur a un écran HD-DPI, est zoomé ou dézoomé,
+ou a un niveau de zoom OS défini, le nombre réel de pixels sur le moniteur sera différent.
 
-`window.devicePixelRatio` will tell us in general, the ratio of actual pixels
-to CSS pixels on your monitor. For example here's your browser's current setting
+`window.devicePixelRatio` nous dira en général le rapport entre les pixels réels
+et les pixels CSS sur votre moniteur. Par exemple, voici le réglage actuel de votre navigateur
 
 > <div>devicePixelRatio = <span data-diagram="dpr"></span></div>
 
-If you're on a desktop or laptop try pressing <kbd>ctrl</kbd>+<kbd>+</kbd> and <kbd>ctrl</kbd>+<kbd>-</kbd> to zoom in and out (<kbd>⌘</kbd>+<kbd>+</kbd> and <kbd>⌘</kbd>+<kbd>-</kbd> on Mac). You should see the number change.
+Si vous êtes sur un ordinateur de bureau ou un ordinateur portable, essayez d'appuyer sur <kbd>ctrl</kbd>+<kbd>+</kbd> et <kbd>ctrl</kbd>+<kbd>-</kbd> pour zoomer et dézoomer (<kbd>⌘</kbd>+<kbd>+</kbd> et <kbd>⌘</kbd>+<kbd>-</kbd> sur Mac). Vous devriez voir le nombre changer.
 
-So if we want the number of pixels in the canvas to match the number of pixels actually used to display it
-the seemingly obvious solution would be to multiply `clientWidth` and `clientHeight` by the `devicePixelRatio` like this:
+Donc si nous voulons que le nombre de pixels dans le canvas corresponde au nombre de pixels réellement utilisés pour l'afficher,
+la solution apparemment évidente serait de multiplier `clientWidth` et `clientHeight` par `devicePixelRatio` comme ceci :
 
 ```js
 function resizeCanvasToDisplaySize(canvas) {
-  // Lookup the size the browser is displaying the canvas in CSS pixels.
+  // Récupérer la taille à laquelle le navigateur affiche le canvas en pixels CSS.
 -  const displayWidth  = canvas.clientWidth;
 -  const displayHeight = canvas.clientHeight;
 +  const dpr = window.devicePixelRatio;
 +  const displayWidth  = Math.round(canvas.clientWidth * dpr);
 +  const displayHeight = Math.round(canvas.clientHeight * dpr);
 
-  // Check if the canvas is not the same size.
+  // Vérifier si le canvas n'est pas à la même taille.
   const needResize = canvas.width  != displayWidth || 
                      canvas.height != displayHeight;
 
   if (needResize) {
-    // Make the canvas the same size
+    // Mettre le canvas à la même taille
     canvas.width  = displayWidth;
     canvas.height = displayHeight;
   }
@@ -205,33 +203,32 @@ function resizeCanvasToDisplaySize(canvas) {
 }
 ```
 
-We need to call `Math.round` (or `Math.ceil`, or `Math.floor` or `| 0`) to get the number
-to an integer because `canvas.width` and `canvas.height` are always in integers so
-our comparison might fail if `devicePixelRatio` is not an integer which is common, especially
-if the user zooms.
+Nous devons appeler `Math.round` (ou `Math.ceil`, ou `Math.floor` ou `| 0`) pour obtenir un entier
+car `canvas.width` et `canvas.height` sont toujours des entiers, donc notre comparaison pourrait échouer
+si `devicePixelRatio` n'est pas un entier, ce qui est courant, surtout si l'utilisateur zoome.
 
-> Note: Whether to use `Math.floor` or `Math.ceil` or `Math.round` is not defined by the HTML
-spec. It's up to the browser. 🙄
+> Note : L'utilisation de `Math.floor` ou `Math.ceil` ou `Math.round` n'est pas définie par la spécification HTML.
+C'est au navigateur d'en décider. 🙄
 
-In any case, this will **not** actually work. The new problem is that given a `devicePixelRatio` that is not 1.0
-the CSS size the canvas needs to be to fill a given area might not be an integer value
-but `clientWidth` and `clientHeight` are defined as integers. Let's say the window is
-999 actual device pixels wide your devicePixelRatio = 2.0 and you ask for 100% size canvas.
-There's no integer CSS size * 2.0 that = 999.
+En tout cas, cela **ne fonctionnera pas** réellement. Le nouveau problème est que si le `devicePixelRatio` n'est pas 1.0,
+la taille CSS que le canvas doit avoir pour remplir une zone donnée peut ne pas être une valeur entière
+mais `clientWidth` et `clientHeight` sont définis comme des entiers. Disons que la fenêtre fait
+999 pixels réels de large, votre devicePixelRatio = 2.0 et vous demandez un canvas de 100%.
+Il n'y a pas de taille CSS entière * 2.0 qui = 999.
 
-The next solution is to use
+La solution suivante est d'utiliser
 [`getBoundingClientRect()`](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect).
-It returns a [`DOMRect`](https://developer.mozilla.org/en-US/docs/Web/API/DOMRect) 
-that has a `width` and `height`. It's the same
-client rect as represented by `clientWidth` and `clientHeight` but it is not required
-to be an integer.
+Elle retourne un [`DOMRect`](https://developer.mozilla.org/en-US/docs/Web/API/DOMRect)
+qui a un `width` et un `height`. C'est le même
+rect client que représenté par `clientWidth` et `clientHeight` mais il n'est pas obligé
+d'être un entier.
 
-Below is a purple `<canvas>` that's set to `width: 100%` of its container. Zoom out a few times to 75% or 60%
-and you may see its `clientWidth` and its `getBoundingClientRect().width` diverge. 
+Ci-dessous, un `<canvas>` violet est réglé à `width: 100%` de son conteneur. Dézoomez quelques fois à 75% ou 60%
+et vous verrez peut-être son `clientWidth` et son `getBoundingClientRect().width` diverger.
 
 > <div data-diagram="getBoundingClientRect"></div>
 
-On my machines I get these readings
+Sur mes machines j'obtiens ces lectures
 
 ```
 Windows 10, zoom level 75%, Chrome
@@ -251,16 +248,15 @@ clientWidth: 700
 getBoundingClientRect().width = 700
 ```
 
-Note: Firefox showed 700 in this particular setup but with enough various test I've
-seen it give a non-integer result from `getBoundingClientRect` for example make the window
-thin so that the 100% canvas is smaller than 700 and you might get a non-integer result
-on Firefox.
+Note : Firefox affichait 700 dans ce cas particulier, mais avec suffisamment de tests variés,
+je l'ai vu retourner un résultat non entier depuis `getBoundingClientRect`. Par exemple, rendez la fenêtre
+étroite pour que le canvas 100% soit plus petit que 700 et vous pourriez obtenir un résultat non entier sur Firefox.
 
-So, given that we could try using `getBoundingClientRect`.
+Donc, étant donné cela, nous pourrions essayer d'utiliser `getBoundingClientRect`.
 
 ```js
 function resizeCanvasToDisplaySize(canvas) {
-  // Lookup the size the browser is displaying the canvas in CSS pixels.
+  // Récupérer la taille à laquelle le navigateur affiche le canvas en pixels CSS.
   const dpr = window.devicePixelRatio;
 -  const displayWidth  = Math.round(canvas.clientWidth * dpr);
 -  const displayHeight = Math.round(canvas.clientHeight * dpr);
@@ -268,12 +264,12 @@ function resizeCanvasToDisplaySize(canvas) {
 +  const displayWidth  = Math.round(width * dpr);
 +  const displayHeight = Math.round(height * dpr);
 
-  // Check if the canvas is not the same size.
+  // Vérifier si le canvas n'est pas à la même taille.
   const needResize = canvas.width  != displayWidth || 
                      canvas.height != displayHeight;
 
   if (needResize) {
-    // Make the canvas the same size
+    // Mettre le canvas à la même taille
     canvas.width  = displayWidth;
     canvas.height = displayHeight;
   }
@@ -282,77 +278,76 @@ function resizeCanvasToDisplaySize(canvas) {
 }
 ```
 
-So are we done? Unfortunately no. It turns out that `canvas.getBoundingClientRect()` can
-not always return the exact correct size. The reason is complicated but it has to do with
-the way the browser decides to draw things. Some parts are decided at the HTML level
-and some parts are decided later at the "compositor" level (the part that actually draws).
-`getBoundingClientRect()` happens at the HTML level but certain things happen after that
-which could affect what size the canvas is actually drawn.
+Avons-nous terminé ? Malheureusement non. Il s'avère que `canvas.getBoundingClientRect()` ne peut pas
+toujours retourner la taille exactement correcte. La raison est complexe mais cela a à voir avec
+la façon dont le navigateur décide de dessiner les choses. Certaines parties sont décidées au niveau HTML
+et certaines parties sont décidées plus tard au niveau du « compositeur » (la partie qui dessine réellement).
+`getBoundingClientRect()` se produit au niveau HTML, mais certaines choses se produisent après cela
+qui pourraient affecter la taille réelle à laquelle le canvas est dessiné.
 
-I think an example is the HTML part works in the abstract and the compositor
-works in the concrete. So lets say you have a window that's 999 device pixels
-wide and a devicePixelRatio of 2.0. You make two elements side by side that are
-`width: 50%`. So HTML computes each one should be 499.5 device pixels. But when it
-actually comes time to draw the compositor can't draw 499.5 pixels so one
-element gets 499 and the other gets 500. Which one gets or loses a pixel is
-undefined by any specs.
+Je pense qu'un exemple est que la partie HTML fonctionne dans l'abstrait et le compositeur
+fonctionne dans le concret. Disons que vous avez une fenêtre de 999 pixels d'appareil
+de large et un devicePixelRatio de 2.0. Vous faites deux éléments côte à côte qui font
+`width: 50%`. Donc HTML calcule que chacun devrait faire 499,5 pixels d'appareil. Mais quand il
+vient réellement le temps de dessiner, le compositeur ne peut pas dessiner 499,5 pixels, donc un
+élément obtient 499 et l'autre 500. Lequel obtient ou perd un pixel n'est
+défini par aucune spécification.
 
-The solution the browser vendors came up with is to use the
-[`ResizeObserver` API](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)
-and provide the actual size used via the `devicePixelContextBoxSize` property of
-the entries it provides.
-It returns the actual number of device pixels that were used. Note it's called the
-`ContentBox` not the `ClientBox` which means it's the actual part of the
-canvas element showing the *content* of the canvas so it doesn't include the padding like
-the `clientWidth`, `clientHeight` and `getBoundingClientRect`, a nice benefit.
+La solution que les fournisseurs de navigateurs ont trouvée est d'utiliser l'
+[API `ResizeObserver`](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)
+et de fournir la taille réelle utilisée via la propriété `devicePixelContextBoxSize` des
+entrées qu'elle fournit.
+Elle retourne le nombre réel de pixels d'appareil utilisés. Notez qu'il s'appelle la
+`ContentBox` et non la `ClientBox`, ce qui signifie que c'est la partie réelle de
+l'élément canvas affichant le *contenu* du canvas, donc elle n'inclut pas le padding comme
+`clientWidth`, `clientHeight` et `getBoundingClientRect`, ce qui est un avantage appréciable.
 
-It's returned this way because the result is asynchronous. The "compositor" mentioned
-above runs asynchronously from the page. It can figure out the size it's actually going to use and then send you that size *out of band*.
+Elle est retournée de cette façon car le résultat est asynchrone. Le « compositeur » mentionné
+ci-dessus s'exécute de façon asynchrone par rapport à la page. Il peut déterminer la taille qu'il va réellement utiliser et ensuite vous envoyer cette taille *en dehors du flux normal*.
 
-Unfortunately while the `ResizeObserver` is available in all modern browser the
-`devicePixelContentBoxSize` is only available in Chrome/Edge so far. Here's how
-to use it.
+Malheureusement, bien que le `ResizeObserver` soit disponible dans tous les navigateurs modernes,
+le `devicePixelContentBoxSize` n'est disponible que dans Chrome/Edge pour l'instant. Voici comment
+l'utiliser.
 
-We create a `ResizeObserver` and we pass it a function to call anytime any elements
-we're observing change size. In our case that's our canvas.
+Nous créons un `ResizeObserver` et lui passons une fonction à appeler chaque fois que les éléments
+que nous observons changent de taille. Dans notre cas, c'est notre canvas.
 
 ```js
 const resizeObserver = new ResizeObserver(onResize);
 resizeObserver.observe(canvas, {box: 'content-box'});
 ```
 
-The code above creates a `ResizeObserver` that will call the function `onResize`
-(below) when an element we observe changes size. We tell it to `observe` our
-canvas. We tell it to observe when the `content-box` changes size. This is
-important and a little confusing. We could ask it to tell us when the
-`device-pixel-content-box` changes size but let's imagine we have a canvas that
-is some percentage size of the window like the common 100% of our line example
-above. In that case our canvas will always be the same number of device pixels
-regardless of zoom level. The window hasn't changed size when we zoom so there's
-still the same number of device pixels. On the otherhand the `content-box` will
-change as we zoom because it's measured in CSS pixels and so as we zoom, more or
-less CSS pixels fit in the number of device pixels.
+Le code ci-dessus crée un `ResizeObserver` qui appellera la fonction `onResize`
+(ci-dessous) quand un élément que nous observons change de taille. Nous lui disons d'`observer` notre
+canvas. Nous lui disons d'observer quand la `content-box` change de taille. C'est
+important et un peu déroutant. Nous pourrions lui demander de nous dire quand la
+`device-pixel-content-box` change de taille, mais imaginons que nous ayons un canvas qui
+fait une certaine taille en pourcentage de la fenêtre comme le courant 100% de notre exemple de ligne
+ci-dessus. Dans ce cas, notre canvas aura toujours le même nombre de pixels d'appareil
+quel que soit le niveau de zoom. La fenêtre n'a pas changé de taille quand nous zoomons, donc il y a
+toujours le même nombre de pixels d'appareil. D'autre part, la `content-box` changera
+quand nous zoomons car elle est mesurée en pixels CSS, donc en zoomant, plus ou moins
+de pixels CSS tiennent dans le nombre de pixels d'appareil.
 
-If we don't care about the zoom level then we could just observe `device-pixel-content-box`.
-It will throw an error if it's not supported so we'd do something like this
+Si nous ne nous soucions pas du niveau de zoom, nous pourrions simplement observer `device-pixel-content-box`.
+Cela lancera une erreur si ce n'est pas supporté, donc nous ferions quelque chose comme ceci
 
 ```js
 const resizeObserver = new ResizeObserver(onResize);
 try {
-  // only call us of the number of device pixels changed
+  // ne nous appeler que si le nombre de pixels d'appareil change
   resizeObserver.observe(canvas, {box: 'device-pixel-content-box'});
 } catch (ex) {
-  // device-pixel-content-box is not supported so fallback to this
+  // device-pixel-content-box n'est pas supporté, donc utiliser cette alternative
   resizeObserver.observe(canvas, {box: 'content-box'});
 }
 ```
 
-The `onResize` function will be called with an array of [`ResizeObserverEntry`s](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserverEntry). One for each thing
-that changed size. We'll record the size in a map so that we can handle more than
-one element.
+La fonction `onResize` sera appelée avec un tableau de [`ResizeObserverEntry`s](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserverEntry). Un pour chaque élément
+qui a changé de taille. Nous enregistrerons la taille dans une map pour pouvoir gérer plus d'un élément.
 
 ```js
-// init with the default canvas size
+// initialiser avec la taille par défaut du canvas
 const canvasToDisplaySizeMap = new Map([[canvas, [300, 150]]]);
 
 function onResize(entries) {
@@ -361,12 +356,12 @@ function onResize(entries) {
     let height;
     let dpr = window.devicePixelRatio;
     if (entry.devicePixelContentBoxSize) {
-      // NOTE: Only this path gives the correct answer
-      // The other paths are imperfect fallbacks
-      // for browsers that don't provide anyway to do this
+      // NOTE : Seul ce chemin donne la réponse correcte
+      // Les autres chemins sont des alternatives imparfaites
+      // pour les navigateurs qui ne fournissent pas de moyen de faire cela
       width = entry.devicePixelContentBoxSize[0].inlineSize;
       height = entry.devicePixelContentBoxSize[0].blockSize;
-      dpr = 1; // it's already in width and height
+      dpr = 1; // c'est déjà dans width et height
     } else if (entry.contentBoxSize) {
       if (entry.contentBoxSize[0]) {
         width = entry.contentBoxSize[0].inlineSize;
@@ -386,27 +381,27 @@ function onResize(entries) {
 }
 ```
 
-That's kind of a mess. You can see the API shipped at least 3 different versions
-before supporting `devicePixelContentBoxSize` 😂
+C'est un peu le bazar. Vous pouvez voir que l'API a évolué en au moins 3 versions différentes
+avant de supporter `devicePixelContentBoxSize` 😂
 
-Now we'll change our resize function to use this data
+Maintenant, nous allons changer notre fonction de redimensionnement pour utiliser ces données
 
 ```js
 function resizeCanvasToDisplaySize(canvas) {
--  // Lookup the size the browser is displaying the canvas in CSS pixels.
+-  // Récupérer la taille à laquelle le navigateur affiche le canvas en pixels CSS.
 -  const dpr = window.devicePixelRatio;
 -  const {width, height} = canvas.getBoundingClientRect();
 -  const displayWidth  = Math.round(width * dpr);
 -  const displayHeight = Math.round(height * dpr);
-+  // Get the size the browser is displaying the canvas in device pixels.
++  // Obtenir la taille à laquelle le navigateur affiche le canvas en pixels d'appareil.
 + const [displayWidth, displayHeight] = canvasToDisplaySizeMap.get(canvas);
 
-  // Check if the canvas is not the same size.
+  // Vérifier si le canvas n'est pas à la même taille.
   const needResize = canvas.width  != displayWidth || 
                      canvas.height != displayHeight;
 
   if (needResize) {
-    // Make the canvas the same size
+    // Mettre le canvas à la même taille
     canvas.width  = displayWidth;
     canvas.height = displayHeight;
   }
@@ -415,70 +410,67 @@ function resizeCanvasToDisplaySize(canvas) {
 }
 ```
 
-Here's an example using this code
+Voici un exemple utilisant ce code
 
 {{{example url="../webgl-resize-canvas-hd-dpi.html" }}}
 
-It may be difficult to see any difference. If you have an HD-DPI display
-like your smartphone or all Macs since 2019 or maybe a 4k monitor then this
-line should be thinner than the line of the previous example.
+Il peut être difficile de voir une différence. Si vous avez un écran HD-DPI
+comme votre smartphone, ou tous les Mac depuis 2019, ou peut-être un moniteur 4k, cette
+ligne devrait être plus fine que la ligne de l'exemple précédent.
 
-Otherwise, if you zoom in (I suggest you open the example in a new window), as you zoom
-in the line should stay the same resolution where as if you zoom in on the previous example
-the line will get thicker and lower-resolution since it's not adjusting to the `devicePixelRatio`.
+Sinon, si vous zoomez (je suggère d'ouvrir l'exemple dans une nouvelle fenêtre), en zoomant,
+la ligne devrait garder la même résolution, alors que si vous zoomez dans l'exemple précédent,
+la ligne deviendra plus épaisse et de résolution plus basse car elle ne s'adapte pas au `devicePixelRatio`.
 
-Just as a test here are all 3 methods above just using a simple canvas 2d.
-To keep it simple it does not use WebGL. Instead it uses Canvas 2D and makes 2 patterns, a 2x2 pixel vertical black and white pattern and a 2x2 pixel horizontal black and white
-pattern. It draws the horizontal pattern ▤ on the left and the vertical pattern ▥
-on the right.
+Juste comme test, voici les 3 méthodes ci-dessus utilisant simplement un canvas 2D.
+Pour simplifier, cela n'utilise pas WebGL. À la place, il utilise Canvas 2D et crée 2 motifs, un motif vertical noir et blanc de 2x2 pixels et un motif horizontal noir et blanc de 2x2 pixels.
+Il dessine le motif horizontal ▤ à gauche et le motif vertical ▥ à droite.
 
 {{{example url="../webgl-resize-the-canvas-comparison.html"}}}
 
-Resize this window, or better, open it in a new window and zoom in an out using
-the keys mentioned above. At different zoom levels resize the window, and notice
-only the bottom one works in all cases (in Chrome/Edge). Note the higher your
-device's `devicePixelRatio` the harder it may be to see problems. What you
-should see is an unvarying pattern on left and on the right. If you see harsh
-patterns or you see differing darkness like a gradient then it's not working.
-Since it will only work in Chrome/Edge you'll need to try it there to see it
-work.
+Redimensionnez cette fenêtre, ou mieux, ouvrez-la dans une nouvelle fenêtre et zoomez avec
+les touches mentionnées ci-dessus. À différents niveaux de zoom, redimensionnez la fenêtre, et remarquez
+que seul le bas fonctionne dans tous les cas (dans Chrome/Edge). Notez que plus le `devicePixelRatio`
+de votre appareil est élevé, plus il peut être difficile de voir les problèmes. Ce que vous
+devriez voir est un motif uniforme à gauche et à droite. Si vous voyez des motifs durs
+ou des dégradés de luminosité différents, cela ne fonctionne pas.
+Puisque cela ne fonctionnera que dans Chrome/Edge, vous devrez l'essayer là pour le voir fonctionner.
 
-Also note, some OSes (MacOS) provide an OS level scaling option that is mostly
-hidden from apps. In this case you'll see a slight pattern on the bottom example
-(assuming your in Chrome/Edge) but it will be a regular pattern.
+Notez aussi que certains OS (MacOS) fournissent une option de mise à l'échelle au niveau OS qui est en grande partie
+cachée des applications. Dans ce cas, vous verrez un léger motif dans l'exemple du bas
+(en supposant que vous êtes dans Chrome/Edge) mais ce sera un motif régulier.
 
-This brings up the issue that there is no good solution on the other browsers but, do you
-need a real solution? The majority of WebGL apps do something like draw some things in 3D
-with textures and or lighting on them. As such it's often not noticeable to either use
-the top solution where we ignored `devicePixelRatio` or to use `clientWidth`, `clientHeight`
-or `getBoundingClientRect()` * `devicePixelRatio` and not worry about it past that.
+Cela soulève la question qu'il n'y a pas de bonne solution sur les autres navigateurs, mais en avez-vous besoin ?
+La majorité des applications WebGL font quelque chose comme dessiner des objets en 3D
+avec des textures et/ou de l'éclairage. En tant que tel, il est souvent imperceptible d'utiliser
+la solution supérieure où nous ignorons `devicePixelRatio`, ou d'utiliser `clientWidth`, `clientHeight`
+ou `getBoundingClientRect()` * `devicePixelRatio` sans s'en préoccuper davantage.
 
-Further, blindly using `devicePixelRatio` can really slow down your performance.
-On iPhoneX or iPhone11 <code>window.devicePixelRatio</code> is <code>3</code> which
-means you'll be drawing 9 times as many pixels. On A Samsung Galaxy S8 that value is <code>4</code> which means you'd be drawing
-16 times as many pixels. That can really slow down your program. In fact it's a common optimization in games to actually render
-less pixels than are displayed and let the GPU scale them up. It really depends on what your needs are. If you're drawing
-a graph for printing you might want to support HD-DPI. If you're making a game you might not or you might want to give the
-user the option to turn support on or off if their system is not fast enough to draw so many pixels.
+De plus, utiliser aveuglément `devicePixelRatio` peut vraiment ralentir vos performances.
+Sur iPhone X ou iPhone 11, <code>window.devicePixelRatio</code> est <code>3</code>, ce qui signifie
+que vous dessinerez 9 fois plus de pixels. Sur un Samsung Galaxy S8, cette valeur est <code>4</code>, ce qui signifie que vous dessinerez
+16 fois plus de pixels. Cela peut vraiment ralentir votre programme. En fait, c'est une optimisation courante dans les jeux de rendre moins de pixels
+que ceux affichés et de laisser le GPU les agrandir. Cela dépend vraiment de vos besoins. Si vous dessinez
+un graphique pour l'impression, vous voudrez peut-être supporter le HD-DPI. Si vous faites un jeu, peut-être pas, ou vous voudrez peut-être donner à
+l'utilisateur la possibilité d'activer ou de désactiver le support si son système n'est pas assez rapide pour dessiner autant de pixels.
 
-One other caveat is, at least in January 2021 the `round(getBoundingClientRect * devicePixelRatio)` works on all modern browsers **IF and ONLY IF** the canvas is the full
-size of the window like the line example above. Here's an example using the patterns
+Une autre mise en garde est qu'au moins en janvier 2021, `round(getBoundingClientRect * devicePixelRatio)` fonctionne sur tous les navigateurs modernes **SI et SEULEMENT SI** le canvas occupe toute la fenêtre comme l'exemple de ligne ci-dessus. Voici un exemple utilisant les motifs
 
 {{{example url="../webgl-resize-the-canvas-comparison-fullwindow.html"}}}
 
-You'll notice if you zoom and resize *this page* it will fail with `getBoundingClientRect`.
-This is because the canvas is not the full window, it's in an iframe. Open the example
-in a separate window and it will work.
+Vous remarquerez que si vous zoomez et redimensionnez *cette page*, cela échouera avec `getBoundingClientRect`.
+C'est parce que le canvas n'occupe pas toute la fenêtre, il est dans une iframe. Ouvrez l'exemple
+dans une fenêtre séparée et cela fonctionnera.
 
-Which solution you use is up to you. For me, 99% of the time I don't use
-`devicePixelRatio`. It makes my pages slow and except for a few graphics pros most
-people won't notice a difference. On this site there are a few diagrams where it's
-used it but majority of examples do not.
+La solution que vous utilisez dépend de vous. Pour moi, 99% du temps je n'utilise pas
+`devicePixelRatio`. Cela ralentit mes pages et sauf pour quelques professionnels de la graphique, la plupart
+des gens ne remarqueront pas de différence. Sur ce site, il y a quelques diagrammes où c'est
+utilisé, mais la majorité des exemples ne le font pas.
 
-If you look at many WebGL programs they handle resizing or setting the size of the canvas in many different ways.
-I think it's arguable the best way is to let the browser chose the size to display canvas with CSS and then looking up what size it chose and adjusting
-the number of pixels in the canvas in response.
-If you're curious <a href="webgl-anti-patterns.html">here are some of the reasons</a> I think the way described above is the preferable way.
+Si vous regardez de nombreux programmes WebGL, ils gèrent le redimensionnement ou la définition de la taille du canvas de nombreuses façons différentes.
+Je pense que la meilleure façon est de laisser le navigateur choisir la taille d'affichage du canvas avec CSS, puis de récupérer la taille choisie et d'ajuster
+le nombre de pixels dans le canvas en réponse.
+Si vous êtes curieux, <a href="webgl-anti-patterns.html">voici quelques raisons</a> pour lesquelles je pense que la méthode décrite ci-dessus est préférable.
 
 
 <!-- just to shut up the build that this link used to exist

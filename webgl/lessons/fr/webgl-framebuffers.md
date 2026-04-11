@@ -1,27 +1,27 @@
 Title: WebGL2 Framebuffers
-Description: What are framebuffers in WebGL?
+Description: Que sont les framebuffers dans WebGL ?
 TOC: Framebuffers
 
-This article is meant to try to give you a mental image
-of what a framebuffer is in WebGL. Framebuffers come up
-as they allow you to [render to a texture](webgl-render-to-texture.html).
+Cet article a pour but de vous donner une représentation mentale
+de ce qu'est un framebuffer dans WebGL. Les framebuffers entrent en jeu
+car ils permettent de [faire le rendu vers une texture](webgl-render-to-texture.html).
 
-A Framebuffer is just a *collection of attachments*. That's it! It is
-used to allow rendering to textures and renderbuffers.
+Un Framebuffer est juste une *collection de pièces jointes (attachments)*. C'est tout ! Il est
+utilisé pour permettre le rendu vers des textures et des renderbuffers.
 
-You can think of a Framebuffer object like this
+Vous pouvez penser à un objet Framebuffer comme ceci
 
 ```
 class Framebuffer {
   constructor() {
-    this.attachments = new Map();  // attachments by attachment point
+    this.attachments = new Map();  // attachments par point d'attache
     this.drawBuffers = [gl.BACK, gl.NONE, gl.NONE, gl.NONE, ...];
     this.readBuffer = gl.BACK,
   }
 }
 ```
 
-And the `WebGL2RenderingContext` (the `gl` object) like this
+Et le `WebGL2RenderingContext` (l'objet `gl`) comme ceci
 
 ```js
 // pseudo code
@@ -31,11 +31,11 @@ gl = {
 }
 ```
 
-There are 2 binding points. They are set like this
+Il y a 2 points de liaison. Ils sont définis comme ceci
 
 ```js
 gl.bindFramebuffer(target, framebuffer) {
-  framebuffer = framebuffer || defaultFramebufferForCanvas; // if null use canvas
+  framebuffer = framebuffer || defaultFramebufferForCanvas; // si null, utiliser le canvas
   switch (target) {
     case: gl.DRAW_FRAMEBUFFER:
       this.drawFramebufferBinding = framebuffer;
@@ -53,13 +53,13 @@ gl.bindFramebuffer(target, framebuffer) {
 }
 ```
 
-The `DRAW_FRAMEBUFFER` binding is used when drawing to a framebuffer via `gl.clear`, `gl.draw???`, or `gl.blitFramebuffer`.
-The `READ_FRAMEBUFFER` binding is used when reading from a framebuffer via `gl.readPixels` or `gl.blitFramebuffer`.
+Le point de liaison `DRAW_FRAMEBUFFER` est utilisé lors du dessin dans un framebuffer via `gl.clear`, `gl.draw???` ou `gl.blitFramebuffer`.
+Le point de liaison `READ_FRAMEBUFFER` est utilisé lors de la lecture depuis un framebuffer via `gl.readPixels` ou `gl.blitFramebuffer`.
 
-You can add attachments to a framebuffer via 3 functions, `framebufferTexture2D`,
-`framebufferRenderbuffer`, and `framebufferTextureLayer`.
+Vous pouvez ajouter des attachments à un framebuffer via 3 fonctions, `framebufferTexture2D`,
+`framebufferRenderbuffer` et `framebufferTextureLayer`.
 
-We can imagine their implementation to be something like
+Nous pouvons imaginer leur implémentation comme quelque chose comme
 
 ```js
 // pseudo code
@@ -92,8 +92,8 @@ gl.framebufferRenderbuffer(target, attachmentPoint, renderbufferTarget, renderbu
 }
 ```
 
-You can set the drawing buffer array with `gl.drawBuffers` which we can
-imagine is implemented like this
+Vous pouvez définir le tableau des buffers de dessin avec `gl.drawBuffers`, que nous pouvons
+imaginer être implémenté comme ceci
 
 ```js
 // pseudo code
@@ -107,13 +107,13 @@ gl.drawBuffers(drawBuffers) {
 }
 ```
 
-The drawBuffers array determines if a particular attachment is rendered to or not.
-The valid values are either `gl.NONE` which means *don't render to this attachment* or,
-`gl.COLOR_ATTACHMENTx` where `x` is the same as the index of the attachment. One other
-value is `gl.BACK` which is only valid when `null` is bound to the current framebuffer
-in which case `gl.BACK` means 'render to the backbuffer (the canvas)'
+Le tableau drawBuffers détermine si un attachment particulier reçoit le rendu ou non.
+Les valeurs valides sont soit `gl.NONE` qui signifie *ne pas faire de rendu vers cet attachment*, soit
+`gl.COLOR_ATTACHMENTx` où `x` est le même que l'index de l'attachment. Une autre
+valeur est `gl.BACK` qui n'est valide que lorsque `null` est lié au framebuffer courant,
+auquel cas `gl.BACK` signifie « faire le rendu vers le backbuffer (le canvas) ».
 
-You can set the read buffer with `gl.readBuffer`
+Vous pouvez définir le buffer de lecture avec `gl.readBuffer`
 
 ```js
 // pseudo code
@@ -123,11 +123,11 @@ gl.readBuffer(readBuffer) {
 }
 ```
 
-The readBuffer sets which attachment is read when calling `gl.readPixels`.
+Le readBuffer définit quel attachment est lu lors de l'appel à `gl.readPixels`.
 
-The important part is a *framebuffer* is just a simple collection of attachments.
-The complications are the restrictions on what those attachments
-can be and the combinations that work. For example a floating point texture 
-attachment can not be rendered to by default. Extensions can enable that like
-`EXT_color_buffer_float`. Similarly if there is
-more than one attachment they must all be the same dimensions.
+L'important est qu'un *framebuffer* est juste une simple collection d'attachments.
+Les complications viennent des restrictions sur ce que ces attachments
+peuvent être et les combinaisons qui fonctionnent. Par exemple, un attachment de texture flottante
+ne peut pas recevoir de rendu par défaut. Des extensions peuvent l'activer comme
+`EXT_color_buffer_float`. De même, s'il y a
+plus d'un attachment, ils doivent tous avoir les mêmes dimensions.

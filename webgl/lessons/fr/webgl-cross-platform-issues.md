@@ -1,66 +1,66 @@
-Title: WebGL2 Cross Platform Issues
-Description: Things to be aware of when trying to make your WebGL app work everywhere.
-TOC: Cross Platform Issues
+Title: WebGL2 Problèmes multi-plateformes
+Description: Ce dont il faut être conscient quand on essaie de faire fonctionner son application WebGL partout.
+TOC: Problèmes multi-plateformes
 
-I probably comes as no shock that not all WebGL programs work on all devices or
-browser. 
+Ce n'est probablement pas une surprise que tous les programmes WebGL ne fonctionnent pas sur tous les appareils ou
+navigateurs.
 
-Here's a list of most of the issues you might run into off the top of my head
+Voici une liste de la plupart des problèmes que vous pourriez rencontrer d'emblée
 
-## Performance
+## Performances
 
-A top end GPU probably runs 100x faster than a low-end GPU. The only way around
-that that I know of is to either aim low, or else give the user options like
-most Desktop PC apps do where they can choose performance or fidelity.
+Un GPU haut de gamme fonctionne probablement 100x plus vite qu'un GPU bas de gamme. La seule façon de
+contourner ça que je connaisse est soit de viser bas, soit de donner à l'utilisateur des options comme
+le font la plupart des applications PC de bureau où il peut choisir entre performance ou fidélité.
 
-## Memory
+## Mémoire
 
-Similarly a top end GPU might have 12 to 24 gig of ram where as a low end GPU
-probably has less than 1gig. (I'm old so it's amazing to me low end = 1gig since
-I started programming on machines with 16k to 64k of memory 😜)
+De même, un GPU haut de gamme pourrait avoir 12 à 24 gig de RAM alors qu'un GPU bas de gamme
+a probablement moins de 1 gig. (Je suis vieux donc il est étonnant pour moi que bas de gamme = 1 gig puisque
+j'ai commencé à programmer sur des machines avec 16k à 64k de mémoire 😜)
 
-## Device Limits
+## Limites des appareils
 
-WebGL has various minimum supported features but your local device might support
-> than that minimum which means it will fail on other devices that support less.
+WebGL a diverses fonctionnalités minimum supportées, mais votre appareil local pourrait supporter
+plus que ce minimum, ce qui signifie que ça échouera sur d'autres appareils qui en supportent moins.
 
-Examples include:
+Les exemples incluent :
 
-* The max texture size allowed
+* La taille maximale de texture autorisée
 
-  2048 or 4096 seems to be reasonable limits. At least as of 2020 it looks like
-  [99% of devices support 4096 but only 50% support > 4096](https://web3dsurvey.com/webgl/parameters/MAX_TEXTURE_SIZE).
+  2048 ou 4096 semble être des limites raisonnables. Au moins en 2020, il semble que
+  [99% des appareils supportent 4096 mais seulement 50% supportent > 4096](https://web3dsurvey.com/webgl/parameters/MAX_TEXTURE_SIZE).
 
-  Note: the max texture size is the maximum dimension the GPU can process. It
-  doesn't mean that GPU has enough memory for that dimension squared (for a 2D
-  texture) or cubed (for a 3D texture). For example some GPUs have a max size of
-  16384. But a 3D texture 16384 on each side would require 16 terabytes of
-  memory!!!
+  Note : la taille maximale de texture est la dimension maximale que le GPU peut traiter. Ça
+  ne signifie pas que ce GPU a assez de mémoire pour cette dimension au carré (pour une texture
+  2D) ou au cube (pour une texture 3D). Par exemple, certains GPU ont une taille max de
+  16384. Mais une texture 3D de 16384 de chaque côté nécessiterait 16 téraoctets de
+  mémoire !!!
 
-* The maximum number of vertex attributes in a single program
+* Le nombre maximum d'attributs de sommets dans un seul programme
 
-  In WebGL1 the minimum supported is 8. In WebGL2 it's 16. If you're using more than that
-  then your code will fail on a machine with only the minimum
+  Dans WebGL1, le minimum supporté est 8. Dans WebGL2, c'est 16. Si vous en utilisez plus,
+  votre code échouera sur une machine avec seulement le minimum.
 
-* The maximum number of uniform vectors
+* Le nombre maximum de vecteurs d'uniforms
 
-  These are specified separately for vertex shaders and fragment shaders.
+  Ceux-ci sont spécifiés séparément pour les vertex shaders et les fragment shaders.
 
-  In WebGL1 it's 128 for vertex shaders and 16 for fragment shaders
-  In WebGL2 it's 256 for vertex shaders and 224 for fragment shaders
+  Dans WebGL1, c'est 128 pour les vertex shaders et 16 pour les fragment shaders.
+  Dans WebGL2, c'est 256 pour les vertex shaders et 224 pour les fragment shaders.
 
-  Note that uniforms can be "packed" so the number above is how many `vec4`s
-  can be used. Theoretically you could have 4x the number of `float` uniforms.
-  but there is an algorithm that fits them in. You can imagine the space as
-  an array with 4 columns, one row for each of the maximum uniform vectors above.
+  Notez que les uniforms peuvent être "empaquetés" donc le nombre ci-dessus est combien de `vec4`s
+  peuvent être utilisés. En théorie, vous pourriez avoir 4x le nombre d'uniforms `float`.
+  Mais il y a un algorithme qui les fait rentrer. Vous pouvez imaginer l'espace comme
+  un tableau avec 4 colonnes, une ligne pour chacun des vecteurs d'uniforms maximum ci-dessus.
 
      ```
      +-+-+-+-+
-     | | | | |   <- one vec4
+     | | | | |   <- un vec4
      | | | | |   |
      | | | | |   |
      | | | | |   V
-     | | | | |   max uniform vectors rows
+     | | | | |   lignes max de vecteurs d'uniforms
      | | | | |
      | | | | |  
      | | | | |
@@ -68,174 +68,173 @@ Examples include:
 
      ```
   
-  First `vec4`s are allocated with a `mat4` being 4 `vec4`s. Then `vec3`s are
-  fit in the space left. Then `vec2`s followed by `float`s. So imagine we had 1
-  `mat4`, 2 `vec3`s, 2 `vec2`s and 3 `float`s
+  D'abord les `vec4`s sont alloués avec un `mat4` étant 4 `vec4`s. Ensuite les `vec3`s sont
+  placés dans l'espace restant. Puis les `vec2`s suivis des `float`s. Donc imaginez qu'on ait 1
+  `mat4`, 2 `vec3`s, 2 `vec2`s et 3 `float`s
 
      ```
      +-+-+-+-+
-     |m|m|m|m|   <- the mat4 takes 4 rows
+     |m|m|m|m|   <- le mat4 prend 4 lignes
      |m|m|m|m|
      |m|m|m|m|
      |m|m|m|m|
-     |3|3|3| |   <- the 2 vec3s take 2 rows
+     |3|3|3| |   <- les 2 vec3s prennent 2 lignes
      |3|3|3| |
-     |2|2|2|2|   <- the 2 vec2s can squeeze into 1 row 
-     |f|f|f| |   <- the 3 floats fit in one row
+     |2|2|2|2|   <- les 2 vec2s tiennent dans 1 ligne 
+     |f|f|f| |   <- les 3 floats tiennent dans une ligne
      ...
 
      ```
 
-  Further, an array of uniforms is always vertical so for example if the maximum
-  allowed uniform vectors is 16 then you can not have a 17 element `float` array
-  and in fact if you had a single `vec4` that would take an entire row so there
-  are only 15 rows left meaning the largest array you can have would be 15
-  elements.
+  De plus, un tableau d'uniforms est toujours vertical, donc par exemple si le maximum
+  de vecteurs d'uniforms autorisés est 16, vous ne pouvez pas avoir un tableau `float` de 17 éléments,
+  et en fait si vous aviez un seul `vec4` cela prendrait une ligne entière donc il ne reste
+  que 15 lignes, ce qui signifie que le plus grand tableau que vous pouvez avoir serait de 15
+  éléments.
 
-  My advice though is don't count on perfect packing. Although the spec says the
-  algorithm above is required to pass there are too many combinations to test
-  that all drivers pass. Just be aware if you're getting close the limit.
+  Mon conseil cependant est de ne pas compter sur un empaquetage parfait. Bien que la spécification dise que
+  l'algorithme ci-dessus est requis pour passer, il y a trop de combinaisons à tester
+  pour que tous les drivers passent. Soyez juste conscient si vous approchez de la limite.
 
-  note: varyings and attributes can not be packed.
+  Note : les varyings et attributs ne peuvent pas être empaquetés.
 
-* The maximum varying vectors.
+* Les vecteurs de varyings maximum.
 
-  WebGL1 the minimum is 8. WebGL2 it's 16.
+  WebGL1 le minimum est 8. WebGL2 c'est 16.
 
-  If you use more than your code will not work on a machine with only the minimum.
+  Si vous en utilisez plus, votre code ne fonctionnera pas sur une machine avec seulement le minimum.
 
-* The maximum texture units
+* Les unités de texture maximum
 
-  There are 3 values here.
+  Il y a 3 valeurs ici.
 
-  1. How many texture units there are
-  2. How many texture units a vertex shader can reference
-  3. How many texture units a fragment shader can reference
+  1. Combien d'unités de texture il y a
+  2. Combien d'unités de texture un vertex shader peut référencer
+  3. Combien d'unités de texture un fragment shader peut référencer
 
   <table class="tabular-data">
     <thead>
       <tr><th></th><th>WebGL1</th><th>WebGL2</th></tr>
     </thead>
     <tbody>
-      <tr><td>min texture units that exist</td><td>8</td><td>32</td></tr>
-      <tr><td>min texture units a vertex shader can reference</td><th style="color: red;">0!</td><td>16</td></tr>
-      <tr><td>min texture units a fragment shader can reference</td><td>8</td><td>16</td></tr>
+      <tr><td>min unités de texture qui existent</td><td>8</td><td>32</td></tr>
+      <tr><td>min unités de texture qu'un vertex shader peut référencer</td><th style="color: red;">0!</td><td>16</td></tr>
+      <tr><td>min unités de texture qu'un fragment shader peut référencer</td><td>8</td><td>16</td></tr>
     </tbody>
   </table>
 
-  It's important to note the **0** for a vertex shader in WebGL1. Note that that's probably not the end of the world.
-  Apparently [~97% of all devices support at least 4](https://web3dsurvey.com/webgl/parameters/MAX_VERTEX_TEXTURE_IMAGE_UNITS).
-  Still, you might want to check so you can either tell the user that your app is not going to work for them or
-  you can fallback to some other shaders.
+  Il est important de noter le **0** pour un vertex shader dans WebGL1. Notez que ce n'est probablement pas la fin du monde.
+  Apparemment, [~97% de tous les appareils supportent au moins 4](https://web3dsurvey.com/webgl/parameters/MAX_VERTEX_TEXTURE_IMAGE_UNITS).
+  Mais vous pourriez vouloir vérifier afin de soit informer l'utilisateur que votre application ne va pas fonctionner pour lui, soit
+  vous pouvez vous rabattre sur d'autres shaders.
 
-There are other limits as well. To look them up you call `gl.getParameter` with
-the following values. 
-
-<div class="webgl_center">
-<table class="tabular-data">
-  <tbody>
-    <tr><td>MAX_TEXTURE_SIZE                </td><td>max size of a texture</td></tr>
-    <tr><td>MAX_VERTEX_ATTRIBS              </td><td>num attribs you can have</td></tr>
-    <tr><td>MAX_VERTEX_UNIFORM_VECTORS      </td><td>num vec4 uniforms a vertex shader can have</td></tr>
-    <tr><td>MAX_VARYING_VECTORS             </td><td>num varyings you have</td></tr>
-    <tr><td>MAX_COMBINED_TEXTURE_IMAGE_UNITS</td><td>num texture units that exist</td></tr>
-    <tr><td>MAX_VERTEX_TEXTURE_IMAGE_UNITS  </td><td>num texture units a vertex shader can reference</td></tr>
-    <tr><td>MAX_TEXTURE_IMAGE_UNITS         </td><td>num texture units a fragment shader can reference</td></tr>
-    <tr><td>MAX_FRAGMENT_UNIFORM_VECTORS    </td><td>num vec4 uniforms a fragment shader can have</td></tr>
-    <tr><td>MAX_CUBE_MAP_TEXTURE_SIZE       </td><td>max size of a cubemap</td></tr>
-    <tr><td>MAX_RENDERBUFFER_SIZE           </td><td>max size of a renderbuffer</td></tr>
-    <tr><td>MAX_VIEWPORT_DIMS               </td><td>max size of the viewport</td></tr>
-  </tbody>
-</table>
-</div>
-
-That is not the entire list. For example the max point size and max line thickness
-but you should basically assume the max line thickness is 1.0 and that POINTS
-are only useful for simple demos where you don't care about
-[the clipping issues](#points-lines-viewport-scissor-behavior).
-
-WebGL2 adds several more. A few common ones are
+Il existe d'autres limites également. Pour les rechercher, vous appelez `gl.getParameter` avec
+les valeurs suivantes.
 
 <div class="webgl_center">
 <table class="tabular-data">
   <tbody>
-    <tr><td>MAX_3D_TEXTURE_SIZE                </td><td>max size of a 3D texture</td></tr>
-    <tr><td>MAX_DRAW_BUFFERS              </td><td>num color attachments you can have</td></tr>
-    <tr><td>MAX_ARRAY_TEXTURE_LAYERS      </td><td>max layers in a 2D texture array</td></tr>
-    <tr><td>MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS             </td><td>num varyings you can output to separate buffers when using transform feedback</td></tr>
-    <tr><td>MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS</td><td>num varyings you can output when sending them all to a single buffer</td></tr>
-    <tr><td>MAX_COMBINED_UNIFORM_BLOCKS  </td><td>num uniform blocks you can use overall</td></tr>
-    <tr><td>MAX_VERTEX_UNIFORM_BLOCKS         </td><td>num uniform blocks a vertex shader can use</td></tr>
-    <tr><td>MAX_FRAGMENT_UNIFORM_BLOCKS    </td><td>num uniform blocks a fragment shader can use</td></tr>
+    <tr><td>MAX_TEXTURE_SIZE                </td><td>taille max d'une texture</td></tr>
+    <tr><td>MAX_VERTEX_ATTRIBS              </td><td>nombre d'attributs que vous pouvez avoir</td></tr>
+    <tr><td>MAX_VERTEX_UNIFORM_VECTORS      </td><td>nombre d'uniforms vec4 qu'un vertex shader peut avoir</td></tr>
+    <tr><td>MAX_VARYING_VECTORS             </td><td>nombre de varyings que vous avez</td></tr>
+    <tr><td>MAX_COMBINED_TEXTURE_IMAGE_UNITS</td><td>nombre d'unités de texture qui existent</td></tr>
+    <tr><td>MAX_VERTEX_TEXTURE_IMAGE_UNITS  </td><td>nombre d'unités de texture qu'un vertex shader peut référencer</td></tr>
+    <tr><td>MAX_TEXTURE_IMAGE_UNITS         </td><td>nombre d'unités de texture qu'un fragment shader peut référencer</td></tr>
+    <tr><td>MAX_FRAGMENT_UNIFORM_VECTORS    </td><td>nombre d'uniforms vec4 qu'un fragment shader peut avoir</td></tr>
+    <tr><td>MAX_CUBE_MAP_TEXTURE_SIZE       </td><td>taille max d'un cubemap</td></tr>
+    <tr><td>MAX_RENDERBUFFER_SIZE           </td><td>taille max d'un renderbuffer</td></tr>
+    <tr><td>MAX_VIEWPORT_DIMS               </td><td>taille max du viewport</td></tr>
   </tbody>
 </table>
 </div>
 
-## Depth Buffer resolution
+Ce n'est pas la liste complète. Par exemple, la taille maximale des points et l'épaisseur maximale des lignes,
+mais vous devriez fondamentalement supposer que l'épaisseur maximale des lignes est 1.0 et que les POINTS
+ne sont utiles que pour de simples démos où vous ne vous souciez pas des
+[problèmes de découpage](#points-lines-viewport-scissor-behavior).
 
-A few really old mobile devices use 16bit depth buffers. Otherwise, AFAICT 99%
-of devices use a 24bit depth buffer so you probably don't have to worry about
-this.
+WebGL2 en ajoute plusieurs autres. Quelques-uns courants sont
 
-## readPixels format/type combos
+<div class="webgl_center">
+<table class="tabular-data">
+  <tbody>
+    <tr><td>MAX_3D_TEXTURE_SIZE                </td><td>taille max d'une texture 3D</td></tr>
+    <tr><td>MAX_DRAW_BUFFERS              </td><td>nombre d'attachements de couleur que vous pouvez avoir</td></tr>
+    <tr><td>MAX_ARRAY_TEXTURE_LAYERS      </td><td>nombre max de couches dans un tableau de textures 2D</td></tr>
+    <tr><td>MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS             </td><td>nombre de varyings que vous pouvez émettre vers des buffers séparés lors de l'utilisation du transform feedback</td></tr>
+    <tr><td>MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS</td><td>nombre de varyings que vous pouvez émettre quand on les envoie tous vers un seul buffer</td></tr>
+    <tr><td>MAX_COMBINED_UNIFORM_BLOCKS  </td><td>nombre de blocs d'uniforms que vous pouvez utiliser au total</td></tr>
+    <tr><td>MAX_VERTEX_UNIFORM_BLOCKS         </td><td>nombre de blocs d'uniforms qu'un vertex shader peut utiliser</td></tr>
+    <tr><td>MAX_FRAGMENT_UNIFORM_BLOCKS    </td><td>nombre de blocs d'uniforms qu'un fragment shader peut utiliser</td></tr>
+  </tbody>
+</table>
+</div>
 
-Only certain format/type combos are guaranteed to work. Other combos are
-optional. This is covered in [this article](webgl-readpixels.html).
+## Résolution du depth buffer
 
-## framebuffer attachment combos
+Quelques très anciens appareils mobiles utilisent des depth buffers de 16 bits. Sinon, autant que je sache, 99%
+des appareils utilisent un depth buffer de 24 bits donc vous n'avez probablement pas à vous inquiéter de
+ça.
 
-Framebuffers can have 1 or more attachments of textures and renderbuffers.
+## Combos format/type de readPixels
 
-In WebGL1 only 3 combinations of attachments are guaranteed to work.
+Seuls certains combos format/type sont garantis de fonctionner. D'autres combos sont
+optionnels. Ceci est couvert dans [cet article](webgl-readpixels.html).
 
-1. a single format = `RGBA`, type = `UNSIGNED_BYTE` texture as `COLOR_ATTACHMENT0`
-2. a format = `RGBA`, type = `UNSIGNED_BYTE` texture as `COLOR_ATTACHMENT0` and a
-   format = `DEPTH_COMPONENT` renderbuffer attached as `DEPTH_ATTACHMENT`
-3. a format = `RGBA`, type = `UNSIGNED_BYTE` texture as `COLOR_ATTACHMENT0` and a
-   format = `DEPTH_STENCIL` renderbuffer attached as `DEPTH_STENCIL_ATTACHMENT`
+## Combos d'attachements de framebuffer
 
-All other combinations are up to the implementation which you check by calling
-`gl.checkFramebufferStatus` and seeing if it returned `FRAMEBUFFER_COMPLETE`.
+Les framebuffers peuvent avoir 1 ou plusieurs attachements de textures et renderbuffers.
 
-WebGL2 guarantees to be able to write to many more formats but still has the
-limit in that **any combination can fail!** Your best bet might be if all the
-color attachments are the same format if you attach more than 1.
+Dans WebGL1, seules 3 combinaisons d'attachements sont garanties de fonctionner.
+
+1. une seule texture avec format = `RGBA`, type = `UNSIGNED_BYTE` comme `COLOR_ATTACHMENT0`
+2. une texture avec format = `RGBA`, type = `UNSIGNED_BYTE` comme `COLOR_ATTACHMENT0` et un
+   renderbuffer avec format = `DEPTH_COMPONENT` attaché comme `DEPTH_ATTACHMENT`
+3. une texture avec format = `RGBA`, type = `UNSIGNED_BYTE` comme `COLOR_ATTACHMENT0` et un
+   renderbuffer avec format = `DEPTH_STENCIL` attaché comme `DEPTH_STENCIL_ATTACHMENT`
+
+Toutes les autres combinaisons dépendent de l'implémentation que vous vérifiez en appelant
+`gl.checkFramebufferStatus` et en voyant s'il retourne `FRAMEBUFFER_COMPLETE`.
+
+WebGL2 garantit de pouvoir écrire dans beaucoup plus de formats mais a quand même la
+limite que **n'importe quelle combinaison peut échouer !** Votre meilleure chance est peut-être que si tous les
+attachements de couleur sont du même format si vous en attachez plus d'un.
 
 ## Extensions
 
-Many features of WebGL1 and WebGL2 are optional. The entire point of having an
-API called `getExtension` is that it can fail if the extension does not exist
-and so you should be checking for that failure and not blindly assuming it will
-succeed.
+De nombreuses fonctionnalités de WebGL1 et WebGL2 sont optionnelles. Tout l'intérêt d'avoir une
+API appelée `getExtension` est qu'elle peut échouer si l'extension n'existe pas
+et vous devriez donc vérifier cet échec et ne pas supposer aveuglément qu'elle réussira.
 
-Probably the most common missing extension on WebGL1 and WebGL2 is
-`OES_texture_float_linear` which is the ability to filter a floating point
-texture, meaning the ability to support setting `TEXTURE_MIN_FILTER` and
-`TEXTURE_MAX_FILTER` to anything except `NEAREST`. Many mobile devices do not
-support this.
+Probablement l'extension manquante la plus courante sur WebGL1 et WebGL2 est
+`OES_texture_float_linear` qui est la capacité de filtrer une texture à virgule flottante,
+c'est-à-dire la capacité de supporter la définition de `TEXTURE_MIN_FILTER` et
+`TEXTURE_MAX_FILTER` à autre chose que `NEAREST`. De nombreux appareils mobiles ne
+supportent pas ça.
 
-In WebGL1 another often missing extension is `WEBGL_draw_buffers` which is the
-ability to attach more than 1 color attachment to a framebuffer is still at
-around 70% for desktop and almost none for smartphones (that seems wrong).
-Basically any device that can run WebGL2 should also support
-`WEBGL_draw_buffers` in WebGL1 but still, it's apparently still an issue. If you
-are needing to render to multiple textures at once it's likely your page needs a
-high end GPU period. Still, you should check if the user device supports it and
-if not provide a friendly explanation.
+Dans WebGL1, une autre extension souvent manquante est `WEBGL_draw_buffers` qui est la
+capacité d'attacher plus d'un attachement de couleur à un framebuffer, qui est encore à
+environ 70% pour le bureau et presque aucun pour les smartphones (cela semble faux).
+Fondamentalement, tout appareil qui peut exécuter WebGL2 devrait également supporter
+`WEBGL_draw_buffers` dans WebGL1, mais quand même, c'est apparemment encore un problème. Si vous
+avez besoin de rendre vers plusieurs textures à la fois, votre page nécessite probablement un
+GPU haut de gamme de toute façon. Quand même, vous devriez vérifier si l'appareil de l'utilisateur le supporte et
+si non, fournir une explication conviviale.
 
-For WebGL1 the following 3 extensions seem almost universally supported so while
-you might want to warn the user your page is not going to work if they are
-missing it's likely that user has an extremely old device that wasn't going to
-run your page well anyway.
+Pour WebGL1, les 3 extensions suivantes semblent presque universellement supportées, donc bien que
+vous puissiez vouloir avertir l'utilisateur que votre page ne va pas fonctionner si elles sont
+manquantes, il est probable que cet utilisateur a un appareil extrêmement ancien qui n'allait
+pas faire fonctionner votre page de toute façon.
 
-They are, `ANGLE_instance_arrays` (the ability to use [instanced drawing](webgl-instanced-drawing.html)),
-`OES_vertex_array_object` (the ability to store all the attribute state in an object so you can swap all
-that state with a single function call. See [this](webgl-attributes.html)), and `OES_element_index_uint`
-(the ability to use `UNSIGNED_INT` 32 bit indices with [`drawElements`](webgl-indexed-vertices.html)).
+Ce sont `ANGLE_instance_arrays` (la capacité d'utiliser le [dessin instancié](webgl-instanced-drawing.html)),
+`OES_vertex_array_object` (la capacité de stocker tout l'état des attributs dans un objet pour pouvoir échanger tout
+cet état avec un seul appel de fonction. Voir [ceci](webgl-attributes.html)), et `OES_element_index_uint`
+(la capacité d'utiliser des indices 32 bits `UNSIGNED_INT` avec [`drawElements`](webgl-indexed-vertices.html)).
 
-## attribute locations
+## Emplacements des attributs
 
-A semi common bug is not looking up attribute locations. For example you have a vertex shader like
+Un bug semi-courant est de ne pas rechercher les emplacements des attributs. Par exemple, vous avez un vertex shader comme
 
 ```glsl
 attribute vec4 position;
@@ -251,17 +250,17 @@ void main() {
 }
 ```
 
-Your code assumes that `position` will be attribute 0 and `texcoord` will be
-attribute 1 but that is not guaranteed. So it runs for you but fails for someone
-else. Often this can be a bug in that you didn't do this intentionally but
-through an error in the code things work when the locations are one way but not
-another.
+Votre code suppose que `position` sera l'attribut 0 et `texcoord` sera
+l'attribut 1, mais ce n'est pas garanti. Donc ça fonctionne pour vous mais échoue pour quelqu'un
+d'autre. Souvent, cela peut être un bug en ce sens que vous n'avez pas fait ça intentionnellement mais
+à cause d'une erreur dans le code, les choses fonctionnent quand les emplacements sont d'une façon mais pas
+d'une autre.
 
-There are 3 solutions.
+Il y a 3 solutions.
 
-1. Always look up the locations.
-2. Assign locations by calling `gl.bindAttribLocation` before calling `gl.linkProgram`
-3. WebGL2 only, set the locations in the shader as in
+1. Toujours rechercher les emplacements.
+2. Assigner des emplacements en appelant `gl.bindAttribLocation` avant d'appeler `gl.linkProgram`
+3. WebGL2 seulement, définir les emplacements dans le shader comme dans
 
    ```glsl
    #version 300 es
@@ -270,33 +269,32 @@ There are 3 solutions.
    ...
    ```
 
-   Solution 2 seems the most [D.R.Y.](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) where as solution 3
-   seems the most [W.E.T.](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself#DRY_vs_WET_solutions) unless
-   you're generating your textures at runtime.
+   La solution 2 semble la plus [D.R.Y.](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) alors que la solution 3
+   semble la plus [W.E.T.](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself#DRY_vs_WET_solutions) sauf si
+   vous générez vos textures à l'exécution.
 
-## GLSL undefined behavior
+## Comportements indéfinis de GLSL
 
-Several GLSL functions have undefined behavior. For example `pow(x, y)` is
-undefined if `x < 0`. There is a longer list at [the bottom of the article on
-spot lighting](webgl-3d-lighting-spot.html).
+Plusieurs fonctions GLSL ont un comportement indéfini. Par exemple `pow(x, y)` est
+indéfini si `x < 0`. Il y a une liste plus longue [en bas de l'article sur
+l'éclairage spot](webgl-3d-lighting-spot.html).
 
-## Shader precision issues
+## Problèmes de précision des shaders
 
-In 2020 the biggest issue here is if you use `mediump` or `lowp` in your shaders
-then on desktop the GPU will really use `highp` but on mobile they'll actually be
-`mediump` and or `lowp` and so you won't notice any issues when developing on desktop.
+En 2020, le plus grand problème ici est que si vous utilisez `mediump` ou `lowp` dans vos shaders,
+alors sur le bureau le GPU utilisera vraiment `highp`, mais sur mobile ils seront vraiment
+`mediump` et/ou `lowp` et vous ne remarquerez donc aucun problème lors du développement sur le bureau.
 
-See [this article for more details](webgl-precision-issues.html).
+Voir [cet article pour plus de détails](webgl-precision-issues.html).
 
-## Points, Lines, Viewport, Scissor behavior
+## Comportement des points, lignes, viewport, ciseaux
 
-`POINTS` and `LINES` in WebGL can have a max size of 1 and in fact for `LINES`
-that is now the most common limit. Further whether points are clipped when their
-center is outside the viewport is implementation defined. See the bottom of
-[this article](webgl-drawing-without-data.html#pointissues).
+Les `POINTS` et `LINES` dans WebGL peuvent avoir une taille max de 1 et en fait pour les `LINES`,
+c'est maintenant la limite la plus courante. De plus, si les points sont découpés quand leur
+centre est en dehors du viewport est défini par l'implémentation. Voir le bas de
+[cet article](webgl-drawing-without-data.html#pointissues).
 
-Similarly, whether or not the viewport clips vertices only or also pixels is
-undefined. The scissor always clips pixels so turn on the scissor test and set
-the scissor size if you set the viewport smaller than the thing you're drawing
-to and you're drawing LINES or POINTS.
-
+De même, si le viewport découpe seulement les sommets ou aussi les pixels est
+indéfini. Les ciseaux découpent toujours les pixels donc activez le test des ciseaux et définissez
+la taille des ciseaux si vous définissez le viewport plus petit que ce vers quoi vous dessinez
+et que vous dessinez des LINES ou POINTS.

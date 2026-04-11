@@ -1,47 +1,47 @@
-Title: WebGL2 3D - Point Lighting
-Description: How to implement point lighting in WebGL
-TOC: Point Lighting
+Title: WebGL2 3D - Éclairage ponctuel
+Description: Comment implémenter l'éclairage ponctuel dans WebGL
+TOC: Éclairage ponctuel
 
 
-This article is a continuation of [WebGL 3D Directional Lighting](webgl-3d-lighting-directional.html).
-If you haven't read that I suggest [you start there](webgl-3d-lighting-directional.html).
+Cet article est la suite de [WebGL 3D Éclairage directionnel](webgl-3d-lighting-directional.html).
+Si vous ne l'avez pas lu, je vous suggère de [commencer par là](webgl-3d-lighting-directional.html).
 
-In the last article we covered directional lighting where the light is coming
-universally from the same direction. We set that direction before rendering.
+Dans le dernier article, nous avons couvert l'éclairage directionnel où la lumière vient
+uniformément de la même direction. Nous avons défini cette direction avant le rendu.
 
-What if instead of setting the direction for the light we picked a point in 3d space for the light
-and computed the direction from any spot on the surface of our model in our shader?
-That would give us a point light.
+Et si au lieu de définir la direction de la lumière, nous choisissions un point dans l'espace 3D pour la lumière
+et calculions la direction depuis n'importe quel point de la surface de notre modèle dans notre shader ?
+Cela nous donnerait une lumière ponctuelle.
 
 {{{diagram url="resources/point-lighting.html" width="500" height="400" className="noborder" }}}
 
-If you rotate the surface above you'll see how each point on the surface has a different
-*surface to light* vector. Getting the dot product of the surface normal and each individual
-surface to light vector gives us a different value at each point on the surface.
+Si vous faites pivoter la surface ci-dessus, vous verrez comment chaque point de la surface a un
+vecteur *surface vers lumière* différent. Obtenir le produit scalaire de la normale de surface et de chaque
+vecteur surface vers lumière individuel nous donne une valeur différente à chaque point de la surface.
 
-So, let's do that.
+Alors, faisons cela.
 
-First we need the light position
+D'abord, nous avons besoin de la position de la lumière
 
     uniform vec3 u_lightWorldPosition;
 
-And we need a way to compute the world position of the surface. For that we can multiply
-our positions by the world matrix so ...
+Et nous avons besoin d'un moyen de calculer la position world de la surface. Pour cela, nous pouvons multiplier
+nos positions par la matrice world donc...
 
     uniform mat4 u_world;
 
     ...
 
-    // compute the world position of the surface
+    // calculer la position world de la surface
     vec3 surfaceWorldPosition = (u_world * a_position).xyz;
 
-And we can compute a vector from the surface to the light which is similar to the
-direction we had before except this time we're computing it for every position on the
-surface to a point.
+Et nous pouvons calculer un vecteur de la surface vers la lumière, ce qui est similaire à la
+direction que nous avions avant, sauf que cette fois nous le calculons pour chaque position de la
+surface vers un point.
 
     v_surfaceToLight = u_lightPosition - surfaceWorldPosition;
 
-Here's all that in context
+Voilà tout cela en contexte
 
     #version 300 es
 
@@ -58,42 +58,42 @@ Here's all that in context
     +out vec3 v_surfaceToLight;
 
     void main() {
-      // Multiply the position by the matrix.
+      // Multiplier la position par la matrice.
       gl_Position = u_worldViewProjection * a_position;
 
-      // orient the normals and pass to the fragment shader
+      // orienter les normales et les passer au fragment shader
       v_normal = mat3(u_worldInverseTranspose) * a_normal;
 
-    +  // compute the world position of the surface
+    +  // calculer la position world de la surface
     +  vec3 surfaceWorldPosition = (u_world * a_position).xyz;
     +
-    +  // compute the vector of the surface to the light
-    +  // and pass it to the fragment shader
+    +  // calculer le vecteur de la surface vers la lumière
+    +  // et le passer au fragment shader
     +  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
     }
 
-Now in the fragment shader we need to normalize the surface to light vector
-since it's a not a unit vector. Note that we could normalize in the vertex shader
-but because it's a *varying* it will be linearly interpolated between our positions
-and so would not be a complete unit vector
+Maintenant, dans le fragment shader, nous devons normaliser le vecteur surface vers lumière
+car ce n'est pas un vecteur unitaire. Notez que nous pourrions normaliser dans le vertex shader
+mais parce que c'est un *varying*, il sera interpolé linéairement entre nos positions
+et ne serait donc pas un vecteur unitaire complet
 
     #version 300 es
     precision highp float;
 
-    // Passed in from the vertex shader.
+    // Passé depuis le vertex shader.
     in vec3 v_normal;
     +in vec3 v_surfaceToLight;
 
     -uniform vec3 u_reverseLightDirection;
     uniform vec4 u_color;
 
-    // we need to declare an output for the fragment shader
+    // nous devons déclarer une sortie pour le fragment shader
     out vec4 outColor;
 
     void main() {
-      // because v_normal is a varying it's interpolated
-      // so it will not be a unit vector. Normalizing it
-      // will make it a unit vector again
+      // parce que v_normal est un varying il est interpolé
+      // donc ce ne sera pas un vecteur unitaire. La normalisation
+      // en fera à nouveau un vecteur unitaire
       vec3 normal = normalize(v_normal);
 
       vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
@@ -103,13 +103,13 @@ and so would not be a complete unit vector
 
       outColor = u_color;
 
-      // Lets multiply just the color portion (not the alpha)
-      // by the light
+      // Multiplions seulement la partie couleur (pas l'alpha)
+      // par la lumière
       outColor.rgb *= light;
     }
 
 
-Then we need to lookup the locations of `u_world` and `u_lightWorldPosition`
+Ensuite, nous devons rechercher les emplacements de `u_world` et `u_lightWorldPosition`
 
 ```
 -  var reverseLightDirectionLocation =
@@ -120,10 +120,10 @@ Then we need to lookup the locations of `u_world` and `u_lightWorldPosition`
 +      gl.getUniformLocation(program, "u_world");
 ```
 
-and set them
+et les définir
 
 ```
-  // Set the matrices
+  // Définir les matrices
 +  gl.uniformMatrix4fv(
 +      worldLocation, false,
 +      worldMatrix);
@@ -133,43 +133,43 @@ and set them
 
   ...
 
--  // set the light direction.
+-  // définir la direction de la lumière.
 -  gl.uniform3fv(reverseLightDirectionLocation, normalize([0.5, 0.7, 1]));
-+  // set the light position
++  // définir la position de la lumière
 +  gl.uniform3fv(lightWorldPositionLocation, [20, 30, 50]);
 ```
 
-And here it is
+Et voilà le résultat
 
 {{{example url="../webgl-3d-lighting-point.html" }}}
 
-Now that we have a point we can add something called specular highlighting.
+Maintenant que nous avons un point, nous pouvons ajouter ce qu'on appelle la surbrillance spéculaire.
 
-If you look at on object in the real world, if it's remotely shiny then if it happens
-to reflect the light directly at you it's almost like a mirror
+Si vous regardez un objet dans le monde réel, s'il est quelque peu brillant, alors s'il se trouve
+qu'il reflète la lumière directement vers vous, c'est presque comme un miroir
 
 <img class="webgl_center" src="resources/specular-highlights.jpg" />
 
-We can simulate that effect by computing if the light reflects into our eyes. Again the *dot-product*
-comes to the rescue.
+Nous pouvons simuler cet effet en calculant si la lumière se reflète dans nos yeux. Encore une fois, le *produit scalaire*
+vient à la rescousse.
 
-What do we need to check? Well let's think about it. Light reflects at the same angle it hits a surface
-so if the direction of the surface to the light is the exact reflection of the surface to the eye
-then it's at the perfect angle to reflect
+Que devons-nous vérifier ? Eh bien, réfléchissons-y. La lumière se reflète au même angle qu'elle frappe une surface,
+donc si la direction de la surface vers la lumière est le reflet exact de la surface vers l'œil,
+alors elle est à l'angle parfait pour se refléter
 
 {{{diagram url="resources/surface-reflection.html" width="500" height="400" className="noborder" }}}
 
-If we know the direction from the surface of our model to the light (which we do since we just did that).
-And if we know the direction from the surface to view/eye/camera, which we can compute, then we can add
-those 2 vectors and normalize them to get the `halfVector` which is the vector that sits half way between them.
-If the halfVector and the surface normal match then it's the perfect angle to reflect the light into
-the view/eye/camera. And how can we tell when they match? Take the *dot product* just like we did
-before. 1 = they match, same direction, 0 = they're perpendicular, -1 = they're opposite.
+Si nous connaissons la direction depuis la surface de notre modèle vers la lumière (ce qui est le cas puisque nous venons de le faire).
+Et si nous connaissons la direction depuis la surface vers la vue/l'œil/la caméra, que nous pouvons calculer, alors nous pouvons additionner
+ces 2 vecteurs et les normaliser pour obtenir le `halfVector` qui est le vecteur qui se situe à mi-chemin entre eux.
+Si le halfVector et la normale de surface correspondent, c'est l'angle parfait pour refléter la lumière dans
+la vue/l'œil/la caméra. Et comment savoir quand ils correspondent ? Prenez le *produit scalaire* comme nous l'avons fait
+avant. 1 = ils correspondent, même direction, 0 = ils sont perpendiculaires, -1 = ils sont opposés.
 
 {{{diagram url="resources/specular-lighting.html" width="500" height="400" className="noborder" }}}
 
-So first thing is we need to pass in the view/camera/eye position, compute the surface to view vector
-and pass it to the fragment shader.
+Donc d'abord, nous devons passer la position vue/caméra/œil, calculer le vecteur surface vers vue
+et le passer au fragment shader.
 
     #version 300 es
 
@@ -189,30 +189,30 @@ and pass it to the fragment shader.
     +out vec3 v_surfaceToView;
 
     void main() {
-      // Multiply the position by the matrix.
+      // Multiplier la position par la matrice.
       gl_Position = u_worldViewProjection * a_position;
 
-      // orient the normals and pass to the fragment shader
+      // orienter les normales et les passer au fragment shader
       v_normal = mat3(u_worldInverseTranspose) * a_normal;
 
-      // compute the world position of the surface
+      // calculer la position world de la surface
       vec3 surfaceWorldPosition = (u_world * a_position).xyz;
 
-      // compute the vector of the surface to the light
-      // and pass it to the fragment shader
+      // calculer le vecteur de la surface vers la lumière
+      // et le passer au fragment shader
       v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
 
-    +  // compute the vector of the surface to the view/camera
-    +  // and pass it to the fragment shader
+    +  // calculer le vecteur de la surface vers la vue/caméra
+    +  // et le passer au fragment shader
     +  v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition;
     }
 
-Next in the fragment shader we need to compute the `halfVector` between
-the surface to view and surface to light vectors. Then we can take the dot
-product the `halfVector` and the normal to find out if the light is reflecting
-into the view.
+Ensuite, dans le fragment shader, nous devons calculer le `halfVector` entre
+les vecteurs surface vers vue et surface vers lumière. Ensuite, nous pouvons prendre le produit scalaire
+du `halfVector` et de la normale pour savoir si la lumière se reflète
+dans la vue.
 
-    // Passed in from the vertex shader.
+    // Passé depuis le vertex shader.
     in vec3 v_normal;
     in vec3 v_surfaceToLight;
     +in vec3 v_surfaceToView;
@@ -222,9 +222,9 @@ into the view.
     out vec4 outColor;
 
     void main() {
-      // because v_normal is a varying it's interpolated
-      // so it will not be a unit vector. Normalizing it
-      // will make it a unit vector again
+      // parce que v_normal est un varying il est interpolé
+      // donc ce ne sera pas un vecteur unitaire. La normalisation
+      // en fera à nouveau un vecteur unitaire
       vec3 normal = normalize(v_normal);
 
     +  vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
@@ -236,15 +236,15 @@ into the view.
 
       outColor = u_color;
 
-      // Lets multiply just the color portion (not the alpha)
-      // by the light
+      // Multiplions seulement la partie couleur (pas l'alpha)
+      // par la lumière
       outColor.rgb *= light;
 
-    +  // Just add in the specular
+    +  // Ajoutons simplement la spéculaire
     +  outColor.rgb += specular;
     }
 
-Finally we have to look up `u_viewWorldPosition` and set it
+Enfin, nous devons rechercher `u_viewWorldPosition` et le définir
 
     var lightWorldPositionLocation =
         gl.getUniformLocation(program, "u_lightWorldPosition");
@@ -253,7 +253,7 @@ Finally we have to look up `u_viewWorldPosition` and set it
 
     ...
 
-    // Compute the camera's matrix
+    // Calculer la matrice de la caméra
     var camera = [100, 150, 200];
     var target = [0, 35, 0];
     var up = [0, 1, 0];
@@ -261,26 +261,26 @@ Finally we have to look up `u_viewWorldPosition` and set it
 
     ...
 
-    +// set the camera/view position
+    +// définir la position de la caméra/vue
     +gl.uniform3fv(viewWorldPositionLocation, camera);
 
 
-And here's that
+Et voilà le résultat
 
 {{{example url="../webgl-3d-lighting-point-specular.html" }}}
 
-**DANG THAT'S BRIGHT!**
+**WOW C'EST BRILLANT !**
 
-We can fix the brightness by raising the dot-product result to a power. This will scrunch up
-the specular highlight from a linear falloff to an exponential falloff.
+Nous pouvons corriger la luminosité en élevant le résultat du produit scalaire à une puissance. Cela va réduire
+la surbrillance spéculaire d'une diminution linéaire à une diminution exponentielle.
 
 {{{diagram url="resources/power-graph.html" width="300" height="300" className="noborder" }}}
 
-The closer the red line is to the top of the graph the brighter our specular addition
-will be. By raising the power it scrunches the range where it goes bright to the
-right.
+Plus la ligne rouge est proche du haut du graphique, plus notre ajout spéculaire
+sera brillant. En augmentant la puissance, cela réduit la plage où elle devient brillante
+vers la droite.
 
-Let's call that `shininess` and add it to our shader.
+Appelons cela `shininess` (brillance) et ajoutons-le à notre shader.
 
     uniform vec4 u_color;
     +uniform float u_shininess;
@@ -293,26 +293,26 @@ Let's call that `shininess` and add it to our shader.
     +    specular = pow(dot(normal, halfVector), u_shininess);
     +  }
 
-The dot product can go negative. Taking a negative number to a power is undefined in WebGL
-which would be bad. So, if the dot product would possibly be negative then we just leave specular at 0.0.
+Le produit scalaire peut devenir négatif. Élever un nombre négatif à une puissance est indéfini dans WebGL,
+ce qui serait problématique. Donc, si le produit scalaire pourrait être négatif, nous laissons simplement specular à 0.0.
 
-Of course we need to look up the location and set it
+Bien sûr, nous devons rechercher l'emplacement et le définir
 
     +var shininessLocation = gl.getUniformLocation(program, "u_shininess");
 
     ...
 
-    // set the shininess
+    // définir la brillance
     gl.uniform1f(shininessLocation, shininess);
 
-And here's that
+Et voilà le résultat
 
 {{{example url="../webgl-3d-lighting-point-specular-power.html" }}}
 
-The final thing I want to go over in this article is light colors.
+La dernière chose que je veux aborder dans cet article est les couleurs de lumière.
 
-Up to this point we've been using `light` to multiply the color we're passing in for the
-F. We could provide a light color as well if wanted colored lights
+Jusqu'à présent, nous avons utilisé `light` pour multiplier la couleur que nous passons pour le
+F. Nous pourrions également fournir une couleur de lumière si nous voulons des lumières colorées
 
     uniform vec4 u_color;
     uniform float u_shininess;
@@ -321,55 +321,54 @@ F. We could provide a light color as well if wanted colored lights
 
     ...
 
-      // Lets multiply just the color portion (not the alpha)
-      // by the light
+      // Multiplions seulement la partie couleur (pas l'alpha)
+      // par la lumière
     *  outColor.rgb *= light * u_lightColor;
 
-      // Just add in the specular
+      // Ajoutons simplement la spéculaire
     *  outColor.rgb += specular * u_specularColor;
     }
 
-and of course
+et bien sûr
 
     +  var lightColorLocation =
     +      gl.getUniformLocation(program, "u_lightColor");
     +  var specularColorLocation =
     +      gl.getUniformLocation(program, "u_specularColor");
 
-and
+et
 
-    +  // set the light color
-    +  gl.uniform3fv(lightColorLocation, normalize([1, 0.6, 0.6]));  // red light
-    +  // set the specular color
-    +  gl.uniform3fv(specularColorLocation, normalize([1, 0.2, 0.2]));  // red light
+    +  // définir la couleur de la lumière
+    +  gl.uniform3fv(lightColorLocation, normalize([1, 0.6, 0.6]));  // lumière rouge
+    +  // définir la couleur spéculaire
+    +  gl.uniform3fv(specularColorLocation, normalize([1, 0.2, 0.2]));  // lumière rouge
 
 {{{example url="../webgl-3d-lighting-point-color.html" }}}
 
-Coming up next [spot lighting](webgl-3d-lighting-spot.html).
+La suite : [l'éclairage spot](webgl-3d-lighting-spot.html).
 
 <div class="webgl_bottombar">
-<h3>Why is <code>pow(negative, power)</code> undefined?</h3>
-<p>What does this mean?</p>
+<h3>Pourquoi <code>pow(négatif, puissance)</code> est-il indéfini ?</h3>
+<p>Que signifie cela ?</p>
 <div class="webgl_center"><pre class="glocal-center-content">pow(5, 2)</pre></div>
-<p>Well you can look at it as</p>
+<p>Eh bien vous pouvez le voir comme</p>
 <div class="webgl_center"><pre class="glocal-center-content">5 * 5 = 25</pre></div>
-<p>What about</p>
+<p>Et</p>
 <div class="webgl_center"><pre class="glocal-center-content">pow(5, 3)</pre></div>
-<p>Well you can look at that as</p>
+<p>Eh bien vous pouvez voir cela comme</p>
 <div class="webgl_center"><pre class="glocal-center-content">5 * 5 * 5 = 125</pre></div>
-<p>Ok, how about</p>
+<p>Ok, et</p>
 <div class="webgl_center"><pre class="glocal-center-content">pow(-5, 2)</pre></div>
-<p>Well that could be</p>
+<p>Eh bien cela pourrait être</p>
 <div class="webgl_center"><pre class="glocal-center-content">-5 * -5 = 25</pre></div>
-<p>And</p>
+<p>Et</p>
 <div class="webgl_center"><pre class="glocal-center-content">pow(-5, 3)</pre></div>
-<p>Well you can look at as</p>
+<p>Eh bien vous pouvez le voir comme</p>
 <div class="webgl_center"><pre class="glocal-center-content">-5 * -5 * -5 = -125</pre></div>
-<p>As you know multiplying a negative by a negative makes a positive. Multiplying by a negative
-again makes it negative.</p>
-<p>Well then what does this mean?</p>
+<p>Comme vous le savez, multiplier un négatif par un négatif donne un positif. Multiplier à nouveau par un négatif
+le rend négatif.</p>
+<p>Alors que signifie cela ?</p>
 <div class="webgl_center"><pre class="glocal-center-content">pow(-5, 2.5)</pre></div>
-<p>How do you decide which is the result of that positive or negative? That's
-the land of <a href="https://betterexplained.com/articles/a-visual-intuitive-guide-to-imaginary-numbers/">imaginary numbers</a>.</p>
+<p>Comment décidez-vous si le résultat est positif ou négatif ? C'est
+le domaine des <a href="https://betterexplained.com/articles/a-visual-intuitive-guide-to-imaginary-numbers/">nombres imaginaires</a>.</p>
 </div>
-

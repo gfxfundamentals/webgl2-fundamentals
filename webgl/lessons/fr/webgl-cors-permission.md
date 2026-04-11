@@ -1,26 +1,26 @@
-Title: WebGL2 - Cross Origin Images
-Description: Using images across domains
-TOC: Cross Origin Images
+Title: WebGL2 - Images Cross Origin
+Description: Utiliser des images de domaines différents
+TOC: Images Cross Origin
 
 
-This article is one in a series of articles about WebGL. If you haven't read
-them I suggest you [start with an earlier lesson](webgl-fundamentals.html).
+Cet article fait partie d'une série d'articles sur WebGL. Si vous ne les avez pas lus,
+je vous suggère de [commencer par une leçon précédente](webgl-fundamentals.html).
 
-In WebGL it's common to download images and then upload them to the GPU to be
-used as textures. There's been several samples here that do this. For
-example the article about [image processing](webgl-image-processing.html), the
-article about [textures](webgl-3d-textures.html) and the article about
-[implementing 2d drawImage](webgl-2d-drawimage.html).
+Dans WebGL, il est courant de télécharger des images puis de les téléverser vers le GPU pour les
+utiliser comme textures. Il y a plusieurs exemples ici qui font ça. Par
+exemple, l'article sur [le traitement d'images](webgl-image-processing.html), l'
+article sur [les textures](webgl-3d-textures.html) et l'article sur
+[l'implémentation de drawImage 2D](webgl-2d-drawimage.html).
 
-Typically we download an image something like this
+Généralement, nous téléchargeons une image comme ça
 
-    // creates a texture info { width: w, height: h, texture: tex }
-    // The texture will start with 1x1 pixels and be updated
-    // when the image has loaded
+    // crée une info de texture { width: w, height: h, texture: tex }
+    // La texture commencera avec des pixels 1x1 et sera mise à jour
+    // quand l'image sera chargée
     function loadImageAndCreateTextureInfo(url) {
       var tex = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, tex);
-      // Fill the texture with a 1x1 blue pixel.
+      // Remplir la texture avec un pixel bleu 1x1.
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
                     new Uint8Array([0, 0, 255, 255]));
 
@@ -28,7 +28,7 @@ Typically we download an image something like this
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
       var textureInfo = {
-        width: 1,   // we don't know the size until it loads
+        width: 1,   // on ne connaît pas la taille jusqu'à ce qu'elle soit chargée
         height: 1,
         texture: tex,
       };
@@ -46,61 +46,61 @@ Typically we download an image something like this
       return textureInfo;
     }
 
-The problem is images might have private data in them (for example a captcha, a signature, a naked picture, ...).
-A webpage often has ads and other things not in direct control of the page and so the browser needs to prevent
-those things from looking at the contents of these private images.
+Le problème est que les images peuvent contenir des données privées (par exemple, un captcha, une signature, une photo intime, ...).
+Une page web contient souvent des publicités et d'autres choses pas directement sous le contrôle de la page, donc le navigateur doit empêcher
+ces choses de regarder le contenu de ces images privées.
 
-Just using `<img src="private.jpg">` is not a problem because although the image will get displayed by
-the browser a script can not see the data inside the image. [The Canvas2D API](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D)
-has a way to see inside the image. First you draw the image into the canvas
+Utiliser simplement `<img src="private.jpg">` n'est pas un problème car bien que l'image soit affichée par
+le navigateur, un script ne peut pas voir les données à l'intérieur de l'image. [L'API Canvas2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D)
+a un moyen de voir à l'intérieur de l'image. D'abord, vous dessinez l'image dans le canvas
 
     ctx.drawImage(someImg, 0, 0);
 
-Then you get the data
+Puis vous obtenez les données
 
     var data = ctx.getImageData(0, 0, width, height);
 
-But, if the image you drew came from a different domain the browser will mark the canvas as *tainted* and
-you'll get a security error when you call `ctx.getImageData`
+Mais, si l'image que vous avez dessinée vient d'un domaine différent, le navigateur marquera le canvas comme *souillé* et
+vous obtiendrez une erreur de sécurité quand vous appelez `ctx.getImageData`
 
-WebGL has to take it even one step further. In WebGL `gl.readPixels` is the equivalent call to `ctx.getImageData`
-so you'd think maybe just blocking that would be enough but it turns out even if you can't read the pixels
-directly you can make shaders that take longer to run based on the colors in the image. Using that information
-you can use timing to effectively look inside the image indirectly and find out its contents.
+WebGL doit aller encore plus loin. Dans WebGL, `gl.readPixels` est l'appel équivalent à `ctx.getImageData`
+donc on pourrait penser que bloquer ça suffirait, mais il s'avère que même si vous ne pouvez pas lire les pixels
+directement, vous pouvez créer des shaders qui prennent plus de temps à s'exécuter en fonction des couleurs de l'image. En utilisant cette information,
+vous pouvez utiliser la mesure du temps pour effectivement regarder à l'intérieur de l'image indirectement et découvrir son contenu.
 
-So, WebGL just bans all images that are not from the same domain. For example here's a short sample
-that draws a rotating rectangle with a texture from another domain.
-Notice the texture never loads and we get an error
+Donc, WebGL interdit simplement toutes les images qui ne viennent pas du même domaine. Par exemple, voici un court exemple
+qui dessine un rectangle rotatif avec une texture d'un autre domaine.
+Remarquez que la texture ne se charge jamais et nous obtenons une erreur
 
 {{{example url="../webgl-cors-permission-bad.html" }}}
 
-How do we work around this?
+Comment contourner ce problème ?
 
-## Enter CORS
+## Entrez CORS
 
-CORS = Cross Origin Resource Sharing. It's a way for the webpage to ask the image server for permission
-to use the image.
+CORS = Cross Origin Resource Sharing (Partage de ressources d'origines différentes). C'est un moyen pour la page web de demander au serveur d'images la permission
+d'utiliser l'image.
 
-To do this we set the `crossOrigin` attribute to something and then when the browser tries to get the
-image from the server, if it's not the same domain, the browser will ask for CORS permission.
+Pour ce faire, nous définissons l'attribut `crossOrigin` à quelque chose, et ensuite quand le navigateur essaie d'obtenir
+l'image du serveur, si ce n'est pas le même domaine, le navigateur demandera la permission CORS.
 
 
     ...
-    +    img.crossOrigin = "";   // ask for CORS permission
+    +    img.crossOrigin = "";   // demander la permission CORS
         img.src = url;
 
-The string you set `crossOrigin` to is sent to the server. The server can look at that string and decide
-whether or not to give you permission. Most servers that support CORS don't look at the string, they just
-give permission to everyone. This is why setting it to the empty string works. All it means in this case
-is "ask permission" vs say `img.crossOrigin = "bob"` would mean "ask permission for 'bob'".
+La chaîne que vous définissez à `crossOrigin` est envoyée au serveur. Le serveur peut regarder cette chaîne et décider
+si oui ou non vous accorder la permission. La plupart des serveurs qui supportent CORS ne regardent pas la chaîne, ils
+accordent simplement la permission à tout le monde. C'est pourquoi la définir à la chaîne vide fonctionne. Tout ce que ça signifie dans ce cas
+est "demander la permission" par opposition à `img.crossOrigin = "bob"` qui signifierait "demander la permission pour 'bob'".
 
-Why don't we just always see that permission? Because asking for permission takes 2 HTTP requests so it's
-slower than not asking. If we know we're on the same domain or we know we won't use the image for anything
-except img tags and or canvas2d then we don't want to set `crossOrigin` because it
-will make things slower.
+Pourquoi ne demandons-nous pas toujours cette permission ? Parce que demander la permission prend 2 requêtes HTTP, donc c'est
+plus lent que de ne pas demander. Si nous savons que nous sommes sur le même domaine ou si nous savons que nous n'utiliserons l'image que pour
+des balises img et/ou canvas2d, alors nous ne voulons pas définir `crossOrigin` car cela
+rendra les choses plus lentes.
 
-We can make a function that checks if the image we're trying to load is on the same origin and if it is not,
-sets the `crossOrigin` attribute.
+Nous pouvons créer une fonction qui vérifie si l'image que nous essayons de charger est sur la même origine, et si ce n'est pas le cas,
+définit l'attribut `crossOrigin`.
 
     function requestCORSIfNotSameOrigin(img, url) {
       if ((new URL(url, window.location.href)).origin !== window.location.origin) {
@@ -108,7 +108,7 @@ sets the `crossOrigin` attribute.
       }
     }
 
-And we can use it like this
+Et on peut l'utiliser comme ça
 
     ...
     +requestCORSIfNotSameOrigin(img, url);
@@ -117,19 +117,18 @@ And we can use it like this
 
 {{{example url="../webgl-cors-permission-good.html" }}}
 
-It's important to note asking for permission does NOT mean you'll be granted permission.
-That is up to the server. Github pages give permission, flickr.com gives permission,
-imgur.com gives permission, but most websites do not.
+Il est important de noter que demander la permission ne signifie PAS que vous obtiendrez la permission.
+Cela dépend du serveur. Les pages GitHub accordent la permission, flickr.com accorde la permission,
+imgur.com accorde la permission, mais la plupart des sites web n'accordent pas la permission.
 
 <div class="webgl_bottombar">
-<h3>Making Apache grant CORS permission</h3>
-<p>If you're running a website with apache and you have the mod_rewrite plugin installed
-you can grant blanket CORS support by putting</p>
+<h3>Faire accorder la permission CORS à Apache</h3>
+<p>Si vous gérez un site web avec Apache et que vous avez le plugin mod_rewrite installé,
+vous pouvez accorder le support CORS général en mettant</p>
 <pre class="prettyprint">
     Header set Access-Control-Allow-Origin "*"
 </pre>
 <p>
-In the appropriate <code>.htaccess</code> file.
+Dans le fichier <code>.htaccess</code> approprié.
 </p>
 </div>
-

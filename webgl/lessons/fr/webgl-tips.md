@@ -1,27 +1,27 @@
-Title: WebGL2 Tips
-Description: Small issues that might trip you up with WebGL
+Title: WebGL2 Conseils
+Description: Petits problèmes qui pourraient vous faire trébucher avec WebGL
 TOC: #
 
-This article is a collection of small issues you might run into
-using WebGL that seemed too small to have their own article.
+Cet article est une collection de petits problèmes que vous pourriez rencontrer
+en utilisant WebGL et qui semblaient trop petits pour avoir leur propre article.
 
 ---
 
-<a id="screenshot" data-toc="Taking a screenshot"></a>
+<a id="screenshot" data-toc="Prendre une capture d'écran"></a>
 
-# Taking A Screenshot of the Canvas
+# Prendre une capture d'écran du canvas
 
-In the browser there are effectively 2 functions that will take a screenshot.
-The old one 
+Dans le navigateur, il y a effectivement 2 fonctions qui prendront une capture d'écran.
+L'ancienne
 [`canvas.toDataURL`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL)
-and the new better one 
+et la nouvelle meilleure
 [`canvas.toBlob`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob)
 
-So you'd think it would be easy to take a screenshot by just adding some code like
+Donc vous penseriez qu'il serait facile de prendre une capture d'écran juste en ajoutant du code comme
 
 ```html
 <canvas id="c"></canvas>
-+<button id="screenshot" type="button">Save...</button>
++<button id="screenshot" type="button">Sauvegarder...</button>
 ```
 
 ```js
@@ -45,29 +45,29 @@ const saveBlob = (function() {
 }());
 ```
 
-Here's the example from [the article on animation](webgl-animation.html)
-with the code above added and some CSS to place the button
+Voici l'exemple de [l'article sur l'animation](webgl-animation.html)
+avec le code ci-dessus ajouté et un peu de CSS pour placer le bouton
 
 {{{example url="../webgl-tips-screenshot-bad.html"}}}
 
-When I tried it I got this screenshot
+Quand j'ai essayé, j'ai obtenu cette capture d'écran
 
 <div class="webgl_center"><img src="resources/screencapture-398x298.png"></div>
 
-Yes, it's just a blank image.
+Oui, c'est juste une image vide.
 
-It's possible it worked for you depending on your browser/OS but in general
-it's not likely to work.
+Il est possible que cela ait fonctionné pour vous selon votre navigateur/OS, mais en général
+c'est peu probable de fonctionner.
 
-The issue is that for performance and compatibility reasons, by default the browser
-will clear a WebGL canvas's drawing buffer after you've drawn to it.
+Le problème est que pour des raisons de performance et de compatibilité, par défaut le navigateur
+va effacer le drawing buffer d'un canvas WebGL après que vous y avez dessiné.
 
-There are 3 solutions.
+Il y a 3 solutions.
 
-1.  call your rendering code just before capturing
+1.  appeler votre code de rendu juste avant la capture
 
-    The code we used as a `drawScene` function. It would be best to make that
-    code not change any state and then we could call it to render for capturing.
+    Le code que nous avons utilisé comme fonction `drawScene`. Il serait préférable de faire en sorte que ce
+    code ne change aucun état, puis nous pourrions l'appeler pour rendre avant la capture.
 
     ```js
     elem.addEventListener('click', () => {
@@ -78,10 +78,10 @@ There are 3 solutions.
     });
     ```
 
-2.  call the capturing code in our render loop
+2.  appeler le code de capture dans notre boucle de rendu
 
-    In this case we'd just set a flag that we want to capture and then
-    in the rendering loop actually do the capture
+    Dans ce cas, nous définirions juste un indicateur que nous voulons capturer, puis
+    dans la boucle de rendu faire réellement la capture
 
     ```js
     let needCapture = false;
@@ -90,8 +90,8 @@ There are 3 solutions.
     });
     ```
 
-    and then in our render loop, which is current implemented in `drawScene`,
-    somewhere after everything has been drawn
+    et ensuite dans notre boucle de rendu, qui est actuellement implémentée dans `drawScene`,
+    quelque part après que tout a été dessiné
 
     ```js
     function drawScene(time) {
@@ -108,17 +108,17 @@ There are 3 solutions.
     }
     ```
 
-3. Set `preserveDrawingBuffer: true` when creating the WebGL context
+3. Définir `preserveDrawingBuffer: true` lors de la création du contexte WebGL
 
     ```js
     const gl = someCanvas.getContext('webgl2', {preserveDrawingBuffer: true});
     ```
 
-    This makes webgl not clear the canvas after compositing the canvas with the
-    rest of the page but prevents certain *possible* optimizations.
+    Cela fait que WebGL n'efface pas le canvas après avoir composité le canvas avec le
+    reste de la page, mais empêche certaines optimisations *possibles*.
 
-I'd pick #1 above. For this particular example first I'd separate the parts of
-the code that update state from the parts that draw.
+Je choisirais le #1 ci-dessus. Pour cet exemple particulier, je séparerais d'abord les parties du
+code qui mettent à jour l'état des parties qui dessinent.
 
 ```js
   var then = 0;
@@ -127,45 +127,45 @@ the code that update state from the parts that draw.
 +  requestAnimationFrame(renderLoop);
 
 +  function renderLoop(now) {
-+    // Convert to seconds
++    // Convertir en secondes
 +    now *= 0.001;
-+    // Subtract the previous time from the current time
++    // Soustraire le temps précédent du temps actuel
 +    var deltaTime = now - then;
-+    // Remember the current time for the next frame.
++    // Mémoriser le temps actuel pour la prochaine frame.
 +    then = now;
 +
-+    // Every frame increase the rotation a little.
++    // À chaque frame, augmenter un peu la rotation.
 +    rotation[1] += rotationSpeed * deltaTime;
 +
 +    drawScene();
 +
-+    // Call renderLoop again next frame
++    // Appeler renderLoop à nouveau la prochaine frame
 +    requestAnimationFrame(renderLoop);
 +  }
 
-  // Draw the scene.
+  // Dessiner la scène.
 +  function drawScene() {
 - function drawScene(now) {
--    // Convert to seconds
+-    // Convertir en secondes
 -    now *= 0.001;
--    // Subtract the previous time from the current time
+-    // Soustraire le temps précédent du temps actuel
 -    var deltaTime = now - then;
--    // Remember the current time for the next frame.
+-    // Mémoriser le temps actuel pour la prochaine frame.
 -    then = now;
 -
--    // Every frame increase the rotation a little.
+-    // À chaque frame, augmenter un peu la rotation.
 -    rotation[1] += rotationSpeed * deltaTime;
 
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
     ...
 
--    // Call drawScene again next frame
+-    // Appeler drawScene à nouveau la prochaine frame
 -    requestAnimationFrame(drawScene);
   }
 ```
 
-and now we can just call `drawScene` before capturing
+et maintenant nous pouvons juste appeler `drawScene` avant la capture
 
 ```js
 elem.addEventListener('click', () => {
@@ -176,25 +176,25 @@ elem.addEventListener('click', () => {
 });
 ```
 
-And now it should work.
+Et maintenant ça devrait fonctionner.
 
 {{{example url="../webgl-tips-screenshot-good.html" }}}
 
-If you actually check the captured image you'll see the background is transparent.
-See [this article](webgl-and-alpha.html) for a few details.
+Si vous vérifiez l'image capturée, vous verrez que le fond est transparent.
+Voir [cet article](webgl-and-alpha.html) pour quelques détails.
 
 ---
 
-<a id="preservedrawingbuffer" data-toc="Prevent the Canvas Being Cleared"></a>
+<a id="preservedrawingbuffer" data-toc="Empêcher l'effacement du canvas"></a>
 
-# Preventing the canvas being cleared
+# Empêcher l'effacement du canvas
 
-Let's say you wanted to let the user paint with an animated
-object. You need to pass in `preserveDrawingBuffer: true` when
-you create the webgl context. This prevents the browser from
-clearing the canvas. 
+Disons que vous vouliez laisser l'utilisateur peindre avec un objet animé.
+Vous devez passer `preserveDrawingBuffer: true` quand
+vous créez le contexte WebGL. Cela empêche le navigateur
+d'effacer le canvas.
 
-Taking the last example from [the article on animation](webgl-animation.html)
+En prenant le dernier exemple de [l'article sur l'animation](webgl-animation.html)
 
 ```js
 var canvas = document.querySelector("#canvas");
@@ -202,47 +202,47 @@ var canvas = document.querySelector("#canvas");
 +var gl = canvas.getContext("webgl2", {preserveDrawingBuffer: true});
 ```
 
-and change the call to `gl.clear` so it only clears the depth buffer
+et changer l'appel à `gl.clear` pour qu'il n'efface que le depth buffer
 
 ```
--// Clear the canvas.
+-// Effacer le canvas.
 -gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-+// Clear the depth buffer.
++// Effacer le depth buffer.
 +gl.clear(gl.DEPTH_BUFFER_BIT);
 ```
 
 {{{example url="../webgl-tips-preservedrawingbuffer.html" }}}
 
-Note that if you were serious about making a drawing program this would not be a
-solution as the browser will still clear the canvas anytime we change its
-resolution. We're changing is resolution based on its display size. Its display
-size changes when the window changes size. That can include when the user downloads
-a file, even in another tab, and the browser adds a status bar. It also includes when
-the user turns their phone and the browser switches from portrait to landscape.
+Notez que si vous étiez sérieux dans la création d'un programme de dessin, ce ne serait pas une
+solution car le navigateur effacera quand même le canvas chaque fois que nous changeons sa
+résolution. Nous changeons sa résolution en fonction de sa taille d'affichage. Sa taille d'affichage
+change quand la taille de la fenêtre change. Cela peut inclure quand l'utilisateur télécharge
+un fichier, même dans un autre onglet, et que le navigateur ajoute une barre d'état. Cela inclut aussi quand
+l'utilisateur retourne son téléphone et que le navigateur passe du portrait au paysage.
 
-If you really wanted to make a drawing program you'd
-[render to a texture](webgl-render-to-texture.html).
+Si vous vouliez vraiment créer un programme de dessin, vous rendriez
+[vers une texture](webgl-render-to-texture.html).
 
 ---
 
-<a id="tabindex" data-toc="Get Keyboard Input From a Canvas"></a>
+<a id="tabindex" data-toc="Obtenir des entrées clavier depuis un canvas"></a>
 
-# Getting Keyboard Input
+# Obtenir des entrées clavier
 
-If you're making a full page / full screen webgl app then you can do whatever
-you want but often you'd like some canvas to just be a part of a larger page and
-you'd like it so if the user clicks on the canvas the canvas gets keyboard input.
-A canvas can't normally get keyboard input though. To fix that set the
+Si vous faites une application WebGL pleine page / plein écran, vous pouvez faire
+ce que vous voulez, mais souvent vous voudriez qu'un canvas ne soit qu'une partie d'une page plus grande et
+vous voudriez que si l'utilisateur clique sur le canvas, le canvas reçoive des entrées clavier.
+Un canvas ne peut normalement pas recevoir d'entrées clavier. Pour corriger ça, définissez le
 [`tabindex`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/tabIndex)
-of the canvas to 0 or more. Eg.
+du canvas à 0 ou plus. Par exemple :
 
 ```html
 <canvas tabindex="0"></canvas>
 ```
 
-This ends up causing a new issue though. Anything that has a `tabindex` set
-will get highlighted when it has the focus. To fix that set its focus CSS outline
-to none
+Cela finit par causer un nouveau problème. Tout ce qui a un `tabindex` défini
+sera mis en surbrillance quand il a le focus. Pour corriger ça, définissez son contour CSS de focus
+à none
 
 ```css
 canvas:focus {
@@ -250,7 +250,7 @@ canvas:focus {
 }
 ```
 
-To demonstrate here are 3 canvases 
+Pour illustrer, voici 3 canvases
 
 ```html
 <canvas id="c1"></canvas>
@@ -258,7 +258,7 @@ To demonstrate here are 3 canvases
 <canvas id="c3" tabindex="1"></canvas>
 ```
 
-and some css just for the last canvas 
+et un peu de CSS juste pour le dernier canvas
 
 ```css
 #c3:focus {
@@ -266,7 +266,7 @@ and some css just for the last canvas
 }
 ```
 
-Let's attach the same event listeners to all of them
+Attachons les mêmes écouteurs d'événements à tous
 
 ```js
 document.querySelectorAll('canvas').forEach((canvas) => {
@@ -281,11 +281,11 @@ document.querySelectorAll('canvas').forEach((canvas) => {
   draw(canvas.id);
 
   canvas.addEventListener('focus', () => {
-    draw('has focus press a key');
+    draw('a le focus, appuyez sur une touche');
   });
 
   canvas.addEventListener('blur', () => {
-    draw('lost focus');
+    draw('perdu le focus');
   });
 
   canvas.addEventListener('keydown', (e) => {
@@ -294,24 +294,24 @@ document.querySelectorAll('canvas').forEach((canvas) => {
 });
 ```
 
-Notice you can't get the first canvas to accept keyboard input.
-The second canvas you can but it gets highlighted. The 3rd
-canvas has both solutions applied.
+Remarquez que vous ne pouvez pas faire accepter des entrées clavier au premier canvas.
+Le deuxième canvas vous le pouvez mais il est mis en surbrillance. Le 3ème
+canvas a les deux solutions appliquées.
 
 {{{example url="../webgl-tips-tabindex.html"}}}
 
 ---
 
-<a id="html-background" data-toc="Use WebGL2 as Background in HTML"></a>
+<a id="html-background" data-toc="Utiliser WebGL2 comme arrière-plan en HTML"></a>
 
-# Making your background a WebGL animation
+# Faire de votre arrière-plan une animation WebGL
 
-A common question is how to make a WebGL animation be the background of
-a webpage.
+Une question courante est comment faire d'une animation WebGL l'arrière-plan d'une
+page web.
 
-There are 2 obvious ways.
+Il y a 2 façons évidentes.
 
-* Set the canvas CSS `position` to `fixed` as in
+* Définir la `position` CSS du canvas à `fixed` comme dans
 
 ```css
 #canvas {
@@ -323,29 +323,29 @@ There are 2 obvious ways.
 }
 ```
 
-and set `z-index` to -1.
+et définir `z-index` à -1.
 
-A small disadvantage to this solution is your JavaScript must integrate with the page
-and if you have a complex page then you need to make sure none of the JavaScript in your
-webgl code conflicts with the JavaScript doing other things in the page.
+Un petit inconvénient de cette solution est que votre JavaScript doit s'intégrer avec la page
+et si vous avez une page complexe, vous devez vous assurer qu'aucun JavaScript de votre
+code WebGL n'entre en conflit avec le JavaScript faisant d'autres choses dans la page.
 
-* Use an `iframe`
+* Utiliser un `iframe`
 
-This is the solution used on [the front page of this site](/).
+C'est la solution utilisée sur [la page d'accueil de ce site](/).
 
-In your webpage just insert an iframe, for example
+Dans votre page web, insérez simplement un iframe, par exemple
 
 ```html
 <iframe id="background" src="background.html"></iframe>
 <div>
-  Your content goes here.
+  Votre contenu va ici.
 </div>
 ```
 
-Then style the iframe to fill the window and be in the background
-which is basically the same code as we used above for the canvas
-except we also need to set `border` to `none` since iframes have
-a border by default.
+Ensuite, stylez l'iframe pour remplir la fenêtre et être en arrière-plan,
+ce qui est fondamentalement le même code que nous avons utilisé ci-dessus pour le canvas
+sauf que nous devons aussi définir `border` à `none` car les iframes ont
+une bordure par défaut.
 
 ```css
 #background {

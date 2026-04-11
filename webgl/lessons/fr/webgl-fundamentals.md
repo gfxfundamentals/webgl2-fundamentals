@@ -1,100 +1,100 @@
-Title: WebGL2 Fundamentals
-Description: Your first WebGL2 lesson starting with the fundamentals
-TOC: Fundamentals
+Title: WebGL2 - Les bases
+Description: Votre première leçon WebGL2 en commençant par les fondamentaux
+TOC: Les bases
 
 
-First things first, these articles are about WebGL2. If you're interested in WebGL 1.0
-[please go here](https://webglfundamentals.org). Note that WebGL2 is [nearly 100% backward
-compatible with WebGL 1](webgl1-to-webgl2.html). That said, once you enable
-WebGL2 you might as well use it as it was meant to be used. These tutorials follow
-that path.
+Avant tout, ces articles parlent de WebGL2. Si vous êtes intéressé par WebGL 1.0,
+[rendez-vous ici](https://webglfundamentals.org). Notez que WebGL2 est [presque 100% rétrocompatible
+avec WebGL 1](webgl1-to-webgl2.html). Cela dit, une fois que vous activez
+WebGL2, autant l'utiliser comme il a été conçu pour être utilisé. Ces tutoriels suivent
+cette voie.
 
-WebGL is often thought of as a 3D API. People think "I'll use WebGL and *magic* I'll get cool 3d".
-In reality WebGL is just a rasterization engine. It draws [points, lines, and triangles](webgl-points-lines-triangles.html) based
-on code you supply. Getting WebGL to do anything else is up to you to provide code to use points, lines,
-and triangles to accomplish your task.
+WebGL est souvent considéré comme une API 3D. Les gens pensent « Je vais utiliser WebGL et *comme par magie* j'aurai de la 3D sympa ».
+En réalité, WebGL est simplement un moteur de rastérisation. Il dessine des [points, des lignes et des triangles](webgl-points-lines-triangles.html)
+à partir du code que vous fournissez. Tout ce que vous voulez faire d'autre avec WebGL dépend de vous :
+vous devez écrire du code utilisant des points, des lignes et des triangles pour accomplir votre tâche.
 
-WebGL runs on the GPU on your computer. As such you need to provide the code that runs on that GPU.
-You provide that code in the form of pairs of functions. Those 2 functions are called a vertex shader
-and a fragment shader and they are each written in a very strictly typed C/C++ like language called
-[GLSL](webgl-shaders-and-glsl.html). (GL Shader Language). Paired together they are called a *program*.
+WebGL s'exécute sur le GPU de votre ordinateur. Vous devez donc fournir le code qui s'exécute sur ce GPU.
+Vous fournissez ce code sous la forme de paires de fonctions. Ces 2 fonctions sont appelées un vertex shader
+et un fragment shader, et chacune est écrite dans un langage fortement typé de style C/C++ appelé
+[GLSL](webgl-shaders-and-glsl.html). (GL Shader Language). Associées ensemble, elles forment un *programme*.
 
-A vertex shader's job is to compute vertex positions. Based on the positions the function outputs
-WebGL can then rasterize various kinds of primitives including [points, lines, or triangles](webgl-points-lines-triangles.html).
-When rasterizing these primitives it calls a second user supplied function called a fragment shader.
-A fragment shader's job is to compute a color for each pixel of the primitive currently being drawn.
+Le rôle d'un vertex shader est de calculer les positions des sommets. À partir des positions que la fonction retourne,
+WebGL peut ensuite rastériser divers types de primitives, notamment des [points, des lignes ou des triangles](webgl-points-lines-triangles.html).
+Lors de la rastérisation de ces primitives, il appelle une deuxième fonction fournie par l'utilisateur appelée fragment shader.
+Le rôle du fragment shader est de calculer une couleur pour chaque pixel de la primitive en cours de dessin.
 
-Nearly all of the entire WebGL API is about [setting up state](resources/webgl-state-diagram.html) for these pairs of functions to run.
-For each thing you want to draw you setup a bunch of state then execute a pair of functions by calling
-`gl.drawArrays` or `gl.drawElements` which executes your shaders on the GPU.
+La quasi-totalité de l'API WebGL consiste à [configurer un état](resources/webgl-state-diagram.html) pour que ces paires de fonctions puissent s'exécuter.
+Pour chaque chose que vous voulez dessiner, vous configurez un ensemble d'états, puis exécutez une paire de fonctions en appelant
+`gl.drawArrays` ou `gl.drawElements` qui exécute vos shaders sur le GPU.
 
-Any data you want those functions to have access to must be provided to the GPU. There are 4 ways
-a shader can receive data.
+Toutes les données auxquelles ces fonctions doivent accéder doivent être fournies au GPU. Il y a 4 façons
+pour un shader de recevoir des données.
 
-1. Attributes, Buffers, and Vertex Arrays
+1. Attributs, Buffers et Vertex Arrays
 
-   Buffers are arrays of binary data you upload to the GPU. Usually buffers contain
-   things like positions, normals, texture coordinates, vertex colors, etc although
-   you're free to put anything you want in them.
+   Les buffers sont des tableaux de données binaires que vous envoyez au GPU. En général, ils contiennent
+   des positions, des normales, des coordonnées de texture, des couleurs de sommet, etc., mais
+   vous êtes libre d'y mettre ce que vous voulez.
 
-   Attributes are used to specify how to
-   pull data out of your buffers and provide them to your vertex shader.
-   For example you might put positions in a buffer as three 32bit floats
-   per position. You would tell a particular attribute which buffer to pull the positions out of, what type
-   of data it should pull out (3 component 32 bit floating point numbers), what offset
-   in the buffer the positions start, and how many bytes to get from one position to the next.
+   Les attributs servent à spécifier comment
+   extraire des données de vos buffers et les fournir à votre vertex shader.
+   Par exemple, vous pourriez stocker des positions dans un buffer sous la forme de trois nombres flottants 32 bits
+   par position. Vous indiqueriez à un attribut particulier dans quel buffer aller chercher les positions, quel type
+   de données extraire (3 nombres flottants 32 bits), quel décalage
+   dans le buffer marque le début des positions, et combien d'octets sépare une position de la suivante.
 
-   Buffers are not random access. Instead a vertex shader is executed a specified number
-   of times. Each time it's executed the next value from each specified buffer is pulled
-   out and assigned to an attribute.
+   Les buffers ne sont pas à accès aléatoire. À la place, le vertex shader est exécuté un nombre
+   spécifié de fois. À chaque exécution, la valeur suivante de chaque buffer spécifié est extraite
+   et assignée à un attribut.
 
-   The state of attributes, which buffers to use for each one, and how to pull out data
-   from those buffers is collected into a vertex array object (VAO).
+   L'état des attributs — quels buffers utiliser pour chacun et comment en extraire les données —
+   est regroupé dans un objet vertex array (VAO).
 
 2. Uniforms
 
-   Uniforms are effectively global variables you set before you execute your shader program.
+   Les uniforms sont en pratique des variables globales que vous définissez avant d'exécuter votre programme shader.
 
 3. Textures
 
-   Textures are arrays of data you can randomly access in your shader program. The most
-   common thing to put in a texture is image data but textures are just data and can just
-   as easily contain something other than colors.
+   Les textures sont des tableaux de données auxquels vous pouvez accéder de façon aléatoire dans votre programme shader.
+   Le plus souvent, on y place des données d'image, mais les textures ne sont que des données et peuvent tout aussi
+   bien contenir autre chose que des couleurs.
 
 4. Varyings
 
-   Varyings are a way for a vertex shader to pass data to a fragment shader. Depending
-   on what is being rendered, points, lines, or triangles, the values set on a varying
-   by a vertex shader will be interpolated while executing the fragment shader.
+   Les varyings sont un moyen pour un vertex shader de transmettre des données à un fragment shader. Selon
+   ce qui est rendu — points, lignes ou triangles —, les valeurs affectées à un varying
+   par le vertex shader seront interpolées lors de l'exécution du fragment shader.
 
 ## WebGL Hello World
 
-WebGL only cares about 2 things. Clip space coordinates and colors.
-Your job as a programmer using WebGL is to provide WebGL with those 2 things.
-You provide your 2 "shaders" to do this. A Vertex shader which provides the
-clip space coordinates, and a fragment shader that provides the color.
+WebGL ne se soucie que de 2 choses : les coordonnées en espace de découpe (clip space) et les couleurs.
+Votre rôle en tant que programmeur WebGL est de fournir ces 2 éléments à WebGL.
+Vous fournissez vos 2 « shaders » pour cela. Un vertex shader qui fournit les
+coordonnées en clip space, et un fragment shader qui fournit la couleur.
 
-Clip space coordinates always go from -1 to +1 no matter what size your
-canvas is. Here is a simple WebGL example that shows WebGL in its simplest form.
+Les coordonnées en clip space vont toujours de -1 à +1, quelle que soit la taille de votre
+canvas. Voici un exemple WebGL simple qui montre WebGL dans sa forme la plus basique.
 
-Let's start with a vertex shader
+Commençons par un vertex shader
 
     #version 300 es
 
-    // an attribute is an input (in) to a vertex shader.
-    // It will receive data from a buffer
+    // un attribut est une entrée (in) dans un vertex shader.
+    // Il recevra des données d'un buffer
     in vec4 a_position;
 
-    // all shaders have a main function
+    // tous les shaders ont une fonction main
     void main() {
 
-      // gl_Position is a special variable a vertex shader
-      // is responsible for setting
+      // gl_Position est une variable spéciale que le vertex shader
+      // est chargé de définir
       gl_Position = a_position;
     }
 
-When executed, if the entire thing was written in JavaScript instead of GLSL
-you could imagine it would be used like this
+Si la totalité du code était écrite en JavaScript plutôt qu'en GLSL lors de l'exécution,
+on pourrait imaginer son utilisation ainsi
 
     // *** PSEUDO CODE!! ***
 
@@ -110,7 +110,7 @@ you could imagine it would be used like this
       var stride = 4;
       var size = 4;
       for (var i = 0; i < count; ++i) {
-         // copy the next 4 values from positionBuffer to the a_position attribute
+         // copie les 4 prochaines valeurs de positionBuffer vers l'attribut a_position
          const start = offset + i * stride;
          attributes.a_position = positionBuffer.slice(start, start + size);
          runVertexShader();
@@ -118,93 +118,92 @@ you could imagine it would be used like this
          doSomethingWith_gl_Position();
     }
 
-In reality it's not quite that simple because `positionBuffer` would need to be converted to binary
-data (see below) and so the actual computation for getting data out of the buffer
-would be a little different but hopefully this gives you an idea of how a vertex
-shader will be executed.
+En réalité ce n'est pas aussi simple car `positionBuffer` devrait être converti en données binaires
+(voir ci-dessous), et le calcul réel pour extraire les données du buffer
+serait un peu différent, mais cela donne une idée de comment un vertex
+shader est exécuté.
 
-Next we need a fragment shader
+Nous avons ensuite besoin d'un fragment shader
 
     #version 300 es
 
-    // fragment shaders don't have a default precision so we need
-    // to pick one. highp is a good default. It means "high precision"
+    // les fragment shaders n'ont pas de précision par défaut, nous devons donc
+    // en choisir une. highp est un bon choix par défaut. Cela signifie "haute précision"
     precision highp float;
 
-    // we need to declare an output for the fragment shader
+    // nous devons déclarer une sortie pour le fragment shader
     out vec4 outColor;
 
     void main() {
-      // Just set the output to a constant reddish-purple
+      // On définit simplement la sortie à une couleur rouge-violacé constante
       outColor = vec4(1, 0, 0.5, 1);
     }
 
-Above we declared `outColor` as our fragment shader's output. We're setting `outColor` to `1, 0, 0.5, 1`
-which is 1 for red, 0 for green, 0.5 for blue, 1 for alpha. Colors in WebGL go from 0 to 1.
+Ci-dessus, nous avons déclaré `outColor` comme sortie de notre fragment shader. Nous lui assignons `1, 0, 0.5, 1`
+ce qui correspond à 1 pour le rouge, 0 pour le vert, 0.5 pour le bleu, 1 pour l'alpha. Les couleurs dans WebGL vont de 0 à 1.
 
-Now that we have written the 2 shader functions lets get started with WebGL
+Maintenant que nous avons écrit les 2 fonctions shader, commençons avec WebGL
 
-First we need an HTML canvas element
+Nous avons d'abord besoin d'un élément HTML canvas
 
      <canvas id="c"></canvas>
 
-Then in JavaScript we can look that up
+Puis en JavaScript nous pouvons le récupérer
 
      var canvas = document.querySelector("#c");
 
-Now we can create a WebGL2RenderingContext
+Maintenant nous pouvons créer un WebGL2RenderingContext
 
      var gl = canvas.getContext("webgl2");
      if (!gl) {
-        // no webgl2 for you!
+        // pas de webgl2 pour vous !
         ...
 
-Now we need to compile those shaders to put them on the GPU so first we need to get them into strings.
-You can create your GLSL strings any way you normally create strings in JavaScript. For example by concatenating,
-by using AJAX to download them, by putting them in non-javascript script tags, or in this case in
-multiline template strings.
+Nous devons ensuite compiler ces shaders pour les envoyer sur le GPU, il faut donc d'abord les mettre dans des chaînes de caractères.
+Vous pouvez créer vos chaînes GLSL de n'importe quelle façon habituelle en JavaScript : par concaténation,
+en les téléchargeant via AJAX, en les plaçant dans des balises script non-JavaScript, ou dans ce cas avec
+des template strings multilignes.
 
     var vertexShaderSource = `#version 300 es
 
-    // an attribute is an input (in) to a vertex shader.
-    // It will receive data from a buffer
+    // un attribut est une entrée (in) dans un vertex shader.
+    // Il recevra des données d'un buffer
     in vec4 a_position;
 
-    // all shaders have a main function
+    // tous les shaders ont une fonction main
     void main() {
 
-      // gl_Position is a special variable a vertex shader
-      // is responsible for setting
+      // gl_Position est une variable spéciale que le vertex shader
+      // est chargé de définir
       gl_Position = a_position;
     }
     `;
 
     var fragmentShaderSource = `#version 300 es
 
-    // fragment shaders don't have a default precision so we need
-    // to pick one. highp is a good default. It means "high precision"
+    // les fragment shaders n'ont pas de précision par défaut, nous devons donc
+    // en choisir une. highp est un bon choix par défaut. Cela signifie "haute précision"
     precision highp float;
 
-    // we need to declare an output for the fragment shader
+    // nous devons déclarer une sortie pour le fragment shader
     out vec4 outColor;
 
     void main() {
-      // Just set the output to a constant reddish-purple
+      // On définit simplement la sortie à une couleur rouge-violacé constante
       outColor = vec4(1, 0, 0.5, 1);
     }
     `;
 
-In fact, most 3D engines generate GLSL shaders on the fly using various types of templates, concatenation, etc.
-For the samples on this site though none of them are complex enough to need to generate GLSL at runtime.
+En fait, la plupart des moteurs 3D génèrent des shaders GLSL à la volée en utilisant divers types de templates, concaténations, etc.
+Pour les exemples de ce site cependant, aucun n'est assez complexe pour nécessiter de générer du GLSL à l'exécution.
 
-> NOTE: `#version 300 es` **MUST BE THE VERY FIRST LINE OF YOUR SHADER**. No comments or
-> blank lines are allowed before it! `#version 300 es` tells WebGL2 you want to use WebGL2's
-> shader language called GLSL ES 3.00. If you don't put that as the first line the shader
-> language defaults to WebGL 1.0's GLSL ES 1.00 which has many differences and far less features.
+> NOTE : `#version 300 es` **DOIT ÊTRE LA TOUTE PREMIÈRE LIGNE DE VOTRE SHADER**. Aucun commentaire ni
+> ligne vide n'est autorisé avant ! `#version 300 es` indique à WebGL2 que vous voulez utiliser le langage
+> shader de WebGL2 appelé GLSL ES 3.00. Si vous ne le mettez pas en première ligne, le langage shader
+> utilise par défaut le GLSL ES 1.00 de WebGL 1.0, qui présente de nombreuses différences et bien moins de fonctionnalités.
 
-Next we need a function that will create a shader, upload the GLSL source, and compile the shader.
-Note I haven't written any comments because it should be clear from the names of the functions
-what is happening.
+Ensuite, nous avons besoin d'une fonction qui va créer un shader, envoyer la source GLSL et compiler le shader.
+Je n'ai pas écrit de commentaires car les noms de fonctions sont suffisamment explicites.
 
     function createShader(gl, type, source) {
       var shader = gl.createShader(type);
@@ -219,12 +218,12 @@ what is happening.
       gl.deleteShader(shader);
     }
 
-We can now call that function to create the 2 shaders
+Nous pouvons maintenant appeler cette fonction pour créer les 2 shaders
 
     var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
     var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 
-We then need to *link* those 2 shaders into a *program*
+Nous devons ensuite *lier* ces 2 shaders en un *programme*
 
     function createProgram(gl, vertexShader, fragmentShader) {
       var program = gl.createProgram();
@@ -240,35 +239,35 @@ We then need to *link* those 2 shaders into a *program*
       gl.deleteProgram(program);
     }
 
-And call it
+Et l'appeler
 
     var program = createProgram(gl, vertexShader, fragmentShader);
 
-Now that we've created a GLSL program on the GPU we need to supply data to it.
-The majority of the WebGL API is about setting up state to supply data to our GLSL programs.
-In this case our only input to our GLSL program is `a_position` which is an attribute.
-The first thing we should do is look up the location of the attribute for the program
-we just created
+Maintenant que nous avons créé un programme GLSL sur le GPU, nous devons lui fournir des données.
+La majorité de l'API WebGL consiste à configurer un état pour fournir des données à nos programmes GLSL.
+Dans ce cas, notre seule entrée dans notre programme GLSL est `a_position` qui est un attribut.
+La première chose à faire est de récupérer l'emplacement de l'attribut pour le programme
+que nous venons de créer
 
     var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
 
-Looking up attribute locations (and uniform locations) is something you should
-do during initialization, not in your render loop.
+La recherche des emplacements d'attributs (et d'uniforms) est quelque chose que vous devriez
+faire lors de l'initialisation, pas dans votre boucle de rendu.
 
-Attributes get their data from buffers so we need to create a buffer
+Les attributs obtiennent leurs données depuis des buffers, nous devons donc créer un buffer
 
     var positionBuffer = gl.createBuffer();
 
-WebGL lets us manipulate many WebGL resources on global bind points.
-You can think of bind points as internal global variables inside WebGL.
-First you bind a resource to a bind point. Then, all other functions
-refer to the resource through the bind point. So, let's bind the position buffer.
+WebGL nous permet de manipuler de nombreuses ressources WebGL via des points de liaison globaux.
+Vous pouvez considérer les points de liaison comme des variables globales internes à WebGL.
+D'abord, vous liez une ressource à un point de liaison. Ensuite, toutes les autres fonctions
+font référence à la ressource via le point de liaison. Donc, lions le buffer de positions.
 
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
-Now we can put data in that buffer by referencing it through the bind point
+Maintenant nous pouvons mettre des données dans ce buffer en y faisant référence via le point de liaison
 
-    // three 2d points
+    // trois points 2D
     var positions = [
       0, 0,
       0, 0.5,
@@ -276,152 +275,152 @@ Now we can put data in that buffer by referencing it through the bind point
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-There's a lot going on here. The first thing is we have `positions` which is a
-JavaScript array. WebGL on other hand needs strongly typed data so the part
-`new Float32Array(positions)` creates a new array of 32bit floating point numbers
-and copies the values from `positions`. `gl.bufferData` then copies that data to
-the `positionBuffer` on the GPU. It's using the position buffer because we bound
-it to the `ARRAY_BUFFER` bind point above.
+Il se passe beaucoup de choses ici. Nous avons d'abord `positions` qui est un
+tableau JavaScript. WebGL en revanche a besoin de données fortement typées, donc la partie
+`new Float32Array(positions)` crée un nouveau tableau de nombres flottants 32 bits
+et copie les valeurs de `positions`. `gl.bufferData` copie ensuite ces données dans
+`positionBuffer` sur le GPU. Il utilise le buffer de positions car nous l'avons lié
+au point de liaison `ARRAY_BUFFER` ci-dessus.
 
-The last argument, `gl.STATIC_DRAW` is a hint to WebGL about how we'll use the data.
-WebGL can try to use that hint to optimize certain things. `gl.STATIC_DRAW` tells WebGL
-we are not likely to change this data much.
+Le dernier argument, `gl.STATIC_DRAW`, est une indication à WebGL sur la façon dont nous utiliserons les données.
+WebGL peut essayer d'utiliser cette indication pour optimiser certaines choses. `gl.STATIC_DRAW` indique à WebGL
+que nous n'allons probablement pas changer ces données souvent.
 
-Now that we've put data in a buffer we need to tell the attribute how to get data
-out of it. First we need to create a collection of attribute state called a Vertex Array Object.
+Maintenant que nous avons mis des données dans un buffer, nous devons indiquer à l'attribut comment
+en extraire les données. D'abord, nous devons créer un ensemble d'états d'attributs appelé Vertex Array Object.
 
     var vao = gl.createVertexArray();
 
-And we need to make that the current vertex array so that all of our attribute settings
-will apply to that set of attribute state
+Et nous devons en faire le vertex array courant pour que tous nos réglages d'attributs
+s'appliquent à cet ensemble d'états d'attributs
 
     gl.bindVertexArray(vao);
 
-Now we finally setup the attributes in the vertex array. First off we need to turn the attribute on.
-This tells WebGL we want to get data out of a buffer. If we don't turn on the attribute
-then the attribute will have a constant value.
+Nous pouvons maintenant configurer les attributs dans le vertex array. Tout d'abord, nous devons activer l'attribut.
+Cela indique à WebGL que nous voulons extraire des données d'un buffer. Si nous n'activons pas l'attribut,
+il aura une valeur constante.
 
     gl.enableVertexAttribArray(positionAttributeLocation);
 
-Then we need to specify how to pull the data out
+Ensuite, nous devons spécifier comment extraire les données
 
-    var size = 2;          // 2 components per iteration
-    var type = gl.FLOAT;   // the data is 32bit floats
-    var normalize = false; // don't normalize the data
-    var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-    var offset = 0;        // start at the beginning of the buffer
+    var size = 2;          // 2 composantes par itération
+    var type = gl.FLOAT;   // les données sont des flottants 32 bits
+    var normalize = false; // ne pas normaliser les données
+    var stride = 0;        // 0 = avancer de size * sizeof(type) à chaque itération pour obtenir la position suivante
+    var offset = 0;        // commencer au début du buffer
     gl.vertexAttribPointer(
         positionAttributeLocation, size, type, normalize, stride, offset)
 
-A hidden part of `gl.vertexAttribPointer` is that it binds the current `ARRAY_BUFFER`
-to the attribute. In other words now this attribute is bound to
-`positionBuffer`. That means we're free to bind something else to the `ARRAY_BUFFER` bind point.
-The attribute will continue to use `positionBuffer`.
+Une partie cachée de `gl.vertexAttribPointer` est qu'elle lie le `ARRAY_BUFFER` courant
+à l'attribut. En d'autres termes, cet attribut est maintenant lié à
+`positionBuffer`. Cela signifie que nous sommes libres de lier autre chose au point de liaison `ARRAY_BUFFER`.
+L'attribut continuera à utiliser `positionBuffer`.
 
-Note that from the point of view of our GLSL vertex shader the `a_position` attribute is a `vec4`
+Notez que du point de vue de notre vertex shader GLSL, l'attribut `a_position` est un `vec4`
 
     in vec4 a_position;
 
-`vec4` is a 4 float value. In JavaScript you could think of it something like
-`a_position = {x: 0, y: 0, z: 0, w: 0}`. Above we set `size = 2`. Attributes
-default to `0, 0, 0, 1` so this attribute will get its first 2 values (x and y)
-from our buffer. The z, and w will be the default 0 and 1 respectively.
+`vec4` est une valeur à 4 flottants. En JavaScript on pourrait penser à quelque chose comme
+`a_position = {x: 0, y: 0, z: 0, w: 0}`. Ci-dessus nous avons mis `size = 2`. Les attributs
+ont par défaut `0, 0, 0, 1`, donc cet attribut obtiendra ses 2 premières valeurs (x et y)
+depuis notre buffer. z et w seront respectivement les valeurs par défaut 0 et 1.
 
-Before we draw we should resize the canvas to match its display size. Canvases just like Images have 2 sizes.
-The number of pixels actually in them and separately the size they are displayed. CSS determines the size
-the canvas is displayed. **You should always set the size you want a canvas with CSS** since it is far far
-more flexible than any other method.
+Avant de dessiner, nous devrions redimensionner le canvas pour correspondre à sa taille d'affichage. Les canvas, comme les images, ont 2 tailles.
+Le nombre de pixels qu'ils contiennent réellement et séparément la taille à laquelle ils sont affichés. Le CSS détermine la taille
+à laquelle le canvas est affiché. **Vous devriez toujours définir la taille souhaitée d'un canvas avec CSS** car c'est de loin
+plus flexible que n'importe quelle autre méthode.
 
-To make the number of pixels in the canvas match the size it's displayed
-[I'm using a helper function you can read about here](webgl-resizing-the-canvas.html).
+Pour que le nombre de pixels dans le canvas corresponde à la taille à laquelle il est affiché,
+[j'utilise une fonction utilitaire dont vous pouvez lire le détail ici](webgl-resizing-the-canvas.html).
 
-In nearly all of these samples the canvas size is 400x300 pixels if the sample is run in its own window
-but stretches to fill the available space if it's inside an iframe like it is on this page.
-By letting CSS determine the size and then adjusting to match we easily handle both of these cases.
+Dans presque tous ces exemples, la taille du canvas est de 400x300 pixels si l'exemple est exécuté dans sa propre fenêtre,
+mais s'étire pour remplir l'espace disponible s'il est dans une iframe comme sur cette page.
+En laissant le CSS déterminer la taille et en ajustant ensuite pour correspondre, nous gérons facilement ces deux cas.
 
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
-We need to tell WebGL how to convert from the clip space
-values we'll be setting `gl_Position` to back into pixels, often called screen space.
-To do this we call `gl.viewport` and pass it the current size of the canvas.
+Nous devons indiquer à WebGL comment convertir les valeurs de clip space
+que nous allons définir pour `gl_Position` en pixels, souvent appelé espace écran.
+Pour cela, nous appelons `gl.viewport` en lui passant la taille actuelle du canvas.
 
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-This tells WebGL the -1 +1 clip space maps to 0 &lt;-&gt; `gl.canvas.width` for x and 0 &lt;-&gt; `gl.canvas.height`
-for y.
+Cela indique à WebGL que le clip space de -1 à +1 correspond à 0 &lt;-&gt; `gl.canvas.width` pour x et 0 &lt;-&gt; `gl.canvas.height`
+pour y.
 
-We clear the canvas. `0, 0, 0, 0` are red, green, blue, alpha respectively so in this case we're making the canvas transparent.
+Nous effaçons le canvas. `0, 0, 0, 0` correspondent respectivement à rouge, vert, bleu, alpha, donc dans ce cas nous rendons le canvas transparent.
 
-    // Clear the canvas
+    // Effacer le canvas
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-Next we need to tell WebGL which shader program to execute.
+Ensuite, nous devons indiquer à WebGL quel programme shader exécuter.
 
-    // Tell it to use our program (pair of shaders)
+    // Indiquer d'utiliser notre programme (paire de shaders)
     gl.useProgram(program);
 
-Then we need to tell it which set of buffers use and how to pull data out of those buffers to
-supply to the attributes
+Puis nous devons lui indiquer quel ensemble de buffers utiliser et comment extraire les données de ces buffers
+pour les fournir aux attributs
 
-    // Bind the attribute/buffer set we want.
+    // Lier l'ensemble attribut/buffer que nous voulons utiliser.
     gl.bindVertexArray(vao);
 
-After all that we can finally ask WebGL to execute our GLSL program.
+Après tout ça, nous pouvons enfin demander à WebGL d'exécuter notre programme GLSL.
 
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
     var count = 3;
     gl.drawArrays(primitiveType, offset, count);
 
-Because the count is 3 this will execute our vertex shader 3 times. The first time `a_position.x` and `a_position.y`
-in our vertex shader attribute will be set to the first 2 values from the positionBuffer.
-The 2nd time `a_position.xy` will be set to the 2nd two values. The last time it will be
-set to the last 2 values.
+Parce que le count est 3, le vertex shader sera exécuté 3 fois. La première fois, `a_position.x` et `a_position.y`
+dans l'attribut de notre vertex shader seront définis avec les 2 premières valeurs du positionBuffer.
+La 2ème fois, `a_position.xy` sera défini avec les 2 valeurs suivantes. La dernière fois, ce sera
+les 2 dernières valeurs.
 
-Because we set `primitiveType` to `gl.TRIANGLES`, each time our vertex shader is run 3 times
-WebGL will draw a triangle based on the 3 values we set `gl_Position` to. No matter what size
-our canvas is those values are in clip space coordinates that go from -1 to 1 in each direction.
+Parce que nous avons défini `primitiveType` à `gl.TRIANGLES`, chaque fois que notre vertex shader est exécuté 3 fois,
+WebGL dessinera un triangle basé sur les 3 valeurs que nous avons assignées à `gl_Position`. Quelle que soit la taille
+de notre canvas, ces valeurs sont en coordonnées de clip space qui vont de -1 à 1 dans chaque direction.
 
-Because our vertex shader is simply copying our positionBuffer values to `gl_Position` the
-triangle will be drawn at clip space coordinates
+Parce que notre vertex shader copie simplement les valeurs de positionBuffer vers `gl_Position`, le
+triangle sera dessiné aux coordonnées de clip space
 
       0, 0,
       0, 0.5,
       0.7, 0,
 
-Converting from clip space to screen space if the canvas size
-happened to be 400x300 we'd get something like this
+La conversion du clip space vers l'espace écran, si la taille du canvas
+était de 400x300, donnerait quelque chose comme ceci
 
-     clip space      screen space
+     clip space      espace écran
        0, 0       ->   200, 150
        0, 0.5     ->   200, 225
      0.7, 0       ->   340, 150
 
-WebGL will now render that triangle. For every pixel it is about to draw WebGL will call our fragment shader.
-Our fragment shader just sets `outColor` to `1, 0, 0.5, 1`. Since the Canvas is an 8bit
-per channel canvas that means WebGL is going to write the values `[255, 0, 127, 255]` into the canvas.
+WebGL va maintenant rendre ce triangle. Pour chaque pixel qu'il est sur le point de dessiner, WebGL appellera notre fragment shader.
+Notre fragment shader définit simplement `outColor` à `1, 0, 0.5, 1`. Puisque le canvas est un canvas de 8 bits
+par canal, cela signifie que WebGL va écrire les valeurs `[255, 0, 127, 255]` dans le canvas.
 
-Here's a live version
+Voici la version en direct
 
 {{{example url="../webgl-fundamentals.html" }}}
 
-In the case above you can see our vertex shader is doing nothing
-but passing on our position data directly. Since the position data is
-already in clip space there is no work to do. *If you want 3D it's up to you
-to supply shaders that convert from 3D to clip space because WebGL is only
-a rasterization API*.
+Dans l'exemple ci-dessus, vous pouvez voir que notre vertex shader ne fait rien
+d'autre que transmettre directement nos données de position. Puisque les données de position sont
+déjà en clip space, il n'y a rien à faire. *Si vous voulez de la 3D, c'est à vous
+de fournir des shaders qui convertissent la 3D en clip space car WebGL est uniquement
+une API de rastérisation*.
 
-You might be wondering why does the triangle start in the middle and go towards the top right.
-Clip space in `x` goes from -1 to +1. That means 0 is in the center and positive values will
-be to the right of that.
+Vous vous demandez peut-être pourquoi le triangle commence au milieu et va vers le coin supérieur droit.
+Le clip space sur `x` va de -1 à +1. Cela signifie que 0 est au centre et que les valeurs positives seront
+à droite de ce centre.
 
-As for why it's on the top, in clip space -1 is at the bottom and +1 is at the top. That means
-0 is in the center and so positive numbers will be above the center.
+Quant à pourquoi il est en haut, en clip space -1 est en bas et +1 est en haut. Cela signifie que
+0 est au centre et donc les nombres positifs seront au-dessus du centre.
 
-For 2D stuff you would probably rather work in pixels than clip space so
-let's change the shader so we can supply the position in pixels and have
-it convert to clip space for us. Here's the new vertex shader
+Pour les graphiques 2D, il est probablement préférable de travailler en pixels plutôt qu'en clip space,
+alors modifions le shader pour pouvoir fournir la position en pixels et la
+convertir en clip space. Voici le nouveau vertex shader
 
     -  in vec4 a_position;
     +  in vec2 a_position;
@@ -429,31 +428,31 @@ it convert to clip space for us. Here's the new vertex shader
     +  uniform vec2 u_resolution;
 
       void main() {
-    +    // convert the position from pixels to 0.0 to 1.0
+    +    // convertir la position de pixels vers 0.0 à 1.0
     +    vec2 zeroToOne = a_position / u_resolution;
     +
-    +    // convert from 0->1 to 0->2
+    +    // convertir de 0->1 vers 0->2
     +    vec2 zeroToTwo = zeroToOne * 2.0;
     +
-    +    // convert from 0->2 to -1->+1 (clip space)
+    +    // convertir de 0->2 vers -1->+1 (clip space)
     +    vec2 clipSpace = zeroToTwo - 1.0;
     +
     *    gl_Position = vec4(clipSpace, 0, 1);
       }
 
-Some things to notice about the changes. We changed `a_position` to a `vec2` since we're
-only using `x` and `y` anyway. A `vec2` is similar to a `vec4` but only has `x` and `y`.
+Quelques points à noter sur les modifications. Nous avons changé `a_position` en `vec2` car nous
+n'utilisons de toute façon que `x` et `y`. Un `vec2` est similaire à un `vec4` mais n'a que `x` et `y`.
 
-Next we added a `uniform` called `u_resolution`. To set that we need to look up its location.
+Ensuite, nous avons ajouté un `uniform` appelé `u_resolution`. Pour le définir, nous devons récupérer son emplacement.
 
     var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
 
-The rest should be clear from the comments. By setting `u_resolution` to the resolution
-of our canvas the shader will now take the positions we put in `positionBuffer` supplied
-in pixels coordinates and convert them to clip space.
+Le reste devrait être clair d'après les commentaires. En définissant `u_resolution` à la résolution
+de notre canvas, le shader va maintenant prendre les positions que nous mettons dans `positionBuffer`
+en coordonnées de pixels et les convertir en clip space.
 
-Now we can change our position values from clip space to pixels. This time we're going to draw a rectangle
-made from 2 triangles, 3 points each.
+Maintenant nous pouvons changer nos valeurs de position du clip space vers des pixels. Cette fois, nous allons dessiner un rectangle
+composé de 2 triangles, 3 points chacun.
 
     var positions = [
     *  10, 20,
@@ -465,50 +464,50 @@ made from 2 triangles, 3 points each.
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-And after we set which program to use we can set the value for the uniform we created.
-`gl.useProgram` is like `gl.bindBuffer` above in that it sets the current program. After
-that all the `gl.uniformXXX` functions set uniforms on the current program.
+Et après avoir défini quel programme utiliser, nous pouvons définir la valeur de l'uniform que nous avons créé.
+`gl.useProgram` est comme `gl.bindBuffer` ci-dessus en ce qu'il définit le programme courant. Après cela,
+toutes les fonctions `gl.uniformXXX` définissent les uniforms sur le programme courant.
 
     gl.useProgram(program);
 
-    // Pass in the canvas resolution so we can convert from
-    // pixels to clip space in the shader
+    // Passer la résolution du canvas pour pouvoir convertir
+    // les pixels en clip space dans le shader
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
-And of course to draw 2 triangles we need to have WebGL call our vertex shader 6 times
-so we need to change the `count` to `6`.
+Et bien sûr pour dessiner 2 triangles, nous devons faire appeler notre vertex shader 6 fois par WebGL,
+donc nous devons changer le `count` à `6`.
 
-    // draw
+    // dessiner
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
     *var count = 6;
     gl.drawArrays(primitiveType, offset, count);
 
-And here it is
+Et voilà le résultat
 
-Note: This example and all following examples use [`webgl-utils.js`](/webgl/resources/webgl-utils.js)
-which contains functions to compile and link the shaders. No reason to clutter the examples
-with that [boilerplate](webgl-boilerplate.html) code.
+Note : Cet exemple et tous les exemples suivants utilisent [`webgl-utils.js`](/webgl/resources/webgl-utils.js)
+qui contient des fonctions pour compiler et lier les shaders. Aucune raison d'encombrer les exemples
+avec ce code [standard](webgl-boilerplate.html).
 
 {{{example url="../webgl-2d-rectangle.html" }}}
 
-Again you might notice the rectangle is near the bottom of that area. WebGL considers positive Y as
-up and negative Y as down. In clip space the bottom left corner -1,-1. We haven't changed any signs
-so with our current math 0, 0 becomes the bottom left corner.
-To get it to be the more traditional top left corner used for 2d graphics APIs
-we can just flip the clip space y coordinate.
+Vous remarquerez peut-être que le rectangle est près du bas de cette zone. WebGL considère le Y positif vers le haut
+et le Y négatif vers le bas. En clip space, le coin inférieur gauche est -1,-1. Nous n'avons pas changé de signe,
+donc avec nos mathématiques actuelles, 0, 0 devient le coin inférieur gauche.
+Pour qu'il corresponde au coin supérieur gauche plus traditionnel utilisé par les API de graphiques 2D,
+nous pouvons simplement inverser la coordonnée y du clip space.
 
     *   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 
-And now our rectangle is where we expect it.
+Et maintenant notre rectangle est où nous l'attendions.
 
 {{{example url="../webgl-2d-rectangle-top-left.html" }}}
 
-Let's make the code that defines a rectangle into a function so
-we can call it for different sized rectangles. While we're at it
-we'll make the color settable.
+Transformons le code qui définit un rectangle en une fonction pour
+pouvoir l'appeler avec des rectangles de tailles différentes. Pendant que nous y sommes,
+nous rendrons la couleur paramétrable.
 
-First we make the fragment shader take a color uniform input.
+D'abord, nous faisons accepter une couleur uniform en entrée au fragment shader.
 
     #version 300 es
 
@@ -523,21 +522,21 @@ First we make the fragment shader take a color uniform input.
     *  outColor = u_color;
     }
 
-And here's the new code that draws 50 rectangles in random places and random colors.
+Et voici le nouveau code qui dessine 50 rectangles à des positions aléatoires et des couleurs aléatoires.
 
       var colorLocation = gl.getUniformLocation(program, "u_color");
       ...
 
-      // draw 50 random rectangles in random colors
+      // dessiner 50 rectangles aléatoires avec des couleurs aléatoires
       for (var ii = 0; ii < 50; ++ii) {
-        // Setup a random rectangle
+        // Définir un rectangle aléatoire
         setRectangle(
             gl, randomInt(300), randomInt(300), randomInt(300), randomInt(300));
 
-        // Set a random color.
+        // Définir une couleur aléatoire.
         gl.uniform4f(colorLocation, Math.random(), Math.random(), Math.random(), 1);
 
-        // Draw the rectangle.
+        // Dessiner le rectangle.
         var primitiveType = gl.TRIANGLES;
         var offset = 0;
         var count = 6;
@@ -545,12 +544,12 @@ And here's the new code that draws 50 rectangles in random places and random col
       }
     }
 
-    // Returns a random integer from 0 to range - 1.
+    // Retourne un entier aléatoire de 0 à range - 1.
     function randomInt(range) {
       return Math.floor(Math.random() * range);
     }
 
-    // Fills the buffer with the values that define a rectangle.
+    // Remplit le buffer avec les valeurs qui définissent un rectangle.
 
     function setRectangle(gl, x, y, width, height) {
       var x1 = x;
@@ -558,10 +557,10 @@ And here's the new code that draws 50 rectangles in random places and random col
       var y1 = y;
       var y2 = y + height;
 
-      // NOTE: gl.bufferData(gl.ARRAY_BUFFER, ...) will affect
-      // whatever buffer is bound to the `ARRAY_BUFFER` bind point
-      // but so far we only have one buffer. If we had more than one
-      // buffer we'd want to bind that buffer to `ARRAY_BUFFER` first.
+      // NOTE: gl.bufferData(gl.ARRAY_BUFFER, ...) affectera
+      // le buffer lié au point de liaison `ARRAY_BUFFER`
+      // mais jusqu'ici nous n'avons qu'un seul buffer. Si nous avions plusieurs
+      // buffers, nous devrions d'abord lier ce buffer à `ARRAY_BUFFER`.
 
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
          x1, y1,
@@ -572,42 +571,42 @@ And here's the new code that draws 50 rectangles in random places and random col
          x2, y2]), gl.STATIC_DRAW);
     }
 
-And here's the rectangles.
+Et voilà les rectangles.
 
 {{{example url="../webgl-2d-rectangles.html" }}}
 
-I hope you can see that WebGL is actually a pretty simple API.
-Okay, simple might be the wrong word. What it does is simple. It just
-executes 2 user supplied functions, a vertex shader and fragment shader and
-draws triangles, lines, or points.
-While it can get more complicated to do 3D that complication is
-added by you, the programmer, in the form of more complex shaders.
-The WebGL API itself is just a rasterizer and conceptually fairly simple.
+J'espère que vous pouvez voir que WebGL est en réalité une API assez simple.
+Bon, « simple » n'est peut-être pas le bon mot. Ce qu'il fait est simple. Il exécute simplement
+2 fonctions fournies par l'utilisateur, un vertex shader et un fragment shader, et
+dessine des triangles, des lignes ou des points.
+Même si faire de la 3D peut devenir plus complexe, cette complexité est
+ajoutée par vous, le programmeur, sous la forme de shaders plus élaborés.
+L'API WebGL elle-même est juste un rastériseur et est conceptuellement assez simple.
 
-We covered a small example that showed how to supply data in an attribute and 2 uniforms.
-It's common to have multiple attributes and many uniforms. Near the top of this article
-we also mentioned *varyings* and *textures*. Those will show up in subsequent lessons.
+Nous avons couvert un petit exemple qui montre comment fournir des données dans un attribut et 2 uniforms.
+Il est courant d'avoir plusieurs attributs et de nombreux uniforms. En haut de cet article,
+nous avons également mentionné les *varyings* et les *textures*. Ceux-ci apparaîtront dans les leçons suivantes.
 
-Before we move on I want to mention that for *most* applications updating
-the data in a buffer like we did in `setRectangle` is not common. I used that
-example because I thought it was easiest to explain since it shows pixel coordinates
-as input and demonstrates doing a small amount of math in GLSL. It's not wrong, there
-are plenty of cases where it's the right thing to do, but you should [keep reading to find out
-the more common way to position, orient and scale things in WebGL](webgl-2d-translation.html).
+Avant de continuer, je veux mentionner que pour *la plupart* des applications, mettre à jour
+les données dans un buffer comme nous l'avons fait dans `setRectangle` n'est pas courant. J'ai utilisé cet
+exemple parce que je pensais qu'il était le plus facile à expliquer car il montre les coordonnées de pixels
+comme entrée et démontre un peu de mathématiques en GLSL. Ce n'est pas mauvais, il y a
+de nombreux cas où c'est la bonne approche, mais vous devriez [continuer à lire pour découvrir
+la façon plus courante de positionner, orienter et mettre à l'échelle des choses dans WebGL](webgl-2d-translation.html).
 
-If you're 100% new to WebGL and have no idea what GLSL is or shaders or what the GPU does
-then checkout [the basics of how WebGL really works](webgl-how-it-works.html).
-You might also want to take a look at this
-[interactive state diagram](/webgl/lessons/resources/webgl-state-diagram.html)
-for another way of understanding how WebGL works.
+Si vous êtes totalement nouveau dans WebGL et que vous n'avez aucune idée de ce qu'est GLSL, ou les shaders, ou ce que fait le GPU,
+consultez [les bases du fonctionnement réel de WebGL](webgl-how-it-works.html).
+Vous pourriez également vouloir jeter un œil à ce
+[diagramme d'état interactif](/webgl/lessons/resources/webgl-state-diagram.html)
+pour une autre façon de comprendre comment WebGL fonctionne.
 
-You should also, at least briefly read about [the boilerplate code used here](webgl-boilerplate.html)
-that is used in most of the examples. You should also at least skim
-[how to draw multiple things](webgl-drawing-multiple-things.html) to give you some idea
-of how more typical WebGL apps are structured because unfortunately nearly all the examples
-only draw one thing and so do not show that structure.
+Vous devriez également, au moins brièvement, lire [le code standard utilisé ici](webgl-boilerplate.html)
+qui est utilisé dans la plupart des exemples. Vous devriez également au moins parcourir
+[comment dessiner plusieurs choses](webgl-drawing-multiple-things.html) pour avoir une idée
+de comment les applications WebGL typiques sont structurées, car malheureusement presque tous les exemples
+ne dessinent qu'une seule chose et ne montrent donc pas cette structure.
 
-Otherwise from here you can go in 2 directions. If you are interested in image processing
-I'll show you [how to do some 2D image processing](webgl-image-processing.html).
-If you are interesting in learning about translation,
-rotation and scale then [start here](webgl-2d-translation.html).
+Sinon, à partir d'ici vous pouvez aller dans 2 directions. Si vous êtes intéressé par le traitement d'images,
+je vous montrerai [comment faire du traitement d'images 2D](webgl-image-processing.html).
+Si vous êtes intéressé par l'apprentissage de la translation,
+de la rotation et de la mise à l'échelle, [commencez ici](webgl-2d-translation.html).

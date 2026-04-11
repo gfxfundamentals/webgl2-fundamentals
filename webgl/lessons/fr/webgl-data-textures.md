@@ -1,24 +1,24 @@
-Title: WebGL2 3D - Data Textures
-Description: Supplying data to a texture.
-TOC: Data Textures
+Title: WebGL2 3D - Textures de données
+Description: Fournir des données à une texture.
+TOC: Textures de données
 
 
-This post is a continuation of a series of posts about WebGL2.
-The first [started with fundamentals](webgl-fundamentals.html)
-and the previous was about [textures](webgl-3d-textures.html).
+Cet article est la suite d'une série d'articles sur WebGL2.
+Le premier [a commencé par les bases](webgl-fundamentals.html)
+et le précédent portait sur les [textures](webgl-3d-textures.html).
 
-In the last post we went over how textures work and how to apply them.
-We created them from images we downloaded. In this article instead of
-using an image we'll create the data in JavaScript directly.
+Dans le dernier article, nous avons vu comment fonctionnent les textures et comment les appliquer.
+Nous les avons créées à partir d'images téléchargées. Dans cet article, au lieu d'utiliser
+une image, nous allons créer les données directement en JavaScript.
 
-Creating data for a texture in JavaScript is mostly straight forward depending
-on the texture format. WebGL2 supports a ton of texture formats though.
-WebGL2 supports all the *un-sized* formats from WebGL1
+Créer des données pour une texture en JavaScript est assez simple selon le format de texture.
+WebGL2 supporte énormément de formats de textures.
+WebGL2 supporte tous les formats *non dimensionnés* de WebGL1
 
 <div class="webgl_center">
   <table class="tabular-data tabular-data1">
     <thead>
-      <tr><td>Format</td><td>Type</td><td>Channels</td><td>Bytes per pixel</td></tr>
+      <tr><td>Format</td><td>Type</td><td>Canaux</td><td>Octets par pixel</td></tr>
     </thead>
     <tbody>
       <tr><td>RGBA</td><td>UNSIGNED_BYTE</td><td>4</td><td>4</td></tr>
@@ -33,22 +33,22 @@ WebGL2 supports all the *un-sized* formats from WebGL1
   </table>
 </div>
 
-They're called *un-sized* because how they are actually represented internally is undefined in WebGL1.
-It is defined in WebGL2. In addition to those un-sized formats there are a slew of sized formats including
+Ils sont appelés *non dimensionnés* car la façon dont ils sont réellement représentés en interne n'est pas définie dans WebGL1.
+Elle l'est dans WebGL2. En plus de ces formats non dimensionnés, il existe une foule de formats dimensionnés, notamment
 
 <div class="webgl_center">
   <table class="tabular-data tabular-data2">
     <thead>
       <tr>
-        <td>Sized<br/>Format</td>
-        <td>Base<br/>Format</td>
-        <td>R<br/>bits</td>
-        <td>G<br/>bits</td>
-        <td>B<br/>bits</td>
-        <td>A<br/>bits</td>
-        <td>Shared<br/>bits</td>
-        <td>Color<br/>renderable</td>
-        <td>Texture<br/>filterable</td>
+        <td>Format<br/>dimensionné</td>
+        <td>Format<br/>de base</td>
+        <td>bits<br/>R</td>
+        <td>bits<br/>G</td>
+        <td>bits<br/>B</td>
+        <td>bits<br/>A</td>
+        <td>bits<br/>partagés</td>
+        <td>Rendu<br/>couleur</td>
+        <td>Filtrage<br/>texture</td>
       </tr>
     </thead>
     <tbody>
@@ -106,16 +106,16 @@ It is defined in WebGL2. In addition to those un-sized formats there are a slew 
   </table>
 </div>
 
-And these depth and stencil formats as well
+Et également ces formats de profondeur et de stencil
 
 <div class="webgl_center">
   <table class="tabular-data tabular-data3">
     <thead>
       <tr>
-        <td>Sized<br/>Format</td>
-        <td>Base<br/>Format</td>
-        <td>Depth<br/>bits</td>
-        <td>Stencil<br/>bits</td>
+        <td>Format<br/>dimensionné</td>
+        <td>Format<br/>de base</td>
+        <td>bits<br/>de profondeur</td>
+        <td>bits<br/>de stencil</td>
       </tr>
     </thead>
     <tbody>
@@ -129,34 +129,33 @@ And these depth and stencil formats as well
   </table>
 </div>
 
-Legend:
+Légende :
 
-* a single number like `8` means 8bits that will be normalized from 0 to 1
-* a number preceded by an `s` like `s8` means a signed 8bit number that will be normalized from -1 to 1
-* a number preceded by an `f` like `f16` means a floating point number.
-* a number preceded by in `i` like `i8` means an integer number.
-* a number preceded by in `ui` like `ui8` means an unsigned integer number.
+* un seul nombre comme `8` signifie 8 bits qui seront normalisés de 0 à 1
+* un nombre précédé d'un `s` comme `s8` signifie un nombre signé de 8 bits qui sera normalisé de -1 à 1
+* un nombre précédé d'un `f` comme `f16` signifie un nombre à virgule flottante
+* un nombre précédé d'un `i` comme `i8` signifie un nombre entier
+* un nombre précédé de `ui` comme `ui8` signifie un entier non signé
 
-We won't use this info here but I <span class="tabular-highlight">highlighted</span>
-the half and float texture formats to show unlike WebGL1 they are always available in WebGL2
-but they are not marked as either color renderable and/or texture filterable by default.
-Not being color renderable means they can not be rendered to. [Rendering to a texture is
-covered in another lesson](webgl-render-to-texture.html). Not texture filterable means they
-must be used with `gl.NEAREST` only. Both of those features are available as optional
-extensions in WebGL2.
+Nous n'utiliserons pas ces informations ici, mais j'ai <span class="tabular-highlight">mis en évidence</span>
+les formats de textures à demi-précision et flottants pour montrer que contrairement à WebGL1, ils sont toujours disponibles dans WebGL2,
+mais ils ne sont pas marqués comme rendables en couleur et/ou filtrables par texture par défaut.
+Ne pas être rendable en couleur signifie qu'on ne peut pas faire de rendu vers eux. [Le rendu vers une texture est
+couvert dans une autre leçon](webgl-render-to-texture.html). Ne pas être filtrable par texture signifie qu'ils
+doivent être utilisés avec `gl.NEAREST` uniquement. Ces deux fonctionnalités sont disponibles comme extensions optionnelles dans WebGL2.
 
-For each of the formats you specify both the *internal format* (the format the GPU will use internally)
-and the *format* and *type* of the data you're supplying to WebGL. Here is a table showing which format
-and type you must supply data for a given internal format
+Pour chacun des formats, vous spécifiez à la fois le *format interne* (le format que le GPU utilisera en interne)
+et le *format* et le *type* des données que vous fournissez à WebGL. Voici un tableau indiquant quel format
+et type vous devez fournir pour un format interne donné
 
 <div class="webgl_center">
   <table class="tabular-data tabular-data4">
     <thead>
       <tr>
-        <td>Internal<br/>Format</td>
+        <td>Format<br/>interne</td>
         <td>Format</td>
         <td>Type</td>
-        <td>Source<br/>Bytes<br/>Per Pixel</td>
+        <td>Octets<br/>source<br/>par pixel</td>
       </tr>
     </thead>
     <tbody>
@@ -227,19 +226,19 @@ and type you must supply data for a given internal format
 </div>
 
 
-Let's create a 3x2 pixel `R8` texture. Because it's an `R8` texture
-there is only 1 value per pixel in the red channel.
+Créons une texture `R8` de 3x2 pixels. Comme c'est une texture `R8`,
+il n'y a qu'une seule valeur par pixel dans le canal rouge.
 
-We'll take the sample from the [last article](webgl-3d-textures.html). First we'll change
-the texture coordinates to use the entire texture on each face of the cube.
+Nous allons partir de l'exemple du [dernier article](webgl-3d-textures.html). D'abord, nous allons modifier
+les coordonnées de texture pour utiliser toute la texture sur chaque face du cube.
 
 ```
-// Fill the buffer with texture coordinates the cube.
+// Remplir le buffer avec les coordonnées de texture du cube.
 function setTexcoords(gl) {
   gl.bufferData(
       gl.ARRAY_BUFFER,
       new Float32Array([
-        // front face
+        // face avant
         0, 0,
         0, 1,
         1, 0,
@@ -249,18 +248,18 @@ function setTexcoords(gl) {
         ...
 ```
 
-Then we'll change the code that creates a texture
+Puis, nous allons modifier le code qui crée une texture
 
 ```
-// Create a texture.
+// Créer une texture.
 var texture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, texture);
 
--// Fill the texture with a 1x1 blue pixel.
+-// Remplir la texture avec un pixel bleu 1x1.
 -gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
 -              new Uint8Array([0, 0, 255, 255]));
 
-// fill texture with 3x2 pixels
+// remplir la texture avec 3x2 pixels
 const level = 0;
 const internalFormat = gl.R8;
 const width = 3;
@@ -275,69 +274,65 @@ const data = new Uint8Array([
 gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border,
               format, type, data);
 
-// set the filtering so we don't need mips and it's not filtered
+// définir le filtrage pour ne pas avoir besoin de mips et qu'il ne soit pas filtré
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
--// Asynchronously load an image
+-// Charger une image de façon asynchrone
 -...
 ```
 
-And here's that
+Et voilà le résultat
 
 {{{example url="../webgl-data-texture-3x2-bad.html" }}}
 
-Oops! Why is this not working?!?!?
+Oups ! Pourquoi ça ne fonctionne pas ?!?!?
 
-Checking the JavaScript console we see this error something like this
+En vérifiant la console JavaScript, nous voyons une erreur comme celle-ci
 
 ```
 WebGL: INVALID_OPERATION: texImage2D: ArrayBufferView not big enough for request
 ```
 
-It turns out there's a kind of obscure setting in WebGL left
-over from when OpenGL was first created. Computers sometimes
-go faster when data is a certain size. For example it can
-be faster to copy 2, 4, or 8 bytes at a time instead of 1 at a time.
-WebGL defaults to using 4 bytes at a time so it expects each
-row of data to be a multiple of 4 bytes (except for the last row).
+Il s'avère qu'il y a un paramètre quelque peu obscur dans WebGL hérité
+du moment où OpenGL a été créé. Les ordinateurs vont parfois plus vite quand les données
+ont une certaine taille. Par exemple, il peut être plus rapide de copier 2, 4 ou 8 octets à la fois plutôt qu'un seul.
+WebGL utilise par défaut 4 octets à la fois, donc il s'attend à ce que chaque
+ligne de données soit un multiple de 4 octets (sauf pour la dernière ligne).
 
-Our data above is only 3 bytes per row, 6 bytes total but WebGL
-is going to try to read 4 bytes for the first row and 3 bytes
-for the 2nd row for a total of 7 bytes which is why it's complaining.
+Nos données ci-dessus font seulement 3 octets par ligne, 6 octets au total, mais WebGL
+va essayer de lire 4 octets pour la première ligne et 3 octets
+pour la 2ème ligne pour un total de 7 octets, c'est pourquoi il se plaint.
 
-We can tell WebGL to deal with 1 byte at a time like this
+Nous pouvons indiquer à WebGL de traiter 1 octet à la fois comme ceci
 
     const alignment = 1;
     gl.pixelStorei(gl.UNPACK_ALIGNMENT, alignment);
 
-Valid alignment values are 1, 2, 4, and 8.
+Les valeurs d'alignement valides sont 1, 2, 4 et 8.
 
-I suspect in WebGL you will not be able to measure a difference
-in speed between aligned data and un-aligned data. I wish the default
-was 1 instead of 4 so this issue wouldn't bite new users but, in order
-to stay compatible with OpenGL the default needed to stay the same.
-That way if a ported app supplies padded rows it will work unchanged.
-At the same time, in a new app you can just always set it to `1` and
-then be done with it.
+Je soupçonne que dans WebGL, vous ne pourrez pas mesurer de différence
+de vitesse entre des données alignées et non alignées. Je souhaiterais que la valeur par défaut
+soit 1 plutôt que 4 pour que ce problème ne surprenne pas les nouveaux utilisateurs, mais, afin de
+rester compatible avec OpenGL, la valeur par défaut devait rester la même.
+Ainsi, si une application portée fournit des lignes avec du rembourrage (padding), elle fonctionnera sans modification.
+En même temps, dans une nouvelle application, vous pouvez simplement toujours le définir à `1` et
+en avoir fini.
 
-With that set things should be working
+Avec ce paramètre, les choses devraient fonctionner
 
 {{{example url="../webgl-data-texture-3x2.html" }}}
 
-And with that covered lets move on to [rendering to a texture](webgl-render-to-texture.html).
+Avec ceci couvert, passons au [rendu vers une texture](webgl-render-to-texture.html).
 
 <div class="webgl_bottombar">
 <h3>Pixel vs Texel</h3>
-<p>Sometimes the pixels in a texture are called texels. Pixel is short for Picture Element.
-Texel is short for Texture Element.
+<p>Parfois, les pixels d'une texture sont appelés texels. Pixel est l'abréviation de Picture Element (élément d'image).
+Texel est l'abréviation de Texture Element (élément de texture).
 </p>
-<p>I'm sure I'll get an earful from some graphics guru but as far as I can tell "texel" is an example of jargon.
-Personally I generally use "pixel" when referring to the elements of a texture without thinking about it. &#x1f607;
+<p>Je suis sûr que je recevrai des critiques de certains gourous de la programmation graphique, mais pour autant que je puisse en juger, "texel" est un exemple de jargon.
+Personnellement, j'utilise généralement "pixel" pour désigner les éléments d'une texture sans y penser. &#x1f607;
 </p>
 </div>
-
-
-

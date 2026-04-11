@@ -1,17 +1,17 @@
-Title: WebGL2 Optimization - Instanced Drawing
-Description: Drawing Multiple Instances of the same Object
-TOC: Instanced Drawing
+Title: WebGL2 Optimisation - Dessin instancié
+Description: Dessiner plusieurs instances du même objet
+TOC: Dessin instancié
 
-WebGL has a feature called *instanced drawing*.
-It is basically a way to draw more than one of the
-same thing faster than drawing each thing individually.
+WebGL dispose d'une fonctionnalité appelée *dessin instancié*.
+C'est essentiellement une façon de dessiner plus d'une instance de
+la même chose plus rapidement que de dessiner chaque chose individuellement.
 
-First let's make an example that draws multiple instances of the
-same thing.
+Créons d'abord un exemple qui dessine plusieurs instances de
+la même chose.
 
-Starting with code *similar* to what we ended up with at
-the end of [the article on orthographic projection](webgl-3d-orthographic.html)
-we start with these 2 shaders
+En partant d'un code *similaire* à celui avec lequel nous avons terminé à
+la fin de [l'article sur la projection orthographique](webgl-3d-orthographic.html),
+nous commençons avec ces 2 shaders
 
 ```js
 const vertexShaderSource = `#version 300 es
@@ -19,7 +19,7 @@ in vec4 a_position;
 uniform mat4 matrix;
 
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplier la position par la matrice.
   gl_Position = matrix * a_position;
 }
 `;
@@ -37,13 +37,13 @@ void main() {
 `;
 ```
 
-The vertex shader multiplies each vertex by a single matrix which we
-covered in [that article](webgl-3d-orthographic.html) as it is
-a fairly flexible arrangement. The fragment shader just uses
-a color we pass in via a uniform.
+Le vertex shader multiplie chaque sommet par une seule matrice que nous
+avons vue dans [cet article](webgl-3d-orthographic.html) car c'est
+un arrangement assez flexible. Le fragment shader utilise simplement
+une couleur que nous passons via un uniform.
 
-To draw we need to compile the shaders, link them together
-and look up the locations of the attributes and uniforms.
+Pour dessiner, nous devons compiler les shaders, les lier ensemble
+et rechercher les emplacements des attributs et uniforms.
 
 ```js
 const program = webglUtils.createProgramFromSources(gl,
@@ -54,17 +54,17 @@ const colorLoc = gl.getUniformLocation(program, 'color');
 const matrixLoc = gl.getUniformLocation(program, 'matrix');
 ```
 
-and make a vertex array object to hold attribute state
+et créer un vertex array object pour contenir l'état des attributs
 
 ```js
-// Create a vertex array object (attribute state)
+// Créer un vertex array object (état des attributs)
 const vao = gl.createVertexArray();
 
-// and make it the one we're currently working with
+// et en faire celui sur lequel on travaille actuellement
 gl.bindVertexArray(vao);
 ```
 
-Then we need to supply data for the positions via a buffer.
+Ensuite, nous devons fournir des données pour les positions via un buffer.
 
 ```js
 const positionBuffer = gl.createBuffer();
@@ -85,20 +85,20 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
   ]), gl.STATIC_DRAW);
 const numVertices = 12;
 
-// setup the position attribute
+// configurer l'attribut de position
 gl.enableVertexAttribArray(positionLoc);
 gl.vertexAttribPointer(
-    positionLoc,  // location
-    2,            // size (num values to pull from buffer per iteration)
-    gl.FLOAT,     // type of data in buffer
-    false,        // normalize
-    0,            // stride (0 = compute from size and type above)
-    0,            // offset in buffer
+    positionLoc,  // emplacement
+    2,            // taille (nombre de valeurs à extraire du buffer par itération)
+    gl.FLOAT,     // type de données dans le buffer
+    false,        // normaliser
+    0,            // stride (0 = calculer à partir de la taille et du type ci-dessus)
+    0,            // décalage dans le buffer
 );
 ```
 
-Let's draw 5 instances. We'll make 5 matrixes and 5 colors for
-each instance.
+Dessinons 5 instances. Nous allons créer 5 matrices et 5 couleurs pour
+chaque instance.
 
 ```js
 const numInstances = 5;
@@ -111,31 +111,31 @@ const matrices = [
 ];
 
 const colors = [
-  [ 1, 0, 0, 1, ],  // red
-  [ 0, 1, 0, 1, ],  // green
-  [ 0, 0, 1, 1, ],  // blue
+  [ 1, 0, 0, 1, ],  // rouge
+  [ 0, 1, 0, 1, ],  // vert
+  [ 0, 0, 1, 1, ],  // bleu
   [ 1, 0, 1, 1, ],  // magenta
   [ 0, 1, 1, 1, ],  // cyan
 ];
 ```
 
-To draw first we use the shader program, then setup the attribute,
-and then loop over the 5 instances, computing a new matrix
-for each one, setting the matrix uniform and color
-and then drawing.
+Pour dessiner, nous utilisons d'abord le programme shader, puis configurons l'attribut,
+et ensuite nous bouclons sur les 5 instances, calculant une nouvelle matrice
+pour chacune, définissant l'uniform de matrice et de couleur
+puis dessinant.
 
 ```js
 function render(time) {
-  time *= 0.001; // seconds
+  time *= 0.001; // secondes
 
   webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
-  // Tell WebGL how to convert from clip space to pixels
+  // Indiquer à WebGL comment convertir du clip space en pixels
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
   gl.useProgram(program);
 
-  // setup all attributes
+  // configurer tous les attributs
   gl.bindVertexArray(vao);
 
   matrices.forEach((mat, ndx) => {
@@ -149,8 +149,8 @@ function render(time) {
 
     gl.drawArrays(
         gl.TRIANGLES,
-        0,             // offset
-        numVertices,   // num vertices per instance
+        0,             // décalage
+        numVertices,   // nombre de sommets par instance
     );
   });
 
@@ -159,42 +159,42 @@ function render(time) {
 requestAnimationFrame(render);
 ```
 
-Note that the matrix math library takes an optional destination
-matrix at the end of each matrix math function. In most articles we
-haven't used this feature and just let the library allocate a new
-matrix for us but this time we want the result to be stored
-in the matrices we already created.
+Notez que la bibliothèque de calcul matriciel prend une matrice de destination optionnelle
+à la fin de chaque fonction mathématique matricielle. Dans la plupart des articles,
+nous n'avons pas utilisé cette fonctionnalité et laissé la bibliothèque allouer une nouvelle
+matrice pour nous, mais cette fois nous voulons que le résultat soit stocké
+dans les matrices que nous avons déjà créées.
 
-This works and we get 5 plus symbols of different colors rotating.
+Cela fonctionne et nous obtenons 5 symboles plus de couleurs différentes qui tournent.
 
 {{{example url="../webgl-instanced-drawing-not-instanced.html"}}}
 
-That took 5 calls each to `gl.uniform4v`, `gl.uniformMatrix4fv`,
-and `gl.drawArrays` for a total of 15 WebGL calls. If our
-shaders were more complex, like the shaders in
-[the article on spot lighting](webgl-3d-lighting-spot.html)
-we'd have at least 7 calls per object, 6 calls to `gl.uniformXXX`
-and one call to `gl.drawArrays`. If we were drawing 400 objects
-that would be 2800 WebGL calls.
+Cela a nécessité 5 appels chacun à `gl.uniform4v`, `gl.uniformMatrix4fv`,
+et `gl.drawArrays` pour un total de 15 appels WebGL. Si nos
+shaders étaient plus complexes, comme les shaders dans
+[l'article sur l'éclairage spot](webgl-3d-lighting-spot.html),
+nous aurions au moins 7 appels par objet, 6 appels à `gl.uniformXXX`
+et un appel à `gl.drawArrays`. Si nous dessinions 400 objets,
+ce serait 2800 appels WebGL.
 
-Instancing is a way to reduce those calls. It works by
-letting you tell WebGL how many times you want the same
-thing drawn (the number of instances). For each attribute
-you designate if that attribute will advance to the *next value*
-from its assigned buffer every time the vertex shader is
-called (the default), or only every N instances where N is usually
+Le dessin instancié est une façon de réduire ces appels. Il fonctionne en
+vous permettant d'indiquer à WebGL combien de fois vous voulez que la même
+chose soit dessinée (le nombre d'instances). Pour chaque attribut,
+vous désignez si cet attribut va avancer vers la *valeur suivante*
+de son buffer assigné à chaque fois que le vertex shader est
+appelé (par défaut), ou seulement tous les N instances où N est généralement
 1.
 
-So for example instead of supplying `matrix` and `color`
-from a uniform, we would instead supply them via `attribute`s.
-We'd put the matrix and color for each instance in a buffer,
-set up the attributes to pull data from those buffers, and
-tell WebGL, only advance to the next value once per instance.
+Ainsi, par exemple, au lieu de fournir `matrix` et `color`
+depuis un uniform, nous les fournirions via des `attribute`s.
+Nous mettrions la matrice et la couleur pour chaque instance dans un buffer,
+configurerions les attributs pour extraire les données de ces buffers, et
+indiquerions à WebGL de n'avancer vers la valeur suivante qu'une fois par instance.
 
-Let's do it!
+Faisons-le !
 
-First we'll change the shaders to use attributes for `matrix`
-and `color` instead of uniforms.
+D'abord, nous allons modifier les shaders pour utiliser des attributs pour `matrix`
+et `color` au lieu d'uniforms.
 
 ```js
 const vertexShaderSource = `#version 300 es
@@ -206,23 +206,23 @@ in vec4 a_position;
 +out vec4 v_color;
 
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplier la position par la matrice.
   gl_Position = matrix * a_position;
 
-+  // Pass the vertex color to the fragment shader.
++  // Passer la couleur du sommet au fragment shader.
 +  v_color = color;
 }
 `;
 ```
 
-and 
+et
 
 ```js
 const fragmentShaderSource = `#version 300 es
 precision highp float;
 
 -uniform vec4 color;
-+// Passed in from the vertex shader.
++// Passé depuis le vertex shader.
 +in vec4 v_color;
 
 out vec4 outColor;
@@ -234,11 +234,11 @@ void main() {
 `;  
 ```
 
-attributes only work in the vertex shader so we need to
-get the color from an attribute in the vertex shader
-and pass it to the fragment shader via a varying.
+les attributs ne fonctionnent que dans le vertex shader donc nous devons
+obtenir la couleur depuis un attribut dans le vertex shader
+et la passer au fragment shader via un varying.
 
-Next we need to look up the locations of these attributes.
+Ensuite, nous devons rechercher les emplacements de ces attributs.
 
 ```js
 const program = webglUtils.createProgramFromSources(gl,
@@ -251,18 +251,18 @@ const positionLoc = gl.getAttribLocation(program, 'a_position');
 +const matrixLoc = gl.getAttribLocation(program, 'matrix');
 ```
 
-Now, we need a buffer hold the matrices at will get applied
-to the attribute. Since a buffer is best updated in one
-*chunk* we'll put all of our matrices in the same `Float32Array`
+Maintenant, nous avons besoin d'un buffer pour contenir les matrices qui seront appliquées
+à l'attribut. Puisqu'un buffer est mieux mis à jour en un seul
+*bloc*, nous allons mettre toutes nos matrices dans le même `Float32Array`
 
 ```js
-// setup matrixes, one per instance
+// configurer les matrices, une par instance
 const numInstances = 5;
-+// make a typed array with one view per matrix
++// créer un tableau typé avec une vue par matrice
 +const matrixData = new Float32Array(numInstances * 16);
 ```
 
-We'll then make `Float32Array` views, one for each matrix.
+Nous allons ensuite créer des vues `Float32Array`, une pour chaque matrice.
 
 ```js
 -const matrices = [
@@ -283,98 +283,98 @@ for (let i = 0; i < numInstances; ++i) {
 }
 ```
 
-This way when we want to reference the data for all the matrixes
-we can use `matrixData` but when we want any individual matrix
-we can use `matrices[ndx]`.
+Ainsi, quand nous voulons référencer les données pour toutes les matrices,
+nous pouvons utiliser `matrixData`, mais quand nous voulons une matrice individuelle,
+nous pouvons utiliser `matrices[ndx]`.
 
-We also need to create a buffer on the GPU for this data.
-We only need to allocate the buffer at this point, we don't
-need to supply data so the 2nd parameter to `gl.bufferData`
-is a size which just allocates the buffer.
+Nous devons également créer un buffer sur le GPU pour ces données.
+Nous avons seulement besoin d'allouer le buffer à ce stade, nous n'avons pas
+besoin de fournir des données, donc le 2ème paramètre de `gl.bufferData`
+est une taille qui alloue juste le buffer.
 
 ```js
 const matrixBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, matrixBuffer);
-// just allocate the buffer
+// juste allouer le buffer
 gl.bufferData(gl.ARRAY_BUFFER, matrixData.byteLength, gl.DYNAMIC_DRAW);
 ```
 
-Notice we passed `gl.DYNAMIC_DRAW` as the last parameter. This is a *hint*
-to WebGL that we're going to change this data often.
+Notez que nous avons passé `gl.DYNAMIC_DRAW` comme dernier paramètre. C'est un *indice*
+à WebGL que nous allons changer ces données souvent.
 
-Now we need to set up the attributes for the matrices.
-The matrix attribute is a `mat4`. A `mat4` actually uses
-4 consecutive attribute slots.
+Maintenant, nous devons configurer les attributs pour les matrices.
+L'attribut matrix est un `mat4`. Un `mat4` utilise en fait
+4 emplacements d'attributs consécutifs.
 
 ```js
 const bytesPerMatrix = 4 * 16;
 for (let i = 0; i < 4; ++i) {
   const loc = matrixLoc + i;
   gl.enableVertexAttribArray(loc);
-  // note the stride and offset
-  const offset = i * 16;  // 4 floats per row, 4 bytes per float
+  // noter le stride et le décalage
+  const offset = i * 16;  // 4 flottants par ligne, 4 octets par flottant
   gl.vertexAttribPointer(
-      loc,              // location
-      4,                // size (num values to pull from buffer per iteration)
-      gl.FLOAT,         // type of data in buffer
-      false,            // normalize
-      bytesPerMatrix,   // stride, num bytes to advance to get to next set of values
-      offset,           // offset in buffer
+      loc,              // emplacement
+      4,                // taille (nombre de valeurs à extraire du buffer par itération)
+      gl.FLOAT,         // type de données dans le buffer
+      false,            // normaliser
+      bytesPerMatrix,   // stride, nombre d'octets à avancer pour atteindre le prochain ensemble de valeurs
+      offset,           // décalage dans le buffer
   );
-  // this line says this attribute only changes for each 1 instance
+  // cette ligne indique que cet attribut ne change qu'une fois par instance
   gl.vertexAttribDivisor(loc, 1);
 }
 ```
 
-The most important point relative to instanced drawing is
-the call to `gl.vertexAttribDivisor`. It sets this
-attribute to only advance to the next value once per instance.
-This means the `matrix` attributes will use the first matrix for
-every vertex for the first instance, the second matrix for the
-second instance and so on.
+Le point le plus important concernant le dessin instancié est
+l'appel à `gl.vertexAttribDivisor`. Il configure cet
+attribut pour n'avancer vers la valeur suivante qu'une fois par instance.
+Cela signifie que les attributs `matrix` utiliseront la première matrice pour
+chaque sommet de la première instance, la deuxième matrice pour la
+deuxième instance, et ainsi de suite.
 
-Next we need our colors also in a buffer. This data will not
-be changing, at least in this example, so we'll just upload
-the data.
+Ensuite, nous avons besoin de nos couleurs aussi dans un buffer. Ces données ne vont pas
+changer, du moins dans cet exemple, donc nous allons juste téléverser
+les données.
 
 ```js
 -const colors = [
--  [ 1, 0, 0, 1, ],  // red
--  [ 0, 1, 0, 1, ],  // green
--  [ 0, 0, 1, 1, ],  // blue
+-  [ 1, 0, 0, 1, ],  // rouge
+-  [ 0, 1, 0, 1, ],  // vert
+-  [ 0, 0, 1, 1, ],  // bleu
 -  [ 1, 0, 1, 1, ],  // magenta
 -  [ 0, 1, 1, 1, ],  // cyan
 -];
-+// setup colors, one per instance
++// configurer les couleurs, une par instance
 +const colorBuffer = gl.createBuffer();
 +gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 +gl.bufferData(gl.ARRAY_BUFFER,
 +    new Float32Array([
-+        1, 0, 0, 1,  // red
-+        0, 1, 0, 1,  // green
-+        0, 0, 1, 1,  // blue
++        1, 0, 0, 1,  // rouge
++        0, 1, 0, 1,  // vert
++        0, 0, 1, 1,  // bleu
 +        1, 0, 1, 1,  // magenta
 +        0, 1, 1, 1,  // cyan
 +      ]),
 +    gl.STATIC_DRAW);
 ```
 
-We also need to set up the color attribute
+Nous devons également configurer l'attribut de couleur
 
 ```js
-// set attribute for color
+// configurer l'attribut pour la couleur
 gl.enableVertexAttribArray(colorLoc);
 gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 0, 0);
-// this line says this attribute only changes for each 1 instance
+// cette ligne indique que cet attribut ne change qu'une fois par instance
 gl.vertexAttribDivisor(colorLoc, 1);
 ```
 
-At draw time instead of looping over each instance,
-setting the matrix and color uniforms, and then calling draw
-we'll first compute the matrix for each instance.
+Au moment du dessin, au lieu de boucler sur chaque instance,
+de définir les uniforms de matrice et de couleur, puis d'appeler draw,
+nous allons d'abord calculer la matrice pour chaque instance.
 
 ```js
-// update all the matrices
+// mettre à jour toutes les matrices
 matrices.forEach((mat, ndx) => {
   m4.translation(-0.5 + ndx * 0.25, 0, 0, mat);
   m4.zRotate(mat, time * (0.1 + 0.1 * ndx), mat);
@@ -386,49 +386,49 @@ matrices.forEach((mat, ndx) => {
 -
 -  gl.drawArrays(
 -      gl.TRIANGLES,
--      0,             // offset
--      numVertices,   // num vertices per instance
+-      0,             // décalage
+-      numVertices,   // nombre de sommets par instance
 -  );
 });
 ```
 
-Because our matrix library takes an optional destination matrix
-and because our matrices are just `Float32Array` views into
-the same larger `Float32Array`, when we're done all the matrix
-data is ready to upload to the GPU directly.
+Comme notre bibliothèque de calcul matriciel prend une matrice de destination optionnelle
+et comme nos matrices sont juste des vues `Float32Array` sur
+le même `Float32Array` plus grand, quand nous avons fini, toutes les données matricielles
+sont prêtes à être téléversées directement sur le GPU.
 
 ```js
-// upload the new matrix data
+// téléverser les nouvelles données matricielles
 gl.bindBuffer(gl.ARRAY_BUFFER, matrixBuffer);
 gl.bufferSubData(gl.ARRAY_BUFFER, 0, matrixData);
 ```
 
-Finally we can draw all instances in a single draw call.
+Enfin, nous pouvons dessiner toutes les instances en un seul appel de dessin.
 
 ```js
 gl.drawArraysInstanced(
   gl.TRIANGLES,
-  0,             // offset
-  numVertices,   // num vertices per instance
-  numInstances,  // num instances
+  0,             // décalage
+  numVertices,   // nombre de sommets par instance
+  numInstances,  // nombre d'instances
 );
 ```
 
 {{{example url="../webgl-instanced-drawing.html"}}}
 
-In the example above we had 3 WebGL calls per shape * 5 shapes
-which were 15 calls total. We now have just 2 calls for all 5 shapes,
-one to upload the matrices, another to draw.
+Dans l'exemple ci-dessus, nous avions 3 appels WebGL par forme * 5 formes
+soit 15 appels au total. Maintenant nous n'avons plus que 2 appels pour les 5 formes,
+un pour téléverser les matrices, un autre pour dessiner.
 
-I feel like this should go without saying but I then again maybe
-it's only obvious to me because I've done this too much. The code
-above does not take into account the aspect of the canvas.
-It does not use a [projection matrix](webgl-3d-orthographic.html)
-or a [view matrix](webgl-3d-camera.html). It was meant only
-to demonstrate instanced drawing. If you wanted a projection and/or
-a view matrix we could add the calculation to JavaScript. That would
-mean more work for JavaScript. The more obvious way would be to add
-one or two more uniforms to the vertex shader.
+Je pense que cela va sans dire, mais peut-être que c'est seulement évident pour moi
+car j'ai fait cela trop de fois. Le code ci-dessus ne tient pas compte
+du rapport d'aspect du canvas.
+Il n'utilise pas de [matrice de projection](webgl-3d-orthographic.html)
+ni de [matrice de vue](webgl-3d-camera.html). Il était destiné uniquement
+à démontrer le dessin instancié. Si vous vouliez une projection et/ou
+une matrice de vue, nous pourrions ajouter le calcul en JavaScript. Cela signifierait
+plus de travail pour JavaScript. La façon la plus évidente serait d'ajouter
+un ou deux uniforms supplémentaires au vertex shader.
 
 ```js
 const vertexShaderSource = `#version 300 es
@@ -441,17 +441,17 @@ in mat4 matrix;
 out vec4 v_color;
 
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplier la position par la matrice.
 -  gl_Position = matrix * a_position;
 +  gl_Position = projection * view * matrix * a_position;
 
-  // Pass the vertex color to the fragment shader.
+  // Passer la couleur du sommet au fragment shader.
   v_color = color;
 }
 `;
 ```
 
-and then look up their locations at init time
+puis rechercher leurs emplacements au moment de l'initialisation
 
 ```js
 const positionLoc = gl.getAttribLocation(program, 'a_position');
@@ -461,13 +461,13 @@ const matrixLoc = gl.getAttribLocation(program, 'matrix');
 +const viewLoc = gl.getUniformLocation(program, 'view');
 ```
 
-and set them appropriately at render time.
+et les définir de manière appropriée au moment du rendu.
 
 ```js
 gl.useProgram(program);
 
-+// set the view and projection matrices since
-+// they are shared by all instances
++// définir les matrices de vue et de projection car
++// elles sont partagées par toutes les instances
 +const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
 +gl.uniformMatrix4fv(projectionLoc, false,
 +    m4.orthographic(-aspect, aspect, -1, 1, -1, 1));

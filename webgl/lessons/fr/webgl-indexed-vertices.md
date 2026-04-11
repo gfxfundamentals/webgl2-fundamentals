@@ -1,44 +1,27 @@
-Title: WebGL2 Indexed Vertices
-Description: How to use gl.drawElements
-TOC: Indexed Vertices (gl.drawElements)
+Title: WebGL2 Sommets indexés
+Description: Comment utiliser gl.drawElements
+TOC: Sommets indexés (gl.drawElements)
 
-This article assumes you've at least read
-[the article on fundamentals](webgl-fundamentals.html). If
-you have not read that yet you should probably start there.
+Cet article suppose que vous avez au moins lu
+[l'article sur les bases](webgl-fundamentals.html). Si
+vous ne l'avez pas encore lu, vous devriez probablement commencer par là.
 
-This is a short article to cover `gl.drawElements`. There are 2
-basic drawing functions in WebGL. `gl.drawArrays` and `gl.drawElements`.
-Most of the articles on the site that explicitly call one or the other
-call `gl.drawArrays` as it's the most straight forward.
+C'est un court article pour couvrir `gl.drawElements`. Il existe 2
+fonctions de dessin de base dans WebGL : `gl.drawArrays` et `gl.drawElements`.
+La plupart des articles sur ce site qui appellent explicitement l'une ou l'autre
+appellent `gl.drawArrays` car c'est la plus directe.
 
-`gl.drawElements` on the other hand uses a buffer filled with
-vertex indices and draws based on that.
+`gl.drawElements` en revanche utilise un buffer rempli d'
+indices de sommets et dessine en se basant sur eux.
 
-Let's take the example that draws rectangles from
-[the first article](webgl-fundamentals.html) and make it use
+Prenons l'exemple qui dessine des rectangles depuis
+[le premier article](webgl-fundamentals.html) et faisons-le utiliser
 `gl.drawElements`
 
-In that code we created a rectangle from 2 triangles, 3 vertices
-each for a total of 6 vertices. 
+Dans ce code, nous avons créé un rectangle à partir de 2 triangles, 3 sommets
+chacun pour un total de 6 sommets.
 
-Here was our code that provided 6 vertex positions
-
-```js
-  var x1 = x;
-  var x2 = x + width;
-  var y1 = y;
-  var y2 = y + height;
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-     x1, y1,   // vertex 0
-     x2, y1,   // vertex 1
-     x1, y2,   // vertex 2
-     x1, y2,   // vertex 3
-     x2, y1,   // vertex 4
-     x2, y2,   // vertex 5
-  ]), gl.STATIC_DRAW);
-```
-
-We can instead use data for 4 vertices
+Voici notre code qui fournissait 6 positions de sommets
 
 ```js
   var x1 = x;
@@ -46,31 +29,48 @@ We can instead use data for 4 vertices
   var y1 = y;
   var y2 = y + height;
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-     x1, y1,  // vertex 0
-     x2, y1,  // vertex 1
-     x1, y2,  // vertex 2
-     x2, y2,  // vertex 3
+     x1, y1,   // sommet 0
+     x2, y1,   // sommet 1
+     x1, y2,   // sommet 2
+     x1, y2,   // sommet 3
+     x2, y1,   // sommet 4
+     x2, y2,   // sommet 5
   ]), gl.STATIC_DRAW);
 ```
 
-But, then we need to add another buffer with indices because WebGL still
-requires that to draw 2 triangles we must tell it to draw 6 vertices in total.
-
-To do this we create another buffer but we use a different binding point.
-Instead of the `ARRAY_BUFFER` binding point we use the `ELEMENT_ARRAY_BUFFER`
-binding point which is always used for indices.
+Nous pouvons à la place utiliser des données pour 4 sommets
 
 ```js
-// create the buffer
+  var x1 = x;
+  var x2 = x + width;
+  var y1 = y;
+  var y2 = y + height;
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+     x1, y1,  // sommet 0
+     x2, y1,  // sommet 1
+     x1, y2,  // sommet 2
+     x2, y2,  // sommet 3
+  ]), gl.STATIC_DRAW);
+```
+
+Mais ensuite, nous devons ajouter un autre buffer avec des indices car WebGL nécessite toujours
+que pour dessiner 2 triangles, nous devions lui dire de dessiner 6 sommets au total.
+
+Pour ce faire, nous créons un autre buffer mais nous utilisons un point de liaison différent.
+Au lieu du point de liaison `ARRAY_BUFFER`, nous utilisons le point de liaison `ELEMENT_ARRAY_BUFFER`
+qui est toujours utilisé pour les indices.
+
+```js
+// créer le buffer
 const indexBuffer = gl.createBuffer();
 
-// make this buffer the current 'ELEMENT_ARRAY_BUFFER'
+// faire de ce buffer le 'ELEMENT_ARRAY_BUFFER' courant
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-// Fill the current element array buffer with data
+// Remplir le element array buffer courant avec des données
 const indices = [
-  0, 1, 2,   // first triangle
-  2, 1, 3,   // second triangle
+  0, 1, 2,   // premier triangle
+  2, 1, 3,   // deuxième triangle
 ];
 gl.bufferData(
     gl.ELEMENT_ARRAY_BUFFER,
@@ -79,23 +79,23 @@ gl.bufferData(
 );
 ```
 
-Like all data in WebGL we need a specific representation for the 
-indices. We convert the indices to unsigned 16 bit integers with
-`new Uint16Array(indices)` and then upload them to the buffer.
+Comme toutes les données dans WebGL, nous avons besoin d'une représentation spécifique pour les
+indices. Nous convertissons les indices en entiers non signés de 16 bits avec
+`new Uint16Array(indices)` puis nous les téléversons dans le buffer.
 
-It's important to note that unlike the `ARRAY_BUFFER` binding point
-which is global state, the `ELEMENT_ARRAY_BUFFER` binding point is
-part of the current vertex array. 
+Il est important de noter que contrairement au point de liaison `ARRAY_BUFFER`
+qui est un état global, le point de liaison `ELEMENT_ARRAY_BUFFER`
+fait partie du vertex array courant.
 
-In the code we created and bound a vertex array and then setup
-the index buffer. That means, like the attributes, anytime we
-bind this vertex array the index buffer will be also be bound.
-See [the article on attributes](webgl-attributes.html) for more info.
+Dans le code, nous avons créé et lié un vertex array, puis configuré
+le buffer d'indices. Cela signifie que, comme les attributs, chaque fois que nous
+lions ce vertex array, le buffer d'indices sera également lié.
+Voir [l'article sur les attributs](webgl-attributes.html) pour plus d'informations.
 
-At draw time we call `drawElements`
+Au moment du dessin, nous appelons `drawElements`
 
 ```js
-// Draw the rectangle.
+// Dessiner le rectangle.
 var primitiveType = gl.TRIANGLES;
 var offset = 0;
 var count = 6;
@@ -104,27 +104,26 @@ var count = 6;
 +gl.drawElements(primitiveType, count, indexType, offset);
 ```
 
-We get the same results as before but we only had to supply data for 4
-vertices instead of 6. We still had to ask WebGL to draw 6 vertices but this let
-us reuse data for 4 vertices through the indices.
+Nous obtenons les mêmes résultats qu'avant mais nous n'avons fourni des données que pour 4
+sommets au lieu de 6. Nous avons quand même demandé à WebGL de dessiner 6 sommets, mais cela nous a permis
+de réutiliser des données pour 4 sommets grâce aux indices.
 
 {{{example url="../webgl-2d-rectangles-indexed.html"}}}
 
-Whether you use indexed or non indexed data is up to you.
+Le choix d'utiliser des données indexées ou non indexées vous appartient.
 
-It's important to note that indexed vertices won't usually let you make a cube
-with 8 vertex positions because generally you want to associate other data with
-each vertex, data that is different depending on which face that vertex position 
-is being used with. For example if you wanted to give each face of the cube a different
-color you'd need to provide that color with the position. So even though the
-same position is used 3 times, once for each face a vertex touches, you'd still
-need to repeat the position, once for each different face, each with a different
-associated color. That would mean you'd need 24 vertices for a cube, 4 for each
-side and then 36 indices to draw the required 12 triangles.
+Il est important de noter que les sommets indexés ne vous permettront généralement pas de créer un cube
+avec 8 positions de sommets car en général vous voulez associer d'autres données à
+chaque sommet, des données différentes selon quelle face utilise cette position de sommet.
+Par exemple, si vous vouliez donner à chaque face du cube une couleur différente, vous devriez
+fournir cette couleur avec la position. Donc, même si la même position est utilisée 3 fois,
+une fois pour chaque face qu'un sommet touche, vous devriez quand même répéter la position,
+une fois pour chaque face différente, chacune avec une couleur associée différente. Cela signifierait
+que vous auriez besoin de 24 sommets pour un cube, 4 pour chaque côté, puis 36 indices pour dessiner
+les 12 triangles nécessaires.
 
-Valid types for `indexType` above are `gl.UNSIGNED_BYTE`
-where you can only have indices from 0 to 255, in which case you'd use `new Uint8Array(indices)`,
-`gl.UNSIGNED_SHORT` where the maximum index is 65535 which we used above, 
-and `gl.UNSIGNED_INT` which has a maximum index of 4294967296 and where you'd use
+Les types valides pour `indexType` ci-dessus sont `gl.UNSIGNED_BYTE`
+où vous ne pouvez avoir que des indices de 0 à 255, auquel cas vous utiliseriez `new Uint8Array(indices)`,
+`gl.UNSIGNED_SHORT` où l'index maximum est 65535 que nous avons utilisé ci-dessus,
+et `gl.UNSIGNED_INT` qui a un index maximum de 4294967296 et où vous utiliseriez
 `new Uint32Array(indices)`.
-

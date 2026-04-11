@@ -1,86 +1,86 @@
-Title: WebGL2 Precision Issues
-Description: Precision Issues in WebGL2
-TOC: Precision Issues
+Title: WebGL2 Problèmes de précision
+Description: Problèmes de précision dans WebGL2
+TOC: Problèmes de précision
 
-This article is about various precision issues in WebGL2
+Cet article porte sur divers problèmes de précision dans WebGL2.
 
 ## `lowp`, `mediump`, `highp`
 
-In [the first article on this site](webgl-fundamentals.html) we created
-a vertex shader and a fragment shader. When we created the fragment
-shader it was mentioned almost in passing that a fragment shader
-doesn't have a default precision and so we needed to set one by adding
-the line
+Dans [le premier article de ce site](webgl-fundamentals.html), nous avons créé
+un vertex shader et un fragment shader. Quand nous avons créé le fragment
+shader, il a été mentionné presque en passant qu'un fragment shader
+n'a pas de précision par défaut et nous devions donc en définir une en ajoutant
+la ligne
 
 ```glsl
 precision highp float;
 ```
 
-What that heck was that about?
+De quoi s'agissait-il ?
 
-`lowp`, `mediump`, and `highp` are precision settings. Precision in this case
-effectively means how many bits are used to store a value. A number in
-Javascript uses 64bits. Most numbers in WebGL are only 32bits. Less bits =
-faster, more bits = more accurate and/or larger range.
+`lowp`, `mediump` et `highp` sont des paramètres de précision. La précision dans ce contexte
+signifie effectivement combien de bits sont utilisés pour stocker une valeur. Un nombre en
+JavaScript utilise 64 bits. La plupart des nombres dans WebGL ne font que 32 bits. Moins de bits =
+plus rapide, plus de bits = plus précis et/ou plus grande plage.
 
-I don't know if I can explain this well. You can search for 
+Je ne sais pas si je peux bien expliquer ça. Vous pouvez chercher
 [double vs float](https://www.google.com/search?q=double+vs+float)
-for other examples of precision issues but one way to explain it is like the
-difference between a byte and a short or in JavaScript a `Uint8Array` vs a
+pour d'autres exemples de problèmes de précision, mais une façon de l'expliquer est comme la
+différence entre un byte et un short ou en JavaScript un `Uint8Array` vs un
 `Uint16Array`.
 
-* A `Uint8Array` is an array of unsigned 8bit integers. 8bits can hold 2<sup>8</sup> values from 0 to 255.
-* A `Uint16Array` is an array of unsigned 16bit integers. 16bits can hold 2<sup>16</sup> values from 0 to 65535.
-* A `Uint32Array` is an array of unsigned 32bit integers. 32bits can hold 2<sup>32</sup> values from 0 to 4294967295.
+* Un `Uint8Array` est un tableau d'entiers non signés 8 bits. 8 bits peuvent contenir 2<sup>8</sup> valeurs de 0 à 255.
+* Un `Uint16Array` est un tableau d'entiers non signés 16 bits. 16 bits peuvent contenir 2<sup>16</sup> valeurs de 0 à 65535.
+* Un `Uint32Array` est un tableau d'entiers non signés 32 bits. 32 bits peuvent contenir 2<sup>32</sup> valeurs de 0 à 4294967295.
 
-`lowp`, `mediump`, and `highp` are similar.
+`lowp`, `mediump` et `highp` sont similaires.
 
-* `lowp` is at least an 9 bit value. For floating point values they can range 
-  from: -2 to +2, for integer values they are similar to `Uint8Array` or `Int8Array`
+* `lowp` est au moins une valeur de 9 bits. Pour les valeurs à virgule flottante, elles peuvent aller
+  de : -2 à +2, pour les valeurs entières, elles sont similaires à `Uint8Array` ou `Int8Array`
 
-* `mediump` is at least a 16 bit value. For floating point values they can range
-  from: -2<sup>14</sup> to +2<sup>14</sup>, for integer values they are similar to
-  `Uint16Array` or `Int16Array`
+* `mediump` est au moins une valeur de 16 bits. Pour les valeurs à virgule flottante, elles peuvent aller
+  de : -2<sup>14</sup> à +2<sup>14</sup>, pour les valeurs entières, elles sont similaires à
+  `Uint16Array` ou `Int16Array`
 
-* `highp` is at least a 32 bit value. For floating point values they can range
-  from: -2<sup>62</sup> to +2<sup>62</sup>, for integer values they are similar to
-  `Uint32Array` or `Int32Array`
+* `highp` est au moins une valeur de 32 bits. Pour les valeurs à virgule flottante, elles peuvent aller
+  de : -2<sup>62</sup> à +2<sup>62</sup>, pour les valeurs entières, elles sont similaires à
+  `Uint32Array` ou `Int32Array`
 
-It's important to note that not every value inside the range can be represented.
-The easiest to understand is probably `lowp`. There are only 9 bits and so only
-512 unique values can be represented. Above it says the range is -2 to +2 but
-there are an infinite number of values between -2 and +2. For example 1.9999999
-and 1.999998 are 2 values between -2 and +2. With only 9 bits `lowp` can't
-represent those 2 values. So for example, if you want do some math on color and
-you used `lowp` you might see a some banding. Without actually digging into what
-actual values can be represented, we know colors go from 0 to 1. If `lowp`
-goes from -2 to +2 and can only represent 512 unique values then it seems likely
-only 128 of those values fit between 0 and 1. That would also suggest if you have
-a value that is 4/128ths and I try to add 1/512th to it, nothing will happen
-because 1/512th can't be represented by `lowp` so it's effectively 0.
+Il est important de noter que toutes les valeurs dans la plage ne peuvent pas être représentées.
+La plus facile à comprendre est probablement `lowp`. Il n'y a que 9 bits et donc seulement
+512 valeurs uniques peuvent être représentées. Ci-dessus, il est dit que la plage est de -2 à +2, mais
+il y a un nombre infini de valeurs entre -2 et +2. Par exemple 1.9999999
+et 1.999998 sont 2 valeurs entre -2 et +2. Avec seulement 9 bits, `lowp` ne peut pas
+représenter ces 2 valeurs. Donc par exemple, si vous voulez faire des calculs sur une couleur et
+vous avez utilisé `lowp`, vous pourriez voir des bandes. Sans vraiment creuser quelles
+valeurs réelles peuvent être représentées, nous savons que les couleurs vont de 0 à 1. Si `lowp`
+va de -2 à +2 et ne peut représenter que 512 valeurs uniques, il semble probable
+que seulement 128 de ces valeurs tiennent entre 0 et 1. Cela suggèrerait aussi que si vous avez
+une valeur qui est 4/128ème et que j'essaie d'y ajouter 1/512ème, rien ne se passera
+car 1/512ème ne peut pas être représenté par `lowp` donc c'est effectivement 0.
 
-We could just use `highp` everywhere and ignore this issue completely
-but on devices that do actually use 9 bits for `lowp` and/or 16bits for
-`mediump` they are usually faster than `highp`. Often significantly faster.
+On pourrait juste utiliser `highp` partout et ignorer complètement ce problème
+mais sur les appareils qui utilisent vraiment 9 bits pour `lowp` et/ou 16 bits pour
+`mediump`, ils sont généralement plus rapides que `highp`. Souvent significativement plus rapides.
 
-To that last point, unlike values in a `Uint8Array` or `Uint16Array`, a `lowp`
-or `mediump` value or for that matter even a `highp` value is allowed to use
-higher precision (more bits). So for example on a desktop GPU if you put
-`mediump` in your shader it will still most likely use 32bits internally. This
-has the problem of making it hard to test your shaders if you use `lowp` or
-`mediump`. To see if the your shaders actually work correctly with `lowp` or
-`mediump` you have to test on a device that actually uses 8bits for `lowp` and
-16bits for `highp`.
+Sur ce dernier point, contrairement aux valeurs dans un `Uint8Array` ou `Uint16Array`, une valeur `lowp`
+ou `mediump` ou même une valeur `highp` est autorisée à utiliser
+une précision plus élevée (plus de bits). Donc par exemple sur un GPU de bureau, si vous mettez
+`mediump` dans votre shader, il utilisera très probablement encore 32 bits en interne. Cela
+a le problème de rendre difficile le test de vos shaders si vous utilisez `lowp` ou
+`mediump`. Pour voir si vos shaders fonctionnent correctement avec `lowp` ou
+`mediump`, vous devez tester sur un appareil qui utilise vraiment 8 bits pour `lowp` et
+16 bits pour `highp`.
 
-If you do want to try to use `mediump` for speed here are some of the issues
-that come up.
+Si vous voulez essayer d'utiliser `mediump` pour la vitesse, voici quelques-uns des problèmes
+qui surgissent.
 
-A good example is probably the example of [point lights](webgl-3d-lighting-point.html),
-in particular the specular highlight calculation, passes values in world or view space to the fragment shader,
-those values can easily get out of range for a `mediump` value. So, maybe on
-a `mediump` device you could just leave out the specular highlights. For example here
-is the point light shader from [the article on point lights](webgl-3d-lighting-point.html)
-modified to for `mediump`.
+Un bon exemple est probablement l'exemple des [lumières ponctuelles](webgl-3d-lighting-point.html),
+en particulier le calcul du reflet spéculaire, qui passe des valeurs dans l'espace world ou view au fragment shader,
+ces valeurs peuvent facilement sortir de la plage d'une valeur `mediump`. Donc, peut-être sur
+un appareil `mediump`, vous pourriez simplement omettre les reflets spéculaires. Par exemple, voici
+le shader de lumière ponctuelle de [l'article sur les lumières ponctuelles](webgl-3d-lighting-point.html)
+modifié pour `mediump`.
 
 ```glsl
 #version 300 es
@@ -88,7 +88,7 @@ modified to for `mediump`.
 -precision highp float;
 +precision mediump float;
 
-// Passed in and varied from the vertex shader.
+// Passé et varié depuis le vertex shader.
 in vec3 v_normal;
 in vec3 v_surfaceToLight;
 in vec3 v_surfaceToView;
@@ -96,21 +96,21 @@ in vec3 v_surfaceToView;
 uniform vec4 u_color;
 uniform float u_shininess;
 
-// we need to declare an output for the fragment shader
+// nous devons déclarer une sortie pour le fragment shader
 out vec4 outColor;
 
 void main() {
-  // because v_normal is a varying it's interpolated
-  // so it will not be a uint vector. Normalizing it
-  // will make it a unit vector again
+  // parce que v_normal est un varying, il est interpolé
+  // donc ce ne sera pas un vecteur unitaire. Le normaliser
+  // en fera à nouveau un vecteur unitaire
   vec3 normal = normalize(v_normal);
 
   vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
 -  vec3 surfaceToViewDirection = normalize(v_surfaceToView);
 -  vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);
 
-  // compute the light by taking the dot product
-  // of the normal to the light's reverse direction
+  // calculer la lumière en prenant le produit scalaire
+  // de la normale vers la direction inverse de la lumière
   float light = dot(normal, surfaceToLightDirection);
 -  float specular = 0.0;
 -  if (light > 0.0) {
@@ -119,153 +119,153 @@ void main() {
 
   outColor = u_color;
 
-  // Lets multiply just the color portion (not the alpha)
-  // by the light
+  // Multiplions juste la partie couleur (pas l'alpha)
+  // par la lumière
   outColor.rgb *= light;
 
--  // Just add in the specular
+-  // Ajouter simplement le spéculaire
 -  outColor.rgb += specular;
 }
 ```
 
-Note: Even that is not really enough. In the vertex shader we have
+Note : Même ça ne suffit pas vraiment. Dans le vertex shader nous avons
 
 ```glsl
-  // compute the vector of the surface to the light
-  // and pass it to the fragment shader
+  // calculer le vecteur de la surface vers la lumière
+  // et le passer au fragment shader
   v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
 ```
 
-So let's say the light is 1000 units away from the surface.
-We then get to the fragment shader and this line
+Disons que la lumière est à 1000 unités de la surface.
+On arrive ensuite dans le fragment shader et cette ligne
 
 ```glsl
   vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
 ```
 
-seems innocent enough. Except that the normal way to normalize vector
-is to divide by its length and the normal way to compute a length is
+semble assez innocente. Sauf que la façon normale de normaliser un vecteur
+est de diviser par sa longueur et la façon normale de calculer une longueur est
 
 ```
   float length = sqrt(v.x * v.x + v.y * v.y * v.z * v.z);
 ```
 
-If one of those x, y, or z is 1000 then 1000*1000 is 1000000. 1000000
-is out of range for `mediump`.
+Si l'un de ces x, y ou z vaut 1000, alors 1000*1000 = 1000000. 1000000
+est hors de la plage pour `mediump`.
 
-One solution here is to normalize in the vertex shader.
+Une solution ici est de normaliser dans le vertex shader.
 
 ```
-  // compute the vector of the surface to the light
-  // and pass it to the fragment shader
+  // calculer le vecteur de la surface vers la lumière
+  // et le passer au fragment shader
 -  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
 +  v_surfaceToLight = normalize(u_lightWorldPosition - surfaceWorldPosition);
 ```
 
-Now the values assigned to `v_surfaceToLight` are between -1 and +1 which
-is in range for `mediump`.
+Maintenant les valeurs assignées à `v_surfaceToLight` sont entre -1 et +1 ce qui
+est dans la plage pour `mediump`.
 
-Note that normalizing in the vertex shader will not actually give the
-same results but they might be close enough that no one will notice
-unless compared side by side.
+Notez que normaliser dans le vertex shader ne donnera pas réellement les
+mêmes résultats, mais ils pourraient être suffisamment proches pour que personne ne remarque
+sauf comparé côte à côte.
 
-Functions like `normalize`, `length`, `distance`, `dot` all have this
-issue that if the values are too large they're going to go out of range
-for `mediump`.
+Des fonctions comme `normalize`, `length`, `distance`, `dot` ont toutes ce
+problème que si les valeurs sont trop grandes, elles vont sortir de la plage
+pour `mediump`.
 
-But, you actually be to test on a device for which `mediump` is 16 bits.
-On desktop `mediump` is 32bits, the same as `highp` and so any issues
-will not be visible.
+Mais, vous devez vraiment tester sur un appareil pour lequel `mediump` est de 16 bits.
+Sur le bureau, `mediump` est de 32 bits, comme `highp`, donc tout problème
+ne sera pas visible.
 
-## Detecting support for 16bit `mediump`
+## Détection du support pour `mediump` 16 bits
 
-You call `gl.getShaderPrecisionFormat`,
-you pass in the shader type, `VERTEX_SHADER` or `FRAGMENT_SHADER` and you
-pass in one of `LOW_FLOAT`, `MEDIUM_FLOAT`, `HIGH_FLOAT`,
-`LOW_INT`, `MEDIUM_INT`, `HIGH_INT`, and it
-[returns the precision info].
+Vous appelez `gl.getShaderPrecisionFormat`,
+vous passez le type de shader, `VERTEX_SHADER` ou `FRAGMENT_SHADER` et vous
+passez l'un de `LOW_FLOAT`, `MEDIUM_FLOAT`, `HIGH_FLOAT`,
+`LOW_INT`, `MEDIUM_INT`, `HIGH_INT`, et il
+[retourne les informations de précision].
 
 {{{example url="../webgl-precision-lowp-mediump-highp.html"}}}
 
-`gl.getShaderPrecisionFormat` returns a object with three values, `precision`, `rangeMin`, and `rangeMax`.
+`gl.getShaderPrecisionFormat` retourne un objet avec trois valeurs, `precision`, `rangeMin` et `rangeMax`.
 
-For `LOW_FLOAT` and `MEDIUM_FLOAT` `precision` will 23 if they are really
-just `highp`. Otherwise they'll likely be 8 and 15 respectively or
-at least they will be less than 23. For `LOW_INT` and `MEDIUM_INT`
-if they're the same as `highp` then `rangeMin` will be 31. If they're
-less than 31 then a `mediump int` is actually more efficient than a
-`highp int` for example.
+Pour `LOW_FLOAT` et `MEDIUM_FLOAT`, `precision` sera 23 s'ils sont vraiment
+juste `highp`. Sinon, ils seront probablement 8 et 15 respectivement ou
+au moins ils seront inférieurs à 23. Pour `LOW_INT` et `MEDIUM_INT`,
+s'ils sont les mêmes que `highp`, alors `rangeMin` sera 31. S'ils sont
+inférieurs à 31, alors un `mediump int` est en réalité plus efficace qu'un
+`highp int` par exemple.
 
-My Pixel 2 XL uses 16 bits for `mediump` it also uses 16 bits for `lowp`. I'm not sure I've ever used a device that uses 9 bits for `lowp` so I'm not sure what issues commonly come up if any.
+Mon Pixel 2 XL utilise 16 bits pour `mediump`, il utilise aussi 16 bits pour `lowp`. Je ne suis pas sûr d'avoir jamais utilisé un appareil qui utilise 9 bits pour `lowp`, donc je ne suis pas sûr des problèmes qui surviennent couramment.
 
-Throughout these articles we've specified a default precision
-in the fragment shader. We can also specify the precision of any individual
-variable. For example
+Tout au long de ces articles, nous avons spécifié une précision par défaut
+dans le fragment shader. Nous pouvons aussi spécifier la précision de n'importe quelle variable individuelle.
+Par exemple
 
 ```glsl
-uniform mediump vec4 color;  // a uniform
-in lowp vec4 normal;         // an attribute or varying input
-out lowp vec4 texcoord;      // a fragment shader output or varying output
-lowp float foo;              // a variable
+uniform mediump vec4 color;  // un uniform
+in lowp vec4 normal;         // un attribut ou entrée varying
+out lowp vec4 texcoord;      // une sortie de fragment shader ou sortie varying
+lowp float foo;              // une variable
 ```
 
-## Texture Formats
+## Formats de texture
 
-Textures are another place where the spec says the actual precision
-used can be greater then the precision requested.
+Les textures sont un autre endroit où la spécification dit que la précision réelle
+utilisée peut être supérieure à la précision demandée.
 
-As an example you can ask for 16 bit, 4bits per channel texture like this
+À titre d'exemple, vous pouvez demander une texture 16 bits, 4 bits par canal comme ça
 
 ```
 gl.texImage2D(
-  gl.TEXTURE_2D,               // target
-  0,                           // mip level
-  gl.RGBA4,                    // internal format
-  width,                       // width
-  height,                      // height
-  0,                           // border
+  gl.TEXTURE_2D,               // cible
+  0,                           // niveau mip
+  gl.RGBA4,                    // format interne
+  width,                       // largeur
+  height,                      // hauteur
+  0,                           // bordure
   gl.RGBA,                     // format
   gl.UNSIGNED_SHORT_4_4_4_4,   // type
   null,
 );
 ```
 
-But the implementation might actually use a higher resolution format internally.
-I believe most desktops do this and most mobile GPUs do not.
+Mais l'implémentation pourrait en réalité utiliser un format de résolution plus élevée en interne.
+Je crois que la plupart des bureaux font ça et la plupart des GPU mobiles ne le font pas.
 
-We can test. First we'll request a 4bit per channel texture like above.
-Then we'll [render to it](webgl-render-to-texture.html) by rendering
-some 0 to 1 gradient.
+On peut tester. D'abord, nous demanderons une texture de 4 bits par canal comme ci-dessus.
+Puis nous [rendrons vers elle](webgl-render-to-texture.html) en rendant
+un dégradé de 0 à 1.
 
-We'll then render that texture to the canvas. If the texture really is 4 bits
-per channel internally there will only be 16 levels of color from the gradient
-we drew. If the texture is really 8bits per channel we'll see 256 levels of
-colors.
+Nous rendrons ensuite cette texture vers le canvas. Si la texture est vraiment de 4 bits
+par canal en interne, il n'y aura que 16 niveaux de couleur dans le dégradé
+que nous avons dessiné. Si la texture est vraiment de 8 bits par canal, nous verrons 256 niveaux de
+couleurs.
 
 {{{example url="../webgl-precision-textures.html"}}}
 
-Running it on my smartphone I see the texture is using 4bits per channel
-(or at least 4 bits in red since I didn't test the other channels).
+En l'exécutant sur mon smartphone, je vois que la texture utilise 4 bits par canal
+(ou au moins 4 bits pour le rouge puisque je n'ai pas testé les autres canaux).
 
 <div class="webgl_center"><img src="resources/mobile-4-4-4-4-texture-no-dither.png" style="image-rendering: pixelated; width: 600px;"></div>
 
-Where as on my desktop I can see the texture is actually using 8bits per
-channel even though I only asked for 4.
+Alors que sur mon bureau, je peux voir que la texture utilise en réalité 8 bits par canal
+même si je n'en demandais que 4.
 
 <div class="webgl_center"><img src="resources/desktop-4-4-4-4-texture-no-dither.png" style="image-rendering: pixelated; width: 600px;"></div>
 
-One thing to note is that by default WebGL can dither its results to make
-gradations like this look smoother. You can turn off dithering with
+Une chose à noter est que par défaut WebGL peut tramater ses résultats pour rendre
+les gradations comme celle-ci plus douces. Vous pouvez désactiver le tramage avec
 
 ```js
 gl.disable(gl.DITHER);
 ```
 
-If I don't turn off dithering then my smartphone produces this.
+Si je ne désactive pas le tramage, mon smartphone produit ceci.
 
 <div class="webgl_center"><img src="resources/mobile-4-4-4-4-texture-dither.png" style="image-rendering: pixelated; width: 600px;"></div>
 
-Off the top of my head the only place this would really come up is if you
-used some lower bit resolution format texture as a render target and didn't
-test on a device where that texture is actually that lower resolution.
-If you only tested on desktop any issues it causes might not be apparent.
+D'emblée, le seul endroit où cela surgirait vraiment est si vous
+utilisiez une texture de format à résolution inférieure en bits comme cible de rendu et que vous ne
+testiez pas sur un appareil où cette texture est en réalité à cette résolution inférieure.
+Si vous ne testiez que sur le bureau, les problèmes que cela cause pourraient ne pas être apparents.

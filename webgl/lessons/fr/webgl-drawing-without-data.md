@@ -1,28 +1,28 @@
-Title: WebGL2 Drawing Without Data
-Description: Creative Coding - Drawing Without Data
-TOC: Drawing Without Data
+Title: WebGL2 - Dessiner sans données
+Description: Programmation créative - Dessiner sans données
+TOC: Dessiner sans données
 
-This article assumes you've read many of the other articles
-starting with [the fundamentals](webgl-fundamentals.html).
-If you have not read them please start there first.
+Cet article suppose que vous avez lu beaucoup des autres articles
+en commençant par [les bases](webgl-fundamentals.html).
+Si vous ne les avez pas lus, veuillez commencer par là d'abord.
 
-In [the article on the smallest WebGL programs](webgl-smallest-programs.html)
-we covered some examples of drawing with very little code.
-In this article will go over drawing with no data.
+Dans [l'article sur les plus petits programmes WebGL](webgl-smallest-programs.html),
+nous avons couvert quelques exemples de dessin avec très peu de code.
+Dans cet article, nous allons voir comment dessiner sans données.
 
-Traditionally, WebGL apps put geometry data in buffers.
-They then use attributes to pull vertex data from those buffers
-into shaders and convert them to clip space.
+Traditionnellement, les applications WebGL mettent des données de géométrie dans des buffers.
+Elles utilisent ensuite des attributs pour extraire les données de sommets de ces buffers
+dans les shaders et les convertir en clip space.
 
-The word **traditionally** is important. It's only a **tradition**
-to do it this way. It is in no way a requirement. WebGL doesn't
-care how we do it, it only cares that our vertex shaders
-assign clip space coordinates to `gl_Position`.
+Le mot **traditionnellement** est important. C'est seulement une **tradition**
+de le faire ainsi. Ce n'est en aucun cas une obligation. WebGL se fiche
+de comment nous le faisons, il se soucie seulement que nos vertex shaders
+assignent des coordonnées en clip space à `gl_Position`.
 
-In GLSL ES 3.0 there is a special variable, `gl_VertexID`
-available in vertex shaders. Effectively it counts vertices.
-Let's use it to draw calculate vertex positions with no data.
-Well compute the points of a circle based on that variable.
+Dans GLSL ES 3.0, il existe une variable spéciale, `gl_VertexID`,
+disponible dans les vertex shaders. En pratique, elle compte les sommets.
+Utilisons-la pour calculer des positions de sommets sans données.
+Calculons les points d'un cercle en nous basant sur cette variable.
 
 ```glsl
 #version 300 es
@@ -31,8 +31,8 @@ uniform int numVerts;
 #define PI radians(180.0)
 
 void main() {
-  float u = float(gl_VertexID) / float(numVerts);  // goes from 0 to 1
-  float angle = u * PI * 2.0;                      // goes from 0 to 2PI
+  float u = float(gl_VertexID) / float(numVerts);  // va de 0 à 1
+  float angle = u * PI * 2.0;                      // va de 0 à 2PI
   float radius = 0.8;
 
   vec2 pos = vec2(cos(angle), sin(angle)) * radius;
@@ -42,17 +42,17 @@ void main() {
 }
 ```
 
-The code above should be pretty straight forward.
-`gl_VertexID` is going to count from 0 to however
-many vertices we ask to draw. We'll pass that same number
-in as `numVerts`.
-Based on that we generate positions for a circle.
+Le code ci-dessus devrait être assez simple.
+`gl_VertexID` va compter de 0 jusqu'au nombre
+de sommets que nous demandons de dessiner. Nous passerons ce même nombre
+en tant que `numVerts`.
+En nous basant sur cela, nous générons des positions pour un cercle.
 
-If we stopped there the circle would be an ellipse
-because clip space is normalized (goes from -1 to 1)
-across and down the canvas. If we pass in the resolution
-we can take into account that -1 to 1 across might not
-represent the same space as -1 to 1 down the canvas.
+Si nous nous arrêtions là, le cercle serait une ellipse
+car le clip space est normalisé (va de -1 à 1)
+horizontalement et verticalement sur le canvas. Si nous passons la résolution,
+nous pouvons prendre en compte que -1 à 1 horizontalement ne représente pas forcément
+le même espace que -1 à 1 verticalement sur le canvas.
 
 ```glsl
 #version 300 es
@@ -62,8 +62,8 @@ uniform int numVerts;
 #define PI radians(180.0)
 
 void main() {
-  float u = float(gl_VertexID) / float(numVerts);  // goes from 0 to 1
-  float angle = u * PI * 2.0;                      // goes from 0 to 2PI
+  float u = float(gl_VertexID) / float(numVerts);  // va de 0 à 1
+  float angle = u * PI * 2.0;                      // va de 0 à 2PI
   float radius = 0.8;
 
   vec2 pos = vec2(cos(angle), sin(angle)) * radius;
@@ -76,7 +76,7 @@ void main() {
 }
 ```
 
-And our fragment shader can just draw a solid color
+Et notre fragment shader peut simplement dessiner une couleur unie
 
 ```glsl
 #version 300 es
@@ -89,42 +89,42 @@ void main() {
 }
 ```
 
-In our JavaScript at init time we'll compile the shader and look up the uniforms,
+Dans notre JavaScript au moment de l'initialisation, nous allons compiler le shader et rechercher les uniforms,
 
 ```js
-// setup GLSL program
+// configurer le programme GLSL
 const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
 const numVertsLoc = gl.getUniformLocation(program, 'numVerts');
 const resolutionLoc = gl.getUniformLocation(program, 'resolution');
 ```
 
-And to render we'll use the program, 
-set the `resolution` and `numVerts` uniforms, and draw the points.
+Et pour faire le rendu, nous utiliserons le programme,
+définirons les uniforms `resolution` et `numVerts`, et dessinerons les points.
 
 ```js
 gl.useProgram(program);
 
 const numVerts = 20;
 
-// tell the shader the number of verts
+// indiquer au shader le nombre de sommets
 gl.uniform1i(numVertsLoc, numVerts);
-// tell the shader the resolution
+// indiquer au shader la résolution
 gl.uniform2f(resolutionLoc, gl.canvas.width, gl.canvas.height);
 
 const offset = 0;
 gl.drawArrays(gl.POINTS, offset, numVerts);
 ```
 
-And we get a circle of points.
+Et nous obtenons un cercle de points.
 
 {{{example url="../webgl-no-data-point-circle.html"}}}
 
-Is this technique useful? Well with some creative code
-we could make a starfield or a simple rain effect with
-almost no data and a single draw call.
+Cette technique est-elle utile ? Eh bien, avec du code créatif,
+nous pourrions faire un champ d'étoiles ou un simple effet de pluie avec
+presque aucune donnée et un seul appel de dessin.
 
-Let's do the rain just to see it work. First we'll
-change the vertex shader to
+Faisons la pluie juste pour voir que ça fonctionne. Tout d'abord, nous allons
+modifier le vertex shader en
 
 ```glsl
 #version 300 es
@@ -132,8 +132,8 @@ uniform int numVerts;
 uniform float time;
 
 void main() {
-  float u = float(gl_VertexID) / float(numVerts);  // goes from 0 to 1
-  float x = u * 2.0 - 1.0;                         // -1 to 1
+  float u = float(gl_VertexID) / float(numVerts);  // va de 0 à 1
+  float x = u * 2.0 - 1.0;                         // -1 à 1
   float y = fract(time + u) * -2.0 + 1.0;          // 1.0 ->  -1.0
 
   gl_Position = vec4(x, y, 0, 1);
@@ -141,20 +141,20 @@ void main() {
 }
 ```
 
-For this situation we don't need the resolution.
+Pour cette situation, nous n'avons pas besoin de la résolution.
 
-We've added a `time` uniform which will be the time
-in seconds since the page loaded.
+Nous avons ajouté un uniform `time` qui sera le temps
+en secondes depuis le chargement de la page.
 
-For 'x' we're just going to go from -1 to 1
+Pour 'x', nous allons simplement aller de -1 à 1
 
-For 'y' we use `time + u` but `fract` returns
-only the fractional portion so a value from 0.0 to 1.0.
-By expanding that to 1.0 to -1.0 we get a y that repeats
-over time but one that is offset differently for each
+Pour 'y', nous utilisons `time + u` mais `fract` retourne
+seulement la partie fractionnaire, donc une valeur de 0.0 à 1.0.
+En l'étendant à 1.0 à -1.0, nous obtenons un y qui se répète
+dans le temps mais qui est décalé différemment pour chaque
 point.
 
-Let's change the color to blue in the fragment shader.
+Changeons la couleur en bleu dans le fragment shader.
 
 ```glsl
 precision highp float;
@@ -167,22 +167,22 @@ void main() {
 }
 ```
 
-Then in JavaScript we need to look up the time uniform
+Ensuite, en JavaScript, nous devons rechercher l'uniform time
 
 ```js
-// setup GLSL program
+// configurer le programme GLSL
 const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
 const numVertsLoc = gl.getUniformLocation(program, 'numVerts');
 -const resolutionLoc = gl.getUniformLocation(program, 'resolution');
 +const timeLoc = gl.getUniformLocation(program, 'time');
 ```
 
-And we need to convert to code to [animate](webgl-animation.html)
-by creating a render loop and setting the `time` uniform.
+Et nous devons convertir le code pour [l'animer](webgl-animation.html)
+en créant une boucle de rendu et en définissant l'uniform `time`.
 
 ```js
 +function render(time) {
-+  time *= 0.001;  // convert to seconds
++  time *= 0.001;  // convertir en secondes
 
 +  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 +  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -191,9 +191,9 @@ by creating a render loop and setting the `time` uniform.
 
   const numVerts = 20;
 
-  // tell the shader the number of verts
+  // indiquer au shader le nombre de sommets
   gl.uniform1i(numVertsLoc, numVerts);
-+  // tell the shader the time
++  // indiquer au shader le temps
 +  gl.uniform1f(timeLoc, time);
 
   const offset = 0;
@@ -206,18 +206,17 @@ by creating a render loop and setting the `time` uniform.
 
 {{{example url="../webgl-no-data-point-rain-linear.html"}}}
 
-This gives us POINTS going down the screen but they are all
-in order. We need to add some randomness. There is no
-random number generator in GLSL. Instead we can use a
-function that generates something that appears random
-enough.
+Cela nous donne des POINTS qui descendent à l'écran mais ils sont tous
+dans l'ordre. Nous avons besoin d'ajouter un peu de hasard. Il n'y a pas de
+générateur de nombres aléatoires dans GLSL. À la place, nous pouvons utiliser une
+fonction qui génère quelque chose qui semble suffisamment aléatoire.
 
-Here's one
+En voici une
 
 ```glsl
-// hash function from https://www.shadertoy.com/view/4djSRW
-// given a value between 0 and 1
-// returns a value between 0 and 1 that *appears* kind of random
+// fonction de hachage de https://www.shadertoy.com/view/4djSRW
+// étant donné une valeur entre 0 et 1
+// retourne une valeur entre 0 et 1 qui *paraît* à peu près aléatoire
 float hash(float p) {
   vec2 p2 = fract(vec2(p * 5.3983, p * 5.4427));
   p2 += dot(p2.yx, p2.xy + vec2(21.5351, 14.3137));
@@ -225,13 +224,13 @@ float hash(float p) {
 }
 ```
 
-and we can use that like this
+et nous pouvons l'utiliser comme ceci
 
 ```glsl
 void main() {
-  float u = float(gl_VertexID) / float(numVerts);  // goes from 0 to 1
--  float x = u * 2.0 - 1.0;                         // -1 to 1
-+  float x = hash(u) * 2.0 - 1.0;                   // random position
+  float u = float(gl_VertexID) / float(numVerts);  // va de 0 à 1
+-  float x = u * 2.0 - 1.0;                         // -1 à 1
++  float x = hash(u) * 2.0 - 1.0;                   // position aléatoire
   float y = fract(time + u) * -2.0 + 1.0;          // 1.0 ->  -1.0
 
   gl_Position = vec4(x, y, 0, 1);
@@ -239,10 +238,10 @@ void main() {
 }
 ```
 
-We pass `hash` our previous 0 to 1 value and it gives us
-back a pseudo random 0 to 1 value.
+Nous passons à `hash` notre précédente valeur de 0 à 1 et elle nous retourne
+une valeur pseudo-aléatoire de 0 à 1.
 
-Let's also make the points smaller
+Rendons aussi les points plus petits
 
 ```glsl
   gl_Position = vec4(x, y, 0, 1);
@@ -250,32 +249,32 @@ Let's also make the points smaller
 +  gl_PointSize = 2.0;
 ```
 
-And bump up the number of points we're drawing
+Et augmentons le nombre de points que nous dessinons
 
 ```js
 -const numVerts = 20;
 +const numVerts = 400;
 ```
 
-And with that we get
+Et avec cela nous obtenons
 
 {{{example url="../webgl-no-data-point-rain.html"}}}
 
-If you look really closely you can see the rain is repeating.
-Look for some clump of points and watch as they fall off
-the bottom and pop back on the top.
-If there was more going on in the background like if
-this cheap rain effect was happening over a 3D game
-it's possible no one would ever notice it's repeating.
+Si vous regardez vraiment de près, vous pouvez voir que la pluie se répète.
+Cherchez un groupe de points et regardez-les tomber en bas
+et réapparaître en haut.
+S'il se passait plus de choses en arrière-plan, comme si
+cet effet de pluie bon marché se produisait sur un jeu 3D,
+il est possible que personne ne remarque jamais qu'il se répète.
 
-We can fix the repetition by adding in a little more randomness.
+Nous pouvons corriger la répétition en ajoutant un peu plus d'aléatoire.
 
 ```glsl
 void main() {
-  float u = float(gl_VertexID) / float(numVerts);  // goes from 0 to 1
-+  float off = floor(time + u) / 1000.0;           // changes once per second per vertex
--  float x = hash(u) * 2.0 - 1.0;                  // random position
-+  float x = hash(u + off) * 2.0 - 1.0;            // random position
+  float u = float(gl_VertexID) / float(numVerts);  // va de 0 à 1
++  float off = floor(time + u) / 1000.0;           // change une fois par seconde par sommet
+-  float x = hash(u) * 2.0 - 1.0;                  // position aléatoire
++  float x = hash(u + off) * 2.0 - 1.0;            // position aléatoire
   float y = fract(time + u) * -2.0 + 1.0;         // 1.0 ->  -1.0
 
   gl_Position = vec4(x, y, 0, 1);
@@ -283,61 +282,60 @@ void main() {
 }
 ```
 
-In the code above we added `off`. Since we're calling `floor`
-the value of `floor(time + u)` will effectively give us
-a second timer that only changes once per second for each vertex.
-This offset is in sync with the code moving the point down the screen
-so at the same instance the point jumps back to the top
-of the screen some small amount is added to the value
-`hash` is being passed which means this particular point
-will get a new random number and therefore a new random horizontal position.
+Dans le code ci-dessus, nous avons ajouté `off`. Comme nous appelons `floor`,
+la valeur de `floor(time + u)` nous donnera effectivement
+un minuteur secondaire qui ne change qu'une fois par seconde pour chaque sommet.
+Ce décalage est synchronisé avec le code qui déplace le point vers le bas de l'écran
+donc au même moment où le point revient en haut de l'écran,
+une petite quantité est ajoutée à la valeur passée à `hash`, ce qui signifie que ce point particulier
+va obtenir un nouveau nombre aléatoire et donc une nouvelle position horizontale aléatoire.
 
-The result is a rain effect that doesn't appear to repeat
+Le résultat est un effet de pluie qui ne semble pas se répéter
 
 {{{example url="../webgl-no-data-point-rain-less-repeat.html"}}}
 
-Can we do more than `gl.POINTS`? Of course! 
+Peut-on faire plus que `gl.POINTS` ? Bien sûr !
 
-Let's make circles. To do this we need triangles around
-a center like slices of pie. We can think of each triangle
-as 2 points around the edge of the pie followed by 1 point in the center.
-We then repeat for each slice of the pie.
+Faisons des cercles. Pour ce faire, nous avons besoin de triangles autour d'un
+centre comme des parts de tarte. Nous pouvons penser à chaque triangle
+comme 2 points autour du bord de la tarte suivis de 1 point au centre.
+Nous répétons ensuite pour chaque part de la tarte.
 
 <div class="webgl_center"><img src="resources/circle-points.svg" style="width: 400px;"></div>
 
-So first we want some kind of counter that changes once per pie slice
+Donc d'abord, nous voulons une sorte de compteur qui change une fois par part de tarte
 
 ```glsl
 int sliceId = gl_VertexID / 3;
 ```
 
-Then we need a count around the edge of the circle that goes
+Ensuite, nous avons besoin d'un compteur autour du bord du cercle qui suit ce schéma
 
     0, 1, ?, 1, 2, ?, 2, 3, ?, ...
 
-The ? value doesn't really matter because looking at the
-diagram above the 3rd value is always in the center (0,0)
-so we can just multiply by 0 regardless of value.
+La valeur ? n'a pas vraiment d'importance car en regardant le
+diagramme ci-dessus, la 3ème valeur est toujours au centre (0,0)
+donc nous pouvons simplement multiplier par 0 quelle que soit la valeur.
 
-To get the pattern above this would work
+Pour obtenir le schéma ci-dessus, ceci fonctionnerait
 
 ```glsl
 int triVertexId = gl_VertexID % 3;
 int edge = triVertexId + sliceId;
 ```
 
-For points on the edge vs points in the center we need
-this pattern. 2 on the edge then 1 in the center, repeat.
+Pour les points sur le bord vs les points au centre, nous avons besoin
+de ce schéma. 2 sur le bord puis 1 au centre, répéter.
 
     1, 1, 0, 1, 1, 0, 1, 1, 0, ...
 
-We can get that pattern with
+Nous pouvons obtenir ce schéma avec
 
 ```glsl
 float radius = step(1.5, float(triVertexId));
 ```
 
-`step(a, b)` is 0 if a < b and 1 otherwise. You can think of it as
+`step(a, b)` vaut 0 si a < b et 1 sinon. Vous pouvez le voir comme
 
 ```js
 function step(a, b) {
@@ -345,24 +343,24 @@ function step(a, b) {
 }
 ```
 
-`step(1.5, float(triVertexId))` will be 1 when 1.5 is less than `triVertexId`.
-That's true for the first 2 vertices of each triangle and false
-for the last one.
+`step(1.5, float(triVertexId))` sera 1 quand 1.5 est inférieur à `triVertexId`.
+C'est vrai pour les 2 premiers sommets de chaque triangle et faux
+pour le dernier.
 
-We can get triangle vertices for a circle like this
+Nous pouvons obtenir des sommets de triangles pour un cercle comme ceci
 
 ```glsl
 int numSlices = 8;
 int sliceId = gl_VertexID / 3;
 int triVertexId = gl_VertexID % 3;
 int edge = triVertexId + sliceId;
-float angleU = float(edge) / float(numSlices);  // 0.0 to 1.0
+float angleU = float(edge) / float(numSlices);  // 0.0 à 1.0
 float angle = angleU * PI * 2.0;
 float radius = step(float(triVertexId), 1.5);
 vec2 pos = vec2(cos(angle), sin(angle)) * radius;
 ```
 
-Putting all of this together let's just try to draw 1 circle.
+Mettons tout cela ensemble et essayons simplement de dessiner 1 cercle.
 
 ```glsl
 #version 300 es
@@ -376,7 +374,7 @@ void main() {
   int sliceId = gl_VertexID / 3;
   int triVertexId = gl_VertexID % 3;
   int edge = triVertexId + sliceId;
-  float angleU = float(edge) / float(numSlices);  // 0.0 to 1.0
+  float angleU = float(edge) / float(numSlices);  // 0.0 à 1.0
   float angle = angleU * PI * 2.0;
   float radius = step(float(triVertexId), 1.5);
   vec2 pos = vec2(cos(angle), sin(angle)) * radius;
@@ -388,16 +386,16 @@ void main() {
 }
 ```
 
-Notice we put `resolution` back in so we don't get an ellipse.
+Remarquez que nous avons remis `resolution` pour ne pas obtenir une ellipse.
 
-For a 8 slice circle we need 8 * 3 vertices
+Pour un cercle à 8 parts, nous avons besoin de 8 * 3 sommets
 
 ```js
 -const numVerts = 400;
 +const numVerts = 8 * 3;
 ```
 
-and we need to draw `TRIANGLES` not `POINTS`
+et nous devons dessiner des `TRIANGLES` et non des `POINTS`
 
 ```js
 const offset = 0;
@@ -407,20 +405,20 @@ const offset = 0;
 
 {{{example url="../webgl-no-data-triangles-circle.html"}}}
 
-And if what if we wanted to draw multiple circles?
+Et si nous voulions dessiner plusieurs cercles ?
 
-All we need to do is come up with a `circleId` which we
-can use to pick some position for each circle that is
-the same for all vertices in the circle.
+Tout ce que nous devons faire est de trouver un `circleId` que nous
+pouvons utiliser pour choisir une position pour chaque cercle qui est
+la même pour tous les sommets du cercle.
 
 ```glsl
 int numVertsPerCircle = numSlices * 3;
 int circleId = gl_VertexID / numVertsPerCircle;
 ```
 
-For example let's draw a circle of circles.
+Par exemple, dessinons un cercle de cercles.
 
-First let's turn the code above into a function,
+D'abord, transformons le code ci-dessus en une fonction,
 
 ```glsl
 vec2 computeCircleTriangleVertex(int vertexId) {
@@ -428,19 +426,19 @@ vec2 computeCircleTriangleVertex(int vertexId) {
   int sliceId = vertexId / 3;
   int triVertexId = vertexId % 3;
   int edge = triVertexId + sliceId;
-  float angleU = float(edge) / float(numSlices);  // 0.0 to 1.0
+  float angleU = float(edge) / float(numSlices);  // 0.0 à 1.0
   float angle = angleU * PI * 2.0;
   float radius = step(float(triVertexId), 1.5);
   return vec2(cos(angle), sin(angle)) * radius;
 }
 ```
 
-Now here's the original code we used to draw
-a circle of points at the top of this article.
+Voici maintenant le code original que nous avons utilisé pour dessiner
+un cercle de points au début de cet article.
 
 ```glsl
-float u = float(gl_VertexID) / float(numVerts);  // goes from 0 to 1
-float angle = u * PI * 2.0;                      // goes from 0 to 2PI
+float u = float(gl_VertexID) / float(numVerts);  // va de 0 à 1
+float angle = u * PI * 2.0;                      // va de 0 à 2PI
 float radius = 0.8;
 
 vec2 pos = vec2(cos(angle), sin(angle)) * radius;
@@ -451,18 +449,18 @@ vec2 scale = vec2(aspect, 1);
 gl_Position = vec4(pos * scale, 0, 1);
 ```
 
-We just need to change it to use `circleId` instead
-of `vertexId` and to divide by the number of circles
-instead of the number of vertices.
+Nous devons simplement le modifier pour utiliser `circleId` à la place
+de `vertexId` et diviser par le nombre de cercles
+au lieu du nombre de sommets.
 
 ```glsl
 void main() {
 +  int circleId = gl_VertexID / numVertsPerCircle;
 +  int numCircles = numVerts / numVertsPerCircle;
 
--  float u = float(gl_VertexID) / float(numVerts);  // goes from 0 to 1
-+  float u = float(circleId) / float(numCircles);  // goes from 0 to 1
-  float angle = u * PI * 2.0;                     // goes from 0 to 2PI
+-  float u = float(gl_VertexID) / float(numVerts);  // va de 0 à 1
++  float u = float(circleId) / float(numCircles);  // va de 0 à 1
+  float angle = u * PI * 2.0;                     // va de 0 à 2PI
   float radius = 0.8;
 
   vec2 pos = vec2(cos(angle), sin(angle)) * radius;
@@ -477,94 +475,92 @@ void main() {
 }
 ```
 
-Then we just need to increase the number of vertices
+Ensuite, nous devons juste augmenter le nombre de sommets
 
 ```js
 -const numVerts = 8 * 3;
 +const numVerts = 8 * 3 * 20;
 ```
 
-And now we have a circle of 20 circles.
+Et maintenant nous avons un cercle de 20 cercles.
 
 {{{example url="../webgl-no-data-triangles-circles.html"}}}
 
-And of course we could apply the same things we did
-above to make a rain of circles. That probably has no
-point so I'm not going to go through it but it does show
-making triangles in the vertex shader with no data.
+Et bien sûr, nous pourrions appliquer les mêmes techniques que nous avons faites
+ci-dessus pour créer une pluie de cercles. Cela n'a probablement aucun intérêt
+donc je ne vais pas le faire, mais cela montre qu'on peut
+créer des triangles dans le vertex shader sans données.
 
-The above technique could be used for making rectangles
-or squares instead, then generating UV coordinates,
-passing those the fragment shader and texture mapping
-our generated geometry. This might be good for 
-falling snowflakes or leaves that actually flip around in 3D
-by applying the 3D techniques we used in the articles
-on [3D perspective](webgl-3d-perspective.html).
+La technique ci-dessus pourrait être utilisée pour créer des rectangles
+ou des carrés à la place, puis générer des coordonnées UV,
+les passer au fragment shader et appliquer des textures
+sur notre géométrie générée. Cela pourrait être utile pour des flocons de neige
+ou des feuilles qui se retournent vraiment en 3D
+en appliquant les techniques 3D que nous avons utilisées dans les articles
+sur la [perspective 3D](webgl-3d-perspective.html).
 
-I want to emphasize **these techniques** are not common.
-Making a simple particle system might be semi common or
-the rain effect above but making extremely complex calculations
-will hurt performance. In general you if you want performance
-you should ask your computer to do as little work as possible
-so if there is a bunch of stuff you can pre-calculate at init
-time and pass it into the shader in some form or another you
-should do that.
+Je veux souligner que **ces techniques** ne sont pas courantes.
+Créer un système de particules simple peut être semi-courant ou
+l'effet de pluie ci-dessus, mais faire des calculs extrêmement complexes
+nuira aux performances. En général, si vous voulez de la performance,
+vous devriez demander à votre ordinateur de faire le moins de travail possible,
+donc s'il y a beaucoup de choses que vous pouvez pré-calculer au moment de l'initialisation
+et les passer dans le shader sous une forme ou une autre, vous
+devriez le faire.
 
-For example here's an extreme vertex shader
-that calculates a bunch of cubes (warning, has sound).
+Par exemple, voici un vertex shader extrême
+qui calcule un tas de cubes (attention, son, du son).
 
 <iframe width="700" height="400" src="https://www.vertexshaderart.com/art/zd2E5vCZduc5JeoFz" frameborder="0" allowfullscreen></iframe>
 
-As an intellectual curiosity of the puzzle "If I had no data
-except a vertex id could I draw something interesting?" it's
-kind of neat. In fact [that entire website](https://www.vertexshaderart.com) is about
-the puzzle of if you only have a vertex id can you make something
-interesting. But, for performance it would be much much faster to use
-the more traditional techniques of passing in cube vertex data
-in buffers and reading that data with attributes or other techniques
-we'll go in other articles.
+En tant que curiosité intellectuelle du puzzle "Si je n'avais aucune donnée
+sauf un identifiant de sommet, pourrais-je dessiner quelque chose d'intéressant ?", c'est
+assez sympa. En fait [tout ce site](https://www.vertexshaderart.com) porte sur
+le puzzle de : si vous n'avez qu'un identifiant de sommet, pouvez-vous faire quelque chose
+d'intéressant ? Mais, pour la performance, ce serait beaucoup, beaucoup plus rapide d'utiliser
+les techniques plus traditionnelles de passage de données de sommets de cubes
+dans des buffers et de lecture de ces données avec des attributs ou d'autres techniques
+que nous verrons dans d'autres articles.
 
-There is some balance to be struck. For the rain example above if you want that exact
-effect then the code above is pretty efficient. Somewhere between
-the two lies the boundary where one technique is more performant
-than another. Usually the more traditional techniques are far more flexible
-as well but you have to decide on a case by case basis when to use one
-way or another.
+Il y a un certain équilibre à trouver. Pour l'exemple de pluie ci-dessus, si vous voulez cet exact
+effet, alors le code ci-dessus est assez efficace. Quelque part entre
+les deux se trouve la limite où une technique est plus performante
+qu'une autre. Habituellement, les techniques plus traditionnelles sont aussi bien plus flexibles
+mais vous devez décider au cas par cas quand utiliser l'une ou l'autre.
 
-The point of this article is mostly to introduce these ideas 
-and to emphasize other ways of thinking about what WebGL
-is actually doing. Again it only cares that you set `gl_Position`
-and output a color in your shaders. It doesn't care how you do it.
+L'objectif de cet article est principalement d'introduire ces idées
+et de mettre en valeur d'autres façons de penser à ce que WebGL
+fait réellement. Encore une fois, il se soucie seulement que vous définissiez `gl_Position`
+et que vous sortiez une couleur dans vos shaders. Il se fiche de comment vous le faites.
 
 <div class="webgl_bottombar" id="pointsissues">
-<h3>A problem with <code>gl.POINTS</code></h3>
+<h3>Un problème avec <code>gl.POINTS</code></h3>
 <p>
-One thing a technique like this can be useful for is to simulate drawing
-with <code>gl.POINTS</code>.
+Une technique comme celle-ci peut être utile pour simuler le dessin
+avec <code>gl.POINTS</code>.
 </p>
 
-There are 2 problems with <code>gl.POINTS</code>
+Il y a 2 problèmes avec <code>gl.POINTS</code>
 
 <ol>
-<li>They have a maximum size<br/><br/>Most people using <code>gl.POINTS</code> use small sizes
-but if that maximum size is smaller than you need you'll need to choose a different solution.
+<li>Ils ont une taille maximale<br/><br/>La plupart des gens qui utilisent <code>gl.POINTS</code> utilisent de petites tailles
+mais si cette taille maximale est plus petite que ce dont vous avez besoin, vous devrez choisir une solution différente.
 </li>
-<li>How they get clipped when off the screen is inconsistent<br/><br/>
-The issue here is imagine you set the center of a point to be 1 pixel off the left edge
-of the canvas but you set <code>gl_PointSize</code> to 32.0.
+<li>La façon dont ils sont découpés quand ils sont hors de l'écran est inconsistante<br/><br/>
+Le problème ici est d'imaginer que vous définissez le centre d'un point à 1 pixel à gauche du bord
+du canvas mais que vous définissez <code>gl_PointSize</code> à 32.0.
 <div class="webgl_center"><img src="resources/point-outside-canvas.svg" style="width: 400px"></div>
-According to the OpenGL ES 3.0
-spec what is supposed to happen is that because 15 columns of those 32x32 pixels are still on the canvas
-they are supposed to be drawn. Unfortunately OpenGL (not ES) says the exact opposite.
-If the center of the point is off the canvas nothing is drawn. Even worse, OpenGL until
-recently has been notoriously under tested and so some drivers do draw those pixels
-and some don't 😭
+Selon la spécification OpenGL ES 3.0, ce qui est censé se passer est que parce que 15 colonnes de ces 32x32 pixels sont encore sur le canvas,
+elles sont censées être dessinées. Malheureusement, OpenGL (pas ES) dit exactement le contraire.
+Si le centre du point est hors du canvas, rien n'est dessiné. Encore pire, OpenGL jusqu'à
+récemment a été notoirement peu testé, donc certains pilotes dessinent ces pixels
+et d'autres non 😭
 </li>
 </ol>
 <p>
-So, if either of those issues is a problem for your needs then as a solution you need to draw your own quads
-with <code>gl.TRIANGLES</code> instead of using <code>gl.POINTS</code>.
- If you do that both problems are solved.
-The maximum size problem goes away as does the inconsistent clipping problem. There are various
-ways to draw lots of quads. <a href="https://jsgist.org/?src=6306857bfd65adbdcd54b0051d441935">One of them is using techniques like the ones in this article</a>.</p>
+Donc, si l'un ou l'autre de ces problèmes pose un problème pour vos besoins, comme solution vous devez dessiner vos propres quads
+avec <code>gl.TRIANGLES</code> au lieu d'utiliser <code>gl.POINTS</code>.
+Si vous faites cela, les deux problèmes sont résolus.
+Le problème de taille maximale disparaît, tout comme le problème de découpage inconsistant. Il existe différentes
+façons de dessiner beaucoup de quads. <a href="https://jsgist.org/?src=6306857bfd65adbdcd54b0051d441935">L'une d'elles consiste à utiliser des techniques comme celles de cet article</a>.</p>
 </div>

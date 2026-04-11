@@ -1,20 +1,20 @@
-Title: WebGL2 - Less Code, More Fun
-Description: Ways to make programming WebGL less verbose
-TOC: Less Code, More Fun
+Title: WebGL2 - Moins de code, plus de plaisir
+Description: Des façons de rendre la programmation WebGL moins verbeuse
+TOC: Moins de code, plus de plaisir
 
 
-This post is a continuation of a series of posts about WebGL.
-The first [started with fundamentals](webgl-fundamentals.html).
-If you haven't read those please view them first.
+Cet article est la suite d'une série d'articles sur WebGL.
+Le premier [commence par les bases](webgl-fundamentals.html).
+Si vous ne les avez pas lus, veuillez les consulter d'abord.
 
-WebGL programs require that you write shader programs which you have to compile and link and then
-you have to look up the locations of the inputs to those shader programs. These inputs are called
-uniforms and attributes and the code required to look up their locations can be wordy and tedious.
+Les programmes WebGL nécessitent que vous écriviez des programmes shader que vous devez compiler et lier, puis
+vous devez rechercher les emplacements des entrées de ces programmes shader. Ces entrées sont appelées
+uniforms et attributs, et le code nécessaire pour rechercher leurs emplacements peut être laborieux et fastidieux.
 
-Assume we've got the <a href="webgl-boilerplate.html">typical boilerplate WebGL code for
-compiling and linking shader programs</a>. Given a set of shaders like this.
+Supposons que nous ayons le <a href="webgl-boilerplate.html">code WebGL classique pour
+compiler et lier les programmes shader</a>. Étant donné un ensemble de shaders comme celui-ci.
 
-vertex shader:
+Vertex shader :
 
 ```
 #version 300 es
@@ -45,7 +45,7 @@ void main() {
 }
 ```
 
-fragment shader:
+Fragment shader :
 
 ```
 #version 300 es
@@ -88,10 +88,10 @@ void main() {
 }
 ```
 
-You'd end up having to write code like this to look up and set all the various values to draw.
+Vous vous retrouveriez à devoir écrire du code comme celui-ci pour rechercher et définir toutes les différentes valeurs pour dessiner.
 
 ```
-// At initialization time
+// Au moment de l'initialisation
 var u_worldViewProjectionLoc   = gl.getUniformLocation(program, "u_worldViewProjection");
 var u_lightWorldPosLoc         = gl.getUniformLocation(program, "u_lightWorldPos");
 var u_worldLoc                 = gl.getUniformLocation(program, "u_world");
@@ -108,7 +108,7 @@ var a_positionLoc              = gl.getAttribLocation(program, "a_position");
 var a_normalLoc                = gl.getAttribLocation(program, "a_normal");
 var a_texCoordLoc              = gl.getAttribLocation(program, "a_texcoord");
 
-// Setup all the buffers and attributes (assuming you made the buffers already)
+// Configurer tous les buffers et attributs (en supposant que vous avez déjà créé les buffers)
 var vao = gl.createVertexArray();
 gl.bindVertexArray(vao);
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -121,7 +121,7 @@ gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
 gl.enableVertexAttribArray(a_texcoordLoc);
 gl.vertexAttribPointer(a_texcoordLoc, texcoordNumComponents, gl.FLOAT, false, 0, 0);
 
-// At init or draw time depending on use.
+// Au moment de l'initialisation ou du rendu selon l'utilisation.
 var someWorldViewProjectionMat = computeWorldViewProjectionMatrix();
 var lightWorldPos              = [100, 200, 300];
 var worldMat                   = computeWorldMatrix();
@@ -134,15 +134,15 @@ var specularColor              = [1, 1, 1, 1];
 var shininess                  = 60;
 var specularFactor             = 1;
 
-// At draw time
+// Au moment du rendu
 gl.useProgram(program);
 gl.bindVertexArray(vao);
 
-// Setup the textures used
+// Configurer les textures utilisées
 gl.activeTexture(gl.TEXTURE0 + diffuseTextureUnit);
 gl.bindTexture(gl.TEXTURE_2D, diffuseTexture);
 
-// Set all the uniforms.
+// Définir tous les uniforms.
 gl.uniformMatrix4fv(u_worldViewProjectionLoc, false, someWorldViewProjectionMat);
 gl.uniform3fv(u_lightWorldPosLoc, lightWorldPos);
 gl.uniformMatrix4fv(u_worldLoc, worldMat);
@@ -158,19 +158,19 @@ gl.uniform1f(u_specularFactorLoc, specularFactor);
 gl.drawArrays(...);
 ```
 
-That's a lot of typing.
+C'est beaucoup de frappe.
 
-There are lots of ways to simplify this. One suggestion is to ask WebGL to tell us all
-the uniforms, attributes and their locations and then setup functions to set them for us.
-We can then pass in JavaScript objects to set our settings much more easily.
-If that's clear as mud well, our code would look something like this
+Il existe de nombreuses façons de simplifier cela. Une suggestion est de demander à WebGL de nous dire tous
+les uniforms, attributs et leurs emplacements, puis de configurer des fonctions pour les définir pour nous.
+On peut alors passer des objets JavaScript pour définir nos paramètres beaucoup plus facilement.
+Si ça n'est pas clair, voici à quoi ressemblerait notre code
 
 ```
-// At initialization time
+// Au moment de l'initialisation
 var uniformSetters = twgl.createUniformSetters(gl, program);
 var attribSetters  = twgl.createAttributeSetters(gl, program);
 
-// Setup all the buffers and attributes
+// Configurer tous les buffers et attributs
 var attribs = {
   a_position: { buffer: positionBuffer, numComponents: 3, },
   a_normal:   { buffer: normalBuffer,   numComponents: 3, },
@@ -179,7 +179,7 @@ var attribs = {
 var vao = twgl.createVAOAndSetAttributes(
     gl, attribSetters, attribs);
 
-// At init time or draw time depending on use.
+// Au moment de l'initialisation ou du rendu selon l'utilisation.
 var uniforms = {
   u_worldViewProjection:   computeWorldViewProjectionMatrix(...),
   u_lightWorldPos:         [100, 200, 300],
@@ -194,28 +194,28 @@ var uniforms = {
   u_specularFactor:        1,
 };
 
-// At draw time
+// Au moment du rendu
 gl.useProgram(program);
 
-// Bind the VAO that has all our buffers and attribute settings
+// Lier le VAO qui a tous nos buffers et paramètres d'attributs
 gl.bindAttribArray(vao);
 
-// Set all the uniforms and textures used.
+// Définir tous les uniforms et textures utilisés.
 twgl.setUniforms(uniformSetters, uniforms);
 
 gl.drawArrays(...);
 ```
 
-That seems a heck of a lot smaller, easier, and less code to me.
+Ça me semble nettement plus petit, plus facile et avec moins de code.
 
-You can even use multiple JavaScript objects for the uniforms if it suits you. For example
+Vous pouvez même utiliser plusieurs objets JavaScript pour les uniforms si ça vous convient. Par exemple
 
 ```
-// At initialization time
+// Au moment de l'initialisation
 var uniformSetters = twgl.createUniformSetters(gl, program);
 var attribSetters  = twgl.createAttributeSetters(gl, program);
 
-// Setup all the buffers and attributes
+// Configurer tous les buffers et attributs
 var attribs = {
   a_position: { buffer: positionBuffer, numComponents: 3, },
   a_normal:   { buffer: normalBuffer,   numComponents: 3, },
@@ -223,7 +223,7 @@ var attribs = {
 };
 var vao = twgl.createVAOAndSetAttributes(gl, attribSetters, attribs);
 
-// At init time or draw time depending
+// Au moment de l'initialisation ou du rendu
 var uniformsThatAreTheSameForAllObjects = {
   u_lightWorldPos:         [100, 200, 300],
   u_viewInverse:           computeInverseViewMatrix(),
@@ -266,12 +266,12 @@ var objects = [
   },
 ];
 
-// At draw time
+// Au moment du rendu
 gl.useProgram(program);
 
-// Setup the parts that are common for all objects
+// Configurer les parties communes à tous les objets
 
-// Bind the VAO that has all our buffers and attribute settings
+// Lier le VAO qui a tous nos buffers et paramètres d'attributs
 gl.bindAttribArray(vao);
 twgl.setUniforms(uniformSetters, uniformThatAreTheSameForAllObjects);
 
@@ -283,15 +283,15 @@ objects.forEach(function(object) {
 });
 ```
 
-Here's an example using these helper functions
+Voici un exemple utilisant ces fonctions helpers
 
 {{{example url="../webgl-less-code-more-fun.html" }}}
 
-Let's take it a tiny step further. In the code above we setup a variable `attribs` with the buffers we created.
-Not shown is the code to setup those buffers. For example if you want to make positions, normals and texture
-coordinates you might need code like this
+Allons un tout petit peu plus loin. Dans le code ci-dessus, nous avons configuré une variable `attribs` avec les buffers que nous avons créés.
+Le code pour configurer ces buffers n'est pas montré. Par exemple, si vous voulez créer des positions, normales et coordonnées de
+texture, vous pourriez avoir besoin de code comme celui-ci
 
-    // a single triangle
+    // un seul triangle
     var positions = [0, -10, 0, 10, 10, 0, -10, 10, 0];
     var texcoords = [0.5, 0, 1, 1, 0, 1];
     var normals   = [0, 0, 1, 0, 0, 1, 0, 0, 1];
@@ -308,9 +308,9 @@ coordinates you might need code like this
     gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
 
-Looks like a pattern we can simplify as well.
+Ça ressemble à un motif qu'on peut simplifier également.
 
-    // a single triangle
+    // un seul triangle
     var arrays = {
        position: { numComponents: 3, data: [0, -10, 0, 10, 10, 0, -10, 10, 0], },
        texcoord: { numComponents: 2, data: [0.5, 0, 1, 1, 0, 1],               },
@@ -320,18 +320,18 @@ Looks like a pattern we can simplify as well.
     var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
     var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
 
-Much shorter!
+Beaucoup plus court !
 
-Here's that
+Voilà
 
 {{{example url="../webgl-less-code-more-fun-triangle.html" }}}
 
-This will even work if we have indices. `createVAOFromBufferInfo`
-will set all the attributes and setup the `ELEMENT_ARRAY_BUFFER`
-with your `indices` so when you bind that VAO you can call
+Cela fonctionnera même si nous avons des indices. `createVAOFromBufferInfo`
+configurera tous les attributs et configurera l'`ELEMENT_ARRAY_BUFFER`
+avec vos `indices` de sorte que quand vous liez ce VAO, vous pouvez appeler
 `gl.drawElements`.
 
-    // an indexed quad
+    // un quad indexé
     var arrays = {
        position: { numComponents: 3, data: [0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 10, 0], },
        texcoord: { numComponents: 2, data: [0, 0, 0, 1, 1, 0, 1, 1],                 },
@@ -342,22 +342,22 @@ with your `indices` so when you bind that VAO you can call
     var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
     var vao = twgl.createVAOFromBufferInfo(gl, setters, bufferInfo);
 
-and at render time we can call `gl.drawElements` instead of `gl.drawArrays`.
+et au moment du rendu nous pouvons appeler `gl.drawElements` au lieu de `gl.drawArrays`.
 
     ...
 
-    // Draw the geometry.
+    // Dessiner la géométrie.
     gl.drawElements(gl.TRIANGLES, bufferInfo.numElements, gl.UNSIGNED_SHORT, 0);
 
-Here's that
+Voilà
 
 {{{example url="../webgl-less-code-more-fun-quad.html" }}}
 
-Finally we can go what I consider possibly too far. Given `position` almost always has 3 components (x, y, z)
-and `texcoords` almost always 2, indices 3, and normals 3, we can just let the system guess the number
-of components.
+Enfin, nous pouvons aller ce que je considère peut-être trop loin. Étant donné que `position` a presque toujours 3 composantes (x, y, z)
+et `texcoords` presque toujours 2, les indices 3, et les normales 3, on peut laisser le système deviner le nombre
+de composantes.
 
-    // an indexed quad
+    // un quad indexé
     var arrays = {
        position: [0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 10, 0],
        texcoord: [0, 0, 0, 1, 1, 0, 1, 1],
@@ -365,93 +365,93 @@ of components.
        indices:  [0, 1, 2, 1, 2, 3],
     };
 
-And that version
+Et cette version
 
 {{{example url="../webgl-less-code-more-fun-quad-guess.html" }}}
 
-I'm not sure I personally like that style. Guessing bugs me because it can guess wrong. For example
-I might choose to stick an extra set of texture coordinates in my texcoord attribute and it will
-guess 2 and be wrong. Of course if it guesses wrong you can just specify it like the example above.
-I guess I worry if the guessing code changes people's stuff might break. It's up to you. Some people
-like things to be what they consider as simple as possible.
+Je ne suis pas sûr d'aimer personnellement ce style. Deviner me dérange car ça peut se tromper. Par exemple,
+je pourrais choisir d'ajouter un ensemble supplémentaire de coordonnées de texture dans mon attribut texcoord et il va
+deviner 2 et avoir tort. Bien sûr, si ça se trompe, vous pouvez juste le spécifier comme dans l'exemple ci-dessus.
+Je suppose que je m'inquiète que si le code de devinette change, les choses des gens pourraient se casser. C'est à vous de décider. Certaines personnes
+aiment que les choses soient aussi simples que possible.
 
-Why don't we look at the attributes on the shader program to figure out the number of components?
-That's because it's common to supply 3 components (x, y, z) from a buffer but use a `vec4` in
-the shader. For attributes WebGL will set `w = 1` automatically. But that means we can't easily
-know the user's intent since what they declared in their shader might not match the number of
-components they provide.
+Pourquoi ne pas regarder les attributs sur le programme shader pour déterminer le nombre de composantes ?
+C'est parce qu'il est courant de fournir 3 composantes (x, y, z) depuis un buffer mais d'utiliser un `vec4` dans
+le shader. Pour les attributs, WebGL mettra `w = 1` automatiquement. Mais cela signifie que nous ne pouvons pas facilement
+connaître l'intention de l'utilisateur puisque ce qu'il a déclaré dans son shader pourrait ne pas correspondre au nombre de
+composantes qu'il fournit.
 
-Looking for more patterns there's this
+En cherchant d'autres motifs, voilà
 
     var program = twgl.createProgramFromSources(gl, [vs, fs]);
     var uniformSetters = twgl.createUniformSetters(gl, program);
     var attribSetters  = twgl.createAttributeSetters(gl, program);
 
-Let's simplify that too into just
+Simplifions ça aussi en juste
 
     var programInfo = twgl.createProgramInfo(gl, ["vertexshader", "fragmentshader"]);
 
-Which returns something like
+Ce qui retourne quelque chose comme
 
     programInfo = {
-       program: WebGLProgram,  // program we just compiled
-       uniformSetters: ...,    // setters as returned from createUniformSetters,
-       attribSetters: ...,     // setters as returned from createAttribSetters,
+       program: WebGLProgram,  // programme qu'on vient de compiler
+       uniformSetters: ...,    // setters tels que retournés par createUniformSetters,
+       attribSetters: ...,     // setters tels que retournés par createAttribSetters,
     }
 
-And that's yet one more minor simplification. This will come in handy once we start using
-multiple programs since it automatically keeps the setters with the program they are associated with.
+Et c'est encore une simplification mineure de plus. Cela sera utile une fois que nous commencerons à utiliser
+plusieurs programmes car il garde automatiquement les setters associés au programme auquel ils appartiennent.
 
 {{{example url="../webgl-less-code-more-fun-quad-programinfo.html" }}}
 
-One more, sometimes we have data that has no indices and we have to call
-`gl.drawArrays`. Other times do have indices and we have to call `gl.drawElements`.
-Given the data we have we can easily check which by looking at `bufferInfo.indices`.
-If it exists we need to call `gl.drawElements`. If not we need to call `gl.drawArrays`.
-So there's a function, `twgl.drawBufferInfo` that does that. It's used like this
+Encore une chose, parfois nous avons des données sans indices et nous devons appeler
+`gl.drawArrays`. D'autres fois, nous avons des indices et nous devons appeler `gl.drawElements`.
+Étant donné les données que nous avons, nous pouvons facilement vérifier lequel en regardant `bufferInfo.indices`.
+S'il existe, nous devons appeler `gl.drawElements`. Sinon, nous devons appeler `gl.drawArrays`.
+Il existe donc une fonction, `twgl.drawBufferInfo`, qui fait ça. Elle s'utilise comme ça
 
     twgl.drawBufferInfo(gl, bufferInfo);
 
-If you don't pass a 3rd parameter for the type of primitive to draw it assumes
+Si vous ne passez pas un 3ème paramètre pour le type de primitive à dessiner, elle suppose
 `gl.TRIANGLES`.
 
-Here's an example were we have a non-indexed triangle and an indexed quad. Because
-we're using `twgl.drawBufferInfo` the code doesn't have to change when we
-switch data.
+Voici un exemple où nous avons un triangle non-indexé et un quad indexé. Parce que
+nous utilisons `twgl.drawBufferInfo`, le code n'a pas à changer quand nous
+changeons de données.
 
 {{{example url="../webgl-less-code-more-fun-drawbufferinfo.html" }}}
 
-Anyway, this is the style I try to write my own WebGL programs.
-For the lessons on these tutorials though I've felt like I have to use the standard **verbose**
-ways so people don't get confused about what is WebGL and what is my own style. At some point
-though showing all the steps gets in the way of the point so going forward some lessons will
-be using this style.
+Quoi qu'il en soit, c'est le style dans lequel j'essaie d'écrire mes propres programmes WebGL.
+Pour les leçons de ces tutoriels, j'ai cependant senti que je devais utiliser les façons **verbeuses** standard
+pour que les gens ne soient pas confus sur ce qui est WebGL et ce qui est mon propre style. À un moment donné,
+cependant, montrer toutes les étapes empêche d'aller à l'essentiel, donc certaines leçons à venir
+utiliseront ce style.
 
-Feel free to use this style in your own code. The functions `twgl.createProgramInfo`,
-`twgl.createVAOAndSetAttributes`, `twgl.createBufferInfoFromArrays`, and `twgl.setUniforms`
-etc... are part of a library I wrote based off these ideas. [It's called `TWGL`](https://twgljs.org).
-It rhymes with wiggle and it stands for `Tiny WebGL`.
+N'hésitez pas à utiliser ce style dans votre propre code. Les fonctions `twgl.createProgramInfo`,
+`twgl.createVAOAndSetAttributes`, `twgl.createBufferInfoFromArrays`, et `twgl.setUniforms`
+etc... font partie d'une bibliothèque que j'ai écrite basée sur ces idées. [Elle s'appelle `TWGL`](https://twgljs.org).
+Ça rime avec wiggle et ça signifie `Tiny WebGL`.
 
-Next up, [drawing multiple things](webgl-drawing-multiple-things.html).
+Ensuite, [dessiner plusieurs choses](webgl-drawing-multiple-things.html).
 
 <div class="webgl_bottombar">
-<h3>Can we use the setters directly?</h3>
+<h3>Peut-on utiliser les setters directement ?</h3>
 <p>
-For those of you familiar with JavaScript you might be wondering if you can use the setters
-directly like this.
+Pour ceux d'entre vous qui connaissent JavaScript, vous vous demandez peut-être si vous pouvez utiliser les setters
+directement comme ça.
 </p>
 <pre class="prettyprint">{{#escapehtml}}
-// At initialization time
+// Au moment de l'initialisation
 var uniformSetters = twgl.createUniformSetters(program);
 
-// At draw time
-uniformSetters.u_ambient([1, 0, 0, 1]); // set the ambient color to red.
+// Au moment du rendu
+uniformSetters.u_ambient([1, 0, 0, 1]); // définir la couleur ambiante en rouge.
 {{/escapehtml}}</pre>
-<p>The reason this is not a good idea is because when you're working with GLSL you might
-modify the shaders from time to time, often to debug. Let's say we were not seeing
-anything on the screen in our program. One of the first things I do when nothing
-is appearing is to simplify my shaders. For example I might change the fragment shader
-to the simplest thing possible</p>
+<p>La raison pour laquelle ce n'est pas une bonne idée est que quand vous travaillez avec GLSL, vous pourriez
+modifier les shaders de temps en temps, souvent pour déboguer. Disons que nous ne voyions
+rien à l'écran dans notre programme. L'une des premières choses que je fais quand rien
+n'apparaît est de simplifier mes shaders. Par exemple, je pourrais changer le fragment shader
+en la chose la plus simple possible</p>
 <pre class="prettyprint showlinemods">{{#escapehtml}}
 #version 300 es
 precision highp float;
@@ -490,17 +490,16 @@ void main() {
     u_lightColor * (diffuseColor * litR.y + diffuseColor * u_ambient +
                 u_specular * litR.z * u_specularFactor)).rgb,
       diffuseColor.a);
-*  outColor = vec4(0,1,0,1);  // &lt;!--- just green
+*  outColor = vec4(0,1,0,1);  // &lt;!--- juste du vert
 }
 {{/escapehtml}}</pre>
-<p>Notice I just added a line that sets <code>outColor</code> to a constant color.
-Most drivers will see that none of the previous lines in the file actually contribute
-to the result. As such they'll optimize out all of our uniforms. The next time we run the program
-when we call <code>twgl.createUniformSetters</code> it won't create a setter for <code>u_ambient</code> so the
-code above that calls <code>uniformSetters.u_ambient()</code> directly will fail with</p>
+<p>Remarquez que j'ai juste ajouté une ligne qui définit <code>outColor</code> à une couleur constante.
+La plupart des drivers verront qu'aucune des lignes précédentes dans le fichier ne contribue vraiment
+au résultat. En tant que tel, ils optimiseront tous nos uniforms. La prochaine fois que nous exécutons le programme
+quand nous appelons <code>twgl.createUniformSetters</code>, il ne créera pas de setter pour <code>u_ambient</code> donc le
+code ci-dessus qui appelle <code>uniformSetters.u_ambient()</code> directement échouera avec</p>
 <pre class="prettyprint">
 TypeError: undefined is not a function
 </pre>
-<p><code>twgl.setUniforms</code> solves that issue. It only sets those uniforms that actually exist</p>
+<p><code>twgl.setUniforms</code> résout ce problème. Il ne définit que les uniforms qui existent réellement</p>
 </div>
-

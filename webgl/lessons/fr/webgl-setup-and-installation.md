@@ -1,119 +1,119 @@
-Title: WebGL2 Setup and Installation
-Description: How to do WebGL development
-TOC: Setup And Installation
+Title: WebGL2 - Installation et configuration
+Description: Comment développer avec WebGL
+TOC: Installation et configuration
 
 
-Techincally you don't need anything other than a web browser to do WebGL
-development. Go to [jsfiddle.net](https://jsfiddle.net/greggman/8djzyjL3/) or [jsbin.com](https://jsbin.com)
-or [codepen.io](https://codepen.io/greggman/pen/YGQjVV) and just start applying the lessons here.
+Techniquement, vous n'avez besoin que d'un navigateur web pour développer avec WebGL.
+Rendez-vous sur [jsfiddle.net](https://jsfiddle.net/greggman/8djzyjL3/) ou [jsbin.com](https://jsbin.com)
+ou [codepen.io](https://codepen.io/greggman/pen/YGQjVV) et commencez simplement à appliquer les leçons ici.
 
-On all of them you can reference external scripts by adding a `<script src="..."></script>`
-tag pair if you want to use external scripts.
+Sur chacun d'eux, vous pouvez référencer des scripts externes en ajoutant une paire de balises `<script src="..."></script>`
+si vous voulez utiliser des scripts externes.
 
-Still, there are limits. WebGL has stronger restrictions than Canvas2D for loading images
-which means you can't easily access images from around the web for your WebGL work.
-On top of that it's just faster to work with everything local.
+Cependant, il y a des limites. WebGL a des restrictions plus strictes que Canvas2D pour le chargement d'images,
+ce qui signifie que vous ne pouvez pas facilement accéder aux images du web pour votre travail WebGL.
+De plus, c'est simplement plus rapide de travailler avec tout en local.
 
-Let's assume you want to run and edit the samples on this site. The first thing you should
- do is download the site. [You can download it here](https://github.com/gfxfundamentals/webgl2-fundamentals/tree/gh-pages).
+Supposons que vous vouliez exécuter et modifier les exemples de ce site. La première chose à faire
+est de télécharger le site. [Vous pouvez le télécharger ici](https://github.com/gfxfundamentals/webgl2-fundamentals/tree/gh-pages).
 
 {{{image url="resources/download-webglfundamentals.gif" }}}
 
-Unzip the files into some folder.
+Décompressez les fichiers dans un dossier.
 
-## Using a small simple easy Web Server
+## Utiliser un petit serveur web simple
 
-Next up you should install a small web server. I know "web server" sounds scary but the truth is [web
-servers are actually extremely simple](https://games.greggman.com/game/saving-and-loading-files-in-a-web-page/).
+Ensuite, vous devriez installer un petit serveur web. Je sais que « serveur web » semble intimidant, mais en réalité
+[les serveurs web sont extrêmement simples](https://games.greggman.com/game/saving-and-loading-files-in-a-web-page/).
 
-Here's a very simple one with an interface called [Servez](https://greggman.github.io/servez).
+En voici un très simple avec une interface appelé [Servez](https://greggman.github.io/servez).
 
 {{{image url="resources/servez.gif" }}}
 
-Just point it at the folder where you unzipped the files, click "Start", then go to
-in your browser [`http://localhost:8080/webgl/`]()`http://localhost:8080/webgl/) and choose
-a sample.
+Pointez-le vers le dossier où vous avez décompressé les fichiers, cliquez sur « Start », puis allez
+dans votre navigateur sur [`http://localhost:8080/webgl/`]()`http://localhost:8080/webgl/) et choisissez
+un exemple.
 
-If you prefer the command line, another way is to use [node.js](https://nodejs.org).
-Download it, install it, then open a command prompt / console / terminal window. If you're on Windows the installer
-will add a special "Node Command Prompt" so use that.
+Si vous préférez la ligne de commande, une autre façon est d'utiliser [node.js](https://nodejs.org).
+Téléchargez-le, installez-le, puis ouvrez une fenêtre d'invite de commandes / console / terminal. Si vous êtes sous Windows,
+l'installateur ajoutera un « Node Command Prompt » spécial, utilisez-le.
 
-Then install the [`servez`](https://github.com/greggman/servez-cli) by typing
+Ensuite, installez [`servez`](https://github.com/greggman/servez-cli) en tapant
 
     npm -g install servez
 
-If you're on OSX use
+Si vous êtes sous OSX, utilisez
 
     sudo npm -g install servez
 
-Once you've done that type
+Une fois fait, tapez
 
     servez path/to/folder/where/you/unzipped/files
 
-It should print something like
+Il devrait afficher quelque chose comme
 
 {{{image url="resources/servez-response.png" }}}
 
-Then in your browser go to [`http://localhost:8080/webgl/`](http://localhost:8080/webgl/).
+Puis dans votre navigateur, allez sur [`http://localhost:8080/webgl/`](http://localhost:8080/webgl/).
 
-If you don't specify a path then servez will server the current folder.
+Si vous ne spécifiez pas de chemin, servez utilisera le dossier courant.
 
-## Using your Browsers Developer Tools
+## Utiliser les outils de développement de votre navigateur
 
-Most browser have extensive developer tools built in.
+La plupart des navigateurs ont des outils de développement intégrés très complets.
 
 {{{image url="resources/chrome-devtools.png" }}}
 
-[Docs for Chrome's are here](https://developers.google.com/web/tools/chrome-devtools/),
-[Firefox's are here](https://developer.mozilla.org/en-US/docs/Tools).
+[La documentation pour Chrome est ici](https://developers.google.com/web/tools/chrome-devtools/),
+[celle pour Firefox est ici](https://developer.mozilla.org/en-US/docs/Tools).
 
-Learn how to use them. If nothing else always check the JavaScript console. If there is an issue it will often have
-an error message. Read the error message closely and you should get a clue where the issue is.
+Apprenez à les utiliser. Vérifiez toujours la console JavaScript en premier. Si un problème survient, elle contiendra souvent
+un message d'erreur. Lisez attentivement le message d'erreur et vous devriez obtenir un indice sur l'origine du problème.
 
 {{{image url="resources/javascript-console.gif" }}}
 
 ## WebGL Lint
 
-[Here](https://greggman.github.io/webgl-lint/) is a script to check for several
-webgl errors. Just add this to your page before your other scripts
+[Voici](https://greggman.github.io/webgl-lint/) un script pour vérifier plusieurs
+erreurs WebGL. Ajoutez simplement ceci à votre page avant vos autres scripts
 
 ```
 <script src="https://greggman.github.io/webgl-lint/webgl-lint.js"></script>
 ```
 
-and your program will throw an exception if it gets a WebGL error and if you're lucky
-print more info.
+et votre programme lancera une exception s'il rencontre une erreur WebGL, et affichera si possible
+plus d'informations.
 
-[You can also add names to your webgl resources](https://github.com/greggman/webgl-lint#naming-your-webgl-objects-buffers-textures-programs-etc)
-(buffer, textures, shaders, programs, ...) so that when you get an error message it
-will include the names of the resources relevant to the error.
+[Vous pouvez également donner des noms à vos ressources WebGL](https://github.com/greggman/webgl-lint#naming-your-webgl-objects-buffers-textures-programs-etc)
+(buffers, textures, shaders, programmes, ...) de sorte que lors d'un message d'erreur,
+il inclura les noms des ressources liées à l'erreur.
 
 ## Extensions
 
-There are various WebGL Inspectors. 
-[Here's one for Chrome and Firefox](https://spector.babylonjs.com/).
+Il existe divers inspecteurs WebGL.
+[En voici un pour Chrome et Firefox](https://spector.babylonjs.com/).
 
 {{{image url="https://camo.githubusercontent.com/5bbc9caf2fc0ecc2eebf615fa8348146b37b08fe/68747470733a2f2f73706563746f72646f632e626162796c6f6e6a732e636f6d2f70696374757265732f7469746c652e706e67" }}}
 
-Note: [READ THE DOCS](https://github.com/BabylonJS/Spector.js/blob/master/readme.md)!
+Note : [LISEZ LA DOCUMENTATION](https://github.com/BabylonJS/Spector.js/blob/master/readme.md) !
 
-The extension version of spector.js captures frames. What this is means is it only
-works if your WebGL app successfully initializes itself and then renders in a
-`requestAnimationFrame` loop. You click the "record" button and it captures
-all the WebGL API calls for one "frame".
+La version extension de spector.js capture des frames. Cela signifie qu'elle ne fonctionne que si
+votre application WebGL s'initialise avec succès, puis fait le rendu dans une
+boucle `requestAnimationFrame`. Vous cliquez sur le bouton « record » et il capture
+tous les appels API WebGL pour une « frame ».
 
-This means without some work it won't help you find issues during initialization.
+Cela signifie que sans adaptation, cela ne vous aidera pas à trouver des problèmes lors de l'initialisation.
 
-To workaround that there are 2 methods.
+Pour contourner cela, il y a 2 méthodes.
 
-1. Use it as a library, not as an extension. 
+1. L'utiliser comme bibliothèque, pas comme extension.
 
-   See [the docs](https://github.com/BabylonJS/Spector.js/blob/master/readme.md). This way you can tell it "Capture the WebGL API commands now!"
+   Voir [la documentation](https://github.com/BabylonJS/Spector.js/blob/master/readme.md). De cette façon, vous pouvez lui dire « Capture les commandes API WebGL maintenant ! »
 
-2. Change your app so that it doesn't start until you click a button.
+2. Modifier votre application pour qu'elle ne démarre qu'au clic d'un bouton.
 
-   This way you can go to the extension and pick "record" and then start your
-   app. If your app doesn't animate then just add a few fake frames. Example:
+   Ainsi, vous pouvez aller dans l'extension, choisir « record », puis démarrer votre application.
+   Si votre application n'anime pas, ajoutez simplement quelques fausses frames. Exemple :
 
 ```html
 <button type="button">start</button>
@@ -122,7 +122,7 @@ To workaround that there are 2 methods.
 
 ```js
 function main() {
-  // Get A WebGL context
+  // Obtenir un contexte WebGL
   /** @type {HTMLCanvasElement} */
   const canvas = document.querySelector("#canvas");
   const gl = canvas.getContext("webgl");
@@ -134,12 +134,12 @@ function main() {
   startElem.addEventListener('click', start, {once: true});
 
   function start() {
-    // run the initialization in rAF since spector only captures inside rAF events
+    // exécuter l'initialisation dans rAF car spector ne capture qu'à l'intérieur des événements rAF
     requestAnimationFrame(() => {
-      // do all the initialization
+      // faire toute l'initialisation
       init(gl);
     });
-    // make so more frames so spector has something to look at.
+    // ajouter quelques frames supplémentaires pour que spector ait quelque chose à observer.
     requestAnimationFrame(() => {});
     requestAnimationFrame(() => {});
     requestAnimationFrame(() => {});
@@ -149,24 +149,24 @@ function main() {
 main();
 ```
 
-Now you can click "record" in the spector.js extension, then click "start" in your page
-and spector will record your initialization.
+Vous pouvez maintenant cliquer sur « record » dans l'extension spector.js, puis cliquer sur « start » dans votre page
+et spector enregistrera votre initialisation.
 
-Safari also has a similar built in feature that has [similar issues with similar workarounds](https://stackoverflow.com/questions/62446483/debugging-in-webgl). 
+Safari possède également une fonctionnalité similaire intégrée qui a [des problèmes similaires avec des solutions similaires](https://stackoverflow.com/questions/62446483/debugging-in-webgl).
 
-When I use a helper like this I'll often click on a draw call, and check the uniforms. If I see a bunch of `NaN` (NaN = Not a Number) then I can usually track down the code that set that uniform and find the bug.
+Quand j'utilise un outil d'aide comme celui-ci, je clique souvent sur un appel de dessin et vérifie les uniforms. Si je vois un tas de `NaN` (NaN = Not a Number), je peux généralement remonter jusqu'au code qui a défini cet uniform et trouver le bug.
 
-## Inspect the Code
+## Inspecter le code
 
-Also always remember you can inspect the code. You can usually just pick view source
+Pensez aussi toujours que vous pouvez inspecter le code. Vous pouvez généralement simplement afficher le source
 
 {{{image url="resources/view-source.gif" }}}
 
-Even if you can't right click a page or if the source is in a separate file
-you can always view the source in the devtools
+Même si vous ne pouvez pas faire un clic droit sur une page ou si le source est dans un fichier séparé,
+vous pouvez toujours voir le source dans les outils de développement
 
 {{{image url="resources/devtools-source.gif" }}}
 
-## Get Started
+## Commencer
 
-Hopefully that helps you get started. [Now back to the lessons](index.html).
+J'espère que cela vous aidera à démarrer. [Retour aux leçons](index.html).

@@ -1,24 +1,24 @@
-Title: WebGL2 Text - HTML
-Description: How to use HTML to display text that is positioned to match WebGL
-TOC: Text - HTML
+Title: WebGL2 Texte - HTML
+Description: Comment utiliser HTML pour afficher du texte positionné par rapport à WebGL
+TOC: Texte - HTML
 
 
-This article is a continuation of previous WebGL articles.
-If you haven't read them I suggest [you start there](webgl-3d-perspective.html)
-and work your way back.
+Cet article est la suite des articles précédents sur WebGL.
+Si vous ne les avez pas lus, je vous suggère [de commencer par là](webgl-3d-perspective.html)
+et de revenir ici ensuite.
 
-A common question is "how to I draw text in WebGL". The first thing to ask yourself
-is what's your purpose in drawing the text. You're in a browser, the browser
-displays text. So your first answer should be to use HTML to display text.
+Une question courante est "comment dessiner du texte dans WebGL". La première chose à se demander
+est quel est votre objectif en dessinant le texte. Vous êtes dans un navigateur, le navigateur
+affiche du texte. Donc votre première réponse devrait être d'utiliser HTML pour afficher le texte.
 
-Let's do the easiest example first: You just want to draw some text over
-your WebGL. We might call this a text overlay. Basically this is text that stays
-in the same position.
+Commençons par l'exemple le plus simple : vous voulez juste dessiner du texte par-dessus
+votre WebGL. On pourrait appeler ça une superposition de texte. C'est essentiellement du texte qui reste
+à la même position.
 
-The simple way is to make an HTML element or elements and use CSS to make them overlap.
+La façon simple est de créer un ou des éléments HTML et d'utiliser CSS pour les faire se superposer.
 
-For example: First make a container and put both a canvas and some HTML to be
-overlaid inside the container.
+Par exemple : d'abord créez un conteneur et mettez à la fois un canvas et du HTML à
+superposer à l'intérieur du conteneur.
 
     <div class="container">
       <canvas id="canvas" width="400" height="300"></canvas>
@@ -28,7 +28,7 @@ overlaid inside the container.
       </div>
     </div>
 
-Next setup the CSS so that the canvas and the HTML overlap
+Ensuite configurez le CSS pour que le canvas et le HTML se superposent
 
     .container {
         position: relative;
@@ -39,75 +39,75 @@ Next setup the CSS so that the canvas and the HTML overlap
         top: 10px;
     }
 
-Now look up those elements at init time and create or lookup the areas you want to
-change.
+Maintenant recherchez ces éléments à l'initialisation et créez ou recherchez les zones que vous voulez
+modifier.
 
-    // look up the elements we want to affect
+    // rechercher les éléments à affecter
     var timeElement = document.querySelector("#time");
     var angleElement = document.querySelector("#angle");
 
-    // Create text nodes to save some time for the browser
-    // and avoid allocations.
+    // Créer des nœuds de texte pour économiser du temps au navigateur
+    // et éviter les allocations.
     var timeNode = document.createTextNode("");
     var angleNode = document.createTextNode("");
 
-    // Add those text nodes where they need to go
+    // Ajouter ces nœuds de texte là où ils doivent aller
     timeElement.appendChild(timeNode);
     angleElement.appendChild(angleNode);
 
-Finally update the nodes when rendering
+Enfin mettez à jour les nœuds lors du rendu
 
     function drawScene(time) {
-        var now = time * 0.001;  // convert to seconds
+        var now = time * 0.001;  // convertir en secondes
 
         ...
 
-        // convert rotation from radians to degrees
+        // convertir la rotation des radians en degrés
         var angle = radToDeg(rotation[1]);
 
-        // only report 0 - 360
+        // ne rapporter que 0 - 360
         angle = angle % 360;
 
-        // set the nodes
-        angleNode.nodeValue = angle.toFixed(0);  // no decimal place
-        timeNode.nodeValue = now.toFixed(2);   // 2 decimal places
+        // définir les nœuds
+        angleNode.nodeValue = angle.toFixed(0);  // pas de décimale
+        timeNode.nodeValue = now.toFixed(2);   // 2 décimales
 
-And here's that example
+Et voici cet exemple
 
 {{{example url="../webgl-text-html-overlay.html" }}}
 
-Notice how I put spans inside the divs specifically for the parts I wanted to change. I'm making the
-assumption here that that's faster than just using the divs with no spans and saying something like
+Remarquez comment j'ai mis des spans à l'intérieur des divs spécifiquement pour les parties que je voulais modifier. Je fais
+l'hypothèse ici que c'est plus rapide que d'utiliser juste les divs sans spans et de dire quelque chose comme
 
     timeNode.nodeValue = "Time " + now.toFixed(2);
 
-Also I'm using text nodes by calling `node = document.createTextNode()` and later `node.nodeValue = someMsg`.
-I could also use `someElement.innerHTML = someHTML`. That would be more flexible because you could
-insert arbitrary HTML strings though it might be slightly slower since the browser has to create
-and destroy nodes each time you set it. Which is better is up to you.
+J'utilise aussi des nœuds de texte en appelant `node = document.createTextNode()` et ensuite `node.nodeValue = someMsg`.
+Je pourrais aussi utiliser `someElement.innerHTML = someHTML`. Ce serait plus flexible car vous pourriez
+insérer des chaînes HTML arbitraires, mais ce serait peut-être légèrement plus lent car le navigateur doit créer
+et détruire des nœuds chaque fois que vous le définissez. Lequel est meilleur dépend de vous.
 
-The important point to take way from the overlay technique is that WebGL runs in a browser. Remember to
-use the browser's features when appropriate. Lots of OpenGL programmers are used to having to render
-every part of their app 100% themselves from scratch but because WebGL runs in a browser it already
-has tons of features. Use them. This has lots of benefits. For example you can use CSS styling to
-easily give that overlay an interesting style.
+Le point important à retenir de la technique de superposition est que WebGL s'exécute dans un navigateur. Rappelons-nous
+d'utiliser les fonctionnalités du navigateur quand c'est approprié. De nombreux programmeurs OpenGL sont habitués à devoir rendre
+chaque partie de leur application 100% eux-mêmes depuis zéro, mais parce que WebGL s'exécute dans un navigateur, il possède déjà
+des tonnes de fonctionnalités. Utilisez-les. Cela a beaucoup d'avantages. Par exemple, vous pouvez utiliser le style CSS pour
+donner facilement à cette superposition un style intéressant.
 
-For example here's the same example but adding some style. The background is rounded, the letters have
-a glow around them. There's a red border. You get all that essentially for free by using HTML.
+Par exemple, voici le même exemple mais avec du style ajouté. L'arrière-plan est arrondi, les lettres ont
+un halo autour d'elles. Il y a une bordure rouge. Vous obtenez tout ça essentiellement gratuitement en utilisant HTML.
 
 {{{example url="../webgl-text-html-overlay-styled.html" }}}
 
-The next most common thing to want to do is position some text relative to something you're rendering.
-We can do that in HTML as well.
+La prochaine chose la plus courante à vouloir faire est de positionner du texte par rapport à quelque chose que vous rendez.
+On peut faire ça en HTML également.
 
-In this case we'll again make a container with the canvas and another container for our moving HTML
+Dans ce cas, nous créerons à nouveau un conteneur avec le canvas et un autre conteneur pour notre HTML mobile
 
     <div class="container">
       <canvas id="canvas" width="400" height="300"></canvas>
       <div id="divcontainer"></div>
     </div>
 
-And we'll setup the CSS
+Et nous configurerons le CSS
 
     .container {
         position: relative;
@@ -129,100 +129,99 @@ And we'll setup the CSS
         position: absolute;
     }
 
-The `position: absolute;` part makes the `#divcontainer` be positioned in absolute terms relative
-to the first parent with another `position: relative` or `position: absolute` style. In this case
-that's the container that both the canvas and the `#divcontainer` are in.
+La partie `position: absolute;` fait que le `#divcontainer` est positionné en termes absolus par rapport
+au premier parent ayant un style `position: relative` ou `position: absolute`. Dans ce cas
+c'est le conteneur dans lequel se trouvent le canvas et le `#divcontainer`.
 
-The `left: 0px; top: 0px` makes the `#divcontainer` align with everything. The `z-index: 10` makes
-it float over the canvas. And the `overflow: hidden` makes its children get clipped.
+Le `left: 0px; top: 0px` fait que le `#divcontainer` s'aligne avec tout. Le `z-index: 10` le fait
+flotter par-dessus le canvas. Et `overflow: hidden` fait que ses enfants sont découpés.
 
-Finally `.floating-div` will be used for the positionable div we create.
+Enfin `.floating-div` sera utilisé pour le div positionnable que nous créons.
 
-So now we need to look up the divcontainer, create a div and append it.
+Donc maintenant nous devons rechercher le divcontainer, créer un div et l'y ajouter.
 
-    // look up the divcontainer
+    // rechercher le divcontainer
     var divContainerElement = document.querySelector("#divcontainer");
 
-    // make the div
+    // créer le div
     var div = document.createElement("div");
 
-    // assign it a CSS class
+    // lui assigner une classe CSS
     div.className = "floating-div";
 
-    // make a text node for its content
+    // créer un nœud de texte pour son contenu
     var textNode = document.createTextNode("");
     div.appendChild(textNode);
 
-    // add it to the divcontainer
+    // l'ajouter au divcontainer
     divContainerElement.appendChild(div);
 
 
-Now we can position the div by setting its style.
+Maintenant nous pouvons positionner le div en définissant son style.
 
     div.style.left = Math.floor(x) + "px";
     div.style.top  = Math.floor(y) + "px";
     textNode.nodeValue = now.toFixed(2);
 
-Here's an example where we're just bounding the div around.
+Voici un exemple où nous faisons juste rebondir le div.
 
 {{{example url="../webgl-text-html-bouncing-div.html" }}}
 
-So the next step is we want to place it relative to something in the 3D scene.
-How do we do that? We do it exactly how we asked the GPU to do it when we
-[covered perspective projection](webgl-3d-perspective.html).
+Donc l'étape suivante est de vouloir le placer par rapport à quelque chose dans la scène 3D.
+Comment fait-on ça ? On le fait exactement comme on a demandé au GPU de le faire quand on a
+[couvert la projection en perspective](webgl-3d-perspective.html).
 
-Up through that example we learned how to use matrices, how to multiply them,
-and how to apply a projection matrix to convert them to clip space. We pass all
-of that to our shader and it multiplies vertices in local space and converts
-them to clip space. We can do all the math ourselves in JavaScript as well.
-Then we can multiply clip space (-1 to +1) into pixels and use
-that to position the div.
+À travers cet exemple, nous avons appris comment utiliser des matrices, comment les multiplier,
+et comment appliquer une matrice de projection pour les convertir en clip space. Nous passons tout
+ça à notre shader et il multiplie les sommets dans l'espace local et les convertit
+en clip space. On peut faire toutes les maths nous-mêmes en JavaScript également.
+Ensuite, on peut multiplier le clip space (-1 à +1) en pixels et utiliser
+ça pour positionner le div.
 
     gl.drawArrays(...);
 
-    // We just got through computing a matrix to draw our
-    // F in 3D.
+    // On vient de finir de calculer une matrice pour dessiner notre
+    // F en 3D.
 
-    // choose a point in the local space of the 'F'.
+    // choisir un point dans l'espace local du 'F'.
     //             X  Y  Z  W
-    var point = [100, 0, 0, 1];  // this is the front top right corner
+    var point = [100, 0, 0, 1];  // c'est le coin avant supérieur droit
 
-    // compute a clip space position
-    // using the matrix we computed for the F
+    // calculer une position en clip space
+    // en utilisant la matrice qu'on a calculée pour le F
     var clipspace = m4.transformVector(matrix, point);
 
-    // divide X and Y by W just like the GPU does.
+    // diviser X et Y par W comme le fait le GPU.
     clipspace[0] /= clipspace[3];
     clipspace[1] /= clipspace[3];
 
-    // convert from clipspace to pixels
+    // convertir du clip space en pixels
     var pixelX = (clipspace[0] *  0.5 + 0.5) * gl.canvas.width;
     var pixelY = (clipspace[1] * -0.5 + 0.5) * gl.canvas.height;
 
-    // position the div
+    // positionner le div
     div.style.left = Math.floor(pixelX) + "px";
     div.style.top  = Math.floor(pixelY) + "px";
     textNode.nodeValue = now.toFixed(2);
 
-And voila, the top left corner of our div is perfectly aligned
-with the top right front corner of the F.
+Et voilà, le coin supérieur gauche de notre div est parfaitement aligné
+avec le coin avant supérieur droit du F.
 
 {{{example url="../webgl-text-html-div.html" }}}
 
-Of course if you want more text make more divs.
+Bien sûr si vous voulez plus de texte, créez plus de divs.
 
 {{{example url="../webgl-text-html-divs.html" }}}
 
-You can look at the source of that last example to see the
-details. One important point is I'm just guessing that
-creating, appending and removing HTML elements from the DOM
-is slow so the example above creates them and keeps them
-around. It hides any unused ones rather than removing them
-from the DOM. You'd have to profile to know if that's faster.
-That was just the method I chose.
+Vous pouvez regarder le source de ce dernier exemple pour voir les
+détails. Un point important est que je suppose simplement que
+créer, ajouter et supprimer des éléments HTML du DOM
+est lent, donc l'exemple ci-dessus les crée et les garde.
+Il cache ceux qui ne sont pas utilisés plutôt que de les supprimer
+du DOM. Vous devriez profiler pour savoir si c'est plus rapide.
+C'était juste la méthode que j'ai choisie.
 
-Hopefully it's clear how to use HTML for text. [Next we'll
-cover using Canvas 2D for text](webgl-text-canvas2d.html).
-
+J'espère que c'est clair comment utiliser HTML pour le texte. [Ensuite nous
+couvrirons l'utilisation de Canvas 2D pour le texte](webgl-text-canvas2d.html).
 
 

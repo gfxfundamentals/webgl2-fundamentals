@@ -1,26 +1,26 @@
 Title: WebGL2 Cubemaps
-Description: How to use cubemaps in WebGL
+Description: Comment utiliser les cubemaps dans WebGL
 TOC: Cubemaps
 
 
-This article is part of a series of articles about WebGL2.
-[The first article starts with the fundamentals](webgl-fundamentals.html).
-This article continues from [the article on textures](webgl-3d-textures.html).
-This article also uses concepts covered in [the article on lighting](webgl-3d-lighting-directional.html).
-If you have not read those articles already you might want to read them first.
+Cet article fait partie d'une série d'articles sur WebGL2.
+[Le premier article commence par les bases](webgl-fundamentals.html).
+Cet article s'appuie sur [l'article sur les textures](webgl-3d-textures.html).
+Cet article utilise également des concepts couverts dans [l'article sur l'éclairage](webgl-3d-lighting-directional.html).
+Si vous n'avez pas encore lu ces articles, vous voudrez peut-être les lire d'abord.
 
-In a [previous article](webgl-3d-textures.html) we covered how to use textures,
-how they are referenced by texture coordinates that go from 0 to 1 across and up
-the texture, and how they are filtered optionally using mips.
+Dans un [article précédent](webgl-3d-textures.html), nous avons couvert l'utilisation des textures,
+comment elles sont référencées par des coordonnées de texture qui vont de 0 à 1 horizontalement et verticalement
+à travers la texture, et comment elles sont filtrées optionnellement avec des mips.
 
-Another kind of texture is a *cubemap*. It consists of 6 faces representing
-the 6 faces of a cube. Instead of the traditional texture coordinates that
-have 2 dimensions, a cubemap uses a normal, in other words a 3D direction.
-Depending on the direction the normal points one of the 6 faces of the cube
-is selected and then within that face the pixels are sampled to produce a color.
+Un autre type de texture est un *cubemap*. Il consiste en 6 faces représentant
+les 6 faces d'un cube. Au lieu des coordonnées de texture traditionnelles qui ont
+2 dimensions, un cubemap utilise une normale, autrement dit une direction 3D.
+Selon la direction vers laquelle la normale pointe, l'une des 6 faces du cube
+est sélectionnée et ensuite les pixels de cette face sont échantillonnés pour produire une couleur.
 
-The 6 faces are referenced by their direction from the center of the cube.
-They are
+Les 6 faces sont référencées par leur direction depuis le centre du cube.
+Ce sont
 
 ```js
 gl.TEXTURE_CUBE_MAP_POSITIVE_X
@@ -31,10 +31,10 @@ gl.TEXTURE_CUBE_MAP_POSITIVE_Z
 gl.TEXTURE_CUBE_MAP_NEGATIVE_Z
 ```
 
-Let's make a simple example, we'll use a 2D canvas to make the images used in
-each of the 6 faces.
+Créons un exemple simple, nous utiliserons un canvas 2D pour créer les images utilisées dans
+chacune des 6 faces.
 
-Here's some code to fill a canvas with a color and a centered message
+Voici du code pour remplir un canvas avec une couleur et un message centré
 
 ```js
 function generateFace(ctx, faceColor, textColor, text) {
@@ -49,10 +49,10 @@ function generateFace(ctx, faceColor, textColor, text) {
 }
 ```
 
-And here's some code to call it to generate 6 images
+Et voici du code pour l'appeler afin de générer 6 images
 
 ```js
-// Get A 2D context
+// Obtenir un contexte 2D
 /** @type {Canvas2DRenderingContext} */
 const ctx = document.createElement("canvas").getContext("2d");
 
@@ -71,7 +71,7 @@ faceInfos.forEach((faceInfo) => {
   const {faceColor, textColor, text} = faceInfo;
   generateFace(ctx, faceColor, textColor, text);
 
-  // show the result
+  // afficher le résultat
   ctx.canvas.toBlob((blob) => {
     const img = new Image();
     img.src = URL.createObjectURL(blob);
@@ -82,10 +82,10 @@ faceInfos.forEach((faceInfo) => {
 
 {{{example url="../webgl-cubemap-faces.html" }}}
 
-Now let's apply that to a cube. We'll start with the code
-from the texture atlas example [in the previous article](webgl-3d-textures.html).
+Appliquons maintenant cela à un cube. Nous allons commencer avec le code
+de l'exemple d'atlas de textures [dans l'article précédent](webgl-3d-textures.html).
 
-First off let's change the shaders to use a cube map
+D'abord, modifions les shaders pour utiliser un cube map
 
 ```glsl
 #version 300 es
@@ -97,50 +97,50 @@ uniform mat4 u_matrix;
 out vec3 v_normal;
 
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplier la position par la matrice.
   gl_Position = u_matrix * a_position;
 
-  // Pass a normal. Since the positions are
-  // centered around the origin we can just
-  // pass the position
+  // Passer une normale. Puisque les positions sont
+  // centrées autour de l'origine, nous pouvons simplement
+  // passer la position
   v_normal = normalize(a_position.xyz);
 }
 ```
 
-We've removed the texture coordinates from the shader and
-added a varying to pass a normal to the fragment shader.
-Since the positions of our cube are perfectly centered around the origin
-we can just use them as our normals.
+Nous avons supprimé les coordonnées de texture du shader et
+ajouté un varying pour passer une normale au fragment shader.
+Puisque les positions de notre cube sont parfaitement centrées autour de l'origine,
+nous pouvons simplement les utiliser comme nos normales.
 
-Recall from [the article on lighting](webgl-3d-lighting-directional.html) that
-normals are a direction and are usually used to specify the direction of
-the surface of some vertex. Because we are using the normalized positions
-for our normals if we were to light this we'd get smooth lighting across
-the cube. For a normal cube we'd have to have different normals for each
-vertex for each face.
+Rappelons-nous de [l'article sur l'éclairage](webgl-3d-lighting-directional.html) que
+les normales sont une direction et sont généralement utilisées pour spécifier la direction de
+la surface d'un sommet. Parce que nous utilisons les positions normalisées
+pour nos normales, si nous devions éclairer ceci, nous obtiendrions un éclairage lisse à travers
+le cube. Pour un cube normal, nous aurions besoin de normales différentes pour chaque
+sommet pour chaque face.
 
-{{{diagram url="resources/cube-normals.html" caption="standard cube normal vs this cube's normals" }}}
+{{{diagram url="resources/cube-normals.html" caption="normales d'un cube standard vs normales de ce cube" }}}
 
-Since we're not using texture coordinates we can remove all code related to
-setting up the texture coordinates.
+Puisque nous n'utilisons pas de coordonnées de texture, nous pouvons supprimer tout le code lié à
+la configuration des coordonnées de texture.
 
-In the fragment shader we need to use a `samplerCube` instead of a `sampler2D`
-and `texture` when used with a `samplerCube` takes a vec3 direction
-so we pass the normalized normal. Since the normal is a varying and will be interpolated
-we need to normalize it.
+Dans le fragment shader, nous devons utiliser un `samplerCube` au lieu d'un `sampler2D`
+et `texture` lorsqu'il est utilisé avec un `samplerCube` prend une direction vec3,
+donc nous passons la normale normalisée. Puisque la normale est un varying et sera interpolée,
+nous devons la normaliser.
 
 ```
 #version 300 es
 
 precision highp float;
 
-// Passed in from the vertex shader.
+// Passé depuis le vertex shader.
 in vec3 v_normal;
 
-// The texture.
+// La texture.
 uniform samplerCube u_texture;
 
-// we need to declare an output for the fragment shader
+// nous devons déclarer une sortie pour le fragment shader
 out vec4 outColor;
 
 void main() {
@@ -148,14 +148,14 @@ void main() {
 }
 ```
 
-Then, in the JavaScript we need to setup the texture
+Ensuite, en JavaScript, nous devons configurer la texture
 
 ```js
-// Create a texture.
+// Créer une texture.
 var texture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
 
-// Get A 2D context
+// Obtenir un contexte 2D
 /** @type {Canvas2DRenderingContext} */
 const ctx = document.createElement("canvas").getContext("2d");
 
@@ -174,7 +174,7 @@ faceInfos.forEach((faceInfo) => {
   const {target, faceColor, textColor, text} = faceInfo;
   generateFace(ctx, faceColor, textColor, text);
 
-  // Upload the canvas to the cubemap face.
+  // Téléverser le canvas sur la face du cubemap.
   const level = 0;
   const internalFormat = gl.RGBA;
   const format = gl.RGBA;
@@ -185,36 +185,34 @@ gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
 gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 ```
 
-Things to notice above:
+Choses à noter ci-dessus :
 
-* We are using `gl.TEXTURE_CUBE_MAP` instead of `gl.TEXTURE_2D`.
+* Nous utilisons `gl.TEXTURE_CUBE_MAP` au lieu de `gl.TEXTURE_2D`.
 
-  This tells WebGL to make a cube map instead of a 2D texture.
+  Cela indique à WebGL de créer un cube map au lieu d'une texture 2D.
 
-* To upload each face of the texture we use special targets.
+* Pour téléverser chaque face de la texture, nous utilisons des cibles spéciales.
 
   `gl.TEXTURE_CUBE_MAP_POSITIVE_X`,
   `gl.TEXTURE_CUBE_MAP_NEGATIVE_X`,
   `gl.TEXTURE_CUBE_MAP_POSITIVE_Y`,
   `gl.TEXTURE_CUBE_MAP_NEGATIVE_Y`,
-  `gl.TEXTURE_CUBE_MAP_POSITIVE_Z`, and
+  `gl.TEXTURE_CUBE_MAP_POSITIVE_Z` et
   `gl.TEXTURE_CUBE_MAP_NEGATIVE_Z`.
 
-* Each face is a square. Above they are 128x128.
+* Chaque face est un carré. Ci-dessus, elles font 128x128.
 
-  Cubemaps are required to have square textures.
-  We're also
-  generating mips and turning on filtering to use the mips.
+  Les cubemaps nécessitent des textures carrées.
+  Nous générons également des mips et activons le filtrage pour utiliser les mips.
 
-And poof
+Et voilà le résultat
 
 {{{example url="../webgl-cubemap.html" }}}
 
-Using a cubemap to texture a cube is **not** what cubemaps are normally
-used for. The *correct* or rather standard way to texture a cube is
-to use a texture atlas like we [mentioned before](webgl-3d-textures.html).
+Utiliser un cubemap pour texturer un cube n'est **pas** ce pour quoi les cubemaps sont normalement
+utilisés. La façon *correcte* ou plutôt standard de texturer un cube est
+d'utiliser un atlas de textures comme nous [l'avons mentionné avant](webgl-3d-textures.html).
 
-Now that we've learned what a cubemap is and how to set one up what is a cubemap
-used for? Probably the single most common thing a cubemap is used for is as an
-[*environment map*](webgl-environment-maps.html).
-
+Maintenant que nous avons appris ce qu'est un cubemap et comment en configurer un, à quoi sert un cubemap ?
+Probablement la chose unique la plus courante pour laquelle un cubemap est utilisé est comme
+[*carte d'environnement*](webgl-environment-maps.html).

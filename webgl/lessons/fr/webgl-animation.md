@@ -1,140 +1,136 @@
 Title: WebGL2 - Animation
-Description: How to do animation in WebGL
+Description: Comment faire de l'animation avec WebGL
 TOC: Animation
 
 
-This post is a continuation of a series of posts about WebGL.
-The first [started with fundamentals](webgl-fundamentals.html).
-and the previous was about [3D cameras](webgl-3d-camera.html).
-If you haven't read those please view them first.
+Cet article est la suite d'une série d'articles sur WebGL.
+Le premier [a commencé par les bases](webgl-fundamentals.html)
+et le précédent portait sur les [caméras 3D](webgl-3d-camera.html).
+Si vous ne les avez pas lus, veuillez les consulter d'abord.
 
-How do we animate something in WebGL?
+Comment animer quelque chose dans WebGL ?
 
-Actually this isn't specific to WebGL but generally if you want
-to animate something in JavaScript you need to change something
-over time and draw again.
+En réalité, ce n'est pas spécifique à WebGL, mais en général si vous voulez
+animer quelque chose en JavaScript, vous devez modifier quelque chose
+au fil du temps et redessiner.
 
-We can take one of our previous samples and animate it as follows.
+Nous pouvons prendre l'un de nos exemples précédents et l'animer comme suit.
 
     *var fieldOfViewRadians = degToRad(60);
     *var rotationSpeed = 1.2;
 
     *requestAnimationFrame(drawScene);
 
-    // Draw the scene.
+    // Dessiner la scène.
     function drawScene() {
-    *  // Every frame increase the rotation a little.
+    *  // À chaque frame, augmenter la rotation un peu.
     *  rotation[1] += rotationSpeed / 60.0;
 
       ...
-    *  // Call drawScene again next frame
+    *  // Appeler drawScene à la prochaine frame
     *  requestAnimationFrame(drawScene);
     }
 
-And here it is
+Et voilà le résultat
 
 {{{example url="../webgl-animation-not-frame-rate-independent.html" }}}
 
-There's a subtle problem though. The code above has a
-`rotationSpeed / 60.0`. We divided by 60.0 because we assumed the browser
-will respond to requestAnimationFrame 60 times a second which is pretty common.
+Il y a cependant un problème subtil. Le code ci-dessus a
+`rotationSpeed / 60.0`. Nous avons divisé par 60.0 car nous supposions que le navigateur
+répondra à requestAnimationFrame 60 fois par seconde, ce qui est assez courant.
 
-That's not actually a valid assumption though. Maybe the user is on a low-powered
-device like an old smartphone. Or maybe the user is running some heavy program in
-the background. There are all kinds of reasons the browser might not be displaying
-frames at 60 frames a second. Maybe it's the year 2020 and all machines run at 240
-frames a second now. Maybe the user is a gamer and has a CRT monitor running at 90
-frames a second.
+Cependant, ce n'est pas réellement une hypothèse valide. Peut-être que l'utilisateur est sur un appareil peu puissant
+comme un vieux smartphone. Ou peut-être que l'utilisateur exécute un programme lourd en
+arrière-plan. Il y a toutes sortes de raisons pour lesquelles le navigateur pourrait ne pas afficher
+des images à 60 images par seconde. Peut-être que nous sommes en 2020 et que toutes les machines tournent à 240
+images par seconde maintenant. Peut-être que l'utilisateur est un joueur et a un moniteur CRT fonctionnant à 90
+images par seconde.
 
-You can see the problem in this example
+Vous pouvez voir le problème dans cet exemple
 
 {{{diagram url="../webgl-animation-frame-rate-issues.html" }}}
 
-In the example above we want to rotate all of the 'F's at the same speed.
-The 'F' in the middle is running full speed and is frame rate independent. The one
-on the left and the right are simulating if the browser was only running at 1/8th
-max speed for the current machine. The one on the left is **NOT** frame rate
-independent. The one on the right **IS** frame rate independent.
+Dans l'exemple ci-dessus, nous voulons faire pivoter tous les 'F' à la même vitesse.
+Le 'F' au milieu tourne à vitesse maximale et est indépendant du framerate. Celui
+de gauche et celui de droite simulent si le navigateur ne fonctionnait qu'à 1/8ème de
+la vitesse maximale de la machine courante. Celui de gauche **N'EST PAS** indépendant du framerate.
+Celui de droite **EST** indépendant du framerate.
 
-Notice because the one on the left is not taking into account that the frame rate
-might be slow it's not keeping up. The one on the right though, even though it's
-running at 1/8 the frame rate it is keeping up with the middle one running at full
-speed.
+Remarquez que celui de gauche, ne tenant pas compte du fait que le framerate
+pourrait être lent, ne parvient pas à suivre. Celui de droite, bien qu'il tourne à 1/8 du framerate,
+parvient à suivre celui du milieu qui tourne à vitesse maximale.
 
-The way to make animation frame rate independent is to compute how much time it took
-between frames and use that to calculate how much to animate this frame.
+La façon de rendre l'animation indépendante du framerate est de calculer combien de temps s'est écoulé
+entre les frames et d'utiliser cela pour calculer de combien animer cette frame.
 
-First off we need to get the time. Fortunately `requestAnimationFrame` passes
-us the time since the page was loaded when it calls us.
+Premièrement, nous devons obtenir le temps. Heureusement, `requestAnimationFrame` nous passe
+le temps écoulé depuis le chargement de la page quand il nous appelle.
 
-I find it easiest if we get the time in seconds but since the `requestAnimationFrame`
-passes us the time in milliseconds (1000ths of a second) we need to multiply by 0.001
-to get seconds.
+Je trouve plus facile de travailler avec le temps en secondes, mais comme `requestAnimationFrame`
+nous passe le temps en millisecondes (millièmes de seconde), nous devons multiplier par 0,001
+pour obtenir des secondes.
 
-So, we can then compute the delta time like this
+Nous pouvons donc calculer le delta de temps ainsi
 
     *var then = 0;
 
     requestAnimationFrame(drawScene);
 
-    // Draw the scene.
+    // Dessiner la scène.
     *function drawScene(now) {
-    *  // Convert the time to seconds
+    *  // Convertir le temps en secondes
     *  now *= 0.001;
-    *  // Subtract the previous time from the current time
+    *  // Soustraire le temps précédent du temps actuel
     *  var deltaTime = now - then;
-    *  // Remember the current time for the next frame.
+    *  // Mémoriser le temps actuel pour la prochaine frame.
     *  then = now;
 
        ...
 
-Once we have the `deltaTime` in seconds then all our calculations can be in how
-many units per second we want something to happen. In this case
-`rotationSpeed` is 1.2 which means we want to rotate 1.2 radians per second.
-That's about 1/5 of a turn or in other words it will take about 5 seconds to
-turn around completely regardless of the frame rate.
+Une fois que nous avons le `deltaTime` en secondes, tous nos calculs peuvent être en
+unités par seconde que nous voulons. Dans ce cas,
+`rotationSpeed` est 1,2 ce qui signifie que nous voulons tourner de 1,2 radian par seconde.
+C'est environ 1/5 d'un tour, soit dit autrement, il faudra environ 5 secondes pour
+faire un tour complet quel que soit le framerate.
 
     *    rotation[1] += rotationSpeed * deltaTime;
 
-Here's that one working.
+Voilà celui qui fonctionne.
 
 {{{example url="../webgl-animation.html" }}}
 
-You aren't likely to see a difference from the one
-at the top of this page unless you are on a slow machine but if you don't
-make your animations frame rate independent you'll likely have some users
-that are getting a very different experience than you planned.
+Vous ne verrez probablement pas de différence avec celui du haut de cette page, à moins d'être sur une machine lente, mais si vous ne rendez pas vos animations indépendantes du framerate, vous aurez probablement des utilisateurs
+qui obtiennent une expérience très différente de ce que vous avez prévu.
 
-Next up [how to apply textures](webgl-3d-textures.html).
+La suite : [comment appliquer des textures](webgl-3d-textures.html).
 
 <div class="webgl_bottombar">
-<h3>Don't use setInterval or setTimeout!</h3>
-<p>If you've been programming animation in JavaScript in the past
-you might have used either <code>setInterval</code> or <code>setTimeout</code> to get your
-drawing function to be called.
+<h3>N'utilisez pas setInterval ou setTimeout !</h3>
+<p>Si vous avez déjà programmé des animations en JavaScript,
+vous avez peut-être utilisé <code>setInterval</code> ou <code>setTimeout</code> pour que votre
+fonction de dessin soit appelée.
 </p><p>
-The problems with using <code>setInterval</code> or <code>setTimeout</code> to do animation
-are two fold. First off both <code>setInterval</code> and <code>setTimeout</code> have no relation
-to the browser displaying anything. They aren't synced to when the browser is
-going to draw a new frame and so can be out of sync with the user's machine.
-If you use <code>setInterval</code> or <code>setTimeout</code> and assume 60 frames
-a second and the user's machine is actually running some other frame rate you'll
-be out of sync with their machine.
+Les problèmes liés à l'utilisation de <code>setInterval</code> ou <code>setTimeout</code> pour faire de l'animation
+sont doubles. D'abord, <code>setInterval</code> et <code>setTimeout</code> n'ont aucun lien
+avec ce que le navigateur affiche. Ils ne sont pas synchronisés avec le moment où le navigateur
+va dessiner une nouvelle frame, et peuvent donc être désynchronisés avec la machine de l'utilisateur.
+Si vous utilisez <code>setInterval</code> ou <code>setTimeout</code> en supposant 60 frames
+par seconde et que la machine de l'utilisateur tourne en réalité à un autre framerate, vous serez
+désynchronisé avec sa machine.
 </p><p>
-The other problem is the browser has no idea why you're using <code>setInterval</code> or
-<code>setTimeout</code>. So for example, even when your page is not visible,
-like when it's not the front tab, the browser still has to execute your code.
-Maybe you're using <code>setTimeout</code> or <code>setInterval</code> to check
-for new mail or tweets. There's no way for the browser to know. That's fine if
-you're just checking every few seconds for new messages but it's not fine if
-you're trying to draw 1000 objects in WebGL. You'll be effectively DOSing the
-user's machine with your invisible tab drawing stuff they can't even see.
+L'autre problème est que le navigateur n'a aucune idée de la raison pour laquelle vous utilisez <code>setInterval</code> ou
+<code>setTimeout</code>. Ainsi, par exemple, même quand votre page n'est pas visible,
+comme quand elle n'est pas l'onglet actif, le navigateur doit quand même exécuter votre code.
+Peut-être utilisez-vous <code>setTimeout</code> ou <code>setInterval</code> pour vérifier
+les nouveaux e-mails ou tweets. Le navigateur n'a aucun moyen de le savoir. C'est bien si
+vous vérifiez simplement toutes les quelques secondes de nouveaux messages, mais ce n'est pas bien si
+vous essayez de dessiner 1000 objets dans WebGL. Vous serez effectivement en train de DOSer
+la machine de l'utilisateur avec votre onglet invisible dessinant des choses qu'il ne peut même pas voir.
 </p><p>
-<code>requestAnimationFrame</code> solves both of these issues. It calls you at just the
-right time to sync your animation with the screen and it also only calls you if
-your tab is visible.
+<code>requestAnimationFrame</code> résout ces deux problèmes. Il vous appelle exactement au bon moment
+pour synchroniser votre animation avec l'écran, et il ne vous appelle que si
+votre onglet est visible.
 </p>
 </div>
-
 
 

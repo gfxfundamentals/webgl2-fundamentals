@@ -1,25 +1,25 @@
-Title: WebGL2 Text - Canvas 2D
-Description: How to display text using a 2D canvas that is in sync with WebGL
-TOC: Text - Canvas 2D
+Title: WebGL2 Texte - Canvas 2D
+Description: Comment afficher du texte en utilisant un canvas 2D synchronisé avec WebGL
+TOC: Texte - Canvas 2D
 
 
-This article is a continuation of [previous WebGL articles about drawing text](webgl-text-html.html).
-If you haven't read them I suggest you start there and work your way back.
+Cet article est la suite des [articles WebGL précédents sur le dessin de texte](webgl-text-html.html).
+Si vous ne les avez pas lus, je vous suggère de commencer par là et de revenir ici ensuite.
 
-Instead of using HTML elements for text we can also use another canvas but with
-a 2D context. Without profiling it's just a guess that this would be faster
-than using the DOM. Of course it's also less flexible. You don't get all the
-fancy CSS styling. But, there's no HTML elements to create and keep track of.
+Au lieu d'utiliser des éléments HTML pour le texte, on peut aussi utiliser un autre canvas mais avec
+un contexte 2D. Sans profilage, c'est juste une supposition que ce serait plus rapide
+que d'utiliser le DOM. Bien sûr, c'est aussi moins flexible. Vous n'obtenez pas tous les
+styles CSS sophistiqués. Mais il n'y a pas d'éléments HTML à créer et à suivre.
 
-Similar to the other examples we make a container but this time we put
-2 canvases in it.
+Comme pour les autres exemples, nous créons un conteneur mais cette fois nous mettons
+2 canvases dedans.
 
     <div class="container">
       <canvas id="canvas" width="400" height="300"></canvas>
       <canvas id="text" width="400" height="300"></canvas>
     </div>
 
-Next setup the CSS so the canvas and the HTML overlap
+Ensuite configurez le CSS pour que le canvas et le HTML se superposent
 
     .container {
         position: relative;
@@ -32,46 +32,46 @@ Next setup the CSS so the canvas and the HTML overlap
         z-index: 10;
     }
 
-Now look up the text canvas at init time and create a 2D context for it.
+Maintenant recherchez le canvas de texte à l'initialisation et créez un contexte 2D pour lui.
 
-    // look up the text canvas.
+    // rechercher le canvas de texte.
     var textCanvas = document.querySelector("#text");
 
-    // make a 2D context for it
+    // créer un contexte 2D pour lui
     var ctx = textCanvas.getContext("2d");
 
-When drawing, just like WebGL, we need to clear the 2D canvas each frame.
+Lors du dessin, comme pour WebGL, nous devons effacer le canvas 2D à chaque frame.
 
     function drawScene() {
         ...
 
-        // Clear the 2D canvas
+        // Effacer le canvas 2D
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-And then we just call `fillText` to draw text
+Et ensuite nous appelons juste `fillText` pour dessiner du texte
 
         ctx.fillText(someMsg, pixelX, pixelY);
 
-And here's that example
+Et voici cet exemple
 
 {{{example url="../webgl-text-html-canvas2d.html" }}}
 
-Why is the text smaller? Because that's the default size for Canvas 2D.
-If you want other sizes [check out the Canvas 2D API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_text).
+Pourquoi le texte est-il plus petit ? Parce que c'est la taille par défaut pour Canvas 2D.
+Si vous voulez d'autres tailles [consultez l'API Canvas 2D](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_text).
 
-Another reason to use Canvas 2D is it's easy to draw other things. For example
-let's add an arrow
+Une autre raison d'utiliser Canvas 2D est qu'il est facile de dessiner d'autres choses. Par exemple,
+ajoutons une flèche
 
-    // draw an arrow and text.
+    // dessiner une flèche et du texte.
 
-    // save all the canvas settings
+    // sauvegarder tous les paramètres du canvas
     ctx.save();
 
-    // translate the canvas origin so 0, 0 is at
-    // the top front right corner of our F
+    // translater l'origine du canvas pour que 0, 0 soit à
+    // l'angle avant supérieur droit de notre F
     ctx.translate(pixelX, pixelY);
 
-    // draw an arrow
+    // dessiner une flèche
     ctx.beginPath();
     ctx.moveTo(10, 5);
     ctx.lineTo(0, 0);
@@ -80,18 +80,17 @@ let's add an arrow
     ctx.lineTo(15, 15);
     ctx.stroke();
 
-    // draw the text.
+    // dessiner le texte.
     ctx.fillText(someMessage, 20, 20);
 
-    // restore the canvas to its old settings.
+    // restaurer le canvas à ses anciens paramètres.
     ctx.restore();
 
-Here we're taking advantage of the Canvas 2D translate function so we don't have to do any extra
-math when drawing our arrow. We just pretend to draw at the origin and translate takes care
-of moving that origin to the corner of our F.
+Ici nous profitons de la fonction de translation de Canvas 2D pour ne pas avoir à faire de calculs supplémentaires
+lors du dessin de notre flèche. On fait semblant de dessiner à l'origine et translate s'occupe
+de déplacer cette origine vers le coin de notre F.
 
 {{{example url="../webgl-text-html-canvas2d-arrows.html" }}}
 
-I think that covers using Canvas 2D. [Check out the Canvas 2D API](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D)
-for more ideas. [Next we'll actually render text in WebGL](webgl-text-texture.html).
-
+Je pense que cela couvre l'utilisation de Canvas 2D. [Consultez l'API Canvas 2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D)
+pour plus d'idées. [Ensuite, nous rendrons réellement du texte dans WebGL](webgl-text-texture.html).

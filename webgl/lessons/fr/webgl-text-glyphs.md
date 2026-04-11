@@ -1,21 +1,20 @@
-Title: WebGL2 Text - Using a Glyph Texture
-Description: How to display text using a texture full of glyphs
-TOC: Text - Using a Glyph Texture
+Title: WebGL2 Texte - Utiliser une texture de glyphes
+Description: Comment afficher du texte en utilisant une texture remplie de glyphes
+TOC: Texte - Utiliser une texture de glyphes
 
 
-This post is a continuation of many articles about WebGL. The last one
-was about [using textures for rendering text in WebGL](webgl-text-texture.html).
-If you haven't read it you might want to check that out before continuing.
+Cet article est la suite de nombreux articles sur WebGL. Le dernier
+traitait de [l'utilisation de textures pour rendre du texte dans WebGL](webgl-text-texture.html).
+Si vous ne l'avez pas lu, vous voudrez peut-être le consulter avant de continuer.
 
-In the last article we went over [how to use a texture to draw text in your WebGL
-scene](webgl-text-texture.html). That technique is very common and it's great
-for things like in multi-player games where you want to put a name over an avatar.
-As that name rarely changes it's perfect.
+Dans le dernier article, nous avons vu [comment utiliser une texture pour dessiner du texte dans votre scène
+WebGL](webgl-text-texture.html). Cette technique est très courante et elle est excellente
+pour des choses comme les jeux multijoueurs où vous voulez afficher un nom au-dessus d'un avatar.
+Comme ce nom change rarement, c'est parfait.
 
-Let's say you want to render a lot of text that changes often like a UI. Given
-the last example in [the previous article](webgl-text-texture.html) an obvious
-solution is to make a texture for each letter. Let's change the last sample to do
-that.
+Disons que vous voulez rendre beaucoup de texte qui change souvent comme une interface utilisateur. Étant donné
+le dernier exemple de [l'article précédent](webgl-text-texture.html), une solution évidente
+est de créer une texture pour chaque lettre. Changeons le dernier exemple pour faire ça.
 
     +var names = [
     +  "anna",   // 0
@@ -36,7 +35,7 @@ that.
     +  "kai",    // 15,
     +];
 
-    // create text textures, one for each letter
+    // créer des textures de texte, une pour chaque lettre
     var textTextures = [
     +  "a",    // 0
     +  "b",    // 1
@@ -67,69 +66,69 @@ that.
     ].map(function(name) {
     *  var textCanvas = makeTextCanvas(name, 10, 26);
 
-Then instead of rendering one quad for each name we'll render one quad for each
-letter in each name.
+Ensuite, au lieu de rendre un quad pour chaque nom, nous rendrons un quad pour chaque
+lettre dans chaque nom.
 
-    // setup to draw the text.
-    +// Because every letter uses the same attributes and the same program
-    +// we only need to do this once.
+    // configurer pour dessiner le texte.
+    +// Parce que chaque lettre utilise les mêmes attributs et le même programme
+    +// on a seulement besoin de faire ça une fois.
     +gl.useProgram(textProgramInfo.program);
     +setBuffersAndAttributes(gl, textProgramInfo.attribSetters, textBufferInfo);
 
     textPositions.forEach(function(pos, ndx) {
     +  var name = names[ndx];
     +
-    +  // for each letter
+    +  // pour chaque lettre
     +  for (var ii = 0; ii < name.length; ++ii) {
     +    var letter = name.charCodeAt(ii);
     +    var letterNdx = letter - "a".charCodeAt(0);
     +
-    +    // select a letter texture
+    +    // sélectionner une texture de lettre
     +    var tex = textTextures[letterNdx];
 
-        // use just the position of the 'F' for the text
+        // utiliser juste la position du 'F' pour le texte
 
-        // because pos is in view space that means it's a vector from the eye to
-        // some position. So translate along that vector back toward the eye some distance
+        // parce que pos est dans l'espace de vue, cela signifie que c'est un vecteur depuis l'œil vers
+        // une certaine position. Donc on translate le long de ce vecteur en revenant vers l'œil d'une certaine distance
         var fromEye = m4.normalize(pos);
-        var amountToMoveTowardEye = 150;  // because the F is 150 units long
+        var amountToMoveTowardEye = 150;  // parce que le F fait 150 unités de long
         var viewX = pos[0] - fromEye[0] * amountToMoveTowardEye;
         var viewY = pos[1] - fromEye[1] * amountToMoveTowardEye;
         var viewZ = pos[2] - fromEye[2] * amountToMoveTowardEye;
-        var desiredTextScale = -1 / gl.canvas.height;  // 1x1 pixels
+        var desiredTextScale = -1 / gl.canvas.height;  // pixels 1x1
         var scale = viewZ * desiredTextScale;
 
         var textMatrix = m4.translate(projectionMatrix, viewX, viewY, viewZ);
         textMatrix = m4.scale(textMatrix, tex.width * scale, tex.height * scale, 1);
         +textMatrix = m4.translate(textMatrix, ii, 0, 0);
 
-        // set texture uniform
+        // définir l'uniform de texture
         textUniforms.u_texture = tex.texture;
         copyMatrix(textMatrix, textUniforms.u_matrix);
         setUniforms(textProgramInfo.uniformSetters, textUniforms);
 
-        // Draw the text.
+        // Dessiner le texte.
         gl.drawElements(gl.TRIANGLES, textBufferInfo.numElements, gl.UNSIGNED_SHORT, 0);
       }
     });
 
-And you can see it works
+Et vous pouvez voir que ça fonctionne
 
 {{{example url="../webgl-text-glyphs.html" }}}
 
-Unfortunately it's SLOW. The example below doesn't show it but we're individually
-drawing 73 quads. We're computing 73 matrices and 219 matrix multiplies. A typical
-UI might easily have 1000 letters showing. That's way way too much work to get
-a reasonable framerate.
+Malheureusement, c'est LENT. L'exemple ci-dessous ne le montre pas, mais nous dessinons individuellement
+73 quads. Nous calculons 73 matrices et 219 multiplications de matrices. Une interface utilisateur typique
+pourrait facilement avoir 1000 lettres affichées. C'est beaucoup trop de travail pour obtenir
+une fréquence d'images raisonnable.
 
-So to fix that the way this is usually done is to make a texture atlas that contains all
-the letters. We went over what a texture atlas is when we talked about [texturing the 6
-faces of a cube](webgl-3d-textures.html#texture-atlas).
+Donc pour corriger ça, la façon dont c'est habituellement fait est de créer un atlas de textures contenant toutes
+les lettres. Nous avons vu ce qu'est un atlas de textures quand nous avons parlé de [texturer les 6
+faces d'un cube](webgl-3d-textures.html#texture-atlas).
 
-Searching the web I found [this simple open source font texture atlas](https://opengameart.org/content/8x8-font-chomps-wacky-worlds-beta)
+En cherchant sur le web, j'ai trouvé [cet atlas de textures de police open source simple](https://opengameart.org/content/8x8-font-chomps-wacky-worlds-beta)
 <img class="webgl_center" width="256" height="160" style="image-rendering: pixelated;" src="../resources/8x8-font.png" />
 
-Let's make some data we can use to help generate positions and texture coordinates
+Créons des données que nous pouvons utiliser pour aider à générer des positions et des coordonnées de texture
 
 ```
 var fontInfo = {
@@ -183,20 +182,20 @@ var fontInfo = {
 };
 ```
 
-And we'll [load the image just like we loaded textures before](webgl-3d-textures.html)
+Et nous [chargerons l'image comme nous avons chargé des textures avant](webgl-3d-textures.html)
 
 ```
-// Create a texture.
+// Créer une texture.
 var glyphTex = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, glyphTex);
-// Fill the texture with a 1x1 blue pixel.
+// Remplir la texture avec un pixel bleu 1x1.
 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
               new Uint8Array([0, 0, 255, 255]));
-// Asynchronously load an image
+// Charger une image de manière asynchrone
 var image = new Image();
 image.src = "resources/8x8-font.png";
 image.addEventListener('load', function() {
-  // Now that the image has loaded make copy it to the texture.
+  // Maintenant que l'image est chargée, la copier dans la texture.
   gl.bindTexture(gl.TEXTURE_2D, glyphTex);
   gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
@@ -207,11 +206,11 @@ image.addEventListener('load', function() {
 });
 ```
 
-Now that we have a texture with glyphs in it we need to use it. To do that we'll
-build quad vertices on the fly for each glyph. Those vertices will use texture coordinates
-to select a particular glyph
+Maintenant que nous avons une texture avec des glyphes dedans, nous devons l'utiliser. Pour ce faire, nous allons
+construire des sommets de quad à la volée pour chaque glyphe. Ces sommets utiliseront des coordonnées de texture
+pour sélectionner un glyphe particulier.
 
-Given a string let's build the vertices
+Étant donné une chaîne, construisons les sommets
 
 ```
 function makeVerticesForString(fontInfo, s) {
@@ -233,7 +232,7 @@ function makeVerticesForString(fontInfo, s) {
       var u2 = (glyphInfo.x + glyphInfo.width - 1) / maxX;
       var v2 = glyphInfo.y / maxY;
 
-      // 6 vertices per letter
+      // 6 sommets par lettre
       positions[offset + 0] = x;
       positions[offset + 1] = 0;
       texcoords[offset + 0] = u1;
@@ -267,13 +266,13 @@ function makeVerticesForString(fontInfo, s) {
       x += glyphInfo.width + fontInfo.spacing;
       offset += 12;
     } else {
-      // we don't have this character so just advance
+      // on n'a pas ce caractère donc on avance juste
       x += fontInfo.spaceWidth;
     }
   }
 
-  // return ArrayBufferViews for the portion of the TypedArrays
-  // that were actually used.
+  // retourner des ArrayBufferViews pour la portion des TypedArrays
+  // qui ont réellement été utilisés.
   return {
     arrays: {
       position: new Float32Array(positions.buffer, 0, offset),
@@ -284,9 +283,9 @@ function makeVerticesForString(fontInfo, s) {
 }
 ```
 
-To use it we'll manually create a bufferInfo. ([See previous article if you don't remember what a bufferInfo is](webgl-drawing-multiple-things.html)).
+Pour l'utiliser, nous allons créer manuellement un bufferInfo. ([Voir l'article précédent si vous ne vous souvenez pas de ce qu'est un bufferInfo](webgl-drawing-multiple-things.html)).
 
-    // Manually create a bufferInfo
+    // Créer manuellement un bufferInfo
     var textBufferInfo = {
       attribs: {
         a_position: { buffer: gl.createBuffer(), numComponents: 2, },
@@ -295,7 +294,7 @@ To use it we'll manually create a bufferInfo. ([See previous article if you don'
       numElements: 0,
     };
 
-And then to render text we'll update the buffers. We'll also make the text dynamic
+Et ensuite pour rendre le texte, nous mettrons à jour les buffers. Nous rendrons aussi le texte dynamique
 
     textPositions.forEach(function(pos, ndx) {
 
@@ -303,29 +302,29 @@ And then to render text we'll update the buffers. We'll also make the text dynam
     +  var s = name + ":" + pos[0].toFixed(0) + "," + pos[1].toFixed(0) + "," + pos[2].toFixed(0);
     +  var vertices = makeVerticesForString(fontInfo, s);
     +
-    +  // update the buffers
+    +  // mettre à jour les buffers
     +  textBufferInfo.attribs.a_position.numComponents = 2;
     +  gl.bindBuffer(gl.ARRAY_BUFFER, textBufferInfo.attribs.a_position.buffer);
     +  gl.bufferData(gl.ARRAY_BUFFER, vertices.arrays.position, gl.DYNAMIC_DRAW);
     +  gl.bindBuffer(gl.ARRAY_BUFFER, textBufferInfo.attribs.a_texcoord.buffer);
     +  gl.bufferData(gl.ARRAY_BUFFER, vertices.arrays.texcoord, gl.DYNAMIC_DRAW);
 
-      // use just the view position of the 'F' for the text
+      // utiliser juste la position de vue du 'F' pour le texte
 
-      // because pos is in view space that means it's a vector from the eye to
-      // some position. So translate along that vector back toward the eye some distance
+      // parce que pos est dans l'espace de vue, cela signifie que c'est un vecteur depuis l'œil vers
+      // une certaine position. Donc on translate le long de ce vecteur en revenant vers l'œil d'une certaine distance
       var fromEye = m4.normalize(pos);
-      var amountToMoveTowardEye = 150;  // because the F is 150 units long
+      var amountToMoveTowardEye = 150;  // parce que le F fait 150 unités de long
       var viewX = pos[0] - fromEye[0] * amountToMoveTowardEye;
       var viewY = pos[1] - fromEye[1] * amountToMoveTowardEye;
       var viewZ = pos[2] - fromEye[2] * amountToMoveTowardEye;
-      var desiredTextScale = -1 / gl.canvas.height * 2;  // 1x1 pixels
+      var desiredTextScale = -1 / gl.canvas.height * 2;  // pixels 1x1
       var scale = viewZ * desiredTextScale;
 
       var textMatrix = m4.translate(projectionMatrix, viewX, viewY, viewZ);
       textMatrix = m4.scale(textMatrix, scale, scale, 1);
 
-      // setup to draw the text.
+      // configurer pour dessiner le texte.
       gl.useProgram(textProgramInfo.program);
 
       gl.bindVertexArray(textVAO);
@@ -333,62 +332,61 @@ And then to render text we'll update the buffers. We'll also make the text dynam
       m4.copy(textMatrix, textUniforms.u_matrix);
       webglUtils.setUniforms(textProgramInfo, textUniforms);
 
-      // Draw the text.
+      // Dessiner le texte.
       gl.drawArrays(gl.TRIANGLES, 0, vertices.numVertices);
     });
 
-And here's that
+Et voilà
 
 {{{example url="../webgl-text-glyphs-texture-atlas.html" }}}
 
-That's the basic technique of using a texture atlas of glyphs. There are a few
-obvious things to add or ways to improve it.
+C'est la technique de base pour utiliser un atlas de textures de glyphes. Il y a quelques
+choses évidentes à ajouter ou des façons de l'améliorer.
 
-*   Reuse the same arrays.
+*   Réutiliser les mêmes tableaux.
 
-    Currently `makeVerticesForString` allocates new Float32Arrays each time it's called.
-    That's probably going to eventually cause garbage collection hiccups. Re-using the
-    same arrays would probably be better. You'd enlarge the array if it's not large
-    enough and keep that size around
+    Actuellement `makeVerticesForString` alloue de nouveaux Float32Arrays chaque fois qu'elle est appelée.
+    Cela va probablement éventuellement causer des ralentissements de ramasse-miettes. Réutiliser les
+    mêmes tableaux serait probablement mieux. Vous agrandiriez le tableau s'il n'est pas assez grand
+    et garderez cette taille
 
-*   Add support for carriage return
+*   Ajouter la prise en charge du retour à la ligne
 
-    Check for `\n` and go down a line when generating vertices. This would make it
-    easy to make paragraphs of text.
+    Vérifiez `\n` et descendez d'une ligne lors de la génération de sommets. Cela faciliterait
+    la création de paragraphes de texte.
 
-*   Add support for all kinds of other formatting.
+*   Ajouter la prise en charge de toutes sortes d'autres mises en forme.
 
-    If you wanted to center the text or justify it you could add all that.
+    Si vous voulez centrer le texte ou le justifier, vous pourriez ajouter tout ça.
 
-*   Add support for vertex colors.
+*   Ajouter la prise en charge des couleurs de sommets.
 
-    Then you could color the text different colors per letter. Of course you'd have
-    to decide how to specify when to change colors.
+    Vous pourriez alors colorer le texte avec différentes couleurs par lettre. Bien sûr, vous devriez
+    décider comment spécifier quand changer de couleurs.
 
-*   Consider generating the glyph texture atlas at runtime using a 2D canvas
+*   Envisager de générer l'atlas de textures de glyphes à l'exécution en utilisant un canvas 2D
 
-The other big issue which I'm not going to cover is that textures have a limited
-size but fonts are effectively unlimited. If you want to support all of Unicode
-so that you can handle Chinese and Japanese and Arabic and all the other languages,
-well, as of 2015 there are over 110,000 glyphs in Unicode! You can't fit all of
-those in textures. There just isn't enough room.
+L'autre grand problème que je ne vais pas aborder est que les textures ont une taille limitée
+mais les polices sont effectivement illimitées. Si vous voulez prendre en charge tout Unicode
+pour pouvoir gérer le chinois, le japonais, l'arabe et toutes les autres langues,
+eh bien, en 2015, il y avait plus de 110 000 glyphes dans Unicode ! Vous ne pouvez pas tous les mettre dans des textures.
+Il n'y a tout simplement pas assez de place.
 
-The way the OS and browsers handle this when they're GPU accelerated is by using a glyph texture cache. Like
-above they might put textures in a texture atlas but they probably make the area
-for each glyph a fixed size. They keep the most recently used glyphs in the texture.
-If they need to draw a glyph that's not in the texture they replace the least
-recently used one with the new one they need. Of course if that glyph they are
-about to replace is still being referenced by a quad yet to be drawn then they need
-to draw with what they have before replacing the glyph.
+La façon dont le système d'exploitation et les navigateurs gèrent ça quand ils sont accélérés par GPU est d'utiliser un cache de textures de glyphes. Comme
+ci-dessus, ils pourraient mettre des textures dans un atlas de textures, mais ils rendent probablement la zone
+pour chaque glyphe de taille fixe. Ils gardent les glyphes les plus récemment utilisés dans la texture.
+S'ils ont besoin de dessiner un glyphe qui n'est pas dans la texture, ils remplacent le moins
+récemment utilisé par le nouveau dont ils ont besoin. Bien sûr, si ce glyphe qu'ils sont
+sur le point de remplacer est encore référencé par un quad qui doit encore être dessiné, ils doivent
+dessiner avec ce qu'ils ont avant de remplacer le glyphe.
 
-Another thing you can do, though I'm not recommending it, is combine this
-technique with [the previous technique](webgl-text-texture.html). You can
-render glyphs directly into another texture.
+Une autre chose que vous pouvez faire, bien que je ne la recommande pas, est de combiner cette
+technique avec [la technique précédente](webgl-text-texture.html). Vous pouvez
+rendre des glyphes directement dans une autre texture.
 
-Yet one more way to draw text in WebGL is to actually use 3D text. The 'F' in
-all the samples above is a 3D letter. You'd make one for each letter. 3D letters
-are common for titles and movie logos but not much else.
+Encore une autre façon de dessiner du texte dans WebGL est d'utiliser réellement du texte 3D. Le 'F' dans
+tous les exemples ci-dessus est une lettre 3D. Vous en créeriez une pour chaque lettre. Les lettres 3D
+sont courantes pour les titres et les logos de films, mais pas grand-chose d'autre.
 
-I hope that's covered text in WebGL.
-
+J'espère que ça couvre le texte dans WebGL.
 

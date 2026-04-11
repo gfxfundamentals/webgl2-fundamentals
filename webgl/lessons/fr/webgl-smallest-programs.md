@@ -1,45 +1,45 @@
-Title: WebGL2 Smallest Programs
-Description: Smallest Code for Testing
-TOC: Smallest Programs
+Title: WebGL2 Plus petits programmes
+Description: Le code le plus petit pour tester
+TOC: Plus petits programmes
 
-This article assumes you've read many of the other articles
-starting with [the fundamentals](webgl-fundamentals.html).
-If you have not read them please start there first.
+Cet article suppose que vous avez lu beaucoup d'autres articles
+en commençant par [les bases](webgl-fundamentals.html).
+Si vous ne les avez pas lus, veuillez commencer par là.
 
-I don't really know what to file this article under because it has two
-purposes.
+Je ne sais pas vraiment sous quelle catégorie classer cet article car il a deux
+objectifs.
 
-1. Show you the smallest WebGL programs.
+1. Vous montrer les plus petits programmes WebGL.
 
-   These techniques are super useful for testing something or
-   when making an [MCVE for Stack Overflow](https://meta.stackoverflow.com/a/349790/128511) or when trying to narrow
-   down a bug.
+   Ces techniques sont très utiles pour tester quelque chose ou
+   lors de la création d'un [MCVE pour Stack Overflow](https://meta.stackoverflow.com/a/349790/128511) ou lors d'une tentative de
+   cerner un bug.
 
-2. Learning to think outside the box
+2. Apprendre à penser en dehors des sentiers battus
 
-   I hope to write several more articles on this
-   to help you see the bigger picture rather than just the common patterns.
-   [Here's one](webgl-drawing-without-data.html).
+   J'espère écrire plusieurs autres articles à ce sujet
+   pour vous aider à voir la vue d'ensemble plutôt que juste les motifs courants.
+   [En voici un](webgl-drawing-without-data.html).
 
-## Just clearing
+## Juste effacer
 
-Here's the smallest WebGL program that actually does something
+Voici le plus petit programme WebGL qui fait réellement quelque chose
 
 ```js
 const gl = document.querySelector('canvas').getContext('webgl2');
-gl.clearColor(1, 0, 0, 1);  // red
+gl.clearColor(1, 0, 0, 1);  // rouge
 gl.clear(gl.COLOR_BUFFER_BIT);
 ```
 
-All this program does is clear the canvas to red but it did actually do something.
+Tout ce que ce programme fait est d'effacer le canvas en rouge, mais il a réellement fait quelque chose.
 
-Think about it through. With just this you can actually test some things. Let's say
-you are [rendering to a texture](webgl-render-to-texture.html) but things aren't working.
-Let's say it's just like the example in [that article](webgl-render-to-texture.html).
-You're rendering 1 or more 3D things into a texture then rending that result onto a cube.
+Réfléchissez-y. Avec juste ça, vous pouvez en fait tester certaines choses. Disons que vous
+faites un [rendu vers une texture](webgl-render-to-texture.html) mais les choses ne fonctionnent pas.
+Disons que c'est comme l'exemple de [cet article](webgl-render-to-texture.html).
+Vous rendez 1 ou plusieurs choses 3D dans une texture, puis rendez ce résultat sur un cube.
 
-You're not seeing anything. Well, as a simple test, stop rendering to the texture with
-shaders are just clear the texture to a known color.
+Vous ne voyez rien. Eh bien, comme test simple, arrêtez de rendre vers la texture avec des shaders
+et effacez simplement la texture à une couleur connue.
 
 ```js
 gl.bindFramebuffer(gl.FRAMEBUFFER, framebufferWithTexture)
@@ -47,29 +47,29 @@ gl.clearColor(1, 0, 1, 1);  // magenta
 gl.clear(gl.COLOR_BUFFER_BIT);
 ```
 
-Now render with the texture from the framebuffer. Does your cube turn magenta? If not
-then your issue is not the rendering to the texture part it's something else.
+Maintenant rendez avec la texture du framebuffer. Votre cube devient-il magenta ? Si non,
+alors votre problème n'est pas la partie rendu vers la texture, c'est autre chose.
 
-## Using the `SCISSOR_TEST` and `gl.clear`
+## Utiliser le `SCISSOR_TEST` et `gl.clear`
 
-The `SCISSOR_TEST` clips both drawing and clearing to some sub rectangle of the canvas (or current framebuffer).
+Le `SCISSOR_TEST` coupe à la fois le dessin et l'effacement à un sous-rectangle du canvas (ou du framebuffer actuel).
 
-You enable the scissor test with
+Vous activez le scissor test avec
 
 ```js
 gl.enable(gl.SCISSOR_TEST);
 ```
 
-and then you set the scissor rectangle in pixels relative to the bottom left corner. It uses the same parameters
-as `gl.viewport`.
+puis vous définissez le rectangle scissor en pixels par rapport au coin inférieur gauche. Il utilise les mêmes paramètres
+que `gl.viewport`.
 
 ```js
 gl.scissor(x, y, width, height);
 ```
 
-Using that can draw rectangles using the `SCISSOR_TEST` and `gl.clear`.
+En utilisant ça, on peut dessiner des rectangles en utilisant le `SCISSOR_TEST` et `gl.clear`.
 
-Example
+Exemple
 
 ```js
 const gl = document.querySelector('#c').getContext('webgl2');
@@ -102,27 +102,27 @@ function rand(min, max) {
 
 {{{example url="../webgl-simple-scissor.html"}}}
 
-Not saying that particular one is all that useful but still
-it's good to know.
+Je ne dis pas que celui-là en particulier est si utile, mais quand même
+c'est bon à savoir.
 
-## Using one large `gl.POINTS`
+## Utiliser un grand `gl.POINTS`
 
-As most of the examples show, the most common thing to do in WebGL
-is create buffers. Put vertex data in those buffers. Create
-shaders with attributes. Set up the attributes to pull data from
-those buffers. Then draw, possibly with uniforms and texture also
-used by your shaders.
+Comme la plupart des exemples le montrent, la chose la plus courante à faire dans WebGL
+est de créer des buffers. Mettre des données de sommets dans ces buffers. Créer
+des shaders avec des attributs. Configurer les attributs pour tirer des données depuis
+ces buffers. Puis dessiner, éventuellement avec des uniforms et des textures également
+utilisés par vos shaders.
 
-But sometimes you just want to test. Let's say you want just see
-something draw.
+Mais parfois, vous voulez juste tester. Disons que vous voulez juste voir
+quelque chose se dessiner.
 
-How about this set of shaders
+Que diriez-vous de cet ensemble de shaders
 
 ```glsl
 #version 300 es
 // vertex shader
 void main() {
-  gl_Position = vec4(0, 0, 0, 1);  // center
+  gl_Position = vec4(0, 0, 0, 1);  // centre
   gl_PointSize = 120.0;
 }
 ```
@@ -135,14 +135,14 @@ precision highp float;
 out vec4 outColor;
 
 void main() {
-  outColor = vec4(1, 0, 0, 1);  // red
+  outColor = vec4(1, 0, 0, 1);  // rouge
 }
 ```
 
-And here's the code to use it
+Et voici le code pour l'utiliser
 
 ```js
-// setup GLSL program
+// configurer le programme GLSL
 const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
 
 gl.useProgram(program);
@@ -152,32 +152,32 @@ const count = 1;
 gl.drawArrays(gl.POINTS, offset, count);
 ```
 
-No buffers to create, no uniforms to setup, and we get a single
-point in the middle of the canvas.
+Pas de buffers à créer, pas d'uniforms à configurer, et on obtient un seul
+point au centre du canvas.
 
 {{{example url="../webgl-simple-point.html"}}}
 
-About `gl.POINTS`: When you pass `gl.POINTS` to `gl.drawArrays` you're also
-required to set `gl_PointSize` in your vertex shader to a size in pixels. It's
-important to note that different GPU/Drivers have a different maximum point size
-you can use. You can query that maximum size with
+À propos de `gl.POINTS` : Quand vous passez `gl.POINTS` à `gl.drawArrays`, vous devez aussi
+définir `gl_PointSize` dans votre vertex shader à une taille en pixels. Il est
+important de noter que différents GPU/Drivers ont une taille maximale de point différente
+que vous pouvez utiliser. Vous pouvez interroger cette taille maximale avec
 
 ```
 const [minSize, maxSize] = gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE);
 ```
 
-The WebGL spec only requires a max size of 1.0. Fortunately
-[most if not all GPUs and drivers support a larger size](https://web3dsurvey.com/webgl/parameters/ALIASED_POINT_SIZE_RANGE).
+La spécification WebGL ne requiert qu'une taille max de 1.0. Heureusement,
+[la plupart sinon tous les GPU et drivers supportent une taille plus grande](https://web3dsurvey.com/webgl/parameters/ALIASED_POINT_SIZE_RANGE).
 
-After you set `gl_PointSize` then when the vertex shader exits, whatever value you set on `gl_Position` is converted
-to screen/canvas space in pixels, then a square is generated around that position that is +/- gl_PointSize / 2 in all 4 directions.
+Après avoir défini `gl_PointSize`, quand le vertex shader se termine, quelle que soit la valeur que vous avez définie sur `gl_Position` est convertie
+en espace écran/canvas en pixels, puis un carré est généré autour de cette position qui est +/- gl_PointSize / 2 dans les 4 directions.
 
-Okay, I can hear you thinking so what, who wants to draw a single point.
+D'accord, je vous entends penser et alors, qui veut dessiner un seul point.
 
-Well, points automatically get free [texture coordinates](webgl-3d-textures.html). They are available in the fragment
-shader with the special variable `gl_PointCoord`. So, let's draw a texture on that point.
+Eh bien, les points obtiennent automatiquement des [coordonnées de texture](webgl-3d-textures.html) gratuites. Elles sont disponibles dans le fragment
+shader avec la variable spéciale `gl_PointCoord`. Donc, dessinons une texture sur ce point.
 
-First let's change the fragment shader.
+D'abord, changeons le fragment shader.
 
 ```glsl
 #version 300 es
@@ -189,57 +189,57 @@ precision highp float;
 out vec4 outColor;
 
 void main() {
--  outColor = vec4(1, 0, 0, 1);  // red
+-  outColor = vec4(1, 0, 0, 1);  // rouge
 +  outColor = texture(tex, gl_PointCoord.xy);
 }
 ```
 
-Now to keep it simple let's make a texture with raw data like we covered in
-[the article on data textures](webgl-data-textures.html).
+Maintenant, pour rester simple, créons une texture avec des données brutes comme nous l'avons couvert dans
+[l'article sur les textures de données](webgl-data-textures.html).
 
 ```js
-// 2x2 pixel data
+// données de pixels 2x2
 const pixels = new Uint8Array([
-  0xFF, 0x00, 0x00, 0xFF,  // red
-  0x00, 0xFF, 0x00, 0xFF,  // green
-  0x00, 0x00, 0xFF, 0xFF,  // blue
+  0xFF, 0x00, 0x00, 0xFF,  // rouge
+  0x00, 0xFF, 0x00, 0xFF,  // vert
+  0x00, 0x00, 0xFF, 0xFF,  // bleu
   0xFF, 0x00, 0xFF, 0xFF,  // magenta
 ]);
 const tex = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, tex);
 gl.texImage2D(
     gl.TEXTURE_2D,
-    0,                 // level
-    gl.RGBA,           // internal format
-    2,                 // width
-    2,                 // height
-    0,                 // border
+    0,                 // niveau
+    gl.RGBA,           // format interne
+    2,                 // largeur
+    2,                 // hauteur
+    0,                 // bordure
     gl.RGBA,           // format
     gl.UNSIGNED_BYTE,  // type
-    pixels,            // data
+    pixels,            // données
 );
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 ```
 
-Because WebGL defaults to using texture unit 0 and because uniforms
-default to 0 there is nothing else to setup
+Parce que WebGL utilise par défaut l'unité de texture 0 et parce que les uniforms
+sont initialisés à 0, il n'y a rien d'autre à configurer
 
 {{{example url="../webgl-simple-point-w-texture.html"}}}
 
-This can be a great way to test texture related problems.
-We're still using no buffers, no attributes, and we didn't have
-to look up and set any uniforms. For example if we loaded an image,
-it's not showing up. What if we try the shader above, does it
-show the image on the point? We rendered to a texture and then
-we want to view the texture. Normally we'd setup some geometry
-via buffers and attributes but we can render the texture just
-by showing it on this single point.
+Cela peut être une excellente façon de tester des problèmes liés aux textures.
+Nous n'utilisons toujours aucun buffer, aucun attribut, et nous n'avons pas eu
+à rechercher et définir des uniforms. Par exemple, si nous chargeons une image
+qui ne s'affiche pas. Que se passe-t-il si nous essayons le shader ci-dessus, affiche-t-il
+l'image sur le point ? Nous rendons vers une texture et ensuite
+nous voulons voir la texture. Normalement, nous configurerons de la géométrie
+via des buffers et des attributs, mais nous pouvons rendre la texture juste
+en l'affichant sur ce seul point.
 
-## Using Multiple Single `POINTS`
+## Utiliser plusieurs `POINTS` simples
 
-Another simple change to the example above. We can change the vertex
-shader to this
+Une autre modification simple de l'exemple ci-dessus. On peut changer le vertex
+shader en ceci
 
 ```glsl
 #version 300 es
@@ -254,9 +254,9 @@ void main() {
 }
 ```
 
-attributes have a default value of `0, 0, 0, 1` so with just that
-change the examples above would still continue to work. But, now
-we gain the ability to set the position if we want.
+Les attributs ont une valeur par défaut de `0, 0, 0, 1` donc avec juste ce
+changement, les exemples ci-dessus continueraient à fonctionner. Mais, maintenant
+nous gagnons la possibilité de définir la position si nous le voulons.
 
 ```js
 +const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
@@ -266,8 +266,8 @@ const positionLoc = gl.getAttribLocation(program, 'position');
 
 +const numPoints = 5;
 +for (let i = 0; i < numPoints; ++i) {
-+  const u = i / (numPoints - 1);    // 0 to 1
-+  const clipspace = u * 1.6 - 0.8;  // -0.8 to +0.8
++  const u = i / (numPoints - 1);    // 0 à 1
++  const clipspace = u * 1.6 - 0.8;  // -0.8 à +0.8
 +  gl.vertexAttrib2f(positionLoc, clipspace, clipspace);
 
 *  const offset = 0;
@@ -276,7 +276,7 @@ const positionLoc = gl.getAttribLocation(program, 'position');
 +}
 ```
 
-Before we run it lets make the point smaller
+Avant de l'exécuter, rendons le point plus petit
 
 ```glsl
 // vertex shader
@@ -290,8 +290,8 @@ void main() {
 }
 ```
 
-And lets make it so we can set the color of the point.
-(note: I switched back to the code without a texture).
+Et faisons en sorte qu'on puisse définir la couleur du point.
+(note : je suis revenu au code sans texture).
 
 ```glsl
 precision highp float;
@@ -301,29 +301,29 @@ precision highp float;
 out vec4 outColor;
 
 void main() {
--  outColor = vec4(1, 0, 0, 1);   // red
+-  outColor = vec4(1, 0, 0, 1);   // rouge
 +  outColor = color;
 }
 ```
 
-and we need to lookup the color location
+et nous devons rechercher l'emplacement de la couleur
 
 ```js
-// setup GLSL program
+// configurer le programme GLSL
 const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
 const positionLoc = gl.getAttribLocation(program, 'position');
 +const colorLoc = gl.getUniformLocation(program, 'color');
 ```
 
-And use them
+Et les utiliser
 
 ```
 gl.useProgram(program);
 
 const numPoints = 5;
 for (let i = 0; i < numPoints; ++i) {
-  const u = i / (numPoints - 1);    // 0 to 1
-  const clipspace = u * 1.6 - 0.8;  // -0.8 to +0.8
+  const u = i / (numPoints - 1);    // 0 à 1
+  const clipspace = u * 1.6 - 0.8;  // -0.8 à +0.8
   gl.vertexAttrib2f(positionLoc, clipspace, clipspace);
 
 +  gl.uniform4f(colorLoc, u, 0, 1 - u, 1);
@@ -334,24 +334,21 @@ for (let i = 0; i < numPoints; ++i) {
 }
 ```
 
-And now we get 5 points with 5 colors
-and we still didn't have to setup any buffers or
-attributes.
+Et maintenant nous obtenons 5 points avec 5 couleurs
+et nous n'avions toujours pas à configurer de buffers ou
+d'attributs.
 
 {{{example url="../webgl-simple-points.html"}}}
 
-Of course this is **NOT** the way you should
-draw lots of points in WebGL. If you want to draw lots
-of points you should do something like setup an attribute with a position
-for each point, and a color for each point and draw all the points
-in a single draw call.
+Bien sûr, ce n'est **PAS** la façon dont vous devriez
+dessiner beaucoup de points dans WebGL. Si vous voulez dessiner beaucoup
+de points, vous devriez faire quelque chose comme configurer un attribut avec une position
+pour chaque point, et une couleur pour chaque point, et dessiner tous les points
+dans un seul appel de dessin.
 
-BUT!, for testing, for debugging, for making an [MCVE](https://meta.stackoverflow.com/a/349790/128511) it's a great way to **minimize**
-the code. As another example let's say we're drawing to textures for a post processing
-affect and we want to visualize them. We could just draw one large
-point for each one using the combination of this example and
-the previous one with a texture. No complicated step of buffers
-and attributes needed, great for debugging.
-
-
-
+MAIS!, pour tester, pour déboguer, pour créer un [MCVE](https://meta.stackoverflow.com/a/349790/128511), c'est une excellente façon de **minimiser**
+le code. Comme autre exemple, disons que nous rendons vers des textures pour un effet de post-traitement
+et nous voulons les visualiser. On pourrait juste dessiner un grand
+point pour chacune en utilisant la combinaison de cet exemple et
+du précédent avec une texture. Pas d'étape compliquée de buffers
+et d'attributs nécessaire, idéal pour déboguer.

@@ -1,69 +1,69 @@
-Title: WebGL2 3D - Directional Lighting
-Description: How to implement directional lighting in WebGL
-TOC: Directional Lighting
+Title: WebGL2 3D - Éclairage directionnel
+Description: Comment implémenter l'éclairage directionnel dans WebGL
+TOC: Éclairage directionnel
 
 
-This article is a continuation of [WebGL 3D Cameras](webgl-3d-camera.html).
-If you haven't read that I suggest [you start there](webgl-3d-camera.html).
+Cet article est la suite de [WebGL 3D Caméras](webgl-3d-camera.html).
+Si vous ne l'avez pas lu, je vous suggère de [commencer par là](webgl-3d-camera.html).
 
-There are many ways to implement lighting. Probably the simplest is *directional lighting*.
+Il existe de nombreuses façons d'implémenter l'éclairage. La plus simple est probablement *l'éclairage directionnel*.
 
-Directional lighting assumes the light is coming uniformly from one direction. The sun
-on a clear day is often considered a directional light. It's so far way that its rays
-can be considered to be hitting the surface of an object all in parallel.
+L'éclairage directionnel suppose que la lumière vient uniformément d'une direction. Le soleil
+par une journée dégagée est souvent considéré comme une lumière directionnelle. Il est si loin que ses rayons
+peuvent être considérés comme frappant la surface d'un objet tous en parallèle.
 
-Computing directional lighting is actually pretty simple. If we know what direction
-the light is traveling and we know what direction the surface of the object is facing
-we can take the *dot product* of the 2 directions and it will give us the cosine of
-the angle between the 2 directions.
+Le calcul de l'éclairage directionnel est en fait assez simple. Si nous savons quelle direction
+la lumière voyage et si nous savons dans quelle direction pointe la surface de l'objet,
+nous pouvons prendre le *produit scalaire* des 2 directions et cela nous donnera le cosinus de
+l'angle entre les 2 directions.
 
-Here's an example
+Voici un exemple
 
-{{{diagram url="resources/dot-product.html" caption="drag the points"}}}
+{{{diagram url="resources/dot-product.html" caption="faites glisser les points"}}}
 
-Drag the points around, if you get them exactly opposite of each other you'll see the dot product
-is -1. If they are at the same spot exactly the dot product is 1.
+Faites glisser les points. Si vous les mettez exactement opposés l'un à l'autre, vous verrez que le produit scalaire
+est -1. S'ils sont exactement au même endroit, le produit scalaire est 1.
 
-How is that useful? Well if we know what direction the surface of our 3d object is facing
-and we know the direction the light is shining then we can just take the dot product
-of them and it will give us a number 1 if the light is pointing directly at the
-surface and -1 if they are pointing directly opposite.
+En quoi est-ce utile ? Eh bien, si nous savons dans quelle direction pointe la surface de notre objet 3D
+et que nous connaissons la direction de la lumière, nous pouvons simplement prendre le produit scalaire
+de ces deux directions et il nous donnera un nombre 1 si la lumière pointe directement sur la
+surface et -1 s'ils pointent directement dans des directions opposées.
 
-{{{diagram url="resources/directional-lighting.html" caption="rotate the direction" width="500" height="400"}}}
+{{{diagram url="resources/directional-lighting.html" caption="faire pivoter la direction" width="500" height="400"}}}
 
-We can multiply our color by that dot product value and boom! Light!
+Nous pouvons multiplier notre couleur par cette valeur de produit scalaire et voilà ! De l'éclairage !
 
-One problem, how do we know which direction the surfaces of our 3d object are facing.
+Un problème : comment savons-nous dans quelle direction les surfaces de notre objet 3D sont orientées ?
 
-## Introducing Normals
+## Introduction aux Normales
 
-I have no idea why they are called *normals* but at least in 3D graphics a normal
-is the word for a unit vector that describes the direction a surface is facing.
+Je ne sais pas pourquoi on les appelle *normales* mais du moins en 3D graphique, une normale
+est le mot pour un vecteur unitaire qui décrit la direction vers laquelle une surface est orientée.
 
-Here are some normals for a cube and a sphere.
+Voici quelques normales pour un cube et une sphère.
 
 {{{diagram url="resources/normals.html"}}}
 
-The lines sticking out of the objects represent normals for each vertex.
+Les lignes sortant des objets représentent les normales pour chaque sommet.
 
-Notice the cube has 3 normals at each corner. That's because you need
-3 different normals to represent the way each face of the cube is um, .. facing.
+Remarquez que le cube a 3 normales à chaque coin. C'est parce que vous avez besoin de
+3 normales différentes pour représenter la façon dont chaque face du cube est, hm, orientée.
 
-Here the normals are also colored based on their direction with
-positive x being <span style="color: red;">red</span>, up being
-<span style="color: green;">green</span> and positive z being
-<span style="color: blue;">blue</span>.
+Ici les normales sont également colorées selon leur direction avec
+le x positif étant <span style="color: red;">rouge</span>, le haut étant
+<span style="color: green;">vert</span> et le z positif étant
+<span style="color: blue;">bleu</span>.
 
-So, let's go add normals to our `F` from [our previous examples](webgl-3d-camera.html)
-so we can light it. Since the `F` is very boxy and its faces are aligned
-to the x, y, or z axis it will be pretty easy. Things that are facing forward
-have the normal `0, 0, 1`. Things that are facing away are `0, 0, -1`. Facing
-left is `-1, 0, 0`, Facing right is `1, 0, 0`. Up is `0, 1, 0` and down is `0, -1, 0`.
+Alors, ajoutons des normales à notre `F` de [nos exemples précédents](webgl-3d-camera.html)
+pour pouvoir l'éclairer. Comme le `F` est très anguleux et que ses faces sont alignées
+sur l'axe x, y ou z, ce sera assez simple. Les choses qui sont orientées vers l'avant
+ont la normale `0, 0, 1`. Celles qui sont orientées vers l'arrière ont `0, 0, -1`. Vers
+la gauche c'est `-1, 0, 0`, vers la droite `1, 0, 0`. Vers le haut c'est `0, 1, 0` et vers le bas `0, -1, 0`.
 
 ```
 function setNormals(gl) {
   var normals = new Float32Array([
-          // left column front
+          // colonne de gauche avant
           0, 0, 1,
           0, 0, 1,
           0, 0, 1,
@@ -71,7 +71,7 @@ function setNormals(gl) {
           0, 0, 1,
           0, 0, 1,
 
-          // top rung front
+          // traverse du haut avant
           0, 0, 1,
           0, 0, 1,
           0, 0, 1,
@@ -79,7 +79,7 @@ function setNormals(gl) {
           0, 0, 1,
           0, 0, 1,
 
-          // middle rung front
+          // traverse du milieu avant
           0, 0, 1,
           0, 0, 1,
           0, 0, 1,
@@ -87,7 +87,7 @@ function setNormals(gl) {
           0, 0, 1,
           0, 0, 1,
 
-          // left column back
+          // colonne de gauche arrière
           0, 0, -1,
           0, 0, -1,
           0, 0, -1,
@@ -95,7 +95,7 @@ function setNormals(gl) {
           0, 0, -1,
           0, 0, -1,
 
-          // top rung back
+          // traverse du haut arrière
           0, 0, -1,
           0, 0, -1,
           0, 0, -1,
@@ -103,7 +103,7 @@ function setNormals(gl) {
           0, 0, -1,
           0, 0, -1,
 
-          // middle rung back
+          // traverse du milieu arrière
           0, 0, -1,
           0, 0, -1,
           0, 0, -1,
@@ -111,7 +111,7 @@ function setNormals(gl) {
           0, 0, -1,
           0, 0, -1,
 
-          // top
+          // dessus
           0, 1, 0,
           0, 1, 0,
           0, 1, 0,
@@ -119,7 +119,7 @@ function setNormals(gl) {
           0, 1, 0,
           0, 1, 0,
 
-          // top rung right
+          // droite de la traverse du haut
           1, 0, 0,
           1, 0, 0,
           1, 0, 0,
@@ -127,7 +127,7 @@ function setNormals(gl) {
           1, 0, 0,
           1, 0, 0,
 
-          // under top rung
+          // dessous de la traverse du haut
           0, -1, 0,
           0, -1, 0,
           0, -1, 0,
@@ -135,7 +135,7 @@ function setNormals(gl) {
           0, -1, 0,
           0, -1, 0,
 
-          // between top rung and middle
+          // entre la traverse du haut et du milieu
           1, 0, 0,
           1, 0, 0,
           1, 0, 0,
@@ -143,7 +143,7 @@ function setNormals(gl) {
           1, 0, 0,
           1, 0, 0,
 
-          // top of middle rung
+          // dessus de la traverse du milieu
           0, 1, 0,
           0, 1, 0,
           0, 1, 0,
@@ -151,7 +151,7 @@ function setNormals(gl) {
           0, 1, 0,
           0, 1, 0,
 
-          // right of middle rung
+          // droite de la traverse du milieu
           1, 0, 0,
           1, 0, 0,
           1, 0, 0,
@@ -159,7 +159,7 @@ function setNormals(gl) {
           1, 0, 0,
           1, 0, 0,
 
-          // bottom of middle rung.
+          // dessous de la traverse du milieu
           0, -1, 0,
           0, -1, 0,
           0, -1, 0,
@@ -167,7 +167,7 @@ function setNormals(gl) {
           0, -1, 0,
           0, -1, 0,
 
-          // right of bottom
+          // droite du bas
           1, 0, 0,
           1, 0, 0,
           1, 0, 0,
@@ -175,7 +175,7 @@ function setNormals(gl) {
           1, 0, 0,
           1, 0, 0,
 
-          // bottom
+          // bas
           0, -1, 0,
           0, -1, 0,
           0, -1, 0,
@@ -183,7 +183,7 @@ function setNormals(gl) {
           0, -1, 0,
           0, -1, 0,
 
-          // left side
+          // côté gauche
           -1, 0, 0,
           -1, 0, 0,
           -1, 0, 0,
@@ -195,115 +195,115 @@ function setNormals(gl) {
 }
 ```
 
-and set them up. While we're at it let's remove the vertex colors
-so it's easier to see the lighting.
+et les configurer. Pendant qu'on y est, supprimons les couleurs des sommets
+pour voir plus facilement l'éclairage.
 
-    // look up where the vertex data needs to go.
+    // rechercher où les données de sommets doivent aller.
     var positionLocation = gl.getAttribLocation(program, "a_position");
     -var colorLocation = gl.getAttribLocation(program, "a_color");
     +var normalLocation = gl.getAttribLocation(program, "a_normal");
 
     ...
 
-    -// Create a buffer for colors.
+    -// Créer un buffer pour les couleurs.
     -var buffer = gl.createBuffer();
     -gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     -gl.enableVertexAttribArray(colorLocation);
     -
-    -// We'll supply RGB as bytes.
+    -// Nous fournirons RGB en bytes.
     -gl.vertexAttribPointer(colorLocation, 3, gl.UNSIGNED_BYTE, true, 0, 0);
     -
-    -// Set Colors.
+    -// Définir les couleurs.
     -setColors(gl);
 
-    // Create a buffer for normals.
+    // Créer un buffer pour les normales.
     var buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.enableVertexAttribArray(normalLocation);
     gl.vertexAttribPointer(normalLocation, 3, gl.FLOAT, false, 0, 0);
 
-    // Set normals.
+    // Définir les normales.
     setNormals(gl);
 
-Now we need to make our shaders use them
+Maintenant, nous devons faire en sorte que nos shaders les utilisent
 
-First the vertex shader we just pass the normals through to
-the fragment shader
+D'abord, le vertex shader où nous passons simplement les normales au
+fragment shader
 
 ```
 #version 300 es
 
-// an attribute is an input (in) to a vertex shader.
-// It will receive data from a buffer
+// un attribut est une entrée (in) dans un vertex shader.
+// Il recevra des données depuis un buffer
 in vec4 a_position;
 -in vec4 a_color;
 +in vec3 a_normal;
 
-// A matrix to transform the positions by
+// Une matrice pour transformer les positions
 uniform mat4 u_matrix;
 
--// a varying to pass the color to the fragment shader
+-// un varying pour passer la couleur au fragment shader
 -out vec4 v_color;
 
-+// varying to pass the normal to the fragment shader
++// varying pour passer la normale au fragment shader
 +out vec3 v_normal;
 
-// all shaders have a main function
+// tous les shaders ont une fonction main
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplier la position par la matrice.
   gl_Position = u_matrix * a_position;
 
--  // Pass the color to the fragment shader.
+-  // Passer la couleur au fragment shader.
 -  v_color = a_color;
 
-+  // Pass the normal to the fragment shader
++  // Passer la normale au fragment shader
 +  v_normal = a_normal;
 }
 ```
 
-And the fragment shader we'll do the math using the dot product
-of the direction of the light and the normal
+Et le fragment shader où nous ferons le calcul en utilisant le produit scalaire
+de la direction de la lumière et de la normale
 
 ```
 #version 300 es
 
 precision highp float;
 
--// the varied color passed from the vertex shader
+-// la couleur varying passée depuis le vertex shader
 -in vec4 v_color;
 
-+// Passed in and varied from the vertex shader.
++// Passé et interpolé depuis le vertex shader.
 +in vec3 v_normal;
 +
 +uniform vec3 u_reverseLightDirection;
 +uniform vec4 u_color;
 
-// we need to declare an output for the fragment shader
+// nous devons déclarer une sortie pour le fragment shader
 out vec4 outColor;
 
 void main() {
 -  outColor = v_color;
-+  // because v_normal is a varying it's interpolated
-+  // so it will not be a unit vector. Normalizing it
-+  // will make it a unit vector again
++  // parce que v_normal est un varying il est interpolé
++  // donc ce ne sera pas un vecteur unitaire. La normalisation
++  // en fera à nouveau un vecteur unitaire
 +  vec3 normal = normalize(v_normal);
 +
-+  // compute the light by taking the dot product
-+  // of the normal to the light's reverse direction
++  // calculer la lumière en prenant le produit scalaire
++  // de la normale dans la direction inverse de la lumière
 +  float light = dot(normal, u_reverseLightDirection);
 +
 +  outColor = u_color;
 +
-+  // Lets multiply just the color portion (not the alpha)
-+  // by the light
++  // Multiplions seulement la partie couleur (pas l'alpha)
++  // par la lumière
 +  outColor.rgb *= light;
 }
 ```
 
-Then we need to lookup the locations of `u_color` and `u_reverseLightDirection`.
+Ensuite, nous devons rechercher les emplacements de `u_color` et `u_reverseLightDirection`.
 
 ```
-  // lookup uniforms
+  // rechercher les uniforms
   var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 +  var colorLocation = gl.getUniformLocation(program, "u_color");
 +  var reverseLightDirectionLocation =
@@ -311,47 +311,47 @@ Then we need to lookup the locations of `u_color` and `u_reverseLightDirection`.
 
 ```
 
-and we need to set them
+et nous devons les définir
 
 ```
-  // Set the matrix.
+  // Définir la matrice.
   gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
-+  // Set the color to use
-+  gl.uniform4fv(colorLocation, [0.2, 1, 0.2, 1]); // green
++  // Définir la couleur à utiliser
++  gl.uniform4fv(colorLocation, [0.2, 1, 0.2, 1]); // vert
 +
-+  // set the light direction.
++  // définir la direction de la lumière.
 +  gl.uniform3fv(reverseLightDirectionLocation, normalize([0.5, 0.7, 1]));
 ```
 
-`normalize`, which we went over before, will make whatever values we put in there
-into a unit vector. The specific values in the sample are
-`x = 0.5` which is positive `x` means the light is on the right pointing left.
-`y = 0.7` which is positive `y` means the light is above pointing down.
-`z = 1` which is positive `z` means the light is in front pointing into the scene.
-the relative values means the direction is mostly pointing into the scene
-and pointing more down then right.
+`normalize`, que nous avons vu avant, transformera les valeurs que nous mettons en
+un vecteur unitaire. Les valeurs spécifiques dans l'exemple sont
+`x = 0.5` qui est positif en `x` ce qui signifie que la lumière est à droite pointant vers la gauche.
+`y = 0.7` qui est positif en `y` ce qui signifie que la lumière est en haut pointant vers le bas.
+`z = 1` qui est positif en `z` ce qui signifie que la lumière est devant pointant dans la scène.
+les valeurs relatives signifient que la direction pointe principalement dans la scène
+et pointe plus vers le bas que vers la droite.
 
-And here it is
+Et voilà le résultat
 
 {{{example url="../webgl-3d-lighting-directional.html" }}}
 
-If you rotate the F you might notice something. The F is rotating
-but the lighting isn't changing. As the F rotates we want whatever part
-is facing the direction of the light to be the brightest.
+Si vous faites pivoter le F, vous pourriez remarquer quelque chose. Le F tourne
+mais l'éclairage ne change pas. Quand le F tourne, nous voulons que la partie
+qui fait face à la direction de la lumière soit la plus brillante.
 
-To fix this we need to re-orient the normals as the object is re-oriented.
-Like we did for positions we can multiply the normals by some matrix. The most obvious
-matrix would be the `world` matrix. As it is right now we're only passing in
-1 matrix called `u_matrix`. Let's change it to pass in 2 matrices. One called
-`u_world` which will be the world matrix. Another called `u_worldViewProjection`
-which will be what we're currently passing in as `u_matrix`
+Pour corriger cela, nous devons réorienter les normales quand l'objet est réorienté.
+Comme nous l'avons fait pour les positions, nous pouvons multiplier les normales par une matrice. La matrice la plus évidente
+serait la matrice `world`. En l'état actuel, nous ne passons qu'une seule
+matrice appelée `u_matrix`. Changeons cela pour passer 2 matrices. Une appelée
+`u_world` qui sera la matrice world. Une autre appelée `u_worldViewProjection`
+qui sera ce que nous passons actuellement en tant que `u_matrix`
 
 ```
 #version 300 es
 
-// an attribute is an input (in) to a vertex shader.
-// It will receive data from a buffer
+// un attribut est une entrée (in) dans un vertex shader.
+// Il recevra des données depuis un buffer
 in vec4 a_position;
 in vec3 a_normal;
 
@@ -361,88 +361,88 @@ in vec3 a_normal;
 out vec3 v_normal;
 
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplier la position par la matrice.
 *  gl_Position = u_worldViewProjection * a_position;
 
-*  // orient the normals and pass to the fragment shader
+*  // orienter les normales et les passer au fragment shader
 *  v_normal = mat3(u_world) * a_normal;
 }
 ```
 
-Notice we are multiplying `a_normal` by `mat3(u_world)`. That's
-because normals are a direction so we don't care about translation.
-The orientation portion of the matrix is only in the top 3x3
-area of the matrix.
+Remarquez que nous multiplions `a_normal` par `mat3(u_world)`. C'est
+parce que les normales sont une direction donc nous ne nous soucions pas de la translation.
+La partie orientation de la matrice n'est que dans la zone 3x3 supérieure
+de la matrice.
 
-Now we have to look those uniforms up
+Maintenant, nous devons rechercher ces uniforms
 
 ```
-  // lookup uniforms
+  // rechercher les uniforms
 -  var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 *  var worldViewProjectionLocation =
 *      gl.getUniformLocation(program, "u_worldViewProjection");
 +  var worldLocation = gl.getUniformLocation(program, "u_world");
 ```
 
-And we have to change the code that updates them
+Et nous devons changer le code qui les met à jour
 
 ```
 *var worldMatrix = m4.yRotation(fRotationRadians);
 *var worldViewProjectionMatrix = m4.multiply(viewProjectionMatrix,
                                              worldMatrix);
 
-*// Set the matrices
+*// Définir les matrices
 *gl.uniformMatrix4fv(
 *    worldViewProjectionLocation, false,
 *    worldViewProjectionMatrix);
 *gl.uniformMatrix4fv(worldLocation, false, worldMatrix);
 ```
 
-and here's that
+et voilà le résultat
 
 {{{example url="../webgl-3d-lighting-directional-world.html" }}}
 
-Rotate the F and notice which ever side is facing the light direction gets lit.
+Faites pivoter le F et remarquez quelle face face à la direction de la lumière est éclairée.
 
-There is one problem which I don't know how to show directly so I'm
-going to show it in a diagram. We're multiplying the `normal` by
-the `u_world` matrix to re-orient the normals.
-What happens if we scale the world matrix?
-It turns out we get the wrong normals.
+Il y a un problème que je ne sais pas comment montrer directement donc je vais
+le montrer dans un diagramme. Nous multiplions la `normal` par
+la matrice `u_world` pour réorienter les normales.
+Que se passe-t-il si nous redimensionnons la matrice world ?
+Il s'avère que nous obtenons de mauvaises normales.
 
-{{{diagram url="resources/normals-scaled.html" caption="click to toggle normals" width="600" }}}
+{{{diagram url="resources/normals-scaled.html" caption="cliquez pour basculer les normales" width="600" }}}
 
-I've never bothered to understand
-the solution but it turns out you can get the inverse of the world matrix,
-transpose it, which means swap the columns for rows, and use that instead
-and you'll get the right answer.
+Je n'ai jamais pris la peine de comprendre
+la solution, mais il s'avère que vous pouvez obtenir l'inverse de la matrice world,
+la transposer, ce qui signifie échanger les colonnes pour les lignes, et l'utiliser à la place
+et vous obtiendrez la bonne réponse.
 
-In the diagram above the <span style="color: #F0F;">purple</span> sphere
-is unscaled. The <span style="color: #F00;">red</span> sphere on the left
-is scaled and the normals are being multiplied by the world matrix. You
-can see something is wrong. The <span style="color: #00F;">blue</span>
-sphere on the right is using the world inverse transpose matrix.
+Dans le diagramme ci-dessus, la sphère <span style="color: #F0F;">violette</span>
+n'est pas redimensionnée. La sphère <span style="color: #F00;">rouge</span> à gauche
+est redimensionnée et les normales sont multipliées par la matrice world. Vous
+pouvez voir que quelque chose ne va pas. La sphère <span style="color: #00F;">bleue</span>
+à droite utilise la matrice inverse transposée de la world.
 
-Click the diagram to cycle through different representations. You should
-notice when the scale is extreme it's very easy to see the normals
-on the left (world) are **not** staying perpendicular to the surface of the sphere
-where as the ones on the right (worldInverseTranspose) are staying perpendicular
-to the sphere. The last mode makes them all shaded red. You should see the lighting
-on the 2 outer spheres is very different based on which matrix is used.
-It's hard to tell which is correct which is why this is a subtle issue but
-based on the other visualizations it's clear using the worldInverseTranspose
-is correct.
+Cliquez sur le diagramme pour parcourir différentes représentations. Vous devriez
+remarquer que quand le redimensionnement est extrême, il est très facile de voir que les normales
+à gauche (world) **ne** restent **pas** perpendiculaires à la surface de la sphère
+alors que celles à droite (worldInverseTranspose) restent perpendiculaires
+à la sphère. Le dernier mode les rend toutes en rouge. Vous devriez voir que l'éclairage
+sur les 2 sphères extérieures est très différent selon la matrice utilisée.
+Il est difficile de dire laquelle est correcte, c'est pourquoi c'est un problème subtil, mais
+d'après les autres visualisations, il est clair que l'utilisation de la worldInverseTranspose
+est correcte.
 
-To implement this in our example let's change the code like this. First we'll update
-the shader. Technically we could just update the value of `u_world`
-but it's best if we rename things so they're named what they actually are
-otherwise it will get confusing.
+Pour implémenter cela dans notre exemple, modifions le code comme suit. D'abord, nous allons mettre à jour
+le shader. Techniquement, nous pourrions juste mettre à jour la valeur de `u_world`
+mais il vaut mieux renommer les choses selon ce qu'elles sont réellement
+sinon cela deviendra confus.
 
 ```
 #version 300 es
 
-// an attribute is an input (in) to a vertex shader.
-// It will receive data from a buffer
+// un attribut est une entrée (in) dans un vertex shader.
+// Il recevra des données depuis un buffer
 in vec4 a_position;
 in vec3 a_normal;
 
@@ -450,21 +450,21 @@ uniform mat4 u_worldViewProjection;
 -uniform mat4 u_world
 +uniform mat4 u_worldInverseTranspose;
 
-// varyings to pass the normal and color to the fragment shader
+// varyings pour passer la normale et la couleur au fragment shader
 out vec4 v_color;
 out vec3 v_normal;
 
-// all shaders have a main function
+// tous les shaders ont une fonction main
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplier la position par la matrice.
   gl_Position = u_worldViewProjection * a_position;
 
-  // orient the normals and pass to the fragment shader
+  // orienter les normales et les passer au fragment shader
 *  v_normal = mat3(u_worldInverseTranspose) * a_normal;
 }
 ```
 
-Then we need to look that up
+Ensuite, nous devons le rechercher
 
 ```
 -  var worldLocation = gl.getUniformLocation(program, "u_world");
@@ -472,7 +472,7 @@ Then we need to look that up
 +      gl.getUniformLocation(program, "u_worldInverseTranspose");
 ```
 
-And we need to compute and set it
+Et nous devons le calculer et le définir
 
 ```
 var worldMatrix = m4.yRotation(fRotationRadians);
@@ -480,7 +480,7 @@ var worldViewProjectionMatrix = m4.multiply(viewProjectionMatrix, worldMatrix);
 +var worldInverseMatrix = m4.inverse(worldMatrix);
 +var worldInverseTransposeMatrix = m4.transpose(worldInverseMatrix);
 
-// Set the matrices
+// Définir les matrices
 gl.uniformMatrix4fv(
     worldViewProjectionLocation, false,
     worldViewProjectionMatrix);
@@ -490,7 +490,7 @@ gl.uniformMatrix4fv(
 +    worldInverseTransposeMatrix);
 ```
 
-and here's the code to transpose a matrix
+et voici le code pour transposer une matrice
 
 ```
 var m4 = {
@@ -505,33 +505,33 @@ var m4 = {
   ...
 ```
 
-Because the effect is subtle and because we aren't scaling anything
-there's no noticeable difference but at least now we're prepared.
+Parce que l'effet est subtil et que nous ne redimensionnons rien,
+il n'y a pas de différence notable mais au moins maintenant nous sommes préparés.
 
 {{{example url="../webgl-3d-lighting-directional-worldinversetranspose.html" }}}
 
-I hope this first step into lighting was clear. Next up [point lighting](webgl-3d-lighting-point.html).
+J'espère que cette première étape dans l'éclairage était claire. La suite : [l'éclairage ponctuel](webgl-3d-lighting-point.html).
 
 <div class="webgl_bottombar">
-<h3>Alternatives to mat3(u_worldInverseTranspose) * a_normal</h3>
-<p>In our shader above there's a line like this</p>
+<h3>Alternatives à mat3(u_worldInverseTranspose) * a_normal</h3>
+<p>Dans notre shader ci-dessus, il y a une ligne comme celle-ci</p>
 <pre class="prettyprint">
 v_normal = mat3(u_worldInverseTranspose) * a_normal;
 </pre>
-<p>We could have done this</p>
+<p>Nous aurions pu faire ceci</p>
 <pre class="prettyprint">
 v_normal = (u_worldInverseTranspose * vec4(a_normal, 0)).xyz;
 </pre>
-<p>Because we set <code>w</code> to 0 before multiplying that would
-end up multiplying the translation from the matrix by 0 effectively removing it. I think that's
-the more common way to do it. The mat3 way looked cleaner to me but
-I've often done it this way too.</p>
-<p>Yet another solution would be to make <code>u_worldInverseTranspose</code> a <code>mat3</code>.
-There are 2 reasons not to do that. One is we might have
-other needs for the full <code>u_worldInverseTranspose</code> so passing the entire
-<code>mat4</code> means we can use with for those other needs.
-Another is that all of our matrix functions in JavaScript
-make 4x4 matrices. Making a whole other set for 3x3 matrices
-or even converting from 4x4 to 3x3 is work we'd rather
-not do unless there was a more compelling reason.</p>
+<p>Parce que nous définissons <code>w</code> à 0 avant de multiplier, cela revient à
+multiplier la translation de la matrice par 0, ce qui l'élimine effectivement. Je pense que c'est
+la façon la plus courante de le faire. La façon avec mat3 m'a semblé plus propre mais
+je l'ai souvent fait aussi de cette façon.</p>
+<p>Encore une autre solution serait de faire de <code>u_worldInverseTranspose</code> un <code>mat3</code>.
+Il y a 2 raisons de ne pas le faire. L'une est que nous pourrions avoir d'autres
+besoins pour le <code>u_worldInverseTranspose</code> complet donc passer le
+<code>mat4</code> entier signifie que nous pouvons l'utiliser pour ces autres besoins.
+L'autre est que toutes nos fonctions matricielles en JavaScript
+créent des matrices 4x4. Créer tout un autre ensemble pour les matrices 3x3
+ou même convertir de 4x4 à 3x3 est un travail que nous préférons
+ne pas faire sauf s'il y avait une raison plus convaincante.</p>
 </div>

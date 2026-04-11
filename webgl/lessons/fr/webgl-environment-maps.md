@@ -1,21 +1,21 @@
-Title: WebGL2 Environment Maps (reflections)
-Description: How to implement environment maps.
-TOC: Environment maps
+Title: WebGL2 Cartes d'environnement (réflexions)
+Description: Comment implémenter les cartes d'environnement.
+TOC: Cartes d'environnement
 
-This article is part of a series of articles about WebGL2.
-[The first article starts with the fundamentals](webgl-fundamentals.html).
-This article continues from [the article on cube maps](webgl-cube-maps.html).
-This article also uses concepts covered in [the article on lighting](webgl-3d-lighting-directional.html).
-If you have not read those articles already you might want to read them first.
+Cet article fait partie d'une série d'articles sur WebGL2.
+[Le premier article commence par les bases](webgl-fundamentals.html).
+Cet article s'appuie sur [l'article sur les cubemaps](webgl-cube-maps.html).
+Cet article utilise également des concepts couverts dans [l'article sur l'éclairage](webgl-3d-lighting-directional.html).
+Si vous n'avez pas encore lu ces articles, vous voudrez peut-être les lire d'abord.
 
-An *environment map* represents the environment of the objects you're drawing.
-If the you're drawing an outdoor scene it would represent the outdoors. If
-you're drawing people on a stage it would represent the venue. If you're drawing
-an outer space scene it would be the stars. We can implement an environment map
-with a cube map if we have 6 images that show the environment from a point in
-space in the 6 directions of the cubemap.
+Une *carte d'environnement* représente l'environnement des objets que vous dessinez.
+Si vous dessinez une scène en extérieur, elle représenterait l'extérieur. Si
+vous dessinez des gens sur une scène, elle représenterait le lieu. Si vous dessinez
+une scène dans l'espace, ce seraient les étoiles. Nous pouvons implémenter une carte d'environnement
+avec un cube map si nous avons 6 images qui montrent l'environnement depuis un point dans
+l'espace dans les 6 directions du cubemap.
 
-Here's an environment map from the lobby of the Computer History Museum in Mountain View, California.
+Voici une carte d'environnement du hall du Computer History Museum à Mountain View, Californie.
 
 <div class="webgl_center">
   <img src="../resources/images/computer-history-museum/pos-x.jpg" style="width: 128px" class="border">
@@ -28,10 +28,10 @@ Here's an environment map from the lobby of the Computer History Museum in Mount
   <img src="../resources/images/computer-history-museum/neg-z.jpg" style="width: 128px" class="border">
 </div>
 
-Based on [the code in the previous article](webgl-cube-maps.html) let's load those 6 images instead of the images we generated
+En se basant sur [le code de l'article précédent](webgl-cube-maps.html), chargeons ces 6 images à la place des images que nous avions générées
 
 ```js
-// Create a texture.
+// Créer une texture.
 var texture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
 
@@ -64,7 +64,7 @@ const faceInfos = [
 faceInfos.forEach((faceInfo) => {
   const {target, url} = faceInfo;
 
-  // Upload the canvas to the cubemap face.
+  // Téléverser le canvas sur la face du cubemap.
   const level = 0;
   const internalFormat = gl.RGBA;
   const width = 512;
@@ -72,14 +72,14 @@ faceInfos.forEach((faceInfo) => {
   const format = gl.RGBA;
   const type = gl.UNSIGNED_BYTE;
 
-  // setup each face so it's immediately renderable
+  // configurer chaque face pour qu'elle soit immédiatement affichable
   gl.texImage2D(target, level, internalFormat, width, height, 0, format, type, null);
 
-  // Asynchronously load an image
+  // Charger une image de manière asynchrone
   const image = new Image();
   image.src = url;
   image.addEventListener('load', function() {
-    // Now that the image has loaded upload it to the texture.
+    // Maintenant que l'image est chargée, la téléverser dans la texture.
     gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
     gl.texImage2D(target, level, internalFormat, format, type, image);
     gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
@@ -89,98 +89,98 @@ gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
 gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 ```
 
-Note that for every face we initialize it with a 512x512 blank image by passing
-`null` to `texImage2D`. Cubemaps must have all 6 faces, all 6 faces must be the
-same size and be square. If they are not the texture will not render. But, we're
-loading 6 images. We'd like to start rendering immediately so we allocate all 6
-faces then start loading the images. As each image arrives we upload it to the
-correct face then generate the mipmap again. This means we can start rendering
-immediately and as the images are download the faces of the cubemap will get
-filled in with the images one at a time and still be renderable even if all 6
-have not arrived yet.
+Notez que pour chaque face, nous l'initialisons avec une image vide de 512x512 en passant
+`null` à `texImage2D`. Les cubemaps doivent avoir les 6 faces, toutes les 6 faces doivent avoir la
+même taille et être carrées. Si ce n'est pas le cas, la texture ne sera pas rendue. Mais nous
+chargeons 6 images. Nous voudrions commencer à faire le rendu immédiatement, donc nous allouons les 6
+faces puis commençons à charger les images. Au fur et à mesure que chaque image arrive, nous la téléversons sur la
+face correcte puis générons à nouveau le mipmap. Cela signifie que nous pouvons commencer à faire le rendu
+immédiatement et au fur et à mesure que les images sont téléchargées, les faces du cubemap seront
+remplies avec les images une par une et seront toujours affichables même si les 6
+ne sont pas encore arrivées.
 
-But, just loading the images is not enough. Like
-[lighting](webgl-3d-lighting-point.html) we need a little math here.
+Mais charger les images ne suffit pas. Comme pour
+[l'éclairage](webgl-3d-lighting-point.html), nous avons besoin d'un peu de mathématiques ici.
 
-In this case we want to know for each fragment to be drawn, given a vector from
-the eye/camera to that position on the surface of the object, which direction
-will it reflect off the that surface. We can then use that direction to get a
-color from the cubemap.
+Dans ce cas, nous voulons savoir pour chaque fragment à dessiner, étant donné un vecteur depuis
+l'œil/caméra vers cette position sur la surface de l'objet, dans quelle direction
+va-t-il se réfléchir sur cette surface ? Nous pouvons ensuite utiliser cette direction pour obtenir une
+couleur depuis le cubemap.
 
-The formula to reflect is
+La formule de réflexion est
 
     reflectionDir = eyeToSurfaceDir –
         2 ∗ dot(surfaceNormal, eyeToSurfaceDir) ∗ surfaceNormal
 
-Thinking about what we can see it's true. Recall from the [lighting articles](webgl-3d-lighting-directional.html)
-that a dot product of 2 vectors returns the cosine of the angle between the 2
-vectors. Adding vectors gives us a new vector so let's take the example of an eye
-looking directly perpendicular to a flat surface.
+En réfléchissant à ce que nous pouvons voir, c'est vrai. Rappelons-nous depuis les [articles sur l'éclairage](webgl-3d-lighting-directional.html)
+que le produit scalaire de 2 vecteurs retourne le cosinus de l'angle entre les 2
+vecteurs. L'addition de vecteurs nous donne un nouveau vecteur, donc prenons l'exemple d'un œil
+regardant directement perpendiculairement à une surface plate.
 
 <div class="webgl_center"><img src="resources/reflect-180-01.svg" style="width: 400px"></div>
 
-Let's visualize the formula above. First off recall the dot product of 2 vectors
-pointing in exactly opposite directions is -1 so visually
+Visualisons la formule ci-dessus. D'abord, rappelons que le produit scalaire de 2 vecteurs
+pointant exactement dans des directions opposées est -1, donc visuellement
 
 <div class="webgl_center"><img src="resources/reflect-180-02.svg" style="width: 400px"></div>
 
-Plugging in that dot product with the <span style="color:black; font-weight:bold;">eyeToSurfaceDir</span>
-and <span style="color:green;">normal</span> in the reflection formula gives us this
+En insérant ce produit scalaire avec le <span style="color:black; font-weight:bold;">eyeToSurfaceDir</span>
+et la <span style="color:green;">normale</span> dans la formule de réflexion, nous obtenons ceci
 
 <div class="webgl_center"><img src="resources/reflect-180-03.svg" style="width: 400px"></div>
 
-Which multiplying -2 by -1 makes it positive 2.
+Ce qui, en multipliant -2 par -1, donne 2 positif.
 
 <div class="webgl_center"><img src="resources/reflect-180-04.svg" style="width: 400px"></div>
 
-So adding the vectors by connecting them up gives us the <span style="color: red">reflected vector</span>
+Donc en additionnant les vecteurs en les connectant, nous obtenons le <span style="color: red">vecteur réfléchi</span>
 
 <div class="webgl_center"><img src="resources/reflect-180-05.svg" style="width: 400px"></div>
 
-We can see above given 2 normals, one completely cancels out the direction from
-the eye and the second one points the reflection directly back towards the eye.
-Which if we put back in the original diagram is exactly what we'd expect
+Nous pouvons voir ci-dessus qu'avec 2 normales, l'une annule complètement la direction depuis
+l'œil et la seconde pointe la réflexion directement vers l'œil.
+Ce qui, si nous remettons dans le diagramme original, est exactement ce à quoi nous nous attendrions
 
 <div class="webgl_center"><img src="resources/reflect-180-06.svg" style="width: 400px"></div>
 
-Let's rotate the surface 45 degrees to the right.
+Faisons pivoter la surface de 45 degrés vers la droite.
 
 <div class="webgl_center"><img src="resources/reflect-45-01.svg" style="width: 400px"></div>
 
-The dot product of 2 vectors 135 degrees apart is -0.707
+Le produit scalaire de 2 vecteurs à 135 degrés l'un de l'autre est -0.707
 
 <div class="webgl_center"><img src="resources/reflect-45-02.svg" style="width: 400px"></div>
 
-So plugging everything into the formula
+Donc en insérant tout dans la formule
 
 <div class="webgl_center"><img src="resources/reflect-45-03.svg" style="width: 400px"></div>
 
-Again multiplying 2 negatives gives us a positive but the <span style="color: green">vector</span> is now about 30% shorter.
+Encore une fois, multiplier 2 négatifs donne un positif, mais le <span style="color: green">vecteur</span> est maintenant environ 30% plus court.
 
 <div class="webgl_center"><img src="resources/reflect-45-04.svg" style="width: 400px"></div>
 
-Adding up the vectors gives us the <span style="color: red">reflected vector</span>
+En additionnant les vecteurs, nous obtenons le <span style="color: red">vecteur réfléchi</span>
 
 <div class="webgl_center"><img src="resources/reflect-45-05.svg" style="width: 400px"></div>
 
-Which if we put back in the original diagram seems correct.
+Ce qui, si nous remettons dans le diagramme original, semble correct.
 
 <div class="webgl_center"><img src="resources/reflect-45-06.svg" style="width: 400px"></div>
 
-We use that  <span style="color: red">reflected direction</span> to look at the cubemap to color the surface of the object.
+Nous utilisons cette <span style="color: red">direction réfléchie</span> pour regarder dans le cubemap afin de colorier la surface de l'objet.
 
-Here's a diagram where you can set the rotation of the surface and see the
-various parts of the equation. You can also see the reflection vectors point to
-the different faces of the cubemap and effect the color of the surface.
+Voici un diagramme où vous pouvez définir la rotation de la surface et voir les
+différentes parties de l'équation. Vous pouvez également voir les vecteurs de réflexion pointer vers
+les différentes faces du cubemap et affecter la couleur de la surface.
 
 {{{diagram url="resources/environment-mapping.html" width="400" height="400" }}}
 
-Now that we know how reflection works and that we can use it to look up values
-from the cubemap let's change the shaders to do that.
+Maintenant que nous savons comment la réflexion fonctionne et que nous pouvons l'utiliser pour rechercher des valeurs
+dans le cubemap, modifions les shaders pour faire cela.
 
-First in the vertex shader we'll compute the world position and world oriented
-normal of the vertices and pass those to the fragment shader as varyings. This
-is similar to what we did in [the article on spotlights](webgl-3d-lighting-spot.html).
+D'abord, dans le vertex shader, nous calculerons la position world et la normale orientée world
+des sommets et les passerons au fragment shader comme varyings. C'est
+similaire à ce que nous avons fait dans [l'article sur les spotlights](webgl-3d-lighting-spot.html).
 
 ```glsl
 #version 300 es
@@ -196,24 +196,24 @@ out vec3 v_worldPosition;
 out vec3 v_worldNormal;
 
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplier la position par la matrice.
   gl_Position = u_projection * u_view * u_world * a_position;
 
-  // send the view position to the fragment shader
+  // envoyer la position world au fragment shader
   v_worldPosition = (u_world * a_position).xyz;
 
-  // orient the normals and pass to the fragment shader
+  // orienter les normales et les passer au fragment shader
   v_worldNormal = mat3(u_world) * a_normal;
 }
 ```
 
-Then in the fragment shader we normalize the `worldNormal` since it's being
-interpolated across the surface between vertices. We pass in the world position
-of the camera and by subtracting that from the world position of the surface we
-get the `eyeToSurfaceDir`.
+Ensuite, dans le fragment shader, nous normalisons la `worldNormal` car elle est
+interpolée à travers la surface entre les sommets. Nous passons la position world
+de la caméra et en soustrayant cela de la position world de la surface, nous
+obtenons le `eyeToSurfaceDir`.
 
-And finally we use `reflect` which is a built in GLSL function that implements
-the formula we went over above. We use the result to get a color from the
+Et enfin, nous utilisons `reflect` qui est une fonction GLSL intégrée qui implémente
+la formule que nous avons vue ci-dessus. Nous utilisons le résultat pour obtenir une couleur depuis le
 cubemap.
 
 ```glsl
@@ -221,17 +221,17 @@ cubemap.
 
 precision highp float;
 
-// Passed in from the vertex shader.
+// Passé depuis le vertex shader.
 in vec3 v_worldPosition;
 in vec3 v_worldNormal;
 
-// The texture.
+// La texture.
 uniform samplerCube u_texture;
 
-// The position of the camera
+// La position de la caméra
 uniform vec3 u_worldCameraPosition;
 
-// we need to declare an output for the fragment shader
+// nous devons déclarer une sortie pour le fragment shader
 out vec4 outColor;
 
 void main() {
@@ -243,32 +243,32 @@ void main() {
 }
 ```
 
-We also need real normals for this example. We need real normals so the faces of
-the cube appear flat. In the previous example just to see the cubemap work we
-repurposed the cube's positions but in this case we need actual normals for a
-cube like we covered in [the article on lighting](webgl-3d-lighting-directional.html)
+Nous avons également besoin de vraies normales pour cet exemple. Nous avons besoin de vraies normales pour que les faces du
+cube apparaissent plates. Dans l'exemple précédent, juste pour voir le cubemap fonctionner, nous avons
+réutilisé les positions du cube, mais dans ce cas, nous avons besoin de vraies normales pour un
+cube comme nous l'avons couvert dans [l'article sur l'éclairage](webgl-3d-lighting-directional.html)
 
-At init time
+Au moment de l'initialisation
 
 ```js
-// Create a buffer to put normals in
+// Créer un buffer pour mettre les normales
 var normalBuffer = gl.createBuffer();
-// Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = normalBuffer)
+// Le lier à ARRAY_BUFFER (pensez-y comme ARRAY_BUFFER = normalBuffer)
 gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-// Put normals data into buffer
+// Mettre les données de normales dans le buffer
 setNormals(gl);
 
-// Tell the attribute how to get data out of normalBuffer (ARRAY_BUFFER)
-var size = 3;          // 3 components per iteration
-var type = gl.FLOAT;   // the data is 32bit floating point values
-var normalize = false; // normalize the data (convert from 0-255 to 0-1)
-var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-var offset = 0;        // start at the beginning of the buffer
+// Indiquer à l'attribut comment obtenir les données depuis normalBuffer (ARRAY_BUFFER)
+var size = 3;          // 3 composantes par itération
+var type = gl.FLOAT;   // les données sont des valeurs flottantes 32 bits
+var normalize = false; // normaliser les données (convertir de 0-255 à 0-1)
+var stride = 0;        // 0 = avancer de size * sizeof(type) à chaque itération pour la position suivante
+var offset = 0;        // commencer au début du buffer
 gl.vertexAttribPointer(
     normalLocation, size, type, normalize, stride, offset)
 ```
 
-And of course we need to look up the uniform locations at init time
+Et bien sûr, nous devons rechercher les emplacements des uniforms au moment de l'initialisation
 
 ```js
 var projectionLocation = gl.getUniformLocation(program, "u_projection");
@@ -278,10 +278,10 @@ var textureLocation = gl.getUniformLocation(program, "u_texture");
 var worldCameraPositionLocation = gl.getUniformLocation(program, "u_worldCameraPosition");
 ```
 
-and set them at render time
+et les définir au moment du rendu
 
 ```js
-// Compute the projection matrix
+// Calculer la matrice de projection
 var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
 var projectionMatrix =
     m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
@@ -290,29 +290,29 @@ gl.uniformMatrix4fv(projectionLocation, false, projectionMatrix);
 var cameraPosition = [0, 0, 2];
 var target = [0, 0, 0];
 var up = [0, 1, 0];
-// Compute the camera's matrix using look at.
+// Calculer la matrice de la caméra avec lookAt.
 var cameraMatrix = m4.lookAt(cameraPosition, target, up);
 
-// Make a view matrix from the camera matrix.
+// Créer une matrice de vue depuis la matrice de caméra.
 var viewMatrix = m4.inverse(cameraMatrix);
 
 var worldMatrix = m4.xRotation(modelXRotationRadians);
 worldMatrix = m4.yRotate(worldMatrix, modelYRotationRadians);
 
-// Set the uniforms
+// Définir les uniforms
 gl.uniformMatrix4fv(projectionLocation, false, projectionMatrix);
 gl.uniformMatrix4fv(viewLocation, false, viewMatrix);
 gl.uniformMatrix4fv(worldLocation, false, worldMatrix);
 gl.uniform3fv(worldCameraPositionLocation, cameraPosition);
 
-// Tell the shader to use texture unit 0 for u_texture
+// Indiquer au shader d'utiliser l'unité de texture 0 pour u_texture
 gl.uniform1i(textureLocation, 0);
 ```
 
-Basic reflections
+Réflexions de base
 
 {{{example url="../webgl-environment-map.html" }}}
 
-Next let's show [how to use a cubemap for a skybox](webgl-skybox.html).
+La suite : [comment utiliser un cubemap pour un skybox](webgl-skybox.html).
 
 

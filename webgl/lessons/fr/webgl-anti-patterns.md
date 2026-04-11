@@ -1,109 +1,109 @@
 Title: WebGL2 Anti-Patterns
-Description: What not to do in WebGL, why not to do it, and what to do instead
+Description: Ce qu'il ne faut pas faire en WebGL, pourquoi ne pas le faire, et quoi faire à la place
 TOC: Anti-Patterns
 
 
-This is a list of anti patterns for WebGL. Anti patterns are things you should avoid doing
+Voici une liste d'anti-patterns pour WebGL. Les anti-patterns sont des choses que vous devriez éviter de faire.
 
-1.  <a id="viewportwidth"></a>Putting `viewportWidth` and `viewportHeight` on the `WebGLRenderingContext`
+1.  <a id="viewportwidth"></a>Mettre `viewportWidth` et `viewportHeight` sur le `WebGLRenderingContext`
 
-    Some code adds properties for their viewport width and height
-    and sticks them on the `WebGLRenderingContext` something like this
+    Certains codes ajoutent des propriétés pour leur largeur et hauteur de viewport
+    et les collent sur le `WebGLRenderingContext` comme ceci
 
         gl = canvas.getContext("webgl2");
-        gl.viewportWidth = canvas.width;    // BAD!!!
-        gl.viewportHeight = canvas.height;  // BAD!!!
+        gl.viewportWidth = canvas.width;    // MAUVAIS!!!
+        gl.viewportHeight = canvas.height;  // MAUVAIS!!!
 
-    Then later they might do something like this
+    Puis plus tard ils pourraient faire quelque chose comme ça
 
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
 
-    **Why it's Bad:**
+    **Pourquoi c'est mauvais :**
 
-    It's objectively bad because you now have 2 properties that need to be updated
-    anytime you change the size of the canvas. For example if you change the size
-    of the canvas when the user resizes the window `gl.viewportWidth` & `gl.viewportHeight`
-    will be wrong unless you set them again.
+    C'est objectivement mauvais parce que vous avez maintenant 2 propriétés qui doivent être mises à jour
+    à chaque fois que vous changez la taille du canvas. Par exemple, si vous changez la taille
+    du canvas quand l'utilisateur redimensionne la fenêtre, `gl.viewportWidth` et `gl.viewportHeight`
+    seront incorrects sauf si vous les redéfinissez.
 
-    It's subjectively bad because any new WebGL programmer will glance at your code
-    and likely think `gl.viewportWidth` and `gl.viewportHeight` are part of the WebGL
-    spec, confusing them for months.
+    C'est subjectivement mauvais car tout nouveau programmeur WebGL jettera un œil à votre code
+    et pensera probablement que `gl.viewportWidth` et `gl.viewportHeight` font partie de la
+    spécification WebGL, les confondant pendant des mois.
 
-    **What to do instead:**
+    **Que faire à la place :**
 
-    Why make more work for yourself? The WebGL context has its canvas available
-    and that has a size.
+    Pourquoi se créer plus de travail ? Le contexte WebGL a son canvas disponible
+    et celui-ci a une taille.
 
     <pre class="prettyprint">
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     </pre>
 
-    The context also has its width and height directly on it.
+    Le contexte a aussi sa largeur et sa hauteur directement dessus.
 
-        // When you need to set the viewport to match the size of the canvas's
-        // drawingBuffer this will always be correct
+        // Quand vous avez besoin de définir le viewport pour correspondre à la taille du
+        // drawingBuffer du canvas, ceci sera toujours correct
         gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 
-    Even better it will handle extreme cases whereas using `gl.canvas.width`
-    and `gl.canvas.height` will not. [As for why see here](#drawingbuffer).
+    C'est encore mieux car ça gérera les cas extrêmes alors qu'utiliser `gl.canvas.width`
+    et `gl.canvas.height` ne le fera pas. [Pour savoir pourquoi, voir ici](#drawingbuffer).
 
-2.  <a id="canvaswidth"></a>Using `canvas.width` and `canvas.height` for aspect ratio
+2.  <a id="canvaswidth"></a>Utiliser `canvas.width` et `canvas.height` pour le ratio d'aspect
 
-    Often code uses `canvas.width` and `canvas.height` for aspect ratio like this
+    Souvent, le code utilise `canvas.width` et `canvas.height` pour le ratio d'aspect comme ça
 
         var aspect = canvas.width / canvas.height;
         perspective(fieldOfView, aspect, zNear, zFar);
 
-    **Why it's Bad:**
+    **Pourquoi c'est mauvais :**
 
-    The width and height of the canvas have nothing to do with the size the canvas is
-    displayed. CSS controls the size the canvas is displayed.
+    La largeur et la hauteur du canvas n'ont rien à voir avec la taille à laquelle le canvas est
+    affiché. CSS contrôle la taille à laquelle le canvas est affiché.
 
-    **What to do instead:**
+    **Que faire à la place :**
 
-    Use `canvas.clientWidth` and `canvas.clientHeight`. Those values tell you what
-    size your canvas is actually being displayed on the screen. Using those values
-    you'll always get the correct aspect ratio regardless of your CSS settings.
+    Utilisez `canvas.clientWidth` et `canvas.clientHeight`. Ces valeurs vous indiquent quelle
+    taille votre canvas est réellement affiché à l'écran. En utilisant ces valeurs,
+    vous obtiendrez toujours le bon ratio d'aspect quelle que soit vos paramètres CSS.
 
         var aspect = canvas.clientWidth / canvas.clientHeight;
         perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
 
-    Here are examples of a canvas who's drawingbuffers are the same size (`width="400" height="300"`)
-    but using CSS we've told the browser to display the canvas a different size.
-    Notice the samples both display the 'F' in the correct aspect ratio.
+    Voici des exemples d'un canvas dont les drawingbuffers ont la même taille (`width="400" height="300"`)
+    mais en utilisant CSS, nous avons dit au navigateur d'afficher le canvas à une taille différente.
+    Remarquez que les deux exemples affichent le 'F' avec le bon ratio d'aspect.
 
     {{{diagram url="../webgl-canvas-clientwidth-clientheight.html" width="150" height="200" }}}
     <p></p>
     {{{diagram url="../webgl-canvas-clientwidth-clientheight.html" width="400" height="150" }}}
 
-    If we had used `canvas.width` and `canvas.height` that would not be true.
+    Si nous avions utilisé `canvas.width` et `canvas.height`, ce ne serait pas le cas.
 
     {{{diagram url="../webgl-canvas-width-height.html" width="150" height="200" }}}
     <p></p>
     {{{diagram url="../webgl-canvas-width-height.html" width="400" height="150" }}}
 
-3.  <a id="innerwidth"></a>Using `window.innerWidth` and `window.innerHeight` to compute anything
+3.  <a id="innerwidth"></a>Utiliser `window.innerWidth` et `window.innerHeight` pour calculer quoi que ce soit
 
-    Many WebGL programs use `window.innerWidth` and `window.innerHeight` in many places.
-    For example:
+    De nombreux programmes WebGL utilisent `window.innerWidth` et `window.innerHeight` dans de nombreux endroits.
+    Par exemple :
 
-        canvas.width = window.innerWidth;                    // BAD!!
-        canvas.height = window.innerHeight;                  // BAD!!
+        canvas.width = window.innerWidth;                    // MAUVAIS!!
+        canvas.height = window.innerHeight;                  // MAUVAIS!!
 
-    **Why it's Bad:**
+    **Pourquoi c'est mauvais :**
 
-    It's not portable. Yes, it can work for WebGL pages where you want to make the canvas
-    fill the screen. The problem comes when you don't. Maybe you decide to make an article
-    like these tutorials where your canvas is just some small diagram in a larger page.
-    Or maybe you need some property editor on the side or a score for a game. Sure you can fix your code
-    to handle those cases but why not just write it so it works in those cases in the first place?
-    Then you won't have to go change any code when you copy it to a new project or use an old
-    project in a new way.
+    Ce n'est pas portable. Oui, ça peut fonctionner pour les pages WebGL où vous voulez que le canvas
+    remplisse l'écran. Le problème vient quand ce n'est pas le cas. Peut-être décidez-vous de faire un article
+    comme ces tutoriels où votre canvas est juste un petit diagramme dans une page plus grande.
+    Ou peut-être avez-vous besoin d'un éditeur de propriétés sur le côté ou d'un score pour un jeu. Bien sûr, vous pouvez corriger votre code
+    pour gérer ces cas, mais pourquoi ne pas simplement l'écrire pour qu'il fonctionne dans ces cas dès le départ ?
+    Alors vous n'aurez pas à modifier le code quand vous le copiez dans un nouveau projet ou utilisez un ancien
+    projet d'une nouvelle façon.
 
-    **What to do instead:**
+    **Que faire à la place :**
 
-    Instead of fighting the Web platform, use the Web platform as it was designed to be used.
-    Use CSS and `clientWidth` and `clientHeight`.
+    Au lieu de combattre la plateforme Web, utilisez la plateforme Web comme elle a été conçue pour être utilisée.
+    Utilisez CSS et `clientWidth` et `clientHeight`.
 
         var width = gl.canvas.clientWidth;
         var height = gl.canvas.clientHeight;
@@ -111,62 +111,61 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
         gl.canvas.width = width;
         gl.canvas.height = height;
 
-    Here are 9 cases. They all use exactly the same code. Notice that none of them
-    reference `window.innerWidth` nor `window.innerHeight`.
+    Voici 9 cas. Ils utilisent tous exactement le même code. Remarquez qu'aucun d'eux
+    ne fait référence à `window.innerWidth` ni à `window.innerHeight`.
 
-    <a href="../webgl-same-code-canvas-fullscreen.html" target="_blank">A page with nothing but a canvas using CSS to make it fullscreen</a>
+    <a href="../webgl-same-code-canvas-fullscreen.html" target="_blank">Une page avec rien qu'un canvas utilisant CSS pour le mettre en plein écran</a>
 
-    <a href="../webgl-same-code-canvas-partscreen.html" target="_blank">A page with a canvas set to using 70% width so there is room for editor controls</a>
+    <a href="../webgl-same-code-canvas-partscreen.html" target="_blank">Une page avec un canvas défini à 70% de largeur pour qu'il y ait de la place pour les contrôles éditeur</a>
 
-    <a href="../webgl-same-code-canvas-embedded.html" target="_blank">A page with a canvas embedded in a paragraph</a>
+    <a href="../webgl-same-code-canvas-embedded.html" target="_blank">Une page avec un canvas intégré dans un paragraphe</a>
 
-    <a href="../webgl-same-code-canvas-embedded-border-box.html" target="_blank">A page with a canvas embedded in a paragraph using <code>box-sizing: border-box;</code></a>
+    <a href="../webgl-same-code-canvas-embedded-border-box.html" target="_blank">Une page avec un canvas intégré dans un paragraphe en utilisant <code>box-sizing: border-box;</code></a>
 
-    <code>box-sizing: border-box;</code> makes borders and padding take space from the element they're defined on rather than outside it. In other words, in
-    normal box-sizing mode a 400x300 pixel element with 15 pixel border has a 400x300 pixel content space surrounded by a 15 pixel border making its total size
-    430x330 pixels. In box-sizing: border-box mode the border goes on the inside so that same element would stay 400x300 pixels, the content would end up
-    being 370x270. This is yet another reason why using `clientWidth` and `clientHeight` is so important. If you set the border to say `1em` you'd have no
-    way of knowing what size your canvas will turn out. It would be different with different fonts on different machines or different browsers.
+    <code>box-sizing: border-box;</code> fait que les bordures et le rembourrage prennent de l'espace à l'élément sur lequel ils sont définis plutôt qu'à l'extérieur. En d'autres termes, dans
+    le mode normal box-sizing, un élément de 400x300 pixels avec une bordure de 15 pixels a un espace de contenu de 400x300 pixels entouré d'une bordure de 15 pixels, faisant que sa taille totale est
+    430x330 pixels. En mode box-sizing: border-box, la bordure va à l'intérieur de sorte que le même élément resterait à 400x300 pixels, le contenu se retrouverait
+    à 370x270. C'est encore une autre raison pour laquelle l'utilisation de `clientWidth` et `clientHeight` est si importante. Si vous définissez la bordure à `1em`, vous n'auriez
+    aucun moyen de savoir quelle taille aura votre canvas. Ce serait différent avec différentes polices sur différentes machines ou différents navigateurs.
 
-    <a href="../webgl-same-code-container-fullscreen.html" target="_blank">A page with nothing but a container using CSS to make it fullscreen into which the code will insert a canvas</a>
+    <a href="../webgl-same-code-container-fullscreen.html" target="_blank">Une page avec rien qu'un conteneur utilisant CSS pour le mettre en plein écran dans lequel le code insérera un canvas</a>
 
-    <a href="../webgl-same-code-container-partscreen.html" target="_blank">A page with a container set to using 70% width so there is room for editor controls into which the code will insert a canvas</a>
+    <a href="../webgl-same-code-container-partscreen.html" target="_blank">Une page avec un conteneur défini à 70% de largeur pour qu'il y ait de la place pour les contrôles éditeur dans lequel le code insérera un canvas</a>
 
-    <a href="../webgl-same-code-container-embedded.html" target="_blank">A page with a container embedded in a paragraph into which the code will insert a canvas</a>
+    <a href="../webgl-same-code-container-embedded.html" target="_blank">Une page avec un conteneur intégré dans un paragraphe dans lequel le code insérera un canvas</a>
 
-    <a href="../webgl-same-code-container-embedded-border-box.html" target="_blank">A page with a container embedded in a paragraph using <code>box-sizing: border-box;</code> into which the code will insert a canvas</a>
+    <a href="../webgl-same-code-container-embedded-border-box.html" target="_blank">Une page avec un conteneur intégré dans un paragraphe en utilisant <code>box-sizing: border-box;</code> dans lequel le code insérera un canvas</a>
 
-    <a href="../webgl-same-code-body-only-fullscreen.html" target="_blank">A page with no elements with CSS setup to make it fullscreen into which the code will insert a canvas</a>
+    <a href="../webgl-same-code-body-only-fullscreen.html" target="_blank">Une page sans éléments avec CSS configuré pour la mettre en plein écran dans lequel le code insérera un canvas</a>
 
-    Again, the point is, if you embrace the web and write your code using the techniques above you won't have to change any code when you run into different use cases.
+    Encore une fois, l'essentiel est que si vous adoptez le web et écrivez votre code en utilisant les techniques ci-dessus, vous n'aurez pas à changer de code quand vous rencontrerez différents cas d'utilisation.
 
-4.  <a id="resize"></a>Using the `'resize'` event to change the size of your canvas.
+4.  <a id="resize"></a>Utiliser l'événement `'resize'` pour changer la taille de votre canvas.
 
-    Some apps check for the window `'resize'` event like this to resize their canvas.
+    Certaines applications vérifient l'événement `'resize'` de la fenêtre comme ça pour redimensionner leur canvas.
 
         window.addEventListener('resize', resizeTheCanvas);
 
-    or this
+    ou cela
 
         window.onresize = resizeTheCanvas;
 
-    **Why it's Bad:**
+    **Pourquoi c'est mauvais :**
 
-    It's not bad per se, rather, for *most* WebGL programs it fits less use cases.
-    Specifically `'resize'` only works when the window is resized. It doesn't work
-    if the canvas is resized for some other reason. For example let's say you're making
-    a 3D editor. You have your canvas on the left and your settings on the right. You've
-    made it so there's a draggable bar separating the 2 parts and you can drag that bar
-    to make the settings area larger or smaller. In this case you won't get any `'resize'`
-    events. Similarly if you've got a page where other content gets added or removed and
-    the canvas changes size as the browser re-lays out the page you won't get a resize
-    event.
+    Ce n'est pas mauvais en soi, plutôt, pour *la plupart* des programmes WebGL, ça couvre moins de cas d'utilisation.
+    Spécifiquement, `'resize'` ne fonctionne que lorsque la fenêtre est redimensionnée. Il ne fonctionne pas
+    si le canvas est redimensionné pour une autre raison. Par exemple, imaginons que vous faites
+    un éditeur 3D. Vous avez votre canvas à gauche et vos paramètres à droite. Vous avez
+    fait en sorte qu'il y a une barre déplaçable séparant les 2 parties et vous pouvez faire glisser cette barre
+    pour agrandir ou réduire la zone des paramètres. Dans ce cas, vous ne recevrez aucun événement `'resize'`.
+    De même, si vous avez une page où d'autres contenus sont ajoutés ou supprimés et
+    que le canvas change de taille pendant que le navigateur refait la mise en page, vous ne recevrez pas d'événement de redimensionnement.
 
-    **What to do instead:**
+    **Que faire à la place :**
 
-    Like many of the solutions to anti-patterns above there's a way to write your code
-    so it just works for most cases. For WebGL apps that constantly draw every frame
-    the solution is to check if you need to resize every time you draw like this
+    Comme pour beaucoup des solutions aux anti-patterns ci-dessus, il y a une façon d'écrire votre code
+    pour qu'il fonctionne simplement dans la plupart des cas. Pour les applications WebGL qui dessinent continuellement chaque frame,
+    la solution est de vérifier si vous devez redimensionner à chaque fois que vous dessinez comme ça
 
         function resizeCanvasToDisplaySize() {
           var width = gl.canvas.clientWidth;
@@ -185,62 +184,62 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
         }
         render();
 
-    Now in any of those cases your canvas will scale to the right size. No need to
-    change any code for different cases. For example using the same code from #3 above
-    here's an editor with a sizable editing area.
+    Maintenant dans n'importe lequel de ces cas, votre canvas s'adaptera à la bonne taille. Pas besoin de
+    changer de code pour différents cas. Par exemple, en utilisant le même code du #3 ci-dessus,
+    voici un éditeur avec une zone d'édition de taille variable.
 
     {{{example url="../webgl-same-code-resize.html" }}}
 
-    There would be no resize events for this case nor any other where the canvas gets resized
-    based on the size of other dynamic elements on the page.
+    Il n'y aurait pas d'événements de redimensionnement pour ce cas ni pour tout autre où le canvas est redimensionné
+    en fonction de la taille d'autres éléments dynamiques sur la page.
 
-    For WebGL apps that don't re-draw every frame the code above is still correct, you'll just need
-    to trigger a re-draw in every case where the canvas can possibly get resized. One easy way to use a `ResizeObserver`
+    Pour les applications WebGL qui ne redessinent pas chaque frame, le code ci-dessus est toujours correct, vous aurez juste besoin
+    de déclencher un redessin dans chaque cas où le canvas peut potentiellement être redimensionné. Une façon facile est d'utiliser un `ResizeObserver`
 
     <pre class="prettyprint">
     const resizeObserver = new ResizeObserver(render);
     resizeObserver.observe(gl.canvas, {box: 'content-box'});
     </pre>
 
-5.  <a id="properties"></a>Adding properties to `WebGLObject`s
+5.  <a id="properties"></a>Ajouter des propriétés aux `WebGLObject`s
 
-    `WebGLObject`s are the various types of resources in WebGL like a `WebGLBuffer`
-    or `WebGLTexture`. Some apps add properties to those objects. For example code like this:
+    Les `WebGLObject`s sont les différents types de ressources dans WebGL comme un `WebGLBuffer`
+    ou `WebGLTexture`. Certaines applications ajoutent des propriétés à ces objets. Par exemple du code comme ça :
 
         var buffer = gl.createBuffer();
-        buffer.itemSize = 3;        // BAD!!
-        buffer.numComponents = 75;  // BAD!!
+        buffer.itemSize = 3;        // MAUVAIS!!
+        buffer.numComponents = 75;  // MAUVAIS!!
 
         var program = gl.createProgram();
         ...
-        program.u_matrixLoc = gl.getUniformLocation(program, "u_matrix");  // BAD!!
+        program.u_matrixLoc = gl.getUniformLocation(program, "u_matrix");  // MAUVAIS!!
 
-    **Why it's Bad:**
+    **Pourquoi c'est mauvais :**
 
-    The reason this is bad is that WebGL can "lose the context". This can happen for any
-    reason but the most common reason is if the browser decides too many GPU resources are being used
-    it might intentionally lose the context on some `WebGLRenderingContext`s to free up space.
-    WebGL programs that want to always work have to handle this. Google Maps handles this for example.
+    La raison pour laquelle c'est mauvais est que WebGL peut "perdre le contexte". Cela peut arriver pour n'importe quelle
+    raison, mais la raison la plus courante est que si le navigateur décide que trop de ressources GPU sont utilisées,
+    il pourrait intentionnellement perdre le contexte sur certains `WebGLRenderingContext` pour libérer de l'espace.
+    Les programmes WebGL qui veulent toujours fonctionner doivent gérer ça. Google Maps le gère par exemple.
 
-    The problem with the code above is that when the context is lost the WebGL creation functions like
-    `gl.createBuffer()` above will return `null`. That effectively makes the code this
+    Le problème avec le code ci-dessus est que quand le contexte est perdu, les fonctions de création WebGL comme
+    `gl.createBuffer()` ci-dessus retourneront `null`. Cela fait effectivement du code ça
 
         var buffer = null;
-        buffer.itemSize = 3;        // ERROR!
-        buffer.numComponents = 75;  // ERROR!
+        buffer.itemSize = 3;        // ERREUR!
+        buffer.numComponents = 75;  // ERREUR!
 
-    That will likely kill your app with an error like
+    Cela tuera probablement votre application avec une erreur comme
 
         TypeError: Cannot set property 'itemSize' of null
 
-    While many apps don't care if they die when the context is lost it seems like a bad idea
-    to write code that will have to be fixed later if the developers ever decide to update their
-    app to handle context lost events.
+    Bien que de nombreuses applications ne se soucient pas de mourir quand le contexte est perdu, il semble que ce soit une mauvaise idée
+    d'écrire du code qui devra être corrigé plus tard si les développeurs décident un jour de mettre à jour leur
+    application pour gérer les événements de perte de contexte.
 
-    **What to do instead:**
+    **Que faire à la place :**
 
-    If you want to keep `WebGLObjects` and some info about them together one way would be
-    to use JavaScript objects. For example:
+    Si vous voulez garder les `WebGLObject`s et certaines infos à leur sujet ensemble, une façon serait
+    d'utiliser des objets JavaScript. Par exemple :
 
         var bufferInfo = {
           id: gl.createBuffer(),
@@ -253,63 +252,56 @@ This is a list of anti patterns for WebGL. Anti patterns are things you should a
           u_matrixLoc: gl.getUniformLocation(program, "u_matrix"),
         };
 
-    Personally I'd suggest [using a few simple helpers that make writing WebGL
-    much simpler](webgl-less-code-more-fun.html).
+    Personnellement, je suggère [d'utiliser quelques helpers simples qui rendent l'écriture WebGL
+    beaucoup plus simple](webgl-less-code-more-fun.html).
 
-Those are a few of what I consider WebGL Anti-Patterns in code I've seen around the net.
-Hopefully I've made the case why to avoid them and given solutions that are easy and useful.
+Ce sont quelques-uns de ce que je considère comme des Anti-Patterns WebGL dans du code que j'ai vu sur le net.
+J'espère avoir montré pourquoi les éviter et avoir donné des solutions faciles et utiles.
 
-<div class="webgl_bottombar"><a id="drawingbuffer"></a><h3>What is drawingBufferWidth and drawingBufferHeight?</h3>
+<div class="webgl_bottombar"><a id="drawingbuffer"></a><h3>Que sont drawingBufferWidth et drawingBufferHeight ?</h3>
 <p>
-GPUs have a limit on how big a rectangle of pixels (texture, renderbuffer) they can support. Often this
-size is the next power of 2 larger than whatever a common monitor resolution was at the time the GPU was
-made. For example if the GPU was designed to support 1280x1024 screens it might have a size limit of 2048.
-If it was designed for 2560x1600 screens it might have a limit of 4096.
+Les GPU ont une limite sur la taille du rectangle de pixels (texture, renderbuffer) qu'ils peuvent prendre en charge. Souvent cette
+taille est la prochaine puissance de 2 supérieure à la résolution d'un moniteur courant au moment où le GPU a été
+fabriqué. Par exemple, si le GPU a été conçu pour prendre en charge des écrans 1280x1024, il pourrait avoir une limite de taille de 2048.
+S'il a été conçu pour des écrans 2560x1600, il pourrait avoir une limite de 4096.
 </p><p>
-That seems reasonable but what happens if you have multiple monitors? Let's say I have a GPU with a limit
-of 2048 but I have two 1920x1080 monitors. The user opens a browser window with a WebGL page, they then
-stretch that window across both monitors. Your code tries to set the <code>canvas.width</code> to
-<code>canvas.clientWidth</code> which in this case is 3840. What should happen?
+Ça semble raisonnable mais que se passe-t-il si vous avez plusieurs moniteurs ? Disons que j'ai un GPU avec une limite
+de 2048 mais j'ai deux moniteurs 1920x1080. L'utilisateur ouvre une fenêtre de navigateur avec une page WebGL, puis il
+étire cette fenêtre sur les deux moniteurs. Votre code essaie de définir le <code>canvas.width</code> à
+<code>canvas.clientWidth</code> qui dans ce cas est 3840. Que devrait-il se passer ?
 </p>
-<p>Off the top of my head there are only 3 options</p>
+<p>D'emblée, il n'y a que 3 options</p>
 <ol>
 <li>
- <p>Throw an exception.</p>
- <p>That seems bad. Most web apps won't be checking for it and the app will crash.
- If the app had user data in it the user just lost their data</p>
+ <p>Lever une exception.</p>
+ <p>Ça semble mauvais. La plupart des applications web ne le vérifieront pas et l'application plantera.
+ Si l'application contenait des données utilisateur, l'utilisateur vient de perdre ses données</p>
 </li>
 <li>
- <p>Limit the size of the canvas to the GPUs limit</p>
- <p>The problem with this solution is it will also
- likely lead to a crash or possibly a messed up webpage because the code expects the canvas to be the size
- they requested and they expect other parts of the UI and elements on the page to be in the proper places.</p>
+ <p>Limiter la taille du canvas à la limite du GPU</p>
+ <p>Le problème avec cette solution est qu'elle
+ mènera probablement aussi à un plantage ou éventuellement à une page web dérangée car le code s'attend à ce que le canvas soit à la taille
+ qu'il a demandée et s'attend à ce que d'autres parties de l'interface et les éléments sur la page soient aux bons endroits.</p>
 </li>
 <li>
- <p>Let the canvas be the size the user requested but make its drawingbuffer the limit</p>
- <p>This is the
- solution WebGL uses. If your code is written correctly the only thing the user might notice is the image in
- the canvas is being scaled slightly. Otherwise it just works. In the worst case most WebGL programs that
- don't do the right thing will just have a slightly off display but if the user sizes the window back down
- things will return to normal.</p>
+ <p>Laisser le canvas être à la taille demandée par l'utilisateur mais rendre son drawingbuffer à la limite</p>
+ <p>C'est la
+ solution que WebGL utilise. Si votre code est écrit correctement, la seule chose que l'utilisateur pourrait remarquer est que l'image dans
+ le canvas est légèrement mise à l'échelle. Sinon, ça fonctionne simplement. Dans le pire des cas, la plupart des programmes WebGL
+ qui ne font pas la bonne chose auront juste un affichage légèrement décalé, mais si l'utilisateur réduit la fenêtre,
+ les choses reviendront à la normale.</p>
 </li>
 </ol>
-<p>Most people don't have multiple monitors so this issue rarely comes up. Or at least it used to.
-Chrome and Safari, at least as of January 2015, had a hard coded limit on canvas size of 4096. Apple's
-5k iMac is past that limit. Lots of WebGL apps were having strange displays because of this.
-Similarly many people have started using WebGL with multiple monitors for installation work and have
-been hitting this limit.</p>
+<p>La plupart des gens n'ont pas plusieurs moniteurs donc ce problème se pose rarement. Ou du moins c'était le cas.
+Chrome et Safari, au moins en janvier 2015, avaient une limite codée en dur sur la taille du canvas de 4096. L'iMac 5k d'Apple dépasse cette limite. Beaucoup d'applications WebGL avaient des affichages étranges à cause de ça.
+De même, de nombreuses personnes ont commencé à utiliser WebGL avec plusieurs moniteurs pour des travaux d'installation et ont
+atteint cette limite.</p>
 <p>
-So, if you want to handle these cases use <code>gl.drawingBufferWidth</code> and <code>gl.drawingBufferHeight</code> as
-shown in #1 above. For most apps if you follow the best practices above things will just work. Be aware
-though if you are doing calculations that need to know the actual size of the drawingbuffer you need
-to take that into account. Examples off the top of my head, [picking](webgl-picking.html), in other words converting from
-mouse coordinates into canvas pixel coordinates. Another would be any kind of post processing
-effects that want to know the actual size of the drawingbuffer.
+Donc, si vous voulez gérer ces cas, utilisez <code>gl.drawingBufferWidth</code> et <code>gl.drawingBufferHeight</code> comme
+indiqué dans le #1 ci-dessus. Pour la plupart des applications, si vous suivez les meilleures pratiques ci-dessus, les choses fonctionneront simplement. Sachez
+cependant que si vous faites des calculs qui nécessitent de connaître la taille réelle du drawingbuffer, vous devez
+en tenir compte. Des exemples qui me viennent à l'esprit : [le picking](webgl-picking.html), c'est-à-dire la conversion des coordonnées
+de souris en coordonnées de pixels du canvas. Un autre serait tout type d'effets de post-traitement
+qui veulent connaître la taille réelle du drawingbuffer.
 </p>
 </div>
-
-
-
-
-
-

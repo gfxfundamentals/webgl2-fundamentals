@@ -1,70 +1,69 @@
-Title: WebGL2 Matrix Naming
-Description: Common names for matrices
-TOC: 3D - Matrix Naming
+Title: WebGL2 Nommage des matrices
+Description: Noms communs pour les matrices
+TOC: 3D - Nommage des matrices
 
 
-This post is a continuation of a series of posts about WebGL. The first
-[started with fundamentals](webgl-fundamentals.html) and the previous
-was [about 3d cameras](webgl-3d-camera.html).
+Cet article est la suite d'une série d'articles sur WebGL. Le premier
+[commence par les bases](webgl-fundamentals.html) et le précédent
+traitait des [caméras 3D](webgl-3d-camera.html).
 
-As the entire site has pointed out pretty much everything about WebGL is
-100% up to you. Except for a few pre-defined names like `gl_Position`
-almost everything about WebGL is defined by you, the programmer.
+Comme tout le site l'a souligné, pratiquement tout dans WebGL est
+100% à votre charge. Sauf pour quelques noms prédéfinis comme `gl_Position`,
+presque tout dans WebGL est défini par vous, le programmeur.
 
-That said there are some common or semi-common naming conventions. Especially
-when related to matrices. I don't know who first game up with these names. I
-think I learned them [from NVidia's Standard Annotations and Semantics](https://www.nvidia.com/object/using_sas.html).
-That's a little more formal as it was a way to try to make shaders work
-in more situations by deciding on specific names. It's kind of out of date
-but the basics are still around.
+Cela dit, il existe des conventions de nommage courantes ou semi-courantes. Surtout
+en ce qui concerne les matrices. Je ne sais pas qui a inventé ces noms en premier. Je
+pense les avoir appris [des Annotations et Sémantiques Standard de NVidia](https://www.nvidia.com/object/using_sas.html).
+C'est un peu plus formel car c'était une façon d'essayer de faire fonctionner les shaders
+dans plus de situations en décidant de noms spécifiques. C'est un peu obsolète
+mais les bases sont toujours là.
 
-Here's the list from my head
+Voici la liste de mémoire
 
-*   world matrix (or sometimes model matrix)
+*   matrice world (ou parfois matrice model)
 
-    a matrix that takes the vertices of a model and moves them to world space
+    une matrice qui prend les sommets d'un modèle et les déplace dans l'espace world
 
-*   camera matrix
+*   matrice camera
 
-    a matrix that positions the camera in the world. Another way of saying
-    that is it's the *world matrix* for the camera.
+    une matrice qui positionne la caméra dans le world. Une autre façon de dire
+    cela est que c'est la *matrice world* pour la caméra.
 
-*   view matrix
+*   matrice view
 
-    a matrix that moves everything else in the world in front of the camera.
-    This is the inverse of the *camera matrix*.
+    une matrice qui déplace tout le reste du world devant la caméra.
+    C'est l'inverse de la *matrice camera*.
 
-*   projection matrix
+*   matrice projection
 
-    a matrix that converts a frustum of space into clip space or some orthographic
-    space into clip space. Another way of thinking about this is it's the matrix
-    returned by your matrix math library's `perspective` and/or `ortho` or
-    `orthographic` function.
+    une matrice qui convertit un frustum d'espace en clip space ou un espace orthographique
+    en clip space. Une autre façon d'y penser est que c'est la matrice
+    retournée par la fonction `perspective` et/ou `ortho` ou
+    `orthographic` de votre bibliothèque de calcul matriciel.
 
-*   local matrix
+*   matrice local
 
-    when using [a scene graph](webgl-scene-graph.html) the local matrix is the
-    matrix at any particular node on the graph before multiplying with any other
-    nodes.
+    lors de l'utilisation d'un [graphe de scène](webgl-scene-graph.html), la matrice locale est la
+    matrice à n'importe quel nœud particulier du graphe avant de multiplier avec tout autre
+    nœud.
 
 
-If a shader needs a combination of these they are usually listed right to left
-even though in the shader they'd be multiplied *on the right*. For example:
+Si un shader a besoin d'une combinaison de ces matrices, elles sont généralement listées de droite à gauche
+même si dans le shader elles seraient multipliées *sur la droite*. Par exemple :
 
     worldViewProjection = projection * view * world
 
-The other two common things to do with a matrix are to take the inverse
+Les deux autres choses courantes à faire avec une matrice sont de prendre l'inverse
 
     viewMatrix = inverse(cameraMatrix)
 
-And to transpose
+Et de transposer
 
     worldInverseTranspose = transpose(inverse(world))
 
-Hopefully knowing these terms you can look at someone else's shader
-and if you're lucky they used names that are close to or similar to
-these ones. Then you can hopefully derive what those shaders are
-actually doing.
+J'espère que connaître ces termes vous permettra de regarder le shader de quelqu'un d'autre
+et si vous avez de la chance, ils ont utilisé des noms proches ou similaires à
+ceux-ci. Vous pourrez alors espérer en déduire ce que ces shaders
+font réellement.
 
-Now let's [learn about animation next](webgl-animation.html).
-
+Ensuite, [apprenons l'animation](webgl-animation.html).
