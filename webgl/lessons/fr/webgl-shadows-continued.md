@@ -1,5 +1,5 @@
-Title: WebGL2 Shadows Continued
-Description: How to compute shadows continued
-TOC: Shadows Continued
+Title: WebGL2 Ombres - Suite
+Description: Comment calculer des ombres - Suite
+TOC: Ombres - Suite
 
-TBD
+À venir

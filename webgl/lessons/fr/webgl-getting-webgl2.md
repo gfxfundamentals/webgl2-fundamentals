@@ -1,8 +1,8 @@
-Title: How to use WebGL2
-Description: Getting a WebGL2 capable browser
-TOC: How to use WebGL2
+Title: Comment utiliser WebGL2
+Description: Obtenir un navigateur capable de WebGL2
+TOC: Comment utiliser WebGL2
 
-As of September 2021, WebGL2 is available in the latest versions of Chrome, Edge,
-Firefox, Safari and Opera.
+Depuis septembre 2021, WebGL2 est disponible dans les dernières versions de Chrome, Edge,
+Firefox, Safari et Opera.
 
-Note that in Safari WebGL2 only shipped in Safari 15, September 2021.
+Notez que dans Safari, WebGL2 n'a été livré que dans Safari 15, en septembre 2021.

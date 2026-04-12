@@ -1,42 +1,40 @@
 Title: WebGL2 Skinning
-Description: How to skin a mesh in WebGL
+Description: Comment faire du skinning sur un mesh en WebGL
 TOC: Skinning
 
+Le skinning en infographie est le nom donné au déplacement d'un ensemble de sommets basé sur
+l'influence pondérée de plusieurs matrices. C'est assez abstrait.
 
-Skinning in graphics is the name given to moving a set of vertices based
-on the weighted influence of multiple matrices. That's pretty abstract.
+On appelle ça *skinning* (habillage) parce que c'est typiquement utilisé pour donner aux
+personnages 3D un "squelette" fait d'"os" où "os" est un autre terme pour matrice,
+et ensuite **par sommet**, on définit l'influence de chaque os sur ce sommet.
 
-It's called *skinning* because it's typically used to make 3D characters
-have a "skeleton" made from "bones" where "bone" is another name for matrix
-and then **per vertex** setting the influence of each bone to that vertex.
+Par exemple, l'os de la main aurait une influence de presque 100% sur les sommets proches
+de la main d'un personnage, alors que l'os du pied aurait zéro influence sur ces mêmes sommets.
+Les sommets autour du poignet auraient une certaine influence de l'os de la main ainsi qu'une
+influence de l'os du bras.
 
-So for example the hand bone would have nearly 100% influence on the vertices
-near the hand of a character where as the foot bone would have zero influence
-on those same vertices. The vertices in around the wrist would have some influence form the hand bone and also some from the arm bone.
+La partie fondamentale est que vous avez besoin d'os (qui n'est qu'une façon de dire une
+hiérarchie de matrices) et de poids. Les poids sont des valeurs par sommet qui vont de 0 à 1
+pour indiquer dans quelle mesure une matrice-os particulière affecte la position de ce sommet.
+Les poids sont un peu comme les couleurs de vertex en termes de données. Un ensemble de poids
+par sommet. En d'autres termes, les poids sont placés dans un tampon et fournis via des attributs.
 
-The basic part is that you need bones (which is just a fancy way of saying
-a matrix hierarchy) and weights. Weights are per vertex values that go
-from 0 to 1 to say how much a particular bone-matrix affects the position
-of that vertex. Weights are kind of like vertex colors as far as data.
-One set of weights per vertex. In other words the weights are put in a
-buffer and provided through attributes.
+En général, on limite le nombre de poids par sommet en partie parce que sinon ce serait
+beaucoup trop de données. Un personnage peut avoir entre 15 os (Virtua Fighter 1) et 150-300 os
+(certains jeux modernes). Si vous aviez 300 os, vous auriez besoin de 300 poids PAR sommet PAR os.
+Si votre personnage avait 10 000 sommets, cela représenterait 3 millions de poids nécessaires.
 
-Typically you limit the number of weights per vertex partly because
-otherwise it would be way too much data.  A character can have anywhere
-from 15 bones (Virtua Fighter 1) to 150-300 bones (some modern games).
-If you had 300 bones you'd need 300 weights PER vertex PER bone.  If your
-character had 10000 vertices that would be 3 million weights needed.
+Ainsi, la plupart des systèmes de skinning temps réel limitent à environ 4 poids par sommet.
+Cela est généralement accompli dans un exporteur/convertisseur qui prend des données d'un logiciel
+3D comme Blender/Maya/3DSMax et, pour chaque sommet, trouve les 4 os avec les poids les plus élevés
+puis normalise ces poids.
 
-So, instead most realtime skinning systems limit it ~4 weights per vertex.
-Usually this is accomplished in an exporter/converter that takes data from
-a 3D packages like blender/maya/3dsmax and for each vertex finds the 4
-bones with the highest weights and then normalizes those weights
-
-To give an pseudo example a non-skinned vertex is typically computed like this
+Pour donner un exemple pseudo-code, un sommet non skinné est typiquement calculé comme ceci :
 
     gl_Position = projection * view * model * position;
 
-A skinned vertex is effectively computed like this
+Un sommet skinné est effectivement calculé comme ceci :
 
     gl_Position = projection * view *
                   (bone1Matrix * position * weight1 +
@@ -44,17 +42,18 @@ A skinned vertex is effectively computed like this
                    bone3Matrix * position * weight3 +
                    bone4Matrix * position * weight4);
 
-As you can see it's like were computing 4 different positions for each vertex and then blending them back into one by applying the weights.
+Comme vous pouvez le voir, c'est comme si on calculait 4 positions différentes pour chaque
+sommet puis qu'on les fondait en une seule en appliquant les poids.
 
-Assuming you stored the bones matrices in a uniform array, and you
-passed in the weights and which bone each weight applies to as
-attributes you might do something like
+En supposant que vous stockiez les matrices des os dans un tableau d'uniforms, et que vous
+passiez les poids et l'indice de l'os auquel chaque poids s'applique comme attributs, vous
+pourriez faire quelque chose comme :
 
     #version 300 es
     in vec4 a_position;
-    in vec4 a_weights;         // 4 weights per vertex
-    in uvec4 a_boneNdx;        // 4 bone indices per vertex
-    uniform mat4 bones[MAX_BONES];  // 1 matrix per bone
+    in vec4 a_weights;         // 4 poids par sommet
+    in uvec4 a_boneNdx;        // 4 indices d'os par sommet
+    uniform mat4 bones[MAX_BONES];  // 1 matrice par os
 
     gl_Position = projection * view *
                   (a_bones[a_boneNdx[0]] * a_position * a_weight[0] +
@@ -63,54 +62,53 @@ attributes you might do something like
                    a_boneS[a_boneNdx[3]] * a_position * a_weight[3]);
 
 
-There's one more issue. Let's say you have a model of a person with
-the origin (0,0,0) on the floor just between their feet.
+Il y a encore un problème. Supposez que vous ayez un modèle d'une personne avec
+l'origine (0,0,0) au sol juste entre leurs pieds.
 
 <div class="webgl_center"><img src="resources/bone-head.svg" style="width: 500px;"></div>
 
-Now imagine you put a matrix/bone/joint at their head and you want to use
-that for bone for skinning.  To keep it simple imagine you just set the
-weights so the vertices of the head have a weight of 1.0 for the head
-bone and no other joints influence those vertices.
+Imaginons maintenant que vous placez une matrice/os/joint à leur tête et que vous voulez
+utiliser cet os pour le skinning. Pour simplifier, imaginons que vous définissiez simplement
+les poids de sorte que les sommets de la tête aient un poids de 1.0 pour l'os de la tête et
+qu'aucun autre joint n'influence ces sommets.
 
 <div class="webgl_center"><img src="resources/bone-head-setup.svg" style="width: 500px;"></div>
 
-There's a problem.
-The head vertices are 2 units above the origin.  The head bone is also 2
-units above the origin.  If you actually multiplied those head vertices by
-the head bone matrix you'd get vertices 4 units above the origin.  The
-original 2 units of the vertices + the 2 units of the head bone matrix.
+Il y a un problème.
+Les sommets de la tête sont à 2 unités au-dessus de l'origine. L'os de la tête est aussi à 2
+unités au-dessus de l'origine. Si vous multipliiez réellement ces sommets de la tête par la
+matrice de l'os de la tête, vous obtiendriez des sommets à 4 unités au-dessus de l'origine.
+Les 2 unités d'origine des sommets + les 2 unités de la matrice de l'os de la tête.
 
 <div class="webgl_center"><img src="resources/bone-head-problem.svg" style="width: 500px;"></div>
 
-A solution is to store a "bind pose" which is an extra matrix per joint of
-where each matrix was before you used it to influence the vertices.  In that
-case the bind pose of the head matrix would be 2 units above the origin.
-So now you can use the inverse of that matrix to subtract out the extra 2
-units.
+Une solution est de stocker une "bind pose" qui est une matrice supplémentaire par joint
+de l'emplacement de chaque matrice avant qu'elle soit utilisée pour influencer les sommets.
+Dans ce cas, la bind pose de la matrice de la tête serait à 2 unités au-dessus de l'origine.
+Vous pouvez maintenant utiliser l'inverse de cette matrice pour soustraire les 2 unités
+supplémentaires.
 
-In other words the bone matrices passed to the shader have each been
-multiplied by their inverse bind pose so as to make their influence only
-how much they changed from their original positions relative to the origin
-of the mesh.
+En d'autres termes, les matrices d'os passées au shader ont chacune été multipliées par leur
+inverse bind pose afin que leur influence soit uniquement leur changement par rapport à leurs
+positions originales relativement à l'origine du mesh.
 
-Let's make a small example. We'll animate in 2d a grid like this
+Faisons un petit exemple. Nous allons animer en 2D une grille comme celle-ci :
 
 <div class="webgl_center"><img src="resources/skinned-mesh.svg" style="width: 400px;"></div>
 
-* Where `b0`, `b1`, and `b2` are the bone matrices.
-* `b1` is a child of `b0` and `b2` is a child of `b1`
-* Verts `0,1` will get a weight of 1.0 from bone b0
-* Verts `2,3` will get a weight of 0.5 from bones b0 and b1
-* Verts `4,5` will get a weight of 1.0 from bone b1
-* Verts `6,7` will get a weight of 0.5 from bones b1 and b2
-* Verts `8,9` will get a weight of 1.0 from bone b2
+* Où `b0`, `b1` et `b2` sont les matrices d'os.
+* `b1` est un enfant de `b0` et `b2` est un enfant de `b1`
+* Les sommets `0,1` auront un poids de 1.0 de l'os b0
+* Les sommets `2,3` auront un poids de 0.5 des os b0 et b1
+* Les sommets `4,5` auront un poids de 1.0 de l'os b1
+* Les sommets `6,7` auront un poids de 0.5 des os b1 et b2
+* Les sommets `8,9` auront un poids de 1.0 de l'os b2
 
-We'll use the utils described in [less code more fun](webgl-less-code-more-fun.html).
+Nous utiliserons les utilitaires décrits dans [moins de code, plus de fun](webgl-less-code-more-fun.html).
 
-First we need the vertices and for each vertex the index
-of each bone that influences it and a number from 0 to 1
-of how much influence that bone has.
+D'abord nous avons besoin des sommets et pour chaque sommet l'index
+de chaque os qui l'influence et un nombre de 0 à 1
+indiquant l'influence de cet os.
 
 ```
 const arrays = {
@@ -179,15 +177,15 @@ const arrays = {
     ],
   },
 };
-// calls gl.createBuffer, gl.bindBuffer, gl.bufferData
+// appelle gl.createBuffer, gl.bindBuffer, gl.bufferData
 const bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
 const skinVAO = twgl.createVAOFromBufferInfo(gl, programInfo, bufferInfo);
 ```
 
-We can define our uniform values including a matrix for each bone
+Nous pouvons définir nos valeurs d'uniform en incluant une matrice pour chaque os :
 
 ```
-// 4 matrices, one for each bone
+// 4 matrices, une pour chaque os
 const numBones = 4;
 const boneArray = new Float32Array(numBones * 16);
 
@@ -199,27 +197,27 @@ var uniforms = {
 };
 ```
 
-We can make views into the boneArray, one for each matrix
+Nous pouvons créer des vues dans le boneArray, une pour chaque matrice :
 
 ```
-// make views for each bone. This lets all the bones
-// exist in 1 array for uploading but as separate
-// arrays for using with the math functions
-const boneMatrices = [];  // the uniform data
-const bones = [];         // the value before multiplying by inverse bind matrix
-const bindPose = [];      // the bind matrix
+// crée des vues pour chaque os. Cela permet à tous les os
+// d'exister dans 1 tableau pour l'upload mais comme des tableaux
+// séparés pour utilisation avec les fonctions mathématiques
+const boneMatrices = [];  // les données uniformes
+const bones = [];         // la valeur avant multiplication par la matrice inverse de bind
+const bindPose = [];      // la matrice de bind
 for (let i = 0; i < numBones; ++i) {
   boneMatrices.push(new Float32Array(boneArray.buffer, i * 4 * 16, 16));
-  bindPose.push(m4.identity());  // just allocate storage
-  bones.push(m4.identity());     // just allocate storage
+  bindPose.push(m4.identity());  // alloue juste du stockage
+  bones.push(m4.identity());     // alloue juste du stockage
 }
 ```
 
-And then some code to manipulate the bone matrixes. We'll just rotate
-them in a heirarchy like the bones of a finger.
+Puis du code pour manipuler les matrices d'os. Nous les ferons juste tourner
+dans une hiérarchie comme les os d'un doigt.
 
 ```
-// rotate each bone by angle and simulate a hierarchy
+// fait tourner chaque os selon l'angle et simule une hiérarchie
 function computeBoneMatrices(bones, angle) {
   const m = m4.identity();
   m4.zRotate(m, angle, bones[0]);
@@ -227,26 +225,26 @@ function computeBoneMatrices(bones, angle) {
   m4.zRotate(m, angle, bones[1]);
   m4.translate(bones[1], 4, 0, 0, m);
   m4.zRotate(m, angle, bones[2]);
-  // bones[3] is not used
+  // bones[3] n'est pas utilisé
 }
 ```
 
-Now call it once to generate their initial positions and use the result
-to compute the inverse bind pose matrices.
+Maintenant, appelons-la une fois pour générer leurs positions initiales et utilisons
+le résultat pour calculer les matrices inverses de bind pose.
 
 ```
-// compute the initial positions of each matrix
+// calcule les positions initiales de chaque matrice
 computeBoneMatrices(bindPose, 0);
 
-// compute their inverses
+// calcule leurs inverses
 const bindPoseInv = bindPose.map(function(m) {
   return m4.inverse(m);
 });
 ```
 
-Now we're ready to render
+Nous sommes maintenant prêts à faire le rendu.
 
-First we animate the bones, conmputing a new world matrix for each
+D'abord, nous animons les os en calculant une nouvelle matrice monde pour chacun :
 
 ```
 const t = time * 0.001;
@@ -254,84 +252,86 @@ const angle = Math.sin(t) * 0.8;
 computeBoneMatrices(bones, angle);
 ```
 
-Then we multiple the result of each by the inverse bind pose to deal with
-the issue mentioned above
+Ensuite, nous multiplions le résultat de chacun par l'inverse de la bind pose pour
+résoudre le problème mentionné ci-dessus :
 
 ```
-// multiply each by its bindPoseInverse
+// multiplie chaque os par son inverse de bindPose
 bones.forEach((bone, ndx) => {
   m4.multiply(bone, bindPoseInv[ndx], boneMatrices[ndx]);
 });
 ```
 
-Then all the normal stuff, setting up the attributes, setting the uniforms, and drawing.
+Puis toute la procédure habituelle : configurer les attributs, définir les uniforms et dessiner.
 
 ```
 gl.useProgram(programInfo.program);
 
 gl.bindVertexArray(skinVAO);
 
-// calls gl.uniformXXX, gl.activeTexture, gl.bindTexture
+// appelle gl.uniformXXX, gl.activeTexture, gl.bindTexture
 twgl.setUniforms(programInfo, uniforms);
 
-// calls gl.drawArrays or gl.drawIndices
+// appelle gl.drawArrays ou gl.drawIndices
 twgl.drawBufferInfo(gl, bufferInfo, gl.LINES);
 ```
 
-And here's the result
+Et voici le résultat :
 
 {{{example url="../webgl-skinning.html" }}}
 
-The red lines are the *skinned* mesh.  The green and blue lines represent
-the x-axis and y-axis of each bone or "joint". You can see how the vertices
-that are influenced by multiple bones move between the bones that influence
-them. We didn't cover how the bones are drawn as it's not important to
-explaining how skinning works. See the code if you're curious.
+Les lignes rouges sont le mesh *skinné*. Les lignes verte et bleue représentent
+l'axe X et l'axe Y de chaque os ou "joint". On peut voir comment les sommets
+influencés par plusieurs os se déplacent entre les os qui les influencent. Nous
+n'avons pas couvert comment les os sont dessinés car ce n'est pas important pour
+expliquer comment fonctionne le skinning. Consultez le code si vous êtes curieux.
 
-NOTE: bones vs joints is confusing. There's only 1 thing, *matrices*.
-But, in a 3d modelling package they usually draw a gizmo (a ui widget)
-between each matrix. That looks ends up looking like a bone. The joints
-are where matrices are and they draw a line or cone from each joint
-to the next to make it kind of look like a skeleton.
+NOTE : la confusion entre os et joints. Il n'y a qu'une seule chose, les *matrices*.
+Mais dans un logiciel de modélisation 3D, on dessine généralement un gizmo (un widget
+d'interface) entre chaque matrice. Cela finit par ressembler à un os. Les joints sont
+là où se trouvent les matrices et on trace une ligne ou un cône de chaque joint au
+suivant pour que ça ressemble un peu à un squelette.
 
 <div class="webgl_center">
   <img src="resources/bone-display.png" style="width: 351px;">
-  <div class="caption"><a href="https://www.blendswap.com/blends/view/66412">LowPoly Man</a> by <a href="https://www.blendswap.com/user/TiZeta">TiZeta</a></div>
+  <div class="caption"><a href="https://www.blendswap.com/blends/view/66412">LowPoly Man</a> par <a href="https://www.blendswap.com/user/TiZeta">TiZeta</a></div>
 </div>
 
-One thing to note that we might not have done before, we made a `uvec4` attribute which is an attribute that receives unsigned integers. If we were not using twgl
-we'd have to call `gl.vertexAttribIPointer` to set it up instead of the more
-common `gl.vertexAttibPointer`.
+Une chose à noter que nous n'avions peut-être pas faite avant : nous avons créé un attribut
+`uvec4` qui est un attribut qui reçoit des entiers non signés. Si nous n'utilisions pas twgl,
+nous devrions appeler `gl.vertexAttribIPointer` pour le configurer au lieu du plus courant
+`gl.vertexAttribPointer`.
 
-Unfortunately there's a limit to the number of uniforms you can use in a shader.
-The lower limit on WebGL is 64 vec4s which is only 8 mat4s and you probably
-need some of those uniforms for other things like for example we have `color`
-in the fragment shader and we have `projection` and `view` which means if
-we were on a device with a limit of 64 vec4s we could only have 5 bones! Checking
-[WebGLStats](https://web3dsurvey.com/webgl/parameters/MAX_VERTEX_UNIFORM_VECTORS)
-most devices support 128 vec4s and 70% of them support 256 vec4s but with
-are sample above that's still only 13 bones and 29 bones respectively. 13 is
-not even enough for a early 90s Virtua Fighter 1 style character and 29 is not
-close to the number used in most modern games.
+Malheureusement, il y a une limite au nombre d'uniforms que vous pouvez utiliser dans un shader.
+La limite basse dans WebGL est de 64 vec4 ce qui n'est que 8 mat4, et vous avez probablement
+besoin de certains de ces uniforms pour d'autres choses, par exemple nous avons `color`
+dans le fragment shader et nous avons `projection` et `view`, ce qui signifie que si
+nous étions sur un appareil avec une limite de 64 vec4, nous ne pourrions avoir que 5 os ! En
+consultant [WebGLStats](https://web3dsurvey.com/webgl/parameters/MAX_VERTEX_UNIFORM_VECTORS),
+la plupart des appareils supportent 128 vec4 et 70% d'entre eux supportent 256 vec4, mais avec
+notre exemple ci-dessus c'est encore seulement 13 os et 29 os respectivement. 13 n'est même pas
+suffisant pour un personnage style Virtua Fighter 1 du début des années 90, et 29 est loin du
+nombre utilisé dans la plupart des jeux modernes.
 
-A couple ways around that. One is to pre-process the models offline and break them
-into multiple parts each one using no more than N bones. That's pretty complicated
-and brings it's own set of issues.
+Quelques façons de contourner ça. L'une est de pré-traiter les modèles hors ligne et de les
+découper en plusieurs parties, chacune n'utilisant pas plus de N os. C'est assez complexe et
+apporte son propre lot de problèmes.
 
-Another is to store the bone matrices in a texture. This is an important reminder
-that textures are not just images, they are effectively 2D arrays of random access
-data that you can pass to a shader and you can use them for all kinds of things
-that are not just reading images for texturing.
+Une autre consiste à stocker les matrices d'os dans une texture. C'est un rappel important que
+les textures ne sont pas que des images, elles sont effectivement des tableaux 2D de données
+à accès aléatoire que vous pouvez passer à un shader et utiliser pour toutes sortes de choses
+qui ne sont pas juste lire des images pour le texturage.
 
-Let's pass our matrices in a texture to bypass the uniform limit. To make this
-easy we're going to use floating point textures.
+Passons nos matrices dans une texture pour contourner la limite des uniforms. Pour simplifier
+les choses, nous allons utiliser des textures à virgule flottante.
 
-Let's update the shader to get the matrices out of a texture.
-We'll make the texture have one matrix per row. Each texel of the texture
-has R, G, B, and A, that's 4 values so we only need 4 pixels per matrix,
-one pixel for each row of the matrix.
-Textures can usually be at least 2048 pixels in certain dimension so
-this will give us room for at least 2048 bone matrices which is plenty.
+Mettons à jour le shader pour extraire les matrices d'une texture.
+Nous ferons la texture avec une matrice par ligne. Chaque texel de la texture
+a R, G, B et A, soit 4 valeurs, donc nous n'avons besoin que de 4 pixels par matrice,
+un pixel pour chaque ligne de la matrice.
+Les textures peuvent généralement avoir au moins 2048 pixels dans certaines dimensions,
+donc cela nous donnera de l'espace pour au moins 2048 matrices d'os, ce qui est amplement
+suffisant.
 
 ```
 #version 300 es
@@ -362,28 +362,28 @@ void main() {
 }
 ```
 
-Notice we're using `texelFetch` instead of `texture` to get data from
-the texture. `texelFetch` retrieves a single texel from the texture.
-It takes as input a, sampler, an ivec2 with the x,y coordinate of the texture
-in texels, and the mip level as in
+Remarquez que nous utilisons `texelFetch` au lieu de `texture` pour obtenir des données
+de la texture. `texelFetch` récupère un seul texel de la texture.
+Il prend en entrée un sampler, un ivec2 avec les coordonnées x,y de la texture
+en texels, et le niveau de mip comme ceci :
 
 ```
 vec4 data = texelFetch(sampler2D, ivec2(x, y), lod);
 ```
 
-Now we'll setup a texture we can put the bone matrices in
+Maintenant, configurons une texture dans laquelle nous pouvons placer les matrices d'os :
 
 ```
-// prepare the texture for bone matrices
+// prépare la texture pour les matrices d'os
 const boneMatrixTexture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, boneMatrixTexture);
-// since we want to use the texture for pure data we turn
-// off filtering
+// puisque nous voulons utiliser la texture pour des données pures, on désactive
+// le filtrage
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 ```
 
-And we'll pass that texture as a uniform.
+Et nous la passons comme uniform.
 
 ```
 const uniforms = {
@@ -394,60 +394,87 @@ const uniforms = {
 };
 ```
 
-Then the only thing we need to change is to update the texture with the
-latest bone matrices when rendering
+La seule chose que nous devons changer est de mettre à jour la texture avec les
+dernières matrices d'os lors du rendu :
 
 ```
-// update the texture with the current matrices
+// met à jour la texture avec les matrices courantes
 gl.bindTexture(gl.TEXTURE_2D, boneMatrixTexture);
 gl.texImage2D(
     gl.TEXTURE_2D,
-    0,          // level
-    gl.RGBA32F, // internal format
-    4,          // width 4 pixels, each pixel has RGBA so 4 pixels is 16 values
-    numBones,   // one row per bone
-    0,          // border
+    0,          // niveau
+    gl.RGBA32F, // format interne
+    4,          // largeur 4 pixels, chaque pixel a RGBA donc 4 pixels = 16 valeurs
+    numBones,   // une ligne par os
+    0,          // bordure
     gl.RGBA,    // format
     gl.FLOAT,   // type
     boneArray);
 ```
 
-The result it the same but we've solved the issue that there aren't
-enough uniforms to pass in the matrices via uniforms.
+Le résultat est le même mais nous avons résolu le problème du manque d'uniforms
+pour passer les matrices.
 
 {{{example url="../webgl-skinning-bone-matrices-in-texture.html" }}}
 
-So that's the basics of skinning. It's not so hard to write the code to display
-a skinned mesh. The harder part is actually getting data. You generally need
-some 3D software like blender/maya/3d studio max, and then to either write
-your own exporter or find a an exporter and format that will provide all the data needed. You'll see as we go over it that there is 10x more code in loading a skin than there is in displaying it and that doesn't include the probably 20-30x more code in the exporter to get the data out of the 3D modeling program. As an aside this is one of the things people writing their own 3D engine often miss. The engine is the easy part 😜
+Voilà donc les bases du skinning. Ce n'est pas si difficile d'écrire le code pour
+afficher un mesh skinné. La partie la plus difficile est d'obtenir les données. Vous
+avez généralement besoin d'un logiciel 3D comme Blender/Maya/3D Studio Max, puis soit
+d'écrire votre propre exporteur, soit de trouver un exporteur et un format qui fournira
+toutes les données nécessaires. Vous verrez, en parcourant le code, qu'il y a 10 fois
+plus de code dans le chargement d'un skin que dans son affichage, et cela n'inclut pas
+les probablement 20 à 30 fois plus de code dans l'exporteur pour extraire les données du
+logiciel de modélisation 3D. À titre d'aparté, c'est l'une des choses que les gens qui
+écrivent leur propre moteur 3D manquent souvent. Le moteur est la partie facile 😜
 
-There's going to be a lot of code so let's first try to just get the un-skinned model to display.
+Il va y avoir beaucoup de code donc essayons d'abord de simplement afficher le modèle
+non skinné.
 
-Let's try loading a glTF file. [glTF](https://www.khronos.org/gltf/) as it's kind of designed for WebGL. Searching the net I found [this killer whale blender file](https://www.blendswap.com/blends/view/65255) by [Junskie Pastilan](https://www.blendswap.com/user/pasilan)
+Essayons de charger un fichier glTF. [glTF](https://www.khronos.org/gltf/) est conçu
+pour WebGL. En cherchant sur le net, j'ai trouvé [ce fichier blender d'orque](https://www.blendswap.com/blends/view/65255) par [Junskie Pastilan](https://www.blendswap.com/user/pasilan).
 
 <div class="webgl_center"><img src="../resources/models/killer_whale/thumbnail.jpg"></div>
 
-There are 2 top level formats for glTF. The `.gltf` format is a JSON file that generally references a `.bin` file which is a binary file that contains usually just the geometry and possibly animation data. The other format is `.glb` which is a binary format. It's basically just the JSON and any other files concatinated into one binary file with a short header and a size/type section between each
-concatinated piece. For JavaScript I think the `.gltf` format is slightly easier to get started with so let's try to load that.
+Il existe 2 formats de haut niveau pour glTF. Le format `.gltf` est un fichier JSON qui
+référence généralement un fichier `.bin` contenant habituellement la géométrie et
+éventuellement les données d'animation. L'autre format est `.glb` qui est un format binaire.
+C'est essentiellement le JSON et tous les autres fichiers concaténés en un seul fichier
+binaire avec un court en-tête et une section taille/type entre chaque pièce concaténée.
+Pour JavaScript, je pense que le format `.gltf` est légèrement plus facile pour commencer,
+alors essayons de charger ça.
 
-First [I downloaded the .blend file](https://www.blendswap.com/blends/view/65255), installed [blender](https://blender.org), installed [the gltf exporter](https://github.com/KhronosGroup/glTF-Blender-IO), loaded the file into blender and exported.
+D'abord [j'ai téléchargé le fichier .blend](https://www.blendswap.com/blends/view/65255),
+installé [Blender](https://blender.org), installé [l'exporteur gltf](https://github.com/KhronosGroup/glTF-Blender-IO),
+chargé le fichier dans Blender et exporté.
 
 <div class="webgl_center"><img src="resources/blender-killer-whale.png" style="width: 700px;" class="nobg"></div>
 
-> A quick note: 3D software like Blender, Maya, 3DSMax is extremely complex software with 1000s of options. When I first learned 3DSMax in 1996 I spent 2-3 hrs a day reading through the 1000+ page manual and working though the tutorials for about 3 weeks. I did something similar when I learned Maya a few years later. Blender is just as complicated and further it has a very different interface from pretty much all other software. This is just a short way of saying that you should expect to spend some significant time learning whatever 3D package you decide to use.
+> Une note rapide : les logiciels 3D comme Blender, Maya, 3DSMax sont des logiciels
+> extrêmement complexes avec des milliers d'options. Quand j'ai appris 3DSMax en 1996,
+> j'ai passé 2-3 heures par jour à lire le manuel de plus de 1000 pages et à travailler
+> les tutoriels pendant environ 3 semaines. J'ai fait quelque chose de similaire quand
+> j'ai appris Maya quelques années plus tard. Blender est tout aussi complexe et de plus
+> il a une interface très différente de pratiquement tous les autres logiciels. C'est juste
+> une façon de dire que vous devriez vous attendre à passer un temps significatif à apprendre
+> quel que soit le logiciel 3D que vous décidez d'utiliser.
 
-After exporting it I loaded the .gltf file into my text editor and took a look around. I used [this cheat sheet](https://www.khronos.org/files/gltf20-reference-guide.pdf) to figure out the format.
+Après l'exportation, j'ai chargé le fichier .gltf dans mon éditeur de texte et j'ai jeté un
+coup d'œil. J'ai utilisé [cette feuille de référence](https://www.khronos.org/files/gltf20-reference-guide.pdf)
+pour comprendre le format.
 
-I want to make it clear the code below is not a perfect glTF loader. It's just enough code to get the whale to display. I suspect that if we tried different files we'd run into areas that need to be changed.
+Je veux préciser que le code ci-dessous n'est pas un chargeur glTF parfait. C'est juste
+suffisant pour afficher l'orque. Je suspecte que si on essayait différents fichiers, on
+rencontrerait des domaines qui nécessiteraient des modifications.
 
-The first thing we need to do is load the file. To make it simpler let's use JavaScript's [async/await](https://javascript.info/async-await). First let's write some code to load the `.gltf` file and any files it references.
+La première chose à faire est de charger le fichier. Pour simplifier, utilisons le
+[async/await](https://javascript.info/async-await) de JavaScript. D'abord, écrivons du code
+pour charger le fichier `.gltf` et tous les fichiers qu'il référence.
 
 ```
 async function loadGLTF(url) {
   const gltf = await loadJSON(url);
 
-  // load all the referenced files relative to the gltf file
+  // charge tous les fichiers référencés relativement au fichier gltf
   const baseURL = new URL(url, location.href);
   gltf.buffers = await Promise.all(gltf.buffers.map((buffer) => {
     const url = new URL(buffer.uri, baseURL.href);
@@ -473,9 +500,16 @@ async function loadJSON(url) {
 }
 ```
 
-Now we need to walk through the data and connect things up.
+Maintenant nous devons parcourir les données et les connecter.
 
-First let's handle what glTF considers a mesh. A mesh is collection of primitives. A primitive is effectively the buffers and attributes needed to render something. Let's use the [twgl library](https://twgljs.org) we covered in [less code more fun](webgl-less-code-more-fun.html). We'll walk the meshes and for each one build a `BufferInfo` we can pass to `twgl.createVAOFromBufferInfo`. Recall a `BufferInfo` is effectively just the attribute information, the indicies if there are any, and the number of elements to pass to `gl.drawXXX`. For example a cube with just positions and normals might have a BufferInfo with this structure
+D'abord, gérons ce que glTF considère comme un mesh. Un mesh est une collection de primitives.
+Une primitive est effectivement les tampons et attributs nécessaires pour rendre quelque chose.
+Utilisons la [bibliothèque twgl](https://twgljs.org) couverte dans [moins de code, plus de fun](webgl-less-code-more-fun.html).
+Nous parcourrons les meshes et pour chacun construirons un `BufferInfo` que nous pourrons
+passer à `twgl.createVAOFromBufferInfo`. Rappelons qu'un `BufferInfo` est effectivement
+les informations d'attributs, les indices s'il y en a, et le nombre d'éléments à passer
+à `gl.drawXXX`. Par exemple un cube avec juste des positions et des normales pourrait avoir
+un BufferInfo avec cette structure :
 
 ```
 const cubeBufferInfo = {
@@ -489,12 +523,16 @@ const cubeBufferInfo = {
 }
 ```
 
-So we will walk each primitive and generate a BufferInfo like that.
+Donc nous parcourrons chaque primitive et générerons un BufferInfo comme ça.
 
-Primitives have an array of attributes, each attribute references an accessor. An accessor says what kind of data is there, for example `VEC3`/`gl.FLOAT` and references a bufferView. A bufferView specifies some view into a buffer. Given an accessor index we can write some code that returns a WebGLBuffer with the data loaded, the accessor, and the stride specified for the bufferView.
+Les primitives ont un tableau d'attributs, chaque attribut référence un accesseur.
+Un accesseur indique quel type de données est là, par exemple `VEC3`/`gl.FLOAT` et
+référence une bufferView. Une bufferView spécifie une vue dans un buffer. Étant donné
+un index d'accesseur, nous pouvons écrire du code qui retourne un WebGLBuffer avec les
+données chargées, l'accesseur et le stride spécifié pour la bufferView.
 
 ```
-// Given an accessor index return an accessor, WebGLBuffer and a stride
+// Étant donné un index d'accesseur, retourne un accesseur, WebGLBuffer et un stride
 function getAccessorAndWebGLBuffer(gl, gltf, accessorIndex) {
   const accessor = gltf.accessors[accessorIndex];
   const bufferView = gltf.bufferViews[accessor.bufferView];
@@ -515,7 +553,7 @@ function getAccessorAndWebGLBuffer(gl, gltf, accessorIndex) {
 }
 ```
 
-We also need a way to convert from an glTF accessor type to a number of components
+Nous avons aussi besoin d'un moyen de convertir un type d'accesseur glTF en nombre de composants :
 
 ```
 function throwNoKey(key) {
@@ -537,9 +575,13 @@ function accessorTypeToNumComponents(type) {
 }
 ```
 
-Now that we've made these functions we can use them to setup our meshes
+Maintenant que nous avons créé ces fonctions, nous pouvons les utiliser pour configurer nos meshes.
 
-Note: glTF files can supposedly define materials but the exporter didn't put any materials in the file even though export materials was checked. I can only guess the exporter doesn't handle every kind of material in blender which is unfortunate. We'll use a default material if there is no material in the file. Since there are no materials in this file there's no code here to use glTF materials.
+Note : les fichiers glTF peuvent supposément définir des matériaux mais l'exporteur n'a mis aucun
+matériau dans le fichier même si l'export des matériaux était coché. Je suppose que l'exporteur
+ne gère pas tous les types de matériaux dans Blender, ce qui est malheureux. Nous utiliserons un
+matériau par défaut s'il n'y en a pas dans le fichier. Puisqu'il n'y a pas de matériaux dans ce
+fichier, il n'y a pas de code ici pour utiliser les matériaux glTF.
 
 ```
 const defaultMaterial = {
@@ -548,7 +590,7 @@ const defaultMaterial = {
   },
 };
 
-// setup meshes
+// configure les meshes
 gltf.meshes.forEach((mesh) => {
   mesh.primitives.forEach((primitive) => {
     const attribs = {};
@@ -579,18 +621,20 @@ gltf.meshes.forEach((mesh) => {
 
     primitive.bufferInfo = bufferInfo;
 
-    // make a VAO for this primitive
+    // crée un VAO pour cette primitive
     primitive.vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, primitive.bufferInfo);
 
-    // save the material info for this primitive
+    // sauvegarde les infos de matériau pour cette primitive
     primitive.material = gltf.materials && gltf.materials[primitive.material] || defaultMaterial;
   });
 });
 ```
 
-Now each primitive will have a `bufferInfo` and a `material` property.
+Maintenant chaque primitive aura une propriété `bufferInfo` et `material`.
 
-For skinning we almost always need some kind of scene graph. We created a scene graph in [the article about scene graphs](webgl-scene-graph.html) so let's use that one.
+Pour le skinning, nous avons presque toujours besoin d'un graphe de scène. Nous avons créé
+un graphe de scène dans [l'article sur les graphes de scène](webgl-scene-graph.html), alors
+utilisons-le.
 
 ```
 class TRS {
@@ -633,14 +677,14 @@ class Node {
     }
 
     if (parentWorldMatrix) {
-      // a matrix was passed in so do the math
+      // une matrice a été passée, donc on fait le calcul
       m4.multiply(parentWorldMatrix, this.localMatrix, this.worldMatrix);
     } else {
-      // no matrix was passed in so just copy local to world
+      // aucune matrice passée, on copie juste local vers world
       m4.copy(this.localMatrix, this.worldMatrix);
     }
 
-    // now process all the children
+    // traite maintenant tous les enfants
     const worldMatrix = this.worldMatrix;
     for (const child of this.children) {
       child.updateWorldMatrix(worldMatrix);
@@ -662,40 +706,39 @@ class Node {
 }
 ```
 
-There are a couple of notable changes from the code in [the scene graph article](webgl-scene-graph.html).
+Il y a quelques changements notables par rapport au code de [l'article sur les graphes de scène](webgl-scene-graph.html).
 
-* This code is using the `class` feature of ES6.
+* Ce code utilise la fonctionnalité `class` d'ES6.
 
-  It's much nicer to use the `class` syntax than the old style of defining a class.
+  C'est bien plus agréable d'utiliser la syntaxe `class` que l'ancienne façon de définir une classe.
 
-* We added an array of drawables to `Node`
+* Nous avons ajouté un tableau de drawables à `Node`.
 
-  This will list the things to draw from this Node. We'll put
-  instances of a class on this list that are responsible for doing
-  the actual drawing. This way we can generically draw different things
-  by using different classes.
+  Cela listera les choses à dessiner depuis ce Node. Nous placerons dans cette liste des instances
+  d'une classe responsable du dessin effectif. Ainsi nous pouvons dessiner génériquement différentes
+  choses en utilisant différentes classes.
 
-  Note: It's not clear to me that putting an array of drawables on Node
-  is the best decision. I feel like the scene graph itself should
-  maybe not contain drawables at all. Things that need to be drawn could instead
-  just reference the node in the graph where to get their data.
-  This way with drawables in the graph is common though so lets start with that.
+  Note : Je ne suis pas sûr que mettre un tableau de drawables sur Node soit la meilleure décision.
+  J'ai l'impression que le graphe de scène lui-même ne devrait peut-être pas contenir de drawables.
+  Les choses qui doivent être dessinées pourraient plutôt juste référencer le nœud dans le graphe
+  d'où obtenir leurs données. Cette façon avec les drawables dans le graphe est courante, donc
+  commençons par ça.
 
-* We added a `traverse` method.
+* Nous avons ajouté une méthode `traverse`.
 
-  It calls a function passing it the current node and then recursively doing the
-  same for all child nodes.
+  Elle appelle une fonction en lui passant le nœud courant puis fait récursivement la même chose
+  pour tous les nœuds enfants.
 
-* The `TRS` class is using a quaternion for rotation
+* La classe `TRS` utilise un quaternion pour la rotation.
 
-  We have not covered quaternions and to be honest I don't think I understand
-  them well enough to explain them. Fortunately we don't need to know how they
-  work to use them. We just take the data out of the gltf file and call
-  a function that builds a matrix from that data and use the matrix.
+  Nous n'avons pas couvert les quaternions et pour être honnête, je ne pense pas les comprendre
+  suffisamment pour les expliquer. Heureusement, nous n'avons pas besoin de savoir comment ils
+  fonctionnent pour les utiliser. Nous prenons juste les données du fichier gltf et appelons une
+  fonction qui construit une matrice à partir de ces données et nous utilisons la matrice.
 
-The nodes in the glTF file are stored as a flat array.
-We'll convert node data in the glTF to `Node` instances. We save off the old array
-of node data as `origNodes` as we'll need it later.
+Les nœuds dans le fichier glTF sont stockés sous forme de tableau plat.
+Nous convertirons les données de nœud dans le glTF en instances de `Node`. Nous sauvegardons
+l'ancien tableau de données de nœud comme `origNodes` car nous en aurons besoin plus tard.
 
 ```
 const origNodes = gltf.nodes;
@@ -711,9 +754,13 @@ gltf.nodes = gltf.nodes.map((n) => {
 });
 ```
 
-Above we created a `TRS` instance for each node, a `Node` instance for each node, and, if there was a `mesh` property we looked up the mesh data we setup before and created a `MeshRenderer` to draw it.
+Ci-dessus, nous avons créé une instance `TRS` pour chaque nœud, une instance `Node` pour chaque
+nœud, et si il y avait une propriété `mesh`, nous avons cherché les données du mesh configurées
+précédemment et créé un `MeshRenderer` pour le dessiner.
 
-Let's make the `MeshRenderer`. It's just an encapsulation of the code we used in [less code more fun](webgl-less-code-more-fun.html) to rendener a single model. All it does is hold a reference to a mesh and then for each primitive sets up the program, attributes, and uniforms and finally calls `gl.drawArrays` or `gl.drawElements` via `twgl.drawBufferInfo`;
+Créons le `MeshRenderer`. C'est juste une encapsulation du code utilisé dans [moins de code, plus de fun](webgl-less-code-more-fun.html) pour rendre un seul modèle. Il ne fait que tenir une référence
+à un mesh et pour chaque primitive configure le programme, les attributs et les uniforms et appelle
+finalement `gl.drawArrays` ou `gl.drawElements` via `twgl.drawBufferInfo`.
 
 ```
 class MeshRenderer {
@@ -736,9 +783,9 @@ class MeshRenderer {
 }
 ```
 
-We've created the nodes, now we need to actually arrange them into a scene graph. This is done at 2 levels in glTF.
-First, each node has an optional array of children that are also indicies into the array of nodes so we can walk all
-the nodes and parent their children
+Nous avons créé les nœuds, maintenant nous devons les arranger en graphe de scène. Cela se fait
+à 2 niveaux dans glTF. D'abord, chaque nœud a un tableau optionnel d'enfants qui sont aussi des
+indices dans le tableau de nœuds, donc nous pouvons parcourir tous les nœuds et parentaliser leurs enfants :
 
 ```
 function addChildren(nodes, node, childIndices) {
@@ -748,7 +795,7 @@ function addChildren(nodes, node, childIndices) {
   });
 }
 
-// arrange nodes into graph
+// arrange les nœuds dans le graphe
 gltf.nodes.forEach((node, ndx) => {
   const children = origNodes[ndx].children;
   if (children) {
@@ -757,11 +804,13 @@ gltf.nodes.forEach((node, ndx) => {
 });
 ```
 
-Then there is an array of scenes. A scene references an
-array of nodes by index into the nodes array that are at the bottom of the scene. It's not clear to me why they didn't just start with a single root node but whatever, it's what's in the glTF file so we create a root node and parent all the scene's children to that node
+Ensuite il y a un tableau de scènes. Une scène référence un tableau de nœuds par index dans le
+tableau de nœuds qui sont à la base de la scène. Je ne vois pas pourquoi ils n'ont pas simplement
+commencé avec un seul nœud racine, mais peu importe, c'est ce qui est dans le fichier glTF donc
+nous créons un nœud racine et parentalisons tous les enfants de la scène à ce nœud :
 
 ```
-  // setup scenes
+  // configure les scènes
   for (const scene of gltf.scenes) {
     scene.root = new Node(new TRS(), scene.name);
     addChildren(gltf.nodes, scene.root, scene.nodes);
@@ -771,21 +820,21 @@ array of nodes by index into the nodes array that are at the bottom of the scene
 }
 ```
 
-and we're done with loading, at least just the meshes. Let's
-mark the main function as `async` so we can use the `await`
-keyword.
+et nous avons terminé le chargement, du moins juste pour les meshes. Marquons la fonction
+principale comme `async` pour pouvoir utiliser le mot-clé `await`.
 
 ```
 async function main() {
 ```
 
-and we can load the gltf file like this
+et nous pouvons charger le fichier gltf comme ceci :
 
 ```
 const gltf = await loadGLTF('resources/models/killer_whale/whale.CYCLES.gltf');
 ```
 
-To render we need a shader that matches the data in the gltf file. Let's look at the data in the gltf file for the primitive that's in it
+Pour rendre, nous avons besoin d'un shader qui correspond aux données dans le fichier gltf.
+Regardons les données dans le fichier gltf pour la primitive qui s'y trouve :
 
 ```
 {
@@ -806,7 +855,8 @@ To render we need a shader that matches the data in the gltf file. Let's look at
 }
 ```
 
-Looking at that, to render let's just use `NORMAL` and `POSITION`. We prepended `a_` to the front of each attribute so a vertex shader like this should work
+En regardant ça, pour le rendu utilisons juste `NORMAL` et `POSITION`. Nous avons ajouté `a_`
+devant chaque attribut, donc un vertex shader comme celui-ci devrait fonctionner :
 
 ```
 #version 300 es
@@ -825,7 +875,7 @@ void main() {
 }
 ```
 
-and for the fragment shader let's use a simple directional light
+et pour le fragment shader utilisons une lumière directionnelle simple :
 
 ```
 #version 300 es
@@ -845,16 +895,23 @@ void main () {
 }
 ```
 
-Notice we take the dot product like we covered in [the article on direcitonal lights](webgl-3d-lighting-directional.html) but unlike that one, here the dot product is multipled by .5 and we add .5. With normal directional lighting the surface is lit 100% when directly facing the light and trails off to 0% when the surface is perpendicular to the light. That means the entire 1/2 of the model facing away from the light is black. By multiplying by .5 and adding .5 we take the dot product from -1 &lt;-&gt; 1 to 0 &lt;-&gt; 1 which means it will only be black when facing the complete opposite direciton. This gives a cheap but pleasing lighting for simple tests.
+Remarquez que nous prenons le produit scalaire comme dans [l'article sur les lumières directionnelles](webgl-3d-lighting-directional.html)
+mais contrairement à cet article, ici le produit scalaire est multiplié par 0.5 et nous ajoutons 0.5.
+Avec un éclairage directionnel normal, la surface est éclairée à 100% quand elle fait directement
+face à la lumière et diminue à 0% quand la surface est perpendiculaire à la lumière. Cela signifie
+que l'ensemble de la moitié du modèle faisant face à l'opposé de la lumière est noir. En multipliant
+par 0.5 et en ajoutant 0.5, nous faisons passer le produit scalaire de -1 &lt;-&gt; 1 à 0 &lt;-&gt; 1,
+ce qui signifie qu'il ne sera noir que lorsqu'il fait face à la direction complètement opposée.
+Cela donne un éclairage bon marché mais agréable pour des tests simples.
 
-So, we need to compile and link the shaders.
+Donc, nous devons compiler et lier les shaders.
 
 ```
-// compiles and links the shaders, looks up attribute and uniform locations
+// compile et lie les shaders, cherche les emplacements d'attribut et d'uniform
 const meshProgramInfo = twgl.createProgramInfo(gl, [meshVS, fs]);
 ```
 
-and then to render all that's different from before is this
+et ensuite pour le rendu, tout ce qui est différent d'avant est :
 
 ```
 const sharedUniforms = {
@@ -868,23 +925,28 @@ function renderDrawables(node) {
 }
 
 for (const scene of gltf.scenes) {
-  // updatte all world matices in the scene.
+  // met à jour toutes les matrices monde dans la scène.
   scene.root.updateWorldMatrix();
-  // walk the scene and render all renderables
+  // parcourt la scène et rend tous les renderables
   scene.root.traverse(renderDrawables);
 }
 ```
 
-Left over from before (not shown above) is our code for computing a projection matrix, camera matrix, and view matrix. We then just walk each scene, call `scene.root.updateWorldMatrix` which will update the world
-matrix of all the nodes in that graph. Then we call `scene.root.traverse` with `renderDrawables`.
+Ce qui reste d'avant (non montré ci-dessus) est notre code pour calculer une matrice de projection,
+une matrice de caméra et une matrice de vue. Nous parcourons ensuite chaque scène, appelons
+`scene.root.updateWorldMatrix` qui mettra à jour la matrice monde de tous les nœuds dans ce graphe.
+Puis nous appelons `scene.root.traverse` avec `renderDrawables`.
 
-`renderDrawables` calls the render method of all the drawables on that node passing in the projection, view, and lighting info via `sharedUniforms`.
+`renderDrawables` appelle la méthode render de tous les drawables sur ce nœud en passant la
+projection, la vue et les infos d'éclairage via `sharedUniforms`.
 
 {{{example url="../webgl-skinning-3d-gltf.html" }}}
 
-Now that that's working let's handle the skins.
+Maintenant que ça fonctionne, gérons les skins.
 
-First let's make a class to represent a skin. It will manage the list of joints, which is another word for nodes in the scene graph that apply to the skin. It will also have the inverse bind matrices and it will manage the texture we put the joint matrices in.
+D'abord, créons une classe pour représenter un skin. Elle gérera la liste des joints, qui est
+un autre terme pour les nœuds du graphe de scène qui s'appliquent au skin. Elle aura aussi les
+matrices inverses de bind et gérera la texture dans laquelle nous mettrons les matrices de joints.
 
 ```
 class Skin {
@@ -892,9 +954,9 @@ class Skin {
     this.joints = joints;
     this.inverseBindMatrices = [];
     this.jointMatrices = [];
-    // allocate enough space for one matrix per joint
+    // alloue assez d'espace pour une matrice par joint
     this.jointData = new Float32Array(joints.length * 16);
-    // create views for each joint and inverseBindMatrix
+    // crée des vues pour chaque joint et inverseBindMatrix
     for (let i = 0; i < joints.length; ++i) {
       this.inverseBindMatrices.push(new Float32Array(
           inverseBindMatrixData.buffer,
@@ -905,7 +967,7 @@ class Skin {
           Float32Array.BYTES_PER_ELEMENT * 16 * i,
           16));
     }
-    // create a texture to hold the joint matrices
+    // crée une texture pour stocker les matrices de joints
     this.jointTexture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, this.jointTexture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -915,9 +977,9 @@ class Skin {
   }
   update(node) {
     const globalWorldInverse = m4.inverse(node.worldMatrix);
-    // go through each joint and get its current worldMatrix
-    // apply the inverse bind matrices and store the
-    // entire result in the texture
+    // parcourt chaque joint et obtient sa matrice monde courante,
+    // applique les matrices inverses de bind et stocke
+    // le résultat entier dans la texture
     for (let j = 0; j < this.joints.length; ++j) {
       const joint = this.joints[j];
       const dst = this.jointMatrices[j];
@@ -931,7 +993,8 @@ class Skin {
 }
 ```
 
-And like we had a `MeshRenderer` let's make a `SkinRenderer` that uses the `Skin` to render a skinned mesh.
+Et comme nous avions un `MeshRenderer`, créons un `SkinRenderer` qui utilise le `Skin`
+pour rendre un mesh skinné.
 
 ```
 class SkinRenderer {
@@ -958,9 +1021,12 @@ class SkinRenderer {
 }
 ```
 
-You can see it's very similar to the `MeshRenderer`. It has a reference to a `Skin` which it uses to update all the matrices needed to render. Then it follows the standard pattern for rendering, using the program, setting up the attributes, setting all the uniforms using `twgl.setUniforms` which also binds textures, and then rendering.
+Vous pouvez voir que c'est très similaire au `MeshRenderer`. Il a une référence à un `Skin`
+qu'il utilise pour mettre à jour toutes les matrices nécessaires au rendu. Puis il suit le
+schéma standard pour le rendu : utilise le programme, configure les attributs, définit tous
+les uniforms avec `twgl.setUniforms` qui lie aussi les textures, et effectue le rendu.
 
-We also need a vertex shader that supports skinning
+Nous avons aussi besoin d'un vertex shader qui supporte le skinning :
 
 ```
 const skinVS = `#version 300 es
@@ -997,30 +1063,47 @@ void main() {
 `;
 ```
 
-This is pretty much the same as our skinning shader above. We renamed the attributes to match what's in the gltf file.
-The biggest change it making a `skinMatrix`. In our previous skinning shader we multiplied the position by each individual joint/bone matrix and multplied those by the weight of influcence for each joint. In this case we instead add up the matrices multiplied by the weights and just multiply by position once. This produces same result but we can use the `skinMatrix` to multiply the normal as well which we need to do otherwise the normals won't match the skin.
+C'est essentiellement le même que notre shader de skinning ci-dessus. Nous avons renommé
+les attributs pour correspondre à ce qui est dans le fichier gltf. Le plus grand changement
+est de créer une `skinMatrix`. Dans notre shader de skinning précédent, nous multipliions
+la position par chaque matrice individuelle de joint/os et nous multipliions celles-ci par
+le poids d'influence pour chaque joint. Dans ce cas, nous additionnons plutôt les matrices
+multipliées par les poids et multiplions juste par la position une seule fois. Cela produit
+le même résultat mais nous pouvons utiliser la `skinMatrix` pour multiplier aussi la normale,
+ce que nous devons faire sinon les normales ne correspondront pas au skin.
 
-Also notice we multiply in the `u_world` matrix here. We subtracted it out in `Skin.update` with these lines
+Notez aussi que nous multiplions par la matrice `u_world` ici. Nous l'avons soustraite dans
+`Skin.update` avec ces lignes :
 
 ```
 *const globalWorldInverse = m4.inverse(node.worldMatrix);
-// go through each joint and get its current worldMatrix
-// apply the inverse bind matrices and store the
-// entire result in the texture
+// parcourt chaque joint et obtient sa matrice monde courante,
+// applique les matrices inverses de bind et stocke
+// le résultat entier dans la texture
 for (let j = 0; j < this.joints.length; ++j) {
   const joint = this.joints[j];
   const dst = this.jointMatrices[j];
 *  m4.multiply(globalWorldInverse, joint.worldMatrix, dst);
 ```
 
-Whether you do that or not is up to you. The reason to do it is it lets you instance the skin. In other words you can render the skinned mesh in the exact same pose at more than
-one place in the same frame. The idea being that if there are lots of joints then doing all the matrix math for a skinned mesh is slow so
-you do that math once and then you can display that skinned
-mesh in different places just by re-rendering with a different world matrix.
+Que vous le fassiez ou non dépend de vous. La raison de le faire est que cela permet
+d'instancier le skin. En d'autres termes, vous pouvez rendre le mesh skinné dans la même
+pose à plus d'un endroit dans la même image. L'idée étant que si il y a beaucoup de joints,
+faire tout le calcul matriciel pour un mesh skinné est lent, donc vous faites ce calcul une
+fois et ensuite vous pouvez afficher ce mesh skinné à différents endroits juste en le
+re-rendant avec une matrice monde différente.
 
-That's maybe useful for displaying a crowd of characters. Unfortunately all the characters will be in the exact same pose so it's unclear to me if it's really that useful or not. How often does that situation actually come up? You can remove multiplying by the inverse world matrix of the node in `Skin` and remove mutlplying by `u_world` in the shader and the result will look the same, you just can't *instance* that skinned mesh. Of course you can render the same skinned mesh as many times as you want in different poses. You'll need a different `Skin` object pointing to different nodes that are in some other orientation.
+C'est peut-être utile pour afficher une foule de personnages. Malheureusement, tous les
+personnages seront dans exactement la même pose, donc je ne suis pas sûr que ce soit vraiment
+utile. À quelle fréquence cette situation se produit-elle réellement ? Vous pouvez supprimer
+la multiplication par l'inverse de la matrice monde du nœud dans `Skin` et supprimer la
+multiplication par `u_world` dans le shader, et le résultat semblera identique, vous ne pourrez
+juste pas *instancier* ce mesh skinné. Bien sûr, vous pouvez rendre le même mesh skinné
+autant de fois que vous voulez dans différentes poses. Vous aurez besoin d'un objet `Skin`
+différent pointant vers différents nœuds qui sont dans une autre orientation.
 
-Back in our loading code, when we're making `Node` instances, if there's a `skin` property we'll remember it so we can make a `Skin` for it.
+Dans notre code de chargement, quand nous créons des instances de `Node`, si il y a une
+propriété `skin`, nous l'enregistrons pour pouvoir créer un `Skin` pour ça.
 
 ```
 +const skinNodes = [];
@@ -1039,11 +1122,13 @@ gltf.nodes = gltf.nodes.map((n) => {
 });
 ```
 
-After making `Node`s we need to make `Skin`s. Skins reference nodes via a `joints` array which is a list of indices of nodes that supply the matrices for the joints.
-A skin also references an accessor that references the inverse bind pose matrices saved in the file.
+Après avoir créé les `Node`s, nous devons créer les `Skin`s. Les skins référencent des nœuds
+via un tableau `joints` qui est une liste d'indices de nœuds qui fournissent les matrices pour
+les joints. Un skin référence aussi un accesseur qui référence les matrices inverses de bind
+pose sauvegardées dans le fichier.
 
 ```
-// setup skins
+// configure les skins
 gltf.skins = gltf.skins.map((skin) => {
   const joints = skin.joints.map(ndx => gltf.nodes[ndx]);
   const {stride, array} = getAccessorTypedArrayAndStride(gl, gltf, skin.inverseBindMatrices);
@@ -1051,7 +1136,9 @@ gltf.skins = gltf.skins.map((skin) => {
 });
 ```
 
-The code above called `getAccessorTypedArrayAndStride` given an accessor index. We need supply that code. For a given accessor we'll return a [TypedArray](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray) view of the correct type to get access to the data in the buffer.
+Le code ci-dessus appelle `getAccessorTypedArrayAndStride` en lui donnant un index d'accesseur.
+Nous devons fournir ce code. Pour un accesseur donné, nous retournerons une vue [TypedArray](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray)
+du type correct pour accéder aux données dans le tampon.
 
 ```
 const glTypeToTypedArrayMap = {
@@ -1064,13 +1151,13 @@ const glTypeToTypedArrayMap = {
   '5126': Float32Array, // gl.FLOAT
 }
 
-// Given a GL type return the TypedArray needed
+// Étant donné un type GL, retourne le TypedArray nécessaire
 function glTypeToTypedArray(type) {
   return glTypeToTypedArrayMap[type] || throwNoKey(type);
 }
 
-// given an accessor index return both the accessor and
-// a TypedArray for the correct portion of the buffer
+// étant donné un index d'accesseur, retourne à la fois l'accesseur et
+// un TypedArray pour la portion correcte du tampon
 function getAccessorTypedArrayAndStride(gl, gltf, accessorIndex) {
   const accessor = gltf.accessors[accessorIndex];
   const bufferView = gltf.bufferViews[accessor.bufferView];
@@ -1087,128 +1174,163 @@ function getAccessorTypedArrayAndStride(gl, gltf, accessorIndex) {
 }
 ```
 
-Something to note about the code above is we've made a table with hardcoded WebGL constants. This is the first time we've done this. The constants won't change so this is safe to do.
+Quelque chose à noter dans le code ci-dessus : nous avons créé une table avec des constantes
+WebGL codées en dur. C'est la première fois que nous faisons ça. Les constantes ne changeront
+pas, c'est donc sûr à faire.
 
-Now what we have the skins we can go back and add them to the nodes that referenced them.
+Maintenant que nous avons les skins, nous pouvons revenir en arrière et les ajouter aux nœuds
+qui les référençaient.
 
 ```
-// Add SkinRenderers to nodes with skins
+// Ajoute des SkinRenderers aux nœuds avec des skins
 for (const {node, mesh, skinNdx} of skinNodes) {
   node.drawables.push(new SkinRenderer(mesh, gltf.skins[skinNdx]));
 }
 ```
 
-If we rendered like this we might not see any difference. We need to animate some of the nodes. Let's just go through each node in the `Skin`, in other words each joint, and rotate it plus a minus a little on the local X access.
+Si nous rendions comme ça, nous ne verrions peut-être pas de différence. Nous devons animer
+certains des nœuds. Parcourons juste chaque nœud dans le `Skin`, c'est-à-dire chaque joint,
+et faisons-le tourner un peu sur l'axe X local.
 
-To do this we'll save off the original local matrix for each joint. We'll then rotate that original matrix some amount each frame, and using a special function, `m4.decompose`, will will convert the matrix back into position, rotation, scale into the joint.
+Pour ce faire, nous sauvegarderons la matrice locale d'origine pour chaque joint. Nous ferons
+ensuite tourner cette matrice originale d'une certaine quantité à chaque image, et en utilisant
+une fonction spéciale, `m4.decompose`, nous convertirons la matrice en position, rotation, échelle
+dans le joint.
 
 ```
 const origMatrix = new Map();
 function animSkin(skin, a) {
   for(let i = 0; i < skin.joints.length; ++i) {
     const joint = skin.joints[i];
-    // if there is no matrix saved for this joint
+    // si aucune matrice n'est sauvegardée pour ce joint
     if (!origMatrix.has(joint)) {
-      // save a matrix for joint
+      // sauvegarde une matrice pour le joint
       origMatrix.set(joint, joint.source.getMatrix());
     }
-    // get the original matrix
+    // obtient la matrice originale
     const origMatrix = origRotations.get(joint);
-    // rotate it
+    // la fait tourner
     const m = m4.xRotate(origMatrix, a);
-    // decompose it back into position, rotation, scale
-    // into the joint
+    // la décompose en position, rotation, échelle
+    // dans le joint
     m4.decompose(m, joint.source.position, joint.source.rotation, joint.source.scale);
   }
 }
 ```
 
-and then just before rendering we'll call that
+et juste avant le rendu, nous appellerons ça :
 
 ```
 animSkin(gltf.skins[0], Math.sin(time) * .5);
 ```
 
-Note `animSkin` is mostly a hack. Ideally we'd load an animation some artist created OR we'd know the names of specific joints we want to manipulate in code in some way. In this case we just to see if our skinning is working and this seemed like the easist way to do it.
+Notez que `animSkin` est principalement un hack. Idéalement, nous chargerions une animation
+créée par un artiste OU nous connaîtrions les noms de joints spécifiques que nous voulons
+manipuler dans le code d'une certaine façon. Dans ce cas, nous voulons juste voir si notre
+skinning fonctionne, et c'est la façon la plus simple de le faire.
 
 {{{example url="../webgl-skinning-3d-gltf-skinned.html" }}}
 
-A few more notes before we move on
+Quelques notes supplémentaires avant de continuer.
 
-When I first tried to get this working, as with most programs things didn't appear on the screen.
+Quand j'ai essayé de faire fonctionner ça pour la première fois, comme pour la plupart des
+programmes, rien n'apparaissait à l'écran.
 
-So, the first thing did was go to the end of the skinning shader and add this line
+Donc, la première chose que j'ai faite a été d'aller à la fin du shader de skinning et
+d'ajouter cette ligne :
 
 ```
   gl_Position = u_projection * u_view *  a_POSITION;
 ```
 
-In the fragment shader I changed it to just draw a solid color by adding this at the end
+Dans le fragment shader, je l'ai changé pour dessiner juste une couleur unie en ajoutant
+ceci à la fin :
 
 ```
 outColor = vec4(1, 0, 0, 1);
 ```
 
-This removes all the skinning and just draws the mesh at the origin. I adjusted the camera position until I had a good view.
+Cela supprime tout le skinning et dessine juste le mesh à l'origine. J'ai ajusté la
+position de la caméra jusqu'à avoir une bonne vue.
 
 ```
 const cameraPosition = [5, 0, 5];
 const target = [0, 0, 0];
 ```
 
-This showed a silhouette of the killer whale so I knew at least some of the data was working.
+Cela montrait une silhouette de l'orque, donc je savais qu'au moins une partie des données
+fonctionnait.
 
 <div class="webgl_center"><img src="resources/skinning-debug-01.png"></div>
 
-Next I made the fragment shader show the normals
+Ensuite, j'ai fait afficher les normales par le fragment shader :
 
 ```
 outColor = vec4(normalize(v_normal) * .5 + .5, 1);
 ```
 
-Normals go from -1 to 1 so the `* .5 + .5` adjusts them to 0 to 1 for viewing as colors.
+Les normales vont de -1 à 1, donc `* .5 + .5` les ajuste à 0 à 1 pour les visualiser
+comme des couleurs.
 
-Back in the vertex shader I just passed the normal through
+De retour dans le vertex shader, j'ai juste passé la normale directement :
 
 ```
 v_normal = a_NORMAL;
 ```
 
-Which gave me a view like this
+Ce qui m'a donné une vue comme celle-ci :
 
 <div class="webgl_center"><img src="resources/skinning-debug-02.png"></div>
 
-I didn't expect the normals to be bad but it was good to start with something I expected to work and confirm that it does indeed work.
+Je ne m'attendais pas à ce que les normales soient mauvaises, mais il était bon de commencer
+avec quelque chose que je m'attendais à voir fonctionner et de confirmer que ça fonctionne
+effectivement.
 
-Next I thought I'd check the weights. All I needed to do was
-pass the weights as normals from the vertex shader
+Ensuite, j'ai pensé vérifier les poids. Tout ce que j'avais à faire était de passer les poids
+comme normales depuis le vertex shader :
 
 ```
 v_normal = a_WEIGHTS_0.xyz * 2. - 1.;
 ```
 
-Weights go from 0 to 1 but since the fragment shader is expecting normals I just made the weights go from -1 to 1
+Les poids vont de 0 à 1 mais comme le fragment shader attend des normales, j'ai juste fait
+aller les poids de -1 à 1.
 
-This originally produced a kind of mess of colors. Once I figured out the bug, I got an image like this
+Cela a initialement produit une sorte de fouillis de couleurs. Une fois que j'ai trouvé le
+bug, j'ai obtenu une image comme celle-ci :
 
 <div class="webgl_center"><img src="resources/skinning-debug-03.png"></div>
 
-It's not entirely obvious it's correct but does make some sense. You'd expect the vertices nearest each bone to have a strong color and you'd expect to see rings of that color in the vertices around the bone since the weights in that area are likely 1.0 or at least all similar.
+Ce n'est pas entièrement évident que c'est correct, mais ça a du sens. On s'attendrait à ce
+que les sommets les plus proches de chaque os aient une couleur forte et à voir des anneaux
+de cette couleur dans les sommets autour de l'os puisque les poids dans cette zone sont
+probablement 1.0 ou du moins tous similaires.
 
-Since the original image was so messy I also tried displaying the joint indices with
+Puisque l'image originale était si désordonnée, j'ai aussi essayé d'afficher les indices
+de joints avec :
 
 ```
 v_normal = vec3(a_JOINTS_0.xyz) / float(textureSize(u_jointTexture, 0).y - 1) * 2. - 1.;
 ```
 
-The indices go from 0 to numJoints - 1 so the code above would give values from -1 to 1.
+Les indices vont de 0 à numJoints - 1, donc le code ci-dessus donnerait des valeurs de -1 à 1.
 
-Once things were working I got an image like this
+Une fois les choses corrigées, j'ai obtenu une image comme celle-ci :
 
 <div class="webgl_center"><img src="resources/skinning-debug-04.png"></div>
 
-Again it was originally a mess of colors. The image above is what it looked like after it was fixed. That's pretty much what you'd expect to see for weights for the killer whale. Rings of color around each bone.
+Là encore, c'était initialement un fouillis de couleurs. L'image ci-dessus montre ce à quoi
+ça ressemblait après correction. C'est à peu près ce qu'on s'attendrait à voir pour les poids
+de l'orque. Des anneaux de couleur autour de chaque os.
 
-The bug had to do with how `twgl.createBufferInfoFromArrays`, which I used instead of twgl when I started making this sample, was figuring out the number of components. There were cases where it ignored the one specified, tried to guess, and guessed wrong. Once the bug was fixed then I removed those changes to the shaders. Note that I left them in the code above commented out if you want to play with them.
+Le bug était lié à la façon dont `twgl.createBufferInfoFromArrays`, que j'ai utilisé à la place
+de twgl quand j'ai commencé à faire cet exemple, déterminait le nombre de composants. Il y avait
+des cas où il ignorait celui spécifié, essayait de deviner, et devinait incorrectement. Une fois
+le bug corrigé, j'ai supprimé ces modifications aux shaders. Notez que je les ai laissées dans
+le code ci-dessus commentées si vous voulez jouer avec.
 
-I want to make it clear the code above is meant to help explain skinning. It is not meant to be a production ready skinning engine. I think if we were to try to make a production quality engine we'd run into many things we'd probably want to change but I hope going through this example helps slight demystify skinning.
+Je veux préciser que le code ci-dessus est destiné à expliquer le skinning. Il n'est pas
+destiné à être un moteur de skinning prêt pour la production. Je pense que si nous essayions
+de faire un moteur de qualité production, nous rencontrerions beaucoup de choses que nous
+voudrions probablement changer, mais j'espère que parcourir cet exemple aide à démystifier
+un peu le skinning.

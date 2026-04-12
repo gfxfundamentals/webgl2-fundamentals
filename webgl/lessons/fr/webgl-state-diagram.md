@@ -1,6 +1,6 @@
-Title: WebGL2 State Diagram
-Description: WebGL2 State Diagram
-TOC: WebGL2 State Diagram
+Title: WebGL2 Diagramme d'état
+Description: WebGL2 Diagramme d'état
+TOC: WebGL2 Diagramme d'état
 Link: webgl/lessons/resources/webgl-state-diagram.html
 
-[WebGL2 State Diagram](/webgl/lessons/resources/webgl-state-diagram.html)
+[WebGL2 Diagramme d'état](/webgl/lessons/resources/webgl-state-diagram.html)

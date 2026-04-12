@@ -1,92 +1,92 @@
-Title: WebGL2 - Scene Graph
-Description: What a scene graph is want what it's used for
-TOC: Scene Graphs
+Title: WebGL2 - Graphe de scène
+Description: Ce qu'est un graphe de scène et à quoi il sert
+TOC: Graphes de scène
 
 
-This article is a continuation of [previous WebGL articles](webgl-fundamentals.html).
-The previous article was about [drawing multiple things](webgl-drawing-multiple-things.html).
-If you haven't read them I suggest you start there.
+Cet article est la suite des [articles WebGL précédents](webgl-fundamentals.html).
+L'article précédent portait sur [dessiner plusieurs choses](webgl-drawing-multiple-things.html).
+Si vous ne les avez pas lus, je vous suggère de commencer là.
 
-I'm sure some CS guru or graphics guru is going to give me an ear full but ...
-A scene graph is usually a tree structure where each node in the tree generates
-a matrix... hmmm, that's not a very useful definition. Maybe some examples would be
-useful.
+Je suis sûr qu'un gourou de l'informatique ou un gourou des graphismes va me disputer mais ...
+Un graphe de scène est généralement une structure arborescente où chaque nœud dans l'arbre génère
+une matrice... hmm, ce n'est pas une définition très utile. Peut-être que quelques exemples seraient
+utiles.
 
-Most 3D engines use a scene graph. You put the things you want to appear in the scene
-graph. The engine then walks the scene graph and figures out a list of things to draw.
-Scene graphs are hierarchical so for example if you wanted to make a universe simulation
-you might have a graph that looks like this
+La plupart des moteurs 3D utilisent un graphe de scène. Vous y mettez les choses que vous voulez faire apparaître dans le graphe
+de scène. Le moteur parcourt ensuite le graphe de scène et détermine une liste de choses à dessiner.
+Les graphes de scène sont hiérarchiques, donc par exemple si vous vouliez créer une simulation d'univers,
+vous pourriez avoir un graphe qui ressemble à ceci
 
 {{{diagram url="resources/planet-diagram.html" height="500" }}}
 
-What's the point of a scene graph? The #1 feature of a scene graph is it provides a parent
-child relationship for matrices as [we discussed in 2D matrix math](webgl-2d-matrices.html).
-So for example in a simple (but unrealistic) universe simulation the stars (children), move along with their
-galaxy (parent). Similarly a moon (child) moves along with its planet (parent).
-If you move the earth the moon will move with it. If you move a galaxy
-all the stars inside will move with it. Drag the names in the diagram above
-and hopefully you can see their relationships.
+À quoi sert un graphe de scène ? La fonctionnalité n°1 d'un graphe de scène est qu'il fournit une relation parent-enfant
+pour les matrices comme [nous en avons discuté dans les maths matricielles 2D](webgl-2d-matrices.html).
+Donc par exemple dans une simulation d'univers simple (mais irréaliste), les étoiles (enfants) se déplacent avec leur
+galaxie (parent). De même, une lune (enfant) se déplace avec sa planète (parent).
+Si vous déplacez la Terre, la Lune se déplacera avec elle. Si vous déplacez une galaxie,
+toutes les étoiles à l'intérieur se déplaceront avec elle. Faites glisser les noms dans le diagramme ci-dessus
+et vous devriez pouvoir voir leurs relations.
 
-If you go back to the [2D matrix math](webgl-2d-matrices.html) you might remember we
-multiply lots of matrices in order to translate, rotate, and scale objects. A
-scene graph provides a structure to help decide what matrix math to apply to an object.
+Si vous revenez aux [maths matricielles 2D](webgl-2d-matrices.html), vous vous souviendrez peut-être que nous
+multiplions beaucoup de matrices pour translater, faire pivoter et mettre à l'échelle des objets. Un
+graphe de scène fournit une structure pour aider à décider quelle mathématique matricielle appliquer à un objet.
 
-Typically each `Node` in a scene graph represents a *local space*. Given the correct
-matrix math anything in that *local space* can ignore everything above it. Another
-way to state the same thing is that the moon only has to care about orbiting the earth.
-It does not have to care about orbiting the sun. Without this scene graph structure
-you'd have to do much more complex math to compute how to get the moon to orbit the sun
-because its orbit around the sun looks something like this
+Typiquement, chaque `Node` dans un graphe de scène représente un *espace local*. Avec les bonnes
+maths matricielles, tout ce qui se trouve dans cet *espace local* peut ignorer tout ce qui se trouve au-dessus de lui. Une autre
+façon d'énoncer la même chose est que la lune n'a à se préoccuper que d'orbiter autour de la Terre.
+Elle n'a pas à se préoccuper d'orbiter autour du Soleil. Sans cette structure de graphe de scène,
+vous devriez faire des maths beaucoup plus complexes pour calculer comment faire orbiter la Lune autour du Soleil
+car son orbite autour du Soleil ressemble à quelque chose comme ça
 
 {{{diagram url="resources/moon-orbit.html" }}}
 
-With a scene graph you just make the moon a child of the earth and then orbit
-the earth which is simple. The scene graph takes care of the fact that the earth
-is orbiting the sun. It does this by walking the nodes and multiplying the
-matrices as it walks
+Avec un graphe de scène, vous faites simplement de la Lune un enfant de la Terre, puis faites orbiter
+la Terre, ce qui est simple. Le graphe de scène prend en charge le fait que la Terre
+orbite autour du Soleil. Il le fait en parcourant les nœuds et en multipliant les
+matrices au fur et à mesure
 
     worldMatrix = greatGrandParent * grandParent * parent * self(localMatrix)
 
-In concrete terms our universe simulation that would be
+En termes concrets, notre simulation d'univers serait
 
     worldMatrixForMoon = galaxyMatrix * starMatrix * planetMatrix * moonMatrix;
 
-We can do this very simply with a recursive function which is effectively
+Nous pouvons faire cela très simplement avec une fonction récursive qui fait effectivement
 
     function computeWorldMatrix(currentNode, parentWorldMatrix) {
-        // compute our world matrix by multiplying our local matrix with
-        // our parent's world matrix.
+        // calculer notre matrice world en multipliant notre matrice locale avec
+        // la matrice world de notre parent.
         var worldMatrix = m4.multiply(parentWorldMatrix, currentNode.localMatrix);
 
-        // now do the same for all of our children
+        // maintenant faire de même pour tous nos enfants
         currentNode.children.forEach(function(child) {
             computeWorldMatrix(child, worldMatrix);
         });
     }
 
-This brings up some terminology which is pretty common to 3D scene graphs.
+Cela soulève une terminologie assez commune dans les graphes de scène 3D.
 
-*   `localMatrix`: The local matrix for the current node. It transforms it and its children in local space with
-    itself at the origin.
+*   `localMatrix` : La matrice locale pour le nœud actuel. Elle transforme le nœud et ses enfants dans l'espace local avec
+    lui-même à l'origine.
 
-*    `worldMatrix`: For a given node it takes stuff in the local space of that node
-     and transforms it to the space of the root node of the scene graph. Or in other words it places it
-     in the world. If we compute the worldMatrix for the moon we'll get that funky orbit you see above.
+*   `worldMatrix` : Pour un nœud donné, elle prend les choses dans l'espace local de ce nœud
+    et les transforme vers l'espace du nœud racine du graphe de scène. En d'autres termes, elle les place
+    dans le monde. Si nous calculons la worldMatrix pour la Lune, nous obtiendrons cette orbite bizarre que vous voyez ci-dessus.
 
-A scene graph is pretty easy to make. Let's define a simple `Node` object.
-There's a zillion ways to organize a scene graph and I'm not sure which
-way is best. The most common is to have an optional field of thing to draw
+Un graphe de scène est assez facile à créer. Définissons un objet `Node` simple.
+Il y a une multitude de façons d'organiser un graphe de scène et je ne suis pas sûr de quelle
+façon est la meilleure. La plus courante est d'avoir un champ optionnel pour la chose à dessiner
 
     var node = {
-       localMatrix: ...,  // the "local" matrix for this node
-       worldMatrix: ...,  // the "world" matrix for this node
-       children: [],      // array of children
-       thingToDraw: ??,   // thing to draw at this node
+       localMatrix: ...,  // la matrice "locale" pour ce nœud
+       worldMatrix: ...,  // la matrice "world" pour ce nœud
+       children: [],      // tableau d'enfants
+       thingToDraw: ??,   // chose à dessiner à ce nœud
     };
 
-Let's make a solar system scene graph. I'm not going to use fancy textures or
-anything like that as it would clutter the example. First let's make a few functions
-to help manage nodes. First we'll make a node class
+Créons un graphe de scène de système solaire. Je ne vais pas utiliser de textures sophistiquées ou
+quoi que ce soit de tel car cela encombrerait l'exemple. D'abord, créons quelques fonctions
+pour aider à gérer les nœuds. D'abord, créons une classe de nœud
 
     var Node = function() {
       this.children = [];
@@ -94,10 +94,10 @@ to help manage nodes. First we'll make a node class
       this.worldMatrix = m4.identity();
     };
 
-Let's give it a way to set the parent of a node.
+Donnons-lui un moyen de définir le parent d'un nœud.
 
     Node.prototype.setParent = function(parent) {
-      // remove us from our parent
+      // nous retirer de notre parent
       if (this.parent) {
         var ndx = this.parent.children.indexOf(this);
         if (ndx >= 0) {
@@ -105,46 +105,46 @@ Let's give it a way to set the parent of a node.
         }
       }
 
-      // Add us to our new parent
+      // Nous ajouter à notre nouveau parent
       if (parent) {
         parent.children.push(this);
       }
       this.parent = parent;
     };
 
-And here's the code to compute world matrices from local matrices based on their parent-child
-relationships. If we start at the parent and recursively visit the children we can compute
-their world matrices. If you don't understand matrix math
-[check out this article on them](webgl-2d-matrices.html).
+Et voici le code pour calculer les matrices world à partir des matrices locales basées sur leurs relations
+parent-enfant. Si nous commençons au parent et visitons récursivement les enfants, nous pouvons calculer
+leurs matrices world. Si vous ne comprenez pas les maths matricielles,
+[consultez cet article à leur sujet](webgl-2d-matrices.html).
 
     Node.prototype.updateWorldMatrix = function(parentWorldMatrix) {
       if (parentWorldMatrix) {
-        // a matrix was passed in so do the math and
-        // store the result in `this.worldMatrix`.
+        // une matrice a été passée, donc faites les maths et
+        // stockez le résultat dans `this.worldMatrix`.
         m4.multiply(parentWorldMatrix, this.localMatrix, this.worldMatrix);
       } else {
-        // no matrix was passed in so just copy.
+        // aucune matrice n'a été passée donc copiez simplement.
         m4.copy(this.localMatrix, this.worldMatrix);
       }
 
-      // now process all the children
+      // maintenant traitez tous les enfants
       var worldMatrix = this.worldMatrix;
       this.children.forEach(function(child) {
         child.updateWorldMatrix(worldMatrix);
       });
     };
 
-Let's just do the sun, the earth, and the moon to keep it simple. We'll of course use
-fake distances so things fit on the screen. We'll just use a single sphere model
-and color it yellowish for the sun, blue-greenish for the earth and grayish for the moon.
-If `drawInfo`, `bufferInfo`, and `programInfo` are not familiar to you [see the previous article](webgl-drawing-multiple-things.html).
+Faisons juste le Soleil, la Terre et la Lune pour rester simple. Nous utiliserons bien sûr des
+distances fictives pour que les choses tiennent sur l'écran. Nous utiliserons juste un seul modèle de sphère
+et la colorierons en jaunâtre pour le Soleil, bleu-verdâtre pour la Terre et grisâtre pour la Lune.
+Si `drawInfo`, `bufferInfo`, et `programInfo` ne vous sont pas familiers, [voir l'article précédent](webgl-drawing-multiple-things.html).
 
-    // Let's make all the nodes
+    // Créons tous les nœuds
     var sunNode = new Node();
-    sunNode.localMatrix = m4.translation(0, 0, 0);  // sun at the center
+    sunNode.localMatrix = m4.translation(0, 0, 0);  // soleil au centre
     sunNode.drawInfo = {
       uniforms: {
-        u_colorOffset: [0.6, 0.6, 0, 1], // yellow
+        u_colorOffset: [0.6, 0.6, 0, 1], // jaune
         u_colorMult:   [0.4, 0.4, 0, 1],
       },
       programInfo: programInfo,
@@ -153,10 +153,10 @@ If `drawInfo`, `bufferInfo`, and `programInfo` are not familiar to you [see the 
     };
 
     var earthNode = new Node();
-    earthNode.localMatrix = m4.translation(100, 0, 0);  // earth 100 units from the sun
+    earthNode.localMatrix = m4.translation(100, 0, 0);  // terre à 100 unités du soleil
     earthNode.drawInfo = {
       uniforms: {
-        u_colorOffset: [0.2, 0.5, 0.8, 1],  // blue-green
+        u_colorOffset: [0.2, 0.5, 0.8, 1],  // bleu-vert
         u_colorMult:   [0.8, 0.5, 0.2, 1],
       },
       programInfo: programInfo,
@@ -165,10 +165,10 @@ If `drawInfo`, `bufferInfo`, and `programInfo` are not familiar to you [see the 
     };
 
     var moonNode = new Node();
-    moonNode.localMatrix = m4.translation(20, 0, 0);  // moon 20 units from the earth
+    moonNode.localMatrix = m4.translation(20, 0, 0);  // lune à 20 unités de la terre
     moonNode.drawInfo = {
       uniforms: {
-        u_colorOffset: [0.6, 0.6, 0.6, 1],  // gray
+        u_colorOffset: [0.6, 0.6, 0.6, 1],  // gris
         u_colorMult:   [0.1, 0.1, 0.1, 1],
       },
       programInfo: programInfo,
@@ -176,13 +176,13 @@ If `drawInfo`, `bufferInfo`, and `programInfo` are not familiar to you [see the 
       vertexArray: sphereVAO,
     };
 
-Now that we've made the nodes let's connect them.
+Maintenant que nous avons créé les nœuds, connectons-les.
 
-    // connect the celestial objects
+    // connecter les objets célestes
     moonNode.setParent(earthNode);
     earthNode.setParent(sunNode);
 
-We'll again make a list of objects and a list of objects to draw.
+Nous allons à nouveau créer une liste d'objets et une liste d'objets à dessiner.
 
     var objects = [
       sunNode,
@@ -196,120 +196,120 @@ We'll again make a list of objects and a list of objects to draw.
       moonNode.drawInfo,
     ];
 
-At render time we'll update each object's local matrix by rotating it slightly.
+Au moment du rendu, nous mettrons à jour la matrice locale de chaque objet en la faisant pivoter légèrement.
 
-    // update the local matrices for each object.
+    // mettre à jour les matrices locales pour chaque objet.
     m4.multiply(m4.yRotation(0.01), sunNode.localMatrix  , sunNode.localMatrix);
     m4.multiply(m4.yRotation(0.01), earthNode.localMatrix, earthNode.localMatrix);
     m4.multiply(m4.yRotation(0.01), moonNode.localMatrix , moonNode.localMatrix);
 
-Now that the local matrices are updated we'll update all the world matrices
+Maintenant que les matrices locales sont mises à jour, nous mettrons à jour toutes les matrices world
 
     sunNode.updateWorldMatrix();
 
-Finally now that we have world matrices we need to multiply those to get a [worldViewProjection
-matrix](webgl-3d-perspective.html) for each object.
+Finalement, maintenant que nous avons les matrices world, nous devons les multiplier pour obtenir une [matrice
+worldViewProjection](webgl-3d-perspective.html) pour chaque objet.
 
-    // Compute all the matrices for rendering
+    // Calculer toutes les matrices pour le rendu
     objects.forEach(function(object) {
       object.drawInfo.uniforms.u_matrix = m4.multiply(viewProjectionMatrix, object.worldMatrix);
     });
 
-Rendering is [the same loop we saw in our last article](webgl-drawing-multiple-things.html).
+Le rendu est [la même boucle que nous avons vue dans notre dernier article](webgl-drawing-multiple-things.html).
 
 {{{example url="../webgl-scene-graph-solar-system.html" }}}
 
-You'll notice all of the planets are the same size. Let's try to make the earth larger
+Vous remarquerez que toutes les planètes ont la même taille. Essayons de rendre la Terre plus grande
 
-    // earth 100 units from the sun
+    // terre à 100 unités du soleil
     earthNode.localMatrix = m4.translation(100, 0, 0));
 
-    // make the earth twice as large
+    // rendre la terre deux fois plus grande
     earthNode.localMatrix = m4.scale(earthNode.localMatrix, 2, 2, 2);
 
 {{{example url="../webgl-scene-graph-solar-system-larger-earth.html" }}}
 
-Oops. The moon got larger too. To fix this we could manually shrink the moon. A better solution though
-is to add more nodes to our scene graph. Instead of just
+Oups. La Lune est devenue plus grande aussi. Pour corriger cela, nous pourrions réduire manuellement la Lune. Une meilleure solution cependant
+est d'ajouter plus de nœuds à notre graphe de scène. Au lieu de juste
 
-      sun
+      soleil
        |
-      earth
+      terre
        |
-      moon
+      lune
 
-We'll change it to
+Nous allons changer en
 
-     solarSystem
+     systèmeSolaire
        |    |
-       |   sun
+       |   soleil
        |
-     earthOrbit
+     orbiteTerre
        |    |
-       |  earth
+       |  terre
        |
-      moonOrbit
+      orbiteLune
           |
-         moon
+         lune
 
-This will let the earth rotate around the solarSystem but we can separately rotate and scale the sun and it won't
-affect the earth. Similarly the earth can rotate separately from the moon. Let's make more nodes for
-`solarSystem`, `earthOrbit` and `moonOrbit`.
+Cela permettra à la Terre de tourner autour du systèmeSolaire, mais nous pouvons faire tourner et mettre à l'échelle le Soleil séparément et cela ne
+affectera pas la Terre. De même, la Terre peut tourner séparément de la Lune. Créons plus de nœuds pour
+`solarSystemNode`, `earthOrbitNode` et `moonOrbitNode`.
 
     var solarSystemNode = new Node();
     var earthOrbitNode = new Node();
 
-    // earth orbit 100 units from the sun
+    // orbite terrestre à 100 unités du soleil
     earthOrbitNode.localMatrix = m4.translation(100, 0, 0);
     var moonOrbitNode = new Node();
 
-     // moon 20 units from the earth
+     // lune à 20 unités de la terre
     moonOrbitNode.localMatrix = m4.translation(20, 0, 0);
 
-Those orbit distances have been removed from the old nodes
+Ces distances d'orbite ont été retirées des anciens nœuds
 
     var earthNode = new Node();
-    -// earth 100 units from the sun
+    -// terre à 100 unités du soleil
     -earthNode.localMatrix = m4.translation(100, 0, 0));
 
-    -// make the earth twice as large
+    -// rendre la terre deux fois plus grande
     -earthNode.localMatrix = m4.scale(earthNode.localMatrix, 2, 2, 2);
     +earthNode.localMatrix = m4.scaling(2, 2, 2);
 
     var moonNode = new Node();
-    -moonNode.localMatrix = m4.translation(20, 0, 0);  // moon 20 units from the earth
+    -moonNode.localMatrix = m4.translation(20, 0, 0);  // lune à 20 unités de la terre
 
-Connecting them now looks like this
+Les connecter ressemble maintenant à ceci
 
-    // connect the celestial objects
+    // connecter les objets célestes
     sunNode.setParent(solarSystemNode);
     earthOrbitNode.setParent(solarSystemNode);
     earthNode.setParent(earthOrbitNode);
     moonOrbitNode.setParent(earthOrbitNode);
     moonNode.setParent(moonOrbitNode);
 
-And we only need to update the orbits
+Et nous n'avons besoin de mettre à jour que les orbites
 
-    // update the local matrices for each object.
+    // mettre à jour les matrices locales pour chaque objet.
     -m4.multiply(m4.yRotation(0.01), sunNode.localMatrix  , sunNode.localMatrix);
     -m4.multiply(m4.yRotation(0.01), earthNode.localMatrix, earthNode.localMatrix);
     -m4.multiply(m4.yRotation(0.01), moonNode.localMatrix , moonNode.localMatrix);
     +m4.multiply(m4.yRotation(0.01), earthOrbitNode.localMatrix, earthOrbitNode.localMatrix);
     +m4.multiply(m4.yRotation(0.01), moonOrbitNode.localMatrix, moonOrbitNode.localMatrix);
 
-    // Update all world matrices in the scene graph
+    // Mettre à jour toutes les matrices world dans le graphe de scène
     -sunNode.updateWorldMatrix();
     +solarSystemNode.updateWorldMatrix();
 
-And now you can see the earth is double size, the moon is not.
+Et maintenant vous pouvez voir que la Terre est deux fois plus grande, la Lune ne l'est pas.
 
 {{{example url="../webgl-scene-graph-solar-system-larger-earth-fixed.html" }}}
 
-You might also notice the sun and the earth are no longer rotating in place. That is now independent.
+Vous pourriez également remarquer que le Soleil et la Terre ne tournent plus sur place. C'est maintenant indépendant.
 
-Let's adjust a few more things.
+Ajustons quelques autres choses.
 
-    -sunNode.localMatrix = m4.translation(0, 0, 0);  // sun at the center
+    -sunNode.localMatrix = m4.translation(0, 0, 0);  // soleil au centre
     +sunNode.localMatrix = m4.scaling(5, 5, 5);
 
     ...
@@ -321,22 +321,22 @@ Let's adjust a few more things.
     +moonNode.localMatrix = m4.scaling(0.4, 0.4, 0.4);
 
     ...
-    // update the local matrices for each object.
+    // mettre à jour les matrices locales pour chaque objet.
     m4.multiply(m4.yRotation(0.01), earthOrbitNode.localMatrix, earthOrbitNode.localMatrix);
     m4.multiply(m4.yRotation(0.01), moonOrbitNode.localMatrix, moonOrbitNode.localMatrix);
-    +// spin the sun
+    +// faire tourner le soleil sur lui-même
     +m4.multiply(m4.yRotation(0.005), sunNode.localMatrix, sunNode.localMatrix);
-    +// spin the earth
+    +// faire tourner la terre sur elle-même
     +m4.multiply(m4.yRotation(0.05), earthNode.localMatrix, earthNode.localMatrix);
-    +// spin the moon
+    +// faire tourner la lune sur elle-même
     +m4.multiply(m4.yRotation(-0.01), moonNode.localMatrix, moonNode.localMatrix);
 
 {{{example url="../webgl-scene-graph-solar-system-adjusted.html" }}}
 
-Currently we have a `localMatrix` and we're modifying it each frame. There's a problem though
-in that every frame our math will collect a little bit of error. There is a way to fix the math
-which is called *ortho normalizing a matrix* but even that won't always work. For example let's
-imagine we scaled down zero and back. Let's just do that for one value `x`
+Actuellement, nous avons une `localMatrix` et nous la modifions à chaque frame. Il y a cependant un problème
+en ce que chaque frame, nos maths accumuleront une petite erreur. Il existe un moyen de corriger les maths
+appelé *ortho normaliser une matrice*, mais même cela ne fonctionnera pas toujours. Par exemple, imaginons
+que nous avons mis à l'échelle à zéro et inversé. Faisons cela juste pour une valeur `x`
 
     x = 246;       // frame #0, x = 246
 
@@ -350,14 +350,14 @@ imagine we scaled down zero and back. Let's just do that for one value `x`
     x = x * scale  // frame #3, x = 0
 
     scale = 0.5;
-    x = x * scale  // frame #4, x = 0  OOPS!
+    x = x * scale  // frame #4, x = 0  OUPS !
 
     scale = 1;
-    x = x * scale  // frame #5, x = 0  OOPS!
+    x = x * scale  // frame #5, x = 0  OUPS !
 
-We lost our value. We can fix this by adding some other class that updates the matrix from
-other values. Let's change the `Node` definition to have a `source`. If it exists we'll
-ask the `source` to give us a local matrix.
+Nous avons perdu notre valeur. Nous pouvons corriger cela en ajoutant une autre classe qui met à jour la matrice à partir d'autres valeurs.
+Modifions la définition `Node` pour avoir une `source`. Si elle existe, nous
+demanderons à la `source` de nous donner une matrice locale.
 
     *var Node = function(source) {
       this.children = [];
@@ -375,8 +375,8 @@ ask the `source` to give us a local matrix.
 
       ...
 
-Now we can create a source. A common source is one that provides translation, rotation, and scale
-something like this
+Maintenant, nous pouvons créer une source. Une source courante est celle qui fournit translation, rotation et échelle
+quelque chose comme ça
 
     var TRS = function() {
       this.translation = [0, 0, 0];
@@ -390,7 +390,7 @@ something like this
       var r = this.rotation;
       var s = this.scale;
 
-      // compute a matrix from translation, rotation, and scale
+      // calculer une matrice à partir de translation, rotation et échelle
       m4.translation(t[0], t[1], t[2], dst);
       m4.xRotate(dst, r[0], dst);
       m4.yRotate(dst, r[1], dst);
@@ -399,65 +399,63 @@ something like this
       return dst;
     };
 
-And we can use it like this
+Et nous pouvons l'utiliser comme ça
 
-    // at init time making a node with a source
+    // à l'initialisation, créer un nœud avec une source
     var someTRS  = new TRS();
     var someNode = new Node(someTRS);
 
-    // at render time
+    // au moment du rendu
     someTRS.rotation[2] += elapsedTime;
 
-Now there's no issue because we are recreating the matrix each time.
+Maintenant, il n'y a pas de problème car nous recréons la matrice à chaque fois.
 
-You might be thinking, I'm not making a solar system so what's the point? Well, If you wanted to
-animate a human you might have a scene graph that looks like this
+Vous pensez peut-être, je ne crée pas un système solaire, donc quel est l'intérêt ? Eh bien, si vous vouliez
+animer un humain, vous pourriez avoir un graphe de scène qui ressemble à ça
 
 {{{diagram url="resources/person-diagram.html" height="400" }}}
 
-How many joints you add for fingers and toes is up to you. The more joints you have
-the more power it takes to compute the animations and the more animation data it takes
-to provide info for all the joints. Old games like Virtua Fighter had around 15 joints.
-Games in the early to mid 2000s had 30 to 70 joints. If you did every joint in your hands
- there's at least 20 in each hand so just 2 hands is 40 joints. Many games that want
-to animate hands animate the thumb as one and the 4 fingers as one large finger to save
-on time (both CPU/GPU and artist time) and memory.
+Le nombre d'articulations que vous ajoutez pour les doigts et les orteils dépend de vous. Plus vous avez
+d'articulations, plus il faut de puissance de calcul pour calculer les animations et plus il faut de données d'animation pour
+fournir des informations pour toutes les articulations. Les vieux jeux comme Virtua Fighter avaient environ 15 articulations.
+Les jeux du début à mi des années 2000 en avaient 30 à 70. Si vous faisiez chaque articulation de vos mains,
+il y en a au moins 20 dans chaque main donc juste 2 mains représentent 40 articulations. De nombreux jeux qui veulent
+animer les mains animent le pouce comme un seul et les 4 doigts comme un grand doigt unique pour économiser
+du temps (à la fois CPU/GPU et temps d'artiste) et de la mémoire.
 
-In any case here's a block guy I hacked together. It's using the `TRS` source for each
-node mentioned above. Programmer art and programmer animation FTW! 😂
+Dans tous les cas, voici un personnage bloc que j'ai bricolé. Il utilise la source `TRS` pour chaque
+nœud mentionné ci-dessus. Art de programmeur et animation de programmeur FTW ! 😂
 
 {{{example url="../webgl-scene-graph-block-guy.html" }}}
 
-If you look at pretty much any 3D library you'll find a scene graph similar to this.
-As for building hierarchies usually they are created in some kind of modeling package
-or level layout package.
+Si vous regardez presque n'importe quelle bibliothèque 3D, vous trouverez un graphe de scène similaire à celui-ci.
+Quant à la construction de hiérarchies, elles sont généralement créées dans une sorte de logiciel de modélisation
+ou de logiciel de mise en page de niveau.
 
 <div class="webgl_bottombar">
 <h3>SetParent vs AddChild / RemoveChild</h3>
-<p>Many scene graphs have a <code>node.addChild</code> function and a <code>node.removeChild</code>
-function whereas above I made a <code>node.setParent</code> function. Which way is better
-is arguably a matter of style but I'd argue one objectively better reason
-<code>setParent</code> is better than <code>addChild</code> is because it makes code like
-this impossible.</p>
+<p>De nombreux graphes de scène ont une fonction <code>node.addChild</code> et une <code>node.removeChild</code>
+alors que ci-dessus j'ai créé une fonction <code>node.setParent</code>. Laquelle est meilleure
+est sans doute une question de style, mais je dirais qu'une raison objectivement meilleure
+pour laquelle <code>setParent</code> est meilleur que <code>addChild</code> est parce qu'il rend ce code
+impossible.</p>
 <pre class="prettyprint">{{#escapehtml}}
     someParent.addChild(someNode);
     ...
     someOtherParent.addChild(someNode);
 {{/escapehtml}}</pre>
-<p>What does that mean? Does <code>someNode</code> get added to both <code>someParent</code> and <code>someOtherParent</code>?
-In most scene graphs that's impossible. Does the second call generate an error?
-<code>ERROR: Already have parent</code>. Does it magically remove <code>someNode</code> from <code>someParent</code> before
-adding it to <code>someOtherParent</code>? If it does it's certainly not clear from the name <code>addChild</code>.
+<p>Qu'est-ce que cela signifie ? Est-ce que <code>someNode</code> est ajouté à la fois à <code>someParent</code> et à <code>someOtherParent</code> ?
+Dans la plupart des graphes de scène, c'est impossible. Est-ce que le deuxième appel génère une erreur ?
+<code>ERROR: Already have parent</code>. Est-ce qu'il retire magiquement <code>someNode</code> de <code>someParent</code> avant
+de l'ajouter à <code>someOtherParent</code> ? Si c'est le cas, ce n'est certainement pas clair d'après le nom <code>addChild</code>.
 </p>
-<p><code>setParent</code> on the other hand has no such issue</p>
+<p><code>setParent</code> en revanche n'a pas ce problème</p>
 <pre class="prettyprint">{{#escapehtml}}
     someNode.setParent(someParent);
     ...
     someNode.setParent(someOtherParent);
 {{/escapehtml}}</pre>
 <p>
-It's 100% obvious what's happening in this case. Zero ambiguity.
+C'est 100% évident ce qui se passe dans ce cas. Zéro ambiguïté.
 </p>
 </div>
-
-

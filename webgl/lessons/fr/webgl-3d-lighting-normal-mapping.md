@@ -1,8 +1,8 @@
 Title: WebGL2 3D - Normal Mapping
-Description: How to implement normal maps
+Description: Comment implémenter les normal maps
 TOC: Normal Mapping
 
-TBD
+À venir
 
 <!--
 double sided / gl_FrontFacing

@@ -1,15 +1,15 @@
-Title: Differences from WebGLFundamentals.org
-Description: The differences between WebGLFundamentals.org and WebGL2Fundamentals.org
-TOC: Differences from WebGLFundamentals.org to WebGL2Fundamentals.org
+Title: Différences depuis WebGLFundamentals.org
+Description: Les différences entre WebGLFundamentals.org et WebGL2Fundamentals.org
+TOC: Différences de WebGLFundamentals.org à WebGL2Fundamentals.org
 
 
-If you previously read [webglfundamentals.org](https://webglfundamentals.org)
-there are some differences that you should be aware of.
+Si vous avez précédemment lu [webglfundamentals.org](https://webglfundamentals.org),
+il y a quelques différences dont vous devriez être conscient.
 
-## Multiline Template Literals
+## Littéraux de gabarits multilignes
 
-On webglfundamentals.org nearly all scripts are stored
-in non-javascript `<script>` tags.
+Sur webglfundamentals.org, presque tous les scripts sont stockés
+dans des balises `<script>` non-javascript.
 
     <script id="vertexshader" type="not-js">;
     shader
@@ -21,8 +21,8 @@ in non-javascript `<script>` tags.
 
     var vertexShaderSource = document.querySelector("#vertexshader").text;
 
-On webgl2fundamentals.org I've switched to using
-multiline template literals.
+Sur webgl2fundamentals.org, je suis passé à l'utilisation de
+littéraux de gabarits multilignes.
 
     var vertexShaderSource = `
     shader
@@ -30,58 +30,55 @@ multiline template literals.
     here
     `;
 
-Multiline template literals are supported on all WebGL capable
-browsers except IE11. If you need to target IE11 consider using a
-transpiler like [babel](https://babeljs.io).
+Les littéraux de gabarits multilignes sont supportés sur tous les navigateurs
+capables de WebGL sauf IE11. Si vous avez besoin de cibler IE11, pensez à utiliser un
+transpileur comme [babel](https://babeljs.io).
 
-## All Shaders use version GLSL 300 es
+## Tous les shaders utilisent la version GLSL 300 es
 
-I switched all the shaders to GLSL 300 es. I figured what's the point
-of using WebGL2 if you're not going to use WebGL2 shaders.
+J'ai changé tous les shaders en GLSL 300 es. Je me suis dit à quoi ça sert
+d'utiliser WebGL2 si vous n'allez pas utiliser les shaders WebGL2.
 
-## All examples use Vertex Array Objects
+## Tous les exemples utilisent des Vertex Array Objects
 
-Vertex Array Objects are an optional feature in WebGL1, but
-they are a standard feature of WebGL2. [I think they should
-be used everywhere](webgl1-to-webgl2.html#Vertex-Array-Objects).
-In fact I almost think I should go back
-to webglfundamentals.org and use them everywhere [using
-a polyfill](https://github.com/greggman/oes-vertex-array-object-polyfill)
-for those few places they are not available. There is arguably zero
-downside and your code gets easier and more efficient in almost
-all cases.
+Les Vertex Array Objects sont une fonctionnalité optionnelle dans WebGL1, mais
+ils sont une fonctionnalité standard de WebGL2. [Je pense qu'ils devraient
+être utilisés partout](webgl1-to-webgl2.html#Vertex-Array-Objects).
+En fait, je me demande presque si je ne devrais pas revenir sur
+webglfundamentals.org et les utiliser partout [en utilisant
+un polyfill](https://github.com/greggman/oes-vertex-array-object-polyfill)
+pour les quelques endroits où ils ne sont pas disponibles. Il y a sans doute zéro
+inconvénient et votre code devient plus facile et plus efficace dans presque
+tous les cas.
 
-## Other minor changes
+## Autres changements mineurs
 
-*  I tried to re-structure many samples slightly to show the most common patterns.
+*  J'ai essayé de restructurer légèrement de nombreux exemples pour montrer les motifs les plus courants.
 
-   For example most apps generally set global WebGL state like blending, culling, and depth testing
-   in their render loop since those settings often change several times whereas on
-   webglfundamentals.org I set them at init time because they only needed to be
-   set once, but that's not a common pattern.
+   Par exemple, la plupart des applications définissent généralement l'état WebGL global comme le blending, le culling et le test de profondeur
+   dans leur boucle de rendu car ces paramètres changent souvent plusieurs fois alors que sur
+   webglfundamentals.org je les définissais au moment de l'initialisation car ils n'avaient besoin d'être
+   définis qu'une seule fois, mais ce n'est pas un motif courant.
 
-*  I set the viewport in all samples
+*  J'ai défini le viewport dans tous les exemples
 
-   I left this out in webglfundamentals.org because the samples
-   don't actually need it, but it's needed in just about all real world code.
+   Je l'avais omis dans webglfundamentals.org car les exemples
+   n'en ont pas réellement besoin, mais c'est nécessaire dans presque tout le code réel.
 
-*  I removed jquery.
+*  J'ai supprimé jquery.
 
-   Back when I started, `<input type="range">` was maybe still not commonly
-   supported, but now it's supported everywhere.
+   Quand j'ai commencé, `<input type="range">` n'était peut-être pas encore couramment
+   supporté, mais maintenant il est supporté partout.
 
-*  I made all helper functions have a prefix
+*  J'ai fait en sorte que toutes les fonctions utilitaires aient un préfixe
 
-   Code like
+   Du code comme
 
        var program = createProgramFromScripts(...)
 
-   is now
+   est maintenant
 
        webglUtils.createProgramFromSources(...);
 
-   I hope this makes it more clear what these functions
-   are and where to find them.
-
-
-
+   J'espère que cela rend plus clair ce que sont ces fonctions
+   et où les trouver.

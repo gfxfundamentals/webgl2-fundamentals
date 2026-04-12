@@ -1,45 +1,45 @@
-Title: WebGL2 What's New
-Description: What's new in WebGL2
-TOC: What's new in WebGL2
+Title: Quoi de neuf dans WebGL2
+Description: Quoi de neuf dans WebGL2
+TOC: Quoi de neuf dans WebGL2
 
 
-WebGL2 is a pretty significant upgrade from WebGL1.
-If you're coming from WebGL1 and you want to know
-how to adjust your code so you can take advantage
-of WebGL2 [see this article](webgl1-to-webgl2.html).
+WebGL2 est une mise à niveau assez significative par rapport à WebGL1.
+Si vous venez de WebGL1 et que vous voulez savoir
+comment adapter votre code pour tirer parti
+de WebGL2, [voir cet article](webgl1-to-webgl2.html).
 
-Here's the short list in no particular order.
+Voici la liste courte dans un ordre quelconque.
 
-## Vertex Array Objects are always available
+## Les Vertex Array Objects sont toujours disponibles
 
-I think this is fairly important even though it
-was optionally available on WebGL1. Now that it's
-always available on WebGL2 [I think you should probably
-always use them](webgl1-to-webgl2.html#Vertex-Array-Objects).
+Je pense que c'est assez important même si c'était
+optionnellement disponible dans WebGL1. Maintenant qu'ils sont
+toujours disponibles dans WebGL2, [je pense que vous devriez probablement
+toujours les utiliser](webgl1-to-webgl2.html#Vertex-Array-Objects).
 
-## The size of a texture is available to shaders
+## La taille d'une texture est disponible pour les shaders
 
-In WebGL1 if your shader needed to know the size of
-a texture you had to pass the size in uniform manually.
-In WebGL2 you can call
+Dans WebGL1, si votre shader devait connaître la taille d'une
+texture, vous deviez passer la taille manuellement dans un uniform.
+Dans WebGL2, vous pouvez appeler
 
     vec2 size = textureSize(sampler, lod)
 
-to get the size of any lod of a texture.
+pour obtenir la taille de n'importe quel lod d'une texture.
 
-## Direct Texel Lookup
+## Recherche directe de texels
 
-It's often convenient to store large arrays of data in a texture.
-In WebGL 1 you could do that but you could only address textures
-with texture coordinates (0.0 to 1.0). In WebGL2 you can look
-up values from a texture by pixel/texel coordinates directly
-making array access slightly easier:
+Il est souvent pratique de stocker de grands tableaux de données dans une texture.
+Dans WebGL 1, vous pouviez faire cela, mais vous ne pouviez adresser les textures
+qu'avec des coordonnées de texture (0.0 à 1.0). Dans WebGL2, vous pouvez rechercher
+des valeurs d'une texture par coordonnées pixel/texel directement,
+rendant l'accès aux tableaux légèrement plus facile :
 
     vec4 values = texelFetch(sampler, ivec2Position, lod);
 
-## Lots of texture formats
+## Beaucoup de formats de texture
 
-WebGL1 had just a few texture formats. WebGL2 has TONS!
+WebGL1 n'avait que quelques formats de texture. WebGL2 en a ÉNORMÉMENT !
 
 *   `RGBA32I`
 *   `RGBA32UI`
@@ -94,193 +94,191 @@ WebGL1 had just a few texture formats. WebGL2 has TONS!
 *   `DEPTH_COMPONENT24`
 *   `DEPTH_COMPONENT16`
 
-## 3D Textures
+## Textures 3D
 
-3D textures are just that, textures that have 3 dimensions.
+Les textures 3D sont simplement des textures qui ont 3 dimensions.
 
-## Texture arrays
+## Tableaux de textures
 
-A texture array is very similar to a 3D texture except that
-each slice is considered a separate texture. All the slices
-have to be the same size, but this is a great way to give
-a shader access to hundreds of textures even though it
-only has a relatively small number of texture units. You can
-select the slice in your shader:
+Un tableau de textures est très similaire à une texture 3D sauf que
+chaque tranche est considérée comme une texture séparée. Toutes les tranches
+doivent avoir la même taille, mais c'est une excellente façon de donner
+à un shader accès à des centaines de textures même s'il
+n'a qu'un nombre relativement petit d'unités de texture. Vous pouvez
+sélectionner la tranche dans votre shader :
 
     vec4 color = texture(someSampler2DArray, vec3(u, v, slice));
 
-## Non-Power of 2 Texture Support
+## Support des textures Non-Puissance de 2
 
-In WebGL1 textures that were not a power of 2 could not have mips.
-In WebGL2 that limit is removed. Non-power of 2 textures work exactly
-the same as power of 2 textures.
+Dans WebGL1, les textures qui n'étaient pas une puissance de 2 ne pouvaient pas avoir de mips.
+Dans WebGL2, cette limite est supprimée. Les textures non-puissance de 2 fonctionnent exactement
+de la même façon que les textures puissance de 2.
 
-## Loop restrictions in shaders are removed
+## Les restrictions de boucle dans les shaders sont supprimées
 
-In WebGL1 a loop in a shader had to use a constant integer expression.
-WebGL2 removes that limit (in GLSL 300 es).
+Dans WebGL1, une boucle dans un shader devait utiliser une expression entière constante.
+WebGL2 supprime cette limite (dans GLSL 300 es).
 
-## Matrix functions in GLSL
+## Fonctions matricielles en GLSL
 
-In WebGL1 if you needed to get the inverse of a matrix you had to
-pass it in as a uniform. In WebGL2 GLSL 300 es there's the built-in
-`inverse` function as well as `transpose`.
+Dans WebGL1, si vous aviez besoin d'obtenir l'inverse d'une matrice, vous deviez
+la passer en tant qu'uniform. Dans WebGL2 GLSL 300 es, il y a la fonction intégrée
+`inverse` ainsi que `transpose`.
 
-## Common compressed textures
+## Textures compressées communes
 
-In WebGL1 there are various compressed texture formats
-that are hardware dependent. S3TC was basically desktop only.
-PVRTC was iOS only, etc.
+Dans WebGL1, il existe divers formats de textures compressées
+qui dépendent du matériel. S3TC était essentiellement uniquement pour les ordinateurs de bureau.
+PVRTC était uniquement pour iOS, etc.
 
-In WebGL2 at least one suite of compressed texture formats are supported.
+Dans WebGL2, au moins une suite de formats de textures compressées est supportée.
 
-* WEBGL_compressed_texture_etc AND/OR
+* WEBGL_compressed_texture_etc ET/OU
 * (
-  * WEBGL_compressed_texture_s3tc AND
-  * WEBGL_compressed_texture_s3tc_srgb AND
+  * WEBGL_compressed_texture_s3tc ET
+  * WEBGL_compressed_texture_s3tc_srgb ET
   * EXT_texture_compression_rgtc
   
   )
 
 ## Uniform Buffer Objects
 
-Uniform Buffer Objects let you specify a bunch of uniforms
-from a buffer. The advantages are:
+Les Uniform Buffer Objects vous permettent de spécifier un ensemble d'uniforms
+depuis un buffer. Les avantages sont :
 
-1. You can manipulate all the uniforms in the buffer
-   outside of WebGL.
+1. Vous pouvez manipuler tous les uniforms dans le buffer
+   en dehors de WebGL.
 
-   In WebGL1 if you had 16 uniforms that would require
-   16 calls to `gl.uniformXXX`, that is relatively slow.
-   In WebGL2 if you use
-   a Uniform Buffer Object you can set the values in
-   a typed array all inside JavaScript which means it's
-   much much faster. When all the values are set
-   you upload them all with 1 call to `gl.bufferData`
-   or `gl.bufferSubData` and then tell the program
-   to use that buffer with `gl.bindBufferRange` so only
-   2 calls.
+   Dans WebGL1, si vous aviez 16 uniforms, cela nécessiterait
+   16 appels à `gl.uniformXXX`, ce qui est relativement lent.
+   Dans WebGL2, si vous utilisez
+   un Uniform Buffer Object, vous pouvez définir les valeurs dans
+   un tableau typé entièrement en JavaScript, ce qui est donc
+   beaucoup plus rapide. Quand toutes les valeurs sont définies,
+   vous les uploadez toutes avec 1 appel à `gl.bufferData`
+   ou `gl.bufferSubData`, puis vous dites au programme
+   d'utiliser ce buffer avec `gl.bindBufferRange`, donc seulement
+   2 appels.
 
-2. You can have different sets of uniform buffer objects.
+2. Vous pouvez avoir différents ensembles d'Uniform Buffer Objects.
 
-   First some terms. A Uniform Block is a collection
-   of uniforms defined in a shader. A Uniform Buffer Object
-   is a buffer that contains the values a Uniform Block
-   will use. You can create as many Uniform Buffer Objects
-   as you want and bind one of them to a particular Uniform Block
-   when you draw.
+   D'abord quelques termes. Un Uniform Block est une collection
+   d'uniforms définis dans un shader. Un Uniform Buffer Object
+   est un buffer qui contient les valeurs qu'un Uniform Block
+   utilisera. Vous pouvez créer autant d'Uniform Buffer Objects
+   que vous voulez et en lier un à un Uniform Block particulier
+   lors du dessin.
 
-   For example, you could have 4 uniform blocks defined
-   in a shader:
+   Par exemple, vous pourriez avoir 4 blocs uniformes définis
+   dans un shader :
 
-   * A global matrix uniform block that contains
-     matrices that are the same for all draw calls like the
-     projection matrix, view matrix, etc.
+   * Un bloc uniform de matrices globales qui contient
+     des matrices qui sont les mêmes pour tous les appels de dessin comme la
+     matrice de projection, la matrice de vue, etc.
 
-   * A per model uniform block that contains matrices that are
-     different per model. For example, the world matrix and
-     normal matrix.
+   * Un bloc uniform par modèle qui contient des matrices qui sont
+     différentes par modèle. Par exemple, la matrice world et
+     la matrice normale.
 
-   * A material uniform block that contains the material settings
-     like diffuse, ambient, specular, etc.
+   * Un bloc uniform de matériau qui contient les paramètres de matériau
+     comme diffus, ambiant, spéculaire, etc.
 
-   * A lighting uniform block that contains the lighting data
-     like light color, light position, etc.
+   * Un bloc uniform d'éclairage qui contient les données d'éclairage
+     comme la couleur de la lumière, la position de la lumière, etc.
 
-   Then at runtime you could create one global uniform buffer
-   object, one model uniform buffer object per model, one
-   light uniform buffer object per light, and one uniform buffer
-   object per material.
+   Ensuite, à l'exécution, vous pourriez créer un Uniform Buffer Object global,
+   un Uniform Buffer Object de modèle par modèle, un
+   Uniform Buffer Object de lumière par lumière et un Uniform Buffer
+   Object par matériau.
 
-   To draw any particular item, assuming all the values are
-   already up to date, all you have to do is bind your desired
-   4 uniform buffer objects:
+   Pour dessiner un élément particulier, en supposant que toutes les valeurs sont
+   déjà à jour, tout ce que vous avez à faire est de lier vos 4
+   Uniform Buffer Objects désirés :
 
        gl.bindBufferRange(..., globalBlockIndx, globalMatrixUBO, ...);
        gl.bindBufferRange(..., modelBlockIndx, someModelMatrixUBO, ...);
        gl.bindBufferRange(..., materialBlockIndx, someMaterialSettingsUBO, ...);
        gl.bindBufferRange(..., lightBlockIndx, someLightSettingsUBO, ...);
 
-## Integer textures, attributes and math
+## Textures entières, attributs et arithmétique
 
-In WebGL2 you can have integer based textures whereas
-in WebGL1 all textures represented floating point values
-even if they weren't represented by floating point values.
+Dans WebGL2, vous pouvez avoir des textures basées sur des entiers alors que
+dans WebGL1, toutes les textures représentaient des valeurs à virgule flottante
+même si elles n'étaient pas représentées par des valeurs à virgule flottante.
 
-You can also have integer attributes.
+Vous pouvez également avoir des attributs entiers.
 
-On top of that, GLSL 300 es allows you to do bit manipulations
-of integers in the shaders.
+De plus, GLSL 300 es vous permet de faire des manipulations de bits
+des entiers dans les shaders.
 
 ## Transform feedback
 
-WebGL2 allows your vertex shader to write its results back
-to a buffer.
+WebGL2 permet à votre vertex shader d'écrire ses résultats en retour
+dans un buffer.
 
 ## Samplers
 
-In WebGL1 all the texture parameters were per texture.
-In WebGL2 you can optionally use sampler objects. With
-samplers, all the filtering and repeat/clamping parameters
-that were part of a texture move to the sampler. This means
-a single texture can be sampled in different ways. Repeating
-or clamped. Filtered or not filtered.
+Dans WebGL1, tous les paramètres de texture étaient par texture.
+Dans WebGL2, vous pouvez optionnellement utiliser des objets sampler. Avec
+les samplers, tous les paramètres de filtrage et de répétition/clamping
+qui faisaient partie d'une texture passent dans le sampler. Cela signifie
+qu'une seule texture peut être échantillonnée de différentes façons. En répétant
+ou en clampant. Filtrée ou non filtrée.
 
-## Depth Textures
+## Textures de profondeur
 
-Depth textures were optional in WebGL1 and a PITA to work around. Now they're standard.
-They're commonly used for computing shadow maps.
+Les textures de profondeur étaient optionnelles dans WebGL1 et pénibles à contourner. Maintenant elles sont standard.
+Elles sont couramment utilisées pour calculer des shadow maps.
 
-## Standard Derivatives
+## Dérivées standard
 
-These are now standard. Common uses include computing normals in the shaders instead of passing them in.
+Celles-ci sont maintenant standard. Les utilisations courantes incluent le calcul des normales dans les shaders au lieu de les passer.
 
-## Instanced Drawing
+## Dessin instancié
 
-This is now standard. Common uses include drawing lots of trees, bushes, or grass quickly.
+C'est maintenant standard. Les utilisations courantes incluent le dessin rapide de nombreux arbres, buissons ou herbes.
 
-## UNSIGNED_INT indices
+## Indices UNSIGNED_INT
 
-Being able to use 32bit ints for indices removes the size limit of indexed geometry.
+Pouvoir utiliser des entiers 32 bits pour les indices supprime la limite de taille de la géométrie indexée.
 
-## Setting `gl_FragDepth`
+## Définir `gl_FragDepth`
 
-You can write your own custom values to the depth buffer / z-buffer.
+Vous pouvez écrire vos propres valeurs personnalisées dans le depth buffer / z-buffer.
 
-## Blend Equation MIN / MAX
+## Équation de fusion MIN / MAX
 
-You are now able to take the min or max of 2 colors when blending.
+Vous êtes maintenant capable de prendre le minimum ou le maximum de 2 couleurs lors du blending.
 
-## Multiple Draw Buffers
+## Plusieurs Draw Buffers
 
-You are now able to draw to multiple buffers at once from a shader. This is commonly used
-for various deferred rendering techniques.
+Vous êtes maintenant capable de dessiner sur plusieurs buffers à la fois depuis un shader. C'est couramment utilisé
+pour diverses techniques de rendu différé.
 
-## Texture access in vertex shaders
+## Accès aux textures dans les vertex shaders
 
-In WebGL1 this was an optional feature. There was a count of how many textures
-you could access in a vertex shader, and that count was allowed to be 0. Most
-devices supported them. In WebGL2 that count is required to be at least 16.
+Dans WebGL1, c'était une fonctionnalité optionnelle. Il y avait un compte de combien de textures
+vous pouviez accéder dans un vertex shader, et ce compte était autorisé à être 0. La plupart des
+appareils les supportaient. Dans WebGL2, ce compte doit être au moins 16.
 
-## Multi-Sampled renderbuffers
+## Renderbuffers multi-échantillons
 
-In WebGL1 the canvas itself could be anti-aliased with the GPU's built in
-multi-sample system, but there was no support for user controlled multi-sampling. In WebGL2
-you can now make multi-sampled renderbuffers.
+Dans WebGL1, le canvas lui-même pouvait être anti-aliasé avec le système multi-échantillon intégré
+du GPU, mais il n'y avait pas de support pour le multi-échantillonnage contrôlé par l'utilisateur. Dans WebGL2,
+vous pouvez maintenant créer des renderbuffers multi-échantillons.
 
-## Occlusion Queries
+## Requêtes d'occlusion
 
-Occlusion queries let you ask the GPU to check if pixels would actually get drawn if it were to render something.
+Les requêtes d'occlusion vous permettent de demander au GPU de vérifier si des pixels seraient réellement dessinés s'il devait rendre quelque chose.
 
-## Floating point textures are always available
+## Les textures à virgule flottante sont toujours disponibles
 
-Floating point textures are used for many special effects
-and calculations. In WebGL1 they were optional. In WebGL2
-they just exist.
+Les textures à virgule flottante sont utilisées pour de nombreux effets spéciaux
+et calculs. Dans WebGL1, elles étaient optionnelles. Dans WebGL2,
+elles existent simplement.
 
-Note: Unfortunately they are still restricted in that filtering
-and rendering to float point textures is still optional. See
+Remarque : Malheureusement, elles sont toujours restreintes en ce que le filtrage
+et le rendu vers des textures à virgule flottante sont toujours optionnels. Voir
 [`OES_texture_float_linear`](https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/)
- and [`EXT_color_buffer_float`](https://www.khronos.org/registry/webgl/extensions/EXT_color_buffer_float/).
-
-
+ et [`EXT_color_buffer_float`](https://www.khronos.org/registry/webgl/extensions/EXT_color_buffer_float/).

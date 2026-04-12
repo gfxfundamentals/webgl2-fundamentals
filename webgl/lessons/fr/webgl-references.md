@@ -1,63 +1,63 @@
-Title: References
-Description: Other References
-TOC: References
+Title: Références
+Description: Autres références
+TOC: Références
 
-Some other links you might find useful
+Quelques autres liens qui pourraient vous être utiles
 
-## Tutorials and Lessons
+## Tutoriels et leçons
 
 * [3d game shaders for beginners](https://lettier.github.io/3d-game-shaders-for-beginners/)
-  has many great explanations of many graphics techniques. It is OpenGL based but
-  the explanations are illustrated well and so it should be possible to adapt them
-  to WebGL.
+  contient de nombreuses excellentes explications sur de nombreuses techniques graphiques. Il est basé sur OpenGL mais
+  les explications sont bien illustrées et il devrait donc être possible de les adapter à
+  WebGL.
 
-* [Learn OpenGL](https://learnopengl.com/): Modern OpenGL lessons
+* [Learn OpenGL](https://learnopengl.com/) : Leçons OpenGL modernes
 
-  These may or may not be useful. Though the APIs are similar OpenGL is not WebGL. For one OpenGL
-  is a C based library. Another issue is OpenGL has many more features than WebGL and the
-  shader languages have many differences. Still, many of the ideas and techniques shown are
-  just as useful in WebGL as they are in OpenGL.
+  Celles-ci peuvent ou non être utiles. Bien que les APIs soient similaires, OpenGL n'est pas WebGL. D'une part OpenGL
+  est une bibliothèque basée sur C. Un autre problème est qu'OpenGL a beaucoup plus de fonctionnalités que WebGL et les
+  langages de shader ont de nombreuses différences. Néanmoins, beaucoup des idées et techniques montrées sont
+  tout aussi utiles dans WebGL que dans OpenGL.
 
 ## Helpers / Extensions
 
-* [Spector](https://chrome.google.com/webstore/detail/spectorjs/denbgaamihkadbghdceggmchnflmhpmk?hl=en): An extension to show all your WebGL calls
+* [Spector](https://chrome.google.com/webstore/detail/spectorjs/denbgaamihkadbghdceggmchnflmhpmk?hl=en) : Une extension pour afficher tous vos appels WebGL
 
-* [Shader Editor](https://chrome.google.com/webstore/detail/shader-editor/ggeaidddejpbakgafapihjbgdlbbbpob?hl=en): An extension that lets you view and edit shaders in live web pages.
+* [Shader Editor](https://chrome.google.com/webstore/detail/shader-editor/ggeaidddejpbakgafapihjbgdlbbbpob?hl=en) : Une extension qui vous permet de voir et modifier les shaders dans des pages web en direct.
 
-* [WebGL Insight](https://chrome.google.com/webstore/detail/webgl-insight/djdcbmfacaaocoomokenoalbomllhnko?hl=en): An extension to let you see WebGL usage
+* [WebGL Insight](https://chrome.google.com/webstore/detail/webgl-insight/djdcbmfacaaocoomokenoalbomllhnko?hl=en) : Une extension pour voir l'utilisation de WebGL
 
-* [webgl-helpers](https://greggman.github.io/webgl-helpers/): Scripts to help with WebGL
+* [webgl-helpers](https://greggman.github.io/webgl-helpers/) : Scripts pour aider avec WebGL
 
-## Libraries
+## Bibliothèques
 
-* [twgl](https://twgljs.org): A library to help make WebGL less verbose.
+* [twgl](https://twgljs.org) : Une bibliothèque pour rendre WebGL moins verbeux.
 
-* [three.js](https://threejs.org): the most popular JavaScript 3D library.
+* [three.js](https://threejs.org) : la bibliothèque JavaScript 3D la plus populaire.
 
-* [PlayCanvas](https://playcanvas.com/) A WebGL game engine with game editor
+* [PlayCanvas](https://playcanvas.com/) Un moteur de jeu WebGL avec éditeur de jeu
 
-* [regl](https://regl.party/): A stateless functional WebGL library.
+* [regl](https://regl.party/) : Une bibliothèque WebGL fonctionnelle sans état.
 
-## Specs
+## Spécifications
 
-* [WebGL2](https://www.khronos.org/registry/webgl/specs/latest/2.0/): The WebGL2 spec
+* [WebGL2](https://www.khronos.org/registry/webgl/specs/latest/2.0/) : La spécification WebGL2
 
-* [OpenGL ES 3.0](https://www.khronos.org/registry/OpenGL/specs/es/3.0/es_spec_3.0.pdf): The spec WebGL2 is based on.
+* [OpenGL ES 3.0](https://www.khronos.org/registry/OpenGL/specs/es/3.0/es_spec_3.0.pdf) : La spécification sur laquelle WebGL2 est basé.
 
-* [GLSL ES 3.0](https://www.khronos.org/registry/OpenGL/specs/es/3.0/GLSL_ES_Specification_3.00.pdf): The shader language spec for WebGL2
+* [GLSL ES 3.0](https://www.khronos.org/registry/OpenGL/specs/es/3.0/GLSL_ES_Specification_3.00.pdf) : La spécification du langage shader pour WebGL2
 
-## Fun
+## Divertissement
 
-* [Shadertoy.com](https://shadertoy.com): Amazing fragment shaders produced under extreme constraints
+* [Shadertoy.com](https://shadertoy.com) : Incroyables fragment shaders produits sous des contraintes extrêmes
 
-  Warning: The shaders on shadertoy.com are usually not the kind of shader that are used in production
-  WebGL apps. Still there are many techniques to be learned from their examples.
+  Attention : Les shaders sur shadertoy.com ne sont généralement pas le type de shader utilisé dans les
+  applications WebGL de production. Il y a cependant beaucoup de techniques à apprendre dans leurs exemples.
 
-* [glslsandbox.com](https://glslsandbox.com): The original fragment shader playground.
+* [glslsandbox.com](https://glslsandbox.com) : Le terrain de jeu original des fragment shaders.
 
-* [vertexshaerart.com](https://vertexshaderart.com): The vertex shader version of glslsandbox.
+* [vertexshaerart.com](https://vertexshaderart.com) : La version vertex shader de glslsandbox.
 
 ---
 
-If you know of other good references to add feel free to
-[open an issue](https://github.com/gfxfundamentals/webgl-fundamentals/issues).
+Si vous connaissez d'autres bonnes références à ajouter, n'hésitez pas à
+[ouvrir un ticket](https://github.com/gfxfundamentals/webgl-fundamentals/issues).

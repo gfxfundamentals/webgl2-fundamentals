@@ -1,22 +1,22 @@
 Title: WebGL2 GPGPU
-Description: How to do general computing with WebGL
+Description: Comment faire du calcul généraliste avec WebGL
 TOC: GPGPU
 
-GPGPU is "General Purpose" GPU and means using the GPU for something
-other than drawing pixels.
+GPGPU signifie "General Purpose GPU" (GPU à usage général) et désigne l'utilisation du GPU
+pour autre chose que le dessin de pixels.
 
-The basic realization to understanding GPGPU in WebGL is that a texture
-is not an image, it's a 2D array of values. In [the article on textures](webgl-3d-textures.html)
-we covered reading from a texture. In [the article on rendering to a texture](webgl-render-to-texture.html)
-we covered writing to a texture. So, if realizing a texture is a 2D array of values
-we can say that we have really described a way to read from and write to 2D arrays.
-Similarly a buffer is not just positions, normals, texture coordinates, and colors.
-That data could be anything. Velocities, masses, stock prices, etc.
-Creatively using that knowledge to do math, that is the essence of GPGPU in WebGL.
+L'idée fondamentale pour comprendre GPGPU dans WebGL est qu'une texture n'est pas une image,
+c'est un tableau 2D de valeurs. Dans [l'article sur les textures](webgl-3d-textures.html),
+nous avons couvert la lecture depuis une texture. Dans [l'article sur le rendu vers une texture](webgl-render-to-texture.html),
+nous avons couvert l'écriture vers une texture. Donc, si on réalise qu'une texture est un tableau
+2D de valeurs, on peut dire qu'on a décrit un moyen de lire et d'écrire dans des tableaux 2D.
+De même, un tampon n'est pas juste des positions, normales, coordonnées de texture et couleurs.
+Ces données peuvent être n'importe quoi : des vitesses, des masses, des cours boursiers, etc.
+Utiliser créativement cette connaissance pour faire des calculs, c'est l'essence du GPGPU dans WebGL.
 
-## First let's do it with textures
+## D'abord faisons-le avec des textures
 
-In JavaScript there is the [`Array.prototype.map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) function which given an array calls a function on each element 
+En JavaScript, il y a la fonction [`Array.prototype.map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) qui, étant donné un tableau, appelle une fonction sur chaque élément :
 
 ```js
 function multBy2(v) {
@@ -26,15 +26,15 @@ function multBy2(v) {
 const src = [1, 2, 3, 4, 5, 6];
 const dst = src.map(multBy2);
 
-// dst is now [2, 4, 6, 8, 10, 12];
+// dst est maintenant [2, 4, 6, 8, 10, 12];
 ```
 
-You can consider `multBy2` a shader and `map` similar to calling `gl.drawArrays` or `gl.drawElements`.
-Some differences.
+On peut considérer `multBy2` comme un shader et `map` comme similaire à l'appel de `gl.drawArrays`
+ou `gl.drawElements`. Quelques différences.
 
-## Shaders don't generate a new array, you have to provide one
+## Les shaders ne génèrent pas un nouveau tableau, il faut en fournir un
 
-We can simulate that by making our own map function
+On peut simuler ça en créant notre propre fonction map :
 
 ```js
 function multBy2(v) {
@@ -49,15 +49,15 @@ function multBy2(v) {
 
 const src = [1, 2, 3, 4, 5, 6];
 -const dst = src.map(multBy2);
-+const dst = new Array(6);    // to simulate that in WebGL we have to allocate a texture
++const dst = new Array(6);    // pour simuler qu'en WebGL on doit allouer une texture
 +mapSrcToDst(src, multBy2, dst);
 
-// dst is now [2, 4, 6, 8, 10, 12];
+// dst est maintenant [2, 4, 6, 8, 10, 12];
 ```
 
-## Shaders don't return a value they set an `out` variable
+## Les shaders ne retournent pas de valeur, ils définissent une variable `out`
 
-That's pretty easy to simulate
+C'est assez facile à simuler :
 
 ```js
 +let outColor;
@@ -76,15 +76,15 @@ function mapSrcToDst(src, fn, dst) {
 }
 
 const src = [1, 2, 3, 4, 5, 6];
-const dst = new Array(6);    // to simulate that in WebGL we have to allocate a texture
+const dst = new Array(6);    // pour simuler qu'en WebGL on doit allouer une texture
 mapSrcToDst(src, multBy2, dst);
 
-// dst is now [2, 4, 6, 8, 10, 12];
+// dst est maintenant [2, 4, 6, 8, 10, 12];
 ```
 
-## Shaders are destination based, not source based.
+## Les shaders sont basés sur la destination, pas sur la source.
 
-In other words, they loop over the destination and ask "what value should I put here"
+En d'autres termes, ils boucle sur la destination et demandent "quelle valeur dois-je mettre ici ?"
 
 ```js
 let outColor;
@@ -107,13 +107,13 @@ function multBy2(src) {
 }
 
 const src = [1, 2, 3, 4, 5, 6];
-const dst = new Array(6);    // to simulate that in WebGL we have to allocate a texture
+const dst = new Array(6);    // pour simuler qu'en WebGL on doit allouer une texture
 mapDst(dst, multBy2(src));
 
-// dst is now [2, 4, 6, 8, 10, 12];
+// dst est maintenant [2, 4, 6, 8, 10, 12];
 ```
 
-## In WebGL the index or ID of the pixel whose value you're being asked to provide is called `gl_FragCoord`
+## Dans WebGL, l'index ou l'ID du pixel dont on vous demande de fournir la valeur s'appelle `gl_FragCoord`
 
 ```js
 let outColor;
@@ -137,15 +137,15 @@ function mapDst(dst, fn) {
 }
 
 const src = [1, 2, 3, 4, 5, 6];
-const dst = new Array(6);    // to simulate that in WebGL we have to allocate a texture
+const dst = new Array(6);    // pour simuler qu'en WebGL on doit allouer une texture
 mapDst(dst, multBy2(src));
 
-// dst is now [2, 4, 6, 8, 10, 12];
+// dst est maintenant [2, 4, 6, 8, 10, 12];
 ```
 
-## In WebGL textures are 2D arrays.
+## Dans WebGL, les textures sont des tableaux 2D.
 
-Let's assume our `dst` array represents a 3x2 texture
+Supposons que notre tableau `dst` représente une texture 3x2 :
 
 ```js
 let outColor;
@@ -176,19 +176,19 @@ function mapDst(dst, across, up, fn) {
 }
 
 const src = [1, 2, 3, 4, 5, 6];
-const dst = new Array(6);    // to simulate that in WebGL we have to allocate a texture
+const dst = new Array(6);    // pour simuler qu'en WebGL on doit allouer une texture
 mapDst(dst, 3, 2, multBy2(src, 3));
 
-// dst is now [2, 4, 6, 8, 10, 12];
+// dst est maintenant [2, 4, 6, 8, 10, 12];
 ```
 
-And we could keep going. I'm hoping the examples above helps you see that GPGPU in WebGL
-is pretty simple conceptually. Let's actually do the above in WebGL.
+On pourrait continuer encore. J'espère que les exemples ci-dessus vous aident à voir que le GPGPU
+dans WebGL est conceptuellement assez simple. Faisons-le réellement dans WebGL.
 
-To understand the following code you will, at a minimum, need to have read
-[the article on fundamentals](webgl-fundamentals.html), probably the article on 
-[How It Works](webgl-how-it-works.html), the article on [GLSL](webgl-shaders-and-glsl.html)
-and [the article on textures](webgl-3d-textures.html).
+Pour comprendre le code suivant, vous devrez au minimum avoir lu
+[l'article sur les fondamentaux](webgl-fundamentals.html), probablement l'article sur
+[Comment ça fonctionne](webgl-how-it-works.html), l'article sur [GLSL](webgl-shaders-and-glsl.html)
+et [l'article sur les textures](webgl-3d-textures.html).
 
 ```js
 const vs = `#version 300 es
@@ -207,7 +207,7 @@ out vec4 outColor;
 
 void main() {
   ivec2 texelCoord = ivec2(gl_FragCoord.xy);
-  vec4 value = texelFetch(srcTex, texelCoord, 0);  // 0 = mip level 0
+  vec4 value = texelFetch(srcTex, texelCoord, 0);  // 0 = niveau mip 0
   outColor = value * 2.0;
 }
 `;
@@ -215,7 +215,7 @@ void main() {
 const dstWidth = 3;
 const dstHeight = 2;
 
-// make a 3x2 canvas for 6 results
+// crée un canvas 3x2 pour 6 résultats
 const canvas = document.createElement('canvas');
 canvas.width = dstWidth;
 canvas.height = dstHeight;
@@ -226,7 +226,7 @@ const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
 const positionLoc = gl.getAttribLocation(program, 'position');
 const srcTexLoc = gl.getUniformLocation(program, 'srcTex');
 
-// setup a full canvas clip space quad
+// configure un quad clip space couvrant tout le canvas
 const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
@@ -238,35 +238,35 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
    1,  1,
 ]), gl.STATIC_DRAW);
 
-// Create a vertex array object (attribute state)
+// Crée un vertex array object (état des attributs)
 const vao = gl.createVertexArray();
 gl.bindVertexArray(vao);
 
-// setup our attributes to tell WebGL how to pull
-// the data from the buffer above to the position attribute
+// configure nos attributs pour dire à WebGL comment extraire
+// les données du tampon ci-dessus vers l'attribut position
 gl.enableVertexAttribArray(positionLoc);
 gl.vertexAttribPointer(
     positionLoc,
-    2,         // size (num components)
-    gl.FLOAT,  // type of data in buffer
-    false,     // normalize
+    2,         // taille (nombre de composants)
+    gl.FLOAT,  // type de données dans le tampon
+    false,     // normaliser
     0,         // stride (0 = auto)
     0,         // offset
 );
 
-// create our source texture
+// crée notre texture source
 const srcWidth = 3;
 const srcHeight = 2;
 const tex = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, tex);
-gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1); // see https://webglfundamentals.org/webgl/lessons/webgl-data-textures.html
+gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1); // voir https://webglfundamentals.org/webgl/lessons/webgl-data-textures.html
 gl.texImage2D(
     gl.TEXTURE_2D,
-    0,                // mip level
-    gl.R8,            // internal format
+    0,                // niveau mip
+    gl.R8,            // format interne
     srcWidth,
     srcHeight,
-    0,                // border
+    0,                // bordure
     gl.RED,           // format
     gl.UNSIGNED_BYTE, // type
     new Uint8Array([
@@ -279,71 +279,73 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
 gl.useProgram(program);
-gl.uniform1i(srcTexLoc, 0);  // tell the shader the src texture is on texture unit 0
+gl.uniform1i(srcTexLoc, 0);  // dit au shader que la texture src est sur l'unité de texture 0
 
-gl.drawArrays(gl.TRIANGLES, 0, 6);  // draw 2 triangles (6 vertices)
+gl.drawArrays(gl.TRIANGLES, 0, 6);  // dessine 2 triangles (6 sommets)
 
-// get the result
+// obtient le résultat
 const results = new Uint8Array(dstWidth * dstHeight * 4);
 gl.readPixels(0, 0, dstWidth, dstHeight, gl.RGBA, gl.UNSIGNED_BYTE, results);
 
-// print the results
+// affiche les résultats
 for (let i = 0; i < dstWidth * dstHeight; ++i) {
   log(results[i * 4]);
 }
 ```
 
-and here it is running
+et le voici en fonctionnement :
 
 {{{example url="../webgl-gpgpu-mult-by-2.html"}}}
 
-Some notes about the code above.
+Quelques notes sur le code ci-dessus.
 
-* We draw a clip space -1 to +1 quad.
+* Nous dessinons un quad clip space -1 à +1.
 
-  We create vertices for a -1 to +1 quad from 2 triangles. This means, assuming the viewport
-  is set correctly, we'll draw all the pixels in the destination. In other words we'll ask
-  our shader to generate a value for every element in the result array. That array in
-  this case is the canvas itself.
+  Nous créons des sommets pour un quad -1 à +1 avec 2 triangles. Cela signifie, en supposant que
+  le viewport soit correctement défini, que nous dessinerons tous les pixels de la destination.
+  En d'autres termes, nous demanderons à notre shader de générer une valeur pour chaque élément
+  du tableau résultat. Ce tableau dans ce cas est le canvas lui-même.
 
-* `texelFetch` is a texture function that looks up a single texel from a texture.
+* `texelFetch` est une fonction de texture qui cherche un seul texel dans une texture.
 
-  It takes 3 parameters. The sampler, an integer based texel coordinate, and mip level.
-  `gl_FragCoord` is a vec2, we need to turn it into an `ivec2` to use it with
-  `texelFetch`. There is no extra math to do here as long the source texture and
-  destination texture are the same size which in this case they are.
+  Elle prend 3 paramètres : le sampler, une coordonnée de texel basée sur des entiers, et le
+  niveau de mip. `gl_FragCoord` est un vec2, nous devons le convertir en `ivec2` pour l'utiliser
+  avec `texelFetch`. Il n'y a pas de calcul supplémentaire tant que la texture source et la texture
+  destination ont la même taille, ce qui est le cas ici.
 
-* Our Shader is writing 4 values per pixel
+* Notre shader écrit 4 valeurs par pixel.
 
-  In this particular case this affects how we read the output. We ask for `RGBA/UNSIGNED_BYTE`
-  from `readPixels` [because other format/type combinations are not supported](webgl-readpixels.html).
-  So we have to look at every 4th value for our answer.
+  Dans ce cas particulier, cela affecte la façon dont nous lisons la sortie. Nous demandons
+  `RGBA/UNSIGNED_BYTE` depuis `readPixels`
+  [car d'autres combinaisons format/type ne sont pas supportées](webgl-readpixels.html).
+  Donc nous devons regarder chaque 4ème valeur pour notre réponse.
 
-  Note: It would be smart to try to take advantage of the fact that WebGL does 4 values at a time
-  to go even faster.
+  Note : Ce serait judicieux d'essayer de profiter du fait que WebGL traite 4 valeurs à la fois
+  pour aller encore plus vite.
 
-* We use `R8` as our texture's internal format.
+* Nous utilisons `R8` comme format interne de notre texture.
 
-  This means only the red channel from the texture has value from our data.
+  Cela signifie que seul le canal rouge de la texture a une valeur issue de nos données.
 
-* Both our input data and output data (the canvas) are `UNSIGNED_BYTE` values
+* Nos données d'entrée et de sortie (le canvas) sont des valeurs `UNSIGNED_BYTE`.
 
-  The means we can only pass in and get back integer values between 0 and 255.
-  We could use different formats for input by supplying a texture of a different format.
-  We could also try rendering to a texture of a different format for more range of output values.
+  Cela signifie qu'on peut seulement passer et recevoir des valeurs entières entre 0 et 255.
+  On pourrait utiliser des formats différents pour l'entrée en fournissant une texture d'un
+  format différent. On pourrait aussi essayer de rendre vers une texture d'un format différent
+  pour plus de plage dans les valeurs de sortie.
 
-In the example above src and dst are the same size. Let's change it so we add every 2 values
-from src to make dst. In other words, given `[1, 2, 3, 4, 5, 6]` as input we want
-`[3, 7, 11]` as output. And further, let's keep the source as 3x2 data
+Dans l'exemple ci-dessus, src et dst ont la même taille. Modifions pour additionner toutes les 2
+valeurs de src pour créer dst. En d'autres termes, étant donné `[1, 2, 3, 4, 5, 6]` en entrée,
+on veut `[3, 7, 11]` en sortie. Et en plus, gardons la source comme données 3x2.
 
-The basic formula to get a value from a 2D array as though it was a 1D array is
+La formule de base pour obtenir une valeur d'un tableau 2D comme si c'était un tableau 1D est :
 
 ```js
-y = floor(indexInto1DArray / widthOf2DArray);
-x = indexInto1DArray % widthOf2Array;
+y = floor(indexDans1DArray / largeurDu2DArray);
+x = indexDans1DArray % largeurDu2DArray;
 ```
 
-Given that, our fragment shader needs to change to this to add every 2 values.
+Étant donné ça, notre fragment shader doit changer comme ceci pour additionner toutes les 2 valeurs.
 
 ```glsl
 #version 300 es
@@ -361,11 +363,11 @@ vec4 getValueFrom2DTextureAs1DArray(sampler2D tex, ivec2 dimensions, int index) 
 }
 
 void main() {
-  // compute a 1D index into dst
+  // calcule un index 1D dans dst
   ivec2 dstPixel = ivec2(gl_FragCoord.xy);
   int dstIndex = dstPixel.y * dstDimensions.x + dstPixel.x;
 
-  ivec2 srcDimensions = textureSize(srcTex, 0);  // size of mip 0
+  ivec2 srcDimensions = textureSize(srcTex, 0);  // taille du mip 0
 
   vec4 v1 = getValueFrom2DTextureAs1DArray(srcTex, srcDimensions, dstIndex * 2);
   vec4 v2 = getValueFrom2DTextureAs1DArray(srcTex, srcDimensions, dstIndex * 2 + 1);
@@ -374,22 +376,22 @@ void main() {
 }
 ```
 
-The function `getValueFrom2DTextureAs1DArray` is basically our array accessor
-function. That means these 2 lines
+La fonction `getValueFrom2DTextureAs1DArray` est essentiellement notre fonction d'accès au tableau.
+Cela signifie que ces 2 lignes :
 
 ```glsl
   vec4 v1 = getValueFrom2DTextureAs1DArray(srcTex, srcDimensions, dstIndex * 2.0);
   vec4 v2 = getValueFrom2DTextureAs1DArray(srcTex, srcDimensions, dstIndex * 2.0 + 1.0);
 ```
 
-Effectively mean this
+signifient effectivement :
 
 ```glsl
   vec4 v1 = srcTexAs1DArray[dstIndex * 2.0];
   vec4 v2 = setTexAs1DArray[dstIndex * 2.0 + 1.0];
 ```
 
-In our JavaScript we need to lookup the location of `dstDimensions`
+En JavaScript, nous devons chercher l'emplacement de `dstDimensions` :
 
 ```js
 const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
@@ -398,15 +400,15 @@ const srcTexLoc = gl.getUniformLocation(program, 'srcTex');
 +const dstDimensionsLoc = gl.getUniformLocation(program, 'dstDimensions');
 ```
 
-and set it
+et le définir :
 
 ```js
 gl.useProgram(program);
-gl.uniform1i(srcTexLoc, 0);  // tell the shader the src texture is on texture unit 0
+gl.uniform1i(srcTexLoc, 0);  // dit au shader que la texture src est sur l'unité de texture 0
 +gl.uniform2f(dstDimensionsLoc, dstWidth, dstHeight);
 ```
 
-and we need to change the size of the destination (the canvas)
+et nous devons changer la taille de la destination (le canvas) :
 
 ```js
 const dstWidth = 3;
@@ -414,24 +416,24 @@ const dstWidth = 3;
 +const dstHeight = 1;
 ```
 
-and with that we have now have the result array able to do math
-with random access into the source array
+et avec ça, le tableau résultat peut maintenant faire des calculs avec accès aléatoire dans le
+tableau source :
 
 {{{example url="../webgl-gpgpu-add-2-elements.html"}}}
 
-If you wanted to use more arrays as input just add more textures to put more
-data in the same texture.
+Si vous vouliez utiliser plus de tableaux en entrée, ajoutez simplement plus de textures pour
+mettre plus de données dans la même texture.
 
-## Now let's do it with *transform feedback*
+## Maintenant faisons-le avec le *transform feedback*
 
-"Transform Feedback" is a fancy name for the ability to write the output
-of varyings in a vertex shader to one or more buffers.
+"Transform Feedback" est un terme fantaisiste pour la capacité d'écrire la sortie des varyings
+d'un vertex shader dans un ou plusieurs tampons.
 
-The advantage to using transform feedback is the output is 1D
-so it's probably easier to reason about. It's even closer to `map` from JavaScript.
+L'avantage d'utiliser le transform feedback est que la sortie est 1D, donc probablement plus
+facile à raisonner. C'est encore plus proche de `map` en JavaScript.
 
-Let's take in 2 arrays of values and output their sum, their difference,
-and their product. Here's the vertex shader
+Prenons 2 tableaux de valeurs et sortons leur somme, leur différence et leur produit.
+Voici le vertex shader :
 
 ```glsl
 #version 300 es
@@ -450,7 +452,7 @@ void main() {
 }
 ```
 
-and the fragment shader is just enough to compile
+et le fragment shader est juste suffisant pour compiler :
 
 ```glsl
 #version 300 es
@@ -459,14 +461,13 @@ void main() {
 }
 ```
 
-To use transform feedback we have to tell WebGL which varyings we want written
-and in what order. We do that by calling `gl.transformFeedbackVaryings` before
-linking the shader program. Because of this we are not going to use our helper
-to compile the shaders and link the program this time, just to make it clear
-what we have to do.
+Pour utiliser le transform feedback, nous devons dire à WebGL quels varyings nous voulons écrire
+et dans quel ordre. Nous faisons ça en appelant `gl.transformFeedbackVaryings` avant de lier le
+programme shader. À cause de ça, nous n'allons pas utiliser notre assistant pour compiler les
+shaders et lier le programme cette fois, juste pour clarifier ce que nous devons faire.
 
-So, here is the code for compiling a shader similar to the code in the very
-[first article](webgl-fundamentals.html).
+Voici le code pour compiler un shader similaire au code dans le tout
+[premier article](webgl-fundamentals.html).
 
 ```js
 function createShader(gl, type, src) {
@@ -480,8 +481,8 @@ function createShader(gl, type, src) {
 }
 ```
 
-We'll use it to compile our 2 shaders and then attach them and call
-`gl.transformFeedbackVaryings` before linking
+Nous l'utiliserons pour compiler nos 2 shaders, puis les attacher et appeler
+`gl.transformFeedbackVaryings` avant de lier :
 
 ```js
 const vShader = createShader(gl, gl.VERTEX_SHADER, vs);
@@ -501,29 +502,28 @@ if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
 }
 ```
 
-`gl.transformFeedbackVaryings` takes 3 arguments. The program, an array of the names
-of the varyings we want to write in the order you want them written. 
-If you did have a fragment shader that actually did
-something then maybe some of your varyings are only for the fragment shader and so
-don't need to be written. In our case we will write all of our varyings so we pass
-in the names of all 3. The last parameter can be 1 of 2 values. Either `SEPARATE_ATTRIBS`
-or `INTERLEAVED_ATTRIBS`. 
+`gl.transformFeedbackVaryings` prend 3 arguments : le programme, un tableau des noms des varyings
+qu'on veut écrire dans l'ordre voulu. Si vous aviez un fragment shader qui faisait réellement
+quelque chose, certains de vos varyings pourraient être uniquement pour le fragment shader et
+n'avoir pas besoin d'être écrits. Dans notre cas, nous écrirons tous nos varyings, donc nous
+passons les noms des 3. Le dernier paramètre peut prendre 1 de 2 valeurs : `SEPARATE_ATTRIBS`
+ou `INTERLEAVED_ATTRIBS`.
 
-`SEPARATE_ATTRIBS` means each varying will be written to a different buffer.
-`INTERLEAVED_ATTRIBS` means all the varyings will be written to the same buffer
-but interleaved on the order we specified. In our case since we specified
-`['sum', 'difference', 'product']` if we used `INTERLEAVED_ATTRIBS` the output
-would be `sum0, difference0, product0, sum1, difference1, product1, sum2, difference2, product2, etc...`
-into a single buffer. We're using `SEPARATE_ATTRIBS` though so instead
-each output will be written to the a different buffer.
+`SEPARATE_ATTRIBS` signifie que chaque varying sera écrit dans un tampon différent.
+`INTERLEAVED_ATTRIBS` signifie que tous les varyings seront écrits dans le même tampon mais
+entrelacés dans l'ordre spécifié. Dans notre cas, puisque nous avons spécifié
+`['sum', 'difference', 'product']`, si on utilisait `INTERLEAVED_ATTRIBS`, la sortie serait
+`sum0, difference0, product0, sum1, difference1, product1, sum2, difference2, product2, etc...`
+dans un seul tampon. Nous utilisons `SEPARATE_ATTRIBS` cependant, donc chaque sortie sera écrite
+dans un tampon différent.
 
-So, like other examples we need to setup buffers for our input attributes
+Comme pour les autres exemples, nous devons configurer des tampons pour nos attributs d'entrée :
 
 ```js
 const aLoc = gl.getAttribLocation(program, 'a');
 const bLoc = gl.getAttribLocation(program, 'b');
 
-// Create a vertex array object (attribute state)
+// Crée un vertex array object (état des attributs)
 const vao = gl.createVertexArray();
 gl.bindVertexArray(vao);
 
@@ -536,14 +536,14 @@ function makeBuffer(gl, sizeOrData) {
 
 function makeBufferAndSetAttribute(gl, data, loc) {
   const buf = makeBuffer(gl, data);
-  // setup our attributes to tell WebGL how to pull
-  // the data from the buffer above to the attribute
+  // configure nos attributs pour dire à WebGL comment extraire
+  // les données du tampon ci-dessus vers l'attribut
   gl.enableVertexAttribArray(loc);
   gl.vertexAttribPointer(
       loc,
-      1,         // size (num components)
-      gl.FLOAT,  // type of data in buffer
-      false,     // normalize
+      1,         // taille (nombre de composants)
+      gl.FLOAT,  // type de données dans le tampon
+      false,     // normaliser
       0,         // stride (0 = auto)
       0,         // offset
   );
@@ -552,59 +552,57 @@ function makeBufferAndSetAttribute(gl, data, loc) {
 const a = [1, 2, 3, 4, 5, 6];
 const b = [3, 6, 9, 12, 15, 18];
 
-// put data in buffers
+// met les données dans les tampons
 const aBuffer = makeBufferAndSetAttribute(gl, new Float32Array(a), aLoc);
 const bBuffer = makeBufferAndSetAttribute(gl, new Float32Array(b), bLoc);
 ```
 
-Then we need to setup a "transform feedback". A "transform feedback" is an object
-that contains the state of the buffers we will write to. Whereas an [vertex array](webgl-attributes.html)
-specifies the state of all the input attributes, a "transform feedback" contains the
-state of all the output attributes.
+Ensuite, nous devons configurer un "transform feedback". Un "transform feedback" est un objet
+qui contient l'état des tampons dans lesquels nous écrirons. Alors qu'un [vertex array](webgl-attributes.html) spécifie l'état de tous les attributs d'entrée, un "transform feedback" contient l'état de tous les attributs de sortie.
 
-Here is the code to set ours up
+Voici le code pour le configurer :
 
 ```js
-// Create and fill out a transform feedback
+// Crée et configure un transform feedback
 const tf = gl.createTransformFeedback();
 gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, tf);
 
-// make buffers for output
+// crée des tampons pour la sortie
 const sumBuffer = makeBuffer(gl, a.length * 4);
 const differenceBuffer = makeBuffer(gl, a.length * 4);
 const productBuffer = makeBuffer(gl, a.length * 4);
 
-// bind the buffers to the transform feedback
+// lie les tampons au transform feedback
 gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, sumBuffer);
 gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 1, differenceBuffer);
 gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 2, productBuffer);
 
 gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, null);
 
-// buffer's we are writing to can not be bound else where
-gl.bindBuffer(gl.ARRAY_BUFFER, null);  // productBuffer was still bound to ARRAY_BUFFER so unbind it
+// les tampons dans lesquels on écrit ne peuvent pas être liés ailleurs
+gl.bindBuffer(gl.ARRAY_BUFFER, null);  // productBuffer était encore lié à ARRAY_BUFFER, on le détache
 ```
 
-We call `bindBufferBase` to set which buffer, each of the outputs, output 0, output 1, and output 2
-will write to. Outputs 0, 1, 2 correspond to the names we passed to `gl.transformFeedbackVaryings`
-when we linked the program.
+Nous appelons `bindBufferBase` pour définir dans quel tampon chacune des sorties 0, 1 et 2 écrira.
+Les sorties 0, 1, 2 correspondent aux noms qu'on a passés à `gl.transformFeedbackVaryings` lors
+de la liaison du programme.
 
-When we're done the "transform feedback" we created has state like this
+Quand nous avons terminé, le "transform feedback" que nous avons créé a cet état :
 
 <img src="resources/transform-feedback-diagram.png" style="width: 625px;" class="webgl_center">
 
-There is also a function `bindBufferRange` that lets us specify a sub range within a buffer where
-we will write to but we won't use that here.
+Il y a aussi une fonction `bindBufferRange` qui permet de spécifier une sous-plage dans un tampon
+dans laquelle on écrira, mais nous ne l'utiliserons pas ici.
 
-So to execute the shader we do this
+Pour exécuter le shader, on fait ceci :
 
 ```js
 gl.useProgram(program);
 
-// bind our input attribute state for the a and b buffers
+// lie notre état d'attribut d'entrée pour les tampons a et b
 gl.bindVertexArray(vao);
 
-// no need to call the fragment shader
+// pas besoin d'appeler le fragment shader
 gl.enable(gl.RASTERIZER_DISCARD);
 
 gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, tf);
@@ -613,14 +611,14 @@ gl.drawArrays(gl.POINTS, 0, a.length);
 gl.endTransformFeedback();
 gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, null);
 
-// turn on using fragment shaders again
+// réactive les fragment shaders
 gl.disable(gl.RASTERIZER_DISCARD);
 ```
 
-We turn off calling the fragment shader. We bind the transform feedback object
-we created earlier, we turn on transform feedback, then we call draw.
+Nous désactivons l'appel au fragment shader. Nous lions l'objet transform feedback créé
+précédemment, activons le transform feedback, puis appelons draw.
 
-To look at the values we can call `gl.getBufferSubData`
+Pour voir les valeurs, on peut appeler `gl.getBufferSubData` :
 
 ```js
 log(`a: ${a}`);
@@ -635,31 +633,32 @@ function printResults(gl, buffer, label) {
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.getBufferSubData(
       gl.ARRAY_BUFFER,
-      0,    // byte offset into GPU buffer,
+      0,    // offset en octets dans le tampon GPU,
       results,
   );
-  // print the results
+  // affiche les résultats
   log(`${label}: ${results}`);
 }
 ```
 
 {{{example url="../webgl-gpgpu-sum-difference-product-transformfeedback.html"}}}
 
-You can see it worked. We got the GPU to compute the sum, difference, and product
-of the 'a' and 'b' values we passed in.
+On peut voir que ça a fonctionné. Nous avons fait calculer par le GPU la somme, la différence et
+le produit des valeurs 'a' et 'b' que nous avons passées.
 
-Note: You might find [this state diagram transform feedback example](https://webgl2fundamentals.org/webgl/lessons/resources/webgl-state-diagram.html?exampleId=transform-feedback) helpful in visualizing what a "transform feedback"
-is. It's not the same example as above though. The vertex shader it uses with transform feedback generates positions and colors for a circle of points.
+Note : vous pourriez trouver [cet exemple de diagramme d'état avec transform feedback](https://webgl2fundamentals.org/webgl/lessons/resources/webgl-state-diagram.html?exampleId=transform-feedback)
+utile pour visualiser ce qu'est un "transform feedback". Ce n'est pas le même exemple qu'ici.
+Le vertex shader utilisé avec le transform feedback génère des positions et des couleurs pour
+un cercle de points.
 
-## First example: particles
+## Premier exemple : particules
 
-Let's say you have a very simple particle system.
-Every particle just has a position and a velocity and
-if it goes off one edge of the screen it wraps around to
-the other side.
+Disons que vous avez un système de particules très simple.
+Chaque particule a juste une position et une vitesse, et si elle sort d'un bord de l'écran,
+elle réapparaît de l'autre côté.
 
-Given most of the other articles on this site you'd
-update the positions of the particles in JavaScript
+Étant donné la plupart des autres articles de ce site, vous mettriez à jour les positions des
+particules en JavaScript :
 
 ```js
 for (const particle of particles) {
@@ -668,36 +667,35 @@ for (const particle of particles) {
 }
 ```
 
-and then draw the particles either one at a time
+puis vous dessineriez les particules soit une par une :
 
 ```
 useProgram (particleShader)
-setup particle attributes
-for each particle
-  set uniforms
-  draw particle
+configure les attributs de particule
+pour chaque particule
+  définit les uniforms
+  dessine la particule
 ```
 
-Or you might upload all the new particle positions
+Ou vous pourriez uploader toutes les nouvelles positions de particules :
 
 ```
 bindBuffer(..., particlePositionBuffer)
 bufferData(..., latestParticlePositions, ...)
 useProgram (particleShader)
-setup particle attributes
-set uniforms
-draw particles
+configure les attributs de particule
+définit les uniforms
+dessine les particules
 ```
 
-Using the transform feedback example above we could make
-a buffer with the velocity for each particle. Then we could
-make 2 buffers for the positions. We'd use transform feedback
-to add the velocity to one position buffer and write it to the
-other position buffer. Then we'd draw with the new positions.
-On the next frame we'd read from the buffer with the new positions
-and write back to the other buffer to generate newer positions.
+En utilisant l'exemple de transform feedback ci-dessus, nous pourrions créer un tampon avec la
+vitesse de chaque particule. Puis nous pourrions créer 2 tampons pour les positions. Nous
+utiliserions le transform feedback pour ajouter la vitesse à un tampon de position et l'écrire
+dans l'autre tampon de position. Puis nous dessinerions avec les nouvelles positions. A la prochaine
+image, nous lirions depuis le tampon avec les nouvelles positions et écririons dans l'autre tampon
+pour générer des positions encore plus récentes.
 
-Here's the vertex shader to update the particle positions
+Voici le vertex shader pour mettre à jour les positions des particules :
 
 ```glsl
 #version 300 es
@@ -720,7 +718,7 @@ void main() {
 }
 ```
 
-To draw the particles we'll just use a simple vertex shader
+Pour dessiner les particules, nous utiliserons juste un simple vertex shader :
 
 ```glsl
 #version 300 es
@@ -728,14 +726,14 @@ in vec4 position;
 uniform mat4 matrix;
 
 void main() {
-  // do the common matrix math
+  // fait le calcul matriciel habituel
   gl_Position = matrix * position;
   gl_PointSize = 10.0;
 }
 ```
 
-Let's turn the code for creating and linking a program into
-a function we can use for both shaders
+Transformons le code pour créer et lier un programme en une fonction que nous pouvons utiliser
+pour les deux shaders :
 
 ```js
 function createProgram(gl, shaderSources, transformFeedbackVaryings) {
@@ -759,8 +757,7 @@ function createProgram(gl, shaderSources, transformFeedbackVaryings) {
 }
 ```
 
-and then use it to compile the shaders, one with a transform feedback
-varying.
+puis l'utiliser pour compiler les shaders, un avec un varying de transform feedback.
 
 ```js
 const updatePositionProgram = createProgram(
@@ -769,7 +766,7 @@ const drawParticlesProgram = createProgram(
     gl, [drawParticlesVS, drawParticlesFS]);
 ```
 
-As usual we need to lookup locations
+Comme d'habitude, nous devons chercher les emplacements :
 
 ```js
 const updatePositionPrgLocs = {
@@ -785,10 +782,10 @@ const drawParticlesProgLocs = {
 };
 ```
 
-Now let's make some random positions and velocities
+Maintenant, créons des positions et vitesses aléatoires :
 
 ```js
-// create random positions and velocities.
+// crée des positions et vitesses aléatoires.
 const rand = (min, max) => {
   if (max === undefined) {
     max = min;
@@ -803,7 +800,7 @@ const positions = new Float32Array(createPoints(numParticles, [[canvas.width], [
 const velocities = new Float32Array(createPoints(numParticles, [[-300, 300], [-300, 300]]));
 ```
 
-Then we'll put those into buffers.
+Puis nous les mettons dans des tampons.
 
 ```js
 function makeBuffer(gl, sizeOrData, usage) {
@@ -818,16 +815,16 @@ const position2Buffer = makeBuffer(gl, positions, gl.DYNAMIC_DRAW);
 const velocityBuffer = makeBuffer(gl, velocities, gl.STATIC_DRAW);
 ```
 
-Note that we passed in `gl.DYNAMIC_DRAW` to `gl.bufferData` for the 2 position buffers
-since we'll be updating them often. This is just a hint to WebGL for optimization.
-Whether it has any effect on performance is up to WebGL.
+Notez que nous avons passé `gl.DYNAMIC_DRAW` à `gl.bufferData` pour les 2 tampons de position
+puisque nous les mettrons souvent à jour. C'est juste un indice à WebGL pour l'optimisation.
+Si cela a un effet sur les performances, c'est à WebGL de décider.
 
-We need 4 vertex arrays. 
+Nous avons besoin de 4 vertex arrays.
 
-* 1 for using `position1Buffer` and `velocity` when updating positions
-* 1 for using `position2Buffer` and `velocity` when updating positions
-* 1 for using `position1Buffer` when drawing
-* 1 for using `position2Buffer` when drawing
+* 1 pour utiliser `position1Buffer` et `velocity` lors de la mise à jour des positions
+* 1 pour utiliser `position2Buffer` et `velocity` lors de la mise à jour des positions
+* 1 pour utiliser `position1Buffer` lors du dessin
+* 1 pour utiliser `position2Buffer` lors du dessin
 
 ```js
 function makeVertexArray(gl, bufLocPairs) {
@@ -837,10 +834,10 @@ function makeVertexArray(gl, bufLocPairs) {
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(
-        loc,      // attribute location
-        2,        // number of elements
-        gl.FLOAT, // type of data
-        false,    // normalize
+        loc,      // emplacement de l'attribut
+        2,        // nombre d'éléments
+        gl.FLOAT, // type de données
+        false,    // normaliser
         0,        // stride (0 = auto)
         0,        // offset
     );
@@ -863,10 +860,10 @@ const drawVA2 = makeVertexArray(
     gl, [[position2Buffer, drawParticlesProgLocs.position]]);
 ```
 
-We then make 2 transform feedback objects.
+Nous créons ensuite 2 objets transform feedback.
 
-* 1 for writing to `position1Buffer`
-* 1 for writing to `position2Buffer`
+* 1 pour écrire dans `position1Buffer`
+* 1 pour écrire dans `position2Buffer`
 
 ```js
 function makeTransformFeedback(gl, buffer) {
@@ -880,61 +877,59 @@ const tf1 = makeTransformFeedback(gl, position1Buffer);
 const tf2 = makeTransformFeedback(gl, position2Buffer);
 ```
 
-When using transform feedback it's important to unbind buffers
-from other bind points. `ARRAY_BUFFER` still has the last buffer
-bound that we put data in. `TRANSFORM_FEEDBACK_BUFFER` is set when
-calling `gl.bindBufferBase`. That is a little confusing. Calling
-`gl.bindBufferBase` with `TRANSFORM_FEEDBACK_BUFFER` actually
-binds the buffer to 2 places. One, to indexed bind point inside
-the transform feedback object. The other is to a kind of global
-bind point called `TRANSFORM_FEEDBACK_BUFFER`.
+Lors de l'utilisation du transform feedback, il est important de détacher les tampons des autres
+points de liaison. `ARRAY_BUFFER` a encore le dernier tampon dans lequel on a mis des données lié.
+`TRANSFORM_FEEDBACK_BUFFER` est défini quand on appelle `gl.bindBufferBase`. C'est un peu
+déroutant. Appeler `gl.bindBufferBase` avec `TRANSFORM_FEEDBACK_BUFFER` lie en fait le tampon
+à 2 endroits. D'une part, au point de liaison indexé dans l'objet transform feedback. De l'autre,
+à une sorte de point de liaison global appelé `TRANSFORM_FEEDBACK_BUFFER`.
 
 ```js
-// unbind left over stuff
+// détache les restes
 gl.bindBuffer(gl.ARRAY_BUFFER, null);
 gl.bindBuffer(gl.TRANSFORM_FEEDBACK_BUFFER, null);
 ```
 
-So that we can easily swap updating and drawing buffers
-we'll setup these 2 objects
+Pour pouvoir facilement échanger les tampons de mise à jour et de dessin,
+nous allons configurer ces 2 objets :
 
 ```js
 let current = {
-  updateVA: updatePositionVA1,  // read from position1
-  tf: tf2,                      // write to position2
-  drawVA: drawVA2,              // draw with position2
+  updateVA: updatePositionVA1,  // lit depuis position1
+  tf: tf2,                      // écrit dans position2
+  drawVA: drawVA2,              // dessine avec position2
 };
 let next = {
-  updateVA: updatePositionVA2,  // read from position2
-  tf: tf1,                      // write to position1
-  drawVA: drawVA1,              // draw with position1
+  updateVA: updatePositionVA2,  // lit depuis position2
+  tf: tf1,                      // écrit dans position1
+  drawVA: drawVA1,              // dessine avec position1
 };
 ```
 
-Then we'll do a render loop, first we'll update the positions
-using transform feedback.
+Ensuite, nous faisons une boucle de rendu, d'abord nous mettons à jour les positions en utilisant
+le transform feedback.
 
 ```js
 let then = 0;
 function render(time) {
-  // convert to seconds
+  // convertit en secondes
   time *= 0.001;
-  // Subtract the previous time from the current time
+  // soustrait le temps précédent du temps courant
   const deltaTime = time - then;
-  // Remember the current time for the next frame.
+  // mémorise le temps courant pour la prochaine image.
   then = time;
 
   webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  // compute the new positions
+  // calcule les nouvelles positions
   gl.useProgram(updatePositionProgram);
   gl.bindVertexArray(current.updateVA);
   gl.uniform2f(updatePositionPrgLocs.canvasDimensions, gl.canvas.width, gl.canvas.height);
   gl.uniform1f(updatePositionPrgLocs.deltaTime, deltaTime);
 
-  // turn of using the fragment shader
+  // désactive le fragment shader
   gl.enable(gl.RASTERIZER_DISCARD);
 
   gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, current.tf);
@@ -943,14 +938,14 @@ function render(time) {
   gl.endTransformFeedback();
   gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, null);
 
-  // turn on using fragment shaders again
+  // réactive les fragment shaders
   gl.disable(gl.RASTERIZER_DISCARD);
 ```
 
-and then draw the particles
+puis dessine les particules :
 
 ```js
-  // now draw the particles.
+  // dessine maintenant les particules.
   gl.useProgram(drawParticlesProgram);
   gl.bindVertexArray(current.drawVA);
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -961,12 +956,12 @@ and then draw the particles
   gl.drawArrays(gl.POINTS, 0, numParticles);
 ```
 
-and finally swap `current` and `next` so that next frame we'll
-use the latest positions to generate new ones
+et enfin échange `current` et `next` pour que la prochaine image utilise les positions récentes
+pour en générer de nouvelles :
 
 ```js
-  // swap which buffer we will read from
-  // and which one we will write to
+  // échange le tampon depuis lequel on lit
+  // et celui dans lequel on écrit
   {
     const temp = current;
     current = next;
@@ -978,46 +973,48 @@ use the latest positions to generate new ones
 requestAnimationFrame(render);
 ```
 
-And with that we have simple GPU based particles.
+Et avec ça, nous avons un système de particules simple basé sur le GPU.
 
 {{{example url="../webgl-gpgpu-particles-transformfeedback.html"}}}
 
-## Next Example: Finding the closest line segment to a point
+## Exemple suivant : Trouver le segment de ligne le plus proche d'un point
 
-I'm not sure this is a good example but it's the one I wrote. I say it might
-not be good because I suspect there are better algorithms for finding
-the closest line to a point than brute force checking every line with the point. For example various space partitioning algorithms might let you easily discard 95%
-of the points and so be faster. Still, this example probably does show
-some techniques of GPGPU at least.
+Je ne suis pas sûr que ce soit un bon exemple, mais c'est celui que j'ai écrit. Je dis que ce
+n'est peut-être pas bon parce que je soupçonne qu'il existe de meilleurs algorithmes pour trouver
+la ligne la plus proche d'un point que la vérification brute force de chaque ligne avec le point.
+Par exemple, divers algorithmes de partitionnement d'espace pourraient vous permettre de rejeter
+facilement 95% des points et donc d'être plus rapides. Cet exemple montre quand même probablement
+certaines techniques du GPGPU.
 
-The problem: We have 500 points and 1000 line segments. For each point
-find which line segment it is closest to. The brute force method is
+Le problème : Nous avons 500 points et 1000 segments de ligne. Pour chaque point, trouver quel
+segment de ligne en est le plus proche. La méthode brute force est :
 
 ```
-for each point
-  minDistanceSoFar = MAX_VALUE
-  for each line segment
-    compute distance from point to line segment
-    if distance is < minDistanceSoFar
-       minDistanceSoFar = distance
-       closestLine = line segment
+pour chaque point
+  minDistanceJusquIci = MAX_VALUE
+  pour chaque segment de ligne
+    calcule la distance du point au segment de ligne
+    si distance < minDistanceJusquIci
+       minDistanceJusquIci = distance
+       ligneLaPlusProche = segment de ligne
 ```
 
-For 500 points each checking 1000 lines that's 500,000 checks.
-Modern GPUs have 100s or 1000s of cores so if we could do this on
-the GPU we could potentially run hundreds or thousands of times faster.
+Pour 500 points vérifiant chacun 1000 lignes, ça fait 500 000 vérifications.
+Les GPU modernes ont des centaines ou milliers de cœurs, donc si on pouvait faire ça sur le GPU,
+on pourrait potentiellement aller des centaines ou milliers de fois plus vite.
 
-This time, while we can put the points in a buffer like we did for the particles
-we can't put the line segments in a buffer. Buffers supply their data via
-attributes. That means we can't randomly access any value on demand, instead
-the values are assigned to the attribute outside the shader's control.
+Cette fois, bien qu'on puisse mettre les points dans un tampon comme on l'a fait pour les
+particules, on ne peut pas mettre les segments de ligne dans un tampon. Les tampons fournissent
+leurs données via les attributs. Cela signifie qu'on ne peut pas accéder aléatoirement à n'importe
+quelle valeur à la demande, les valeurs sont plutôt assignées à l'attribut hors du contrôle du
+shader.
 
-So, we need to put the line positions in a texture, which as we pointed out
-above is another word for a 2D array though we can still treat that 2D
-array as a 1D array if we want.
+Donc, nous devons mettre les positions des lignes dans une texture, qui comme mentionné ci-dessus
+est un autre mot pour un tableau 2D, bien qu'on puisse toujours traiter ce tableau 2D comme un
+tableau 1D si on veut.
 
-Here's the vertex shader that finds the closest line for a single point.
-It's exactly the brute force algorithm as above
+Voici le vertex shader qui trouve la ligne la plus proche pour un seul point.
+C'est exactement l'algorithme brute force ci-dessus :
 
 ```js
   const closestLineVS = `#version 300 es
@@ -1034,8 +1031,8 @@ It's exactly the brute force algorithm as above
     return texelFetch(tex, ivec2(x, y), 0);
   }
 
-  // from https://stackoverflow.com/a/6853926/128511
-  // a is the point, b,c is the line segment
+  // d'après https://stackoverflow.com/a/6853926/128511
+  // a est le point, b,c est le segment de ligne
   float distanceFromPointToLine(in vec3 a, in vec3 b, in vec3 c) {
     vec3 ba = a - b;
     vec3 bc = c - b;
@@ -1052,7 +1049,7 @@ It's exactly the brute force algorithm as above
   void main() {
     ivec2 linesTexDimensions = textureSize(linesTex, 0);
     
-    // find the closest line segment
+    // trouve le segment de ligne le plus proche
     float minDist = 10000000.0; 
     int minIndex = -1;
     for (int i = 0; i < numLineSegments; ++i) {
@@ -1070,16 +1067,15 @@ It's exactly the brute force algorithm as above
   `;
 ```
 
-I renamed `getValueFrom2DTextureAs1DArray` to `getAs1D` just to make
-some of the lines shorter and more readable.
-Otherwise it's a pretty straight forward implementation of the brute force algorithm
-we wrote above.
+J'ai renommé `getValueFrom2DTextureAs1DArray` en `getAs1D` juste pour raccourcir et rendre
+certaines lignes plus lisibles. Sinon, c'est une implémentation assez directe de l'algorithme
+brute force ci-dessus.
 
-`point` is the current point. `linesTex` contains the points for the
-line segment in pairs, first point, followed by second point.
+`point` est le point courant. `linesTex` contient les points des segments de ligne par paires :
+premier point suivi du second point.
 
-First let's make some test data. Here's 2 points and 5 lines. They are
-padded with 0, 0 because each one will stored in an RGBA texture.
+D'abord, créons des données de test. Voici 2 points et 5 lignes. Ils sont remplis avec 0, 0 car
+chacun sera stocké dans une texture RGBA.
 
 ```js
 const points = [
@@ -1102,30 +1098,30 @@ const numPoints = points.length / 2;
 const numLineSegments = lines.length / 2 / 2;
 ```
 
-If we plot those out they look like this
+Si on trace ça, ça ressemble à ceci :
 
 <img src="resources/line-segments-points.svg" style="width: 500px;" class="webgl_center">
 
-The lines are numbered 0 to 4 from left to right,
-so if our code works the first point (<span style="color: red;">red</span>)
-should get a value of 1 as the closest line, the second point
-(<span style="color: green;">green</span>), should get a value of 3.
+Les lignes sont numérotées de 0 à 4 de gauche à droite, donc si notre code fonctionne, le
+premier point (<span style="color: red;">rouge</span>) devrait obtenir la valeur 1 comme ligne
+la plus proche, le second point (<span style="color: green;">vert</span>) devrait obtenir la
+valeur 3.
 
-Lets put the points in a buffer as well as make a buffer to hold the computed
-closest index for each
+Mettons les points dans un tampon et créons aussi un tampon pour stocker l'index le plus proche
+calculé pour chacun :
 
 ```js
 const closestNdxBuffer = makeBuffer(gl, points.length * 4, gl.STATIC_DRAW);
 const pointsBuffer = makeBuffer(gl, new Float32Array(points), gl.DYNAMIC_DRAW);
 ```
 
-and lets make a texture to hold all the end points of the lines.
+et créons une texture pour stocker tous les points des extrémités des lignes.
 
 ```js
 function createDataTexture(gl, data, numComponents, internalFormat, format, type) {
   const numElements = data.length / numComponents;
 
-  // compute a size that will hold all of our data
+  // calcule une taille qui contiendra toutes nos données
   const width = Math.ceil(Math.sqrt(numElements));
   const height = Math.ceil(numElements / width);
 
@@ -1136,11 +1132,11 @@ function createDataTexture(gl, data, numComponents, internalFormat, format, type
   gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.texImage2D(
       gl.TEXTURE_2D,
-      0,        // mip level
+      0,        // niveau mip
       internalFormat,
       width,
       height,
-      0,        // border
+      0,        // bordure
       format,
       type,
       bin,
@@ -1156,22 +1152,20 @@ const {tex: linesTex, dimensions: linesTexDimensions} =
     createDataTexture(gl, lines, 2, gl.RG32F, gl.RG, gl.FLOAT);
 ```
 
-In this case we're letting the code choose the dimensions of the texture
-and letting it pad the texture out. For example if we gave it an array
-with 7 entries it would stick that in a 3x3 texture. It returns
-both the texture and the dimensions it chose. Why do we let it choose
-the dimension? Because textures have a maximum dimension.
+Dans ce cas, nous laissons le code choisir les dimensions de la texture et la rembourrer.
+Par exemple, si on lui donnait un tableau avec 7 entrées, il le mettrait dans une texture 3x3.
+Il retourne à la fois la texture et les dimensions choisies. Pourquoi le laisser choisir les
+dimensions ? Parce que les textures ont une dimension maximale.
 
-Ideally we'd just like to look at our data as a 1 dimensional array
-of positions, 1 dimensional array of line points etc. So we could just
-declare a texture to be Nx1. Unfortunately GPUs have a maximum
-dimension and that can be as low as 1024 or 2048. If the limit
-was 1024 and we needed 1025 values in our array we'd have to put the data
-in a texture like say 512x2. By putting the data in a square we won't
-hit the limit until we hit the maximum texture dimension squared.
-For a dimension limit of 1024 that would allow arrays of over 1 million values.
+Idéalement, on aimerait juste regarder nos données comme un tableau 1D de positions, un tableau
+1D de points de lignes, etc. On pourrait déclarer une texture comme Nx1. Malheureusement, les
+GPU ont une dimension maximale qui peut être aussi basse que 1024 ou 2048. Si la limite était
+1024 et qu'on avait besoin de 1025 valeurs dans notre tableau, on devrait mettre les données dans
+une texture d'environ 512x2. En mettant les données dans un carré, on n'atteindra pas la limite
+tant qu'on n'atteint pas le carré de la dimension maximale de texture. Pour une limite de dimension
+de 1024, cela permettrait des tableaux de plus d'un million de valeurs.
 
-Next up compile the shader and look up the locations
+Compilons ensuite le shader et cherchons les emplacements :
 
 ```js
 const closestLinePrg = createProgram(
@@ -1184,7 +1178,7 @@ const closestLinePrgLocs = {
 };
 ```
 
-And make a vertex array for the points
+Et créons un vertex array pour les points :
 
 ```js
 function makeVertexArray(gl, bufLocPairs) {
@@ -1194,10 +1188,10 @@ function makeVertexArray(gl, bufLocPairs) {
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(
-        loc,      // attribute location
-        2,        // number of elements
-        gl.FLOAT, // type of data
-        false,    // normalize
+        loc,      // emplacement de l'attribut
+        2,        // nombre d'éléments
+        gl.FLOAT, // type de données
+        false,    // normaliser
         0,        // stride (0 = auto)
         0,        // offset
     );
@@ -1210,8 +1204,8 @@ const closestLinesVA = makeVertexArray(gl, [
 ]);
 ```
 
-Now we need to setup a transform feedback to let us write the results to the
-`cloestNdxBuffer`.
+Maintenant nous devons configurer un transform feedback pour nous permettre d'écrire les résultats
+dans le `closestNdxBuffer`.
 
 ```js
 function makeTransformFeedback(gl, buffer) {
@@ -1224,16 +1218,16 @@ function makeTransformFeedback(gl, buffer) {
 const closestNdxTF = makeTransformFeedback(gl, closestNdxBuffer);
 ```
 
-With all of that setup we can render
+Avec tout ça configuré, on peut faire le rendu :
 
 ```js
-// compute the closest lines
+// calcule les lignes les plus proches
 gl.bindVertexArray(closestLinesVA);
 gl.useProgram(closestLinePrg);
 gl.uniform1i(closestLinePrgLocs.linesTex, 0);
 gl.uniform1i(closestLinePrgLocs.numLineSegments, numLineSegments);
 
-// turn of using the fragment shader
+// désactive le fragment shader
 gl.enable(gl.RASTERIZER_DISCARD);
 
 gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, closestNdxTF);
@@ -1242,14 +1236,14 @@ gl.drawArrays(gl.POINTS, 0, numPoints);
 gl.endTransformFeedback();
 gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, null);
 
-// turn on using fragment shaders again
+// réactive les fragment shaders
 gl.disable(gl.RASTERIZER_DISCARD);
 ```
 
-and finally read the result
+et finalement lit le résultat :
 
 ```js
-// get the results.
+// obtient les résultats.
 {
   const results = new Int32Array(numPoints);
   gl.bindBuffer(gl.ARRAY_BUFFER, closestNdxBuffer);
@@ -1258,19 +1252,19 @@ and finally read the result
 }
 ```
 
-If we run it
+Si on l'exécute :
 
 {{{example url="../webgl-gpgpu-closest-line-results-transformfeedback.html"}}}
 
-We should get the expected result of `[1, 3]`
+On devrait obtenir le résultat attendu de `[1, 3]`.
 
-Reading data back from the GPU is slow. Let's say we wanted to
-visualize the results. It would be pretty easy to read those results
-back to JavaScript and draw them but how about without reading them
-back to JavaScript? Let's use the data as is and draw the results?
+Lire les données depuis le GPU est lent. Disons qu'on voulait visualiser les résultats. Ce serait
+assez simple de lire ces résultats dans JavaScript et de les dessiner, mais qu'en est-il sans les
+lire dans JavaScript ? Utilisons les données telles quelles et dessinons les résultats ?
 
-First, drawing the points is relatively easy. It's the same as the particle example
-Let's draw each point in a different color so we can highlight the closest line in the same color.
+D'abord, dessiner les points est relativement facile. C'est la même chose que l'exemple de
+particules. Dessinons chaque point dans une couleur différente pour pouvoir mettre en surbrillance
+la ligne la plus proche dans la même couleur.
 
 ```js
 const drawPointsVS = `#version 300 es
@@ -1281,8 +1275,8 @@ uniform mat4 matrix;
 
 out vec4 v_color;
 
-// converts hue, saturation, and value each in the 0 to 1 range
-// to rgb.  c = color, c.x = hue, c.y = saturation, c.z = value
+// convertit teinte, saturation et valeur chacun dans la plage 0 à 1
+// en rgb. c = couleur, c.x = teinte, c.y = saturation, c.z = valeur
 vec3 hsv2rgb(vec3 c) {
   c = vec3(c.x, clamp(c.yz, 0.0, 1.0));
   vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
@@ -1308,12 +1302,11 @@ void main() {
 }`;
 ```
 
-Rather than passing in colors we generate them using `hsv2rgb` and passing it
-a hue from to 0 to 1. For 500 points there would
-be no easy way to tell lines apart but for around 10 points we should be
-able to distinguish them.
+Plutôt que de passer des couleurs, nous les générons en utilisant `hsv2rgb` et en lui passant une
+teinte de 0 à 1. Pour 500 points, il n'y aurait aucun moyen facile de distinguer les lignes, mais
+pour environ 10 points, nous devrions pouvoir les distinguer.
 
-We pass the generated color to a simple fragment shader
+Nous passons la couleur générée à un simple fragment shader :
 
 ```js
 const drawClosestPointsLinesFS = `
@@ -1325,9 +1318,9 @@ void main() {
 `;
 ```
 
-To draw all the lines, even the ones that are not close to any points is
-almost the same except we don't generate a color. In this case we're just
-using a hardcoded color.
+Pour dessiner toutes les lignes, même celles qui ne sont proches d'aucun point, c'est presque
+la même chose sauf qu'on ne génère pas de couleur. Dans ce cas, on utilise juste une couleur
+codée en dur.
 
 ```js
 const drawLinesVS = `#version 300 es
@@ -1345,22 +1338,22 @@ vec4 getAs1D(sampler2D tex, ivec2 dimensions, int index) {
 void main() {
   ivec2 linesTexDimensions = textureSize(linesTex, 0);
 
-  // pull the position from the texture
+  // extrait la position de la texture
   vec4 position = getAs1D(linesTex, linesTexDimensions, gl_VertexID);
 
-  // do the common matrix math
+  // fait le calcul matriciel habituel
   gl_Position = matrix * vec4(position.xy, 0, 1);
 
-  // just so we can use the same fragment shader
+  // juste pour utiliser le même fragment shader
   v_color = vec4(0.8, 0.8, 0.8, 1);
 }
 `;
 ```
 
-We don't have any attributes. We just use `gl_VertexID` like we covered in
-[the article on drawing without data](webgl-drawing-without-data.html).
+Nous n'avons pas d'attributs. Nous utilisons juste `gl_VertexID` comme nous l'avons couvert dans
+[l'article sur le dessin sans données](webgl-drawing-without-data.html).
 
-Finally drawing closest lines works like this
+Enfin, dessiner les lignes les plus proches fonctionne comme ceci :
 
 ```js
 const drawClosestLinesVS = `#version 300 es
@@ -1377,8 +1370,8 @@ vec4 getAs1D(sampler2D tex, ivec2 dimensions, int index) {
   return texelFetch(tex, ivec2(x, y), 0);
 }
 
-// converts hue, saturation, and value each in the 0 to 1 range
-// to rgb.  c = color, c.x = hue, c.y = saturation, c.z = value
+// convertit teinte, saturation et valeur chacun dans la plage 0 à 1
+// en rgb. c = couleur, c.x = teinte, c.y = saturation, c.z = valeur
 vec3 hsv2rgb(vec3 c) {
   c = vec3(c.x, clamp(c.yz, 0.0, 1.0));
   vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
@@ -1389,11 +1382,11 @@ vec3 hsv2rgb(vec3 c) {
 void main() {
   ivec2 linesTexDimensions = textureSize(linesTex, 0);
 
-  // pull the position from the texture
+  // extrait la position de la texture
   int linePointId = closestNdx * 2 + gl_VertexID % 2;
   vec4 position = getAs1D(linesTex, linesTexDimensions, linePointId);
 
-  // do the common matrix math
+  // fait le calcul matriciel habituel
   gl_Position = matrix * vec4(position.xy, 0, 1);
 
   int pointId = gl_InstanceID;
@@ -1403,16 +1396,16 @@ void main() {
 `;
 ```
 
-We pass in `closestNdx` as an attribute. These are the results we generated.
-Using that we can look up specific line. We need to draw 2 points per line
-though so we'll use [instanced drawing](webgl-instanced-drawing.html) to
-draw 2 points per `closestNdx`. We can then use `gl_VertexID % 2` to choose
-the starting or ending point.
+Nous passons `closestNdx` comme attribut. Ce sont les résultats que nous avons générés. En
+l'utilisant, nous pouvons chercher une ligne spécifique. Nous devons dessiner 2 points par ligne,
+donc nous utiliserons le [dessin instancié](webgl-instanced-drawing.html) pour dessiner 2 points
+par `closestNdx`. Nous pouvons ensuite utiliser `gl_VertexID % 2` pour choisir le point de départ
+ou de fin.
 
-Finally we compute a color using the same method we used when drawing points
-so they'll match their points.
+Enfin, nous calculons une couleur en utilisant la même méthode que pour les points afin qu'ils
+correspondent.
 
-We need to compile all of these new shader programs and look up locations
+Nous devons compiler tous ces nouveaux programmes de shader et chercher les emplacements :
 
 ```js
 const closestLinePrg = createProgram(
@@ -1446,7 +1439,7 @@ const closestLinePrgLocs = {
 +};
 ```
 
-We need to vertex arrays for drawing the points and the closest lines.
+Nous avons besoin de vertex arrays pour dessiner les points et les lignes les plus proches.
 
 ```js
 const closestLinesVA = makeVertexArray(gl, [
@@ -1465,32 +1458,31 @@ const closestLinesVA = makeVertexArray(gl, [
 +]);
 ```
 
-So, at render time we compute the results like we did before but
-we don't look up the results with `getBufferSubData`. Instead we just
-pass them to the appropriate shaders.
+Donc, au moment du rendu, nous calculons les résultats comme avant mais nous ne les cherchons pas
+avec `getBufferSubData`. À la place, nous les passons simplement aux shaders appropriés.
 
-First we draw all the lines in gray
+D'abord, nous dessinons toutes les lignes en gris :
 
 ```js
-// draw all the lines in gray
+// dessine toutes les lignes en gris
 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
 gl.bindVertexArray(null);
 gl.useProgram(drawLinesPrg);
 
-// bind the lines texture to texture unit 0
+// lie la texture des lignes à l'unité de texture 0
 gl.activeTexture(gl.TEXTURE0);
 gl.bindTexture(gl.TEXTURE_2D, linesTex);
 
-// Tell the shader to use texture on texture unit 0
+// dit au shader d'utiliser la texture sur l'unité de texture 0
 gl.uniform1i(drawLinesPrgLocs.linesTex, 0);
 gl.uniformMatrix4fv(drawLinesPrgLocs.matrix, false, matrix);
 
 gl.drawArrays(gl.LINES, 0, numLineSegments * 2);
 ```
 
-Then we draw all the closest lines
+Puis nous dessinons toutes les lignes les plus proches :
 
 ```js
 gl.bindVertexArray(drawClosestLinesVA);
@@ -1506,7 +1498,7 @@ gl.uniformMatrix4fv(drawClosestLinesPrgLocs.matrix, false, matrix);
 gl.drawArraysInstanced(gl.LINES, 0, 2, numPoints);
 ```
 
-and finally we draw each point
+et finalement nous dessinons chaque point :
 
 ```js
 gl.bindVertexArray(drawPointsVA);
@@ -1518,7 +1510,7 @@ gl.uniformMatrix4fv(drawPointsPrgLocs.matrix, false, matrix);
 gl.drawArrays(gl.POINTS, 0, numPoints);
 ```
 
-Before we run it lets do one more thing. Let's add more points and lines
+Avant de l'exécuter, ajoutons encore une chose. Ajoutons plus de points et de lignes :
 
 ```js
 -const points = [
@@ -1554,25 +1546,22 @@ const numPoints = points.length / 2;
 const numLineSegments = lines.length / 2 / 2;
 ```
 
-and if we run that
+et si on l'exécute :
 
 {{{example url="../webgl-gpgpu-closest-line-transformfeedback.html"}}}
 
-You can bump up the number of points and lines
-but at some point you won't be able to tell which
-points go with which lines but with a smaller number
-you can at least visually verify it's working.
+Vous pouvez augmenter le nombre de points et de lignes, mais à partir d'un certain point, vous ne
+pourrez plus dire quels points correspondent à quelles lignes. Avec un nombre plus petit, vous
+pouvez au moins visuellement vérifier que ça fonctionne.
 
-Just for fun, lets combine the particle example and this
-example. We'll use the techniques we used to update
-the positions of particles to update the points. For
-updating the line end points we'll do what we did at the
-top and write results to a texture.
+Pour le plaisir, combinons l'exemple de particules et cet exemple. Nous utiliserons les techniques
+utilisées pour mettre à jour les positions des particules pour mettre à jour les points. Pour
+mettre à jour les extrémités des lignes, nous ferons ce que nous avons fait au début et écrirons
+les résultats dans une texture.
 
-To do that we copy in the `updatePositionFS` vertex shader
-from the particle example. For the lines, since their values
-are stored in a texture we need to move their points in
-a fragment shader
+Pour ça, copions le vertex shader `updatePositionFS` de l'exemple de particules. Pour les lignes,
+puisque leurs valeurs sont stockées dans une texture, nous devons déplacer leurs points dans un
+fragment shader :
 
 ```js
 const updateLinesVS = `#version 300 es
@@ -1597,7 +1586,7 @@ vec2 euclideanModulo(vec2 n, vec2 m) {
 }
 
 void main() {
-  // compute texel coord from gl_FragCoord;
+  // calcule les coordonnées de texel depuis gl_FragCoord;
   ivec2 texelCoord = ivec2(gl_FragCoord.xy);
   
   vec2 position = texelFetch(linesTex, texelCoord, 0).xy;
@@ -1609,8 +1598,8 @@ void main() {
 `;
 ```
 
-We can then compile the 2 new shaders for updating the points and
-the lines and look up locations
+On peut alors compiler les 2 nouveaux shaders pour mettre à jour les points et les lignes et
+chercher les emplacements :
 
 ```js
 +const updatePositionPrg = createProgram(
@@ -1661,7 +1650,7 @@ const drawPointsPrgLocs = {
 };
 ```
 
-We need to generate velocities for both the points and lines
+Nous devons générer des vitesses à la fois pour les points et les lignes :
 
 ```js
 const points = createPoints(8, [[0, gl.canvas.width], [0, gl.canvas.height]]);
@@ -1673,9 +1662,9 @@ const numLineSegments = lines.length / 2 / 2;
 +const lineVelocities = createPoints(numLineSegments * 2, [[-20, 20], [-20, 20]]);
 ```
 
-We need to make 2 buffers for points, so we can swap them like we did above
-for particles. We also need a buffer for the point velocities. And we need
-a -1 to +1 clip space quad for updating the line positions.
+Nous devons créer 2 tampons pour les points pour pouvoir les échanger comme nous l'avons fait
+ci-dessus pour les particules. Nous avons aussi besoin d'un tampon pour les vitesses des points.
+Et nous avons besoin d'un quad clip space -1 à +1 pour mettre à jour les positions des lignes.
 
 ```js
 const closestNdxBuffer = makeBuffer(gl, points.length * 4, gl.STATIC_DRAW);
@@ -1693,9 +1682,9 @@ const closestNdxBuffer = makeBuffer(gl, points.length * 4, gl.STATIC_DRAW);
 +]), gl.STATIC_DRAW);
 ```
 
-Similarly we now need 2 textures to hold the line end points, and we'll update
-one from the other and swap. And, we need a texture to hold the velocities
-for the line end points as well.
+De même, nous avons maintenant besoin de 2 textures pour stocker les extrémités des lignes, et
+nous mettrons à jour l'une depuis l'autre et les échangerons. Et nous avons besoin d'une texture
+pour stocker les vitesses des extrémités des lignes.
 
 ```js
 -const {tex: linesTex, dimensions: linesTexDimensions} =
@@ -1708,17 +1697,12 @@ for the line end points as well.
 +    createDataTexture(gl, lineVelocities, 2, gl.RG32F, gl.RG, gl.FLOAT);
 ```
 
-We need a bunch of vertex arrays. 
+Nous avons besoin d'un ensemble de vertex arrays.
 
-* 2 for updating positions (one that
-takes `pointsBuffer1` as input and another that takes `pointsBuffer2`
-as input).
-* 1 to hold the clip space -1 to +1 quad used when updating
-the lines.
-* 2 to compute the closest lines (one that looks at points
-in `pointsBuffer1` and one that looks at points in `pointsBuffer2`).
-* 2 to draw the points (one that looks at points
-in `pointsBuffer1` and one that looks at points in `pointsBuffer2`)
+* 2 pour mettre à jour les positions (un qui prend `pointsBuffer1` en entrée et un autre qui prend `pointsBuffer2`).
+* 1 pour contenir le quad clip space -1 à +1 utilisé lors de la mise à jour des positions de lignes.
+* 2 pour calculer les lignes les plus proches (un qui regarde les points dans `pointsBuffer1` et un dans `pointsBuffer2`).
+* 2 pour dessiner les points (un qui regarde les points dans `pointsBuffer1` et un dans `pointsBuffer2`).
 
 ```js
 +const updatePositionVA1 = makeVertexArray(gl, [
@@ -1762,7 +1746,7 @@ gl.vertexAttribDivisor(drawClosestLinesPrgLocs.closestNdx, 1);
 +]);
 ```
 
-We need 2 more transform feedbacks for updating the points
+Nous avons besoin de 2 transform feedbacks supplémentaires pour mettre à jour les points :
 
 ```js
 function makeTransformFeedback(gl, buffer) {
@@ -1778,8 +1762,8 @@ function makeTransformFeedback(gl, buffer) {
 const closestNdxTF = makeTransformFeedback(gl, closestNdxBuffer);
 ```
 
-We need to make framebuffers for updating the line points, one to
-write to `linesTex1` and one to write to `linesTex2`
+Nous devons créer des framebuffers pour mettre à jour les points de lignes, un pour écrire dans
+`linesTex1` et un pour écrire dans `linesTex2` :
 
 ```js
 function createFramebuffer(gl, tex) {
@@ -1793,12 +1777,12 @@ const linesFB1 = createFramebuffer(gl, linesTex1);
 const linesFB2 = createFramebuffer(gl, linesTex2);
 ```
 
-Because we want to write to floating point textures and that's an optional
-feature of WebGL2 we need to check if we can by checking for the
-`EXT_color_buffer_float` extension
+Parce que nous voulons écrire dans des textures à virgule flottante, ce qui est une fonctionnalité
+optionnelle de WebGL2, nous devons vérifier si on peut en vérifiant l'extension
+`EXT_color_buffer_float` :
 
 ```js
-// Get A WebGL context
+// Obtient un contexte WebGL
 /** @type {HTMLCanvasElement} */
 const canvas = document.querySelector("#canvas");
 const gl = canvas.getContext("webgl2");
@@ -1812,53 +1796,52 @@ if (!gl) {
 +}
 ```
 
-And we need to setup some objects to track current and next so we can
-easily swap the things we need to swap each frame
+Et nous devons configurer des objets pour suivre current et next afin de pouvoir facilement
+échanger ce qu'on doit échanger à chaque image :
 
 ```js
 let current = {
-  // for updating points
-  updatePositionVA: updatePositionVA1,  // read from points1
-  pointsTF: pointsTF2,                  // write to points2
-  // for updating line endings
-  linesTex: linesTex1,                  // read from linesTex1
-  linesFB: linesFB2,                    // write to linesTex2
-  // for computing closest lines
-  closestLinesVA: closestLinesVA2,      // read from points2
-  // for drawing all lines and closest lines
-  allLinesTex: linesTex2,               // read from linesTex2
-  // for drawing points
-  drawPointsVA: drawPointsVA2,          // read form points2
+  // pour mettre à jour les points
+  updatePositionVA: updatePositionVA1,  // lit depuis points1
+  pointsTF: pointsTF2,                  // écrit dans points2
+  // pour mettre à jour les extrémités de lignes
+  linesTex: linesTex1,                  // lit depuis linesTex1
+  linesFB: linesFB2,                    // écrit dans linesTex2
+  // pour calculer les lignes les plus proches
+  closestLinesVA: closestLinesVA2,      // lit depuis points2
+  // pour dessiner toutes les lignes et les lignes les plus proches
+  allLinesTex: linesTex2,               // lit depuis linesTex2
+  // pour dessiner les points
+  drawPointsVA: drawPointsVA2,          // lit depuis points2
 };
 
 let next = {
-  // for updating points
-  updatePositionVA: updatePositionVA2,  // read from points2
-  pointsTF: pointsTF1,                  // write to points1
-  // for updating line endings
-  linesTex: linesTex2,                  // read from linesTex2
-  linesFB: linesFB1,                    // write to linesTex1
-  // for computing closest lines
-  closestLinesVA: closestLinesVA1,      // read from points1
-  // for drawing all lines and closest lines
-  allLinesTex: linesTex1,               // read from linesTex1
-  // for drawing points
-  drawPointsVA: drawPointsVA1,          // read form points1
+  // pour mettre à jour les points
+  updatePositionVA: updatePositionVA2,  // lit depuis points2
+  pointsTF: pointsTF1,                  // écrit dans points1
+  // pour mettre à jour les extrémités de lignes
+  linesTex: linesTex2,                  // lit depuis linesTex2
+  linesFB: linesFB1,                    // écrit dans linesTex1
+  // pour calculer les lignes les plus proches
+  closestLinesVA: closestLinesVA1,      // lit depuis points1
+  // pour dessiner toutes les lignes et les lignes les plus proches
+  allLinesTex: linesTex1,               // lit depuis linesTex1
+  // pour dessiner les points
+  drawPointsVA: drawPointsVA1,          // lit depuis points1
 };
 ```
 
-Then we need a render loop. Let's break all the parts
-into functions
+Ensuite nous avons besoin d'une boucle de rendu. Découpons toutes les parties en fonctions :
 
 ```js
 
 let then = 0;
 function render(time) {
-  // convert to seconds
+  // convertit en secondes
   time *= 0.001;
-  // Subtract the previous time from the current time
+  // soustrait le temps précédent du temps courant
   const deltaTime = time - then;
-  // Remember the current time for the next frame.
+  // mémorise le temps courant pour la prochaine image.
   then = time;
 
   webglUtils.resizeCanvasToDisplaySize(gl.canvas);
@@ -1875,7 +1858,7 @@ function render(time) {
   drawClosestLines(matrix);
   drawPoints(matrix);
 
-  // swap
+  // échange
   {
     const temp = current;
     current = next;
@@ -1888,8 +1871,8 @@ requestAnimationFrame(render);
 }
 ```
 
-And now we can just fill in the parts. All the previous parts
-are the same example we reference `current` at the appropriate places.
+Et maintenant nous pouvons juste remplir les parties. Toutes les parties précédentes sont dans
+le même exemple, nous référençons `current` aux endroits appropriés.
 
 ```js
 function computeClosestLines() {
@@ -1914,12 +1897,12 @@ function drawAllLines(matrix) {
   gl.bindVertexArray(null);
   gl.useProgram(drawLinesPrg);
 
-  // bind the lines texture to texture unit 0
+  // lie la texture des lignes à l'unité de texture 0
   gl.activeTexture(gl.TEXTURE0);
 -  gl.bindTexture(gl.TEXTURE_2D, linesTex);
 +  gl.bindTexture(gl.TEXTURE_2D, current.allLinesTex);
 
-  // Tell the shader to use texture on texture unit 0
+  // dit au shader d'utiliser la texture sur l'unité de texture 0
   gl.uniform1i(drawLinesPrgLocs.linesTex, 0);
   gl.uniformMatrix4fv(drawLinesPrgLocs.matrix, false, matrix);
 
@@ -1953,7 +1936,7 @@ function drawPoints(matrix) {
 }
 ```
 
-And we need 2 new functions for updating the points and lines
+Et nous avons besoin de 2 nouvelles fonctions pour mettre à jour les points et les lignes :
 
 ```js
 function updatePointPositions(deltaTime) {
@@ -1965,66 +1948,65 @@ function updatePointPositions(deltaTime) {
 }
 
 function updateLineEndPoints(deltaTime) {
-  // Update the line endpoint positions ---------------------
-  gl.bindVertexArray(updateLinesVA); // just a quad
+  // Met à jour les positions des extrémités de lignes ---------------------
+  gl.bindVertexArray(updateLinesVA); // juste un quad
   gl.useProgram(updateLinesPrg);
 
-  // bind texture to texture units 0 and 1
+  // lie les textures aux unités de texture 0 et 1
   gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D, current.linesTex);
   gl.activeTexture(gl.TEXTURE0 + 1);
   gl.bindTexture(gl.TEXTURE_2D, lineVelocitiesTex);
 
-  // tell the shader to look at the textures on texture units 0 and 1
+  // dit au shader de regarder les textures sur les unités 0 et 1
   gl.uniform1i(updateLinesPrgLocs.linesTex, 0);
   gl.uniform1i(updateLinesPrgLocs.velocityTex, 1);
   gl.uniform1f(updateLinesPrgLocs.deltaTime, deltaTime);
   gl.uniform2f(updateLinesPrgLocs.canvasDimensions, gl.canvas.width, gl.canvas.height);
 
-  // write to the other lines texture
+  // écrit dans l'autre texture de lignes
   gl.bindFramebuffer(gl.FRAMEBUFFER, current.linesFB);
   gl.viewport(0, 0, ...lineVelocitiesTexDimensions);
 
-  // drawing a clip space -1 to +1 quad = map over entire destination array
+  // dessiner un quad clip space -1 à +1 = mapper sur tout le tableau de destination
   gl.drawArrays(gl.TRIANGLES, 0, 6);
 }
 ```
 
-And with that we can see it working dynamically and all the computation
-is happening on the GPU
+Et avec ça, on peut le voir fonctionner dynamiquement, tout le calcul se faisant sur le GPU :
 
 {{{example url="../webgl-gpgpu-closest-line-dynamic-transformfeedback.html"}}}
 
-## Some Caveats about GPGPU
+## Quelques mises en garde sur le GPGPU
 
-* GPGPU in WebGL1 is mostly limited to using 2D arrays as output (textures).
-  WebGL2 adds the ability to just process a 1D array of arbitrary size via
+* Le GPGPU dans WebGL1 est principalement limité à l'utilisation de tableaux 2D comme sortie
+  (textures). WebGL2 ajoute la capacité de traiter un tableau 1D de taille arbitraire via le
   transform feedback.
   
-  If you're curious see [the same article for webgl1](https://webglfundamentals.org/webgl/lessons/webgl-gpgpu.html) to see how all of these were done using only the ability
-  to output to textures. Of course with a little thought that should be obvious.
+  Si vous êtes curieux, voir [le même article pour webgl1](https://webglfundamentals.org/webgl/lessons/webgl-gpgpu.html) pour voir comment tout cela était fait en utilisant uniquement la capacité
+  de sortir vers des textures. Bien sûr, avec un peu de réflexion, cela devrait être évident.
 
-  WebGL2 versions using textures instead of transform feedback are available as well
-  since using `texelFetch` and having more texture formats available slightly changes
-  their implementations.
+  Des versions WebGL2 utilisant des textures au lieu du transform feedback sont également
+  disponibles, car l'utilisation de `texelFetch` et la disponibilité de plus de formats de texture
+  modifient légèrement leurs implémentations.
   
-  * [particles](../webgl-gpgpu-particles.html)
-  * [closest lines results](../webgl-gpgpu-closest-line-results.html)
-  * [closest lines visualized](../webgl-gpgpu-closest-line.html)
-  * [closest lines dynamic](../webgl-gpgpu-closest-line-dynamic.html)
+  * [particules](../webgl-gpgpu-particles.html)
+  * [résultats des lignes les plus proches](../webgl-gpgpu-closest-line-results.html)
+  * [lignes les plus proches visualisées](../webgl-gpgpu-closest-line.html)
+  * [lignes les plus proches dynamiques](../webgl-gpgpu-closest-line-dynamic.html)
 
-* Firefox Bug<a id="firefox-bug"></a>
+* Bug Firefox<a id="firefox-bug"></a>
 
-  Firefox as of version 84 has [a bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1677552) in that
-  it wrongly requires there to be at least one active attribute that uses a divisor of 0 when calling
-  `drawArraysIndexed`. That means the example above where we draw the closest lines using
-  `drawArraysIndexed` fails.
+  Firefox à partir de la version 84 a [un bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1677552)
+  en ce qu'il exige incorrectement qu'il y ait au moins un attribut actif avec un diviseur de 0
+  lors de l'appel de `drawArraysIndexed`. Cela signifie que l'exemple ci-dessus où nous dessinons
+  les lignes les plus proches en utilisant `drawArraysIndexed` échoue.
 
-  To work around it we can create a buffer that just has `[0, 1]` in it and use that
-  on an attribute for how we used `gl_VertexID % 2`. Instead we'd use
+  Pour contourner ça, on peut créer un tampon qui contient juste `[0, 1]` et l'utiliser sur un
+  attribut pour ce qu'on utilisait `gl_VertexID % 2`. À la place, on utiliserait :
 
   ```glsl
-  in int endPoint;  // needed by firefox
+  in int endPoint;  // nécessaire pour firefox
 
   ...
   -int linePointId = closestNdx * 2 + gl_VertexID % 2;
@@ -2032,114 +2014,109 @@ is happening on the GPU
   ...
   ```
 
-  which will [make it work in firefox](../webgl/webgl-gpgpu-closest-line-dynamic-transformfeedback-ff.html).
+  ce qui [le fera fonctionner dans Firefox](../webgl/webgl-gpgpu-closest-line-dynamic-transformfeedback-ff.html).
 
-* GPUs don't have the same precision as CPUs.
+* Les GPU n'ont pas la même précision que les CPU.
 
-  Check your results and make sure they are acceptable.
+  Vérifiez vos résultats et assurez-vous qu'ils sont acceptables.
 
-* There is overhead to GPGPU.
+* Il y a un overhead au GPGPU.
 
-  In the first few examples above we computed some
-  data using WebGL and then read the results. Setting up buffers and textures,
-  setting attributes and uniforms takes time. Enough time that for anything
-  under a certain size it would be better to just do it in JavaScript.
-  The actual examples multiplying 6 numbers or adding 3 pairs of numbers
-  are much too small for GPGPU to be useful. Where that trade off is
-  is undefined. Experiment but just a guess that if you're not doing at least
-  1000 or more things keep it in JavaScript
+  Dans les premiers exemples ci-dessus, nous avons calculé des données avec WebGL puis lu les
+  résultats. La configuration des tampons et des textures, la définition des attributs et des
+  uniforms prend du temps. Assez de temps pour que pour tout ce qui est en dessous d'une certaine
+  taille, il serait préférable de le faire en JavaScript. Les exemples réels de multiplication de
+  6 nombres ou d'addition de 3 paires de nombres sont bien trop petits pour que le GPGPU soit
+  utile. Où se trouve ce seuil de compromis n'est pas défini. Expérimentez, mais si on ne fait
+  pas au moins 1000 opérations ou plus, gardez-le en JavaScript.
 
-* `readPixels` and `getBufferSubData` are slow
+* `readPixels` et `getBufferSubData` sont lents.
 
-  Reading the results from WebGL is slow so it's important to avoid it
-  as much as possible. As an example neither the particle system above nor
-  the dynamic closest lines example ever
-  read the results back to JavaScript. Where you can, keep the results
-  on the GPU for as long as possible. In other words, you could do something
-  like
+  Lire les résultats depuis WebGL est lent, il est donc important de l'éviter autant que possible.
+  Par exemple, ni le système de particules ci-dessus ni l'exemple dynamique de lignes les plus
+  proches ne lisent jamais les résultats dans JavaScript. Dans la mesure du possible, gardez les
+  résultats sur le GPU aussi longtemps que possible. En d'autres termes, vous pourriez faire
+  quelque chose comme :
 
-  * compute stuff on GPU
-  * read result
-  * prep result for next step
-  * upload prepped result to gpu
-  * compute stuff on GPU
-  * read result
-  * prep result for next step
-  * upload prepped result to gpu
-  * compute stuff on GPU
-  * read result
+  * calcule des choses sur le GPU
+  * lit le résultat
+  * prépare le résultat pour la prochaine étape
+  * uploade le résultat préparé sur le GPU
+  * calcule des choses sur le GPU
+  * lit le résultat
+  * prépare le résultat pour la prochaine étape
+  * uploade le résultat préparé sur le GPU
+  * calcule des choses sur le GPU
+  * lit le résultat
 
-  whereas via creative solutions it would be much faster if you could
+  alors que via des solutions créatives, ce serait bien plus rapide si vous pouviez :
 
-  * compute stuff on GPU
-  * prep result for next step using GPU
-  * compute stuff on GPU
-  * prep result for next step using GPU
-  * compute stuff on GPU
-  * read result
+  * calcule des choses sur le GPU
+  * prépare le résultat pour la prochaine étape en utilisant le GPU
+  * calcule des choses sur le GPU
+  * prépare le résultat pour la prochaine étape en utilisant le GPU
+  * calcule des choses sur le GPU
+  * lit le résultat
 
-  Our dynamic closest lines example did this. The results never leave
-  the GPU.
+  Notre exemple dynamique de lignes les plus proches a fait ça. Les résultats ne quittent jamais
+  le GPU.
 
-  As another example I once wrote a histogram computing shader. I then read
-  the results back into JavaScript, figured out the min and max values
-  Then drew the image back to the canvas using those min and max values
-  as uniforms to auto-level the image.
+  Comme autre exemple, j'ai écrit une fois un shader de calcul d'histogramme. J'ai ensuite lu
+  les résultats dans JavaScript, calculé les valeurs min et max, puis redessiné l'image sur le
+  canvas en utilisant ces valeurs min et max comme uniforms pour auto-ajuster l'image.
 
-  But, it turned instead of reading the histogram back into JavaScript
-  I could instead run a shader on the histogram itself that generated
-  a 2 pixel texture with the min and max values in the texture.
+  Mais, il s'avère qu'au lieu de lire l'histogramme dans JavaScript, je pouvais plutôt exécuter
+  un shader sur l'histogramme lui-même qui générait une texture de 2 pixels avec les valeurs min
+  et max dans la texture.
 
-  I could then pass that 2 pixel texture into the 3rd shader which it
-  could read for the min and max values. No need to read them out of the
-  GPU for setting uniforms.
+  Je pouvais alors passer cette texture de 2 pixels au 3ème shader qui pouvait lire les valeurs
+  min et max depuis elle. Pas besoin de les lire depuis le GPU pour les utiliser comme uniforms.
 
-  Similarly to display the histogram itself I first read the histogram
-  data from the GPU but later I instead wrote a shader that could
-  visualize the histogram data directly removing the need to read it
-  back to JavaScript.
+  De même, pour afficher l'histogramme lui-même, j'ai d'abord lu les données d'histogramme depuis
+  le GPU, mais plus tard j'ai plutôt écrit un shader qui pouvait visualiser les données
+  d'histogramme directement, supprimant le besoin de les lire dans JavaScript.
 
-  By doing that the entire process stayed on the GPU and was likely much
-  faster.
+  En faisant ça, tout le processus est resté sur le GPU et était probablement bien plus rapide.
 
-* GPUs can do many things in parallel but most can't multi-task the same way
-  a CPU can. GPUs usually can't do "[preemptive multitasking](https://www.google.com/search?q=preemptive+multitasking)".
-  That means if you give them a very complex shader that say takes 5 minutes to
-  run they'll potentially freeze your entire machine for 5 minutes.
-  Most well made OSes deal with this by having the CPU check how long it's been
-  since the last command they gave to the GPU. If it's been too long (5-6 second)
-  and the GPU has not responded then their only option is to reset the GPU.
+* Les GPU peuvent faire beaucoup de choses en parallèle, mais la plupart ne peuvent pas effectuer
+  de multitâche de la même façon qu'un CPU. Les GPU ne peuvent généralement pas faire du
+  "[préemptive multitasking](https://www.google.com/search?q=preemptive+multitasking)". Cela
+  signifie que si vous leur donnez un shader très complexe qui prend disons 5 minutes à exécuter,
+  ils pourraient potentiellement geler votre machine entière pendant 5 minutes. La plupart des OS
+  bien conçus gèrent ça en faisant vérifier au CPU depuis combien de temps a été donné le dernier
+  ordre au GPU. Si ça fait trop longtemps (5-6 secondes) et que le GPU n'a pas répondu, leur seule
+  option est de réinitialiser le GPU.
   
-  This is one reason why WebGL can *lose the context* and you get an "Aw, rats!"
-  or similar message.
+  C'est l'une des raisons pour lesquelles WebGL peut *perdre le contexte* et vous obtenez un
+  message "Aw, rats!" ou similaire.
 
-  It's easy to give the GPU too much to do but in graphics it's not *that*
-  common to take it to the 5-6 second level. It's usually more like the 0.1
-  second level which is still bad but usually you want graphics to run fast
-  and so the programmer will hopefully optimize or find a different technique
-  to keep the their app responsive.
+  Il est facile de donner trop de travail au GPU mais en graphisme, ce n'est pas si courant
+  d'atteindre le niveau des 5-6 secondes. C'est plus souvent le niveau des 0.1 secondes, ce qui
+  est quand même mauvais, mais vous voulez généralement que les graphismes s'exécutent vite et
+  donc le programmeur optimisera ou trouvera une technique différente pour garder l'application
+  réactive.
 
-  GPGPU on the other hand you might truly want to give the GPU a heavy task
-  to run. There is no easy solution here. A mobile phone has a much less powerful
-  GPU than a top end PC. Other than doing your own timing there is no way to
-  know for sure how much work you can give a GPU before its "too slow"
+  En GPGPU, par contre, vous pourriez vraiment vouloir donner au GPU une tâche lourde à exécuter.
+  Il n'y a pas de solution facile ici. Un téléphone mobile a un GPU bien moins puissant qu'un PC
+  haut de gamme. En dehors de faire votre propre timing, il n'y a aucun moyen de savoir avec
+  certitude combien de travail vous pouvez donner à un GPU avant que ce soit "trop lent".
 
-  I don't have a solution to offer. Only a warning that depending on what you're
-  trying to do you may run into that issue.
+  Je n'ai pas de solution à proposer. Seulement un avertissement que selon ce que vous essayez de
+  faire, vous pourriez rencontrer ce problème.
 
-* Mobile devices don't generally support rendering to floating point textures
+* Les appareils mobiles ne supportent généralement pas le rendu vers des textures à virgule
+  flottante.
 
-  There are various ways of working around the issue. One use you can
-  use the GLSL functions `floatBitsToInt`, `floatBitsToUint`, `IntBitsToFloat`,
-  and `UintBitsToFloat`.
+  Il y a diverses façons de contourner le problème. Une consiste à utiliser les fonctions GLSL
+  `floatBitsToInt`, `floatBitsToUint`, `IntBitsToFloat` et `UintBitsToFloat`.
 
-  As an example, [the texture based version of the particle example](../webgl-gpgpu-particles.html)
-  needs to write to floating point textures. We could fix it so it doesn't require them by
-  declaring our texture to be type `RG32I` (32 integer textures) but still
-  upload floats.
+  Par exemple, [la version basée sur texture de l'exemple de particules](../webgl-gpgpu-particles.html)
+  a besoin d'écrire dans des textures à virgule flottante. Nous pourrions le corriger pour ne pas
+  en nécessiter en déclarant notre texture de type `RG32I` (textures entières 32 bits) mais en
+  uploadant quand même des flottants.
 
-  In the shader we'd need to read the textures as integers and decode them
-  to floats and then encode the result back into integers. For example
+  Dans le shader, nous devrions lire les textures comme des entiers et les décoder en flottants,
+  puis encoder le résultat en retour en entiers. Par exemple :
 
   ```glsl
   #version 300 es
@@ -2159,15 +2136,15 @@ is happening on the GPU
   }
 
   void main() {
-    // there will be one velocity per position
-    // so the velocity texture and position texture
-    // are the same size.
+    // il y aura une vitesse par position
+    // donc la texture de vitesse et la texture de position
+    // ont la même taille.
 
-    // further, we're generating new positions
-    // so we know our destination is the same size
-    // as our source
+    // de plus, nous générons de nouvelles positions
+    // donc nous savons que notre destination a la même taille
+    // que notre source
 
-    // compute texcoord from gl_FragCoord;
+    // calcule les coordonnées de texel depuis gl_FragCoord;
     ivec2 texelCoord = ivec2(gl_FragCoord.xy);
     
   -  vec2 position = texelFetch(positionTex, texelCoord, 0).xy;
@@ -2181,25 +2158,21 @@ is happening on the GPU
   }
   ```
 
-  [Here's a working example](../webgl-gpgpu-particles-no-floating-point-textures.html)
+  [Voici un exemple fonctionnel](../webgl-gpgpu-particles-no-floating-point-textures.html)
 
-I hope these examples helped you understand the key idea of GPGPU in WebGL
-is just the fact that WebGL reads from and writes to arrays of **data**,
-not pixels.
+J'espère que ces exemples vous ont aidé à comprendre que l'idée clé du GPGPU dans WebGL
+est simplement que WebGL lit et écrit dans des tableaux de **données**, pas de pixels.
 
-Shaders work similar to `map` functions in that the function being called
-for each value doesn't get to decide where its value will be stored.
-Rather that is decided from outside the function. In WebGL's case
-that's decided by how you setup what you're drawing. Once you call `gl.drawXXX`
-the shader will be called for each needed value being asked "what value should
-I make this?"
+Les shaders fonctionnent de façon similaire aux fonctions `map` en ce que la fonction appelée
+pour chaque valeur ne décide pas où sa valeur sera stockée. C'est plutôt décidé depuis l'extérieur
+de la fonction. Dans le cas de WebGL, c'est décidé par la façon dont vous configurez ce que vous
+dessinez. Une fois que vous appelez `gl.drawXXX`, le shader sera appelé pour chaque valeur nécessaire
+en demandant "quelle valeur dois-je créer ici ?"
 
-And that's really it.
+Et c'est vraiment tout.
 
 ---
 
-Since we made some particles via GPGPU there is [this wonderful video](https://www.youtube.com/watch?v=X-iSQQgOd1A) which in its second half
-uses compute shaders to do a "slime" simulation.
+Puisque nous avons créé des particules via GPGPU, voici [cette merveilleuse vidéo](https://www.youtube.com/watch?v=X-iSQQgOd1A) qui dans sa deuxième moitié utilise des shaders de calcul pour faire une simulation de "slime".
 
-Using the techniques above <a href="https://jsgist.org/?src=94e9058c7ef1a4f124eccab4e7fdcd1d">here it is translated into WebGL2</a>.
-
+En utilisant les techniques ci-dessus, <a href="https://jsgist.org/?src=94e9058c7ef1a4f124eccab4e7fdcd1d">voici sa traduction en WebGL2</a>.

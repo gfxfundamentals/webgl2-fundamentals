@@ -1,22 +1,21 @@
-Title: WebGL2 Load Obj with Mtl
-Description: How to parse an .MTL file
-TOC: Loading .obj w .mtl files
+Title: WebGL2 Charger des fichiers Obj avec Mtl
+Description: Comment analyser un fichier .MTL
+TOC: Charger des fichiers .obj avec .mtl
 
-In [the previous article](webgl-load-obj.html) we parsed .OBJ files.
-In this article lets parse their complementary .MTL material files.
+Dans [l'article précédent](webgl-load-obj.html), nous avons analysé des fichiers .OBJ.
+Dans cet article, analysons leurs fichiers de matériaux .MTL complémentaires.
 
-**Disclaimer:** This .MTL parser is not meant to be exhaustive or
-flawless or handle every .MTL file. Rather it's meant as an
-exercise to walk through handling what we run into on the way.
-That said, if you run into big issues and solutions a comment
-at the bottom might be helpful for others if they choose to
-use this code.
+**Avertissement :** Ce parser .MTL n'est pas conçu pour être exhaustif ou
+parfait, ni pour gérer tous les fichiers .MTL. Il s'agit plutôt d'un
+exercice pour parcourir la gestion de ce qu'on rencontre en chemin.
+Cela dit, si vous rencontrez des problèmes importants et leurs solutions, un commentaire
+en bas de page pourrait être utile aux autres s'ils choisissent d'utiliser ce code.
 
-We loaded this [CC-BY 4.0](http://creativecommons.org/licenses/by/4.0/) [chair](https://sketchfab.com/3d-models/chair-aa2acddb218646a59ece132bf95aa558) by [haytonm](https://sketchfab.com/haytonm) I found on [Sketchfab](https://sketchfab.com/)
+Nous avons chargé cette [chaise](https://sketchfab.com/3d-models/chair-aa2acddb218646a59ece132bf95aa558) sous licence [CC-BY 4.0](http://creativecommons.org/licenses/by/4.0/) par [haytonm](https://sketchfab.com/haytonm) trouvée sur [Sketchfab](https://sketchfab.com/).
 
 <div class="webgl_center"><img src="../resources/models/chair/chair.jpg" style="width: 452px;"></div>
 
-It has a corresponding .MTL file that looks like this
+Elle a un fichier .MTL correspondant qui ressemble à ceci :
 
 ```
 # Blender MTL File: 'None'
@@ -52,13 +51,13 @@ Ni 1.000000
 d 1.000000
 illum 2
 
-... similar for 8 more materials
+... similaire pour 8 autres matériaux
 ```
 
-Checking [a description of the .MTL file format](http://paulbourke.net/dataformats/mtl/)
-We can see the keyword `newmtl` starts a new material by the given name and below
-that are all the settings for that material. Each line starts with a keyword similar
-to the .OBJ file so we can start with a similar framework
+En consultant [une description du format de fichier .MTL](http://paulbourke.net/dataformats/mtl/),
+on peut voir que le mot-clé `newmtl` commence un nouveau matériau avec le nom donné, et
+en dessous se trouvent tous les paramètres de ce matériau. Chaque ligne commence par un mot-clé
+similaire au fichier .OBJ, donc on peut commencer avec un cadre similaire :
 
 ```js
 function parseMTL(text) {
@@ -97,20 +96,19 @@ function parseMTL(text) {
 }
 ```
 
-Then we just need to add functions for each keyword. The docs say that
+Ensuite, il suffit d'ajouter des fonctions pour chaque mot-clé. La documentation indique que :
 
-* `Ns` is the specular shininess setting from [the article on point lights](webgl-3d-lighting-point.html)
-* `Ka` is the ambient color of the material
-* `Kd` is the diffuse color which was our color in [the article on point lights](webgl-3d-lighting-point.html)
-* `Ks` is the specular color
-* `Ke` is the emissive color
-* `Ni` is the optical density. We won't use this
-* `d` stands for "dissolve" which is the opacity
-* `illum` specifies the kind of illumination. The document lists 11 kinds. We'll ignore this for now.
+* `Ns` est le paramètre de brillance spéculaire de [l'article sur les lumières ponctuelles](webgl-3d-lighting-point.html)
+* `Ka` est la couleur ambiante du matériau
+* `Kd` est la couleur diffuse qui était notre couleur dans [l'article sur les lumières ponctuelles](webgl-3d-lighting-point.html)
+* `Ks` est la couleur spéculaire
+* `Ke` est la couleur émissive
+* `Ni` est la densité optique. Nous ne l'utiliserons pas
+* `d` signifie "dissolve" qui est l'opacité
+* `illum` spécifie le type d'illumination. Le document liste 11 types. Nous l'ignorerons pour l'instant.
 
-I debated on whether or not to keep those names just as they are. I suppose a math
-person loves short names. Most code style guides prefer descriptive names so I
-decided to do that.
+J'ai hésité à conserver ces noms tels quels. Un mathématicien aime les noms courts.
+La plupart des guides de style de code préfèrent des noms descriptifs, donc j'ai décidé de faire ainsi.
 
 ```js
 function parseMTL(text) {
@@ -138,40 +136,40 @@ function parseMTL(text) {
 }
 ```
 
-I also debated on whether or not to try to guess the path to each .MTL file
-or manually specify it. In other words we could do this
+J'ai aussi hésité à essayer de deviner le chemin vers chaque fichier .MTL
+ou de le spécifier manuellement. En d'autres termes, on pourrait faire ceci :
 
 ```
-// pseudo code - manually specify the path for both the .OBJ and .MTL files
+// pseudo code - spécifier manuellement le chemin pour les fichiers .OBJ et .MTL
 const obj = downloadAndParseObj(pathToOBJFile);
 const materials = downloadAndParseMtl(pathToMTLFile);
 ```
 
-Or we can do this
+Ou on peut faire ceci :
 
 ```
-// pseudo code - guess the path to the .MTL file based on the .OBJ file
+// pseudo code - deviner le chemin du fichier .MTL basé sur le fichier .OBJ
 const obj = downloadAndParseObj(pathToOBJFile);
 const materials = downloadAndParseMtl(pathToOBJFile, obj);
 ```
 
-I chose the latter which I'm not totally sure is a good or bad idea.
-According to the docs an .OBJ file can contain references to multiple .MTL
-files. I've never seen an example of that but I'm guessing the author of
-the docs did.
+J'ai choisi la deuxième option, dont je ne suis pas totalement sûr qu'elle soit
+bonne ou mauvaise. Selon la documentation, un fichier .OBJ peut contenir des
+références à plusieurs fichiers .MTL. Je n'en ai jamais vu d'exemple, mais je
+suppose que l'auteur de la documentation l'a fait.
 
-Further, I've never seen the .MTL file named anything different than the
-.OBJ file. In other words if the .OBJ file is `bananas.obj` the .MTL file
-seems to almost always bee `bananas.mtl`.
+De plus, je n'ai jamais vu le fichier .MTL portant un nom différent du fichier .OBJ.
+En d'autres termes, si le fichier .OBJ s'appelle `bananas.obj`, le fichier .MTL
+s'appelle presque toujours `bananas.mtl`.
 
-That said, the spec says the .MTL files are specified in the `.OBJ` file
-so I decided to try to compute the paths of the .MTL files
+Cela dit, la spécification dit que les fichiers .MTL sont spécifiés dans le fichier
+`.OBJ`, donc j'ai décidé d'essayer de calculer les chemins des fichiers .MTL.
 
-Starting with the code [from the previous article](webgl-load-obj.html)
-we separate out the URL for the .OBJ file, then build new URLs for the
-.MTL files relative to the .OBJ file. Finally we load all of them,
-concatenate them since they are just text files, and pass them to our
-parser.
+En partant du code [de l'article précédent](webgl-load-obj.html),
+nous séparons l'URL du fichier .OBJ, puis construisons de nouvelles URLs pour les
+fichiers .MTL relativement au fichier .OBJ. Enfin, nous les chargeons tous,
+les concaténons puisque ce sont des fichiers texte, et les passons à notre
+parseur.
 
 ```js
 -const response = await fetch('resources/models/chair/chair.obj');
@@ -188,9 +186,9 @@ const obj = parseOBJ(text);
 +const materials = parseMTL(matTexts.join('\n'));
 ```
 
-Now we need to use the materials. First when we setup the parts we'll
-use the name of the material we pulled out of the .OBJ file and use it
-to look up a material from the materials we just loaded.
+Nous devons maintenant utiliser les matériaux. D'abord, lors de la configuration des
+parties, nous utiliserons le nom du matériau extrait du fichier .OBJ et nous l'utiliserons
+pour chercher un matériau parmi ceux que nous venons de charger.
 
 ```js
 -const parts = obj.geometries.map(({data}) => {
@@ -198,7 +196,7 @@ to look up a material from the materials we just loaded.
 
   ...
 
-  // create a buffer for each array by calling
+  // crée un tampon pour chaque tableau en appelant
   // gl.createBuffer, gl.bindBuffer, gl.bufferData
   const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
   const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
@@ -213,7 +211,7 @@ to look up a material from the materials we just loaded.
 });
 ```
 
-When we render our helper lets us pass more than one set of uniform values.
+Lors du rendu, notre assistant nous permet de passer plus d'un ensemble de valeurs d'uniform.
 
 ```js
 function render(time) {
@@ -221,15 +219,15 @@ function render(time) {
   ...
 
   for (const {bufferInfo, vao, material} of parts) {
-    // set the attributes for this part.
+    // configure les attributs pour cette partie.
     gl.bindVertexArray(vao);
-    // calls gl.uniform
+    // appelle gl.uniform
     twgl.setUniforms(meshProgramInfo, {
       u_world,
 -      u_diffuse: material.u_diffuse,
 -    });
 +    }, material);
-    // calls gl.drawArrays or gl.drawElements
+    // appelle gl.drawArrays ou gl.drawElements
     twgl.drawBufferInfo(gl, bufferInfo);
   }
 
@@ -237,19 +235,20 @@ function render(time) {
 }
 ```
 
-Then we need to change the shaders. Because the materials have specular settings
-we'll add in the specular calculation from [the article on point lighting](webgl-3d-lighting-point.html) except with one difference, we'll compute
-specular lighting from a directional light instead of a point light.
+Ensuite, nous devons modifier les shaders. Puisque les matériaux ont des paramètres
+spéculaires, nous allons ajouter le calcul spéculaire de [l'article sur l'éclairage ponctuel](webgl-3d-lighting-point.html),
+sauf avec une différence : nous calculerons l'éclairage spéculaire depuis une lumière
+directionnelle au lieu d'une lumière ponctuelle.
 
-`ambient` and `emissive` might need an explanation. `ambient` is the color
-of the material from light with no direction. We can multiply that by an
-`u_ambientLight` color and set that light color to something more than black
-if we want to see it. This tends to wash thing out.
+`ambient` et `emissive` nécessitent peut-être une explication. `ambient` est la couleur
+du matériau sous une lumière sans direction. Nous pouvons la multiplier par une couleur
+`u_ambientLight` et définir cette couleur de lumière à quelque chose de plus que du noir
+si on veut la voir. Cela tend à "laver" les couleurs.
 
-`emissive` is the color the of the material separate from all lights so
-we just add it on. `emissive` might be used if you have an area that glows.
+`emissive` est la couleur du matériau indépendamment de toutes les lumières, donc on la
+ajoute simplement. `emissive` pourrait être utilisé si vous avez une zone qui brille.
 
-Here's the new shader.
+Voici le nouveau shader.
 
 ```js
 const vs = `#version 300 es
@@ -319,17 +318,17 @@ void main () {
 `;
 ```
 
-And with that we get something that looks pretty similar to the image above
+Et avec ça, on obtient quelque chose qui ressemble beaucoup à l'image ci-dessus :
 
 {{{example url="../webgl-load-obj-w-mtl-no-textures.html"}}}
 
-Let's try to load an .OBJ file that has a .MTL that references textures
+Essayons de charger un fichier .OBJ qui a un .MTL qui référence des textures.
 
- I found [this CC-BY-NC 3.0 windmill 3D model](https://www.blendswap.com/blends/view/69174) by [ahedov](https://www.blendswap.com/user/ahedov).
+J'ai trouvé [ce modèle 3D de moulin à vent sous licence CC-BY-NC 3.0](https://www.blendswap.com/blends/view/69174) par [ahedov](https://www.blendswap.com/user/ahedov).
 
 <div class="webgl_center"><img src="../resources/models/windmill/windmill-obj.jpg"></div>
 
-Its .MTL file looks like this
+Son fichier .MTL ressemble à ceci :
 
 ```
 # Blender MTL File: 'windmill_001.blend'
@@ -361,12 +360,12 @@ map_Bump windmill_001_base_NOR.jpg
 map_Ns windmill_001_base_SPEC.jpg
 ```
 
-We can see `map_Kd`, `map_Bump`, and `map_Ns` all specify image files.
-Let's add them to our .MTL parser
+On peut voir que `map_Kd`, `map_Bump` et `map_Ns` spécifient tous des fichiers image.
+Ajoutons-les à notre parseur .MTL :
 
 ```js
 +function parseMapArgs(unparsedArgs) {
-+  // TODO: handle options
++  // TODO: gérer les options
 +  return unparsedArgs;
 +}
 
@@ -395,17 +394,21 @@ function parseMTL(text) {
   ...
 ```
 
-Note: I made `parseMapArgs` because according to [the spec](http://paulbourke.net/dataformats/mtl/) there are a bunch of extra options we don't see in this file. We'd need some major refactoring to use them but for now I to hopefully handle filenames with space and no options.
+Note : J'ai créé `parseMapArgs` parce que selon [la spécification](http://paulbourke.net/dataformats/mtl/),
+il y a plein d'options supplémentaires qu'on ne voit pas dans ce fichier. Il nous faudrait
+une refactorisation majeure pour les utiliser, mais pour l'instant j'espère gérer les noms
+de fichiers avec des espaces et sans options.
 
-To load all these textures we could use the code from [the article on textures](webgl-3d-textures.html) but let's use our helpers again to unclutter the code.
+Pour charger toutes ces textures, nous pourrions utiliser le code de [l'article sur les textures](webgl-3d-textures.html),
+mais utilisons à nouveau nos assistants pour alléger le code.
 
-Two materials might reference the same image so let's keep all the textures in
-an object by filename so we don't load any twice.
+Deux matériaux peuvent référencer la même image, donc gardons toutes les textures dans
+un objet par nom de fichier pour ne pas en charger deux fois.
 
 ```js
 const textures = {};
 
-// load texture for materials
+// charge les textures pour les matériaux
 for (const material of Object.values(materials)) {
   Object.entries(material)
     .filter(([key]) => key.endsWith('Map'))
@@ -421,11 +424,14 @@ for (const material of Object.values(materials)) {
 }
 ```
 
-The code above goes through each property of each material. If the property ends
-in `"Map"` it creates a relative URL, creates a texture and assigns it back to
-the material. Our helper will asynchronously load the image into the texture.
+Le code ci-dessus parcourt chaque propriété de chaque matériau. Si la propriété se termine
+par `"Map"`, il crée une URL relative, crée une texture et l'assigne au matériau. Notre
+assistant chargera l'image dans la texture de façon asynchrone.
 
-We'll also put in a single white pixel texture we can use for any material that doesn't reference a texture. This way we can use the same shader. Otherwise we'd need different shaders, one for materials with a texture and a different one for materials without.
+Nous allons aussi mettre une texture blanche 1x1 que nous pouvons utiliser pour tout
+matériau qui ne référence pas de texture. Ainsi, nous pouvons utiliser le même shader.
+Sinon, il nous faudrait des shaders différents, un pour les matériaux avec texture et un
+autre pour les matériaux sans.
 
 ```js
 -const textures = {};
@@ -434,7 +440,7 @@ We'll also put in a single white pixel texture we can use for any material that 
 +};
 ```
 
-Let's also assign defaults for any material parameters that are missing.
+Assignons aussi des valeurs par défaut pour tout paramètre de matériau manquant.
 
 ```
 +const defaultMaterial = {
@@ -450,7 +456,7 @@ const parts = obj.geometries.map(({material, data}) => {
 
   ...
 
-  // create a buffer for each array by calling
+  // crée un tampon pour chaque tableau en appelant
   // gl.createBuffer, gl.bindBuffer, gl.bufferData
   const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
   const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
@@ -466,8 +472,8 @@ const parts = obj.geometries.map(({material, data}) => {
 });
 ```
 
-To use the textures we need to change the shader. Let's use them one at a time. We'll first
-use the diffuse map.
+Pour utiliser les textures, nous devons modifier le shader. Utilisons-les une à la fois.
+Nous commencerons par la diffuse map.
 
 ```js
 const vs = `#version 300 es
@@ -541,18 +547,18 @@ void main () {
 `;
 ```
 
-And we get textures!
+Et on obtient des textures !
 
 {{{example url="../webgl-load-obj-w-mtl-w-textures.html"}}}
 
-Looking back in the .MTL file we can see a `map_Ks` which is basically
-a black and white texture that specifies how shiny a particular surface
-is or another way to think of it is how much of the specular reflection is used.
+En regardant le fichier .MTL, on peut voir un `map_Ks` qui est essentiellement
+une texture en noir et blanc qui spécifie à quel point une surface particulière
+est brillante, ou autrement dit quelle quantité de réflexion spéculaire est utilisée.
 
 <div class="webgl_center"><img src="../resources/models/windmill/windmill_001_base_SPEC.jpg" style="width: 512px;"></div>
 
-To use it we just need to update the shader since we're already loading
-all the textures.
+Pour l'utiliser, il suffit de mettre à jour le shader puisque nous chargeons déjà
+toutes les textures.
 
 ```js
 const fs = `#version 300 es
@@ -602,7 +608,8 @@ void main () {
 `;
 ```
 
-We should also add a default for any material that doesn't have a specular map
+Nous devrions aussi ajouter une valeur par défaut pour tout matériau qui n'a pas de
+specular map :
 
 ```js
 const defaultMaterial = {
@@ -616,70 +623,71 @@ const defaultMaterial = {
 };
 ```
 
-It would be hard to see what this does with the material settings as they are in the
-.MTL file so let's hack the specular settings so they're more pleasing.
+Il serait difficile de voir l'effet avec les paramètres de matériau tels qu'ils sont dans
+le fichier .MTL, alors modifions les paramètres spéculaires pour qu'ils soient plus visibles.
 
 ```js
-// hack the materials so we can see the specular map
+// modifie les matériaux pour voir la specular map
 Object.values(materials).forEach(m => {
   m.shininess = 25;
   m.specular = [3, 2, 1];
 });
 ```
 
-And with that we can see only the windows and blades are set to show specular highlights.
+Et avec ça, on peut voir que seules les fenêtres et les pales sont configurées pour afficher des reflets spéculaires.
 
 {{{example url="../webgl-load-obj-w-mtl-w-specular-map.html"}}}
 
-I'm actually surprised the blades are set to reflect. If you look back up at the
-.MTL file you'll see shininess `Ns` is set to 0.0 which means the specular highlights
-would be extremely blown out. But, also `illum` is specified as 1 for both materials.
-According to the docs illum 1 means
+Je suis en fait surpris que les pales soient configurées pour réfléchir. Si vous regardez
+le fichier .MTL, vous verrez que la brillance `Ns` est à 0.0, ce qui signifie que les
+reflets spéculaires seraient extrêmement saturés. Mais aussi `illum` est spécifié à 1
+pour les deux matériaux. Selon la documentation, illum 1 signifie :
 
 ```
 color = KaIa + Kd { SUM j=1..ls, (N * Lj)Ij }
 ```
 
-Which translated into something more readable is
+Ce qui, traduit en quelque chose de plus lisible, donne :
 
 ```
 color = ambientColor * lightAmbient + diffuseColor * sumOfLightCalculations
 ```
 
-As you can see there nothing about using specular whatsoever and yet the file
-has a specular map! ¯\_(ツ)_/¯. Specular highlights require illum 2 or higher.
-This is my experience with .OBJ/.MTL files,
-that there is always some manual tweaking required for the materials. How you fix
-it is up to you. You can edit the .MTL file or you can add code. For now we'll
-go the "add code" direction.
+Comme on peut le voir, il n'est nullement question d'utiliser le spéculaire, et pourtant
+le fichier a une specular map ! ¯\_(ツ)_/¯. Les reflets spéculaires nécessitent illum 2
+ou plus. C'est mon expérience avec les fichiers .OBJ/.MTL : il faut toujours quelques
+ajustements manuels pour les matériaux. La façon de corriger ça dépend de vous. Vous pouvez
+éditer le fichier .MTL ou ajouter du code. Pour l'instant, nous allons dans la direction
+"ajouter du code".
 
-The last map this .MTL file uses is a `map_Bump` bump map.
-This is another place where the .OBJ/.MTL files show there age.
-The file referenced is clearly a normal map, not a bump map.
+La dernière map que ce fichier .MTL utilise est une `map_Bump` (bump map).
+C'est un autre endroit où les fichiers .OBJ/.MTL montrent leur âge.
+Le fichier référencé est clairement une normal map, pas une bump map.
 
 <div class="webgl_center"><img src="../resources/models/windmill/windmill_001_base_NOR.jpg" style="width: 512px;"></div>
 
-There is no option in the .MTL file to specify normal maps or that bump maps
-should be used as normal maps. We could use some heuristic like maybe if the
-filename has 'nor' in it? Or, maybe we could just assume all files referenced by
-`map_Bump` are normal maps in 2020 and beyond since I'm not sure I've seen an
-.OBJ file with an actual bump map in over a decade. Let's go that route for now.
+Il n'existe pas d'option dans le fichier .MTL pour spécifier des normal maps ou que les
+bump maps doivent être utilisées comme normal maps. Nous pourrions utiliser une heuristique,
+par exemple si le nom de fichier contient 'nor' ? Ou, peut-être supposer que tous les
+fichiers référencés par `map_Bump` sont des normal maps en 2020 et au-delà, car je ne suis
+pas sûr d'avoir vu un fichier .OBJ avec une vraie bump map depuis plus d'une décennie.
+Suivons cette voie pour l'instant.
 
-We'll grab the code for generating tangents from [the article on normal mapping](webgl-3d-lighting-normal-mapping.html).
+Nous récupérerons le code de génération de tangentes de [l'article sur le normal mapping](webgl-3d-lighting-normal-mapping.html).
 
 ```js
 const parts = obj.geometries.map(({material, data}) => {
   ...
 
-+  // generate tangents if we have the data to do so.
++  // génère les tangentes si on a les données pour le faire.
 +  if (data.texcoord && data.normal) {
 +    data.tangent = generateTangents(data.position, data.texcoord);
 +  } else {
-+    // There are no tangents
++    // Pas de tangentes
 +    data.tangent = { value: [1, 0, 0] };
 +  }
 
-  // create a buffer for each array by calling
+  // crée un tampon pour chaque tableau en appelant
   // gl.createBuffer, gl.bindBuffer, gl.bufferData
 
   const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
@@ -695,7 +703,7 @@ const parts = obj.geometries.map(({material, data}) => {
 });
 ```
 
-We also need to add a default normal map for materials that don't have one
+Nous devons aussi ajouter une normal map par défaut pour les matériaux qui n'en ont pas :
 
 ```js
 const textures = {
@@ -719,7 +727,7 @@ const defaultMaterial = {
 
 ```
 
-And then we need to incorporate the shader changes from [the article on normal mapping](webgl-3d-lighting-normal-mapping.html).
+Et ensuite nous devons incorporer les modifications du shader de [l'article sur le normal mapping](webgl-3d-lighting-normal-mapping.html).
 
 ```js
 const vs = `#version 300 es
@@ -809,64 +817,64 @@ void main () {
 `;
 ```
 
-And we that we get normal maps. Note: I moved the camera closer so they are easier to see.
+Et avec ça, nous obtenons les normal maps. Note : J'ai rapproché la caméra pour qu'elles
+soient plus faciles à voir.
 
 {{{example url="../webgl-load-obj-w-mtl-w-normal-maps.html"}}}
 
 
-I'm sure there are way more features of the .MTL file we could try to support.
-For example the `refl` keyword specifies reflection maps which is another word
-for [environment map](webgl-environment-maps.html). They also show the various
-`map_` keywords take a bunch of optional arguments. A few are:
+Je suis sûr qu'il y a bien plus de fonctionnalités du fichier .MTL que nous pourrions
+essayer de prendre en charge. Par exemple, le mot-clé `refl` spécifie des reflection maps
+qui est une autre façon de dire [environment map](webgl-environment-maps.html). On voit
+aussi que les différents mots-clés `map_` prennent un tas d'arguments optionnels. En voici quelques-uns :
 
-* `-clamp on | off` specifies whether the texture repeats
-* `-mm base gain` specifies an offset and multiplier for texture values
-* `-o u v w` specifies an offset for texture coordinates. You'd apply those using a texture matrix similar to what we did in [the article on drawImage](webgl-2d-drawimage.html)
-* `-s u v w` specifies a scale for texture coordinates. As above you'd put those in a texture matrix
+* `-clamp on | off` spécifie si la texture se répète
+* `-mm base gain` spécifie un décalage et un multiplicateur pour les valeurs de texture
+* `-o u v w` spécifie un décalage pour les coordonnées de texture. Vous l'appliqueriez en utilisant une texture matrix similaire à ce qu'on a fait dans [l'article sur drawImage](webgl-2d-drawimage.html)
+* `-s u v w` spécifie une échelle pour les coordonnées de texture. Comme ci-dessus, vous le mettriez dans une texture matrix
 
-I have no idea how many .MTL files are out there that use those settings.
+Je ne sais pas combien de fichiers .MTL existent qui utilisent ces paramètres.
 
-A bigger point to take home is that adding support for every feature makes
-the shaders bigger and more complicated. Above we have a form of *uber shader*,
-a shader that tries to handle all cases. To make it work we passed in various
-defaults. For example we set the `diffuseMap` to a white texture so if we
-load something without textures it will still display. The diffuse color will
-be multiplied by white which is 1.0 so we'll just get the diffuse color.
-Similarly we passed in a white default vertex color in case there are no
-vertex colors.
+Un point plus important à retenir est que l'ajout de la prise en charge de chaque
+fonctionnalité rend les shaders plus grands et plus complexes. Ci-dessus, nous avons une
+forme de *uber shader*, un shader qui essaie de gérer tous les cas. Pour le faire fonctionner,
+nous avons passé diverses valeurs par défaut. Par exemple, nous avons défini le `diffuseMap`
+comme une texture blanche afin que si nous chargeons quelque chose sans textures, ça s'affiche
+quand même. La couleur diffuse sera multipliée par du blanc qui est 1.0, donc on aura juste
+la couleur diffuse. De même, nous avons passé une couleur de vertex blanche par défaut au
+cas où il n'y aurait pas de couleurs de vertex.
 
-This is a common way to get things working and if it works fast enough for your
-needs then there is no reason to change it. But, it's more common to generate
-shaders that turn these features on/off. If there are no vertex colors then
-generate a shader, as in manipulate the shader strings, so they don't have an
-`a_color` attribute nor all the related code. Similarly if a material doesn't
-have a diffuse map then generate a shader that doesn't have a `uniform sampler2D
-diffuseMap` and removes all related code. If it doesn't have any maps then we
-don't need texture coordinates so we'd leave those out as well.
+C'est une façon courante de faire fonctionner les choses, et si ça fonctionne assez vite pour
+vos besoins, il n'y a pas de raison de changer. Mais il est plus courant de générer des shaders
+qui activent/désactivent ces fonctionnalités. S'il n'y a pas de couleurs de vertex, générez un
+shader, c'est-à-dire manipulez les chaînes du shader, pour qu'il n'ait pas d'attribut `a_color`
+ni tout le code associé. De même, si un matériau n'a pas de diffuse map, générez un shader qui
+n'a pas de `uniform sampler2D diffuseMap` et supprimez tout le code associé. S'il n'y a pas de
+maps du tout, nous n'avons pas besoin de coordonnées de texture, donc nous les laisserions de côté.
 
-When you add up all the combinations there can be 1000s of shader variations.
-With just what we have above there is
+Quand on additionne toutes les combinaisons, il peut y avoir des milliers de variantes de shaders.
+Avec juste ce qu'on a ci-dessus, il y a :
 
-* diffuseMap yes/no
-* specularMap yes/no
-* normalMap yes/no
-* vertex colors yes/no
-* ambientMap yes/no (we didn't support this but .MTL file does)
-* reflectionMap yes/no (we didn't support this but the .MTL file does)
+* diffuseMap oui/non
+* specularMap oui/non
+* normalMap oui/non
+* couleurs de vertex oui/non
+* ambientMap oui/non (nous n'avons pas pris en charge ça mais le fichier .MTL le fait)
+* reflectionMap oui/non (nous n'avons pas pris en charge ça mais le fichier .MTL le fait)
 
-Just those represent 64 combinations. If we add in say 1 to 4 lights, and those
-lights can be spot, or point, or, directional we end up with 8192 possible
-shader feature combinations.
+Ces seules options représentent 64 combinaisons. Si on ajoute disons 1 à 4 lumières, et
+que ces lumières peuvent être des spots, ponctuelles ou directionnelles, on se retrouve avec
+8192 combinaisons possibles de fonctionnalités de shader.
 
-Managing all of that is a lot of work. This is one reason why many people
-chose a 3D engine like [three.js](https://threejs.org) instead of doing this
-all themselves. But least hopefully this article gives some idea of
-the types of things involved in displaying arbitrary 3D content.
+Gérer tout ça représente beaucoup de travail. C'est l'une des raisons pour lesquelles
+beaucoup de gens choisissent un moteur 3D comme [three.js](https://threejs.org) plutôt que
+de tout faire eux-mêmes. Mais au moins, espérons que cet article donne une idée des types de
+choses impliquées dans l'affichage de contenu 3D arbitraire.
 
 <div class="webgl_bottombar">
-<h3>Avoid conditionals in shaders where possible</h3>
-<p>The traditional advice is to avoid conditionals in shaders. As an example
-we could have done something like this</p>
+<h3>Éviter les conditionnelles dans les shaders dans la mesure du possible</h3>
+<p>Le conseil traditionnel est d'éviter les conditionnelles dans les shaders. Par exemple,
+nous aurions pu faire quelque chose comme ceci :</p>
 <pre class="prettyprint"><code>{{#escapehtml}}
 uniform bool hasDiffuseMap;
 uniform vec4 diffuse;
@@ -879,11 +887,11 @@ uniform sampler2D diffuseMap
   }
 ...
 {{/escapehtml}}</code></pre>
-<p>Conditionals like that are generally discouraged because depending on the
-GPU/driver they are often not very performant.</p>
-<p>Either do like we did above and try to make the code have no conditionals. We used
-a single 1x1 white pixel texture when there is no texture so our math would work
-without a conditional.<p>
-<p>Or, use different shaders. One that doesn't have the feature and one the does
-and choose the correct one for each situation.</p>
+<p>Les conditionnelles de ce type sont généralement déconseillées car selon le
+GPU/pilote, elles sont souvent peu performantes.</p>
+<p>Soit faites comme nous l'avons fait ci-dessus et essayez de faire en sorte que le code
+n'ait pas de conditionnelles. Nous avons utilisé une texture blanche 1x1 quand il n'y a pas
+de texture pour que nos calculs fonctionnent sans conditionnelle.<p>
+<p>Soit utilisez des shaders différents. Un qui n'a pas la fonctionnalité et un qui l'a,
+et choisissez le bon pour chaque situation.</p>
 </div>

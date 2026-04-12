@@ -1,27 +1,26 @@
-Title: WebGL2 Load Obj
-Description: How to parse and display an .OBJ file
-TOC: Loading .obj files
+Title: WebGL2 Charger des fichiers Obj
+Description: Comment analyser et afficher un fichier .OBJ
+TOC: Charger des fichiers .obj
 
-Wavefront .obj files are one of the most common formats of
-3D files you can find online. They are not that hard to
-parse the most common forms so let's parse one. It will
-hopefully provide a useful example for parsing 3D formats
-in general.
+Les fichiers Wavefront .obj sont l'un des formats de fichiers 3D les plus courants
+qu'on trouve en ligne. Les formes les plus communes ne sont pas trop difficiles à
+analyser, alors analysons-en un. Cela fournira, espérons-le, un exemple utile pour
+l'analyse des formats 3D en général.
 
-**Disclaimer:** This .OBJ parser is not meant to be exhaustive or
-flawless or handle every .OBJ file. Rather it's meant as an
-exercise to walk through handling what we run into on the way.
-That said, if you run into big issues and solutions a comment
-at the bottom might be helpful for others if they choose to
-use this code.
+**Avertissement :** Ce parser .OBJ n'est pas conçu pour être exhaustif ou
+parfait, ni pour gérer tous les fichiers .OBJ. Il s'agit plutôt d'un exercice
+pour parcourir la gestion de ce qu'on rencontre en chemin. Cela dit, si vous
+rencontrez des problèmes importants et leurs solutions, un commentaire en bas de
+page pourrait être utile aux autres s'ils choisissent d'utiliser ce code.
 
-The best documentation I've found for the .OBJ format is
-[here](http://paulbourke.net/dataformats/obj/). Though 
-[this page](https://www.loc.gov/preservation/digital/formats/fdd/fdd000507.shtml)
-links to many other documents including what appears to
-[the original docs](https://web.archive.org/web/20200324065233/http://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf).
+La meilleure documentation que j'ai trouvée pour le format .OBJ est
+[ici](http://paulbourke.net/dataformats/obj/). Bien que
+[cette page](https://www.loc.gov/preservation/digital/formats/fdd/fdd000507.shtml)
+renvoie à de nombreux autres documents, notamment ce qui semble être
+[les docs originaux](https://web.archive.org/web/20200324065233/http://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf).
 
-Let's look a simple example. Here is a cube.obj file exported from blender's default scene.
+Regardons un exemple simple. Voici un fichier cube.obj exporté depuis la scène par
+défaut de Blender.
 
 ```txt
 # Blender v2.80 (sub 75) OBJ File: ''
@@ -72,14 +71,13 @@ f 2/14/5 1/15/5 3/16/5 4/17/5
 f 6/18/6 5/19/6 1/20/6 2/11/6
 ```
 
-Without even looking at the documentation we can probably figure
-out that lines that start with `v` are positions, lines that
-start with` vt` are texture coordinates, and lines that start
-with `vn` are normals. What's left is to figure out the rest.
+Sans même consulter la documentation, on peut probablement deviner que les lignes
+commençant par `v` sont des positions, celles commençant par `vt` sont des coordonnées
+de texture, et celles commençant par `vn` sont des normales. Il reste à comprendre le reste.
 
-It appears .OBJ files are text files so the first thing we need
-to do is load a text file. Fortunately in 2020 that's super easy
-if we use [async/await](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await).
+Il semble que les fichiers .OBJ soient des fichiers texte, donc la première chose à faire
+est de charger un fichier texte. Heureusement, en 2020, c'est très simple avec
+[async/await](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await).
 
 ```js
 async function main() {
@@ -89,18 +87,17 @@ async function main() {
   const text = await response.text();
 ```
 
-Next it looks like we can parse it one line at time and that
-each line is in the form of
+Ensuite, on peut analyser le fichier ligne par ligne et chaque ligne est de la forme :
 
 ```
-keyword data data data data ...
+mot-clé donnée donnée donnée ...
 ```
 
-where the first thing on the line is a keyword and data
-is separated by spaces. Lines that start with `#` are comments.
+où la première chose sur la ligne est un mot-clé et les données sont séparées par des espaces.
+Les lignes commençant par `#` sont des commentaires.
 
-So, let's set up some code to parse each line, skip blank lines
-and comments and then call some function based on the keyword
+Configurons du code pour analyser chaque ligne, ignorer les lignes vides et les commentaires,
+puis appeler une fonction selon le mot-clé :
 
 ```js
 +function parseOBJ(text) {
@@ -132,70 +129,66 @@ and comments and then call some function based on the keyword
 }
 ```
 
-Some things to note: We trim each line to remove leading and trailing
-spaces. I have no idea if this is needed but I think it can't hurt.
-We split the line by white space using `/\s+/`. Again I have no idea if
-this is needed. Can there be more than one space between data? Can
-there be tabs? No idea but it seemed safer to assume there is variation
-out there given it's a text format.
+Quelques remarques : nous supprimons les espaces en début et fin de chaque ligne.
+Je ne sais pas si c'est nécessaire mais je pense que ça ne peut pas faire de mal.
+Nous découpons la ligne par des espaces blancs avec `/\s+/`. Là encore, je ne sais
+pas si c'est nécessaire. Peut-il y avoir plus d'un espace entre les données ? Des
+tabulations ? Je ne sais pas, mais il semblait plus sûr de supposer qu'il peut y avoir
+des variations dans un format texte.
 
-Otherwise we pull out the first part as the keyword and then look up a function
-for that keyword and call it passing it the data after the keyword. So now we
-just need to fill in those functions.
+Sinon, nous extrayons la première partie comme mot-clé, puis cherchons une fonction
+pour ce mot-clé et l'appelons en lui passant les données après le mot-clé. Il faut
+maintenant remplir ces fonctions.
 
-We guessed the `v`, `vt`, and `vn` data above. The docs say `f`
-stands for "face" or polygon where each piece of data are
-indices into the positions, texture coordinates, and normals.
+Nous avons deviné les données `v`, `vt` et `vn` ci-dessus. La documentation dit que `f`
+signifie "face" ou polygone où chaque donnée est un indice dans les positions, les
+coordonnées de texture et les normales.
 
-The indices are 1 based if positive or relative to the number
-of vertices parsed so far if negative.
-The order of the indices are position/texcoord/normal and
-that all except the position are optional so
+Les indices sont basés sur 1 si positifs, ou relatifs au nombre de sommets analysés
+jusqu'ici s'ils sont négatifs. L'ordre des indices est position/texcoord/normale et
+tout sauf la position est optionnel :
 
 ```txt
-f 1 2 3              # indices for positions only
-f 1/1 2/2 3/3        # indices for positions and texcoords
-f 1/1/1 2/2/2 3/3/3  # indices for positions, texcoords, and normals
-f 1//1 2//2 3//3     # indices for positions and normals
+f 1 2 3              # indices pour les positions seulement
+f 1/1 2/2 3/3        # indices pour les positions et les texcoords
+f 1/1/1 2/2/2 3/3/3  # indices pour les positions, texcoords et normales
+f 1//1 2//2 3//3     # indices pour les positions et les normales
 ```
 
-`f` can have more than 3 vertices, for example 4 for a quad
-We know that WebGL can only draw triangles so we need to convert
-the data to triangles. It does not say if a face can have more
-than 4 vertices nor does it says if the face must be convex or
-if it can be concave. For now lets assume they are concave.
+`f` peut avoir plus de 3 sommets, par exemple 4 pour un quadrilatère.
+WebGL ne peut dessiner que des triangles, donc nous devons convertir les données en triangles.
+Les docs ne précisent pas si une face peut avoir plus de 4 sommets, ni si la face doit être
+convexe ou si elle peut être concave. Pour l'instant, supposons qu'elles soient concaves.
 
-Also, in general, in WebGL we don't use a different index for
-positions, texcoords, and normals. Instead a "webgl vertex"
-is the combination of all data for that vertex. So for example
-to draw a cube WebGL requires 36 vertices, each face is 2 triangles,
-each triangle is 3 vertices. 6 faces * 2 triangles * 3 vertices
-per triangle is 36. Even though there are only 8 unique positions,
-6 unique normals, and who knows for texture coordinates. So, we'll
-need to read the face vertex indices and generate a "webgl vertex"
-that is the combination of data of all 3 things. [*](webgl-pulling-vertices.html)
+Aussi, en général dans WebGL, nous n'utilisons pas d'indices différents pour les positions,
+les texcoords et les normales. Au lieu de ça, un "vertex webgl" est la combinaison de toutes
+les données pour ce sommet. Ainsi, pour dessiner un cube, WebGL nécessite 36 sommets, chaque
+face est 2 triangles, chaque triangle est 3 sommets. 6 faces * 2 triangles * 3 sommets par
+triangle = 36. Même s'il n'y a que 8 positions uniques, 6 normales uniques, et on ne sait
+pas combien de coordonnées de texture. Nous devons donc lire les indices de sommets des faces
+et générer un "vertex webgl" qui est la combinaison des données des 3 choses. [*](webgl-pulling-vertices.html)
 
-So given all that it looks like we can parse these parts as follows
+Donc, étant donné tout ça, on peut analyser ces parties comme suit :
 
 ```js
 function parseOBJ(text) {
-+  // because indices are base 1 let's just fill in the 0th data
++  // comme les indices sont en base 1, remplissons simplement la 0ème donnée
 +  const objPositions = [[0, 0, 0]];
 +  const objTexcoords = [[0, 0]];
 +  const objNormals = [[0, 0, 0]];
 +
-+  // same order as `f` indices
++  // même ordre que les indices `f`
 +  const objVertexData = [
 +    objPositions,
 +    objTexcoords,
 +    objNormals,
 +  ];
 +
-+  // same order as `f` indices
++  // même ordre que les indices `f`
 +  let webglVertexData = [
 +    [],   // positions
 +    [],   // texcoords
-+    [],   // normals
++    [],   // normales
 +  ];
 +
 +  function addVertex(vert) {
@@ -231,23 +224,23 @@ function parseOBJ(text) {
   };
 ```
 
-The code above creates 3 arrays to hold the positions, texcoords, and
-normals parsed from the object file. It also creates 3 arrays to hold
-the same for WebGL. These are put in arrays as well in the same order
-as the `f` indices to make it easy to reference when we parse `f`.
+Le code ci-dessus crée 3 tableaux pour stocker les positions, texcoords et normales
+analysées du fichier objet. Il crée aussi 3 tableaux pour stocker les mêmes données
+pour WebGL. Ils sont mis dans des tableaux dans le même ordre que les indices `f` pour
+faciliter les références lors de l'analyse de `f`.
 
-In other words an `f` line like
+En d'autres termes, une ligne `f` comme :
 
 ```txt
 f 1/2/3 4/5/6 7/8/9
 ```
 
-One of those parts `4/5/6` is saying "use position 4" for this face vertex, "use
-texcoord 5" and "use normal 6" but by putting the position, texcoord, and normal
-arrays themselves in an array, the `objVertexData` array, we can simplify that to
-"use item n of objData i for webglData i" which lets us make the code simpler.
+Une de ces parties `4/5/6` dit "utiliser la position 4" pour ce sommet de face,
+"utiliser la texcoord 5" et "utiliser la normale 6". En mettant les tableaux eux-mêmes
+dans un tableau, `objVertexData`, on peut simplifier en "utiliser l'élément n de objData i
+pour webglData i", ce qui simplifie le code.
 
-At end of our function we return the data we've built up
+À la fin de notre fonction, nous retournons les données construites :
 
 ```js
   ...
@@ -260,8 +253,8 @@ At end of our function we return the data we've built up
 }
 ```
 
-All that's left to do is draw the data. First we'll use a variation
-of the shaders from [the article on directional lighting](webgl-3d-lighting-directional.html).
+Il ne reste plus qu'à dessiner les données. D'abord, nous utiliserons une variante des shaders
+de [l'article sur l'éclairage directionnel](webgl-3d-lighting-directional.html).
 
 ```js
 const vs = `#version 300 es
@@ -298,13 +291,13 @@ const fs = `#version 300 es
 `;
 ```
 
-Then, using the code from the article on 
-[less code more fun](webgl-less-code-more-fun.html)
-first we'll load our data
+Puis, en utilisant le code de l'article sur
+[moins de code, plus de fun](webgl-less-code-more-fun.html),
+nous chargeons d'abord nos données :
 
 ```js
 async function main() {
-  // Get A WebGL context
+  // Obtenir un contexte WebGL
   /** @type {HTMLCanvasElement} */
   const canvas = document.querySelector("#canvas");
   const gl = canvas.getContext("webgl2");
@@ -312,19 +305,19 @@ async function main() {
     return;
   }
 
-  // Tell the twgl to match position with a_position etc..
+  // Dit à twgl de faire correspondre position avec a_position etc...
   twgl.setAttributePrefix("a_");
 
   ... shaders ...
 
-  // compiles and links the shaders, looks up attribute and uniform locations
+  // compile et lie les shaders, cherche les emplacements d'attribut et d'uniform
   const meshProgramInfo = twgl.createProgramInfo(gl, [vs, fs]);
 
   const response = await fetch('resources/models/cube/cube.obj');
   const text = await response.text();
   const data = parseOBJ(text);
 
-  // Because data is just named arrays like this
+  // Parce que data est juste des tableaux nommés comme ceci
   //
   // {
   //   position: [...],
@@ -332,19 +325,19 @@ async function main() {
   //   normal: [...],
   // }
   //
-  // and because those names match the attributes in our vertex
-  // shader we can pass it directly into `createBufferInfoFromArrays`
-  // from the article "less code more fun".
+  // et parce que ces noms correspondent aux attributs dans notre vertex
+  // shader nous pouvons le passer directement à `createBufferInfoFromArrays`
+  // de l'article "moins de code, plus de fun".
 
-  // create a buffer for each array by calling
+  // crée un tampon pour chaque tableau en appelant
   // gl.createBuffer, gl.bindBuffer, gl.bufferData
   const bufferInfo = webglUtils.createBufferInfoFromArrays(gl, data);
-  // fills out a vertex array by calling gl.createVertexArray, gl.bindVertexArray
-  // then gl.bindBuffer, gl.enableVertexAttribArray, and gl.vertexAttribPointer for each attribute
+  // remplit un vertex array en appelant gl.createVertexArray, gl.bindVertexArray
+  // puis gl.bindBuffer, gl.enableVertexAttribArray, et gl.vertexAttribPointer pour chaque attribut
   const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
 ```
 
-and then we'll draw it
+puis nous le dessinons :
 
 ```js
   const cameraTarget = [0, 0, 0];
@@ -357,7 +350,7 @@ and then we'll draw it
   }
 
   function render(time) {
-    time *= 0.001;  // convert to seconds
+    time *= 0.001;  // convertit en secondes
 
     twgl.resizeCanvasToDisplaySize(gl.canvas);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -369,10 +362,10 @@ and then we'll draw it
     const projection = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
 
     const up = [0, 1, 0];
-    // Compute the camera's matrix using look at.
+    // Calcule la matrice de la caméra avec lookAt.
     const camera = m4.lookAt(cameraPosition, cameraTarget, up);
 
-    // Make a view matrix from the camera matrix.
+    // Crée une matrice de vue depuis la matrice de caméra.
     const view = m4.inverse(camera);
 
     const sharedUniforms = {
@@ -383,19 +376,19 @@ and then we'll draw it
 
     gl.useProgram(meshProgramInfo.program);
 
-    // calls gl.uniform
+    // appelle gl.uniform
     twgl.setUniforms(meshProgramInfo, sharedUniforms);
 
-    // set the attributes for this part.
+    // configure les attributs pour cette partie.
     gl.bindVertexArray(vao);
 
-    // calls gl.uniform
+    // appelle gl.uniform
     twgl.setUniforms(meshProgramInfo, {
       u_world: m4.yRotation(time),
       u_diffuse: [1, 0.7, 0.5, 1],
     });
 
-    // calls gl.drawArrays or gl.drawElements
+    // appelle gl.drawArrays ou gl.drawElements
     twgl.drawBufferInfo(gl, bufferInfo);
 
     requestAnimationFrame(render);
@@ -404,45 +397,44 @@ and then we'll draw it
 }
 ```
 
-And with that we can see our cube is loaded and drawing
+Et avec ça, on peut voir notre cube chargé et dessiné :
 
 {{{example url="../webgl-load-obj-cube.html"}}}
 
-We also see some messages about unhandled keywords. What are those for?
+On voit aussi des messages sur des mots-clés non gérés. À quoi servent-ils ?
 
-`usemtl` is the most important of these. It specifies that all geometry that
-appears after uses a specific material. For example if you had a model of a car
-you probably want transparent windows and chrome bumpers. The windows are
-[transparent](webgl-text-texture.html) and the bumpers are
-[reflective](webgl-environment-maps.html) so they need to be drawn differently
-than the body of the car. The `usemtl` tag marks this separation of parts.
+`usemtl` est le plus important d'entre eux. Il spécifie que toute la géométrie qui
+suit utilise un matériau spécifique. Par exemple, si vous avez un modèle de voiture,
+vous voudrez probablement des vitres transparentes et des pare-chocs chromés. Les vitres
+sont [transparentes](webgl-text-texture.html) et les pare-chocs sont
+[réfléchissants](webgl-environment-maps.html), ils doivent donc être dessinés différemment
+de la carrosserie. Le tag `usemtl` marque cette séparation des parties.
 
-Because we'll need to draw each of these parts separately let's fix
-the code so that each time we see a `usemtl` we'll start a new set of webgl
-data.
+Puisque nous devrons dessiner chacune de ces parties séparément, corrigeons le code
+pour qu'à chaque fois que nous voyons un `usemtl`, nous démarrions un nouvel ensemble
+de données webgl.
 
-First let's make some code that starts a new webgl data if we don't already
-have some
+D'abord, créons du code qui démarre de nouvelles données webgl si nous n'en avons pas déjà :
 
 ```js
 function parseOBJ(text) {
-  // because indices are base 1 let's just fill in the 0th data
+  // comme les indices sont en base 1, remplissons simplement la 0ème donnée
   const objPositions = [[0, 0, 0]];
   const objTexcoords = [[0, 0]];
   const objNormals = [[0, 0, 0]];
 
-  // same order as `f` indices
+  // même ordre que les indices `f`
   const objVertexData = [
     objPositions,
     objTexcoords,
     objNormals,
   ];
 
-  // same order as `f` indices
+  // même ordre que les indices `f`
   let webglVertexData = [
     [],   // positions
     [],   // texcoords
-    [],   // normals
+    [],   // normales
   ];
 
 +  const geometries = [];
@@ -450,8 +442,8 @@ function parseOBJ(text) {
 +  let material = 'default';
 +
 +  function newGeometry() {
-+    // If there is an existing geometry and it's
-+    // not empty then start a new one.
++    // S'il y a une géométrie existante et qu'elle n'est
++    // pas vide, en démarrer une nouvelle.
 +    if (geometry && geometry.data.position.length) {
 +      geometry = undefined;
 +    }
@@ -482,9 +474,8 @@ function parseOBJ(text) {
 ...
 ```
 
-and then let's call those in the correct places when
-handling our keywords including adding the `o` keyword
-function.
+puis appelons-les aux bons endroits lors du traitement de nos mots-clés, en incluant
+l'ajout de la fonction pour le mot-clé `o` :
 
 ```js
   ...
@@ -518,13 +509,12 @@ function.
 
 ```
 
-The `usemtl` keyword is not required so if there is no `usemtl` in the file
-we still want geometry so in the `f` handler we call `setGeometry`
-which will start some if there was no `usemtl` keyword in the file before
-that point.
+Le mot-clé `usemtl` n'est pas obligatoire, donc s'il n'y en a pas dans le fichier,
+on veut quand même de la géométrie. Donc dans le gestionnaire `f`, on appelle `setGeometry`
+qui en démarrera si aucun mot-clé `usemtl` n'est apparu avant ce point dans le fichier.
 
-Otherwise at the end we'll return `geometries` which
-is an array of objects, each of which contain `name` and `data`.
+Sinon, à la fin, nous retournerons `geometries` qui est un tableau d'objets, contenant
+chacun `name` et `data` :
 
 ```js
   ...
@@ -538,11 +528,11 @@ is an array of objects, each of which contain `name` and `data`.
 }
 ```
 
-While we're here we should also handle the case where texcoords
-or normals are missing and just not include them.
+Tant que nous y sommes, nous devrions aussi gérer le cas où les texcoords ou normales
+sont absentes et simplement ne pas les inclure.
 
 ```js
-+  // remove any arrays that have no entries.
++  // supprime tout tableau qui n'a pas d'entrées.
 +  for (const geometry of geometries) {
 +    geometry.data = Object.fromEntries(
 +        Object.entries(geometry.data).filter(([, array]) => array.length > 0));
@@ -555,15 +545,16 @@ or normals are missing and just not include them.
 }
 ```
 
-Continuing with keywords, According to the [*official spec*](https://web.archive.org/web/20200324065233/http://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf),
-`matlib` specifies separate file(s) that contains material info. Unfortunately that
-doesn't seem to match reality because filenames can have spaces them and the .OBJ format
-provides no way to escape spaces or quote arguments. Ideally they should have used a well defined format
-like json or xml or yaml or something that solves this issue but in their defense .OBJ is older
-than any of those formats.
+En continuant avec les mots-clés, selon la [*spécification officielle*](https://web.archive.org/web/20200324065233/http://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf),
+`matlib` spécifie des fichiers séparés qui contiennent des informations sur les matériaux.
+Malheureusement, ça ne semble pas correspondre à la réalité car les noms de fichiers
+peuvent contenir des espaces et le format .OBJ ne fournit aucun moyen d'échapper les espaces
+ou de citer les arguments. Idéalement, ils auraient dû utiliser un format bien défini comme
+JSON, XML ou YAML, ou quelque chose qui résout ce problème. Mais à leur décharge, .OBJ est
+plus ancien que tous ces formats.
 
-We handle loading the file latter.
-For now let's just add it on to our loader so we can reference it later.
+Nous gérons le chargement du fichier plus tard. Pour l'instant, ajoutons-le juste à notre
+chargeur pour pouvoir y faire référence plus tard.
 
 ```js
 function parseOBJ(text) {
@@ -588,9 +579,9 @@ function parseOBJ(text) {
 }
 ```
 
-`o` specifies the following items belong to the named "object". It's
-not really clear how to use this. Can we have a file with just `o`
-but no `usemtl`? Let's assume yes.
+`o` spécifie que les éléments suivants appartiennent à l'"objet" nommé. Ce n'est pas
+vraiment clair comment l'utiliser. Peut-on avoir un fichier avec juste `o` mais sans
+`usemtl` ? Supposons que oui.
 
 ```js
 function parseOBJ(text) {
@@ -633,21 +624,20 @@ function parseOBJ(text) {
   };
 ```
 
-`s` specifies a smoothing group. I think smoothing groups is
-mostly something we can ignore. Usually they are used in a modeling
-program to auto generate vertex normals. A vertex normal is computed
-first computing the normal of each face which is easy using the *cross product*
-which we covered in [the article on cameras](webgl-3d-camera.html).
-Then, for any vertex we can average all the faces it shares. But, if we
-want a hard edge sometimes we need to be able to tell the system to
-ignore a face. Smoothing groups let you designate which faces will get
-included when computing vertex normals. As for computing vertex normals
-for geometry in general you can look in [the article on lathing](webgl-3d-geometry-lathe.html) for one example.
+`s` spécifie un groupe de lissage. Je pense que les groupes de lissage sont quelque chose
+qu'on peut ignorer. Ils sont généralement utilisés dans un logiciel de modélisation pour
+auto-générer des normales de sommets. Une normale de sommet est calculée en calculant d'abord
+la normale de chaque face, ce qui est facile en utilisant le *produit vectoriel* que nous avons
+couvert dans [l'article sur les caméras](webgl-3d-camera.html). Ensuite, pour n'importe quel
+sommet, on peut faire la moyenne de toutes les faces qu'il partage. Mais si on veut un bord
+dur, on doit parfois pouvoir dire au système d'ignorer une face. Les groupes de lissage
+permettent de désigner quelles faces seront incluses lors du calcul des normales de sommets.
+Pour le calcul des normales de sommets pour la géométrie en général, vous pouvez regarder
+[l'article sur le tour de potier](webgl-3d-geometry-lathe.html) pour un exemple.
 
-For our case let's just ignore them. It suspect most .obj files have
-normals internally and so probably don't need smoothing groups. They keep
-them around for modeling packages incase you want to edit and regenerate
-normals.
+Dans notre cas, ignorons-les simplement. Je soupçonne que la plupart des fichiers .obj ont
+des normales en interne et n'ont donc probablement pas besoin de groupes de lissage. Ils les
+gardent pour les logiciels de modélisation au cas où vous voudriez éditer et régénérer des normales.
 
 ```js
 +  const noop = () => {};
@@ -659,10 +649,10 @@ normals.
   };
 ```
 
-One more keyword we haven't seen yet is `g` for group. It's basically
-just meta data. Objects can belong to more than one group.
-Because it will appear in the next file we try let's add support here
-even though we won't actually use the data.
+Un autre mot-clé que nous n'avons pas encore vu est `g` pour groupe. C'est essentiellement
+juste des métadonnées. Les objets peuvent appartenir à plusieurs groupes.
+Puisque ça apparaîtra dans le prochain fichier qu'on essaie, ajoutons le support ici même
+si on n'utilisera pas vraiment les données.
 
 ```js
 function parseOBJ(text) {
@@ -705,9 +695,9 @@ function parseOBJ(text) {
   };
 ```
 
-Now that we're creating multiple sets of geometry we need to change
-our setup code to create `WebGLBuffers` for each one. We'll also create
-a random color so hopefully it's easy to see the different parts.
+Maintenant que nous créons plusieurs ensembles de géométrie, nous devons changer notre
+code de configuration pour créer des `WebGLBuffers` pour chacun. Nous créerons aussi une
+couleur aléatoire pour pouvoir facilement voir les différentes parties.
 
 ```js
 -  const response = await fetch('resources/models/cube/cube.obj');
@@ -717,7 +707,7 @@ a random color so hopefully it's easy to see the different parts.
 +  const obj = parseOBJ(text);
 
 +  const parts = obj.geometries.map(({data}) => {
-    // Because data is just named arrays like this
+    // Parce que data est juste des tableaux nommés comme ceci
     //
     // {
     //   position: [...],
@@ -725,15 +715,15 @@ a random color so hopefully it's easy to see the different parts.
     //   normal: [...],
     // }
     //
-    // and because those names match the attributes in our vertex
-    // shader we can pass it directly into `createBufferInfoFromArrays`
-    // from the article "less code more fun".
+    // et parce que ces noms correspondent aux attributs dans notre vertex
+    // shader nous pouvons le passer directement à `createBufferInfoFromArrays`
+    // de l'article "moins de code, plus de fun".
 
-    // create a buffer for each array by calling
+    // crée un tampon pour chaque tableau en appelant
     // gl.createBuffer, gl.bindBuffer, gl.bufferData
     const bufferInfo = webglUtils.createBufferInfoFromArrays(gl, data);
-    // fills out a vertex array by calling gl.createVertexArray, gl.bindVertexArray
-    // then gl.bindBuffer, gl.enableVertexAttribArray, and gl.vertexAttribPointer for each attribute
+    // remplit un vertex array en appelant gl.createVertexArray, gl.bindVertexArray
+    // puis gl.bindBuffer, gl.enableVertexAttribArray, et gl.vertexAttribPointer pour chaque attribut
     const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
 +    return {
 +      material: {
@@ -745,11 +735,11 @@ a random color so hopefully it's easy to see the different parts.
 +  });
 ```
 
-I switched from loading a cube to loading this [CC-BY 4.0](http://creativecommons.org/licenses/by/4.0/) [chair](https://sketchfab.com/3d-models/chair-aa2acddb218646a59ece132bf95aa558) by [haytonm](https://sketchfab.com/haytonm) I found on [Sketchfab](https://sketchfab.com/)
+J'ai changé du chargement d'un cube au chargement de cette [chaise](https://sketchfab.com/3d-models/chair-aa2acddb218646a59ece132bf95aa558) sous licence [CC-BY 4.0](http://creativecommons.org/licenses/by/4.0/) par [haytonm](https://sketchfab.com/haytonm) trouvée sur [Sketchfab](https://sketchfab.com/).
 
 <div class="webgl_center"><img src="../resources/models/chair/chair.jpg" style="width: 452px;"></div>
 
-To render we just need to loop over the parts
+Pour le rendu, il suffit de boucler sur les parties :
 
 ```js
 function render(time) {
@@ -757,39 +747,39 @@ function render(time) {
 
   gl.useProgram(meshProgramInfo.program);
 
-  // calls gl.uniform
+  // appelle gl.uniform
   twgl.setUniforms(meshProgramInfo, sharedUniforms);
 
-+  // compute the world matrix once since all parts
-+  // are at the same space.
++  // calcule la matrice monde une seule fois puisque toutes les parties
++  // sont dans le même espace.
 +  const u_world = m4.yRotation(time);
 +
 +  for (const {bufferInfo, vao material} of parts) {
-    // set the attributes for this part.
+    // configure les attributs pour cette partie.
     gl.bindVertexArray(vao);
-    // calls gl.uniform
+    // appelle gl.uniform
     twgl.setUniforms(meshProgramInfo, {
 -      u_world: m4.yRotation(time),
 -      u_diffuse: [1, 0.7, 0.5, 1],
 +      u_world,
 +      u_diffuse: material.u_diffuse,
     });
-    // calls gl.drawArrays or gl.drawElements
+    // appelle gl.drawArrays ou gl.drawElements
     twgl.drawBufferInfo(gl, bufferInfo);
 +  }
 
   ...
 ```
 
-and that kinda works
+et ça fonctionne à peu près :
 
 {{{example url="../webgl-load-obj.html"}}}
 
-Wouldn't it be nice if we could try to center the object?
+Ne serait-il pas agréable de pouvoir essayer de centrer l'objet ?
 
-To do that we need to compute the extents which is the minimum
-and maximum vertex positions. So first we can make a function
-that given positions will figure out the min and max positions
+Pour ce faire, nous devons calculer les étendues, soit les positions minimale et maximale
+des sommets. D'abord, nous pouvons créer une fonction qui, étant donné des positions,
+calculera les positions min et max :
 
 ```js
 function getExtents(positions) {
@@ -806,8 +796,8 @@ function getExtents(positions) {
 }
 ```
 
-and then we can loop over all the parts of our geometry and
-get the extents for all parts
+puis nous pouvons boucler sur toutes les parties de notre géométrie et obtenir
+les étendues pour toutes les parties :
 
 ```js
 function getGeometriesExtents(geometries) {
@@ -824,9 +814,9 @@ function getGeometriesExtents(geometries) {
 }
 ```
 
-Then we can use that to compute how far to translate the object
-so its center is at the origin and a distance from the origin
-to place the camera so hopefully we can see all of it.
+Ensuite, nous pouvons utiliser ça pour calculer de combien déplacer l'objet
+afin que son centre soit à l'origine, et une distance depuis l'origine pour
+placer la caméra de façon à voir idéalement tout l'objet.
 
 ```js
 -  const cameraTarget = [0, 0, 0];
@@ -835,77 +825,76 @@ to place the camera so hopefully we can see all of it.
 -  const zFar = 50;
 +  const extents = getGeometriesExtents(obj.geometries);
 +  const range = m4.subtractVectors(extents.max, extents.min);
-+  // amount to move the object so its center is at the origin
++  // quantité de déplacement de l'objet pour que son centre soit à l'origine
 +  const objOffset = m4.scaleVector(
 +      m4.addVectors(
 +        extents.min,
 +        m4.scaleVector(range, 0.5)),
 +      -1);
 +  const cameraTarget = [0, 0, 0];
-+  // figure out how far away to move the camera so we can likely
-+  // see the object.
++  // calcule à quelle distance déplacer la caméra pour voir probablement l'objet.
 +  const radius = m4.length(range) * 1.2;
 +  const cameraPosition = m4.addVectors(cameraTarget, [
 +    0,
 +    0,
 +    radius,
 +  ]);
-+  // Set zNear and zFar to something hopefully appropriate
-+  // for the size of this object.
++  // Définit zNear et zFar à quelque chose d'approprié
++  // pour la taille de cet objet.
 +  const zNear = radius / 100;
 +  const zFar = radius * 3;
 ```
 
-Above we also set `zNear` and `zFar` to something that hopefully shows the object
-well.
+Ci-dessus, nous avons aussi défini `zNear` et `zFar` à quelque chose qui espérons-le
+montre bien l'objet.
 
-We just need to use the `objOffset` to translate the object to the origin
+Il suffit d'utiliser `objOffset` pour déplacer l'objet vers l'origine :
 
 ```js
-// compute the world matrix once since all parts
-// are at the same space.
+// calcule la matrice monde une seule fois puisque toutes les parties
+// sont dans le même espace.
 -const u_world = m4.yRotation(time);
 +let u_world = m4.yRotation(time);
 +u_world = m4.translate(u_world, ...objOffset);
 ```
 
-and with that the object is centered.
+et avec ça, l'objet est centré.
 
 {{{example url="../webgl-load-obj-w-extents.html"}}}
 
-Looking around the net it turns out there are non-standard versions of
-.OBJ files that include vertex colors. To do this they tack on extra
-values to each vertex position so instead of
+En cherchant sur le net, il s'avère qu'il existe des versions non standard de fichiers .OBJ
+qui incluent des couleurs de sommets. Pour ce faire, ils ajoutent des valeurs supplémentaires
+à chaque position de sommet, donc au lieu de :
 
 ```
 v <x> <y> <z>
 ```
 
-its
+c'est :
 
 ```
-v <x> <y> <z> <red> <green> <blue>
+v <x> <y> <z> <rouge> <vert> <bleu>
 ```
 
-It's not clear if there is also an optional alpha at end of that.
+Il n'est pas clair s'il y a aussi un alpha optionnel à la fin.
 
-I looked around and found this [Book - Vertex chameleon study](https://sketchfab.com/3d-models/book-vertex-chameleon-study-51b0b3bdcd844a9e951a9ede6f192da8) by [Oleaf](https://sketchfab.com/homkahom0) License: [CC-BY-NC](http://creativecommons.org/licenses/by-nc/4.0/) that uses vertex colors.
+J'ai cherché et trouvé ce [livre - Étude Vertex Caméléon](https://sketchfab.com/3d-models/book-vertex-chameleon-study-51b0b3bdcd844a9e951a9ede6f192da8) par [Oleaf](https://sketchfab.com/homkahom0) sous licence [CC-BY-NC](http://creativecommons.org/licenses/by-nc/4.0/) qui utilise des couleurs de sommets.
 
 <div class="webgl_center"><img src="../resources/models/book-vertex-chameleon-study/book.png" style="width: 446px;"></div>
 
-Let's see if we can add in support to our parser to handle the vertex colors.
+Voyons si nous pouvons ajouter le support dans notre parseur pour gérer les couleurs de sommets.
 
-We need to add stuff for colors everywhere we had position, normals, and texcoords
+Nous devons ajouter des éléments pour les couleurs partout où nous avions des positions, normales et texcoords :
 
 ```js
 function parseOBJ(text) {
-  // because indices are base 1 let's just fill in the 0th data
+  // comme les indices sont en base 1, remplissons simplement la 0ème donnée
   const objPositions = [[0, 0, 0]];
   const objTexcoords = [[0, 0]];
   const objNormals = [[0, 0, 0]];
 +  const objColors = [[0, 0, 0]];
 
-  // same order as `f` indices
+  // même ordre que les indices `f`
   const objVertexData = [
     objPositions,
     objTexcoords,
@@ -913,12 +902,12 @@ function parseOBJ(text) {
 +    objColors,
   ];
 
-  // same order as `f` indices
+  // même ordre que les indices `f`
   let webglVertexData = [
     [],   // positions
     [],   // texcoords
-    [],   // normals
-+    [],   // colors
+    [],   // normales
++    [],   // couleurs
   ];
 
   ...
@@ -951,13 +940,13 @@ function parseOBJ(text) {
   }
 ```
 
-Then unfortunately actually parsing makes the code a little less generic.
+Ensuite, malheureusement l'analyse réelle rend le code un peu moins générique :
 
 ```js
   const keywords = {
     v(parts) {
 -      objPositions.push(parts.map(parseFloat));
-+      // if there are more than 3 values here they are vertex colors
++      // si il y a plus de 3 valeurs ici, ce sont des couleurs de sommets
 +      if (parts.length > 3) {
 +        objPositions.push(parts.slice(0, 3).map(parseFloat));
 +        objColors.push(parts.slice(3).map(parseFloat));
@@ -969,8 +958,8 @@ Then unfortunately actually parsing makes the code a little less generic.
   };
 ```
 
-Then when we read a `f` face line we call `addVertex`. We'll need to grab
-the vertex colors here
+Puis quand nous lisons une ligne de face `f`, nous appelons `addVertex`. Nous devrons récupérer
+les couleurs de sommets ici :
 
 ```js
   function addVertex(vert) {
@@ -982,8 +971,8 @@ the vertex colors here
       const objIndex = parseInt(objIndexStr);
       const index = objIndex + (objIndex >= 0 ? 0 : objVertexData[i].length);
       webglVertexData[i].push(...objVertexData[i][index]);
-+      // if this is the position index (index 0) and we parsed
-+      // vertex colors then copy the vertex colors to the webgl vertex color data
++      // si c'est l'indice de position (index 0) et qu'on a analysé
++      // des couleurs de sommets, on copie les couleurs dans les données de couleur webgl
 +      if (i === 0 && objColors.length > 1) {
 +        geometry.data.color.push(...objColors[index]);
 +      }
@@ -991,7 +980,7 @@ the vertex colors here
   }
 ```
 
-Now we need to change our shaders to use vertex colors
+Maintenant, nous devons changer nos shaders pour utiliser les couleurs de sommets :
 
 ```js
 const vs = `#version 300 es
@@ -1034,17 +1023,17 @@ void main () {
 `;
 ```
 
-Like I mentioned above I have no idea if this non-standard version of .OBJ
-can include alpha values for each vertex color. Our [helper library](webgl-less-code-more-fun.html) has been automatically taking the data we pass it and making buffers for
-us. It guesses how many components there are per element in the data. For data with a name
-that contains the string `position` or `normal` it assumes 3 components per element.
-For a name that contains `texcoord` it assumes 2 components per element. For everything
-else it assumes 4 components per element. That means if our colors are only r, g, b,
-3 components per element, we need to tell it so it doesn't guess 4.
+Comme mentionné ci-dessus, je ne sais pas si cette version non standard de .OBJ peut inclure
+des valeurs alpha pour chaque couleur de sommet. Notre [bibliothèque d'assistance](webgl-less-code-more-fun.html) prend automatiquement les données qu'on lui passe et crée des tampons pour nous. Elle devine
+le nombre de composants par élément dans les données. Pour les données dont le nom contient
+la chaîne `position` ou `normal`, elle suppose 3 composants par élément. Pour un nom qui
+contient `texcoord`, elle suppose 2 composants par élément. Pour tout le reste, elle suppose
+4 composants par élément. Cela signifie que si nos couleurs sont seulement r, g, b (3 composants
+par élément), nous devons le lui dire pour qu'elle ne devine pas 4.
 
 ```js
 const parts = obj.geometries.map(({data}) => {
-  // Because data is just named arrays like this
+  // Parce que data est juste des tableaux nommés comme ceci
   //
   // {
   //   position: [...],
@@ -1052,17 +1041,17 @@ const parts = obj.geometries.map(({data}) => {
   //   normal: [...],
   // }
   //
-  // and because those names match the attributes in our vertex
-  // shader we can pass it directly into `createBufferInfoFromArrays`
-  // from the article "less code more fun".
+  // et parce que ces noms correspondent aux attributs dans notre vertex
+  // shader nous pouvons le passer directement à `createBufferInfoFromArrays`
+  // de l'article "moins de code, plus de fun".
 
 +   if (data.position.length === data.color.length) {
-+     // it's 3. The our helper library assumes 4 so we need
-+     // to tell it there are only 3.
++     // c'est 3. Notre bibliothèque d'assistance suppose 4 donc nous devons
++     // lui dire qu'il n'y en a que 3.
 +     data.color = { numComponents: 3, data: data.color };
 +   }
 
-  // create a buffer for each array by calling
+  // crée un tampon pour chaque tableau en appelant
   // gl.createBuffer, gl.bindBuffer, gl.bufferData
   const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
   const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
@@ -1076,26 +1065,26 @@ const parts = obj.geometries.map(({data}) => {
 });
 ```
 
-We probably also want to still handle the more common case when there are no
-vertex colors. On [the first article](webgl-fundamentals.html) as well as
-[other articles](webgl-attributes.html) we covered that an attribute usually
-gets its value from a buffer. But, we can also make attributes just be constant.
-An attribute that is turned off uses a constant value. Example
+Nous voulons aussi probablement encore gérer le cas plus courant où il n'y a pas de couleurs
+de sommets. Dans [le premier article](webgl-fundamentals.html) ainsi que dans
+[d'autres articles](webgl-attributes.html), nous avons couvert le fait qu'un attribut obtient
+généralement sa valeur depuis un tampon. Mais, nous pouvons aussi faire des attributs qui ont
+juste une valeur constante. Un attribut désactivé utilise une valeur constante. Par exemple :
 
 ```js
-gl.disableVertexAttribArray(someAttributeLocation);  // use a constant value
+gl.disableVertexAttribArray(someAttributeLocation);  // utilise une valeur constante
 const value = [1, 2, 3, 4];
-gl.vertexAttrib4fv(someAttributeLocation, value);    // the constant value to use
+gl.vertexAttrib4fv(someAttributeLocation, value);    // la valeur constante à utiliser
 ```
 
-Our [helper library](webgl-less-code-more-fun.html) handles this for us if
-we set the data for that attribute to `{value: [1, 2, 3, 4]}`. So, we can
-check if there are no vertex colors then if so set the vertex color attribute
-to constant white.
+Notre [bibliothèque d'assistance](webgl-less-code-more-fun.html) gère ceci pour nous si nous
+définissons les données de cet attribut à `{value: [1, 2, 3, 4]}`. Donc, on peut vérifier
+s'il n'y a pas de couleurs de sommets et si c'est le cas, définir l'attribut de couleur de
+sommet à blanc constant.
 
 ```js
 const parts = obj.geometries.map(({data}) => {
-  // Because data is just named arrays like this
+  // Parce que data est juste des tableaux nommés comme ceci
   //
   // {
   //   position: [...],
@@ -1103,18 +1092,18 @@ const parts = obj.geometries.map(({data}) => {
   //   normal: [...],
   // }
   //
-  // and because those names match the attributes in our vertex
-  // shader we can pass it directly into `createBufferInfoFromArrays`
-  // from the article "less code more fun".
+  // et parce que ces noms correspondent aux attributs dans notre vertex
+  // shader nous pouvons le passer directement à `createBufferInfoFromArrays`
+  // de l'article "moins de code, plus de fun".
 
 +  if (data.color) {
       if (data.position.length === data.color.length) {
-        // it's 3. The our helper library assumes 4 so we need
-        // to tell it there are only 3.
+        // c'est 3. Notre bibliothèque d'assistance suppose 4 donc nous devons
+        // lui dire qu'il n'y en a que 3.
         data.color = { numComponents: 3, data: data.color };
       }
 +  } else {
-+    // there are no vertex colors so just use constant white
++    // il n'y a pas de couleurs de sommets, on utilise juste blanc constant
 +    data.color = { value: [1, 1, 1, 1] };
 +  }
 
@@ -1122,13 +1111,13 @@ const parts = obj.geometries.map(({data}) => {
 });
 ```
 
-We also can't use a random color per part any more
+Nous ne pouvons également plus utiliser une couleur aléatoire par partie :
 
 ```js
 const parts = obj.geometries.map(({data}) => {
   ...
 
-  // create a buffer for each array by calling
+  // crée un tampon pour chaque tableau en appelant
   // gl.createBuffer, gl.bindBuffer, gl.bufferData
   const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
   const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
@@ -1143,61 +1132,60 @@ const parts = obj.geometries.map(({data}) => {
 });
 ```
 
-And with that we're able to load an .OBJ file with vertex colors.
+Et avec ça, nous pouvons charger un fichier .OBJ avec des couleurs de sommets.
 
 {{{example url="../webgl-load-obj-w-vertex-colors.html"}}}
 
-As for parsing and using materials [see the next article](webgl-load-obj-w-mtl.html)
+Pour analyser et utiliser les matériaux, [voir l'article suivant](webgl-load-obj-w-mtl.html).
 
-## A bunch of notes
+## Quelques notes
 
-### The loader above is incomplete
+### Le chargeur ci-dessus est incomplet
 
-You can go [read more about the .obj format](http://paulbourke.net/dataformats/obj/).
-There are tons of features the code above doesn't support. Also, the code has
-not been tested on very many .obj files so maybe there are lurking bugs. That said, I 
-suspect the majority of .obj files online only use the features shown above so I suspect
-it's probably a useful example.
+Vous pouvez [lire plus sur le format .obj](http://paulbourke.net/dataformats/obj/).
+Il y a des tonnes de fonctionnalités que le code ci-dessus ne supporte pas. De plus, le code
+n'a pas été testé sur de très nombreux fichiers .obj, donc il y a peut-être des bugs cachés.
+Cela dit, je soupçonne que la majorité des fichiers .obj en ligne n'utilise que les
+fonctionnalités montrées ci-dessus, donc je pense que c'est probablement un exemple utile.
 
-### The loader is not checking for errors
+### Le chargeur ne vérifie pas les erreurs
 
-Example: the `vt` keyword can have 3 values per entry instead of just 2. 3 values
-would be for 3D textures which is not common so I didn't bother. If you did pass it
-a file with 3D texture coordinates you'd have to change the shaders to handle 3D
-textures and the code that generates `WebGLBuffers` (calls `createBufferInfoFromArrays`)
-to tell it it's 3 components per UV coordinate.
+Par exemple, le mot-clé `vt` peut avoir 3 valeurs par entrée au lieu de seulement 2. 3 valeurs
+seraient pour des textures 3D, ce qui n'est pas courant, donc je ne me suis pas embêté avec ça.
+Si vous lui passiez un fichier avec des coordonnées de texture 3D, vous devriez changer les
+shaders pour gérer les textures 3D et le code qui génère des `WebGLBuffers` (appels de
+`createBufferInfoFromArrays`) pour lui dire qu'il s'agit de 3 composants par coordonnée UV.
 
-### It's assuming the data is homogeneous
+### Il suppose que les données sont homogènes
 
-I have no idea if some `f` keywords can have 3 entries
-and others only 2 in the same file. If that's possible the code above doesn't
-handle it.
+Je ne sais pas si certains mots-clés `f` peuvent avoir 3 entrées et d'autres seulement 2 dans
+le même fichier. Si c'est possible, le code ci-dessus ne le gère pas.
 
-The code also assumes that if vertex positions have x, y, z they all
-have x, y, z. If there are files out there where some vertex positions
-have x, y, z, others have only x, y, and still others have x, y, z, r, g, b
-then we'd have to refractor.
+Le code suppose aussi que si les positions de sommets ont x, y, z, elles ont toutes x, y, z.
+S'il existe des fichiers où certaines positions de sommets ont x, y, z, d'autres seulement x, y,
+et d'autres encore x, y, z, r, g, b, alors il faudrait refactoriser.
 
-### You could put all the data in one buffer
+### On pourrait mettre toutes les données dans un seul tampon
 
-The code above puts the data for position, texcoord, normal in separate buffers.
-You could put them in one buffer by either interleaving them 
-pos,uv,nrm,pos,uv,nrm,... but you'd then need to change
-how the attributes are setup to pass in strides and offsets.
+Le code ci-dessus met les données de position, texcoord, normale dans des tampons séparés.
+On pourrait les mettre dans un seul tampon en les entrelacant
+pos,uv,nrm,pos,uv,nrm,... mais il faudrait alors changer comment les attributs sont configurés
+pour passer des strides et des offsets.
 
-Extending that you could even put the data for all the parts in the same
-buffers where as currently it's one buffer per data type per part.
+En étendant ça, on pourrait même mettre les données de toutes les parties dans les mêmes tampons,
+alors qu'actuellement c'est un tampon par type de données par partie.
 
-I left those out because I don't think it's that important and because it would clutter the example.
+J'ai laissé ça de côté parce que je ne pense pas que ce soit si important et parce que ça
+alourdirait l'exemple.
 
-### You could re-index the vertices
+### On pourrait ré-indexer les sommets
 
-The code above expands the vertices into flat lists of triangles. We could have reindexed
-the vertices. Especially if we put all vertex data in a single buffer or at least a single
-buffer per type but shared across parts then basically for each `f` keyword you convert
-the indices to positive numbers (translate the negative numbers to the correct positive index),
-and then the set of the numbers is an *id* for that vertex. So you can store an *id to index
-map* to help look up the indices.
+Le code ci-dessus développe les sommets en listes plates de triangles. Nous aurions pu
+ré-indexer les sommets. Surtout si on mettait toutes les données de sommets dans un seul
+tampon ou au moins un seul tampon par type partagé entre les parties. Pour chaque mot-clé `f`,
+on convertit les indices en nombres positifs (on traduit les nombres négatifs en index positifs
+corrects), et l'ensemble de ces nombres est un *identifiant* pour ce sommet. On peut stocker
+une *map id-vers-index* pour aider à chercher les indices.
 
 ```js
 const idToIndexMap = {}
@@ -1205,7 +1193,7 @@ const webglIndices = [];
 
 function addVertex(vert) {
   const ptn = vert.split('/');
-  // first convert all the indices to positive indices
+  // d'abord convertit tous les indices en indices positifs
   const indices = ptn.forEach((objIndexStr, i) => {
     if (!objIndexStr) {
       return;
@@ -1213,12 +1201,12 @@ function addVertex(vert) {
     const objIndex = parseInt(objIndexStr);
     return objIndex + (objIndex >= 0 ? 0 : objVertexData[i].length);
   });
-  // now see that particular combination of position,texcoord,normal
-  // already exists
+  // vérifie si cette combinaison particulière de position,texcoord,normale
+  // existe déjà
   const id = indices.join(',');
   let vertIndex = idToIndexMap[id];
   if (!vertIndex) {
-    // No. Add it.
+    // Non. On l'ajoute.
     vertIndex = webglVertexData[0].length / 3;
     idToIndexMap[id] = vertexIndex;
     indices.forEach((index, i) => {
@@ -1231,59 +1219,59 @@ function addVertex(vert) {
 }
 ```
 
-Or you could just manually re-index if you think it's important.
+Ou on pourrait simplement ré-indexer manuellement si on pense que c'est important.
 
-### The code doesn't handle position only or position + texcoord only.
+### Le code ne gère pas position seule ou position + texcoord seulement.
 
-The code as written assumes normals exists. Like we did for
-[the lathe example](webgl-3d-geometry-lathe.html) we could generate normals
-if they don't exist, taking into account smoothing groups if we want. Or we
-could also use different shaders that either don't use normals or compute normals.
+Le code tel qu'il est suppose que les normales existent. Comme nous l'avons fait pour
+[l'exemple du tour de potier](webgl-3d-geometry-lathe.html), nous pourrions générer des
+normales si elles n'existent pas, en tenant compte des groupes de lissage si on le souhaite.
+Ou nous pourrions utiliser des shaders différents qui n'utilisent pas les normales ou qui
+calculent les normales.
 
-### You shouldn't use .OBJ files
+### Vous ne devriez pas utiliser les fichiers .OBJ
 
-Honestly you should not use .OBJ files IMO. I mostly wrote this as an example.
-If you can pull vertex data out of a file you can write importers for any format.
+Honnêtement, vous ne devriez pas utiliser les fichiers .OBJ à mon avis. J'ai principalement
+écrit ça comme exemple. Si vous pouvez extraire les données de sommets d'un fichier, vous
+pouvez écrire des importeurs pour n'importe quel format.
 
-Problems with .OBJ files include
+Les problèmes avec les fichiers .OBJ incluent :
 
-* no support for lights or cameras
+* pas de support pour les lumières ni les caméras
 
-  That might be okay because maybe you're loading a bunch of parts
-  (like trees, bushes, rocks for a landscape) and you don't need cameras
-  or lights. Still it's nice to have the option if you want to load entire scenes
-  as some artist created them.
+  Ça pourrait être acceptable parce que peut-être que vous chargez un tas de parties
+  (comme des arbres, des buissons, des rochers pour un paysage) et vous n'avez pas besoin
+  de caméras ni de lumières. Mais il est quand même agréable d'avoir l'option si vous voulez
+  charger des scènes entières telles qu'un artiste les a créées.
 
-* No hierarchy, No scene graph
+* Pas de hiérarchie, pas de graphe de scène
 
-  If you want to load a car ideally you'd like to be able to turn the wheels
-  and have them spin around their centers. This is impossible with .OBJ
-  because .OBJ contains no [scene graph](webgl-scene-graph.html). Better formats
-  include that data which is much more useful if you want to be able to orient
-  parts, slide a window, open a door, move the legs of a character, etc...
+  Si vous voulez charger une voiture, vous aimeriez idéalement pouvoir tourner les roues et
+  les faire pivoter autour de leurs centres. C'est impossible avec .OBJ parce que .OBJ ne
+  contient pas de [graphe de scène](webgl-scene-graph.html). Les formats plus récents incluent
+  ces données, ce qui est bien plus utile si vous voulez orienter des parties, faire glisser une
+  fenêtre, ouvrir une porte, déplacer les jambes d'un personnage, etc.
 
-* no support for animation or skinning
+* pas de support pour l'animation ou le skinning
 
-  We went over [skinning](webgl-skinning.html) elsewhere but .OBJ provides no
-  data for skinning and no data for animation. Again that might be okay
-  for your needs but I'd prefer one format that handles more.
+  Nous avons couvert le [skinning](webgl-skinning.html) ailleurs, mais .OBJ ne fournit aucune
+  donnée pour le skinning ni pour l'animation. Là encore, ça pourrait être acceptable pour vos
+  besoins, mais je préférerais un format qui gère plus de choses.
 
-* .OBJ doesn't support more modern materials.
+* .OBJ ne supporte pas les matériaux plus modernes.
 
-  Materials are usually pretty engine specific but lately there is at least
-  some agreement on physically based rendering materials. .OBJ doesn't support
-  that AFAIK.
+  Les matériaux sont généralement assez spécifiques au moteur, mais dernièrement il y a au
+  moins un accord sur les matériaux à rendu physique. .OBJ ne le supporte pas à ma connaissance.
 
-* .OBJ requires parsing
+* .OBJ nécessite de l'analyse
 
-  Unless you're making a generic viewer for users to upload .OBJ files into it
-  the best practice is to use a format that requires as little parsing as possible.
-  .GLTF is a format designed for WebGL. It uses JSON so you can just load it in.
-  For binary data it uses formats that are ready to load into the GPU directly,
-  no need to parse numbers into arrays most of the time.
+  À moins que vous ne fassiez une visionneuse générique permettant aux utilisateurs de charger
+  des fichiers .OBJ, la meilleure pratique est d'utiliser un format qui nécessite le moins
+  d'analyse possible. .GLTF est un format conçu pour WebGL. Il utilise JSON, donc vous pouvez
+  juste le charger. Pour les données binaires, il utilise des formats prêts à être chargés
+  directement dans le GPU, pas besoin d'analyser des nombres en tableaux la plupart du temps.
 
-  You can see an example of loading a .GLTF file in [the article on skinning](webgl-skinning.html).
+  Vous pouvez voir un exemple de chargement d'un fichier .GLTF dans [l'article sur le skinning](webgl-skinning.html).
 
-  If you have .OBJ files you want to use the best practice would be to convert them
-  to some other format first, offline, and then use the better format on your page.
-
+  Si vous avez des fichiers .OBJ à utiliser, la meilleure pratique serait de les convertir
+  d'abord hors ligne dans un autre format, puis d'utiliser le meilleur format sur votre page.

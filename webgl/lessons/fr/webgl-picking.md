@@ -1,61 +1,61 @@
 Title: WebGL2 Picking
-Description: How to pick things in WebGL
-TOC: Picking (clicking on stuff)
+Description: Comment sélectionner des objets en WebGL
+TOC: Picking (cliquer sur des objets)
 
-This article is about how to use WebGL to let the user pick or select
-things.
+Cet article explique comment utiliser WebGL pour permettre à l'utilisateur de sélectionner
+des objets.
 
-If you've read the other articles on this site you have hopefully realized
-that WebGL itself is just a rasterization library. It draws triangles,
-lines, and points into the canvas so it has no concept of "objects to be
-selected". It just outputs pixels via shaders you supply. That means
-any concept of "picking" something has to come from your code. You need
-to define what these things you're letting the user select are.
-That means while this article can cover general concepts you'll need to
-decide for yourself how to translate what you see here into usable
-concepts in your own application.
+Si vous avez lu les autres articles de ce site, vous avez probablement réalisé
+que WebGL lui-même n'est qu'une bibliothèque de rastérisation. Elle dessine des triangles,
+des lignes et des points sur le canvas, donc elle n'a pas de notion "d'objets à sélectionner".
+Elle ne fait que sortir des pixels via les shaders que vous fournissez. Cela signifie
+que tout concept de "picking" doit venir de votre code. Vous devez
+définir ce que sont les choses que vous laissez l'utilisateur sélectionner.
+Cela signifie que bien que cet article puisse couvrir les concepts généraux, vous devrez
+décider par vous-même comment traduire ce que vous voyez ici en concepts utilisables
+dans votre propre application.
 
-## Clicking on an Object
+## Cliquer sur un objet
 
-One of the easiest ways figure out which thing a user clicked on is
-we come up with a numeric id for each object, we can then draw 
-all of the objects using their id as their color with no lighting
-and no textures. This will give us an image of the silhouettes of
-each object. The depth buffer will handle sorting for us.
-We can then read the color of the pixel under the
-mouse which will give us the id of the object that was rendered there.
+L'une des façons les plus simples de déterminer sur quel objet un utilisateur a cliqué est
+d'attribuer un identifiant numérique à chaque objet, puis de dessiner
+tous les objets en utilisant leur identifiant comme couleur sans éclairage
+ni textures. Cela nous donnera une image des silhouettes de
+chaque objet. Le depth buffer gérera le tri pour nous.
+Nous pouvons alors lire la couleur du pixel sous la
+souris, ce qui nous donnera l'identifiant de l'objet qui a été rendu là.
 
-To implement this technique we'll need to combine several previous
-articles. The first is the article on [drawing multiple objects](webgl-drawing-multiple-things.html)
-which we'll use because given it draws multiple things we can try to
-pick them.
+Pour implémenter cette technique, nous devrons combiner plusieurs articles précédents.
+Le premier est l'article sur [dessiner plusieurs objets](webgl-drawing-multiple-things.html)
+que nous utiliserons car il dessine plusieurs choses que nous pouvons essayer de
+sélectionner.
 
-On top of that we generally want to render these ids off screen
-by [rendering to a texture](webgl-render-to-texture.html) so we'll
-add in that code as well.
+De plus, nous voulons généralement rendre ces identifiants hors écran
+en [rendant vers une texture](webgl-render-to-texture.html) donc nous allons
+ajouter ce code aussi.
 
-So, let's start with the last example from
-[the article on drawing multiple things](webgl-drawing-multiple-things.html)
-that draws 200 things.
+Partons donc du dernier exemple de
+[l'article sur dessiner plusieurs choses](webgl-drawing-multiple-things.html)
+qui dessine 200 objets.
 
-To it let's add a framebuffer with attached texture and depth buffer from
-the last example in [the article on rendering to a texture](webgl-render-to-texture.html).
+Ajoutons-y un framebuffer avec une texture attachée et un depth buffer du
+dernier exemple dans [l'article sur le rendu vers une texture](webgl-render-to-texture.html).
 
 ```js
-// Create a texture to render to
+// Créer une texture pour rendre
 const targetTexture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, targetTexture);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-// create a depth renderbuffer
+// créer un depth renderbuffer
 const depthBuffer = gl.createRenderbuffer();
 gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
 
 function setFramebufferAttachmentSizes(width, height) {
   gl.bindTexture(gl.TEXTURE_2D, targetTexture);
-  // define size and format of level 0
+  // définir la taille et le format du niveau 0
   const level = 0;
   const internalFormat = gl.RGBA;
   const border = 0;
@@ -70,26 +70,26 @@ function setFramebufferAttachmentSizes(width, height) {
   gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, width, height);
 }
 
-// Create and bind the framebuffer
+// Créer et lier le framebuffer
 const fb = gl.createFramebuffer();
 gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
 
-// attach the texture as the first color attachment
+// attacher la texture comme premier attachement couleur
 const attachmentPoint = gl.COLOR_ATTACHMENT0;
 const level = 0;
 gl.framebufferTexture2D(gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, targetTexture, level);
 
-// make a depth buffer and the same size as the targetTexture
+// créer un depth buffer de la même taille que targetTexture
 gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
 ```
 
-We put the code to set the sizes of the texture and
-the depth renderbuffer into a function so we can
-call it to resize them to match the size of the
+Nous mettons le code pour définir les tailles de la texture et
+du depth renderbuffer dans une fonction afin de pouvoir
+l'appeler pour les redimensionner selon la taille du
 canvas.
 
-In our rendering code if the canvas changes size
-we'll adjust the texture and renderbuffer to match.
+Dans notre code de rendu, si le canvas change de taille,
+nous ajusterons la texture et le renderbuffer pour correspondre.
 
 ```js
 function drawScene(time) {
@@ -97,17 +97,17 @@ function drawScene(time) {
 
 -  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 +  if (webglUtils.resizeCanvasToDisplaySize(gl.canvas)) {
-+    // the canvas was resized, make the framebuffer attachments match
++    // le canvas a été redimensionné, faire correspondre les attachements du framebuffer
 +    setFramebufferAttachmentSizes(gl.canvas.width, gl.canvas.height);
 +  }
 
 ...
 ```
 
-Next we need a second shader. The shader in the
-sample renders using vertex colors but we need
-one we can set to a solid color to render with ids.
-So first here is our second shader
+Ensuite, nous avons besoin d'un second shader. Le shader de l'exemple
+rend en utilisant les couleurs de sommets, mais nous avons besoin
+d'un shader que nous pouvons régler sur une couleur unie pour rendre avec des identifiants.
+Voici donc notre second shader
 
 ```js
 const pickingVS = `#version 300 es
@@ -116,7 +116,7 @@ const pickingVS = `#version 300 es
   uniform mat4 u_matrix;
   
   void main() {
-    // Multiply the position by the matrix.
+    // Multiplier la position par la matrice.
     gl_Position = u_matrix * a_position;
   }
 `;
@@ -134,13 +134,13 @@ const pickingFS = `#version 300 es
 `;
 ```
 
-And we need to compile, link and look up the locations
-using our [helpers](webgl-less-code-more-fun.html).
+Et nous devons compiler, lier et rechercher les emplacements
+en utilisant nos [helpers](webgl-less-code-more-fun.html).
 
 ```js
-// setup GLSL program
-// note: we need the attribute positions to match across programs
-// so that we only need one vertex array per shape
+// configurer le programme GLSL
+// note : les positions des attributs doivent correspondre entre les programmes
+// pour que nous n'ayons besoin que d'un seul tableau de sommets par forme
 const options = {
   attribLocations: {
     a_position: 0,
@@ -151,19 +151,19 @@ const programInfo = twgl.createProgramInfo(gl, [vs, fs], options);
 const pickingProgramInfo = twgl.createProgramInfo(gl, [pickingVS, pickingFS], options);
 ```
 
-One difference above from most samples on this site, this is one
-of the few times we've needed to draw the same data with 2 different
-shaders. Because of that we need the attributes locations to match
-across shaders. We can do that in 2 ways. One way is to set them
-manually in the GLSL
+Une différence par rapport à la plupart des exemples de ce site, c'est l'une
+des rares fois où nous avons besoin de dessiner les mêmes données avec 2 shaders différents.
+Pour cette raison, nous avons besoin que les emplacements des attributs correspondent
+entre les shaders. Nous pouvons faire cela de 2 façons. L'une est de les définir
+manuellement dans le GLSL
 
 ```glsl
 layout (location = 0) in vec4 a_position;
 layout (location = 1) in vec4 a_color;
 ```
 
-The other is to call `gl.bindAttribLocation` **before** linking
-a shader program
+L'autre est d'appeler `gl.bindAttribLocation` **avant** de lier
+un programme shader
 
 ```js
 gl.bindAttribLocation(someProgram, 0, 'a_position');
@@ -171,21 +171,21 @@ gl.bindAttribLocation(someProgram, 1, 'a_color');
 gl.linkProgram(someProgram);
 ```
 
-This latter style is uncommon but it's more
+Ce dernier style est moins courant mais c'est plus
 [D.R.Y.](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself).
-Our helper library will call `gl.bindAttribLocation` for us
-if we pass in the attribute names and the location we want
-which is what is happening above.
+Notre bibliothèque helper appellera `gl.bindAttribLocation` pour nous
+si nous passons les noms des attributs et l'emplacement que nous voulons,
+ce qui est ce qui se passe ci-dessus.
 
-This we'll mean we can guarantee the `a_position` attribute uses
-location 0 in both programs so we can use the same vertex array
-with both programs.
+Cela signifie que nous pouvons garantir que l'attribut `a_position` utilise
+l'emplacement 0 dans les deux programmes, nous pouvons donc utiliser le même tableau de sommets
+avec les deux programmes.
 
-Next we need to be able to render all the objects
-twice. Once with whatever shader we assigned to
-them and again with the shader we just wrote
-so let's extract the code that currently renders
-all the objects into a function.
+Ensuite, nous devons être capables de rendre tous les objets
+deux fois. Une fois avec le shader que nous leur avons assigné
+et à nouveau avec le shader que nous venons d'écrire.
+Extrayons donc le code qui rend actuellement
+tous les objets dans une fonction.
 
 ```js
 function drawObjects(objectsToDraw, overrideProgramInfo) {
@@ -196,33 +196,33 @@ function drawObjects(objectsToDraw, overrideProgramInfo) {
 
     gl.useProgram(programInfo.program);
 
-    // Setup all the needed attributes.
+    // Configurer tous les attributs nécessaires.
     gl.bindVertexArray(vertexArray);
 
-    // Set the uniforms.
+    // Définir les uniforms.
     twgl.setUniforms(programInfo, object.uniforms);
 
-    // Draw (calls gl.drawArrays or gl.drawElements)
+    // Dessiner (appelle gl.drawArrays ou gl.drawElements)
     twgl.drawBufferInfo(gl, object.bufferInfo);
   });
 }
 ```
 
-`drawObjects` takes an optional `overrideProgramInfo`
-we can pass in to use our picking shader instead of
-the object's assigned shader.
+`drawObjects` prend un `overrideProgramInfo` optionnel
+que nous pouvons passer pour utiliser notre shader de picking à la place
+du shader assigné à l'objet.
 
-Let's call it, once to draw into the texture with
-ids and again to draw the scene to the canvas.
+Appelons-le, une fois pour dessiner dans la texture avec
+les identifiants et à nouveau pour dessiner la scène sur le canvas.
 
 ```js
-// Draw the scene.
+// Dessiner la scène.
 function drawScene(time) {
   time *= 0.0005;
 
   ...
 
-  // Compute the matrices for each object.
+  // Calculer les matrices pour chaque objet.
   objects.forEach(function(object) {
     object.uniforms.u_matrix = computeMatrix(
         viewProjectionMatrix,
@@ -231,7 +231,7 @@ function drawScene(time) {
         object.yRotationSpeed * time);
   });
 
-+  // ------ Draw the objects to the texture --------
++  // ------ Dessiner les objets dans la texture --------
 +
 +  gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
 +  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -239,12 +239,12 @@ function drawScene(time) {
 +  gl.enable(gl.CULL_FACE);
 +  gl.enable(gl.DEPTH_TEST);
 +
-+  // Clear the canvas AND the depth buffer.
++  // Effacer le canvas ET le depth buffer.
 +  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 +
 +  drawObjects(objectsToDraw, pickingProgramInfo);
 +
-+  // ------ Draw the objects to the canvas
++  // ------ Dessiner les objets sur le canvas
 +
 +  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 +  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -255,17 +255,17 @@ function drawScene(time) {
 }
 ```
 
-Our picking shader needs `u_id` set to an id so let's
-add that to our uniform data where we setup our objects.
+Notre shader de picking a besoin que `u_id` soit défini sur un identifiant, donc
+ajoutons cela à nos données d'uniforms là où nous configurons nos objets.
 
 ```js
-// Make infos for each object for each object.
+// Créer des infos pour chaque objet.
 const baseHue = rand(0, 360);
 const numObjects = 200;
 for (let ii = 0; ii < numObjects; ++ii) {
 +  const id = ii + 1;
 
-  // pick a shape
+  // choisir une forme
   const shape = shapes[rand(shapes.length) | 0];
 
   const object = {
@@ -285,7 +285,7 @@ for (let ii = 0; ii < numObjects; ++ii) {
   };
   objects.push(object);
 
-  // Add it to the list of things to draw.
+  // L'ajouter à la liste des choses à dessiner.
   objectsToDraw.push({
     programInfo: programInfo,
     bufferInfo: shape.bufferInfo,
@@ -295,25 +295,25 @@ for (let ii = 0; ii < numObjects; ++ii) {
 }
 ```
 
-This will work because our [helper library](webgl-less-code-more-fun.html)
-handles applying uniforms for us.
+Cela fonctionnera car notre [bibliothèque helper](webgl-less-code-more-fun.html)
+gère l'application des uniforms pour nous.
 
-We had to split ids across R, G, B, and A. Because our
-texture's format/type is `gl.RGBA`, `gl.UNSIGNED_BYTE`
-we get 8 bits per channel. 8 bits only represent 256 values
-but by splitting the id across 4 channels we get 32bits total
-which is > 4 billion values.
+Nous avons dû répartir les identifiants sur R, G, B et A. Parce que le
+format/type de notre texture est `gl.RGBA`, `gl.UNSIGNED_BYTE`,
+nous obtenons 8 bits par canal. 8 bits ne représentent que 256 valeurs,
+mais en répartissant l'identifiant sur 4 canaux, nous obtenons 32 bits au total,
+ce qui représente plus de 4 milliards de valeurs.
 
-We add 1 to the id because we'll use 0 for meaning
-"nothing under the mouse".
+Nous ajoutons 1 à l'identifiant car nous utiliserons 0 pour signifier
+"rien sous la souris".
 
-Now let's highlight the object under the mouse.
+Maintenant, mettons en surbrillance l'objet sous la souris.
 
-First we need some code to get a canvas relative
-mouse position.
+D'abord, nous avons besoin de code pour obtenir la position de la souris
+relative au canvas.
 
 ```js
-// mouseX and mouseY are in CSS display space relative to canvas
+// mouseX et mouseY sont en pixels CSS dans l'espace d'affichage relatif au canvas
 let mouseX = -1;
 let mouseY = -1;
 
@@ -326,22 +326,22 @@ gl.canvas.addEventListener('mousemove', (e) => {
 });
 ```
 
-Note that with the code above `mouseX` and `mouseY`
-are in CSS pixels in display space. That means
-they are in the space the canvas is displayed,
-not the space of how many pixels are in the canvas.
-In other words if you had a canvas like this
+Notez qu'avec le code ci-dessus, `mouseX` et `mouseY`
+sont en pixels CSS dans l'espace d'affichage. Cela signifie
+qu'ils sont dans l'espace où le canvas est affiché,
+et non dans l'espace du nombre de pixels dans le canvas.
+En d'autres termes, si vous aviez un canvas comme ça
 
 ```html
 <canvas width="11" height="22" style="width:33px; height:44px;"></canvas>
 ```
 
-then `mouseX` will go from 0 to 33 across the canvas and
-`mouseY` will go from 0 to 44 across the canvas. See [this](webgl-resizing-the-canvas.html)
-for more info.
+alors `mouseX` ira de 0 à 33 sur le canvas et
+`mouseY` ira de 0 à 44 sur le canvas. Voir [ceci](webgl-resizing-the-canvas.html)
+pour plus d'informations.
 
-Now that we have a mouse position let's add some code
-look up the pixel under the mouse
+Maintenant que nous avons une position de souris, ajoutons du code
+pour rechercher le pixel sous la souris
 
 ```js
 const pixelX = mouseX * gl.canvas.width / gl.canvas.clientWidth;
@@ -350,50 +350,50 @@ const data = new Uint8Array(4);
 gl.readPixels(
     pixelX,            // x
     pixelY,            // y
-    1,                 // width
-    1,                 // height
+    1,                 // largeur
+    1,                 // hauteur
     gl.RGBA,           // format
     gl.UNSIGNED_BYTE,  // type
-    data);             // typed array to hold result
+    data);             // tableau typé pour stocker le résultat
 const id = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
 ```
 
-The code above that is computing `pixelX` and `pixelY` is converting
-from `mouseX` and `mouseY` in display space to pixel in the canvas
-space. In other words, given the example above where `mouseX` went from
-0 to 33 and `mouseY` went from 0 to 44. `pixelX` will go from 0 to 11
-and `pixelY` will go from 0 to 22.
+Le code ci-dessus qui calcule `pixelX` et `pixelY` convertit
+de `mouseX` et `mouseY` en espace d'affichage vers des pixels dans l'espace
+du canvas. En d'autres termes, avec l'exemple ci-dessus où `mouseX` allait de
+0 à 33 et `mouseY` allait de 0 à 44, `pixelX` ira de 0 à 11
+et `pixelY` ira de 0 à 22.
 
-In our actual code we're using our utility function `resizeCanvasToDisplaySize`
-and we're making our texture the same size as the canvas so the display
-size and the canvas size match but at least we're prepared for the case
-where they do not match.
+Dans notre code réel, nous utilisons notre fonction utilitaire `resizeCanvasToDisplaySize`
+et nous faisons en sorte que notre texture ait la même taille que le canvas, donc la taille d'affichage
+et la taille du canvas correspondent, mais au moins nous sommes prêts pour le cas
+où elles ne correspondent pas.
 
-Now that we have an id, to actually highlight the selected object
-let's change the color we're using to render it to the canvas.
-The shader we were using has a `u_colorMult`
-uniform we can use so if an object is under the mouse we'll look it up,
-save off its `u_colorMult` value, replace it with a selection color,
-and restore it.
+Maintenant que nous avons un identifiant, pour réellement mettre en surbrillance l'objet sélectionné,
+changeons la couleur que nous utilisons pour le rendre sur le canvas.
+Le shader que nous utilisions a un uniform `u_colorMult`
+que nous pouvons utiliser, donc si un objet est sous la souris, nous le recherchons,
+sauvegardons sa valeur `u_colorMult`, la remplaçons par une couleur de sélection,
+et la restaurons.
 
 ```js
-// mouseX and mouseY are in CSS display space relative to canvas
+// mouseX et mouseY sont en pixels CSS dans l'espace d'affichage relatif au canvas
 let mouseX = -1;
 let mouseY = -1;
 +let oldPickNdx = -1;
 +let oldPickColor;
 +let frameCount = 0;
 
-// Draw the scene.
+// Dessiner la scène.
 function drawScene(time) {
   time *= 0.0005;
 +  ++frameCount;
 
-  // ------ Draw the objects to the texture --------
+  // ------ Dessiner les objets dans la texture --------
 
   ...
 
-  // ------ Figure out what pixel is under the mouse and read it
+  // ------ Déterminer quel pixel est sous la souris et le lire
 
   const pixelX = mouseX * gl.canvas.width / gl.canvas.clientWidth;
   const pixelY = gl.canvas.height - mouseY * gl.canvas.height / gl.canvas.clientHeight - 1;
@@ -401,21 +401,21 @@ function drawScene(time) {
   gl.readPixels(
       pixelX,            // x
       pixelY,            // y
-      1,                 // width
-      1,                 // height
+      1,                 // largeur
+      1,                 // hauteur
       gl.RGBA,           // format
       gl.UNSIGNED_BYTE,  // type
-      data);             // typed array to hold result
+      data);             // tableau typé pour stocker le résultat
   const id = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
 
-  // restore the object's color
+  // restaurer la couleur de l'objet
   if (oldPickNdx >= 0) {
     const object = objects[oldPickNdx];
     object.uniforms.u_colorMult = oldPickColor;
     oldPickNdx = -1;
   }
 
-  // highlight object under mouse
+  // mettre en surbrillance l'objet sous la souris
   if (id > 0) {
     const pickNdx = id - 1;
     oldPickNdx = pickNdx;
@@ -424,45 +424,44 @@ function drawScene(time) {
     object.uniforms.u_colorMult = (frameCount & 0x8) ? [1, 0, 0, 1] : [1, 1, 0, 1];
   }
 
-  // ------ Draw the objects to the canvas
+  // ------ Dessiner les objets sur le canvas
 
 ```
 
-And with that we should be able to move the mouse over
-the scene and the object under the mouse will flash
+Et avec ça, nous devrions pouvoir déplacer la souris sur
+la scène et l'objet sous la souris clignotera
 
 {{{example url="../webgl-picking-w-gpu.html" }}}
 
-One optimization we can make, we're rendering
-the ids to a texture that's the same size
-as the canvas. This is conceptually the easiest
-thing to do.
+Une optimisation que nous pouvons faire : nous rendons
+les identifiants vers une texture de la même taille
+que le canvas. C'est conceptuellement la chose la plus simple
+à faire.
 
-But, we could instead just render the pixel
-under the mouse. To do this we use a frustum
-who's math will cover just the space for that
+Mais, nous pourrions à la place rendre seulement le pixel
+sous la souris. Pour ce faire, nous utilisons un frustum
+dont les maths couvriront juste l'espace pour ce
 1 pixel.
 
-Until now, for 3D we've been using a function called
-`perspective` that takes as input a field of view, an aspect, and a
-near and far value for the z-planes and makes a
-perspective projection matrix that converts from the
-frustum defined by those values to clip space.
+Jusqu'à présent, pour la 3D, nous avons utilisé une fonction appelée
+`perspective` qui prend en entrée un champ de vision, un aspect et des valeurs
+near et far pour les plans z, et crée une
+matrice de projection perspective qui convertit depuis le
+frustum défini par ces valeurs vers le clip space.
 
-Most 3D math libraries have another function called
-`frustum` that takes 6 values, the left, right, top,
-and bottom values for the near z-plane and then the
-z-near and z-far values for the z-planes and generates
-a perspective matrix defined by those values.
+La plupart des bibliothèques mathématiques 3D ont une autre fonction appelée
+`frustum` qui prend 6 valeurs, les valeurs gauche, droite, haut,
+et bas pour le plan near z, puis les valeurs near et far z pour les plans z, et génère
+une matrice de perspective définie par ces valeurs.
 
-Using that we can generate a perspective matrix for
-the one pixel under the mouse
+En utilisant cela, nous pouvons générer une matrice de projection pour
+le seul pixel sous la souris.
 
-First we compute the edges and size of what our near plane *would be*
-if we were to use the `perspective` function
+D'abord, nous calculons les bords et la taille de ce que serait notre plan near
+si nous utilisions la fonction `perspective`
 
 ```js
-// compute the rectangle the near plane of our frustum covers
+// calculer le rectangle que couvre le plan near de notre frustum
 const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
 const top = Math.tan(fieldOfViewRadians * 0.5) * near;
 const bottom = -top;
@@ -472,16 +471,16 @@ const width = Math.abs(right - left);
 const height = Math.abs(top - bottom);
 ```
 
-So `left`, `right`, `width`, and `height` are the
-size and position of the near plane. Now on that
-plane we can compute the size and position of the
-one pixel under the mouse and pass that to the
-`frustum` function to generate a projection matrix
-that covers just that 1 pixel
+Donc `left`, `right`, `width` et `height` sont la
+taille et la position du plan near. Maintenant sur ce
+plan, nous pouvons calculer la taille et la position du
+seul pixel sous la souris et les passer à la
+fonction `frustum` pour générer une matrice de projection
+qui couvre juste ce 1 pixel
 
 ```js
-// compute the portion of the near plane covers the 1 pixel
-// under the mouse.
+// calculer la portion du plan near qui couvre le 1 pixel
+// sous la souris.
 const pixelX = mouseX * gl.canvas.width / gl.canvas.clientWidth;
 const pixelY = gl.canvas.height - mouseY * gl.canvas.height / gl.canvas.clientHeight - 1;
 
@@ -490,7 +489,7 @@ const subBottom = bottom + pixelY * height / gl.canvas.height;
 const subWidth = width / gl.canvas.width;
 const subHeight = height / gl.canvas.height;
 
-// make a frustum for that 1 pixel
+// créer un frustum pour ce 1 pixel
 const projectionMatrix = m4.frustum(
     subLeft,
     subLeft + subWidth,
@@ -500,14 +499,14 @@ const projectionMatrix = m4.frustum(
     far);
 ```
 
-To use this we need to make some changes. As it now our shader
-just takes `u_matrix` which means in order to draw with a different
-projection matrix we'd need to recompute the matrices for every object
-twice each frame, once with our normal projection matrix for drawing
-to the canvas and again for this 1 pixel projection matrix.
+Pour l'utiliser, nous devons apporter quelques modifications. Actuellement, notre shader
+prend juste `u_matrix`, ce qui signifie que pour dessiner avec une matrice de
+projection différente, nous devrions recalculer les matrices pour chaque objet
+deux fois par frame, une fois avec notre matrice de projection normale pour dessiner
+sur le canvas et à nouveau pour cette matrice de projection à 1 pixel.
 
-We can remove that responsibility from JavaScript by moving that
-multiplication to the vertex shaders.
+Nous pouvons supprimer cette responsabilité de JavaScript en déplaçant cette
+multiplication vers les vertex shaders.
 
 ```html
 const vs = `#version 300 es
@@ -522,11 +521,11 @@ in vec4 a_color;
 out vec4 v_color;
 
 void main() {
-  // Multiply the position by the matrix.
+  // Multiplier la position par la matrice.
 -  gl_Position = u_matrix * a_position;
 +  gl_Position = u_viewProjection * u_world * a_position;
 
-  // Pass the color to the fragment shader.
+  // Passer la couleur au fragment shader.
   v_color = a_color;
 }
 `;
@@ -541,28 +540,28 @@ const pickingVS = `#version 300 es
 +  uniform mat4 u_world;
   
   void main() {
-    // Multiply the position by the matrix.
+    // Multiplier la position par la matrice.
 -   gl_Position = u_matrix * a_position;
 +    gl_Position = u_viewProjection * u_world * a_position;
   }
 `;
 ```
 
-Then we can make our JavaScript `viewProjectionMatrix` shared
-among all the objects.
+Ensuite, nous pouvons rendre notre `viewProjectionMatrix` JavaScript
+partagée entre tous les objets.
 
 ```js
 const objectsToDraw = [];
 const objects = [];
 +const viewProjectionMatrix = m4.identity();
 
-// Make infos for each object for each object.
+// Créer des infos pour chaque objet.
 const baseHue = rand(0, 360);
 const numObjects = 200;
 for (let ii = 0; ii < numObjects; ++ii) {
   const id = ii + 1;
 
-  // pick a shape
+  // choisir une forme
   const shape = shapes[rand(shapes.length) | 0];
 
   const object = {
@@ -584,8 +583,8 @@ for (let ii = 0; ii < numObjects; ++ii) {
   };
 ```
 
-And where we compute the matrices for each object we no longer need
-to include the view projection matrix
+Et là où nous calculons les matrices pour chaque objet, nous n'avons plus besoin
+d'inclure la matrice view projection
 
 ```js
 -function computeMatrix(viewProjectionMatrix, translation, xRotation, yRotation) {
@@ -600,7 +599,7 @@ to include the view projection matrix
 }
 ...
 
-// Compute the matrices for each object.
+// Calculer les matrices pour chaque objet.
 objects.forEach(function(object) {
   object.uniforms.u_world = computeMatrix(
 -      viewProjectionMatrix,
@@ -610,47 +609,47 @@ objects.forEach(function(object) {
 });
 ```
 
-We'll create just a 1x1 pixel texture and depth buffer
+Nous allons créer juste une texture 1x1 pixel et un depth buffer
 
 ```js
 setFramebufferAttachmentSizes(1, 1);
 
 ...
 
-// Draw the scene.
+// Dessiner la scène.
 function drawScene(time) {
   time *= 0.0005;
   ++frameCount;
 
 -  if (webglUtils.resizeCanvasToDisplaySize(gl.canvas)) {
--    // the canvas was resized, make the framebuffer attachments match
+-    // le canvas a été redimensionné, faire correspondre les attachements du framebuffer
 -    setFramebufferAttachmentSizes(gl.canvas.width, gl.canvas.height);
 -  }
 +  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 ```
 
-Then before rendering the off screen ids we'll set the view projection
-using our 1 pixel projection matrix and then when drawing to the canvas
-we'll use the original projection matrix
+Avant de rendre les identifiants hors écran, nous définirons la view projection
+en utilisant notre matrice de projection à 1 pixel, puis lors du dessin sur le canvas,
+nous utiliserons la matrice de projection originale
 
 ```js
--// Compute the projection matrix
+-// Calculer la matrice de projection
 -const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
 -const projectionMatrix =
 -    m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
 
-// Compute the camera's matrix using look at.
+// Calculer la matrice de la caméra avec lookAt.
 const cameraPosition = [0, 0, 100];
 const target = [0, 0, 0];
 const up = [0, 1, 0];
 const cameraMatrix = m4.lookAt(cameraPosition, target, up);
 
-// Make a view matrix from the camera matrix.
+// Créer une matrice view depuis la matrice caméra.
 const viewMatrix = m4.inverse(cameraMatrix);
 
 -const viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
 
-// Compute the matrices for each object.
+// Calculer les matrices pour chaque objet.
 objects.forEach(function(object) {
   object.uniforms.u_world = computeMatrix(
       object.translation,
@@ -658,13 +657,13 @@ objects.forEach(function(object) {
       object.yRotationSpeed * time);
 });
 
-// ------ Draw the objects to the texture --------
+// ------ Dessiner les objets dans la texture --------
 
-// Figure out what pixel is under the mouse and setup
-// a frustum to render just that pixel
+// Déterminer quel pixel est sous la souris et configurer
+// un frustum pour ne rendre que ce pixel
 
 {
-  // compute the rectangle the near plane of our frustum covers
+  // calculer le rectangle que couvre le plan near de notre frustum
   const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
   const top = Math.tan(fieldOfViewRadians * 0.5) * near;
   const bottom = -top;
@@ -673,8 +672,8 @@ objects.forEach(function(object) {
   const width = Math.abs(right - left);
   const height = Math.abs(top - bottom);
 
-  // compute the portion of the near plane covers the 1 pixel
-  // under the mouse.
+  // calculer la portion du plan near qui couvre le 1 pixel
+  // sous la souris.
   const pixelX = mouseX * gl.canvas.width / gl.canvas.clientWidth;
   const pixelY = gl.canvas.height - mouseY * gl.canvas.height / gl.canvas.clientHeight - 1;
 
@@ -683,7 +682,7 @@ objects.forEach(function(object) {
   const subWidth = width / gl.canvas.width;
   const subHeight = height / gl.canvas.height;
 
-  // make a frustum for that 1 pixel
+  // créer un frustum pour ce 1 pixel
   const projectionMatrix = m4.frustum(
       subLeft,
       subLeft + subWidth,
@@ -700,12 +699,12 @@ gl.viewport(0, 0, 1, 1);
 gl.enable(gl.CULL_FACE);
 gl.enable(gl.DEPTH_TEST);
 
-// Clear the canvas AND the depth buffer.
+// Effacer le canvas ET le depth buffer.
 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 drawObjects(objectsToDraw, pickingProgramInfo);
 
-// read the 1 pixel
+// lire le 1 pixel
 -const pixelX = mouseX * gl.canvas.width / gl.canvas.clientWidth;
 -const pixelY = gl.canvas.height - mouseY * gl.canvas.height / gl.canvas.clientHeight - 1;
 const data = new Uint8Array(4);
@@ -714,21 +713,21 @@ gl.readPixels(
 -    pixelY,            // y
 +    0,                 // x
 +    0,                 // y
-    1,                 // width
-    1,                 // height
+    1,                 // largeur
+    1,                 // hauteur
     gl.RGBA,           // format
     gl.UNSIGNED_BYTE,  // type
-    data);             // typed array to hold result
+    data);             // tableau typé pour stocker le résultat
 const id = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
 
-// restore the object's color
+// restaurer la couleur de l'objet
 if (oldPickNdx >= 0) {
   const object = objects[oldPickNdx];
   object.uniforms.u_colorMult = oldPickColor;
   oldPickNdx = -1;
 }
 
-// highlight object under mouse
+// mettre en surbrillance l'objet sous la souris
 if (id > 0) {
   const pickNdx = id - 1;
   oldPickNdx = pickNdx;
@@ -737,10 +736,10 @@ if (id > 0) {
   object.uniforms.u_colorMult = (frameCount & 0x8) ? [1, 0, 0, 1] : [1, 1, 0, 1];
 }
 
-// ------ Draw the objects to the canvas
+// ------ Dessiner les objets sur le canvas
 
 +{
-+  // Compute the projection matrix
++  // Calculer la matrice de projection
 +  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
 +  const projectionMatrix =
 +      m4.perspective(fieldOfViewRadians, aspect, near, far);
@@ -754,9 +753,7 @@ gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 drawObjects(objectsToDraw);
 ```
 
-And you can see the math works, we're only drawing a single pixel
-and we're still figuring out what is under the mouse
+Et vous pouvez voir que les maths fonctionnent, nous ne dessinons qu'un seul pixel
+et nous déterminons toujours ce qui est sous la souris
 
 {{{example url="../webgl-picking-w-gpu-1pixel.html"}}}
-
-
