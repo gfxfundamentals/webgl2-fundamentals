@@ -1995,27 +1995,6 @@ Et avec ça, on peut le voir fonctionner dynamiquement, tout le calcul se faisan
   * [lignes les plus proches visualisées](../webgl-gpgpu-closest-line.html)
   * [lignes les plus proches dynamiques](../webgl-gpgpu-closest-line-dynamic.html)
 
-* Bug Firefox<a id="firefox-bug"></a>
-
-  Firefox à partir de la version 84 a [un bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1677552)
-  en ce qu'il exige incorrectement qu'il y ait au moins un attribut actif avec un diviseur de 0
-  lors de l'appel de `drawArraysIndexed`. Cela signifie que l'exemple ci-dessus où nous dessinons
-  les lignes les plus proches en utilisant `drawArraysIndexed` échoue.
-
-  Pour contourner ça, on peut créer un tampon qui contient juste `[0, 1]` et l'utiliser sur un
-  attribut pour ce qu'on utilisait `gl_VertexID % 2`. À la place, on utiliserait :
-
-  ```glsl
-  in int endPoint;  // nécessaire pour firefox
-
-  ...
-  -int linePointId = closestNdx * 2 + gl_VertexID % 2;
-  +int linePointId = closestNdx * 2 + endPoint;
-  ...
-  ```
-
-  ce qui [le fera fonctionner dans Firefox](../webgl/webgl-gpgpu-closest-line-dynamic-transformfeedback-ff.html).
-
 * Les GPU n'ont pas la même précision que les CPU.
 
   Vérifiez vos résultats et assurez-vous qu'ils sont acceptables.
