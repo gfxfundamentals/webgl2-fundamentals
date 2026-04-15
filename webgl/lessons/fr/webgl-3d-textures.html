@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/fr/webgl-3d-textures.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Comment fonctionnent les textures dans WebGL">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-3d-textures_fr.jpg">
+
+<meta property="og:title" content="WebGL2 Textures">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-3d-textures_fr.jpg">
+<meta property="og:description" content="Comment fonctionnent les textures dans WebGL">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-textures.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Textures">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-textures.html">
+<meta name="twitter:description" content="Comment fonctionnent les textures dans WebGL">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-3d-textures_fr.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-textures.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-3d-textures_fr.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-textures.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-textures.html",
+      "inLanguage":"fr",
+      "name":"WebGL2 Textures",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-textures.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Textures</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/fr/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-3d-textures.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-3d-textures.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/webgl/lessons/fr/webgl-3d-textures.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-3d-textures.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-3d-textures.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-3d-textures.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-3d-textures.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-3d-textures.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-3d-textures.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-3d-textures.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-3d-textures.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-3d-textures.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-3d-textures.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-3d-textures.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-3d-textures.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-3d-textures.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Table des matières</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/fr/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Textures</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Cet article est la suite d’une série d’articles sur WebGL.
+Le premier <a href="webgl-fundamentals.html">a commencé par les bases</a>
+et le précédent portait sur <a href="webgl-animation.html">l’animation</a>.</p>
+<p>Comment appliquons-nous des textures dans WebGL ? Vous pourriez probablement déduire comment en
+lisant <a href="webgl-image-processing.html">les articles sur le traitement d’images</a>
+mais il sera probablement plus facile à comprendre si nous le voyons plus en détail.</p>
+<p>La première chose que nous devons faire est d’ajuster nos shaders pour utiliser des textures. Voici les
+changements au vertex shader. Nous devons passer les coordonnées de texture. Dans ce
+cas, nous les passons directement au fragment shader.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+in vec4 a_position;
+*in vec2 a_texcoord;
+
+uniform mat4 u_matrix;
+
++// un varying pour passer les coordonnées de texture au fragment shader
++out vec2 v_texcoord;
+
+void main() {
+  // Multiplier la position par la matrice.
+  gl_Position = u_matrix * a_position;
+
++  // Passer la texcoord au fragment shader.
++  v_texcoord = a_texcoord;
+}
+</code></pre>
+<p>Dans le fragment shader, nous déclarons un uniform sampler2D qui nous permet de référencer
+une texture. Nous utilisons les coordonnées de texture passées depuis le vertex shader
+et nous appelons <code class="notranslate" translate="no">texture</code> pour obtenir une couleur de cette texture.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+precision highp float;
+
+// Passé depuis le vertex shader.
+*in vec2 v_texcoord;
+
+*// La texture.
+*uniform sampler2D u_texture;
+
+out vec4 outColor;
+
+void main() {
+*   outColor = texture(u_texture, v_texcoord);
+}
+</code></pre>
+<p>Nous devons configurer les coordonnées de texture</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// rechercher où les données de sommets doivent aller.
+var positionAttributeLocation = gl.getAttribLocation(program, &quot;a_position&quot;);
+*var texcoordAttributeLocation = gl.getAttribLocation(program, &quot;a_texcoord&quot;);
+
+...
+
+*// créer le buffer de texcoord, en faire le ARRAY_BUFFER courant
+*// et y copier les valeurs de texcoord
+*var texcoordBuffer = gl.createBuffer();
+*gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
+*setTexcoords(gl);
+*
+*// Activer l'attribut
+*gl.enableVertexAttribArray(texcoordAttributeLocation);
+*
+*// Indiquer à l'attribut comment obtenir les données depuis texcoordBuffer (ARRAY_BUFFER)
+*var size = 2;          // 2 composantes par itération
+*var type = gl.FLOAT;   // les données sont des valeurs flottantes 32 bits
+*var normalize = true;  // convertir de 0-255 à 0.0-1.0
+*var stride = 0;        // 0 = avancer de size * sizeof(type) à chaque itération pour la texcoord suivante
+*var offset = 0;        // commencer au début du buffer
+*gl.vertexAttribPointer(
+*    texcoordAttributeLocation, size, type, normalize, stride, offset);
+</code></pre>
+<p>Et vous pouvez voir les coordonnées que nous utilisons qui mappent la texture entière
+sur chaque quad de notre ‘F’.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*// Remplir le buffer avec les coordonnées de texture pour le F.
+*function setTexcoords(gl) {
+*  gl.bufferData(
+*      gl.ARRAY_BUFFER,
+*      new Float32Array([
+*        // colonne de gauche avant
+*        0, 0,
+*        0, 1,
+*        1, 0,
+*        0, 1,
+*        1, 1,
+*        1, 0,
+*
+*        // traverse du haut avant
+*        0, 0,
+*        0, 1,
+*        1, 0,
+*        0, 1,
+*        1, 1,
+*        1, 0,
+* ...
+*       ]),
+*       gl.STATIC_DRAW);
+</code></pre>
+<p>Nous avons aussi besoin d’une texture. Nous pourrions en créer une de toutes pièces, mais dans ce cas
+chargeons une image car c’est probablement la façon la plus courante.</p>
+<p>Voici l’image que nous allons utiliser</p>
+<img class="webgl_center" src="../../resources/f-texture.png" />
+<p>Quelle image passionnante ! En fait, une image avec un ‘F’ a une direction claire
+donc il est facile de voir si elle est tournée ou retournée quand nous l’utilisons comme texture.</p>
+<p>Le fait de charger une image se produit de manière asynchrone. Nous demandons que l’image
+soit chargée mais le navigateur met un certain temps à la télécharger. Il y a généralement
+2 solutions à cela. Nous pourrions faire attendre le code jusqu’à ce que la texture soit téléchargée
+et seulement alors commencer à dessiner. L’autre solution est de créer une texture fictive à utiliser
+jusqu’à ce que l’image soit téléchargée. De cette façon, nous pouvons commencer à faire le rendu immédiatement. Ensuite, une fois
+que l’image a été téléchargée, nous copions l’image dans la texture. Nous utiliserons cette méthode ci-dessous.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*// Créer une texture.
+*var texture = gl.createTexture();
+*gl.bindTexture(gl.TEXTURE_2D, texture);
+*
+*// Remplir la texture avec un pixel bleu 1x1.
+*gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+*              new Uint8Array([0, 0, 255, 255]));
+*
+*// Charger une image de manière asynchrone
+*var image = new Image();
+*image.src = &quot;resources/f-texture.png&quot;;
+*image.addEventListener('load', function() {
+*  // Maintenant que l'image est chargée, la copier dans la texture.
+*  gl.bindTexture(gl.TEXTURE_2D, texture);
+*  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+*  gl.generateMipmap(gl.TEXTURE_2D);
+*});
+</code></pre>
+<p>Et voilà le résultat</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-textures.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-textures.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Et si nous voulions n’utiliser qu’une partie de la texture sur la face avant du ‘F’ ? Les textures sont référencées
+avec des “coordonnées de texture” et les coordonnées de texture vont de 0.0 à 1.0 de gauche à
+droite à travers la texture et de 0.0 à 1.0 depuis le premier pixel de la première ligne jusqu’au dernier pixel de la dernière ligne.
+Remarquez que je n’ai pas dit haut ou bas. Le haut et le bas n’ont aucun sens dans l’espace texture
+car jusqu’à ce que vous dessiniez quelque chose et l’orientiez, il n’y a pas de haut et de bas. Ce qui compte, c’est que vous
+fournissiez des données de texture à WebGL. Le début de ces données commence à la coordonnée de texture 0,0
+et la fin de ces données est à 1,1</p>
+<img class="webgl_center noinvertdark" width="405" src="../resources/texture-coordinates-diagram.svg" />
+<p>J’ai chargé la texture dans Photoshop et j’ai cherché les diverses coordonnées en pixels.</p>
+<img class="webgl_center" width="256" height="256" src="../../resources/f-texture-pixel-coords.png" />
+<p>Pour convertir des coordonnées de pixel en coordonnées de texture, nous pouvons utiliser</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">texcoordX = pixelCoordX / (width  - 1)
+texcoordY = pixelCoordY / (height - 1)
+</code></pre>
+<p>Voici les coordonnées de texture pour la face avant.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// colonne de gauche avant
+ 38 / 255,  44 / 255,
+ 38 / 255, 223 / 255,
+113 / 255,  44 / 255,
+ 38 / 255, 223 / 255,
+113 / 255, 223 / 255,
+113 / 255,  44 / 255,
+
+// traverse du haut avant
+113 / 255, 44 / 255,
+113 / 255, 85 / 255,
+218 / 255, 44 / 255,
+113 / 255, 85 / 255,
+218 / 255, 85 / 255,
+218 / 255, 44 / 255,
+
+// traverse du milieu avant
+113 / 255, 112 / 255,
+113 / 255, 151 / 255,
+203 / 255, 112 / 255,
+113 / 255, 151 / 255,
+203 / 255, 151 / 255,
+203 / 255, 112 / 255,
+</code></pre>
+<p>J’ai également utilisé des coordonnées de texture similaires pour l’arrière. Et voilà le résultat.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-textures-texture-coords-mapped.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-textures-texture-coords-mapped.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Ce n’est pas un affichage très excitant, mais cela démontre comment utiliser les coordonnées de texture. Si vous créez
+de la géométrie dans du code (cubes, sphères, etc.), il est généralement assez facile de calculer les coordonnées de texture que vous
+voulez. D’un autre côté, si vous obtenez des modèles 3D depuis des logiciels de modélisation 3D comme Blender, Maya, 3D Studio Max, alors
+vos artistes (ou vous) devront <a href="https://docs.blender.org/manual/en/3.4/modeling/meshes/uv/index.html">ajuster les coordonnées de texture dans ces packages en utilisant un éditeur UV</a>.</p>
+<p>Alors que se passe-t-il si nous utilisons des coordonnées de texture en dehors de la plage 0.0 à 1.0 ? Par défaut, WebGL répète
+la texture. 0.0 à 1.0 est une ‘copie’ de la texture. 1.0 à 2.0 est une autre copie. Même -4.0 à -3.0 est encore
+une autre copie. Affichons un plan en utilisant ces coordonnées de texture.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"> -3, -1,
+  2, -1,
+ -3,  4,
+ -3,  4,
+  2, -1,
+  2,  4,
+</code></pre>
+<p>et voilà le résultat</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-textures-repeat-clamp.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-textures-repeat-clamp.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Vous pouvez dire à WebGL de ne pas répéter la texture dans une certaine direction en utilisant <code class="notranslate" translate="no">CLAMP_TO_EDGE</code>. Par exemple</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+</code></pre>
+<p>vous pouvez aussi dire à WebGL de mettre en miroir la texture quand elle se répète avec <code class="notranslate" translate="no">gl.MIRRORED_REPEAT</code>.
+Cliquez sur les boutons dans l’exemple ci-dessus pour voir la différence.</p>
+<p>Vous avez peut-être remarqué un appel à <code class="notranslate" translate="no">gl.generateMipmap</code> quand nous avons chargé la texture. À quoi sert-il ?</p>
+<p>Imaginez que nous avions cette texture de 16x16 pixels.</p>
+<img class="webgl_center" src="../resources/mip-low-res-enlarged.png" style="border: 2px solid black;" />
+<p>Imaginez maintenant que nous ayons essayé de dessiner cette texture sur un polygone de 2x2 pixels à l’écran. Quelles couleurs devrions-nous
+faire avec ces 4 pixels ? Il y a 256 pixels parmi lesquels choisir. Dans Photoshop, si vous redimensionniez une image de 16x16 pixels
+à 2x2, elle ferait la moyenne des 8x8 pixels dans chaque coin pour créer les 4 pixels dans une image 2x2. Malheureusement,
+lire 64 pixels et les moyenner tous ensemble serait beaucoup trop lent pour un GPU. En fait, imaginez si vous
+aviez une texture de 2048x2048 pixels et que vous essayiez de la dessiner en 2x2 pixels. Pour faire ce que Photoshop fait pour chacun des
+4 pixels dans le résultat 2x2, il faudrait moyenner 1024x1024 pixels, soit 1 million de pixels fois 4. C’est bien
+trop pour être rapide.</p>
+<p>Donc ce que le GPU fait, c’est qu’il utilise un mipmap. Un mipmap est une collection d’images progressivement plus petites,
+chacune faisant 1/4 de la taille de la précédente. Le mipmap pour la texture 16x16 ci-dessus ressemblerait à quelque chose comme
+cela.</p>
+<img class="webgl_center noinvertdark nobg" src="../resources/mipmap-low-res-enlarged.png" />
+<p>Généralement, chaque niveau plus petit est juste une interpolation bilinéaire du niveau précédent et c’est
+ce que fait <code class="notranslate" translate="no">gl.generateMipmap</code>. Il regarde le plus grand niveau et génère tous les niveaux plus petits pour vous.
+Bien sûr, vous pouvez fournir vous-même les niveaux plus petits si vous le souhaitez.</p>
+<p>Maintenant, si vous essayez de dessiner cette texture de 16x16 pixels en seulement 2x2 pixels à l’écran, WebGL peut sélectionner le
+mip qui est 2x2 et qui a déjà été moyenné à partir des mips précédents.</p>
+<p>Vous pouvez choisir ce que WebGL fait en définissant le filtrage de texture pour chaque texture. Il y a 6 modes</p>
+<ul>
+<li><code class="notranslate" translate="no">NEAREST</code> = choisir 1 pixel depuis le plus grand mip</li>
+<li><code class="notranslate" translate="no">LINEAR</code> = choisir 4 pixels depuis le plus grand mip et les mélanger</li>
+<li><code class="notranslate" translate="no">NEAREST_MIPMAP_NEAREST</code> = choisir le meilleur mip, puis choisir un pixel depuis ce mip</li>
+<li><code class="notranslate" translate="no">LINEAR_MIPMAP_NEAREST</code> = choisir le meilleur mip, puis mélanger 4 pixels de ce mip</li>
+<li><code class="notranslate" translate="no">NEAREST_MIPMAP_LINEAR</code> = choisir les 2 meilleurs mips, choisir 1 pixel de chacun, les mélanger</li>
+<li><code class="notranslate" translate="no">LINEAR_MIPMAP_LINEAR</code> = choisir les 2 meilleurs mips, choisir 4 pixels de chacun, les mélanger tous</li>
+</ul>
+<p>Vous pouvez voir l’importance des mips dans ces 2 exemples. Le premier montre que si vous utilisez <code class="notranslate" translate="no">NEAREST</code>
+ou <code class="notranslate" translate="no">LINEAR</code> et ne choisissez que depuis la plus grande image, vous aurez beaucoup de scintillement car quand les choses
+bougent, pour chaque pixel dessiné, vous devez choisir un seul pixel de la plus grande image. Cela change selon
+la taille et la position et donc parfois il choisira un pixel, d’autres fois un différent, d’où le scintillement.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-textures-mips.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-textures-mips.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>L’exemple ci-dessus est exagéré pour montrer le problème.
+Remarquez à quel point ceux de gauche et du milieu scintillent alors que ceux de droite scintillent moins.
+Ceux de droite ont également des couleurs mélangées car ils utilisent les mips. Plus vous dessinez la texture petite, plus WebGL va
+choisir des pixels éloignés. C’est pourquoi par exemple celui du bas au milieu, même s’il utilise <code class="notranslate" translate="no">LINEAR</code> et mélange
+4 pixels, scintille avec des couleurs différentes car ces 4 pixels proviennent de coins différents de l’image 16x16 selon lesquels
+4 sont choisis, vous obtenez une couleur différente. Celui en bas à droite reste cependant une couleur constante
+car il utilise le 2ème plus petit mip.</p>
+<p>Ce deuxième exemple montre des polygones qui s’enfoncent loin dans la profondeur.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-textures-mips-tri-linear.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-textures-mips-tri-linear.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Les 6 faisceaux entrant dans l’écran utilisent les 6 modes de filtrage listés ci-dessus. Le faisceau en haut à gauche utilise <code class="notranslate" translate="no">NEAREST</code>
+et vous pouvez voir qu’il est clairement très pixelisé. Celui en haut au milieu utilise <code class="notranslate" translate="no">LINEAR</code> et n’est pas beaucoup mieux.
+Celui en haut à droite utilise <code class="notranslate" translate="no">NEAREST_MIPMAP_NEAREST</code>. Cliquez sur l’image pour passer à une texture où chaque mip est
+une couleur différente et vous verrez facilement où il choisit d’utiliser un mip spécifique. Celui en bas à gauche utilise
+<code class="notranslate" translate="no">LINEAR_MIPMAP_NEAREST</code> ce qui signifie qu’il choisit le meilleur mip puis mélange 4 pixels dans ce mip. Vous pouvez toujours voir
+une zone claire où il passe d’un mip au mip suivant. Celui du bas au milieu utilise <code class="notranslate" translate="no">NEAREST_MIPMAP_LINEAR</code>
+ce qui signifie choisir les 2 meilleurs mips, choisir un pixel de chacun et les
+mélanger. Si vous regardez de près, vous pouvez voir qu’il est encore pixelisé, surtout dans la direction horizontale.
+Celui en bas à droite utilise <code class="notranslate" translate="no">LINEAR_MIPMAP_LINEAR</code> ce qui choisit les 2 meilleurs mips, choisit 4 pixels de chacun,
+et mélange les 8 pixels.</p>
+<img class="webgl_center noinvertdark nobg" src="../resources/different-colored-mips.png" />
+<div class="webgl_center">mips de différentes couleurs</div>
+<p>Vous pourriez vous demander pourquoi choisiriez-vous jamais autre chose que <code class="notranslate" translate="no">LINEAR_MIPMAP_LINEAR</code> qui est sans doute
+le meilleur. Il y a de nombreuses raisons. L’une est que <code class="notranslate" translate="no">LINEAR_MIPMAP_LINEAR</code> est le plus lent. Lire 8 pixels
+est plus lent que lire 1 pixel. Sur le matériel GPU moderne, ce n’est probablement pas un problème si vous n’utilisez qu’une seule
+texture à la fois, mais les jeux modernes peuvent utiliser 2 à 4 textures à la fois. 4 textures * 8 pixels par texture =
+besoin de lire 32 pixels pour chaque pixel dessiné. Ce sera lent. Une autre raison est si vous essayez
+d’obtenir un certain effet. Par exemple, si vous voulez que quelque chose ait ce look pixelisé <em>rétro</em>, vous voudrez peut-être
+utiliser <code class="notranslate" translate="no">NEAREST</code>. Les mips prennent aussi de la mémoire. En fait ils prennent 33% de mémoire supplémentaire. Cela peut être beaucoup de mémoire
+surtout pour une très grande texture comme vous pourriez en utiliser sur un écran titre de jeu. Si vous n’allez jamais
+dessiner quelque chose de plus petit que le plus grand mip, pourquoi gaspiller de la mémoire pour les mips plus petits. Utilisez simplement <code class="notranslate" translate="no">NEAREST</code>
+ou <code class="notranslate" translate="no">LINEAR</code> car ils n’utilisent que le premier mip.</p>
+<p>Pour définir le filtrage, appelez <code class="notranslate" translate="no">gl.texParameter</code> comme ceci</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+</code></pre>
+<p><code class="notranslate" translate="no">TEXTURE_MIN_FILTER</code> est le paramètre utilisé quand la taille que vous dessinez est plus petite que le plus grand mip.
+<code class="notranslate" translate="no">TEXTURE_MAG_FILTER</code> est le paramètre utilisé quand la taille que vous dessinez est plus grande que le plus grand mip. Pour
+<code class="notranslate" translate="no">TEXTURE_MAG_FILTER</code>, seuls <code class="notranslate" translate="no">NEAREST</code> et <code class="notranslate" translate="no">LINEAR</code> sont des paramètres valides.</p>
+<p>Une chose à savoir : WebGL2 requiert que les textures soient “texture complete” sinon elles ne seront pas rendues.
+“texture complete” signifie soit que</p>
+<ol>
+<li>
+<p>Vous avez réglé le filtrage pour n’utiliser que le premier niveau de mip, ce qui signifie
+régler le <code class="notranslate" translate="no">TEXTURE_MIN_FILTER</code> sur <code class="notranslate" translate="no">LINEAR</code> ou <code class="notranslate" translate="no">NEAREST</code>.</p>
+</li>
+<li>
+<p>Si vous utilisez des mips, ils doivent être de la bonne taille et vous devez en fournir TOUS
+jusqu’à la taille 1x1.</p>
+</li>
+</ol>
+<p>La façon la plus simple de le faire est d’appeler <code class="notranslate" translate="no">gl.generateMipmap</code>. Sinon, si vous fournissez vos propres mips, vous devez les fournir
+tous ou vous obtiendrez une erreur.</p>
+<p><a name="texture-atlas"></a>Une question courante est “Comment puis-je appliquer une image différente sur chaque face d’un cube ?”. Par exemple, disons que nous
+avions ces 6 images.</p>
+<div class="webgl_table_div_center">
+  <style>
+    table.webgl_table_center {
+      border-spacing: 0.5em;
+      border-collapse: separate;
+    }
+    table.webgl_table_center img {
+      display:block;
+    }
+  </style>
+  <table class="webgl_table_center">
+    <tr><td><img src="../resources/noodles-01.jpg" /></td><td><img src="../resources/noodles-02.jpg" /></td></tr>
+    <tr><td><img src="../resources/noodles-03.jpg" /></td><td><img src="../resources/noodles-04.jpg" /></td></tr>
+    <tr><td><img src="../resources/noodles-05.jpg" /></td><td><img src="../resources/noodles-06.jpg" /></td></tr>
+  </table>
+</div>
+<p>3 réponses viennent à l’esprit</p>
+<ol>
+<li>
+<p>créer un shader compliqué qui référence 6 textures et passer des informations supplémentaires par sommet dans
+le vertex shader qui sont passées au fragment shader pour décider quelle texture utiliser. NE FAITES PAS CELA !
+Un peu de réflexion rendrait clair que vous finiriez par écrire des tonnes de shaders différents si vous
+vouliez faire la même chose pour des formes différentes avec plus de côtés etc.</p>
+</li>
+<li>
+<p>dessiner 6 plans au lieu d’un cube. C’est une solution courante. Ce n’est pas mauvais mais ça ne fonctionne vraiment
+que pour de petites formes comme un cube. Si vous aviez une sphère avec 1000 quads et que vous vouliez mettre une texture différente
+sur chaque quad, vous devriez dessiner 1000 plans et ce serait lent.</p>
+</li>
+<li>
+<p>La, j’ose dire, <em>meilleure solution</em> est de mettre toutes les images dans 1 texture et d’utiliser les coordonnées de texture
+pour mapper une partie différente de la texture sur chaque face du cube. C’est la technique que pratiquement
+toutes les applications haute performance (comprenez <em>les jeux</em>) utilisent. Ainsi, par exemple, nous mettrions toutes les images dans une texture peut-être
+comme ceci</p>
+</li>
+</ol>
+<img class="webgl_center" src="../../resources/noodles.jpg" />
+<p>puis utiliser un ensemble différent de coordonnées de texture pour chaque face du cube.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">    // sélectionner l'image en haut à gauche
+    0   , 0  ,
+    0   , 0.5,
+    0.25, 0  ,
+    0   , 0.5,
+    0.25, 0.5,
+    0.25, 0  ,
+    // sélectionner l'image en haut au milieu
+    0.25, 0  ,
+    0.5 , 0  ,
+    0.25, 0.5,
+    0.25, 0.5,
+    0.5 , 0  ,
+    0.5 , 0.5,
+    // sélectionner l'image en haut à droite
+    0.5 , 0  ,
+    0.5 , 0.5,
+    0.75, 0  ,
+    0.5 , 0.5,
+    0.75, 0.5,
+    0.75, 0  ,
+    // sélectionner l'image en bas à gauche
+    0   , 0.5,
+    0.25, 0.5,
+    0   , 1  ,
+    0   , 1  ,
+    0.25, 0.5,
+    0.25, 1  ,
+    // sélectionner l'image en bas au milieu
+    0.25, 0.5,
+    0.25, 1  ,
+    0.5 , 0.5,
+    0.25, 1  ,
+    0.5 , 1  ,
+    0.5 , 0.5,
+    // sélectionner l'image en bas à droite
+    0.5 , 0.5,
+    0.75, 0.5,
+    0.5 , 1  ,
+    0.5 , 1  ,
+    0.75, 0.5,
+    0.75, 1  ,
+</code></pre>
+<p>Et nous obtenons</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-textures-texture-atlas.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-textures-texture-atlas.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Ce style d’application de plusieurs images en utilisant 1 texture s’appelle souvent un <a href="https://www.google.com/?ion=1&amp;espv=2#q=texture%20atlas"><em>atlas de textures</em></a>.
+C’est la meilleure solution car il n’y a qu’une texture à charger, le shader reste simple car il ne doit référencer qu’une texture, et il ne nécessite
+qu’un seul appel de dessin pour dessiner la forme au lieu d’un appel de dessin par texture si nous la découpions en
+plans.</p>
+<p>Quelques autres choses très importantes que vous voudrez peut-être savoir sur les textures.
+L’une est <a href="webgl-texture-units.html">comment fonctionne l’état des unités de texture</a>.
+Une autre est <a href="webgl-2-textures.html">comment utiliser 2 textures ou plus à la fois</a>. L’autre
+est <a href="webgl-cors-permission.html">comment utiliser des images d’autres domaines</a>.</p>
+<p>La suite : <a href="webgl-less-code-more-fun.html">commençons à simplifier avec moins de code et plus de plaisir</a>.</p>
+<div class="webgl_bottombar">
+<h3>UV vs. Coordonnées de texture</h3>
+<p>Les coordonnées de texture sont souvent abrégées en texture coords, texcoords ou UVs
+(prononcé Ew-Vées). Je ne sais pas d'où vient le terme UV sauf que
+les positions de sommets utilisent souvent <code class="notranslate" translate="no">x, y, z, w</code> donc pour les coordonnées de texture ils ont décidé d'utiliser
+<code class="notranslate" translate="no">s, t, u, v</code> pour essayer de clarifier à quel des 2 types vous faites référence.
+Cependant, étant donné cela, vous penseriez qu'on les appellerait Es-Tés et en fait si vous regardez
+les paramètres d'enroulement de texture, ils s'appellent <code class="notranslate" translate="no">TEXTURE_WRAP_S</code> et
+<code class="notranslate" translate="no">TEXTURE_WRAP_T</code> mais pour une raison quelconque, depuis aussi longtemps que j'ai travaillé
+en graphisme, les gens les ont appelés Ew-Vées.
+</p>
+<p>Donc maintenant vous savez que si quelqu'un dit UVs, il parle de coordonnées de texture.</p>
+</div>
+<div class="webgl_bottombar">
+<h3>Images non puissance de 2</h3>
+<p>Si vous êtes habitué à WebGL1, WebGL1 avait la limitation que les textures dont les dimensions
+n'étaient pas une puissance de 2, autrement dit <strong>pas</strong> 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, etc,
+ne pouvaient pas utiliser des mips et ne pouvaient pas se répéter. Dans WebGL2, ces restrictions ont disparu.
+SUPER !
+</p>
+</div>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-3d-textures.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-3d-textures.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-3d-textures.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-3d-textures.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-3d-textures.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-3d-textures.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-3d-textures.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-3d-textures.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fondamentaux</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-getting-webgl2.html">Comment utiliser WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fundamentals.html">Les bases</a></li>
+<li><a href="/webgl/lessons/fr/webgl-how-it-works.html">Comment ça marche</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shaders-and-glsl.html">Shaders et GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Diagramme d'état</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl2-whats-new.html">Quoi de neuf dans WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2.html">Passer de WebGL1 à WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2-fundamentals.html">Différences de WebGLFundamentals.org à WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Traitement d'images</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-image-processing.html">Traitement d'images</a></li>
+<li><a href="/webgl/lessons/fr/webgl-image-processing-continued.html">Traitement d'images - Suite</a></li>
+        </ul>
+  <li>Translation, rotation, mise à l'échelle 2D et calcul matriciel</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-translation.html">Translation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-rotation.html">Rotation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-scale.html">Mise à l'échelle 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrices.html">Matrices 2D</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-orthographic.html">Projection Orthographique 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective.html">Perspective 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-camera.html">3D - Caméras</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-naming.html">3D - Nommage des matrices</a></li>
+        </ul>
+  <li>Éclairage</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-lighting-directional.html">Éclairage directionnel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-point.html">Éclairage ponctuel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-spot.html">Éclairage spot</a></li>
+        </ul>
+  <li>Structure et organisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-less-code-more-fun.html">Moins de code, plus de plaisir</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-multiple-things.html">Dessiner plusieurs choses</a></li>
+<li><a href="/webgl/lessons/fr/webgl-scene-graph.html">Graphes de scène</a></li>
+        </ul>
+  <li>Géométrie</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-geometry-lathe.html">3D Géométrie - Tour</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj.html">Charger des fichiers .obj</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj-w-mtl.html">Charger des fichiers .obj avec .mtl</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/fr/webgl-data-textures.html">Textures de données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2-textures.html">Utiliser 2 textures ou plus</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cors-permission.html">Images Cross Origin</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective-correct-texturemapping.html">Mappage de Texture avec Correction de Perspective</a></li>
+<li><a href="/webgl/lessons/fr/webgl-planar-projection-mapping.html">Projection planaire et en perspective</a></li>
+        </ul>
+  <li>Rendu vers une texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-render-to-texture.html">Rendu vers une texture</a></li>
+        </ul>
+  <li>Ombres</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-shadows.html">Ombres</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrix-stack.html">2D - Pile de matrices</a></li>
+<li><a href="/webgl/lessons/fr/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/fr/webgl-environment-maps.html">Cartes d'environnement</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fog.html">Brouillard</a></li>
+<li><a href="/webgl/lessons/fr/webgl-picking.html">Picking (cliquer sur des objets)</a></li>
+        </ul>
+  <li>Texte</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-text-html.html">Texte - HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-canvas2d.html">Texte - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-texture.html">Texte - Utiliser une texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-glyphs.html">Texte - Utiliser une texture de glyphes</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Astuces</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-smallest-programs.html">Plus petits programmes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-without-data.html">Dessiner sans données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/fr/webgl-pulling-vertices.html">Extraction de sommets</a></li>
+        </ul>
+  <li>Optimisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-indexed-vertices.html">Sommets indexés (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-instanced-drawing.html">Dessin instancié</a></li>
+        </ul>
+  <li>Divers</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-setup-and-installation.html">Installation et configuration</a></li>
+<li><a href="/webgl/lessons/fr/webgl-boilerplate.html">Code standard (Boilerplate)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-resizing-the-canvas.html">Redimensionner le Canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/fr/webgl-points-lines-triangles.html">Points, Lignes et Triangles</a></li>
+<li><a href="/webgl/lessons/fr/webgl-multiple-views.html">Vues multiples, Canvas multiples</a></li>
+<li><a href="/webgl/lessons/fr/webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+<li><a href="/webgl/lessons/fr/webgl-and-alpha.html">WebGL2 et Alpha</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-vs-3d-library.html">Bibliothèques 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-vs-math.html">WebGL2 Matrices vs Matrices Mathématiques</a></li>
+<li><a href="/webgl/lessons/fr/webgl-precision-issues.html">Problèmes de précision</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#screenshot">Prendre une capture d'écran</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#preservedrawingbuffer">Empêcher l'effacement du canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#tabindex">Obtenir des entrées clavier depuis un canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#html-background">Utiliser WebGL2 comme arrière-plan en HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cross-platform-issues.html">Problèmes multi-plateformes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Référence</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-attributes.html">Attributs</a></li>
+<li><a href="/webgl/lessons/fr/webgl-texture-units.html">Unités de Texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/fr/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/fr/webgl-references.html">Références</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentation de l'API</a></li>
+  <li>
+    <a href="https://twgljs.org">TWGL, une bibliothèque utilitaire WebGL</a>
+  </li>
+  <li>
+    <a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a>
+  </li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Problème ou bug ? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Créez un ticket sur github</a>.</div>
+<div class="lesson-comment-notes">
+   Utilisez <b>&lt;pre&gt;&lt;code&gt;</b>le code ici<b>&lt;/code&gt;&lt;/pre&gt;</b> pour les blocs de code
+</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Textures';
+            var disqus_title = 'WebGL2 Textures';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Merci à <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>pour <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/fr/webgl-load-obj-w-mtl.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Comment analyser un fichier .MTL">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-load-obj-w-mtl_fr.jpg">
+
+<meta property="og:title" content="WebGL2 Charger des fichiers Obj avec Mtl">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-load-obj-w-mtl_fr.jpg">
+<meta property="og:description" content="Comment analyser un fichier .MTL">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-load-obj-w-mtl.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Charger des fichiers Obj avec Mtl">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-load-obj-w-mtl.html">
+<meta name="twitter:description" content="Comment analyser un fichier .MTL">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-load-obj-w-mtl_fr.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-load-obj-w-mtl.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-load-obj-w-mtl_fr.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-load-obj-w-mtl.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-load-obj-w-mtl.html",
+      "inLanguage":"fr",
+      "name":"WebGL2 Charger des fichiers Obj avec Mtl",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-load-obj-w-mtl.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Charger des fichiers Obj avec Mtl</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/fr/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-load-obj-w-mtl.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-load-obj-w-mtl.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/webgl/lessons/fr/webgl-load-obj-w-mtl.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-load-obj-w-mtl.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-load-obj-w-mtl.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-load-obj-w-mtl.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-load-obj-w-mtl.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-load-obj-w-mtl.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-load-obj-w-mtl.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-load-obj-w-mtl.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-load-obj-w-mtl.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-load-obj-w-mtl.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-load-obj-w-mtl.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-load-obj-w-mtl.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-load-obj-w-mtl.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-load-obj-w-mtl.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Table des matières</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/fr/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Charger des fichiers Obj avec Mtl</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Dans <a href="webgl-load-obj.html">l’article précédent</a>, nous avons analysé des fichiers .OBJ.
+Dans cet article, analysons leurs fichiers de matériaux .MTL complémentaires.</p>
+<p><strong>Avertissement :</strong> Ce parser .MTL n’est pas conçu pour être exhaustif ou
+parfait, ni pour gérer tous les fichiers .MTL. Il s’agit plutôt d’un
+exercice pour parcourir la gestion de ce qu’on rencontre en chemin.
+Cela dit, si vous rencontrez des problèmes importants et leurs solutions, un commentaire
+en bas de page pourrait être utile aux autres s’ils choisissent d’utiliser ce code.</p>
+<p>Nous avons chargé cette <a href="https://sketchfab.com/3d-models/chair-aa2acddb218646a59ece132bf95aa558">chaise</a> sous licence <a href="http://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a> par <a href="https://sketchfab.com/haytonm">haytonm</a> trouvée sur <a href="https://sketchfab.com/">Sketchfab</a>.</p>
+<div class="webgl_center"><img src="../../resources/models/chair/chair.jpg" style="width: 452px;"></div>
+<p>Elle a un fichier .MTL correspondant qui ressemble à ceci :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"># Blender MTL File: 'None'
+# Material Count: 11
+
+newmtl D1blinn1SG
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.500000 0.500000 0.500000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl D1lambert2SG
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.020000 0.020000 0.020000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl D1lambert3SG
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+
+... similaire pour 8 autres matériaux
+</code></pre>
+<p>En consultant <a href="http://paulbourke.net/dataformats/mtl/">une description du format de fichier .MTL</a>,
+on peut voir que le mot-clé <code class="notranslate" translate="no">newmtl</code> commence un nouveau matériau avec le nom donné, et
+en dessous se trouvent tous les paramètres de ce matériau. Chaque ligne commence par un mot-clé
+similaire au fichier .OBJ, donc on peut commencer avec un cadre similaire :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseMTL(text) {
+  const materials = {};
+  let material;
+
+  const keywords = {
+    newmtl(parts, unparsedArgs) {
+      material = {};
+      materials[unparsedArgs] = material;
+    },
+  };
+
+  const keywordRE = /(\w*)(?: )*(.*)/;
+  const lines = text.split('\n');
+  for (let lineNo = 0; lineNo &lt; lines.length; ++lineNo) {
+    const line = lines[lineNo].trim();
+    if (line === '' || line.startsWith('#')) {
+      continue;
+    }
+    const m = keywordRE.exec(line);
+    if (!m) {
+      continue;
+    }
+    const [, keyword, unparsedArgs] = m;
+    const parts = line.split(/\s+/).slice(1);
+    const handler = keywords[keyword];
+    if (!handler) {
+      console.warn('unhandled keyword:', keyword);
+      continue;
+    }
+    handler(parts, unparsedArgs);
+  }
+
+  return materials;
+}
+</code></pre>
+<p>Ensuite, il suffit d’ajouter des fonctions pour chaque mot-clé. La documentation indique que :</p>
+<ul>
+<li><code class="notranslate" translate="no">Ns</code> est le paramètre de brillance spéculaire de <a href="webgl-3d-lighting-point.html">l’article sur les lumières ponctuelles</a></li>
+<li><code class="notranslate" translate="no">Ka</code> est la couleur ambiante du matériau</li>
+<li><code class="notranslate" translate="no">Kd</code> est la couleur diffuse qui était notre couleur dans <a href="webgl-3d-lighting-point.html">l’article sur les lumières ponctuelles</a></li>
+<li><code class="notranslate" translate="no">Ks</code> est la couleur spéculaire</li>
+<li><code class="notranslate" translate="no">Ke</code> est la couleur émissive</li>
+<li><code class="notranslate" translate="no">Ni</code> est la densité optique. Nous ne l’utiliserons pas</li>
+<li><code class="notranslate" translate="no">d</code> signifie “dissolve” qui est l’opacité</li>
+<li><code class="notranslate" translate="no">illum</code> spécifie le type d’illumination. Le document liste 11 types. Nous l’ignorerons pour l’instant.</li>
+</ul>
+<p>J’ai hésité à conserver ces noms tels quels. Un mathématicien aime les noms courts.
+La plupart des guides de style de code préfèrent des noms descriptifs, donc j’ai décidé de faire ainsi.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseMTL(text) {
+  const materials = {};
+  let material;
+
+  const keywords = {
+    newmtl(parts, unparsedArgs) {
+      material = {};
+      materials[unparsedArgs] = material;
+    },
++    Ns(parts)     { material.shininess      = parseFloat(parts[0]); },
++    Ka(parts)     { material.ambient        = parts.map(parseFloat); },
++    Kd(parts)     { material.diffuse        = parts.map(parseFloat); },
++    Ks(parts)     { material.specular       = parts.map(parseFloat); },
++    Ke(parts)     { material.emissive       = parts.map(parseFloat); },
++    Ni(parts)     { material.opticalDensity = parseFloat(parts[0]); },
++    d(parts)      { material.opacity        = parseFloat(parts[0]); },
++    illum(parts)  { material.illum          = parseInt(parts[0]); },
+  };
+
+  ...
+
+  return materials;
+}
+</code></pre>
+<p>J’ai aussi hésité à essayer de deviner le chemin vers chaque fichier .MTL
+ou de le spécifier manuellement. En d’autres termes, on pourrait faire ceci :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// pseudo code - spécifier manuellement le chemin pour les fichiers .OBJ et .MTL
+const obj = downloadAndParseObj(pathToOBJFile);
+const materials = downloadAndParseMtl(pathToMTLFile);
+</code></pre>
+<p>Ou on peut faire ceci :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// pseudo code - deviner le chemin du fichier .MTL basé sur le fichier .OBJ
+const obj = downloadAndParseObj(pathToOBJFile);
+const materials = downloadAndParseMtl(pathToOBJFile, obj);
+</code></pre>
+<p>J’ai choisi la deuxième option, dont je ne suis pas totalement sûr qu’elle soit
+bonne ou mauvaise. Selon la documentation, un fichier .OBJ peut contenir des
+références à plusieurs fichiers .MTL. Je n’en ai jamais vu d’exemple, mais je
+suppose que l’auteur de la documentation l’a fait.</p>
+<p>De plus, je n’ai jamais vu le fichier .MTL portant un nom différent du fichier .OBJ.
+En d’autres termes, si le fichier .OBJ s’appelle <code class="notranslate" translate="no">bananas.obj</code>, le fichier .MTL
+s’appelle presque toujours <code class="notranslate" translate="no">bananas.mtl</code>.</p>
+<p>Cela dit, la spécification dit que les fichiers .MTL sont spécifiés dans le fichier
+<code class="notranslate" translate="no">.OBJ</code>, donc j’ai décidé d’essayer de calculer les chemins des fichiers .MTL.</p>
+<p>En partant du code <a href="webgl-load-obj.html">de l’article précédent</a>,
+nous séparons l’URL du fichier .OBJ, puis construisons de nouvelles URLs pour les
+fichiers .MTL relativement au fichier .OBJ. Enfin, nous les chargeons tous,
+les concaténons puisque ce sont des fichiers texte, et les passons à notre
+parseur.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-const response = await fetch('resources/models/chair/chair.obj');
++const objHref = 'resources/models/chair/chair.obj';
++const response = await fetch(objHref);
+const text = await response.text();
+const obj = parseOBJ(text);
++const baseHref = new URL(objHref, window.location.href);
++const matTexts = await Promise.all(obj.materialLibs.map(async filename =&gt; {
++  const matHref = new URL(filename, baseHref).href;
++  const response = await fetch(matHref);
++  return await response.text();
++}));
++const materials = parseMTL(matTexts.join('\n'));
+</code></pre>
+<p>Nous devons maintenant utiliser les matériaux. D’abord, lors de la configuration des
+parties, nous utiliserons le nom du matériau extrait du fichier .OBJ et nous l’utiliserons
+pour chercher un matériau parmi ceux que nous venons de charger.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-const parts = obj.geometries.map(({data}) =&gt; {
++const parts = obj.geometries.map(({material, data}) =&gt; {
+
+  ...
+
+  // crée un tampon pour chaque tableau en appelant
+  // gl.createBuffer, gl.bindBuffer, gl.bufferData
+  const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
+  const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
+  return {
+-    material: {
+-      u_diffuse: [1, 1, 1, 1],
+-    },
++    material: materials[material],
+    bufferInfo,
+    vao,
+  };
+});
+</code></pre>
+<p>Lors du rendu, notre assistant nous permet de passer plus d’un ensemble de valeurs d’uniform.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render(time) {
+
+  ...
+
+  for (const {bufferInfo, vao, material} of parts) {
+    // configure les attributs pour cette partie.
+    gl.bindVertexArray(vao);
+    // appelle gl.uniform
+    twgl.setUniforms(meshProgramInfo, {
+      u_world,
+-      u_diffuse: material.u_diffuse,
+-    });
++    }, material);
+    // appelle gl.drawArrays ou gl.drawElements
+    twgl.drawBufferInfo(gl, bufferInfo);
+  }
+
+  requestAnimationFrame(render);
+}
+</code></pre>
+<p>Ensuite, nous devons modifier les shaders. Puisque les matériaux ont des paramètres
+spéculaires, nous allons ajouter le calcul spéculaire de <a href="webgl-3d-lighting-point.html">l’article sur l’éclairage ponctuel</a>,
+sauf avec une différence : nous calculerons l’éclairage spéculaire depuis une lumière
+directionnelle au lieu d’une lumière ponctuelle.</p>
+<p><code class="notranslate" translate="no">ambient</code> et <code class="notranslate" translate="no">emissive</code> nécessitent peut-être une explication. <code class="notranslate" translate="no">ambient</code> est la couleur
+du matériau sous une lumière sans direction. Nous pouvons la multiplier par une couleur
+<code class="notranslate" translate="no">u_ambientLight</code> et définir cette couleur de lumière à quelque chose de plus que du noir
+si on veut la voir. Cela tend à “laver” les couleurs.</p>
+<p><code class="notranslate" translate="no">emissive</code> est la couleur du matériau indépendamment de toutes les lumières, donc on la
+ajoute simplement. <code class="notranslate" translate="no">emissive</code> pourrait être utilisé si vous avez une zone qui brille.</p>
+<p>Voici le nouveau shader.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
+in vec4 a_position;
+in vec3 a_normal;
+in vec4 a_color;
+
+uniform mat4 u_projection;
+uniform mat4 u_view;
+uniform mat4 u_world;
++uniform vec3 u_viewWorldPosition;
+
+out vec3 v_normal;
++out vec3 v_surfaceToView;
+out vec4 v_color;
+
+void main() {
+-  gl_Position = u_projection * u_view * a_position;
++  vec4 worldPosition = u_world * a_position;
++  gl_Position = u_projection * u_view * worldPosition;
++  v_surfaceToView = u_viewWorldPosition - worldPosition.xyz;
+  v_normal = mat3(u_world) * a_normal;
+  v_color = a_color;
+}
+`;
+
+const fs = `#version 300 es
+precision highp float;
+
+in vec3 v_normal;
++in vec3 v_surfaceToView;
+in vec4 v_color;
+
+-uniform vec4 u_diffuse;
++uniform vec3 diffuse;
++uniform vec3 ambient;
++uniform vec3 emissive;
++uniform vec3 specular;
++uniform float shininess;
++uniform float opacity;
+uniform vec3 u_lightDirection;
++uniform vec3 u_ambientLight;
+
+out vec4 outColor;
+
+void main () {
+  vec3 normal = normalize(v_normal);
+
++  vec3 surfaceToViewDirection = normalize(v_surfaceToView);
++  vec3 halfVector = normalize(u_lightDirection + surfaceToViewDirection);
+
+  float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
++  float specularLight = clamp(dot(normal, halfVector), 0.0, 1.0);
+
+-  vec4 diffuse = u_diffuse * v_color;
++  vec3 effectiveDiffuse = diffuse * v_color.rgb;
++  float effectiveOpacity = opacity * v_color.a;
+
+-  outColor = vec4(diffuse.rgb * fakeLight, diffuse.a);
++  outColor = vec4(
++      emissive +
++      ambient * u_ambientLight +
++      effectiveDiffuse * fakeLight +
++      specular * pow(specularLight, shininess),
++      effectiveOpacity);
+}
+`;
+</code></pre>
+<p>Et avec ça, on obtient quelque chose qui ressemble beaucoup à l’image ci-dessus :</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-load-obj-w-mtl-no-textures.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-load-obj-w-mtl-no-textures.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Essayons de charger un fichier .OBJ qui a un .MTL qui référence des textures.</p>
+<p>J’ai trouvé <a href="https://www.blendswap.com/blends/view/69174">ce modèle 3D de moulin à vent sous licence CC-BY-NC 3.0</a> par <a href="https://www.blendswap.com/user/ahedov">ahedov</a>.</p>
+<div class="webgl_center"><img src="../../resources/models/windmill/windmill-obj.jpg"></div>
+<p>Son fichier .MTL ressemble à ceci :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no"># Blender MTL File: 'windmill_001.blend'
+# Material Count: 2
+
+newmtl Material
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd windmill_001_lopatky_COL.jpg
+map_Bump windmill_001_lopatky_NOR.jpg
+
+newmtl windmill
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd windmill_001_base_COL.jpg
+map_Bump windmill_001_base_NOR.jpg
+map_Ns windmill_001_base_SPEC.jpg
+</code></pre>
+<p>On peut voir que <code class="notranslate" translate="no">map_Kd</code>, <code class="notranslate" translate="no">map_Bump</code> et <code class="notranslate" translate="no">map_Ns</code> spécifient tous des fichiers image.
+Ajoutons-les à notre parseur .MTL :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">+function parseMapArgs(unparsedArgs) {
++  // TODO: gérer les options
++  return unparsedArgs;
++}
+
+function parseMTL(text) {
+  const materials = {};
+  let material;
+
+  const keywords = {
+    newmtl(parts, unparsedArgs) {
+      material = {};
+      materials[unparsedArgs] = material;
+    },
+    Ns(parts)       { material.shininess      = parseFloat(parts[0]); },
+    Ka(parts)       { material.ambient        = parts.map(parseFloat); },
+    Kd(parts)       { material.diffuse        = parts.map(parseFloat); },
+    Ks(parts)       { material.specular       = parts.map(parseFloat); },
+    Ke(parts)       { material.emissive       = parts.map(parseFloat); },
++    map_Kd(parts, unparsedArgs)   { material.diffuseMap = parseMapArgs(unparsedArgs); },
++    map_Ns(parts, unparsedArgs)   { material.specularMap = parseMapArgs(unparsedArgs); },
++    map_Bump(parts, unparsedArgs) { material.normalMap = parseMapArgs(unparsedArgs); },
+    Ni(parts)       { material.opticalDensity = parseFloat(parts[0]); },
+    d(parts)        { material.opacity        = parseFloat(parts[0]); },
+    illum(parts)    { material.illum          = parseInt(parts[0]); },
+  };
+
+  ...
+</code></pre>
+<p>Note : J’ai créé <code class="notranslate" translate="no">parseMapArgs</code> parce que selon <a href="http://paulbourke.net/dataformats/mtl/">la spécification</a>,
+il y a plein d’options supplémentaires qu’on ne voit pas dans ce fichier. Il nous faudrait
+une refactorisation majeure pour les utiliser, mais pour l’instant j’espère gérer les noms
+de fichiers avec des espaces et sans options.</p>
+<p>Pour charger toutes ces textures, nous pourrions utiliser le code de <a href="webgl-3d-textures.html">l’article sur les textures</a>,
+mais utilisons à nouveau nos assistants pour alléger le code.</p>
+<p>Deux matériaux peuvent référencer la même image, donc gardons toutes les textures dans
+un objet par nom de fichier pour ne pas en charger deux fois.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const textures = {};
+
+// charge les textures pour les matériaux
+for (const material of Object.values(materials)) {
+  Object.entries(material)
+    .filter(([key]) =&gt; key.endsWith('Map'))
+    .forEach(([key, filename]) =&gt; {
+      let texture = textures[filename];
+      if (!texture) {
+        const textureHref = new URL(filename, baseHref).href;
+        texture = twgl.createTexture(gl, {src: textureHref, flipY: true});
+        textures[filename] = texture;
+      }
+      material[key] = texture;
+    });
+}
+</code></pre>
+<p>Le code ci-dessus parcourt chaque propriété de chaque matériau. Si la propriété se termine
+par <code class="notranslate" translate="no">&quot;Map&quot;</code>, il crée une URL relative, crée une texture et l’assigne au matériau. Notre
+assistant chargera l’image dans la texture de façon asynchrone.</p>
+<p>Nous allons aussi mettre une texture blanche 1x1 que nous pouvons utiliser pour tout
+matériau qui ne référence pas de texture. Ainsi, nous pouvons utiliser le même shader.
+Sinon, il nous faudrait des shaders différents, un pour les matériaux avec texture et un
+autre pour les matériaux sans.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-const textures = {};
++const textures = {
++  defaultWhite: twgl.createTexture(gl, {src: [255, 255, 255, 255]}),
++};
+</code></pre>
+<p>Assignons aussi des valeurs par défaut pour tout paramètre de matériau manquant.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+const defaultMaterial = {
++  diffuse: [1, 1, 1],
++  diffuseMap: textures.defaultWhite,
++  ambient: [0, 0, 0],
++  specular: [1, 1, 1],
++  shininess: 400,
++  opacity: 1,
++};
+
+const parts = obj.geometries.map(({material, data}) =&gt; {
+
+  ...
+
+  // crée un tampon pour chaque tableau en appelant
+  // gl.createBuffer, gl.bindBuffer, gl.bufferData
+  const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
+  const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
+  return {
+-    material: materials[material],
++    material: {
++      ...defaultMaterial,
++      ...materials[material],
++    },
+    bufferInfo,
+    vao,
+  };
+});
+</code></pre>
+<p>Pour utiliser les textures, nous devons modifier le shader. Utilisons-les une à la fois.
+Nous commencerons par la diffuse map.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
+in vec4 a_position;
+in vec3 a_normal;
++in vec2 a_texcoord;
+in vec4 a_color;
+
+uniform mat4 u_projection;
+uniform mat4 u_view;
+uniform mat4 u_world;
+uniform vec3 u_viewWorldPosition;
+
+out vec3 v_normal;
+out vec3 v_surfaceToView;
++out vec2 v_texcoord;
+out vec4 v_color;
+
+void main() {
+  vec4 worldPosition = u_world * a_position;
+  gl_Position = u_projection * u_view * worldPosition;
+  v_surfaceToView = u_viewWorldPosition - worldPosition.xyz;
+  v_normal = mat3(u_world) * a_normal;
++  v_texcoord = a_texcoord;
+  v_color = a_color;
+}
+`;
+
+const fs = `#version 300 es
+precision highp float;
+
+in vec3 v_normal;
+in vec3 v_surfaceToView;
++in vec2 v_texcoord;
+in vec4 v_color;
+
+uniform vec3 diffuse;
++uniform sampler2D diffuseMap;
+uniform vec3 ambient;
+uniform vec3 emissive;
+uniform vec3 specular;
+uniform float shininess;
+uniform float opacity;
+uniform vec3 u_lightDirection;
+uniform vec3 u_ambientLight;
+
+out vec4 outColor;
+
+void main () {
+  vec3 normal = normalize(v_normal);
+
+  vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+  vec3 halfVector = normalize(u_lightDirection + surfaceToViewDirection);
+
+  float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
+  float specularLight = clamp(dot(normal, halfVector), 0.0, 1.0);
+
+-  vec3 effectiveDiffuse = diffuse.rgb * v_color.rgb;
+-  float effectiveOpacity = v_color.a * opacity;
++  vec4 diffuseMapColor = texture(diffuseMap, v_texcoord);
++  vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb * v_color.rgb;
++  float effectiveOpacity = opacity * diffuseMapColor.a * v_color.a;
+
+  outColor = vec4(
+      emissive +
+      ambient * u_ambientLight +
+      effectiveDiffuse * fakeLight +
+      specular * pow(specularLight, shininess),
+      effectiveOpacity);
+}
+`;
+</code></pre>
+<p>Et on obtient des textures !</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-load-obj-w-mtl-w-textures.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-load-obj-w-mtl-w-textures.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>En regardant le fichier .MTL, on peut voir un <code class="notranslate" translate="no">map_Ks</code> qui est essentiellement
+une texture en noir et blanc qui spécifie à quel point une surface particulière
+est brillante, ou autrement dit quelle quantité de réflexion spéculaire est utilisée.</p>
+<div class="webgl_center"><img src="../../resources/models/windmill/windmill_001_base_SPEC.jpg" style="width: 512px;"></div>
+<p>Pour l’utiliser, il suffit de mettre à jour le shader puisque nous chargeons déjà
+toutes les textures.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const fs = `#version 300 es
+precision highp float;
+
+in vec3 v_normal;
+in vec3 v_surfaceToView;
+in vec2 v_texcoord;
+in vec4 v_color;
+
+uniform vec3 diffuse;
+uniform sampler2D diffuseMap;
+uniform vec3 ambient;
+uniform vec3 emissive;
+uniform vec3 specular;
++uniform sampler2D specularMap;
+uniform float shininess;
+uniform float opacity;
+uniform vec3 u_lightDirection;
+uniform vec3 u_ambientLight;
+
+out vec4 outColor;
+
+void main () {
+  vec3 normal = normalize(v_normal);
+
+  vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+  vec3 halfVector = normalize(u_lightDirection + surfaceToViewDirection);
+
+  float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
+  float specularLight = clamp(dot(normal, halfVector), 0.0, 1.0);
++  vec4 specularMapColor = texture(specularMap, v_texcoord);
++  vec3 effectiveSpecular = specular * specularMapColor.rgb;
+
+  vec4 diffuseMapColor = texture(diffuseMap, v_texcoord);
+  vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb * v_color.rgb;
+  float effectiveOpacity = opacity * diffuseMapColor.a * v_color.a;
+
+  outColor = vec4(
+      emissive +
+      ambient * u_ambientLight +
+      effectiveDiffuse * fakeLight +
+-      specular * pow(specularLight, shininess),
++      effectiveSpecular * pow(specularLight, shininess),
+      effectiveOpacity);
+}
+`;
+</code></pre>
+<p>Nous devrions aussi ajouter une valeur par défaut pour tout matériau qui n’a pas de
+specular map :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const defaultMaterial = {
+  diffuse: [1, 1, 1],
+  diffuseMap: textures.defaultWhite,
+  ambient: [0, 0, 0],
+  specular: [1, 1, 1],
++  specularMap: textures.defaultWhite,
+  shininess: 400,
+  opacity: 1,
+};
+</code></pre>
+<p>Il serait difficile de voir l’effet avec les paramètres de matériau tels qu’ils sont dans
+le fichier .MTL, alors modifions les paramètres spéculaires pour qu’ils soient plus visibles.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// modifie les matériaux pour voir la specular map
+Object.values(materials).forEach(m =&gt; {
+  m.shininess = 25;
+  m.specular = [3, 2, 1];
+});
+</code></pre>
+<p>Et avec ça, on peut voir que seules les fenêtres et les pales sont configurées pour afficher des reflets spéculaires.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-load-obj-w-mtl-w-specular-map.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-load-obj-w-mtl-w-specular-map.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Je suis en fait surpris que les pales soient configurées pour réfléchir. Si vous regardez
+le fichier .MTL, vous verrez que la brillance <code class="notranslate" translate="no">Ns</code> est à 0.0, ce qui signifie que les
+reflets spéculaires seraient extrêmement saturés. Mais aussi <code class="notranslate" translate="no">illum</code> est spécifié à 1
+pour les deux matériaux. Selon la documentation, illum 1 signifie :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">color = KaIa + Kd { SUM j=1..ls, (N * Lj)Ij }
+</code></pre>
+<p>Ce qui, traduit en quelque chose de plus lisible, donne :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">color = ambientColor * lightAmbient + diffuseColor * sumOfLightCalculations
+</code></pre>
+<p>Comme on peut le voir, il n’est nullement question d’utiliser le spéculaire, et pourtant
+le fichier a une specular map ! ¯_(ツ)_/¯. Les reflets spéculaires nécessitent illum 2
+ou plus. C’est mon expérience avec les fichiers .OBJ/.MTL : il faut toujours quelques
+ajustements manuels pour les matériaux. La façon de corriger ça dépend de vous. Vous pouvez
+éditer le fichier .MTL ou ajouter du code. Pour l’instant, nous allons dans la direction
+“ajouter du code”.</p>
+<p>La dernière map que ce fichier .MTL utilise est une <code class="notranslate" translate="no">map_Bump</code> (bump map).
+C’est un autre endroit où les fichiers .OBJ/.MTL montrent leur âge.
+Le fichier référencé est clairement une normal map, pas une bump map.</p>
+<div class="webgl_center"><img src="../../resources/models/windmill/windmill_001_base_NOR.jpg" style="width: 512px;"></div>
+<p>Il n’existe pas d’option dans le fichier .MTL pour spécifier des normal maps ou que les
+bump maps doivent être utilisées comme normal maps. Nous pourrions utiliser une heuristique,
+par exemple si le nom de fichier contient ‘nor’ ? Ou, peut-être supposer que tous les
+fichiers référencés par <code class="notranslate" translate="no">map_Bump</code> sont des normal maps en 2020 et au-delà, car je ne suis
+pas sûr d’avoir vu un fichier .OBJ avec une vraie bump map depuis plus d’une décennie.
+Suivons cette voie pour l’instant.</p>
+<p>Nous récupérerons le code de génération de tangentes de <a href="webgl-3d-lighting-normal-mapping.html">l’article sur le normal mapping</a>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const parts = obj.geometries.map(({material, data}) =&gt; {
+  ...
+
++  // génère les tangentes si on a les données pour le faire.
++  if (data.texcoord &amp;&amp; data.normal) {
++    data.tangent = generateTangents(data.position, data.texcoord);
++  } else {
++    // Pas de tangentes
++    data.tangent = { value: [1, 0, 0] };
++  }
+
+  // crée un tampon pour chaque tableau en appelant
+  // gl.createBuffer, gl.bindBuffer, gl.bufferData
+
+  const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
+  const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
+  return {
+    material: {
+      ...defaultMaterial,
+      ...materials[material],
+    },
+    bufferInfo,
+    vao,
+  };
+});
+</code></pre>
+<p>Nous devons aussi ajouter une normal map par défaut pour les matériaux qui n’en ont pas :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const textures = {
+  defaultWhite: twgl.createTexture(gl, {src: [255, 255, 255, 255]}),
++  defaultNormal: twgl.createTexture(gl, {src: [127, 127, 255, 0]}),
+};
+
+...
+
+const defaultMaterial = {
+  diffuse: [1, 1, 1],
+  diffuseMap: textures.defaultWhite,
++  normalMap: textures.defaultNormal,
+  ambient: [0, 0, 0],
+  specular: [1, 1, 1],
+  specularMap: textures.defaultWhite,
+  shininess: 400,
+  opacity: 1,
+};
+...
+
+</code></pre>
+<p>Et ensuite nous devons incorporer les modifications du shader de <a href="webgl-3d-lighting-normal-mapping.html">l’article sur le normal mapping</a>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
+in vec4 a_position;
+in vec3 a_normal;
++in vec3 a_tangent;
+in vec2 a_texcoord;
+in vec4 a_color;
+
+uniform mat4 u_projection;
+uniform mat4 u_view;
+uniform mat4 u_world;
+uniform vec3 u_viewWorldPosition;
+
+out vec3 v_normal;
++out vec3 v_tangent;
+out vec3 v_surfaceToView;
+out vec2 v_texcoord;
+out vec4 v_color;
+
+void main() {
+  vec4 worldPosition = u_world * a_position;
+  gl_Position = u_projection * u_view * worldPosition;
+  v_surfaceToView = u_viewWorldPosition - worldPosition.xyz;
+
+-  v_normal = mat3(u_world) * a_normal;
++  mat3 normalMat = mat3(u_world);
++  v_normal = normalize(normalMat * a_normal);
++  v_tangent = normalize(normalMat * a_tangent);
+
+  v_texcoord = a_texcoord;
+  v_color = a_color;
+}
+`;
+
+const fs = `#version 300 es
+precision highp float;
+
+in vec3 v_normal;
++in vec3 v_tangent;
+in vec3 v_surfaceToView;
+in vec2 v_texcoord;
+in vec4 v_color;
+
+uniform vec3 diffuse;
+uniform sampler2D diffuseMap;
+uniform vec3 ambient;
+uniform vec3 emissive;
+uniform vec3 specular;
+uniform sampler2D specularMap;
+uniform float shininess;
+uniform sampler2D normalMap;
+uniform float opacity;
+uniform vec3 u_lightDirection;
+uniform vec3 u_ambientLight;
+
+out vec4 outColor;
+
+void main () {
+  vec3 normal = normalize(v_normal);
++  vec3 tangent = normalize(v_tangent);
++  vec3 bitangent = normalize(cross(normal, tangent));
++
++  mat3 tbn = mat3(tangent, bitangent, normal);
++  normal = texture(normalMap, v_texcoord).rgb * 2. - 1.;
++  normal = normalize(tbn * normal);
+
+  vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+  vec3 halfVector = normalize(u_lightDirection + surfaceToViewDirection);
+
+  float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
+  float specularLight = clamp(dot(normal, halfVector), 0.0, 1.0);
+  vec4 specularMapColor = texture(specularMap, v_texcoord);
+  vec3 effectiveSpecular = specular * specularMapColor.rgb;
+
+  vec4 diffuseMapColor = texture(diffuseMap, v_texcoord);
+  vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb * v_color.rgb;
+  float effectiveOpacity = opacity * diffuseMapColor.a * v_color.a;
+
+  outColor = vec4(
+      emissive +
+      ambient * u_ambientLight +
+      effectiveDiffuse * fakeLight +
+      effectiveSpecular * pow(specularLight, shininess),
+      effectiveOpacity);// * 0.0 + vec4(normal * 0.5 + 0.5 + effectiveSpecular * pow(specularLight, shininess), 1);
+}
+`;
+</code></pre>
+<p>Et avec ça, nous obtenons les normal maps. Note : J’ai rapproché la caméra pour qu’elles
+soient plus faciles à voir.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-load-obj-w-mtl-w-normal-maps.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-load-obj-w-mtl-w-normal-maps.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Je suis sûr qu’il y a bien plus de fonctionnalités du fichier .MTL que nous pourrions
+essayer de prendre en charge. Par exemple, le mot-clé <code class="notranslate" translate="no">refl</code> spécifie des reflection maps
+qui est une autre façon de dire <a href="webgl-environment-maps.html">environment map</a>. On voit
+aussi que les différents mots-clés <code class="notranslate" translate="no">map_</code> prennent un tas d’arguments optionnels. En voici quelques-uns :</p>
+<ul>
+<li><code class="notranslate" translate="no">-clamp on | off</code> spécifie si la texture se répète</li>
+<li><code class="notranslate" translate="no">-mm base gain</code> spécifie un décalage et un multiplicateur pour les valeurs de texture</li>
+<li><code class="notranslate" translate="no">-o u v w</code> spécifie un décalage pour les coordonnées de texture. Vous l’appliqueriez en utilisant une texture matrix similaire à ce qu’on a fait dans <a href="webgl-2d-drawimage.html">l’article sur drawImage</a></li>
+<li><code class="notranslate" translate="no">-s u v w</code> spécifie une échelle pour les coordonnées de texture. Comme ci-dessus, vous le mettriez dans une texture matrix</li>
+</ul>
+<p>Je ne sais pas combien de fichiers .MTL existent qui utilisent ces paramètres.</p>
+<p>Un point plus important à retenir est que l’ajout de la prise en charge de chaque
+fonctionnalité rend les shaders plus grands et plus complexes. Ci-dessus, nous avons une
+forme de <em>uber shader</em>, un shader qui essaie de gérer tous les cas. Pour le faire fonctionner,
+nous avons passé diverses valeurs par défaut. Par exemple, nous avons défini le <code class="notranslate" translate="no">diffuseMap</code>
+comme une texture blanche afin que si nous chargeons quelque chose sans textures, ça s’affiche
+quand même. La couleur diffuse sera multipliée par du blanc qui est 1.0, donc on aura juste
+la couleur diffuse. De même, nous avons passé une couleur de vertex blanche par défaut au
+cas où il n’y aurait pas de couleurs de vertex.</p>
+<p>C’est une façon courante de faire fonctionner les choses, et si ça fonctionne assez vite pour
+vos besoins, il n’y a pas de raison de changer. Mais il est plus courant de générer des shaders
+qui activent/désactivent ces fonctionnalités. S’il n’y a pas de couleurs de vertex, générez un
+shader, c’est-à-dire manipulez les chaînes du shader, pour qu’il n’ait pas d’attribut <code class="notranslate" translate="no">a_color</code>
+ni tout le code associé. De même, si un matériau n’a pas de diffuse map, générez un shader qui
+n’a pas de <code class="notranslate" translate="no">uniform sampler2D diffuseMap</code> et supprimez tout le code associé. S’il n’y a pas de
+maps du tout, nous n’avons pas besoin de coordonnées de texture, donc nous les laisserions de côté.</p>
+<p>Quand on additionne toutes les combinaisons, il peut y avoir des milliers de variantes de shaders.
+Avec juste ce qu’on a ci-dessus, il y a :</p>
+<ul>
+<li>diffuseMap oui/non</li>
+<li>specularMap oui/non</li>
+<li>normalMap oui/non</li>
+<li>couleurs de vertex oui/non</li>
+<li>ambientMap oui/non (nous n’avons pas pris en charge ça mais le fichier .MTL le fait)</li>
+<li>reflectionMap oui/non (nous n’avons pas pris en charge ça mais le fichier .MTL le fait)</li>
+</ul>
+<p>Ces seules options représentent 64 combinaisons. Si on ajoute disons 1 à 4 lumières, et
+que ces lumières peuvent être des spots, ponctuelles ou directionnelles, on se retrouve avec
+8192 combinaisons possibles de fonctionnalités de shader.</p>
+<p>Gérer tout ça représente beaucoup de travail. C’est l’une des raisons pour lesquelles
+beaucoup de gens choisissent un moteur 3D comme <a href="https://threejs.org">three.js</a> plutôt que
+de tout faire eux-mêmes. Mais au moins, espérons que cet article donne une idée des types de
+choses impliquées dans l’affichage de contenu 3D arbitraire.</p>
+<div class="webgl_bottombar">
+<h3>Éviter les conditionnelles dans les shaders dans la mesure du possible</h3>
+<p>Le conseil traditionnel est d'éviter les conditionnelles dans les shaders. Par exemple,
+nous aurions pu faire quelque chose comme ceci :</p>
+<pre class="prettyprint"><code class="notranslate" translate="no">
+uniform bool hasDiffuseMap;
+uniform vec4 diffuse;
+uniform sampler2D diffuseMap
+
+...
+  vec4 effectiveDiffuse &#x3D; diffuse;
+  if (hasDiffuseMap) {
+    effectiveDiffuse *&#x3D; texture2D(diffuseMap, texcoord);
+  }
+...
+</code></pre>
+<p>Les conditionnelles de ce type sont généralement déconseillées car selon le
+GPU/pilote, elles sont souvent peu performantes.</p>
+<p>Soit faites comme nous l'avons fait ci-dessus et essayez de faire en sorte que le code
+n'ait pas de conditionnelles. Nous avons utilisé une texture blanche 1x1 quand il n'y a pas
+de texture pour que nos calculs fonctionnent sans conditionnelle.<p>
+<p>Soit utilisez des shaders différents. Un qui n'a pas la fonctionnalité et un qui l'a,
+et choisissez le bon pour chaque situation.</p>
+</div>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-load-obj-w-mtl.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-load-obj-w-mtl.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-load-obj-w-mtl.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-load-obj-w-mtl.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-load-obj-w-mtl.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-load-obj-w-mtl.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-load-obj-w-mtl.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-load-obj-w-mtl.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fondamentaux</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-getting-webgl2.html">Comment utiliser WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fundamentals.html">Les bases</a></li>
+<li><a href="/webgl/lessons/fr/webgl-how-it-works.html">Comment ça marche</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shaders-and-glsl.html">Shaders et GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Diagramme d'état</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl2-whats-new.html">Quoi de neuf dans WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2.html">Passer de WebGL1 à WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2-fundamentals.html">Différences de WebGLFundamentals.org à WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Traitement d'images</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-image-processing.html">Traitement d'images</a></li>
+<li><a href="/webgl/lessons/fr/webgl-image-processing-continued.html">Traitement d'images - Suite</a></li>
+        </ul>
+  <li>Translation, rotation, mise à l'échelle 2D et calcul matriciel</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-translation.html">Translation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-rotation.html">Rotation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-scale.html">Mise à l'échelle 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrices.html">Matrices 2D</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-orthographic.html">Projection Orthographique 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective.html">Perspective 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-camera.html">3D - Caméras</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-naming.html">3D - Nommage des matrices</a></li>
+        </ul>
+  <li>Éclairage</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-lighting-directional.html">Éclairage directionnel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-point.html">Éclairage ponctuel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-spot.html">Éclairage spot</a></li>
+        </ul>
+  <li>Structure et organisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-less-code-more-fun.html">Moins de code, plus de plaisir</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-multiple-things.html">Dessiner plusieurs choses</a></li>
+<li><a href="/webgl/lessons/fr/webgl-scene-graph.html">Graphes de scène</a></li>
+        </ul>
+  <li>Géométrie</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-geometry-lathe.html">3D Géométrie - Tour</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj.html">Charger des fichiers .obj</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj-w-mtl.html">Charger des fichiers .obj avec .mtl</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/fr/webgl-data-textures.html">Textures de données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2-textures.html">Utiliser 2 textures ou plus</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cors-permission.html">Images Cross Origin</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective-correct-texturemapping.html">Mappage de Texture avec Correction de Perspective</a></li>
+<li><a href="/webgl/lessons/fr/webgl-planar-projection-mapping.html">Projection planaire et en perspective</a></li>
+        </ul>
+  <li>Rendu vers une texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-render-to-texture.html">Rendu vers une texture</a></li>
+        </ul>
+  <li>Ombres</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-shadows.html">Ombres</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrix-stack.html">2D - Pile de matrices</a></li>
+<li><a href="/webgl/lessons/fr/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/fr/webgl-environment-maps.html">Cartes d'environnement</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fog.html">Brouillard</a></li>
+<li><a href="/webgl/lessons/fr/webgl-picking.html">Picking (cliquer sur des objets)</a></li>
+        </ul>
+  <li>Texte</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-text-html.html">Texte - HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-canvas2d.html">Texte - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-texture.html">Texte - Utiliser une texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-glyphs.html">Texte - Utiliser une texture de glyphes</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Astuces</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-smallest-programs.html">Plus petits programmes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-without-data.html">Dessiner sans données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/fr/webgl-pulling-vertices.html">Extraction de sommets</a></li>
+        </ul>
+  <li>Optimisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-indexed-vertices.html">Sommets indexés (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-instanced-drawing.html">Dessin instancié</a></li>
+        </ul>
+  <li>Divers</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-setup-and-installation.html">Installation et configuration</a></li>
+<li><a href="/webgl/lessons/fr/webgl-boilerplate.html">Code standard (Boilerplate)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-resizing-the-canvas.html">Redimensionner le Canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/fr/webgl-points-lines-triangles.html">Points, Lignes et Triangles</a></li>
+<li><a href="/webgl/lessons/fr/webgl-multiple-views.html">Vues multiples, Canvas multiples</a></li>
+<li><a href="/webgl/lessons/fr/webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+<li><a href="/webgl/lessons/fr/webgl-and-alpha.html">WebGL2 et Alpha</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-vs-3d-library.html">Bibliothèques 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-vs-math.html">WebGL2 Matrices vs Matrices Mathématiques</a></li>
+<li><a href="/webgl/lessons/fr/webgl-precision-issues.html">Problèmes de précision</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#screenshot">Prendre une capture d'écran</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#preservedrawingbuffer">Empêcher l'effacement du canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#tabindex">Obtenir des entrées clavier depuis un canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#html-background">Utiliser WebGL2 comme arrière-plan en HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cross-platform-issues.html">Problèmes multi-plateformes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Référence</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-attributes.html">Attributs</a></li>
+<li><a href="/webgl/lessons/fr/webgl-texture-units.html">Unités de Texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/fr/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/fr/webgl-references.html">Références</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentation de l'API</a></li>
+  <li>
+    <a href="https://twgljs.org">TWGL, une bibliothèque utilitaire WebGL</a>
+  </li>
+  <li>
+    <a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a>
+  </li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Problème ou bug ? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Créez un ticket sur github</a>.</div>
+<div class="lesson-comment-notes">
+   Utilisez <b>&lt;pre&gt;&lt;code&gt;</b>le code ici<b>&lt;/code&gt;&lt;/pre&gt;</b> pour les blocs de code
+</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Charger des fichiers Obj avec Mtl';
+            var disqus_title = 'WebGL2 Charger des fichiers Obj avec Mtl';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Merci à <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>pour <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

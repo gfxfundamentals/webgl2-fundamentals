@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/fr/webgl-cross-platform-issues.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Ce dont il faut être conscient quand on essaie de faire fonctionner son application WebGL partout.">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-cross-platform-issues_fr.jpg">
+
+<meta property="og:title" content="WebGL2 Problèmes multi-plateformes">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-cross-platform-issues_fr.jpg">
+<meta property="og:description" content="Ce dont il faut être conscient quand on essaie de faire fonctionner son application WebGL partout.">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-cross-platform-issues.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Problèmes multi-plateformes">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-cross-platform-issues.html">
+<meta name="twitter:description" content="Ce dont il faut être conscient quand on essaie de faire fonctionner son application WebGL partout.">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-cross-platform-issues_fr.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-cross-platform-issues.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-cross-platform-issues_fr.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-cross-platform-issues.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-cross-platform-issues.html",
+      "inLanguage":"fr",
+      "name":"WebGL2 Problèmes multi-plateformes",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-cross-platform-issues.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Problèmes multi-plateformes</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/fr/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/webgl/lessons/fr/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-cross-platform-issues.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-cross-platform-issues.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-cross-platform-issues.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-cross-platform-issues.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-cross-platform-issues.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-cross-platform-issues.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-cross-platform-issues.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-cross-platform-issues.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-cross-platform-issues.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-cross-platform-issues.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Table des matières</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/fr/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Problèmes multi-plateformes</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Ce n’est probablement pas une surprise que tous les programmes WebGL ne fonctionnent pas sur tous les appareils ou
+navigateurs.</p>
+<p>Voici une liste de la plupart des problèmes que vous pourriez rencontrer d’emblée</p>
+<h2 id="performances">Performances</h2>
+<p>Un GPU haut de gamme fonctionne probablement 100x plus vite qu’un GPU bas de gamme. La seule façon de
+contourner ça que je connaisse est soit de viser bas, soit de donner à l’utilisateur des options comme
+le font la plupart des applications PC de bureau où il peut choisir entre performance ou fidélité.</p>
+<h2 id="mémoire">Mémoire</h2>
+<p>De même, un GPU haut de gamme pourrait avoir 12 à 24 gig de RAM alors qu’un GPU bas de gamme
+a probablement moins de 1 gig. (Je suis vieux donc il est étonnant pour moi que bas de gamme = 1 gig puisque
+j’ai commencé à programmer sur des machines avec 16k à 64k de mémoire 😜)</p>
+<h2 id="limites-des-appareils">Limites des appareils</h2>
+<p>WebGL a diverses fonctionnalités minimum supportées, mais votre appareil local pourrait supporter
+plus que ce minimum, ce qui signifie que ça échouera sur d’autres appareils qui en supportent moins.</p>
+<p>Les exemples incluent :</p>
+<ul>
+<li>
+<p>La taille maximale de texture autorisée</p>
+<p>2048 ou 4096 semble être des limites raisonnables. Au moins en 2020, il semble que
+<a href="https://web3dsurvey.com/webgl/parameters/MAX_TEXTURE_SIZE">99% des appareils supportent 4096 mais seulement 50% supportent &gt; 4096</a>.</p>
+<p>Note : la taille maximale de texture est la dimension maximale que le GPU peut traiter. Ça
+ne signifie pas que ce GPU a assez de mémoire pour cette dimension au carré (pour une texture
+2D) ou au cube (pour une texture 3D). Par exemple, certains GPU ont une taille max de
+16384. Mais une texture 3D de 16384 de chaque côté nécessiterait 16 téraoctets de
+mémoire !!!</p>
+</li>
+<li>
+<p>Le nombre maximum d’attributs de sommets dans un seul programme</p>
+<p>Dans WebGL1, le minimum supporté est 8. Dans WebGL2, c’est 16. Si vous en utilisez plus,
+votre code échouera sur une machine avec seulement le minimum.</p>
+</li>
+<li>
+<p>Le nombre maximum de vecteurs d’uniforms</p>
+<p>Ceux-ci sont spécifiés séparément pour les vertex shaders et les fragment shaders.</p>
+<p>Dans WebGL1, c’est 128 pour les vertex shaders et 16 pour les fragment shaders.
+Dans WebGL2, c’est 256 pour les vertex shaders et 224 pour les fragment shaders.</p>
+<p>Notez que les uniforms peuvent être “empaquetés” donc le nombre ci-dessus est combien de <code class="notranslate" translate="no">vec4</code>s
+peuvent être utilisés. En théorie, vous pourriez avoir 4x le nombre d’uniforms <code class="notranslate" translate="no">float</code>.
+Mais il y a un algorithme qui les fait rentrer. Vous pouvez imaginer l’espace comme
+un tableau avec 4 colonnes, une ligne pour chacun des vecteurs d’uniforms maximum ci-dessus.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+-+-+-+-+
+| | | | |   &lt;- un vec4
+| | | | |   |
+| | | | |   |
+| | | | |   V
+| | | | |   lignes max de vecteurs d'uniforms
+| | | | |
+| | | | |  
+| | | | |
+...
+
+</code></pre>
+<p>D’abord les <code class="notranslate" translate="no">vec4</code>s sont alloués avec un <code class="notranslate" translate="no">mat4</code> étant 4 <code class="notranslate" translate="no">vec4</code>s. Ensuite les <code class="notranslate" translate="no">vec3</code>s sont
+placés dans l’espace restant. Puis les <code class="notranslate" translate="no">vec2</code>s suivis des <code class="notranslate" translate="no">float</code>s. Donc imaginez qu’on ait 1
+<code class="notranslate" translate="no">mat4</code>, 2 <code class="notranslate" translate="no">vec3</code>s, 2 <code class="notranslate" translate="no">vec2</code>s et 3 <code class="notranslate" translate="no">float</code>s</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+-+-+-+-+
+|m|m|m|m|   &lt;- le mat4 prend 4 lignes
+|m|m|m|m|
+|m|m|m|m|
+|m|m|m|m|
+|3|3|3| |   &lt;- les 2 vec3s prennent 2 lignes
+|3|3|3| |
+|2|2|2|2|   &lt;- les 2 vec2s tiennent dans 1 ligne 
+|f|f|f| |   &lt;- les 3 floats tiennent dans une ligne
+...
+
+</code></pre>
+<p>De plus, un tableau d’uniforms est toujours vertical, donc par exemple si le maximum
+de vecteurs d’uniforms autorisés est 16, vous ne pouvez pas avoir un tableau <code class="notranslate" translate="no">float</code> de 17 éléments,
+et en fait si vous aviez un seul <code class="notranslate" translate="no">vec4</code> cela prendrait une ligne entière donc il ne reste
+que 15 lignes, ce qui signifie que le plus grand tableau que vous pouvez avoir serait de 15
+éléments.</p>
+<p>Mon conseil cependant est de ne pas compter sur un empaquetage parfait. Bien que la spécification dise que
+l’algorithme ci-dessus est requis pour passer, il y a trop de combinaisons à tester
+pour que tous les drivers passent. Soyez juste conscient si vous approchez de la limite.</p>
+<p>Note : les varyings et attributs ne peuvent pas être empaquetés.</p>
+</li>
+<li>
+<p>Les vecteurs de varyings maximum.</p>
+<p>WebGL1 le minimum est 8. WebGL2 c’est 16.</p>
+<p>Si vous en utilisez plus, votre code ne fonctionnera pas sur une machine avec seulement le minimum.</p>
+</li>
+<li>
+<p>Les unités de texture maximum</p>
+<p>Il y a 3 valeurs ici.</p>
+<ol>
+<li>Combien d’unités de texture il y a</li>
+<li>Combien d’unités de texture un vertex shader peut référencer</li>
+<li>Combien d’unités de texture un fragment shader peut référencer</li>
+</ol>
+<table class="tabular-data">
+  <thead>
+    <tr><th></th><th>WebGL1</th><th>WebGL2</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>min unités de texture qui existent</td><td>8</td><td>32</td></tr>
+    <tr><td>min unités de texture qu'un vertex shader peut référencer</td><th style="color: red;">0!</td><td>16</td></tr>
+    <tr><td>min unités de texture qu'un fragment shader peut référencer</td><td>8</td><td>16</td></tr>
+  </tbody>
+</table>
+<p>Il est important de noter le <strong>0</strong> pour un vertex shader dans WebGL1. Notez que ce n’est probablement pas la fin du monde.
+Apparemment, <a href="https://web3dsurvey.com/webgl/parameters/MAX_VERTEX_TEXTURE_IMAGE_UNITS">~97% de tous les appareils supportent au moins 4</a>.
+Mais vous pourriez vouloir vérifier afin de soit informer l’utilisateur que votre application ne va pas fonctionner pour lui, soit
+vous pouvez vous rabattre sur d’autres shaders.</p>
+</li>
+</ul>
+<p>Il existe d’autres limites également. Pour les rechercher, vous appelez <code class="notranslate" translate="no">gl.getParameter</code> avec
+les valeurs suivantes.</p>
+<div class="webgl_center">
+<table class="tabular-data">
+  <tbody>
+    <tr><td>MAX_TEXTURE_SIZE                </td><td>taille max d'une texture</td></tr>
+    <tr><td>MAX_VERTEX_ATTRIBS              </td><td>nombre d'attributs que vous pouvez avoir</td></tr>
+    <tr><td>MAX_VERTEX_UNIFORM_VECTORS      </td><td>nombre d'uniforms vec4 qu'un vertex shader peut avoir</td></tr>
+    <tr><td>MAX_VARYING_VECTORS             </td><td>nombre de varyings que vous avez</td></tr>
+    <tr><td>MAX_COMBINED_TEXTURE_IMAGE_UNITS</td><td>nombre d'unités de texture qui existent</td></tr>
+    <tr><td>MAX_VERTEX_TEXTURE_IMAGE_UNITS  </td><td>nombre d'unités de texture qu'un vertex shader peut référencer</td></tr>
+    <tr><td>MAX_TEXTURE_IMAGE_UNITS         </td><td>nombre d'unités de texture qu'un fragment shader peut référencer</td></tr>
+    <tr><td>MAX_FRAGMENT_UNIFORM_VECTORS    </td><td>nombre d'uniforms vec4 qu'un fragment shader peut avoir</td></tr>
+    <tr><td>MAX_CUBE_MAP_TEXTURE_SIZE       </td><td>taille max d'un cubemap</td></tr>
+    <tr><td>MAX_RENDERBUFFER_SIZE           </td><td>taille max d'un renderbuffer</td></tr>
+    <tr><td>MAX_VIEWPORT_DIMS               </td><td>taille max du viewport</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Ce n’est pas la liste complète. Par exemple, la taille maximale des points et l’épaisseur maximale des lignes,
+mais vous devriez fondamentalement supposer que l’épaisseur maximale des lignes est 1.0 et que les POINTS
+ne sont utiles que pour de simples démos où vous ne vous souciez pas des
+<a href="#points-lines-viewport-scissor-behavior">problèmes de découpage</a>.</p>
+<p>WebGL2 en ajoute plusieurs autres. Quelques-uns courants sont</p>
+<div class="webgl_center">
+<table class="tabular-data">
+  <tbody>
+    <tr><td>MAX_3D_TEXTURE_SIZE                </td><td>taille max d'une texture 3D</td></tr>
+    <tr><td>MAX_DRAW_BUFFERS              </td><td>nombre d'attachements de couleur que vous pouvez avoir</td></tr>
+    <tr><td>MAX_ARRAY_TEXTURE_LAYERS      </td><td>nombre max de couches dans un tableau de textures 2D</td></tr>
+    <tr><td>MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS             </td><td>nombre de varyings que vous pouvez émettre vers des buffers séparés lors de l'utilisation du transform feedback</td></tr>
+    <tr><td>MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS</td><td>nombre de varyings que vous pouvez émettre quand on les envoie tous vers un seul buffer</td></tr>
+    <tr><td>MAX_COMBINED_UNIFORM_BLOCKS  </td><td>nombre de blocs d'uniforms que vous pouvez utiliser au total</td></tr>
+    <tr><td>MAX_VERTEX_UNIFORM_BLOCKS         </td><td>nombre de blocs d'uniforms qu'un vertex shader peut utiliser</td></tr>
+    <tr><td>MAX_FRAGMENT_UNIFORM_BLOCKS    </td><td>nombre de blocs d'uniforms qu'un fragment shader peut utiliser</td></tr>
+  </tbody>
+</table>
+</div>
+<h2 id="résolution-du-depth-buffer">Résolution du depth buffer</h2>
+<p>Quelques très anciens appareils mobiles utilisent des depth buffers de 16 bits. Sinon, autant que je sache, 99%
+des appareils utilisent un depth buffer de 24 bits donc vous n’avez probablement pas à vous inquiéter de
+ça.</p>
+<h2 id="combos-formattype-de-readpixels">Combos format/type de readPixels</h2>
+<p>Seuls certains combos format/type sont garantis de fonctionner. D’autres combos sont
+optionnels. Ceci est couvert dans <a href="webgl-readpixels.html">cet article</a>.</p>
+<h2 id="combos-dattachements-de-framebuffer">Combos d’attachements de framebuffer</h2>
+<p>Les framebuffers peuvent avoir 1 ou plusieurs attachements de textures et renderbuffers.</p>
+<p>Dans WebGL1, seules 3 combinaisons d’attachements sont garanties de fonctionner.</p>
+<ol>
+<li>une seule texture avec format = <code class="notranslate" translate="no">RGBA</code>, type = <code class="notranslate" translate="no">UNSIGNED_BYTE</code> comme <code class="notranslate" translate="no">COLOR_ATTACHMENT0</code></li>
+<li>une texture avec format = <code class="notranslate" translate="no">RGBA</code>, type = <code class="notranslate" translate="no">UNSIGNED_BYTE</code> comme <code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> et un
+renderbuffer avec format = <code class="notranslate" translate="no">DEPTH_COMPONENT</code> attaché comme <code class="notranslate" translate="no">DEPTH_ATTACHMENT</code></li>
+<li>une texture avec format = <code class="notranslate" translate="no">RGBA</code>, type = <code class="notranslate" translate="no">UNSIGNED_BYTE</code> comme <code class="notranslate" translate="no">COLOR_ATTACHMENT0</code> et un
+renderbuffer avec format = <code class="notranslate" translate="no">DEPTH_STENCIL</code> attaché comme <code class="notranslate" translate="no">DEPTH_STENCIL_ATTACHMENT</code></li>
+</ol>
+<p>Toutes les autres combinaisons dépendent de l’implémentation que vous vérifiez en appelant
+<code class="notranslate" translate="no">gl.checkFramebufferStatus</code> et en voyant s’il retourne <code class="notranslate" translate="no">FRAMEBUFFER_COMPLETE</code>.</p>
+<p>WebGL2 garantit de pouvoir écrire dans beaucoup plus de formats mais a quand même la
+limite que <strong>n’importe quelle combinaison peut échouer !</strong> Votre meilleure chance est peut-être que si tous les
+attachements de couleur sont du même format si vous en attachez plus d’un.</p>
+<h2 id="extensions">Extensions</h2>
+<p>De nombreuses fonctionnalités de WebGL1 et WebGL2 sont optionnelles. Tout l’intérêt d’avoir une
+API appelée <code class="notranslate" translate="no">getExtension</code> est qu’elle peut échouer si l’extension n’existe pas
+et vous devriez donc vérifier cet échec et ne pas supposer aveuglément qu’elle réussira.</p>
+<p>Probablement l’extension manquante la plus courante sur WebGL1 et WebGL2 est
+<code class="notranslate" translate="no">OES_texture_float_linear</code> qui est la capacité de filtrer une texture à virgule flottante,
+c’est-à-dire la capacité de supporter la définition de <code class="notranslate" translate="no">TEXTURE_MIN_FILTER</code> et
+<code class="notranslate" translate="no">TEXTURE_MAX_FILTER</code> à autre chose que <code class="notranslate" translate="no">NEAREST</code>. De nombreux appareils mobiles ne
+supportent pas ça.</p>
+<p>Dans WebGL1, une autre extension souvent manquante est <code class="notranslate" translate="no">WEBGL_draw_buffers</code> qui est la
+capacité d’attacher plus d’un attachement de couleur à un framebuffer, qui est encore à
+environ 70% pour le bureau et presque aucun pour les smartphones (cela semble faux).
+Fondamentalement, tout appareil qui peut exécuter WebGL2 devrait également supporter
+<code class="notranslate" translate="no">WEBGL_draw_buffers</code> dans WebGL1, mais quand même, c’est apparemment encore un problème. Si vous
+avez besoin de rendre vers plusieurs textures à la fois, votre page nécessite probablement un
+GPU haut de gamme de toute façon. Quand même, vous devriez vérifier si l’appareil de l’utilisateur le supporte et
+si non, fournir une explication conviviale.</p>
+<p>Pour WebGL1, les 3 extensions suivantes semblent presque universellement supportées, donc bien que
+vous puissiez vouloir avertir l’utilisateur que votre page ne va pas fonctionner si elles sont
+manquantes, il est probable que cet utilisateur a un appareil extrêmement ancien qui n’allait
+pas faire fonctionner votre page de toute façon.</p>
+<p>Ce sont <code class="notranslate" translate="no">ANGLE_instance_arrays</code> (la capacité d’utiliser le <a href="webgl-instanced-drawing.html">dessin instancié</a>),
+<code class="notranslate" translate="no">OES_vertex_array_object</code> (la capacité de stocker tout l’état des attributs dans un objet pour pouvoir échanger tout
+cet état avec un seul appel de fonction. Voir <a href="webgl-attributes.html">ceci</a>), et <code class="notranslate" translate="no">OES_element_index_uint</code>
+(la capacité d’utiliser des indices 32 bits <code class="notranslate" translate="no">UNSIGNED_INT</code> avec <a href="webgl-indexed-vertices.html"><code class="notranslate" translate="no">drawElements</code></a>).</p>
+<h2 id="emplacements-des-attributs">Emplacements des attributs</h2>
+<p>Un bug semi-courant est de ne pas rechercher les emplacements des attributs. Par exemple, vous avez un vertex shader comme</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">attribute vec4 position;
+attribute vec2 texcoord;
+
+uniform mat4 matrix;
+
+varying vec2 v_texcoord;
+
+void main() {
+   gl_Position = matrix * position;
+   v_texcoord = texcoord;
+}
+</code></pre>
+<p>Votre code suppose que <code class="notranslate" translate="no">position</code> sera l’attribut 0 et <code class="notranslate" translate="no">texcoord</code> sera
+l’attribut 1, mais ce n’est pas garanti. Donc ça fonctionne pour vous mais échoue pour quelqu’un
+d’autre. Souvent, cela peut être un bug en ce sens que vous n’avez pas fait ça intentionnellement mais
+à cause d’une erreur dans le code, les choses fonctionnent quand les emplacements sont d’une façon mais pas
+d’une autre.</p>
+<p>Il y a 3 solutions.</p>
+<ol>
+<li>
+<p>Toujours rechercher les emplacements.</p>
+</li>
+<li>
+<p>Assigner des emplacements en appelant <code class="notranslate" translate="no">gl.bindAttribLocation</code> avant d’appeler <code class="notranslate" translate="no">gl.linkProgram</code></p>
+</li>
+<li>
+<p>WebGL2 seulement, définir les emplacements dans le shader comme dans</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+layout(location = 0) vec4 position;
+latout(location = 1) vec2 texcoord;
+...
+</code></pre>
+<p>La solution 2 semble la plus <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">D.R.Y.</a> alors que la solution 3
+semble la plus <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself#DRY_vs_WET_solutions">W.E.T.</a> sauf si
+vous générez vos textures à l’exécution.</p>
+</li>
+</ol>
+<h2 id="comportements-indéfinis-de-glsl">Comportements indéfinis de GLSL</h2>
+<p>Plusieurs fonctions GLSL ont un comportement indéfini. Par exemple <code class="notranslate" translate="no">pow(x, y)</code> est
+indéfini si <code class="notranslate" translate="no">x &lt; 0</code>. Il y a une liste plus longue <a href="webgl-3d-lighting-spot.html">en bas de l’article sur
+l’éclairage spot</a>.</p>
+<h2 id="problèmes-de-précision-des-shaders">Problèmes de précision des shaders</h2>
+<p>En 2020, le plus grand problème ici est que si vous utilisez <code class="notranslate" translate="no">mediump</code> ou <code class="notranslate" translate="no">lowp</code> dans vos shaders,
+alors sur le bureau le GPU utilisera vraiment <code class="notranslate" translate="no">highp</code>, mais sur mobile ils seront vraiment
+<code class="notranslate" translate="no">mediump</code> et/ou <code class="notranslate" translate="no">lowp</code> et vous ne remarquerez donc aucun problème lors du développement sur le bureau.</p>
+<p>Voir <a href="webgl-precision-issues.html">cet article pour plus de détails</a>.</p>
+<h2 id="comportement-des-points-lignes-viewport-ciseaux">Comportement des points, lignes, viewport, ciseaux</h2>
+<p>Les <code class="notranslate" translate="no">POINTS</code> et <code class="notranslate" translate="no">LINES</code> dans WebGL peuvent avoir une taille max de 1 et en fait pour les <code class="notranslate" translate="no">LINES</code>,
+c’est maintenant la limite la plus courante. De plus, si les points sont découpés quand leur
+centre est en dehors du viewport est défini par l’implémentation. Voir le bas de
+<a href="../webgl-drawing-without-data.html#pointissues">cet article</a>.</p>
+<p>De même, si le viewport découpe seulement les sommets ou aussi les pixels est
+indéfini. Les ciseaux découpent toujours les pixels donc activez le test des ciseaux et définissez
+la taille des ciseaux si vous définissez le viewport plus petit que ce vers quoi vous dessinez
+et que vous dessinez des LINES ou POINTS.</p>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-cross-platform-issues.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-cross-platform-issues.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-cross-platform-issues.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-cross-platform-issues.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-cross-platform-issues.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-cross-platform-issues.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-cross-platform-issues.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-cross-platform-issues.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fondamentaux</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-getting-webgl2.html">Comment utiliser WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fundamentals.html">Les bases</a></li>
+<li><a href="/webgl/lessons/fr/webgl-how-it-works.html">Comment ça marche</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shaders-and-glsl.html">Shaders et GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Diagramme d'état</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl2-whats-new.html">Quoi de neuf dans WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2.html">Passer de WebGL1 à WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2-fundamentals.html">Différences de WebGLFundamentals.org à WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Traitement d'images</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-image-processing.html">Traitement d'images</a></li>
+<li><a href="/webgl/lessons/fr/webgl-image-processing-continued.html">Traitement d'images - Suite</a></li>
+        </ul>
+  <li>Translation, rotation, mise à l'échelle 2D et calcul matriciel</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-translation.html">Translation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-rotation.html">Rotation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-scale.html">Mise à l'échelle 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrices.html">Matrices 2D</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-orthographic.html">Projection Orthographique 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective.html">Perspective 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-camera.html">3D - Caméras</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-naming.html">3D - Nommage des matrices</a></li>
+        </ul>
+  <li>Éclairage</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-lighting-directional.html">Éclairage directionnel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-point.html">Éclairage ponctuel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-spot.html">Éclairage spot</a></li>
+        </ul>
+  <li>Structure et organisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-less-code-more-fun.html">Moins de code, plus de plaisir</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-multiple-things.html">Dessiner plusieurs choses</a></li>
+<li><a href="/webgl/lessons/fr/webgl-scene-graph.html">Graphes de scène</a></li>
+        </ul>
+  <li>Géométrie</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-geometry-lathe.html">3D Géométrie - Tour</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj.html">Charger des fichiers .obj</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj-w-mtl.html">Charger des fichiers .obj avec .mtl</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/fr/webgl-data-textures.html">Textures de données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2-textures.html">Utiliser 2 textures ou plus</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cors-permission.html">Images Cross Origin</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective-correct-texturemapping.html">Mappage de Texture avec Correction de Perspective</a></li>
+<li><a href="/webgl/lessons/fr/webgl-planar-projection-mapping.html">Projection planaire et en perspective</a></li>
+        </ul>
+  <li>Rendu vers une texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-render-to-texture.html">Rendu vers une texture</a></li>
+        </ul>
+  <li>Ombres</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-shadows.html">Ombres</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrix-stack.html">2D - Pile de matrices</a></li>
+<li><a href="/webgl/lessons/fr/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/fr/webgl-environment-maps.html">Cartes d'environnement</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fog.html">Brouillard</a></li>
+<li><a href="/webgl/lessons/fr/webgl-picking.html">Picking (cliquer sur des objets)</a></li>
+        </ul>
+  <li>Texte</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-text-html.html">Texte - HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-canvas2d.html">Texte - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-texture.html">Texte - Utiliser une texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-glyphs.html">Texte - Utiliser une texture de glyphes</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Astuces</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-smallest-programs.html">Plus petits programmes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-without-data.html">Dessiner sans données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/fr/webgl-pulling-vertices.html">Extraction de sommets</a></li>
+        </ul>
+  <li>Optimisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-indexed-vertices.html">Sommets indexés (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-instanced-drawing.html">Dessin instancié</a></li>
+        </ul>
+  <li>Divers</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-setup-and-installation.html">Installation et configuration</a></li>
+<li><a href="/webgl/lessons/fr/webgl-boilerplate.html">Code standard (Boilerplate)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-resizing-the-canvas.html">Redimensionner le Canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/fr/webgl-points-lines-triangles.html">Points, Lignes et Triangles</a></li>
+<li><a href="/webgl/lessons/fr/webgl-multiple-views.html">Vues multiples, Canvas multiples</a></li>
+<li><a href="/webgl/lessons/fr/webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+<li><a href="/webgl/lessons/fr/webgl-and-alpha.html">WebGL2 et Alpha</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-vs-3d-library.html">Bibliothèques 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-vs-math.html">WebGL2 Matrices vs Matrices Mathématiques</a></li>
+<li><a href="/webgl/lessons/fr/webgl-precision-issues.html">Problèmes de précision</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#screenshot">Prendre une capture d'écran</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#preservedrawingbuffer">Empêcher l'effacement du canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#tabindex">Obtenir des entrées clavier depuis un canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#html-background">Utiliser WebGL2 comme arrière-plan en HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cross-platform-issues.html">Problèmes multi-plateformes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Référence</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-attributes.html">Attributs</a></li>
+<li><a href="/webgl/lessons/fr/webgl-texture-units.html">Unités de Texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/fr/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/fr/webgl-references.html">Références</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentation de l'API</a></li>
+  <li>
+    <a href="https://twgljs.org">TWGL, une bibliothèque utilitaire WebGL</a>
+  </li>
+  <li>
+    <a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a>
+  </li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Problème ou bug ? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Créez un ticket sur github</a>.</div>
+<div class="lesson-comment-notes">
+   Utilisez <b>&lt;pre&gt;&lt;code&gt;</b>le code ici<b>&lt;/code&gt;&lt;/pre&gt;</b> pour les blocs de code
+</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Problèmes multi-plateformes';
+            var disqus_title = 'WebGL2 Problèmes multi-plateformes';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Merci à <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>pour <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

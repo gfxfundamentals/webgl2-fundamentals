@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/fr/webgl-instanced-drawing.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Dessiner plusieurs instances du même objet">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-instanced-drawing_fr.jpg">
+
+<meta property="og:title" content="WebGL2 Optimisation - Dessin instancié">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-instanced-drawing_fr.jpg">
+<meta property="og:description" content="Dessiner plusieurs instances du même objet">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-instanced-drawing.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Optimisation - Dessin instancié">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-instanced-drawing.html">
+<meta name="twitter:description" content="Dessiner plusieurs instances du même objet">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-instanced-drawing_fr.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-instanced-drawing.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-instanced-drawing_fr.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-instanced-drawing.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-instanced-drawing.html",
+      "inLanguage":"fr",
+      "name":"WebGL2 Optimisation - Dessin instancié",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-instanced-drawing.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Optimisation - Dessin instancié</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/fr/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-instanced-drawing.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-instanced-drawing.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/webgl/lessons/fr/webgl-instanced-drawing.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-instanced-drawing.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-instanced-drawing.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-instanced-drawing.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-instanced-drawing.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-instanced-drawing.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-instanced-drawing.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-instanced-drawing.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-instanced-drawing.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-instanced-drawing.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-instanced-drawing.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-instanced-drawing.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-instanced-drawing.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-instanced-drawing.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Table des matières</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/fr/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Optimisation - Dessin instancié</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>WebGL dispose d’une fonctionnalité appelée <em>dessin instancié</em>.
+C’est essentiellement une façon de dessiner plus d’une instance de
+la même chose plus rapidement que de dessiner chaque chose individuellement.</p>
+<p>Créons d’abord un exemple qui dessine plusieurs instances de
+la même chose.</p>
+<p>En partant d’un code <em>similaire</em> à celui avec lequel nous avons terminé à
+la fin de <a href="webgl-3d-orthographic.html">l’article sur la projection orthographique</a>,
+nous commençons avec ces 2 shaders</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vertexShaderSource = `#version 300 es
+in vec4 a_position;
+uniform mat4 matrix;
+
+void main() {
+  // Multiplier la position par la matrice.
+  gl_Position = matrix * a_position;
+}
+`;
+
+const fragmentShaderSource = `#version 300 es
+precision highp float;
+
+uniform vec4 color;
+
+out vec4 outColor;
+
+void main() {
+  outColor = color;
+}
+`;
+</code></pre>
+<p>Le vertex shader multiplie chaque sommet par une seule matrice que nous
+avons vue dans <a href="webgl-3d-orthographic.html">cet article</a> car c’est
+un arrangement assez flexible. Le fragment shader utilise simplement
+une couleur que nous passons via un uniform.</p>
+<p>Pour dessiner, nous devons compiler les shaders, les lier ensemble
+et rechercher les emplacements des attributs et uniforms.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const program = webglUtils.createProgramFromSources(gl,
+    [vertexShaderSource, fragmentShaderSource]);
+
+const positionLoc = gl.getAttribLocation(program, 'a_position');
+const colorLoc = gl.getUniformLocation(program, 'color');
+const matrixLoc = gl.getUniformLocation(program, 'matrix');
+</code></pre>
+<p>et créer un vertex array object pour contenir l’état des attributs</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Créer un vertex array object (état des attributs)
+const vao = gl.createVertexArray();
+
+// et en faire celui sur lequel on travaille actuellement
+gl.bindVertexArray(vao);
+</code></pre>
+<p>Ensuite, nous devons fournir des données pour les positions via un buffer.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const positionBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+    -0.1,  0.4,
+    -0.1, -0.4,
+     0.1, -0.4,
+    -0.1,  0.4,
+     0.1, -0.4,
+     0.1,  0.4,
+    -0.4, -0.1,
+     0.4, -0.1,
+    -0.4,  0.1,
+    -0.4,  0.1,
+     0.4, -0.1,
+     0.4,  0.1,
+  ]), gl.STATIC_DRAW);
+const numVertices = 12;
+
+// configurer l'attribut de position
+gl.enableVertexAttribArray(positionLoc);
+gl.vertexAttribPointer(
+    positionLoc,  // emplacement
+    2,            // taille (nombre de valeurs à extraire du buffer par itération)
+    gl.FLOAT,     // type de données dans le buffer
+    false,        // normaliser
+    0,            // stride (0 = calculer à partir de la taille et du type ci-dessus)
+    0,            // décalage dans le buffer
+);
+</code></pre>
+<p>Dessinons 5 instances. Nous allons créer 5 matrices et 5 couleurs pour
+chaque instance.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const numInstances = 5;
+const matrices = [
+  m4.identity(),
+  m4.identity(),
+  m4.identity(),
+  m4.identity(),
+  m4.identity(),
+];
+
+const colors = [
+  [ 1, 0, 0, 1, ],  // rouge
+  [ 0, 1, 0, 1, ],  // vert
+  [ 0, 0, 1, 1, ],  // bleu
+  [ 1, 0, 1, 1, ],  // magenta
+  [ 0, 1, 1, 1, ],  // cyan
+];
+</code></pre>
+<p>Pour dessiner, nous utilisons d’abord le programme shader, puis configurons l’attribut,
+et ensuite nous bouclons sur les 5 instances, calculant une nouvelle matrice
+pour chacune, définissant l’uniform de matrice et de couleur
+puis dessinant.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render(time) {
+  time *= 0.001; // secondes
+
+  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
+  // Indiquer à WebGL comment convertir du clip space en pixels
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+  gl.useProgram(program);
+
+  // configurer tous les attributs
+  gl.bindVertexArray(vao);
+
+  matrices.forEach((mat, ndx) =&gt; {
+    m4.translation(-0.5 + ndx * 0.25, 0, 0, mat);
+    m4.zRotate(mat, time * (0.1 + 0.1 * ndx), mat);
+
+    const color = colors[ndx];
+
+    gl.uniform4fv(colorLoc, color);
+    gl.uniformMatrix4fv(matrixLoc, false, mat);
+
+    gl.drawArrays(
+        gl.TRIANGLES,
+        0,             // décalage
+        numVertices,   // nombre de sommets par instance
+    );
+  });
+
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+</code></pre>
+<p>Notez que la bibliothèque de calcul matriciel prend une matrice de destination optionnelle
+à la fin de chaque fonction mathématique matricielle. Dans la plupart des articles,
+nous n’avons pas utilisé cette fonctionnalité et laissé la bibliothèque allouer une nouvelle
+matrice pour nous, mais cette fois nous voulons que le résultat soit stocké
+dans les matrices que nous avons déjà créées.</p>
+<p>Cela fonctionne et nous obtenons 5 symboles plus de couleurs différentes qui tournent.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-instanced-drawing-not-instanced.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-instanced-drawing-not-instanced.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Cela a nécessité 5 appels chacun à <code class="notranslate" translate="no">gl.uniform4v</code>, <code class="notranslate" translate="no">gl.uniformMatrix4fv</code>,
+et <code class="notranslate" translate="no">gl.drawArrays</code> pour un total de 15 appels WebGL. Si nos
+shaders étaient plus complexes, comme les shaders dans
+<a href="webgl-3d-lighting-spot.html">l’article sur l’éclairage spot</a>,
+nous aurions au moins 7 appels par objet, 6 appels à <code class="notranslate" translate="no">gl.uniformXXX</code>
+et un appel à <code class="notranslate" translate="no">gl.drawArrays</code>. Si nous dessinions 400 objets,
+ce serait 2800 appels WebGL.</p>
+<p>Le dessin instancié est une façon de réduire ces appels. Il fonctionne en
+vous permettant d’indiquer à WebGL combien de fois vous voulez que la même
+chose soit dessinée (le nombre d’instances). Pour chaque attribut,
+vous désignez si cet attribut va avancer vers la <em>valeur suivante</em>
+de son buffer assigné à chaque fois que le vertex shader est
+appelé (par défaut), ou seulement tous les N instances où N est généralement
+1.</p>
+<p>Ainsi, par exemple, au lieu de fournir <code class="notranslate" translate="no">matrix</code> et <code class="notranslate" translate="no">color</code>
+depuis un uniform, nous les fournirions via des <code class="notranslate" translate="no">attribute</code>s.
+Nous mettrions la matrice et la couleur pour chaque instance dans un buffer,
+configurerions les attributs pour extraire les données de ces buffers, et
+indiquerions à WebGL de n’avancer vers la valeur suivante qu’une fois par instance.</p>
+<p>Faisons-le !</p>
+<p>D’abord, nous allons modifier les shaders pour utiliser des attributs pour <code class="notranslate" translate="no">matrix</code>
+et <code class="notranslate" translate="no">color</code> au lieu d’uniforms.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vertexShaderSource = `#version 300 es
+in vec4 a_position;
+-uniform mat4 matrix;
++in vec4 color;
++in mat4 matrix;
++
++out vec4 v_color;
+
+void main() {
+  // Multiplier la position par la matrice.
+  gl_Position = matrix * a_position;
+
++  // Passer la couleur du sommet au fragment shader.
++  v_color = color;
+}
+`;
+</code></pre>
+<p>et</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const fragmentShaderSource = `#version 300 es
+precision highp float;
+
+-uniform vec4 color;
++// Passé depuis le vertex shader.
++in vec4 v_color;
+
+out vec4 outColor;
+
+void main() {
+-  outColor = color;
++  outColor = v_color;
+}
+`;  
+</code></pre>
+<p>les attributs ne fonctionnent que dans le vertex shader donc nous devons
+obtenir la couleur depuis un attribut dans le vertex shader
+et la passer au fragment shader via un varying.</p>
+<p>Ensuite, nous devons rechercher les emplacements de ces attributs.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const program = webglUtils.createProgramFromSources(gl,
+    [vertexShaderSource, fragmentShaderSource]);
+
+const positionLoc = gl.getAttribLocation(program, 'a_position');
+-const colorLoc = gl.getUniformLocation(program, 'color');
+-const matrixLoc = gl.getUniformLocation(program, 'matrix');
++const colorLoc = gl.getAttribLocation(program, 'color');
++const matrixLoc = gl.getAttribLocation(program, 'matrix');
+</code></pre>
+<p>Maintenant, nous avons besoin d’un buffer pour contenir les matrices qui seront appliquées
+à l’attribut. Puisqu’un buffer est mieux mis à jour en un seul
+<em>bloc</em>, nous allons mettre toutes nos matrices dans le même <code class="notranslate" translate="no">Float32Array</code></p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// configurer les matrices, une par instance
+const numInstances = 5;
++// créer un tableau typé avec une vue par matrice
++const matrixData = new Float32Array(numInstances * 16);
+</code></pre>
+<p>Nous allons ensuite créer des vues <code class="notranslate" translate="no">Float32Array</code>, une pour chaque matrice.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-const matrices = [
+-  m4.identity(),
+-  m4.identity(),
+-  m4.identity(),
+-  m4.identity(),
+-  m4.identity(),
+-];
+const matrices = [];
+for (let i = 0; i &lt; numInstances; ++i) {
+  const byteOffsetToMatrix = i * 16 * 4;
+  const numFloatsForView = 16;
+  matrices.push(new Float32Array(
+      matrixData.buffer,
+      byteOffsetToMatrix,
+      numFloatsForView));
+}
+</code></pre>
+<p>Ainsi, quand nous voulons référencer les données pour toutes les matrices,
+nous pouvons utiliser <code class="notranslate" translate="no">matrixData</code>, mais quand nous voulons une matrice individuelle,
+nous pouvons utiliser <code class="notranslate" translate="no">matrices[ndx]</code>.</p>
+<p>Nous devons également créer un buffer sur le GPU pour ces données.
+Nous avons seulement besoin d’allouer le buffer à ce stade, nous n’avons pas
+besoin de fournir des données, donc le 2ème paramètre de <code class="notranslate" translate="no">gl.bufferData</code>
+est une taille qui alloue juste le buffer.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const matrixBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, matrixBuffer);
+// juste allouer le buffer
+gl.bufferData(gl.ARRAY_BUFFER, matrixData.byteLength, gl.DYNAMIC_DRAW);
+</code></pre>
+<p>Notez que nous avons passé <code class="notranslate" translate="no">gl.DYNAMIC_DRAW</code> comme dernier paramètre. C’est un <em>indice</em>
+à WebGL que nous allons changer ces données souvent.</p>
+<p>Maintenant, nous devons configurer les attributs pour les matrices.
+L’attribut matrix est un <code class="notranslate" translate="no">mat4</code>. Un <code class="notranslate" translate="no">mat4</code> utilise en fait
+4 emplacements d’attributs consécutifs.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const bytesPerMatrix = 4 * 16;
+for (let i = 0; i &lt; 4; ++i) {
+  const loc = matrixLoc + i;
+  gl.enableVertexAttribArray(loc);
+  // noter le stride et le décalage
+  const offset = i * 16;  // 4 flottants par ligne, 4 octets par flottant
+  gl.vertexAttribPointer(
+      loc,              // emplacement
+      4,                // taille (nombre de valeurs à extraire du buffer par itération)
+      gl.FLOAT,         // type de données dans le buffer
+      false,            // normaliser
+      bytesPerMatrix,   // stride, nombre d'octets à avancer pour atteindre le prochain ensemble de valeurs
+      offset,           // décalage dans le buffer
+  );
+  // cette ligne indique que cet attribut ne change qu'une fois par instance
+  gl.vertexAttribDivisor(loc, 1);
+}
+</code></pre>
+<p>Le point le plus important concernant le dessin instancié est
+l’appel à <code class="notranslate" translate="no">gl.vertexAttribDivisor</code>. Il configure cet
+attribut pour n’avancer vers la valeur suivante qu’une fois par instance.
+Cela signifie que les attributs <code class="notranslate" translate="no">matrix</code> utiliseront la première matrice pour
+chaque sommet de la première instance, la deuxième matrice pour la
+deuxième instance, et ainsi de suite.</p>
+<p>Ensuite, nous avons besoin de nos couleurs aussi dans un buffer. Ces données ne vont pas
+changer, du moins dans cet exemple, donc nous allons juste téléverser
+les données.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-const colors = [
+-  [ 1, 0, 0, 1, ],  // rouge
+-  [ 0, 1, 0, 1, ],  // vert
+-  [ 0, 0, 1, 1, ],  // bleu
+-  [ 1, 0, 1, 1, ],  // magenta
+-  [ 0, 1, 1, 1, ],  // cyan
+-];
++// configurer les couleurs, une par instance
++const colorBuffer = gl.createBuffer();
++gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
++gl.bufferData(gl.ARRAY_BUFFER,
++    new Float32Array([
++        1, 0, 0, 1,  // rouge
++        0, 1, 0, 1,  // vert
++        0, 0, 1, 1,  // bleu
++        1, 0, 1, 1,  // magenta
++        0, 1, 1, 1,  // cyan
++      ]),
++    gl.STATIC_DRAW);
+</code></pre>
+<p>Nous devons également configurer l’attribut de couleur</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// configurer l'attribut pour la couleur
+gl.enableVertexAttribArray(colorLoc);
+gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 0, 0);
+// cette ligne indique que cet attribut ne change qu'une fois par instance
+gl.vertexAttribDivisor(colorLoc, 1);
+</code></pre>
+<p>Au moment du dessin, au lieu de boucler sur chaque instance,
+de définir les uniforms de matrice et de couleur, puis d’appeler draw,
+nous allons d’abord calculer la matrice pour chaque instance.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// mettre à jour toutes les matrices
+matrices.forEach((mat, ndx) =&gt; {
+  m4.translation(-0.5 + ndx * 0.25, 0, 0, mat);
+  m4.zRotate(mat, time * (0.1 + 0.1 * ndx), mat);
+
+-  const color = colors[ndx];
+-
+-  gl.uniform4fv(colorLoc, color);
+-  gl.uniformMatrix4fv(matrixLoc, false, mat);
+-
+-  gl.drawArrays(
+-      gl.TRIANGLES,
+-      0,             // décalage
+-      numVertices,   // nombre de sommets par instance
+-  );
+});
+</code></pre>
+<p>Comme notre bibliothèque de calcul matriciel prend une matrice de destination optionnelle
+et comme nos matrices sont juste des vues <code class="notranslate" translate="no">Float32Array</code> sur
+le même <code class="notranslate" translate="no">Float32Array</code> plus grand, quand nous avons fini, toutes les données matricielles
+sont prêtes à être téléversées directement sur le GPU.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// téléverser les nouvelles données matricielles
+gl.bindBuffer(gl.ARRAY_BUFFER, matrixBuffer);
+gl.bufferSubData(gl.ARRAY_BUFFER, 0, matrixData);
+</code></pre>
+<p>Enfin, nous pouvons dessiner toutes les instances en un seul appel de dessin.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.drawArraysInstanced(
+  gl.TRIANGLES,
+  0,             // décalage
+  numVertices,   // nombre de sommets par instance
+  numInstances,  // nombre d'instances
+);
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-instanced-drawing.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-instanced-drawing.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Dans l’exemple ci-dessus, nous avions 3 appels WebGL par forme * 5 formes
+soit 15 appels au total. Maintenant nous n’avons plus que 2 appels pour les 5 formes,
+un pour téléverser les matrices, un autre pour dessiner.</p>
+<p>Je pense que cela va sans dire, mais peut-être que c’est seulement évident pour moi
+car j’ai fait cela trop de fois. Le code ci-dessus ne tient pas compte
+du rapport d’aspect du canvas.
+Il n’utilise pas de <a href="webgl-3d-orthographic.html">matrice de projection</a>
+ni de <a href="webgl-3d-camera.html">matrice de vue</a>. Il était destiné uniquement
+à démontrer le dessin instancié. Si vous vouliez une projection et/ou
+une matrice de vue, nous pourrions ajouter le calcul en JavaScript. Cela signifierait
+plus de travail pour JavaScript. La façon la plus évidente serait d’ajouter
+un ou deux uniforms supplémentaires au vertex shader.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vertexShaderSource = `#version 300 es
+in vec4 a_position;
+in vec4 color;
+in mat4 matrix;
++uniform mat4 projection;
++uniform mat4 view;
+
+out vec4 v_color;
+
+void main() {
+  // Multiplier la position par la matrice.
+-  gl_Position = matrix * a_position;
++  gl_Position = projection * view * matrix * a_position;
+
+  // Passer la couleur du sommet au fragment shader.
+  v_color = color;
+}
+`;
+</code></pre>
+<p>puis rechercher leurs emplacements au moment de l’initialisation</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const positionLoc = gl.getAttribLocation(program, 'a_position');
+const colorLoc = gl.getAttribLocation(program, 'color');
+const matrixLoc = gl.getAttribLocation(program, 'matrix');
++const projectionLoc = gl.getUniformLocation(program, 'projection');
++const viewLoc = gl.getUniformLocation(program, 'view');
+</code></pre>
+<p>et les définir de manière appropriée au moment du rendu.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.useProgram(program);
+
++// définir les matrices de vue et de projection car
++// elles sont partagées par toutes les instances
++const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
++gl.uniformMatrix4fv(projectionLoc, false,
++    m4.orthographic(-aspect, aspect, -1, 1, -1, 1));
++gl.uniformMatrix4fv(viewLoc, false, m4.zRotation(time * .1));
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-instanced-drawing-projection-view.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-instanced-drawing-projection-view.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-instanced-drawing.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-instanced-drawing.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-instanced-drawing.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-instanced-drawing.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-instanced-drawing.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-instanced-drawing.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-instanced-drawing.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-instanced-drawing.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fondamentaux</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-getting-webgl2.html">Comment utiliser WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fundamentals.html">Les bases</a></li>
+<li><a href="/webgl/lessons/fr/webgl-how-it-works.html">Comment ça marche</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shaders-and-glsl.html">Shaders et GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Diagramme d'état</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl2-whats-new.html">Quoi de neuf dans WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2.html">Passer de WebGL1 à WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2-fundamentals.html">Différences de WebGLFundamentals.org à WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Traitement d'images</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-image-processing.html">Traitement d'images</a></li>
+<li><a href="/webgl/lessons/fr/webgl-image-processing-continued.html">Traitement d'images - Suite</a></li>
+        </ul>
+  <li>Translation, rotation, mise à l'échelle 2D et calcul matriciel</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-translation.html">Translation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-rotation.html">Rotation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-scale.html">Mise à l'échelle 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrices.html">Matrices 2D</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-orthographic.html">Projection Orthographique 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective.html">Perspective 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-camera.html">3D - Caméras</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-naming.html">3D - Nommage des matrices</a></li>
+        </ul>
+  <li>Éclairage</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-lighting-directional.html">Éclairage directionnel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-point.html">Éclairage ponctuel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-spot.html">Éclairage spot</a></li>
+        </ul>
+  <li>Structure et organisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-less-code-more-fun.html">Moins de code, plus de plaisir</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-multiple-things.html">Dessiner plusieurs choses</a></li>
+<li><a href="/webgl/lessons/fr/webgl-scene-graph.html">Graphes de scène</a></li>
+        </ul>
+  <li>Géométrie</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-geometry-lathe.html">3D Géométrie - Tour</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj.html">Charger des fichiers .obj</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj-w-mtl.html">Charger des fichiers .obj avec .mtl</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/fr/webgl-data-textures.html">Textures de données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2-textures.html">Utiliser 2 textures ou plus</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cors-permission.html">Images Cross Origin</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective-correct-texturemapping.html">Mappage de Texture avec Correction de Perspective</a></li>
+<li><a href="/webgl/lessons/fr/webgl-planar-projection-mapping.html">Projection planaire et en perspective</a></li>
+        </ul>
+  <li>Rendu vers une texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-render-to-texture.html">Rendu vers une texture</a></li>
+        </ul>
+  <li>Ombres</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-shadows.html">Ombres</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrix-stack.html">2D - Pile de matrices</a></li>
+<li><a href="/webgl/lessons/fr/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/fr/webgl-environment-maps.html">Cartes d'environnement</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fog.html">Brouillard</a></li>
+<li><a href="/webgl/lessons/fr/webgl-picking.html">Picking (cliquer sur des objets)</a></li>
+        </ul>
+  <li>Texte</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-text-html.html">Texte - HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-canvas2d.html">Texte - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-texture.html">Texte - Utiliser une texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-glyphs.html">Texte - Utiliser une texture de glyphes</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Astuces</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-smallest-programs.html">Plus petits programmes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-without-data.html">Dessiner sans données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/fr/webgl-pulling-vertices.html">Extraction de sommets</a></li>
+        </ul>
+  <li>Optimisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-indexed-vertices.html">Sommets indexés (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-instanced-drawing.html">Dessin instancié</a></li>
+        </ul>
+  <li>Divers</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-setup-and-installation.html">Installation et configuration</a></li>
+<li><a href="/webgl/lessons/fr/webgl-boilerplate.html">Code standard (Boilerplate)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-resizing-the-canvas.html">Redimensionner le Canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/fr/webgl-points-lines-triangles.html">Points, Lignes et Triangles</a></li>
+<li><a href="/webgl/lessons/fr/webgl-multiple-views.html">Vues multiples, Canvas multiples</a></li>
+<li><a href="/webgl/lessons/fr/webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+<li><a href="/webgl/lessons/fr/webgl-and-alpha.html">WebGL2 et Alpha</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-vs-3d-library.html">Bibliothèques 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-vs-math.html">WebGL2 Matrices vs Matrices Mathématiques</a></li>
+<li><a href="/webgl/lessons/fr/webgl-precision-issues.html">Problèmes de précision</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#screenshot">Prendre une capture d'écran</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#preservedrawingbuffer">Empêcher l'effacement du canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#tabindex">Obtenir des entrées clavier depuis un canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#html-background">Utiliser WebGL2 comme arrière-plan en HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cross-platform-issues.html">Problèmes multi-plateformes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Référence</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-attributes.html">Attributs</a></li>
+<li><a href="/webgl/lessons/fr/webgl-texture-units.html">Unités de Texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/fr/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/fr/webgl-references.html">Références</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentation de l'API</a></li>
+  <li>
+    <a href="https://twgljs.org">TWGL, une bibliothèque utilitaire WebGL</a>
+  </li>
+  <li>
+    <a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a>
+  </li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Problème ou bug ? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Créez un ticket sur github</a>.</div>
+<div class="lesson-comment-notes">
+   Utilisez <b>&lt;pre&gt;&lt;code&gt;</b>le code ici<b>&lt;/code&gt;&lt;/pre&gt;</b> pour les blocs de code
+</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Optimisation - Dessin instancié';
+            var disqus_title = 'WebGL2 Optimisation - Dessin instancié';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Merci à <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>pour <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

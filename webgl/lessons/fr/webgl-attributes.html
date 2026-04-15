@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/fr/webgl-attributes.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Que sont les attributs dans WebGL ?">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-attributes_fr.jpg">
+
+<meta property="og:title" content="WebGL2 Attributs">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-attributes_fr.jpg">
+<meta property="og:description" content="Que sont les attributs dans WebGL ?">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-attributes.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Attributs">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-attributes.html">
+<meta name="twitter:description" content="Que sont les attributs dans WebGL ?">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-attributes_fr.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-attributes.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-attributes_fr.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-attributes.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-attributes.html",
+      "inLanguage":"fr",
+      "name":"WebGL2 Attributs",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-attributes.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Attributs</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/fr/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-attributes.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-attributes.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/webgl/lessons/fr/webgl-attributes.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-attributes.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-attributes.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-attributes.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-attributes.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-attributes.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-attributes.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-attributes.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-attributes.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-attributes.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-attributes.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-attributes.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-attributes.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-attributes.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Table des matières</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/fr/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Attributs</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Cet article a pour but de vous donner une représentation mentale
+de la façon dont l’état des attributs est configuré dans WebGL. Il existe <a href="webgl-texture-units.html">un article similaire sur les unités de texture</a> et sur les <a href="webgl-framebuffers.html">framebuffers</a>.</p>
+<p>En prérequis, vous voudrez probablement lire <a href="webgl-how-it-works.html">Comment WebGL fonctionne</a>
+et <a href="https://webglfundamentals.org/webgl/lessons/webgl-shaders-and-glsl.html">WebGL Shaders et GLSL</a>.</p>
+<h2 id="attributs">Attributs</h2>
+<p>Dans WebGL, les attributs sont des entrées d’un vertex shader qui obtiennent leurs données depuis des buffers.
+WebGL exécutera le vertex shader fourni par l’utilisateur N fois lorsque <code class="notranslate" translate="no">gl.drawArrays</code> ou <code class="notranslate" translate="no">gl.drawElements</code> est appelé.
+Pour chaque itération, les attributs définissent comment extraire les données des buffers qui leur sont liés
+et les fournir aux attributs à l’intérieur du vertex shader.</p>
+<p>S’ils étaient implémentés en JavaScript, ils ressembleraient à quelque chose comme ceci</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// pseudo code
+const gl = {
+  arrayBuffer: null,
+  vertexArray: {
+    attributes: [
+      { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, divisor: 0 },
+      { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, divisor: 0 },
+      { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, divisor: 0 },
+      { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, divisor: 0 },
+      { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, divisor: 0 },
+      { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, divisor: 0 },
+      { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, divisor: 0 },
+      { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, divisor: 0 },
+      { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, divisor: 0 },
+      { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, divisor: 0 },
+      { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, divisor: 0 },
+      { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, divisor: 0 },
+      { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, divisor: 0 },
+      { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, divisor: 0 },
+      { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, divisor: 0 },
+      { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, divisor: 0 },
+    ],
+    elementArrayBuffer: null,
+  },
+}
+</code></pre>
+<p>Comme vous pouvez le voir ci-dessus, il y a 16 attributs.</p>
+<p>Quand vous appelez <code class="notranslate" translate="no">gl.enableVertexAttribArray(location)</code> ou <code class="notranslate" translate="no">gl.disableVertexAttribArray</code>, vous pouvez l’imaginer ainsi</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// pseudo code
+gl.enableVertexAttribArray = function(location) {
+  const attrib = gl.vertexArray.attributes[location];
+  attrib.enable = true;
+};
+
+gl.disableVertexAttribArray = function(location) {
+  const attrib = gl.vertexArray.attributes[location];
+  attrib.enable = false;
+};
+</code></pre>
+<p>En d’autres termes, location fait directement référence à l’index d’un attribut.</p>
+<p>De même, <code class="notranslate" translate="no">gl.vertexAttribPointer</code> est utilisé pour définir presque tous les autres
+paramètres d’un attribut. Il serait implémenté de cette façon</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// pseudo code
+gl.vertexAttribPointer = function(location, size, type, normalize, stride, offset) {
+  const attrib = gl.vertexArray.attributes[location];
+  attrib.size = size;
+  attrib.type = type;
+  attrib.normalize = normalize;
+  attrib.stride = stride ? stride : sizeof(type) * size;
+  attrib.offset = offset;
+  attrib.buffer = gl.arrayBuffer;  // !!!! &lt;-----
+};
+</code></pre>
+<p>Notez que lorsque nous appelons <code class="notranslate" translate="no">gl.vertexAttribPointer</code>, <code class="notranslate" translate="no">attrib.buffer</code>
+est défini avec la valeur courante de <code class="notranslate" translate="no">gl.arrayBuffer</code>.
+<code class="notranslate" translate="no">gl.arrayBuffer</code> dans le pseudo code ci-dessus serait défini en
+appelant <code class="notranslate" translate="no">gl.bindBuffer(gl.ARRAY_BUFFER, someBuffer)</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// pseudo code
+gl.bindBuffer = function(target, buffer) {
+  switch (target) {
+    case ARRAY_BUFFER:
+      gl.arrayBuffer = buffer;
+      break;
+    case ELEMENT_ARRAY_BUFFER;
+      gl.vertexArray.elementArrayBuffer = buffer;
+      break;
+  ...
+};
+</code></pre>
+<p>Ensuite, nous avons les vertex shaders. Dans un vertex shader, vous déclarez des attributs. Exemple :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+in vec4 position;
+in vec2 texcoord;
+in vec3 normal;
+
+...
+
+void main() {
+  ...
+}
+</code></pre>
+<p>Quand vous liez un vertex shader avec un fragment shader en appelant
+<code class="notranslate" translate="no">gl.linkProgram(someProgram)</code>, WebGL (le pilote/GPU/navigateur) décide de lui-même
+quel index/emplacement utiliser pour chaque attribut. À moins de les assigner manuellement
+(voir ci-dessous), vous ne savez pas lesquels ils vont choisir. C’est au
+navigateur/pilote/GPU d’en décider. Vous devez donc lui demander quel attribut il a utilisé
+pour position, texcoord et normal. Vous faites cela en appelant
+<code class="notranslate" translate="no">gl.getAttribLocation</code></p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const positionLoc = gl.getAttribLocation(program, 'position');
+const texcoordLoc = gl.getAttribLocation(program, 'texcoord');
+const normalLoc = gl.getAttribLocation(program, 'normal');
+</code></pre>
+<p>Disons que <code class="notranslate" translate="no">positionLoc</code> = <code class="notranslate" translate="no">5</code>. Cela signifie que quand le vertex shader s’exécute (quand
+vous appelez <code class="notranslate" translate="no">gl.drawArrays</code> ou <code class="notranslate" translate="no">gl.drawElements</code>), le vertex shader s’attend à ce que vous ayez
+configuré l’attribut 5 avec le bon type, la bonne taille, le bon offset, stride, buffer, etc.</p>
+<p>Notez qu’AVANT de lier le programme, vous pouvez choisir les emplacements en appelant
+<code class="notranslate" translate="no">gl.bindAttribLocation(program, location, nameOfAttribute)</code>. Exemple :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// Indiquer à `gl.linkProgram` d'assigner `position` à l'attribut #7
+gl.bindAttribLocation(program, 7, 'position');
+</code></pre>
+<p>Vous pouvez également indiquer quel emplacement utiliser directement dans votre shader si vous
+utilisez des shaders GLSL ES 3.00 avec</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">layout(location = 0) in vec4 position;
+layout(location = 1) in vec2 texcoord;
+layout(location = 2) in vec3 normal;
+
+...
+</code></pre>
+<p>Utiliser <code class="notranslate" translate="no">bindAttribLocation</code> semble bien plus conforme au principe <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">D.R.Y.</a>
+mais utilisez ce que vous préférez.</p>
+<h2 id="état-complet-des-attributs">État complet des attributs</h2>
+<p>Ce qui manque dans la description ci-dessus est que chaque attribut possède aussi une valeur par défaut.
+Elle est omise ci-dessus car il est rare de l’utiliser.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">attributeValues: [
+  [0, 0, 0, 1],
+  [0, 0, 0, 1],
+  ...
+],
+vertexArray: {
+  attributes: [
+   { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?,
+   　divisor: 0, },
+   { enable: ?, type: ?, size: ?, normalize: ?, stride: ?, offset: ?, buffer: ?,
+   　divisor: 0, },
+   ...
+</code></pre>
+<p>Vous pouvez définir la valeur de chaque attribut avec les différentes fonctions <code class="notranslate" translate="no">gl.vertexAttribXXX</code>.
+La valeur est utilisée quand <code class="notranslate" translate="no">enable</code> est false. Quand enable est true, les données de
+l’attribut sont extraites du buffer assigné.</p>
+<p><a id="vaos"></a></p>
+<h2 id="vertex-array-objects-vao">Vertex Array Objects (VAO)</h2>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vao = gl.createVertexArray();
+</code></pre>
+<p>crée l’objet que vous voyez attaché à <code class="notranslate" translate="no">gl.vertexArray</code> dans le <em>pseudo code</em>
+ci-dessus. Appeler <code class="notranslate" translate="no">gl.bindVertexArray(vao)</code> assigne votre vertex array object créé
+comme vertex array courant.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// pseudo code
+gl.bindVertexArray = function(vao) {
+  gl.vertexArray = vao ? vao : defaultVAO;
+};
+</code></pre>
+<p>Cela vous permet de configurer tous les attributs et l’<code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code> dans le
+VAO courant, de sorte que quand vous voulez dessiner une forme particulière, il suffit d’un seul appel à
+<code class="notranslate" translate="no">gl.bindVertexArray</code> pour configurer efficacement
+tous les attributs, alors que sinon il faudrait jusqu’à un appel à <code class="notranslate" translate="no">gl.bindBuffer</code>, <code class="notranslate" translate="no">gl.vertexAttribPointer</code> (et peut-être
+<code class="notranslate" translate="no">gl.enableVertexAttribArray</code>) <strong>par attribut</strong>.</p>
+<p>On peut dire que l’utilisation des vertex array objects est une bonne chose.
+Pour les utiliser cependant, cela nécessite souvent plus d’organisation. Par exemple, supposons que vous vouliez
+dessiner un cube avec <code class="notranslate" translate="no">gl.TRIANGLES</code> avec un shader, puis à nouveau avec <code class="notranslate" translate="no">gl.LINES</code>
+avec un shader différent. Supposons que lors du dessin avec des triangles, vous utilisiez
+des normales pour l’éclairage, vous déclarez donc des attributs dans votre shader comme ceci :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+// lighting-shader
+// shader pour un cube dessiné avec des triangles
+
+in vec4 a_position;
+in vec3 a_normal;
+</code></pre>
+<p>Vous utilisez ensuite ces positions et normales comme nous l’avons couvert dans
+<a href="webgl-3d-lighting-directional.html">le premier article sur l’éclairage</a>.</p>
+<p>Pour les lignes, vous ne voulez pas d’éclairage, vous voulez une couleur unie, donc vous
+faites quelque chose de similaire aux premiers shaders sur <a href="webgl-fundamentals.html">la première page</a> de ces
+tutoriels. Vous déclarez un uniform pour la couleur. Cela signifie que dans votre
+vertex shader, vous n’avez besoin que de la position</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+// solid-shader
+// shader pour un cube avec des lignes
+
+in vec4 a_position;
+</code></pre>
+<p>Nous n’avons aucune idée des emplacements d’attributs qui seront décidés pour chaque shader.
+Supposons que pour le lighting-shader ci-dessus les emplacements soient</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">a_position location = 1
+a_normal location = 0
+</code></pre>
+<p>et pour le solid-shader qui n’a qu’un seul attribut</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">a_position location = 0
+</code></pre>
+<p>Il est clair qu’en changeant de shader, nous devrons reconfigurer nos attributs différemment.
+Un shader s’attend à ce que les données de <code class="notranslate" translate="no">a_position</code> apparaissent sur l’attribut 0. L’autre shader
+s’attend à ce qu’elles apparaissent sur l’attribut 1.</p>
+<p>Reconfigurer les attributs représente du travail supplémentaire. Pire encore, le but principal d’utiliser un
+vertex array object est justement de nous éviter ce travail. Pour résoudre ce problème,
+nous lierions les emplacements avant de lier les programmes shader.</p>
+<p>Nous indiquerions à WebGL</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.bindAttribLocation(solidProgram, 0, 'a_position');
+gl.bindAttribLocation(lightingProgram, 0, 'a_position');
+gl.bindAttribLocation(lightingProgram, 1, 'a_normal');
+</code></pre>
+<p><strong>AVANT d’appeler gl.linkProgram</strong>. Cela indique à WebGL quels emplacements assigner lors de la liaison du shader.
+Maintenant, nous pouvons utiliser le même VAO pour les deux shaders.</p>
+<h2 id="nombre-maximum-dattributs">Nombre maximum d’attributs</h2>
+<p>WebGL2 exige qu’au moins 16 attributs soient supportés, mais un ordinateur/navigateur/implémentation/pilote particulier
+peut en supporter davantage. Vous pouvez connaître le nombre supporté en appelant</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const maxAttributes = gl.getParameter(gl.MAX_VERTEX_ATTRIBS);
+</code></pre>
+<p>Si vous décidez d’en utiliser plus de 16, vous voudrez probablement vérifier combien
+sont réellement supportés et en informer l’utilisateur si sa
+machine n’en a pas assez, ou bien utiliser des shaders plus simples en repli.</p>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-attributes.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-attributes.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-attributes.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-attributes.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-attributes.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-attributes.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-attributes.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-attributes.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fondamentaux</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-getting-webgl2.html">Comment utiliser WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fundamentals.html">Les bases</a></li>
+<li><a href="/webgl/lessons/fr/webgl-how-it-works.html">Comment ça marche</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shaders-and-glsl.html">Shaders et GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Diagramme d'état</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl2-whats-new.html">Quoi de neuf dans WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2.html">Passer de WebGL1 à WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2-fundamentals.html">Différences de WebGLFundamentals.org à WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Traitement d'images</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-image-processing.html">Traitement d'images</a></li>
+<li><a href="/webgl/lessons/fr/webgl-image-processing-continued.html">Traitement d'images - Suite</a></li>
+        </ul>
+  <li>Translation, rotation, mise à l'échelle 2D et calcul matriciel</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-translation.html">Translation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-rotation.html">Rotation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-scale.html">Mise à l'échelle 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrices.html">Matrices 2D</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-orthographic.html">Projection Orthographique 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective.html">Perspective 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-camera.html">3D - Caméras</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-naming.html">3D - Nommage des matrices</a></li>
+        </ul>
+  <li>Éclairage</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-lighting-directional.html">Éclairage directionnel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-point.html">Éclairage ponctuel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-spot.html">Éclairage spot</a></li>
+        </ul>
+  <li>Structure et organisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-less-code-more-fun.html">Moins de code, plus de plaisir</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-multiple-things.html">Dessiner plusieurs choses</a></li>
+<li><a href="/webgl/lessons/fr/webgl-scene-graph.html">Graphes de scène</a></li>
+        </ul>
+  <li>Géométrie</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-geometry-lathe.html">3D Géométrie - Tour</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj.html">Charger des fichiers .obj</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj-w-mtl.html">Charger des fichiers .obj avec .mtl</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/fr/webgl-data-textures.html">Textures de données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2-textures.html">Utiliser 2 textures ou plus</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cors-permission.html">Images Cross Origin</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective-correct-texturemapping.html">Mappage de Texture avec Correction de Perspective</a></li>
+<li><a href="/webgl/lessons/fr/webgl-planar-projection-mapping.html">Projection planaire et en perspective</a></li>
+        </ul>
+  <li>Rendu vers une texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-render-to-texture.html">Rendu vers une texture</a></li>
+        </ul>
+  <li>Ombres</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-shadows.html">Ombres</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrix-stack.html">2D - Pile de matrices</a></li>
+<li><a href="/webgl/lessons/fr/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/fr/webgl-environment-maps.html">Cartes d'environnement</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fog.html">Brouillard</a></li>
+<li><a href="/webgl/lessons/fr/webgl-picking.html">Picking (cliquer sur des objets)</a></li>
+        </ul>
+  <li>Texte</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-text-html.html">Texte - HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-canvas2d.html">Texte - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-texture.html">Texte - Utiliser une texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-glyphs.html">Texte - Utiliser une texture de glyphes</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Astuces</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-smallest-programs.html">Plus petits programmes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-without-data.html">Dessiner sans données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/fr/webgl-pulling-vertices.html">Extraction de sommets</a></li>
+        </ul>
+  <li>Optimisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-indexed-vertices.html">Sommets indexés (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-instanced-drawing.html">Dessin instancié</a></li>
+        </ul>
+  <li>Divers</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-setup-and-installation.html">Installation et configuration</a></li>
+<li><a href="/webgl/lessons/fr/webgl-boilerplate.html">Code standard (Boilerplate)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-resizing-the-canvas.html">Redimensionner le Canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/fr/webgl-points-lines-triangles.html">Points, Lignes et Triangles</a></li>
+<li><a href="/webgl/lessons/fr/webgl-multiple-views.html">Vues multiples, Canvas multiples</a></li>
+<li><a href="/webgl/lessons/fr/webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+<li><a href="/webgl/lessons/fr/webgl-and-alpha.html">WebGL2 et Alpha</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-vs-3d-library.html">Bibliothèques 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-vs-math.html">WebGL2 Matrices vs Matrices Mathématiques</a></li>
+<li><a href="/webgl/lessons/fr/webgl-precision-issues.html">Problèmes de précision</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#screenshot">Prendre une capture d'écran</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#preservedrawingbuffer">Empêcher l'effacement du canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#tabindex">Obtenir des entrées clavier depuis un canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#html-background">Utiliser WebGL2 comme arrière-plan en HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cross-platform-issues.html">Problèmes multi-plateformes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Référence</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-attributes.html">Attributs</a></li>
+<li><a href="/webgl/lessons/fr/webgl-texture-units.html">Unités de Texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/fr/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/fr/webgl-references.html">Références</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentation de l'API</a></li>
+  <li>
+    <a href="https://twgljs.org">TWGL, une bibliothèque utilitaire WebGL</a>
+  </li>
+  <li>
+    <a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a>
+  </li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Problème ou bug ? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Créez un ticket sur github</a>.</div>
+<div class="lesson-comment-notes">
+   Utilisez <b>&lt;pre&gt;&lt;code&gt;</b>le code ici<b>&lt;/code&gt;&lt;/pre&gt;</b> pour les blocs de code
+</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Attributs';
+            var disqus_title = 'WebGL2 Attributs';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Merci à <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>pour <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

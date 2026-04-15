@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/fr/webgl-shadows.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Comment calculer des ombres">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-shadows_fr.jpg">
+
+<meta property="og:title" content="WebGL2 Ombres">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-shadows_fr.jpg">
+<meta property="og:description" content="Comment calculer des ombres">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-shadows.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Ombres">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-shadows.html">
+<meta name="twitter:description" content="Comment calculer des ombres">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-shadows_fr.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-shadows.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-shadows_fr.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-shadows.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-shadows.html",
+      "inLanguage":"fr",
+      "name":"WebGL2 Ombres",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-shadows.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Ombres</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/fr/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-shadows.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-shadows.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/webgl/lessons/fr/webgl-shadows.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-shadows.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-shadows.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-shadows.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-shadows.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-shadows.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-shadows.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-shadows.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-shadows.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-shadows.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-shadows.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-shadows.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-shadows.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-shadows.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Table des matières</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/fr/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Ombres</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Dessinons des ombres !</p>
+<h2 id="prérequis">Prérequis</h2>
+<p>Le calcul des ombres de base n’est pas <em>si</em> difficile mais il requiert
+beaucoup de connaissances de fond. Pour comprendre cet article,
+vous devez déjà comprendre les sujets suivants.</p>
+<ul>
+<li><a href="webgl-3d-orthographic.html">Projection orthographique</a></li>
+<li><a href="webgl-3d-perspective.html">Projection en perspective</a></li>
+<li><a href="webgl-3d-lighting-spot.html">Éclairage de spot</a></li>
+<li><a href="webgl-3d-textures.html">Textures</a></li>
+<li><a href="webgl-render-to-texture.html">Rendu vers une texture</a></li>
+<li><a href="webgl-planar-projection-mapping.html">Projection de textures</a></li>
+<li><a href="webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+</ul>
+<p>Donc si vous n’avez pas lu ces articles, veuillez d’abord les lire.</p>
+<p>De plus, cet article suppose que vous avez lu l’article sur
+<a href="webgl-less-code-more-fun.html">moins de code, plus de plaisir</a>
+car il utilise la bibliothèque mentionnée là-bas pour
+désencombrer l’exemple. Si vous ne comprenez pas
+ce que sont les buffers, les tableaux de sommets et les attributs, ou ce que
+signifie une fonction nommée <code class="notranslate" translate="no">twgl.setUniforms</code> pour définir des uniforms,
+etc… alors vous devriez probablement revenir en arrière et
+<a href="webgl-fundamentals.html">lire les bases</a>.</p>
+<p>Tout d’abord, il y a plus d’une façon de dessiner des ombres.
+Chaque façon a ses compromis. La façon la plus courante de dessiner
+des ombres est d’utiliser des shadow maps.</p>
+<p>Les shadow maps fonctionnent en combinant les techniques de tous les articles
+prérequis ci-dessus.</p>
+<p>Dans <a href="webgl-planar-projection-mapping.html">l’article sur la projection de textures planes</a>
+on a vu comment projeter une image sur des objets</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-planar-projection-with-projection-matrix.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-planar-projection-with-projection-matrix.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Rappelons que l’on n’a pas dessiné cette image par-dessus les objets de la scène,
+mais plutôt, lors du rendu des objets, pour chaque pixel on vérifiait si la
+texture projetée était dans la plage, si oui on échantillonnait la couleur appropriée depuis
+la texture projetée, sinon on échantillonnait une couleur d’une autre texture
+dont la couleur était recherchée en utilisant des coordonnées de texture qui mappaient une texture
+sur l’objet.</p>
+<p>Que se passerait-il si la texture projetée contenait à la place des données de profondeur du point
+de vue d’une lumière ? En d’autres termes, supposons qu’il y ait une lumière à la pointe du
+frustum montré dans l’exemple ci-dessus et que la texture projetée contenait des informations
+de profondeur du point de vue de la lumière. La sphère aurait des valeurs de profondeur plus proches
+de la lumière, le plan aurait des valeurs de profondeur plus éloignées de la lumière.</p>
+<div class="webgl_center"><img class="noinvertdark" src="../resources/depth-map-generation.svg" style="width: 600px;"></div>
+<p>Si on avait ces données, quand on choisit une couleur à rendre,
+on pourrait obtenir une valeur de profondeur depuis la texture projetée et vérifier si la
+profondeur du pixel qu’on est sur le point de dessiner est plus proche ou plus loin de la lumière.
+Si c’est plus loin de la lumière, cela
+signifie que quelque chose d’autre était plus proche de la lumière. Autrement dit,
+quelque chose bloque la lumière, donc ce pixel est dans une ombre.</p>
+<div class="webgl_center"><img class="noinvertdark" src="../resources/projected-depth-texture.svg" style="width: 600px;"></div>
+<p>Ici, la texture de profondeur est projetée à travers l’espace lumière à l’intérieur du frustum depuis le point de vue de la lumière.
+Quand on dessine les pixels du sol, on calcule la profondeur de ce pixel du point de vue
+de la lumière (0.3 dans le diagramme ci-dessus). On regarde ensuite la profondeur correspondante dans
+la texture de profondeur projetée. Du point de vue de la lumière, la valeur de profondeur
+dans la texture sera 0.1 car elle a touché la sphère. En voyant que 0.1 &lt; 0.3 on
+sait que le sol à cette position doit être dans l’ombre.</p>
+<p>D’abord, dessinons la shadow map. Prenons le dernier exemple de
+<a href="webgl-planar-projection-mapping.html">l’article sur la projection de textures planes</a>
+mais au lieu de charger une texture, on va <a href="webgl-render-to-texture.html">rendre vers une texture</a>
+donc on crée une texture de profondeur et on l’attache à un framebuffer comme <code class="notranslate" translate="no">DEPTH_ATTACHMENT</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const depthTexture = gl.createTexture();
+const depthTextureSize = 512;
+gl.bindTexture(gl.TEXTURE_2D, depthTexture);
+gl.texImage2D(
+    gl.TEXTURE_2D,      // cible
+    0,                  // niveau mip
+    gl.DEPTH_COMPONENT32F, // format interne
+    depthTextureSize,   // largeur
+    depthTextureSize,   // hauteur
+    0,                  // bordure
+    gl.DEPTH_COMPONENT, // format
+    gl.FLOAT,           // type
+    null);              // données
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+const depthFramebuffer = gl.createFramebuffer();
+gl.bindFramebuffer(gl.FRAMEBUFFER, depthFramebuffer);
+gl.framebufferTexture2D(
+    gl.FRAMEBUFFER,       // cible
+    gl.DEPTH_ATTACHMENT,  // point d'attachement
+    gl.TEXTURE_2D,        // cible de texture
+    depthTexture,         // texture
+    0);                   // niveau mip
+</code></pre>
+<p>Pour l’utiliser, nous devons pouvoir rendre la scène plus d’une fois avec différents
+shaders. Une fois avec un shader simple juste pour rendre vers la texture de profondeur et
+puis à nouveau avec notre shader actuel qui projette une texture.</p>
+<p>Donc d’abord, modifions <code class="notranslate" translate="no">drawScene</code> pour qu’on puisse lui passer le programme avec lequel
+on veut rendre</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-function drawScene(projectionMatrix, cameraMatrix, textureMatrix) {
++function drawScene(projectionMatrix, cameraMatrix, textureMatrix, programInfo) {
+  // Créer une matrice view depuis la matrice caméra.
+  const viewMatrix = m4.inverse(cameraMatrix);
+
+-  gl.useProgram(textureProgramInfo.program);
++  gl.useProgram(programInfo.program);
+
+  // définir les uniforms qui sont les mêmes pour la sphère et le plan
+  // note : toutes les valeurs sans uniform correspondant dans le shader
+  // sont ignorées.
+-  twgl.setUniforms(textureProgramInfo, {
++  twgl.setUniforms(programInfo, {
+    u_view: viewMatrix,
+    u_projection: projectionMatrix,
+*    u_textureMatrix: textureMatrix,
+-    u_projectedTexture: imageTexture,
++    u_projectedTexture: depthTexture,
+  });
+
+  // ------ Dessiner la sphère --------
+
+  // Configurer tous les attributs nécessaires.
+  gl.bindVertexArray(sphereVAO);
+
+  // Définir les uniforms propres à la sphère
+-  twgl.setUniforms(textureProgramInfo, sphereUniforms);
++  twgl.setUniforms(programInfo, sphereUniforms);
+
+  // appelle gl.drawArrays ou gl.drawElements
+  twgl.drawBufferInfo(gl, sphereBufferInfo);
+
+  // ------ Dessiner le plan --------
+
+  // Configurer tous les attributs nécessaires.
+  gl.bindVertexArray(planeVAO);
+
+  // Définir les uniforms qu'on vient de calculer
+-  twgl.setUniforms(textureProgramInfo, planeUniforms);
++  twgl.setUniforms(programInfo, planeUniforms);
+
+  // appelle gl.drawArrays ou gl.drawElements
+  twgl.drawBufferInfo(gl, planeBufferInfo);
+}
+</code></pre>
+<p>Maintenant qu’on va utiliser les mêmes tableaux de sommets avec plusieurs
+programmes shader, nous devons nous assurer que ces programmes utilisent les mêmes attributs.
+Cela a été mentionné avant en parlant des tableaux de sommets (VAOs dans le code ci-dessus)
+mais je pense que c’est le premier exemple sur ce site qui tombe vraiment sur ce
+problème. Autrement dit, on va dessiner la sphère et le plan avec à la fois
+le programme shader de texture projetée et le programme shader de couleur unie.
+Le programme shader de texture projetée a 2 attributs, <code class="notranslate" translate="no">a_position</code> et
+<code class="notranslate" translate="no">a_texcoord</code>. Le programme shader de couleur unie en a juste un, <code class="notranslate" translate="no">a_position</code>.
+Si on ne dit pas à WebGL quels emplacements d’attributs utiliser, il est possible
+qu’il attribue l’emplacement = 0 de <code class="notranslate" translate="no">a_position</code> pour un shader et l’emplacement = 1 pour l’autre
+(ou vraiment WebGL pourrait choisir n’importe quel emplacement arbitraire). Si cela se produit,
+les attributs qu’on a configurés dans <code class="notranslate" translate="no">sphereVAO</code> et <code class="notranslate" translate="no">planeVAO</code> ne correspondront pas
+aux deux programmes.</p>
+<p>On peut résoudre cela de 2 façons.</p>
+<ol>
+<li>En GLSL, ajouter <code class="notranslate" translate="no">layout(location = 0)</code> devant chaque attribut</li>
+</ol>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">layout(location = 0) in vec4 a_position;
+layout(location = 1) in vec4 a_texcoord;
+</code></pre>
+<p>Si on avait 150 shaders, on devrait répéter ces emplacements dans tous
+et suivre quels shaders utilisent quels emplacements</p>
+<ol start="2">
+<li>
+<p>Appeler <code class="notranslate" translate="no">gl.bindAttribLocation</code> avant de lier les shaders</p>
+<p>Dans ce cas, avant d’appeler <code class="notranslate" translate="no">gl.linkProgram</code>, on appellerait <code class="notranslate" translate="no">gl.bindAttribLocation</code>.
+(voir <a href="webgl-fundamentals.html">le premier article</a>)</p>
+</li>
+</ol>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.bindAttribLocation(program, 0, &quot;a_position&quot;);
+gl.bindAttribLocation(program, 1, &quot;a_texcoord&quot;);
+gl.linkProgram(program);
+...
+</code></pre>
+<p>On utilisera cette deuxième façon car c’est plus <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">D.R.Y</a></p>
+<p>La bibliothèque qu’on utilise pour compiler et lier nos shaders a l’option de faire cela
+pour nous. On lui passe juste les noms des attributs et leurs emplacements et elle
+appellera <code class="notranslate" translate="no">gl.bindAttribLocation</code> pour nous</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// configurer les programmes GLSL
++// note : Puisqu'on va utiliser le même VAO avec plusieurs
++// programmes shader, on doit s'assurer que tous les programmes utilisent
++// les mêmes emplacements d'attributs. Il y a 2 façons de faire ça.
++// (1) les assigner en GLSL. (2) les assigner en appelant `gl.bindAttribLocation`
++// avant le linkage. On utilise la méthode 2 car c'est plus D.R.Y.
++const programOptions = {
++  attribLocations: {
++    'a_position': 0,
++    'a_normal':   1,
++    'a_texcoord': 2,
++    'a_color':    3,
++  },
++};
+-const textureProgramInfo = twgl.createProgramInfo(gl, [vs, fs]);
+-const colorProgramInfo = twgl.createProgramInfo(gl, [colorVS, colorFS],);
++const textureProgramInfo = twgl.createProgramInfo(gl, [vs, fs], programOptions);
++const colorProgramInfo = twgl.createProgramInfo(gl, [colorVS, colorFS], programOptions);
+</code></pre>
+<p>Maintenant utilisons <code class="notranslate" translate="no">drawScene</code> pour dessiner la scène du point de vue de la lumière
+puis à nouveau avec la texture de profondeur</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render() {
+  twgl.resizeCanvasToDisplaySize(gl.canvas);
+
+  gl.enable(gl.CULL_FACE);
+  gl.enable(gl.DEPTH_TEST);
+
+  // d'abord dessiner du PDV de la lumière
+-  const textureWorldMatrix = m4.lookAt(
++  const lightWorldMatrix = m4.lookAt(
+      [settings.posX, settings.posY, settings.posZ],          // position
+      [settings.targetX, settings.targetY, settings.targetZ], // cible
+      [0, 1, 0],                                              // haut
+  );
+-  const textureProjectionMatrix = settings.perspective
++  const lightProjectionMatrix = settings.perspective
+      ? m4.perspective(
+          degToRad(settings.fieldOfView),
+          settings.projWidth / settings.projHeight,
+          0.5,  // near
+          10)   // far
+      : m4.orthographic(
+          -settings.projWidth / 2,   // gauche
+           settings.projWidth / 2,   // droite
+          -settings.projHeight / 2,  // bas
+           settings.projHeight / 2,  // haut
+           0.5,                      // near
+           10);                      // far
+
++  // rendre vers la texture de profondeur
++  gl.bindFramebuffer(gl.FRAMEBUFFER, depthFramebuffer);
++  gl.viewport(0, 0, depthTextureSize, depthTextureSize);
++  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+-  drawScene(textureProjectionMatrix, textureWorldMatrix, m4.identity());
++  drawScene(lightProjectionMatrix, lightWorldMatrix, m4.identity(), colorProgramInfo);
+
++  // maintenant dessiner la scène sur le canvas en projetant la texture de profondeur dans la scène
++  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
++  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
++  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  let textureMatrix = m4.identity();
+  textureMatrix = m4.translate(textureMatrix, 0.5, 0.5, 0.5);
+  textureMatrix = m4.scale(textureMatrix, 0.5, 0.5, 0.5);
+-  textureMatrix = m4.multiply(textureMatrix, textureProjectionMatrix);
++  textureMatrix = m4.multiply(textureMatrix, lightProjectionMatrix);
+  // utiliser l'inverse de cette matrice world pour créer
+  // une matrice qui va transformer d'autres positions
+  // pour être relatives à cet espace world.
+  textureMatrix = m4.multiply(
+      textureMatrix,
+-      m4.inverse(textureWorldMatrix));
++      m4.inverse(lightWorldMatrix));
+
+  // Calculer la matrice de projection
+  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  const projectionMatrix =
+      m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
+
+  // Calculer la matrice de la caméra avec lookAt.
+  const cameraPosition = [settings.cameraX, settings.cameraY, 7];
+  const target = [0, 0, 0];
+  const up = [0, 1, 0];
+  const cameraMatrix = m4.lookAt(cameraPosition, target, up);
+
+-  drawScene(projectionMatrix, cameraMatrix, textureMatrix); 
++  drawScene(projectionMatrix, cameraMatrix, textureMatrix, textureProgramInfo); 
+}
+</code></pre>
+<p>Notez que j’ai renommé <code class="notranslate" translate="no">textureWorldMatrix</code> en <code class="notranslate" translate="no">lightWorldMatrix</code> et
+<code class="notranslate" translate="no">textureProjectionMatrix</code> en <code class="notranslate" translate="no">lightProjectionMatrix</code>. Ce sont vraiment les
+mêmes choses mais avant on projetait une texture dans un espace arbitraire.
+Maintenant on essaie de projeter une shadow map depuis une lumière. Les maths sont les mêmes
+mais il semblait approprié de renommer les variables.</p>
+<p>Ci-dessus, on rend d’abord la sphère et le plan vers la texture de profondeur
+en utilisant le shader de couleur qu’on a créé pour dessiner les lignes du frustum. Ce shader
+dessine juste une couleur unie et ne fait rien d’autre de spécial, ce qui est tout
+ce dont on a besoin pour rendre vers la texture de profondeur.</p>
+<p>Ensuite, on rend la scène à nouveau sur le canvas comme on l’a fait avant,
+en projetant la texture dans la scène.
+Quand on référence la texture de profondeur dans un shader, seule la valeur rouge
+est valide donc on la répètera pour rouge, vert et bleu.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">void main() {
+  vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
+  bool inRange = 
+      projectedTexcoord.x &gt;= 0.0 &amp;&amp;
+      projectedTexcoord.x &lt;= 1.0 &amp;&amp;
+      projectedTexcoord.y &gt;= 0.0 &amp;&amp;
+      projectedTexcoord.y &lt;= 1.0;
+
+-  vec4 projectedTexColor = texture2D(u_projectedTexture, projectedTexcoord.xy);
++  // le canal 'r' contient les valeurs de profondeur
++  vec4 projectedTexColor = vec4(texture2D(u_projectedTexture, projectedTexcoord.xy).rrr, 1);
+  vec4 texColor = texture2D(u_texture, v_texcoord) * u_colorMult;
+  float projectedAmount = inRange ? 1.0 : 0.0;
+  gl_FragColor = mix(texColor, projectedTexColor, projectedAmount);
+}
+</code></pre>
+<p>Pendant qu’on y est, ajoutons un cube à la scène</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">+const cubeBufferInfo = twgl.primitives.createCubeBufferInfo(
++    gl,
++    2,  // taille
++);
+
+...
+
++const cubeUniforms = {
++  u_colorMult: [0.5, 1, 0.5, 1],  // vert clair
++  u_color: [0, 0, 1, 1],
++  u_texture: checkerboardTexture,
++  u_world: m4.translation(3, 1, 0),
++};
+
+...
+
+function drawScene(projectionMatrix, cameraMatrix, textureMatrix, programInfo) {
+
+    ...
+
++    // ------ Dessiner le cube --------
++
++    // Configurer tous les attributs nécessaires.
++    gl.bindVertexArray(cubeVAO);
++
++    // Définir les uniforms qu'on vient de calculer
++    twgl.setUniforms(programInfo, cubeUniforms);
++
++    // appelle gl.drawArrays ou gl.drawElements
++    twgl.drawBufferInfo(gl, cubeBufferInfo);
+
+...
+</code></pre>
+<p>et ajustons les paramètres. On va déplacer la caméra
+et élargir le champ de vision pour la projection de texture pour couvrir plus de la scène</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const settings = {
+-  cameraX: 2.5,
++  cameraX: 6,
+  cameraY: 5,
+  posX: 2.5,
+  posY: 4.8,
+  posZ: 4.3,
+  targetX: 2.5,
+  targetY: 0,
+  targetZ: 3.5,
+  projWidth: 1,
+  projHeight: 1,
+  perspective: true,
+-  fieldOfView: 45,
++  fieldOfView: 120,
+};
+</code></pre>
+<p>note : j’ai déplacé le code qui dessine le cube de lignes montrant le
+frustum hors de la fonction <code class="notranslate" translate="no">drawScene</code>.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-shadows-depth-texture.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-shadows-depth-texture.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>C’est exactement le même que l’exemple du haut sauf qu’au lieu
+de charger une image, on génère une texture de profondeur en
+rendant la scène vers elle. Si vous voulez vérifier, remettez <code class="notranslate" translate="no">cameraX</code>
+à 2.5 et <code class="notranslate" translate="no">fieldOfView</code> à 45 et cela devrait ressembler au même
+que ci-dessus sauf qu’avec notre nouvelle texture de profondeur projetée
+au lieu d’une image chargée.</p>
+<p>Les valeurs de profondeur vont de 0.0 à 1.0 représentant leur position
+à travers le frustum donc 0.0 (sombre) est proche de la pointe
+du frustum et 1.0 (clair) est à l’extrémité ouverte éloignée.</p>
+<p>Donc tout ce qui reste à faire est qu’au lieu de choisir entre notre couleur de texture
+projetée et notre couleur de texture mappée, on peut utiliser la profondeur de
+la texture de profondeur pour vérifier si la position Z de la texture de profondeur
+est plus proche ou plus loin de la lumière que la profondeur du pixel qu’on nous
+demande de dessiner. Si la profondeur de la texture de profondeur est plus proche, quelque chose
+bloquait la lumière et ce pixel est dans une ombre.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">void main() {
+  vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
++  float currentDepth = projectedTexcoord.z;
+
+  bool inRange = 
+      projectedTexcoord.x &gt;= 0.0 &amp;&amp;
+      projectedTexcoord.x &lt;= 1.0 &amp;&amp;
+      projectedTexcoord.y &gt;= 0.0 &amp;&amp;
+      projectedTexcoord.y &lt;= 1.0;
+
+-  vec4 projectedTexColor = vec4(texture(u_projectedTexture, projectedTexcoord.xy).rrr, 1);
++  float projectedDepth = texture(u_projectedTexture, projectedTexcoord.xy).r;
++  float shadowLight = (inRange &amp;&amp; projectedDepth &lt;= currentDepth) ? 0.0 : 1.0;  
+
+  vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
+-  outColor = mix(texColor, projectedTexColor, projectedAmount);
++  outColor = vec4(texColor.rgb * shadowLight, texColor.a);
+}
+</code></pre>
+<p>Ci-dessus, si <code class="notranslate" translate="no">projectedDepth</code> est inférieur à <code class="notranslate" translate="no">currentDepth</code>, alors
+du point de vue de la lumière quelque chose était plus proche de
+la lumière donc ce pixel qu’on est sur le point de dessiner est dans l’ombre.</p>
+<p>Si on exécute cela, on obtiendra une ombre</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-shadows-basic.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-shadows-basic.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Ça marche un peu, on peut voir l’ombre de la sphère sur
+le sol mais qu’est-ce que c’est que tous ces motifs étranges là où il
+ne devrait pas y avoir d’ombre ? Ces motifs
+sont appelés <em>shadow acne</em>. Ils proviennent du fait que les
+données de profondeur stockées dans la texture de profondeur ont été quantifiées à la fois
+parce que c’est une texture, une grille de pixels, elle a été projetée depuis le
+point de vue de la lumière mais on la compare à des valeurs du point de vue de la caméra. Cela signifie que la grille de valeurs dans la
+depth map n’est pas alignée avec notre caméra et
+donc quand on calcule <code class="notranslate" translate="no">currentDepth</code>, il y a des moments où une valeur
+sera légèrement plus grande ou légèrement plus petite que <code class="notranslate" translate="no">projectedDepth</code>.</p>
+<p>Ajoutons un biais.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">...
+
++uniform float u_bias;
+
+void main() {
+  vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
+-  float currentDepth = projectedTexcoord.z;
++  float currentDepth = projectedTexcoord.z + u_bias;
+
+  bool inRange = 
+      projectedTexcoord.x &gt;= 0.0 &amp;&amp;
+      projectedTexcoord.x &lt;= 1.0 &amp;&amp;
+      projectedTexcoord.y &gt;= 0.0 &amp;&amp;
+      projectedTexcoord.y &lt;= 1.0;
+
+  float projectedDepth = texture(u_projectedTexture, projectedTexcoord.xy).r;
+  float shadowLight = (inRange &amp;&amp; projectedDepth &lt;= currentDepth) ? 0.0 : 1.0;  
+
+  vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
+  outColor = vec4(texColor.rgb * shadowLight, texColor.a);
+}
+</code></pre>
+<p>Et on doit le définir</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const settings = {
+  cameraX: 2.75,
+  cameraY: 5,
+  posX: 2.5,
+  posY: 4.8,
+  posZ: 4.3,
+  targetX: 2.5,
+  targetY: 0,
+  targetZ: 3.5,
+  projWidth: 1,
+  projHeight: 1,
+  perspective: true,
+  fieldOfView: 120,
++  bias: -0.006,
+};
+
+...
+
+function drawScene(projectionMatrix, cameraMatrix, textureMatrix, programInfo, /**/u_lightWorldMatrix) {
+  // Créer une matrice view depuis la matrice caméra.
+  const viewMatrix = m4.inverse(cameraMatrix);
+
+  gl.useProgram(programInfo.program);
+
+  // définir les uniforms qui sont les mêmes pour la sphère et le plan
+  // note : toutes les valeurs sans uniform correspondant dans le shader
+  // sont ignorées.
+  twgl.setUniforms(programInfo, {
+    u_view: viewMatrix,
+    u_projection: projectionMatrix,
++    u_bias: settings.bias,
+    u_textureMatrix: textureMatrix,
+    u_projectedTexture: depthTexture,
+  });
+
+  ...
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-shadows-basic-w-bias.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-shadows-basic-w-bias.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>faites glisser la valeur du biais et vous pouvez voir comment cela affecte quand et où
+les motifs apparaissent.</p>
+<p>Pour aller plus loin, ajoutons un calcul de lumière de spot
+de <a href="webgl-3d-lighting-spot.html">l’article sur les lumières de spot</a>.</p>
+<p>D’abord, collons les parties nécessaires dans le vertex shader directement
+depuis <a href="webgl-3d-lighting-spot.html">cet article</a>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+in vec4 a_position;
+in vec2 a_texcoord;
++in vec3 a_normal;
+
++uniform vec3 u_lightWorldPosition;
++uniform vec3 u_viewWorldPosition;
+
+uniform mat4 u_projection;
+uniform mat4 u_view;
+uniform mat4 u_world;
+uniform mat4 u_textureMatrix;
+
+out vec2 v_texcoord;
+out vec4 v_projectedTexcoord;
++out vec3 v_normal;
+
++out vec3 v_surfaceToLight;
++out vec3 v_surfaceToView;
+
+void main() {
+  // Multiplier la position par la matrice.
+  vec4 worldPosition = u_world * a_position;
+
+  gl_Position = u_projection * u_view * worldPosition;
+
+  // Passer la coordonnée de texture au fragment shader.
+  v_texcoord = a_texcoord;
+
+  v_projectedTexcoord = u_textureMatrix * worldPosition;
+
++  // orienter les normales et les passer au fragment shader
++  v_normal = mat3(u_world) * a_normal;
++
++  // calculer la position world de la surface
++  vec3 surfaceWorldPosition = (u_world * a_position).xyz;
++
++  // calculer le vecteur de la surface vers la lumière
++  // et le passer au fragment shader
++  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
++
++  // calculer le vecteur de la surface vers la vue/caméra
++  // et le passer au fragment shader
++  v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition;
+}
+</code></pre>
+<p>Puis le fragment shader</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+precision highp float;
+
+// Passé depuis le vertex shader.
+in vec2 v_texcoord;
+in vec4 v_projectedTexcoord;
++in vec3 v_normal;
++in vec3 v_surfaceToLight;
++in vec3 v_surfaceToView;
+
+uniform vec4 u_colorMult;
+uniform sampler2D u_texture;
+uniform sampler2D u_projectedTexture;
+uniform float u_bias;
++uniform float u_shininess;
++uniform vec3 u_lightDirection;
++uniform float u_innerLimit;          // en espace dot
++uniform float u_outerLimit;          // en espace dot
+
+out vec4 outColor;
+
+void main() {
++  // parce que v_normal est un varying, il est interpolé
++  // donc ce ne sera pas un vecteur unitaire. Le normaliser
++  // en fera à nouveau un vecteur unitaire
++  vec3 normal = normalize(v_normal);
++
++  vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
++  vec3 surfaceToViewDirection = normalize(v_surfaceToView);
++  vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);
++
++  float dotFromDirection = dot(surfaceToLightDirection,
++                               -u_lightDirection);
++  float limitRange = u_innerLimit - u_outerLimit;
++  float inLight = clamp((dotFromDirection - u_outerLimit) / limitRange, 0.0, 1.0);
++  float light = inLight * dot(normal, surfaceToLightDirection);
++  float specular = inLight * pow(dot(normal, halfVector), u_shininess);
+
+  vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
+  float currentDepth = projectedTexcoord.z + u_bias;
+
+  bool inRange =
+      projectedTexcoord.x &gt;= 0.0 &amp;&amp;
+      projectedTexcoord.x &lt;= 1.0 &amp;&amp;
+      projectedTexcoord.y &gt;= 0.0 &amp;&amp;
+      projectedTexcoord.y &lt;= 1.0;
+
+  // le canal 'r' contient les valeurs de profondeur
+  float projectedDepth = texture(u_projectedTexture, projectedTexcoord.xy).r;
+  float shadowLight = (inRange &amp;&amp; projectedDepth &lt;= currentDepth) ? 0.0 : 1.0;
+
+  vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
+-  outColor = vec4(texColor.rgb * shadowLight, texColor.a);
++  outColor = vec4(
++      texColor.rgb * light * shadowLight +
++      specular * shadowLight,
++      texColor.a);
+}
+</code></pre>
+<p>Notez qu’on utilise juste <code class="notranslate" translate="no">shadowLight</code> pour ajuster l’effet de <code class="notranslate" translate="no">light</code> et
+<code class="notranslate" translate="no">specular</code>. Si un objet est dans l’ombre alors il n’y a pas de lumière.</p>
+<p>On doit juste définir les uniforms</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-function drawScene(projectionMatrix, cameraMatrix, textureMatrix, programInfo) {
++function drawScene(
++    projectionMatrix,
++    cameraMatrix,
++    textureMatrix,
++    lightWorldMatrix,
++    programInfo) {
+  // Créer une matrice view depuis la matrice caméra.
+  const viewMatrix = m4.inverse(cameraMatrix);
+
+  gl.useProgram(programInfo.program);
+
+  // définir les uniforms qui sont les mêmes pour la sphère et le plan
+  // note : toutes les valeurs sans uniform correspondant dans le shader
+  // sont ignorées.
+  twgl.setUniforms(programInfo, {
+    u_view: viewMatrix,
+    u_projection: projectionMatrix,
+    u_bias: settings.bias,
+    u_textureMatrix: textureMatrix,
+    u_projectedTexture: depthTexture,
++    u_shininess: 150,
++    u_innerLimit: Math.cos(degToRad(settings.fieldOfView / 2 - 10)),
++    u_outerLimit: Math.cos(degToRad(settings.fieldOfView / 2)),
++    u_lightDirection: lightWorldMatrix.slice(8, 11).map(v =&gt; -v),
++    u_lightWorldPosition: lightWorldMatrix.slice(12, 15),
++    u_viewWorldPosition: cameraMatrix.slice(12, 15),
+  });
+
+...
+
+function render() {
+  ...
+
+-  drawScene(lightProjectionMatrix, lightWorldMatrix, m4.identity(), colorProgramInfo);
++  drawScene(
++      lightProjectionMatrix,
++      lightWorldMatrix,
++      m4.identity(),
++      lightWorldMatrix,
++      colorProgramInfo);
+
+  ...
+
+-  drawScene(projectionMatrix, cameraMatrix, textureMatrix, textureProgramInfo);
++  drawScene(
++      projectionMatrix,
++      cameraMatrix,
++      textureMatrix,
++      lightWorldMatrix,
++      textureProgramInfo);
+
+  ...
+}
+</code></pre>
+<p>Pour passer en revue quelques-uns de ces paramètres d’uniforms. Rappelons de <a href="webgl-3d-lighting-spot.html">l’article sur les lumières de spot</a>
+que les paramètres innerLimit et outerLimit sont en espace dot (espace cosinus) et que
+nous n’avons besoin que de la moitié du champ de vision car ils s’étendent autour de la direction de la lumière.
+Rappelons aussi de <a href="webgl-3d-camera.html">l’article sur la caméra</a> que la 3ème ligne d’une matrice 4x4
+est l’axe Z donc extraire les 3 premières valeurs de la 3ème ligne de <code class="notranslate" translate="no">lightWorldMatrix</code>
+nous donne la direction -Z de la lumière. On veut la direction positive donc on l’inverse.
+De même, le même article nous dit que la 4ème ligne est la position world donc on peut obtenir
+la lightWorldPosition et viewWorldPosition (aussi connue comme la position world de la caméra)
+en les extrayant de leurs matrices respectives. Bien sûr, on aurait aussi pu
+les obtenir en exposant plus de paramètres ou en passant plus de variables.</p>
+<p>Effaçons aussi le fond en noir et définissons les lignes du frustum en blanc</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render() {
+
+  ...
+
+  // maintenant dessiner la scène sur le canvas en projetant la texture de profondeur dans la scène
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
++  gl.clearColor(0, 0, 0, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  ...
+
+  // ------ Dessiner le frustum ------
+  {
+
+    ...
+
+          // Définir les uniforms qu'on vient de calculer
+    twgl.setUniforms(colorProgramInfo, {
+-      u_color: [0, 0, 0, 1],
++      u_color: [1, 1, 1, 1],
+      u_view: viewMatrix,
+      u_projection: projectionMatrix,
+      u_world: mat,
+    });
+</code></pre>
+<p>Et maintenant on a une lumière de spot avec des ombres.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-shadows-w-spot-light.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-shadows-w-spot-light.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Pour une lumière directionnelle, on copierait le code shader de
+<a href="webgl-3d-lighting-directional.html">l’article sur les lumières directionnelles</a>
+et on changerait notre projection de perspective en orthographique.</p>
+<p>D’abord le vertex shader</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+in vec4 a_position;
+in vec2 a_texcoord;
++in vec3 a_normal;
+
+-uniform vec3 u_lightWorldPosition;
+-uniform vec3 u_viewWorldPosition;
+
+uniform mat4 u_projection;
+uniform mat4 u_view;
+uniform mat4 u_world;
+uniform mat4 u_textureMatrix;
+
+out vec2 v_texcoord;
+out vec4 v_projectedTexcoord;
+out vec3 v_normal;
+
+-out vec3 v_surfaceToLight;
+-out vec3 v_surfaceToView;
+
+void main() {
+  // Multiplier la position par la matrice.
+  vec4 worldPosition = u_world * a_position;
+
+  gl_Position = u_projection * u_view * worldPosition;
+
+  // Passer la coordonnée de texture au fragment shader.
+  v_texcoord = a_texcoord;
+
+  v_projectedTexcoord = u_textureMatrix * worldPosition;
+
+  // orienter les normales et les passer au fragment shader
+  v_normal = mat3(u_world) * a_normal;
+
+-  // calculer la position world de la surface
+-  vec3 surfaceWorldPosition = (u_world * a_position).xyz;
+-
+-  // calculer le vecteur de la surface vers la lumière
+-  // et le passer au fragment shader
+-  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
+-
+-  // calculer le vecteur de la surface vers la vue/caméra
+-  // et le passer au fragment shader
+-  v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition;
+}
+</code></pre>
+<p>Puis le fragment shader</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+precision highp float;
+
+// Passé depuis le vertex shader.
+in vec2 v_texcoord;
+in vec4 v_projectedTexcoord;
+in vec3 v_normal;
+-in vec3 v_surfaceToLight;
+-in vec3 v_surfaceToView;
+
+uniform vec4 u_colorMult;
+uniform sampler2D u_texture;
+uniform sampler2D u_projectedTexture;
+uniform float u_bias;
+-uniform float u_shininess;
+-uniform vec3 u_lightDirection;
+-uniform float u_innerLimit;          // en espace dot
+-uniform float u_outerLimit;          // en espace dot
++uniform vec3 u_reverseLightDirection;
+
+out vec4 outColor;
+
+void main() {
+  // parce que v_normal est un varying, il est interpolé
+  // donc ce ne sera pas un vecteur unitaire. Le normaliser
+  // en fera à nouveau un vecteur unitaire
+  vec3 normal = normalize(v_normal);
+
++  float light = dot(normal, u_reverseLightDirection);
+
+-  vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
+-  vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+-  vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);
+-
+-  float dotFromDirection = dot(surfaceToLightDirection,
+-                               -u_lightDirection);
+-  float limitRange = u_innerLimit - u_outerLimit;
+-  float inLight = clamp((dotFromDirection - u_outerLimit) / limitRange, 0.0, 1.0);
+-  float light = inLight * dot(normal, surfaceToLightDirection);
+-  float specular = inLight * pow(dot(normal, halfVector), u_shininess);
+
+  vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
+  float currentDepth = projectedTexcoord.z + u_bias;
+
+  bool inRange =
+      projectedTexcoord.x &gt;= 0.0 &amp;&amp;
+      projectedTexcoord.x &lt;= 1.0 &amp;&amp;
+      projectedTexcoord.y &gt;= 0.0 &amp;&amp;
+      projectedTexcoord.y &lt;= 1.0;
+
+  // le canal 'r' contient les valeurs de profondeur
+  float projectedDepth = texture(u_projectedTexture, projectedTexcoord.xy).r;
+  float shadowLight = (inRange &amp;&amp; projectedDepth &lt;= currentDepth) ? 0.0 : 1.0;
+
+  vec4 texColor = texture(u_texture, v_texcoord) * u_colorMult;
+  outColor = vec4(
+-      texColor.rgb * light * shadowLight +
+-      specular * shadowLight,
++      texColor.rgb * light * shadowLight,
+      texColor.a);
+}
+</code></pre>
+<p>et les uniforms</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  // définir les uniforms qui sont les mêmes pour la sphère et le plan
+  // note : toutes les valeurs sans uniform correspondant dans le shader
+  // sont ignorées.
+  twgl.setUniforms(programInfo, {
+    u_view: viewMatrix,
+    u_projection: projectionMatrix,
+    u_bias: settings.bias,
+    u_textureMatrix: textureMatrix,
+    u_projectedTexture: depthTexture,
+-    u_shininess: 150,
+-    u_innerLimit: Math.cos(degToRad(settings.fieldOfView / 2 - 10)),
+-    u_outerLimit: Math.cos(degToRad(settings.fieldOfView / 2)),
+-    u_lightDirection: lightWorldMatrix.slice(8, 11).map(v =&gt; -v),
+-    u_lightWorldPosition: lightWorldMatrix.slice(12, 15),
+-    u_viewWorldPosition: cameraMatrix.slice(12, 15),
++    u_reverseLightDirection: lightWorldMatrix.slice(8, 11),
+  });
+</code></pre>
+<p>J’ai ajusté la caméra pour voir plus de la scène.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-shadows-w-directional-light.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-shadows-w-directional-light.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Cela souligne quelque chose qui devrait être évident d’après le code ci-dessus : notre
+shadow map n’a qu’une certaine taille donc même si le calcul d’une lumière directionnelle
+n’a qu’une direction, il n’y a pas de position pour la lumière elle-même, on doit quand même
+choisir une position pour décider de la zone pour calculer et appliquer
+la shadow map.</p>
+<p>Cet article commence à être long et il y a encore beaucoup de choses à couvrir relatives
+aux ombres donc nous laisserons le reste à <a href="webgl-shadows-continued.html">l’article suivant</a>.</p>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-shadows.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-shadows.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-shadows.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-shadows.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-shadows.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-shadows.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-shadows.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-shadows.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fondamentaux</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-getting-webgl2.html">Comment utiliser WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fundamentals.html">Les bases</a></li>
+<li><a href="/webgl/lessons/fr/webgl-how-it-works.html">Comment ça marche</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shaders-and-glsl.html">Shaders et GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Diagramme d'état</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl2-whats-new.html">Quoi de neuf dans WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2.html">Passer de WebGL1 à WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2-fundamentals.html">Différences de WebGLFundamentals.org à WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Traitement d'images</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-image-processing.html">Traitement d'images</a></li>
+<li><a href="/webgl/lessons/fr/webgl-image-processing-continued.html">Traitement d'images - Suite</a></li>
+        </ul>
+  <li>Translation, rotation, mise à l'échelle 2D et calcul matriciel</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-translation.html">Translation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-rotation.html">Rotation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-scale.html">Mise à l'échelle 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrices.html">Matrices 2D</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-orthographic.html">Projection Orthographique 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective.html">Perspective 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-camera.html">3D - Caméras</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-naming.html">3D - Nommage des matrices</a></li>
+        </ul>
+  <li>Éclairage</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-lighting-directional.html">Éclairage directionnel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-point.html">Éclairage ponctuel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-spot.html">Éclairage spot</a></li>
+        </ul>
+  <li>Structure et organisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-less-code-more-fun.html">Moins de code, plus de plaisir</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-multiple-things.html">Dessiner plusieurs choses</a></li>
+<li><a href="/webgl/lessons/fr/webgl-scene-graph.html">Graphes de scène</a></li>
+        </ul>
+  <li>Géométrie</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-geometry-lathe.html">3D Géométrie - Tour</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj.html">Charger des fichiers .obj</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj-w-mtl.html">Charger des fichiers .obj avec .mtl</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/fr/webgl-data-textures.html">Textures de données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2-textures.html">Utiliser 2 textures ou plus</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cors-permission.html">Images Cross Origin</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective-correct-texturemapping.html">Mappage de Texture avec Correction de Perspective</a></li>
+<li><a href="/webgl/lessons/fr/webgl-planar-projection-mapping.html">Projection planaire et en perspective</a></li>
+        </ul>
+  <li>Rendu vers une texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-render-to-texture.html">Rendu vers une texture</a></li>
+        </ul>
+  <li>Ombres</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-shadows.html">Ombres</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrix-stack.html">2D - Pile de matrices</a></li>
+<li><a href="/webgl/lessons/fr/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/fr/webgl-environment-maps.html">Cartes d'environnement</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fog.html">Brouillard</a></li>
+<li><a href="/webgl/lessons/fr/webgl-picking.html">Picking (cliquer sur des objets)</a></li>
+        </ul>
+  <li>Texte</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-text-html.html">Texte - HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-canvas2d.html">Texte - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-texture.html">Texte - Utiliser une texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-glyphs.html">Texte - Utiliser une texture de glyphes</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Astuces</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-smallest-programs.html">Plus petits programmes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-without-data.html">Dessiner sans données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/fr/webgl-pulling-vertices.html">Extraction de sommets</a></li>
+        </ul>
+  <li>Optimisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-indexed-vertices.html">Sommets indexés (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-instanced-drawing.html">Dessin instancié</a></li>
+        </ul>
+  <li>Divers</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-setup-and-installation.html">Installation et configuration</a></li>
+<li><a href="/webgl/lessons/fr/webgl-boilerplate.html">Code standard (Boilerplate)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-resizing-the-canvas.html">Redimensionner le Canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/fr/webgl-points-lines-triangles.html">Points, Lignes et Triangles</a></li>
+<li><a href="/webgl/lessons/fr/webgl-multiple-views.html">Vues multiples, Canvas multiples</a></li>
+<li><a href="/webgl/lessons/fr/webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+<li><a href="/webgl/lessons/fr/webgl-and-alpha.html">WebGL2 et Alpha</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-vs-3d-library.html">Bibliothèques 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-vs-math.html">WebGL2 Matrices vs Matrices Mathématiques</a></li>
+<li><a href="/webgl/lessons/fr/webgl-precision-issues.html">Problèmes de précision</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#screenshot">Prendre une capture d'écran</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#preservedrawingbuffer">Empêcher l'effacement du canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#tabindex">Obtenir des entrées clavier depuis un canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#html-background">Utiliser WebGL2 comme arrière-plan en HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cross-platform-issues.html">Problèmes multi-plateformes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Référence</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-attributes.html">Attributs</a></li>
+<li><a href="/webgl/lessons/fr/webgl-texture-units.html">Unités de Texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/fr/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/fr/webgl-references.html">Références</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentation de l'API</a></li>
+  <li>
+    <a href="https://twgljs.org">TWGL, une bibliothèque utilitaire WebGL</a>
+  </li>
+  <li>
+    <a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a>
+  </li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Problème ou bug ? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Créez un ticket sur github</a>.</div>
+<div class="lesson-comment-notes">
+   Utilisez <b>&lt;pre&gt;&lt;code&gt;</b>le code ici<b>&lt;/code&gt;&lt;/pre&gt;</b> pour les blocs de code
+</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Ombres';
+            var disqus_title = 'WebGL2 Ombres';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Merci à <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>pour <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

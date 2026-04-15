@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/fr/webgl-skinning.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Comment faire du skinning sur un mesh en WebGL">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-skinning_fr.jpg">
+
+<meta property="og:title" content="WebGL2 Skinning">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-skinning_fr.jpg">
+<meta property="og:description" content="Comment faire du skinning sur un mesh en WebGL">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-skinning.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Skinning">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-skinning.html">
+<meta name="twitter:description" content="Comment faire du skinning sur un mesh en WebGL">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-skinning_fr.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-skinning.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-skinning_fr.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-skinning.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-skinning.html",
+      "inLanguage":"fr",
+      "name":"WebGL2 Skinning",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-skinning.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Skinning</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/fr/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-skinning.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-skinning.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/webgl/lessons/fr/webgl-skinning.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-skinning.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-skinning.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-skinning.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-skinning.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-skinning.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-skinning.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-skinning.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-skinning.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-skinning.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-skinning.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-skinning.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-skinning.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-skinning.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Table des matières</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/fr/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Skinning</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Le skinning en infographie est le nom donné au déplacement d’un ensemble de sommets basé sur
+l’influence pondérée de plusieurs matrices. C’est assez abstrait.</p>
+<p>On appelle ça <em>skinning</em> (habillage) parce que c’est typiquement utilisé pour donner aux
+personnages 3D un “squelette” fait d’“os” où “os” est un autre terme pour matrice,
+et ensuite <strong>par sommet</strong>, on définit l’influence de chaque os sur ce sommet.</p>
+<p>Par exemple, l’os de la main aurait une influence de presque 100% sur les sommets proches
+de la main d’un personnage, alors que l’os du pied aurait zéro influence sur ces mêmes sommets.
+Les sommets autour du poignet auraient une certaine influence de l’os de la main ainsi qu’une
+influence de l’os du bras.</p>
+<p>La partie fondamentale est que vous avez besoin d’os (qui n’est qu’une façon de dire une
+hiérarchie de matrices) et de poids. Les poids sont des valeurs par sommet qui vont de 0 à 1
+pour indiquer dans quelle mesure une matrice-os particulière affecte la position de ce sommet.
+Les poids sont un peu comme les couleurs de vertex en termes de données. Un ensemble de poids
+par sommet. En d’autres termes, les poids sont placés dans un tampon et fournis via des attributs.</p>
+<p>En général, on limite le nombre de poids par sommet en partie parce que sinon ce serait
+beaucoup trop de données. Un personnage peut avoir entre 15 os (Virtua Fighter 1) et 150-300 os
+(certains jeux modernes). Si vous aviez 300 os, vous auriez besoin de 300 poids PAR sommet PAR os.
+Si votre personnage avait 10 000 sommets, cela représenterait 3 millions de poids nécessaires.</p>
+<p>Ainsi, la plupart des systèmes de skinning temps réel limitent à environ 4 poids par sommet.
+Cela est généralement accompli dans un exporteur/convertisseur qui prend des données d’un logiciel
+3D comme Blender/Maya/3DSMax et, pour chaque sommet, trouve les 4 os avec les poids les plus élevés
+puis normalise ces poids.</p>
+<p>Pour donner un exemple pseudo-code, un sommet non skinné est typiquement calculé comme ceci :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl_Position = projection * view * model * position;
+</code></pre>
+<p>Un sommet skinné est effectivement calculé comme ceci :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl_Position = projection * view *
+              (bone1Matrix * position * weight1 +
+               bone2Matrix * position * weight2 +
+               bone3Matrix * position * weight3 +
+               bone4Matrix * position * weight4);
+</code></pre>
+<p>Comme vous pouvez le voir, c’est comme si on calculait 4 positions différentes pour chaque
+sommet puis qu’on les fondait en une seule en appliquant les poids.</p>
+<p>En supposant que vous stockiez les matrices des os dans un tableau d’uniforms, et que vous
+passiez les poids et l’indice de l’os auquel chaque poids s’applique comme attributs, vous
+pourriez faire quelque chose comme :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+in vec4 a_position;
+in vec4 a_weights;         // 4 poids par sommet
+in uvec4 a_boneNdx;        // 4 indices d'os par sommet
+uniform mat4 bones[MAX_BONES];  // 1 matrice par os
+
+gl_Position = projection * view *
+              (a_bones[a_boneNdx[0]] * a_position * a_weight[0] +
+               a_bones[a_boneNdx[1]] * a_position * a_weight[1] +
+               a_bones[a_boneNdx[2]] * a_position * a_weight[2] +
+               a_boneS[a_boneNdx[3]] * a_position * a_weight[3]);
+</code></pre>
+<p>Il y a encore un problème. Supposez que vous ayez un modèle d’une personne avec
+l’origine (0,0,0) au sol juste entre leurs pieds.</p>
+<div class="webgl_center"><img src="../resources/bone-head.svg" style="width: 500px;"></div>
+<p>Imaginons maintenant que vous placez une matrice/os/joint à leur tête et que vous voulez
+utiliser cet os pour le skinning. Pour simplifier, imaginons que vous définissiez simplement
+les poids de sorte que les sommets de la tête aient un poids de 1.0 pour l’os de la tête et
+qu’aucun autre joint n’influence ces sommets.</p>
+<div class="webgl_center"><img src="../resources/bone-head-setup.svg" style="width: 500px;"></div>
+<p>Il y a un problème.
+Les sommets de la tête sont à 2 unités au-dessus de l’origine. L’os de la tête est aussi à 2
+unités au-dessus de l’origine. Si vous multipliiez réellement ces sommets de la tête par la
+matrice de l’os de la tête, vous obtiendriez des sommets à 4 unités au-dessus de l’origine.
+Les 2 unités d’origine des sommets + les 2 unités de la matrice de l’os de la tête.</p>
+<div class="webgl_center"><img src="../resources/bone-head-problem.svg" style="width: 500px;"></div>
+<p>Une solution est de stocker une “bind pose” qui est une matrice supplémentaire par joint
+de l’emplacement de chaque matrice avant qu’elle soit utilisée pour influencer les sommets.
+Dans ce cas, la bind pose de la matrice de la tête serait à 2 unités au-dessus de l’origine.
+Vous pouvez maintenant utiliser l’inverse de cette matrice pour soustraire les 2 unités
+supplémentaires.</p>
+<p>En d’autres termes, les matrices d’os passées au shader ont chacune été multipliées par leur
+inverse bind pose afin que leur influence soit uniquement leur changement par rapport à leurs
+positions originales relativement à l’origine du mesh.</p>
+<p>Faisons un petit exemple. Nous allons animer en 2D une grille comme celle-ci :</p>
+<div class="webgl_center"><img src="../resources/skinned-mesh.svg" style="width: 400px;"></div>
+<ul>
+<li>Où <code class="notranslate" translate="no">b0</code>, <code class="notranslate" translate="no">b1</code> et <code class="notranslate" translate="no">b2</code> sont les matrices d’os.</li>
+<li><code class="notranslate" translate="no">b1</code> est un enfant de <code class="notranslate" translate="no">b0</code> et <code class="notranslate" translate="no">b2</code> est un enfant de <code class="notranslate" translate="no">b1</code></li>
+<li>Les sommets <code class="notranslate" translate="no">0,1</code> auront un poids de 1.0 de l’os b0</li>
+<li>Les sommets <code class="notranslate" translate="no">2,3</code> auront un poids de 0.5 des os b0 et b1</li>
+<li>Les sommets <code class="notranslate" translate="no">4,5</code> auront un poids de 1.0 de l’os b1</li>
+<li>Les sommets <code class="notranslate" translate="no">6,7</code> auront un poids de 0.5 des os b1 et b2</li>
+<li>Les sommets <code class="notranslate" translate="no">8,9</code> auront un poids de 1.0 de l’os b2</li>
+</ul>
+<p>Nous utiliserons les utilitaires décrits dans <a href="webgl-less-code-more-fun.html">moins de code, plus de fun</a>.</p>
+<p>D’abord nous avons besoin des sommets et pour chaque sommet l’index
+de chaque os qui l’influence et un nombre de 0 à 1
+indiquant l’influence de cet os.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const arrays = {
+  position: {
+    numComponents: 2,
+    data: [
+    0,  1,  // 0
+    0, -1,  // 1
+    2,  1,  // 2
+    2, -1,  // 3
+    4,  1,  // 4
+    4, -1,  // 5
+    6,  1,  // 6
+    6, -1,  // 7
+    8,  1,  // 8
+    8, -1,  // 9
+    ],
+  },
+  boneNdx: {
+    numComponents: 4,
+    data: new Uint8Array([
+      0, 0, 0, 0,  // 0
+      0, 0, 0, 0,  // 1
+      0, 1, 0, 0,  // 2
+      0, 1, 0, 0,  // 3
+      1, 0, 0, 0,  // 4
+      1, 0, 0, 0,  // 5
+      1, 2, 0, 0,  // 6
+      1, 2, 0, 0,  // 7
+      2, 0, 0, 0,  // 8
+      2, 0, 0, 0,  // 9
+    ]),
+  },
+  weight: {
+    numComponents: 4,
+    data: [
+    1, 0, 0, 0,  // 0
+    1, 0, 0, 0,  // 1
+    .5,.5, 0, 0,  // 2
+    .5,.5, 0, 0,  // 3
+    1, 0, 0, 0,  // 4
+    1, 0, 0, 0,  // 5
+    .5,.5, 0, 0,  // 6
+    .5,.5, 0, 0,  // 7
+    1, 0, 0, 0,  // 8
+    1, 0, 0, 0,  // 9
+    ],
+  },
+
+  indices: {
+    numComponents: 2,
+    data: [
+      0, 1,
+      0, 2,
+      1, 3,
+      2, 3, //
+      2, 4,
+      3, 5,
+      4, 5,
+      4, 6,
+      5, 7, //
+      6, 7,
+      6, 8,
+      7, 9,
+      8, 9,
+    ],
+  },
+};
+// appelle gl.createBuffer, gl.bindBuffer, gl.bufferData
+const bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
+const skinVAO = twgl.createVAOFromBufferInfo(gl, programInfo, bufferInfo);
+</code></pre>
+<p>Nous pouvons définir nos valeurs d’uniform en incluant une matrice pour chaque os :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 4 matrices, une pour chaque os
+const numBones = 4;
+const boneArray = new Float32Array(numBones * 16);
+
+var uniforms = {
+  projection: m4.orthographic(-20, 20, -10, 10, -1, 1),
+  view: m4.translation(-6, 0, 0),
+  bones: boneArray,
+  color: [1, 0, 0, 1],
+};
+</code></pre>
+<p>Nous pouvons créer des vues dans le boneArray, une pour chaque matrice :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// crée des vues pour chaque os. Cela permet à tous les os
+// d'exister dans 1 tableau pour l'upload mais comme des tableaux
+// séparés pour utilisation avec les fonctions mathématiques
+const boneMatrices = [];  // les données uniformes
+const bones = [];         // la valeur avant multiplication par la matrice inverse de bind
+const bindPose = [];      // la matrice de bind
+for (let i = 0; i &lt; numBones; ++i) {
+  boneMatrices.push(new Float32Array(boneArray.buffer, i * 4 * 16, 16));
+  bindPose.push(m4.identity());  // alloue juste du stockage
+  bones.push(m4.identity());     // alloue juste du stockage
+}
+</code></pre>
+<p>Puis du code pour manipuler les matrices d’os. Nous les ferons juste tourner
+dans une hiérarchie comme les os d’un doigt.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// fait tourner chaque os selon l'angle et simule une hiérarchie
+function computeBoneMatrices(bones, angle) {
+  const m = m4.identity();
+  m4.zRotate(m, angle, bones[0]);
+  m4.translate(bones[0], 4, 0, 0, m);
+  m4.zRotate(m, angle, bones[1]);
+  m4.translate(bones[1], 4, 0, 0, m);
+  m4.zRotate(m, angle, bones[2]);
+  // bones[3] n'est pas utilisé
+}
+</code></pre>
+<p>Maintenant, appelons-la une fois pour générer leurs positions initiales et utilisons
+le résultat pour calculer les matrices inverses de bind pose.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// calcule les positions initiales de chaque matrice
+computeBoneMatrices(bindPose, 0);
+
+// calcule leurs inverses
+const bindPoseInv = bindPose.map(function(m) {
+  return m4.inverse(m);
+});
+</code></pre>
+<p>Nous sommes maintenant prêts à faire le rendu.</p>
+<p>D’abord, nous animons les os en calculant une nouvelle matrice monde pour chacun :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const t = time * 0.001;
+const angle = Math.sin(t) * 0.8;
+computeBoneMatrices(bones, angle);
+</code></pre>
+<p>Ensuite, nous multiplions le résultat de chacun par l’inverse de la bind pose pour
+résoudre le problème mentionné ci-dessus :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// multiplie chaque os par son inverse de bindPose
+bones.forEach((bone, ndx) =&gt; {
+  m4.multiply(bone, bindPoseInv[ndx], boneMatrices[ndx]);
+});
+</code></pre>
+<p>Puis toute la procédure habituelle : configurer les attributs, définir les uniforms et dessiner.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.useProgram(programInfo.program);
+
+gl.bindVertexArray(skinVAO);
+
+// appelle gl.uniformXXX, gl.activeTexture, gl.bindTexture
+twgl.setUniforms(programInfo, uniforms);
+
+// appelle gl.drawArrays ou gl.drawIndices
+twgl.drawBufferInfo(gl, bufferInfo, gl.LINES);
+</code></pre>
+<p>Et voici le résultat :</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-skinning.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-skinning.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Les lignes rouges sont le mesh <em>skinné</em>. Les lignes verte et bleue représentent
+l’axe X et l’axe Y de chaque os ou “joint”. On peut voir comment les sommets
+influencés par plusieurs os se déplacent entre les os qui les influencent. Nous
+n’avons pas couvert comment les os sont dessinés car ce n’est pas important pour
+expliquer comment fonctionne le skinning. Consultez le code si vous êtes curieux.</p>
+<p>NOTE : la confusion entre os et joints. Il n’y a qu’une seule chose, les <em>matrices</em>.
+Mais dans un logiciel de modélisation 3D, on dessine généralement un gizmo (un widget
+d’interface) entre chaque matrice. Cela finit par ressembler à un os. Les joints sont
+là où se trouvent les matrices et on trace une ligne ou un cône de chaque joint au
+suivant pour que ça ressemble un peu à un squelette.</p>
+<div class="webgl_center">
+  <img src="../resources/bone-display.png" style="width: 351px;">
+  <div class="caption"><a href="https://www.blendswap.com/blends/view/66412">LowPoly Man</a> par <a href="https://www.blendswap.com/user/TiZeta">TiZeta</a></div>
+</div>
+<p>Une chose à noter que nous n’avions peut-être pas faite avant : nous avons créé un attribut
+<code class="notranslate" translate="no">uvec4</code> qui est un attribut qui reçoit des entiers non signés. Si nous n’utilisions pas twgl,
+nous devrions appeler <code class="notranslate" translate="no">gl.vertexAttribIPointer</code> pour le configurer au lieu du plus courant
+<code class="notranslate" translate="no">gl.vertexAttribPointer</code>.</p>
+<p>Malheureusement, il y a une limite au nombre d’uniforms que vous pouvez utiliser dans un shader.
+La limite basse dans WebGL est de 64 vec4 ce qui n’est que 8 mat4, et vous avez probablement
+besoin de certains de ces uniforms pour d’autres choses, par exemple nous avons <code class="notranslate" translate="no">color</code>
+dans le fragment shader et nous avons <code class="notranslate" translate="no">projection</code> et <code class="notranslate" translate="no">view</code>, ce qui signifie que si
+nous étions sur un appareil avec une limite de 64 vec4, nous ne pourrions avoir que 5 os ! En
+consultant <a href="https://web3dsurvey.com/webgl/parameters/MAX_VERTEX_UNIFORM_VECTORS">WebGLStats</a>,
+la plupart des appareils supportent 128 vec4 et 70% d’entre eux supportent 256 vec4, mais avec
+notre exemple ci-dessus c’est encore seulement 13 os et 29 os respectivement. 13 n’est même pas
+suffisant pour un personnage style Virtua Fighter 1 du début des années 90, et 29 est loin du
+nombre utilisé dans la plupart des jeux modernes.</p>
+<p>Quelques façons de contourner ça. L’une est de pré-traiter les modèles hors ligne et de les
+découper en plusieurs parties, chacune n’utilisant pas plus de N os. C’est assez complexe et
+apporte son propre lot de problèmes.</p>
+<p>Une autre consiste à stocker les matrices d’os dans une texture. C’est un rappel important que
+les textures ne sont pas que des images, elles sont effectivement des tableaux 2D de données
+à accès aléatoire que vous pouvez passer à un shader et utiliser pour toutes sortes de choses
+qui ne sont pas juste lire des images pour le texturage.</p>
+<p>Passons nos matrices dans une texture pour contourner la limite des uniforms. Pour simplifier
+les choses, nous allons utiliser des textures à virgule flottante.</p>
+<p>Mettons à jour le shader pour extraire les matrices d’une texture.
+Nous ferons la texture avec une matrice par ligne. Chaque texel de la texture
+a R, G, B et A, soit 4 valeurs, donc nous n’avons besoin que de 4 pixels par matrice,
+un pixel pour chaque ligne de la matrice.
+Les textures peuvent généralement avoir au moins 2048 pixels dans certaines dimensions,
+donc cela nous donnera de l’espace pour au moins 2048 matrices d’os, ce qui est amplement
+suffisant.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+in vec4 a_position;
+in vec4 a_weight;
+in uvec4 a_boneNdx;
+
+uniform mat4 projection;
+uniform mat4 view;
+*uniform sampler2D boneMatrixTexture;
+
++mat4 getBoneMatrix(uint boneNdx) {
++  return mat4(
++    texelFetch(boneMatrixTexture, ivec2(0, boneNdx), 0),
++    texelFetch(boneMatrixTexture, ivec2(1, boneNdx), 0),
++    texelFetch(boneMatrixTexture, ivec2(2, boneNdx), 0),
++    texelFetch(boneMatrixTexture, ivec2(3, boneNdx), 0));
++}
+
+void main() {
+
+  gl_Position = projection * view *
+*                (getBoneMatrix(a_boneNdx[0]) * a_position * a_weight[0] +
+*                 getBoneMatrix(a_boneNdx[1]) * a_position * a_weight[1] +
+*                 getBoneMatrix(a_boneNdx[2]) * a_position * a_weight[2] +
+*                 getBoneMatrix(a_boneNdx[3]) * a_position * a_weight[3]);
+
+}
+</code></pre>
+<p>Remarquez que nous utilisons <code class="notranslate" translate="no">texelFetch</code> au lieu de <code class="notranslate" translate="no">texture</code> pour obtenir des données
+de la texture. <code class="notranslate" translate="no">texelFetch</code> récupère un seul texel de la texture.
+Il prend en entrée un sampler, un ivec2 avec les coordonnées x,y de la texture
+en texels, et le niveau de mip comme ceci :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 data = texelFetch(sampler2D, ivec2(x, y), lod);
+</code></pre>
+<p>Maintenant, configurons une texture dans laquelle nous pouvons placer les matrices d’os :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// prépare la texture pour les matrices d'os
+const boneMatrixTexture = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, boneMatrixTexture);
+// puisque nous voulons utiliser la texture pour des données pures, on désactive
+// le filtrage
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+</code></pre>
+<p>Et nous la passons comme uniform.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const uniforms = {
+  projection: m4.orthographic(-20, 20, -10, 10, -1, 1),
+  view: m4.translation(-6, 0, 0),
+*  boneMatrixTexture,
+  color: [1, 0, 0, 1],
+};
+</code></pre>
+<p>La seule chose que nous devons changer est de mettre à jour la texture avec les
+dernières matrices d’os lors du rendu :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// met à jour la texture avec les matrices courantes
+gl.bindTexture(gl.TEXTURE_2D, boneMatrixTexture);
+gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,          // niveau
+    gl.RGBA32F, // format interne
+    4,          // largeur 4 pixels, chaque pixel a RGBA donc 4 pixels = 16 valeurs
+    numBones,   // une ligne par os
+    0,          // bordure
+    gl.RGBA,    // format
+    gl.FLOAT,   // type
+    boneArray);
+</code></pre>
+<p>Le résultat est le même mais nous avons résolu le problème du manque d’uniforms
+pour passer les matrices.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-skinning-bone-matrices-in-texture.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-skinning-bone-matrices-in-texture.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Voilà donc les bases du skinning. Ce n’est pas si difficile d’écrire le code pour
+afficher un mesh skinné. La partie la plus difficile est d’obtenir les données. Vous
+avez généralement besoin d’un logiciel 3D comme Blender/Maya/3D Studio Max, puis soit
+d’écrire votre propre exporteur, soit de trouver un exporteur et un format qui fournira
+toutes les données nécessaires. Vous verrez, en parcourant le code, qu’il y a 10 fois
+plus de code dans le chargement d’un skin que dans son affichage, et cela n’inclut pas
+les probablement 20 à 30 fois plus de code dans l’exporteur pour extraire les données du
+logiciel de modélisation 3D. À titre d’aparté, c’est l’une des choses que les gens qui
+écrivent leur propre moteur 3D manquent souvent. Le moteur est la partie facile 😜</p>
+<p>Il va y avoir beaucoup de code donc essayons d’abord de simplement afficher le modèle
+non skinné.</p>
+<p>Essayons de charger un fichier glTF. <a href="https://www.khronos.org/gltf/">glTF</a> est conçu
+pour WebGL. En cherchant sur le net, j’ai trouvé <a href="https://www.blendswap.com/blends/view/65255">ce fichier blender d’orque</a> par <a href="https://www.blendswap.com/user/pasilan">Junskie Pastilan</a>.</p>
+<div class="webgl_center"><img src="../../resources/models/killer_whale/thumbnail.jpg"></div>
+<p>Il existe 2 formats de haut niveau pour glTF. Le format <code class="notranslate" translate="no">.gltf</code> est un fichier JSON qui
+référence généralement un fichier <code class="notranslate" translate="no">.bin</code> contenant habituellement la géométrie et
+éventuellement les données d’animation. L’autre format est <code class="notranslate" translate="no">.glb</code> qui est un format binaire.
+C’est essentiellement le JSON et tous les autres fichiers concaténés en un seul fichier
+binaire avec un court en-tête et une section taille/type entre chaque pièce concaténée.
+Pour JavaScript, je pense que le format <code class="notranslate" translate="no">.gltf</code> est légèrement plus facile pour commencer,
+alors essayons de charger ça.</p>
+<p>D’abord <a href="https://www.blendswap.com/blends/view/65255">j’ai téléchargé le fichier .blend</a>,
+installé <a href="https://blender.org">Blender</a>, installé <a href="https://github.com/KhronosGroup/glTF-Blender-IO">l’exporteur gltf</a>,
+chargé le fichier dans Blender et exporté.</p>
+<div class="webgl_center"><img src="../resources/blender-killer-whale.png" style="width: 700px;" class="nobg"></div>
+<blockquote>
+<p>Une note rapide : les logiciels 3D comme Blender, Maya, 3DSMax sont des logiciels
+extrêmement complexes avec des milliers d’options. Quand j’ai appris 3DSMax en 1996,
+j’ai passé 2-3 heures par jour à lire le manuel de plus de 1000 pages et à travailler
+les tutoriels pendant environ 3 semaines. J’ai fait quelque chose de similaire quand
+j’ai appris Maya quelques années plus tard. Blender est tout aussi complexe et de plus
+il a une interface très différente de pratiquement tous les autres logiciels. C’est juste
+une façon de dire que vous devriez vous attendre à passer un temps significatif à apprendre
+quel que soit le logiciel 3D que vous décidez d’utiliser.</p>
+</blockquote>
+<p>Après l’exportation, j’ai chargé le fichier .gltf dans mon éditeur de texte et j’ai jeté un
+coup d’œil. J’ai utilisé <a href="https://www.khronos.org/files/gltf20-reference-guide.pdf">cette feuille de référence</a>
+pour comprendre le format.</p>
+<p>Je veux préciser que le code ci-dessous n’est pas un chargeur glTF parfait. C’est juste
+suffisant pour afficher l’orque. Je suspecte que si on essayait différents fichiers, on
+rencontrerait des domaines qui nécessiteraient des modifications.</p>
+<p>La première chose à faire est de charger le fichier. Pour simplifier, utilisons le
+<a href="https://javascript.info/async-await">async/await</a> de JavaScript. D’abord, écrivons du code
+pour charger le fichier <code class="notranslate" translate="no">.gltf</code> et tous les fichiers qu’il référence.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">async function loadGLTF(url) {
+  const gltf = await loadJSON(url);
+
+  // charge tous les fichiers référencés relativement au fichier gltf
+  const baseURL = new URL(url, location.href);
+  gltf.buffers = await Promise.all(gltf.buffers.map((buffer) =&gt; {
+    const url = new URL(buffer.uri, baseURL.href);
+    return loadBinary(url.href);
+  }));
+
+  ...
+
+async function loadFile(url, typeFunc) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`could not load: ${url}`);
+  }
+  return await response[typeFunc]();
+}
+
+async function loadBinary(url) {
+  return loadFile(url, 'arrayBuffer');
+}
+
+async function loadJSON(url) {
+  return loadFile(url, 'json');
+}
+</code></pre>
+<p>Maintenant nous devons parcourir les données et les connecter.</p>
+<p>D’abord, gérons ce que glTF considère comme un mesh. Un mesh est une collection de primitives.
+Une primitive est effectivement les tampons et attributs nécessaires pour rendre quelque chose.
+Utilisons la <a href="https://twgljs.org">bibliothèque twgl</a> couverte dans <a href="webgl-less-code-more-fun.html">moins de code, plus de fun</a>.
+Nous parcourrons les meshes et pour chacun construirons un <code class="notranslate" translate="no">BufferInfo</code> que nous pourrons
+passer à <code class="notranslate" translate="no">twgl.createVAOFromBufferInfo</code>. Rappelons qu’un <code class="notranslate" translate="no">BufferInfo</code> est effectivement
+les informations d’attributs, les indices s’il y en a, et le nombre d’éléments à passer
+à <code class="notranslate" translate="no">gl.drawXXX</code>. Par exemple un cube avec juste des positions et des normales pourrait avoir
+un BufferInfo avec cette structure :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const cubeBufferInfo = {
+  attribs: {
+    'a_POSITION': { buffer: WebGLBuffer, type: gl.FLOAT, numComponents: 3, },
+    'a_NORMAL': { buffer: WebGLBuffer, type: gl.FLOAT, numComponents: 3, },
+  },
+  numElements: 24,
+  indices: WebGLBuffer,
+  elementType: gl.UNSIGNED_SHORT,
+}
+</code></pre>
+<p>Donc nous parcourrons chaque primitive et générerons un BufferInfo comme ça.</p>
+<p>Les primitives ont un tableau d’attributs, chaque attribut référence un accesseur.
+Un accesseur indique quel type de données est là, par exemple <code class="notranslate" translate="no">VEC3</code>/<code class="notranslate" translate="no">gl.FLOAT</code> et
+référence une bufferView. Une bufferView spécifie une vue dans un buffer. Étant donné
+un index d’accesseur, nous pouvons écrire du code qui retourne un WebGLBuffer avec les
+données chargées, l’accesseur et le stride spécifié pour la bufferView.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Étant donné un index d'accesseur, retourne un accesseur, WebGLBuffer et un stride
+function getAccessorAndWebGLBuffer(gl, gltf, accessorIndex) {
+  const accessor = gltf.accessors[accessorIndex];
+  const bufferView = gltf.bufferViews[accessor.bufferView];
+  if (!bufferView.webglBuffer) {
+    const buffer = gl.createBuffer();
+    const target = bufferView.target || gl.ARRAY_BUFFER;
+    const arrayBuffer = gltf.buffers[bufferView.buffer];
+    const data = new Uint8Array(arrayBuffer, bufferView.byteOffset, bufferView.byteLength);
+    gl.bindBuffer(target, buffer);
+    gl.bufferData(target, data, gl.STATIC_DRAW);
+    bufferView.webglBuffer = buffer;
+  }
+  return {
+    accessor,
+    buffer: bufferView.webglBuffer,
+    stride: bufferView.stride || 0,
+  };
+}
+</code></pre>
+<p>Nous avons aussi besoin d’un moyen de convertir un type d’accesseur glTF en nombre de composants :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function throwNoKey(key) {
+  throw new Error(`no key: ${key}`);
+}
+
+const accessorTypeToNumComponentsMap = {
+  'SCALAR': 1,
+  'VEC2': 2,
+  'VEC3': 3,
+  'VEC4': 4,
+  'MAT2': 4,
+  'MAT3': 9,
+  'MAT4': 16,
+};
+
+function accessorTypeToNumComponents(type) {
+  return accessorTypeToNumComponentsMap[type] || throwNoKey(type);
+}
+</code></pre>
+<p>Maintenant que nous avons créé ces fonctions, nous pouvons les utiliser pour configurer nos meshes.</p>
+<p>Note : les fichiers glTF peuvent supposément définir des matériaux mais l’exporteur n’a mis aucun
+matériau dans le fichier même si l’export des matériaux était coché. Je suppose que l’exporteur
+ne gère pas tous les types de matériaux dans Blender, ce qui est malheureux. Nous utiliserons un
+matériau par défaut s’il n’y en a pas dans le fichier. Puisqu’il n’y a pas de matériaux dans ce
+fichier, il n’y a pas de code ici pour utiliser les matériaux glTF.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const defaultMaterial = {
+  uniforms: {
+    u_diffuse: [.5, .8, 1, 1],
+  },
+};
+
+// configure les meshes
+gltf.meshes.forEach((mesh) =&gt; {
+  mesh.primitives.forEach((primitive) =&gt; {
+    const attribs = {};
+    let numElements;
+    for (const [attribName, index] of Object.entries(primitive.attributes)) {
+      const {accessor, buffer, stride} = getAccessorAndWebGLBuffer(gl, gltf, index);
+      numElements = accessor.count;
+      attribs[`a_${attribName}`] = {
+        buffer,
+        type: accessor.componentType,
+        numComponents: accessorTypeToNumComponents(accessor.type),
+        stride,
+        offset: accessor.byteOffset | 0,
+      };
+    }
+
+    const bufferInfo = {
+      attribs,
+      numElements,
+    };
+
+    if (primitive.indices !== undefined) {
+      const {accessor, buffer} = getAccessorAndWebGLBuffer(gl, gltf, primitive.indices);
+      bufferInfo.numElements = accessor.count;
+      bufferInfo.indices = buffer;
+      bufferInfo.elementType = accessor.componentType;
+    }
+
+    primitive.bufferInfo = bufferInfo;
+
+    // crée un VAO pour cette primitive
+    primitive.vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, primitive.bufferInfo);
+
+    // sauvegarde les infos de matériau pour cette primitive
+    primitive.material = gltf.materials &amp;&amp; gltf.materials[primitive.material] || defaultMaterial;
+  });
+});
+</code></pre>
+<p>Maintenant chaque primitive aura une propriété <code class="notranslate" translate="no">bufferInfo</code> et <code class="notranslate" translate="no">material</code>.</p>
+<p>Pour le skinning, nous avons presque toujours besoin d’un graphe de scène. Nous avons créé
+un graphe de scène dans <a href="webgl-scene-graph.html">l’article sur les graphes de scène</a>, alors
+utilisons-le.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">class TRS {
+  constructor(position = [0, 0, 0], rotation = [0, 0, 0, 1], scale = [1, 1, 1]) {
+    this.position = position;
+    this.rotation = rotation;
+    this.scale = scale;
+  }
+  getMatrix(dst) {
+    dst = dst || new Float32Array(16);
+    m4.compose(this.position, this.rotation, this.scale, dst);
+    return dst;
+  }
+}
+
+class Node {
+  constructor(source, name) {
+    this.name = name;
+    this.source = source;
+    this.parent = null;
+    this.children = [];
+    this.localMatrix = m4.identity();
+    this.worldMatrix = m4.identity();
+    this.drawables = [];
+  }
+  setParent(parent) {
+    if (this.parent) {
+      this.parent._removeChild(this);
+      this.parent = null;
+    }
+    if (parent) {
+      parent._addChild(this);
+      this.parent = parent;
+    }
+  }
+  updateWorldMatrix(parentWorldMatrix) {
+    const source = this.source;
+    if (source) {
+      source.getMatrix(this.localMatrix);
+    }
+
+    if (parentWorldMatrix) {
+      // une matrice a été passée, donc on fait le calcul
+      m4.multiply(parentWorldMatrix, this.localMatrix, this.worldMatrix);
+    } else {
+      // aucune matrice passée, on copie juste local vers world
+      m4.copy(this.localMatrix, this.worldMatrix);
+    }
+
+    // traite maintenant tous les enfants
+    const worldMatrix = this.worldMatrix;
+    for (const child of this.children) {
+      child.updateWorldMatrix(worldMatrix);
+    }
+  }
+  traverse(fn) {
+    fn(this);
+    for (const child of this.children) {
+      child.traverse(fn);
+    }
+  }
+  _addChild(child) {
+    this.children.push(child);
+  }
+  _removeChild(child) {
+    const ndx = this.children.indexOf(child);
+    this.children.splice(ndx, 1);
+  }
+}
+</code></pre>
+<p>Il y a quelques changements notables par rapport au code de <a href="webgl-scene-graph.html">l’article sur les graphes de scène</a>.</p>
+<ul>
+<li>
+<p>Ce code utilise la fonctionnalité <code class="notranslate" translate="no">class</code> d’ES6.</p>
+<p>C’est bien plus agréable d’utiliser la syntaxe <code class="notranslate" translate="no">class</code> que l’ancienne façon de définir une classe.</p>
+</li>
+<li>
+<p>Nous avons ajouté un tableau de drawables à <code class="notranslate" translate="no">Node</code>.</p>
+<p>Cela listera les choses à dessiner depuis ce Node. Nous placerons dans cette liste des instances
+d’une classe responsable du dessin effectif. Ainsi nous pouvons dessiner génériquement différentes
+choses en utilisant différentes classes.</p>
+<p>Note : Je ne suis pas sûr que mettre un tableau de drawables sur Node soit la meilleure décision.
+J’ai l’impression que le graphe de scène lui-même ne devrait peut-être pas contenir de drawables.
+Les choses qui doivent être dessinées pourraient plutôt juste référencer le nœud dans le graphe
+d’où obtenir leurs données. Cette façon avec les drawables dans le graphe est courante, donc
+commençons par ça.</p>
+</li>
+<li>
+<p>Nous avons ajouté une méthode <code class="notranslate" translate="no">traverse</code>.</p>
+<p>Elle appelle une fonction en lui passant le nœud courant puis fait récursivement la même chose
+pour tous les nœuds enfants.</p>
+</li>
+<li>
+<p>La classe <code class="notranslate" translate="no">TRS</code> utilise un quaternion pour la rotation.</p>
+<p>Nous n’avons pas couvert les quaternions et pour être honnête, je ne pense pas les comprendre
+suffisamment pour les expliquer. Heureusement, nous n’avons pas besoin de savoir comment ils
+fonctionnent pour les utiliser. Nous prenons juste les données du fichier gltf et appelons une
+fonction qui construit une matrice à partir de ces données et nous utilisons la matrice.</p>
+</li>
+</ul>
+<p>Les nœuds dans le fichier glTF sont stockés sous forme de tableau plat.
+Nous convertirons les données de nœud dans le glTF en instances de <code class="notranslate" translate="no">Node</code>. Nous sauvegardons
+l’ancien tableau de données de nœud comme <code class="notranslate" translate="no">origNodes</code> car nous en aurons besoin plus tard.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const origNodes = gltf.nodes;
+gltf.nodes = gltf.nodes.map((n) =&gt; {
+  const {name, skin, mesh, translation, rotation, scale} = n;
+  const trs = new TRS(translation, rotation, scale);
+  const node = new Node(trs, name);
+  const realMesh =　gltf.meshes[mesh];
+  if (realMesh) {
+    node.drawables.push(new MeshRenderer(realMesh));
+  }
+  return node;
+});
+</code></pre>
+<p>Ci-dessus, nous avons créé une instance <code class="notranslate" translate="no">TRS</code> pour chaque nœud, une instance <code class="notranslate" translate="no">Node</code> pour chaque
+nœud, et si il y avait une propriété <code class="notranslate" translate="no">mesh</code>, nous avons cherché les données du mesh configurées
+précédemment et créé un <code class="notranslate" translate="no">MeshRenderer</code> pour le dessiner.</p>
+<p>Créons le <code class="notranslate" translate="no">MeshRenderer</code>. C’est juste une encapsulation du code utilisé dans <a href="webgl-less-code-more-fun.html">moins de code, plus de fun</a> pour rendre un seul modèle. Il ne fait que tenir une référence
+à un mesh et pour chaque primitive configure le programme, les attributs et les uniforms et appelle
+finalement <code class="notranslate" translate="no">gl.drawArrays</code> ou <code class="notranslate" translate="no">gl.drawElements</code> via <code class="notranslate" translate="no">twgl.drawBufferInfo</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">class MeshRenderer {
+  constructor(mesh) {
+    this.mesh = mesh;
+  }
+  render(node, projection, view, sharedUniforms) {
+    const {mesh} = this;
+    gl.useProgram(meshProgramInfo.program);
+    for (const primitive of mesh.primitives) {
+      gl.bindVertexArray(primitive.vao);
+      twgl.setUniforms(meshProgramInfo, {
+        u_projection: projection,
+        u_view: view,
+        u_world: node.worldMatrix,
+      }, primitive.material.uniforms, sharedUniforms);
+      twgl.drawBufferInfo(gl, primitive.bufferInfo);
+    }
+  }
+}
+</code></pre>
+<p>Nous avons créé les nœuds, maintenant nous devons les arranger en graphe de scène. Cela se fait
+à 2 niveaux dans glTF. D’abord, chaque nœud a un tableau optionnel d’enfants qui sont aussi des
+indices dans le tableau de nœuds, donc nous pouvons parcourir tous les nœuds et parentaliser leurs enfants :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function addChildren(nodes, node, childIndices) {
+  childIndices.forEach((childNdx) =&gt; {
+    const child = nodes[childNdx];
+    child.setParent(node);
+  });
+}
+
+// arrange les nœuds dans le graphe
+gltf.nodes.forEach((node, ndx) =&gt; {
+  const children = origNodes[ndx].children;
+  if (children) {
+    addChildren(gltf.nodes, node, children);
+  }
+});
+</code></pre>
+<p>Ensuite il y a un tableau de scènes. Une scène référence un tableau de nœuds par index dans le
+tableau de nœuds qui sont à la base de la scène. Je ne vois pas pourquoi ils n’ont pas simplement
+commencé avec un seul nœud racine, mais peu importe, c’est ce qui est dans le fichier glTF donc
+nous créons un nœud racine et parentalisons tous les enfants de la scène à ce nœud :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // configure les scènes
+  for (const scene of gltf.scenes) {
+    scene.root = new Node(new TRS(), scene.name);
+    addChildren(gltf.nodes, scene.root, scene.nodes);
+  }
+
+  return gltf;
+}
+</code></pre>
+<p>et nous avons terminé le chargement, du moins juste pour les meshes. Marquons la fonction
+principale comme <code class="notranslate" translate="no">async</code> pour pouvoir utiliser le mot-clé <code class="notranslate" translate="no">await</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">async function main() {
+</code></pre>
+<p>et nous pouvons charger le fichier gltf comme ceci :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const gltf = await loadGLTF('resources/models/killer_whale/whale.CYCLES.gltf');
+</code></pre>
+<p>Pour rendre, nous avons besoin d’un shader qui correspond aux données dans le fichier gltf.
+Regardons les données dans le fichier gltf pour la primitive qui s’y trouve :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">{
+    &quot;name&quot; : &quot;orca&quot;,
+    &quot;primitives&quot; : [
+        {
+            &quot;attributes&quot; : {
+                &quot;JOINTS_0&quot; : 5,
+                &quot;NORMAL&quot; : 2,
+                &quot;POSITION&quot; : 1,
+                &quot;TANGENT&quot; : 3,
+                &quot;TEXCOORD_0&quot; : 4,
+                &quot;WEIGHTS_0&quot; : 6
+            },
+            &quot;indices&quot; : 0
+        }
+    ]
+}
+</code></pre>
+<p>En regardant ça, pour le rendu utilisons juste <code class="notranslate" translate="no">NORMAL</code> et <code class="notranslate" translate="no">POSITION</code>. Nous avons ajouté <code class="notranslate" translate="no">a_</code>
+devant chaque attribut, donc un vertex shader comme celui-ci devrait fonctionner :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+in vec4 a_POSITION;
+in vec3 a_NORMAL;
+
+uniform mat4 u_projection;
+uniform mat4 u_view;
+uniform mat4 u_world;
+
+out vec3 v_normal;
+
+void main() {
+  gl_Position = u_projection * u_view * u_world * a_POSITION;
+  v_normal = mat3(u_world) * a_NORMAL;
+}
+</code></pre>
+<p>et pour le fragment shader utilisons une lumière directionnelle simple :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+precision highp float;
+
+int vec3 v_normal;
+
+uniform vec4 u_diffuse;
+uniform vec3 u_lightDirection;
+
+out vec4 outColor;
+
+void main () {
+  vec3 normal = normalize(v_normal);
+  float light = dot(u_lightDirection, normal) * .5 + .5;
+  outColor = vec4(u_diffuse.rgb * light, u_diffuse.a);
+}
+</code></pre>
+<p>Remarquez que nous prenons le produit scalaire comme dans <a href="webgl-3d-lighting-directional.html">l’article sur les lumières directionnelles</a>
+mais contrairement à cet article, ici le produit scalaire est multiplié par 0.5 et nous ajoutons 0.5.
+Avec un éclairage directionnel normal, la surface est éclairée à 100% quand elle fait directement
+face à la lumière et diminue à 0% quand la surface est perpendiculaire à la lumière. Cela signifie
+que l’ensemble de la moitié du modèle faisant face à l’opposé de la lumière est noir. En multipliant
+par 0.5 et en ajoutant 0.5, nous faisons passer le produit scalaire de -1 &lt;-&gt; 1 à 0 &lt;-&gt; 1,
+ce qui signifie qu’il ne sera noir que lorsqu’il fait face à la direction complètement opposée.
+Cela donne un éclairage bon marché mais agréable pour des tests simples.</p>
+<p>Donc, nous devons compiler et lier les shaders.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// compile et lie les shaders, cherche les emplacements d'attribut et d'uniform
+const meshProgramInfo = twgl.createProgramInfo(gl, [meshVS, fs]);
+</code></pre>
+<p>et ensuite pour le rendu, tout ce qui est différent d’avant est :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const sharedUniforms = {
+  u_lightDirection: m4.normalize([-1, 3, 5]),
+};
+
+function renderDrawables(node) {
+  for(const drawable of node.drawables) {
+      drawable.render(node, projection, view, sharedUniforms);
+  }
+}
+
+for (const scene of gltf.scenes) {
+  // met à jour toutes les matrices monde dans la scène.
+  scene.root.updateWorldMatrix();
+  // parcourt la scène et rend tous les renderables
+  scene.root.traverse(renderDrawables);
+}
+</code></pre>
+<p>Ce qui reste d’avant (non montré ci-dessus) est notre code pour calculer une matrice de projection,
+une matrice de caméra et une matrice de vue. Nous parcourons ensuite chaque scène, appelons
+<code class="notranslate" translate="no">scene.root.updateWorldMatrix</code> qui mettra à jour la matrice monde de tous les nœuds dans ce graphe.
+Puis nous appelons <code class="notranslate" translate="no">scene.root.traverse</code> avec <code class="notranslate" translate="no">renderDrawables</code>.</p>
+<p><code class="notranslate" translate="no">renderDrawables</code> appelle la méthode render de tous les drawables sur ce nœud en passant la
+projection, la vue et les infos d’éclairage via <code class="notranslate" translate="no">sharedUniforms</code>.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-skinning-3d-gltf.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-skinning-3d-gltf.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Maintenant que ça fonctionne, gérons les skins.</p>
+<p>D’abord, créons une classe pour représenter un skin. Elle gérera la liste des joints, qui est
+un autre terme pour les nœuds du graphe de scène qui s’appliquent au skin. Elle aura aussi les
+matrices inverses de bind et gérera la texture dans laquelle nous mettrons les matrices de joints.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">class Skin {
+  constructor(joints, inverseBindMatrixData) {
+    this.joints = joints;
+    this.inverseBindMatrices = [];
+    this.jointMatrices = [];
+    // alloue assez d'espace pour une matrice par joint
+    this.jointData = new Float32Array(joints.length * 16);
+    // crée des vues pour chaque joint et inverseBindMatrix
+    for (let i = 0; i &lt; joints.length; ++i) {
+      this.inverseBindMatrices.push(new Float32Array(
+          inverseBindMatrixData.buffer,
+          inverseBindMatrixData.byteOffset + Float32Array.BYTES_PER_ELEMENT * 16 * i,
+          16));
+      this.jointMatrices.push(new Float32Array(
+          this.jointData.buffer,
+          Float32Array.BYTES_PER_ELEMENT * 16 * i,
+          16));
+    }
+    // crée une texture pour stocker les matrices de joints
+    this.jointTexture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, this.jointTexture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  }
+  update(node) {
+    const globalWorldInverse = m4.inverse(node.worldMatrix);
+    // parcourt chaque joint et obtient sa matrice monde courante,
+    // applique les matrices inverses de bind et stocke
+    // le résultat entier dans la texture
+    for (let j = 0; j &lt; this.joints.length; ++j) {
+      const joint = this.joints[j];
+      const dst = this.jointMatrices[j];
+      m4.multiply(globalWorldInverse, joint.worldMatrix, dst);
+      m4.multiply(dst, this.inverseBindMatrices[j], dst);
+    }
+    gl.bindTexture(gl.TEXTURE_2D, this.jointTexture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, 4, this.joints.length, 0,
+                  gl.RGBA, gl.FLOAT, this.jointData);
+  }
+}
+</code></pre>
+<p>Et comme nous avions un <code class="notranslate" translate="no">MeshRenderer</code>, créons un <code class="notranslate" translate="no">SkinRenderer</code> qui utilise le <code class="notranslate" translate="no">Skin</code>
+pour rendre un mesh skinné.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">class SkinRenderer {
+  constructor(mesh, skin) {
+    this.mesh = mesh;
+    this.skin = skin;
+  }
+  render(node, projection, view, sharedUniforms) {
+    const {skin, mesh} = this;
+    skin.update(node);
+    gl.useProgram(skinProgramInfo.program);
+    for (const primitive of mesh.primitives) {
+      gl.bindVertexArray(primitive.vao);
+      twgl.setUniforms(skinProgramInfo, {
+        u_projection: projection,
+        u_view: view,
+        u_world: node.worldMatrix,
+        u_jointTexture: skin.jointTexture,
+        u_numJoints: skin.joints.length,
+      }, primitive.material.uniforms, sharedUniforms);
+      twgl.drawBufferInfo(gl, primitive.bufferInfo);
+    }
+  }
+}
+</code></pre>
+<p>Vous pouvez voir que c’est très similaire au <code class="notranslate" translate="no">MeshRenderer</code>. Il a une référence à un <code class="notranslate" translate="no">Skin</code>
+qu’il utilise pour mettre à jour toutes les matrices nécessaires au rendu. Puis il suit le
+schéma standard pour le rendu : utilise le programme, configure les attributs, définit tous
+les uniforms avec <code class="notranslate" translate="no">twgl.setUniforms</code> qui lie aussi les textures, et effectue le rendu.</p>
+<p>Nous avons aussi besoin d’un vertex shader qui supporte le skinning :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const skinVS = `#version 300 es
+in vec4 a_POSITION;
+in vec3 a_NORMAL;
+in vec4 a_WEIGHTS_0;
+in uvec4 a_JOINTS_0;
+
+uniform mat4 u_projection;
+uniform mat4 u_view;
+uniform mat4 u_world;
+uniform sampler2D u_jointTexture;
+uniform float u_numJoints;
+
+out vec3 v_normal;
+
+mat4 getBoneMatrix(uint jointNdx) {
+  return mat4(
+    texelFetch(u_jointTexture, ivec2(0, jointNdx), 0),
+    texelFetch(u_jointTexture, ivec2(1, jointNdx), 0),
+    texelFetch(u_jointTexture, ivec2(2, jointNdx), 0),
+    texelFetch(u_jointTexture, ivec2(3, jointNdx), 0));
+}
+
+void main() {
+  mat4 skinMatrix = getBoneMatrix(a_JOINTS_0[0]) * a_WEIGHTS_0[0] +
+                    getBoneMatrix(a_JOINTS_0[1]) * a_WEIGHTS_0[1] +
+                    getBoneMatrix(a_JOINTS_0[2]) * a_WEIGHTS_0[2] +
+                    getBoneMatrix(a_JOINTS_0[3]) * a_WEIGHTS_0[3];
+  mat4 world = u_world * skinMatrix;
+  gl_Position = u_projection * u_view * world * a_POSITION;
+  v_normal = mat3(world) * a_NORMAL;
+}
+`;
+</code></pre>
+<p>C’est essentiellement le même que notre shader de skinning ci-dessus. Nous avons renommé
+les attributs pour correspondre à ce qui est dans le fichier gltf. Le plus grand changement
+est de créer une <code class="notranslate" translate="no">skinMatrix</code>. Dans notre shader de skinning précédent, nous multipliions
+la position par chaque matrice individuelle de joint/os et nous multipliions celles-ci par
+le poids d’influence pour chaque joint. Dans ce cas, nous additionnons plutôt les matrices
+multipliées par les poids et multiplions juste par la position une seule fois. Cela produit
+le même résultat mais nous pouvons utiliser la <code class="notranslate" translate="no">skinMatrix</code> pour multiplier aussi la normale,
+ce que nous devons faire sinon les normales ne correspondront pas au skin.</p>
+<p>Notez aussi que nous multiplions par la matrice <code class="notranslate" translate="no">u_world</code> ici. Nous l’avons soustraite dans
+<code class="notranslate" translate="no">Skin.update</code> avec ces lignes :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*const globalWorldInverse = m4.inverse(node.worldMatrix);
+// parcourt chaque joint et obtient sa matrice monde courante,
+// applique les matrices inverses de bind et stocke
+// le résultat entier dans la texture
+for (let j = 0; j &lt; this.joints.length; ++j) {
+  const joint = this.joints[j];
+  const dst = this.jointMatrices[j];
+*  m4.multiply(globalWorldInverse, joint.worldMatrix, dst);
+</code></pre>
+<p>Que vous le fassiez ou non dépend de vous. La raison de le faire est que cela permet
+d’instancier le skin. En d’autres termes, vous pouvez rendre le mesh skinné dans la même
+pose à plus d’un endroit dans la même image. L’idée étant que si il y a beaucoup de joints,
+faire tout le calcul matriciel pour un mesh skinné est lent, donc vous faites ce calcul une
+fois et ensuite vous pouvez afficher ce mesh skinné à différents endroits juste en le
+re-rendant avec une matrice monde différente.</p>
+<p>C’est peut-être utile pour afficher une foule de personnages. Malheureusement, tous les
+personnages seront dans exactement la même pose, donc je ne suis pas sûr que ce soit vraiment
+utile. À quelle fréquence cette situation se produit-elle réellement ? Vous pouvez supprimer
+la multiplication par l’inverse de la matrice monde du nœud dans <code class="notranslate" translate="no">Skin</code> et supprimer la
+multiplication par <code class="notranslate" translate="no">u_world</code> dans le shader, et le résultat semblera identique, vous ne pourrez
+juste pas <em>instancier</em> ce mesh skinné. Bien sûr, vous pouvez rendre le même mesh skinné
+autant de fois que vous voulez dans différentes poses. Vous aurez besoin d’un objet <code class="notranslate" translate="no">Skin</code>
+différent pointant vers différents nœuds qui sont dans une autre orientation.</p>
+<p>Dans notre code de chargement, quand nous créons des instances de <code class="notranslate" translate="no">Node</code>, si il y a une
+propriété <code class="notranslate" translate="no">skin</code>, nous l’enregistrons pour pouvoir créer un <code class="notranslate" translate="no">Skin</code> pour ça.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+const skinNodes = [];
+const origNodes = gltf.nodes;
+gltf.nodes = gltf.nodes.map((n) =&gt; {
+  const {name, skin, mesh, translation, rotation, scale} = n;
+  const trs = new TRS(translation, rotation, scale);
+  const node = new Node(trs, name);
+  const realMesh =　gltf.meshes[mesh];
++  if (skin !== undefined) {
++    skinNodes.push({node, mesh: realMesh, skinNdx: skin});
++  } else if (realMesh) {
+    node.drawables.push(new MeshRenderer(realMesh));
+  }
+  return node;
+});
+</code></pre>
+<p>Après avoir créé les <code class="notranslate" translate="no">Node</code>s, nous devons créer les <code class="notranslate" translate="no">Skin</code>s. Les skins référencent des nœuds
+via un tableau <code class="notranslate" translate="no">joints</code> qui est une liste d’indices de nœuds qui fournissent les matrices pour
+les joints. Un skin référence aussi un accesseur qui référence les matrices inverses de bind
+pose sauvegardées dans le fichier.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// configure les skins
+gltf.skins = gltf.skins.map((skin) =&gt; {
+  const joints = skin.joints.map(ndx =&gt; gltf.nodes[ndx]);
+  const {stride, array} = getAccessorTypedArrayAndStride(gl, gltf, skin.inverseBindMatrices);
+  return new Skin(joints, array);
+});
+</code></pre>
+<p>Le code ci-dessus appelle <code class="notranslate" translate="no">getAccessorTypedArrayAndStride</code> en lui donnant un index d’accesseur.
+Nous devons fournir ce code. Pour un accesseur donné, nous retournerons une vue <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray">TypedArray</a>
+du type correct pour accéder aux données dans le tampon.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const glTypeToTypedArrayMap = {
+  '5120': Int8Array,    // gl.BYTE
+  '5121': Uint8Array,   // gl.UNSIGNED_BYTE
+  '5122': Int16Array,   // gl.SHORT
+  '5123': Uint16Array,  // gl.UNSIGNED_SHORT
+  '5124': Int32Array,   // gl.INT
+  '5125': Uint32Array,  // gl.UNSIGNED_INT
+  '5126': Float32Array, // gl.FLOAT
+}
+
+// Étant donné un type GL, retourne le TypedArray nécessaire
+function glTypeToTypedArray(type) {
+  return glTypeToTypedArrayMap[type] || throwNoKey(type);
+}
+
+// étant donné un index d'accesseur, retourne à la fois l'accesseur et
+// un TypedArray pour la portion correcte du tampon
+function getAccessorTypedArrayAndStride(gl, gltf, accessorIndex) {
+  const accessor = gltf.accessors[accessorIndex];
+  const bufferView = gltf.bufferViews[accessor.bufferView];
+  const TypedArray = glTypeToTypedArray(accessor.componentType);
+  const buffer = gltf.buffers[bufferView.buffer];
+  return {
+    accessor,
+    array: new TypedArray(
+        buffer,
+        bufferView.byteOffset + (accessor.byteOffset || 0),
+        accessor.count * accessorTypeToNumComponents(accessor.type)),
+    stride: bufferView.byteStride || 0,
+  };
+}
+</code></pre>
+<p>Quelque chose à noter dans le code ci-dessus : nous avons créé une table avec des constantes
+WebGL codées en dur. C’est la première fois que nous faisons ça. Les constantes ne changeront
+pas, c’est donc sûr à faire.</p>
+<p>Maintenant que nous avons les skins, nous pouvons revenir en arrière et les ajouter aux nœuds
+qui les référençaient.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Ajoute des SkinRenderers aux nœuds avec des skins
+for (const {node, mesh, skinNdx} of skinNodes) {
+  node.drawables.push(new SkinRenderer(mesh, gltf.skins[skinNdx]));
+}
+</code></pre>
+<p>Si nous rendions comme ça, nous ne verrions peut-être pas de différence. Nous devons animer
+certains des nœuds. Parcourons juste chaque nœud dans le <code class="notranslate" translate="no">Skin</code>, c’est-à-dire chaque joint,
+et faisons-le tourner un peu sur l’axe X local.</p>
+<p>Pour ce faire, nous sauvegarderons la matrice locale d’origine pour chaque joint. Nous ferons
+ensuite tourner cette matrice originale d’une certaine quantité à chaque image, et en utilisant
+une fonction spéciale, <code class="notranslate" translate="no">m4.decompose</code>, nous convertirons la matrice en position, rotation, échelle
+dans le joint.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const origMatrix = new Map();
+function animSkin(skin, a) {
+  for(let i = 0; i &lt; skin.joints.length; ++i) {
+    const joint = skin.joints[i];
+    // si aucune matrice n'est sauvegardée pour ce joint
+    if (!origMatrix.has(joint)) {
+      // sauvegarde une matrice pour le joint
+      origMatrix.set(joint, joint.source.getMatrix());
+    }
+    // obtient la matrice originale
+    const origMatrix = origRotations.get(joint);
+    // la fait tourner
+    const m = m4.xRotate(origMatrix, a);
+    // la décompose en position, rotation, échelle
+    // dans le joint
+    m4.decompose(m, joint.source.position, joint.source.rotation, joint.source.scale);
+  }
+}
+</code></pre>
+<p>et juste avant le rendu, nous appellerons ça :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">animSkin(gltf.skins[0], Math.sin(time) * .5);
+</code></pre>
+<p>Notez que <code class="notranslate" translate="no">animSkin</code> est principalement un hack. Idéalement, nous chargerions une animation
+créée par un artiste OU nous connaîtrions les noms de joints spécifiques que nous voulons
+manipuler dans le code d’une certaine façon. Dans ce cas, nous voulons juste voir si notre
+skinning fonctionne, et c’est la façon la plus simple de le faire.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-skinning-3d-gltf-skinned.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-skinning-3d-gltf-skinned.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Quelques notes supplémentaires avant de continuer.</p>
+<p>Quand j’ai essayé de faire fonctionner ça pour la première fois, comme pour la plupart des
+programmes, rien n’apparaissait à l’écran.</p>
+<p>Donc, la première chose que j’ai faite a été d’aller à la fin du shader de skinning et
+d’ajouter cette ligne :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  gl_Position = u_projection * u_view *  a_POSITION;
+</code></pre>
+<p>Dans le fragment shader, je l’ai changé pour dessiner juste une couleur unie en ajoutant
+ceci à la fin :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">outColor = vec4(1, 0, 0, 1);
+</code></pre>
+<p>Cela supprime tout le skinning et dessine juste le mesh à l’origine. J’ai ajusté la
+position de la caméra jusqu’à avoir une bonne vue.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const cameraPosition = [5, 0, 5];
+const target = [0, 0, 0];
+</code></pre>
+<p>Cela montrait une silhouette de l’orque, donc je savais qu’au moins une partie des données
+fonctionnait.</p>
+<div class="webgl_center"><img src="../resources/skinning-debug-01.png"></div>
+<p>Ensuite, j’ai fait afficher les normales par le fragment shader :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">outColor = vec4(normalize(v_normal) * .5 + .5, 1);
+</code></pre>
+<p>Les normales vont de -1 à 1, donc <code class="notranslate" translate="no">* .5 + .5</code> les ajuste à 0 à 1 pour les visualiser
+comme des couleurs.</p>
+<p>De retour dans le vertex shader, j’ai juste passé la normale directement :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v_normal = a_NORMAL;
+</code></pre>
+<p>Ce qui m’a donné une vue comme celle-ci :</p>
+<div class="webgl_center"><img src="../resources/skinning-debug-02.png"></div>
+<p>Je ne m’attendais pas à ce que les normales soient mauvaises, mais il était bon de commencer
+avec quelque chose que je m’attendais à voir fonctionner et de confirmer que ça fonctionne
+effectivement.</p>
+<p>Ensuite, j’ai pensé vérifier les poids. Tout ce que j’avais à faire était de passer les poids
+comme normales depuis le vertex shader :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v_normal = a_WEIGHTS_0.xyz * 2. - 1.;
+</code></pre>
+<p>Les poids vont de 0 à 1 mais comme le fragment shader attend des normales, j’ai juste fait
+aller les poids de -1 à 1.</p>
+<p>Cela a initialement produit une sorte de fouillis de couleurs. Une fois que j’ai trouvé le
+bug, j’ai obtenu une image comme celle-ci :</p>
+<div class="webgl_center"><img src="../resources/skinning-debug-03.png"></div>
+<p>Ce n’est pas entièrement évident que c’est correct, mais ça a du sens. On s’attendrait à ce
+que les sommets les plus proches de chaque os aient une couleur forte et à voir des anneaux
+de cette couleur dans les sommets autour de l’os puisque les poids dans cette zone sont
+probablement 1.0 ou du moins tous similaires.</p>
+<p>Puisque l’image originale était si désordonnée, j’ai aussi essayé d’afficher les indices
+de joints avec :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v_normal = vec3(a_JOINTS_0.xyz) / float(textureSize(u_jointTexture, 0).y - 1) * 2. - 1.;
+</code></pre>
+<p>Les indices vont de 0 à numJoints - 1, donc le code ci-dessus donnerait des valeurs de -1 à 1.</p>
+<p>Une fois les choses corrigées, j’ai obtenu une image comme celle-ci :</p>
+<div class="webgl_center"><img src="../resources/skinning-debug-04.png"></div>
+<p>Là encore, c’était initialement un fouillis de couleurs. L’image ci-dessus montre ce à quoi
+ça ressemblait après correction. C’est à peu près ce qu’on s’attendrait à voir pour les poids
+de l’orque. Des anneaux de couleur autour de chaque os.</p>
+<p>Le bug était lié à la façon dont <code class="notranslate" translate="no">twgl.createBufferInfoFromArrays</code>, que j’ai utilisé à la place
+de twgl quand j’ai commencé à faire cet exemple, déterminait le nombre de composants. Il y avait
+des cas où il ignorait celui spécifié, essayait de deviner, et devinait incorrectement. Une fois
+le bug corrigé, j’ai supprimé ces modifications aux shaders. Notez que je les ai laissées dans
+le code ci-dessus commentées si vous voulez jouer avec.</p>
+<p>Je veux préciser que le code ci-dessus est destiné à expliquer le skinning. Il n’est pas
+destiné à être un moteur de skinning prêt pour la production. Je pense que si nous essayions
+de faire un moteur de qualité production, nous rencontrerions beaucoup de choses que nous
+voudrions probablement changer, mais j’espère que parcourir cet exemple aide à démystifier
+un peu le skinning.</p>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-skinning.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-skinning.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-skinning.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-skinning.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-skinning.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-skinning.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-skinning.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-skinning.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fondamentaux</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-getting-webgl2.html">Comment utiliser WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fundamentals.html">Les bases</a></li>
+<li><a href="/webgl/lessons/fr/webgl-how-it-works.html">Comment ça marche</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shaders-and-glsl.html">Shaders et GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Diagramme d'état</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl2-whats-new.html">Quoi de neuf dans WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2.html">Passer de WebGL1 à WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2-fundamentals.html">Différences de WebGLFundamentals.org à WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Traitement d'images</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-image-processing.html">Traitement d'images</a></li>
+<li><a href="/webgl/lessons/fr/webgl-image-processing-continued.html">Traitement d'images - Suite</a></li>
+        </ul>
+  <li>Translation, rotation, mise à l'échelle 2D et calcul matriciel</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-translation.html">Translation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-rotation.html">Rotation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-scale.html">Mise à l'échelle 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrices.html">Matrices 2D</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-orthographic.html">Projection Orthographique 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective.html">Perspective 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-camera.html">3D - Caméras</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-naming.html">3D - Nommage des matrices</a></li>
+        </ul>
+  <li>Éclairage</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-lighting-directional.html">Éclairage directionnel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-point.html">Éclairage ponctuel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-spot.html">Éclairage spot</a></li>
+        </ul>
+  <li>Structure et organisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-less-code-more-fun.html">Moins de code, plus de plaisir</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-multiple-things.html">Dessiner plusieurs choses</a></li>
+<li><a href="/webgl/lessons/fr/webgl-scene-graph.html">Graphes de scène</a></li>
+        </ul>
+  <li>Géométrie</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-geometry-lathe.html">3D Géométrie - Tour</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj.html">Charger des fichiers .obj</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj-w-mtl.html">Charger des fichiers .obj avec .mtl</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/fr/webgl-data-textures.html">Textures de données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2-textures.html">Utiliser 2 textures ou plus</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cors-permission.html">Images Cross Origin</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective-correct-texturemapping.html">Mappage de Texture avec Correction de Perspective</a></li>
+<li><a href="/webgl/lessons/fr/webgl-planar-projection-mapping.html">Projection planaire et en perspective</a></li>
+        </ul>
+  <li>Rendu vers une texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-render-to-texture.html">Rendu vers une texture</a></li>
+        </ul>
+  <li>Ombres</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-shadows.html">Ombres</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrix-stack.html">2D - Pile de matrices</a></li>
+<li><a href="/webgl/lessons/fr/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/fr/webgl-environment-maps.html">Cartes d'environnement</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fog.html">Brouillard</a></li>
+<li><a href="/webgl/lessons/fr/webgl-picking.html">Picking (cliquer sur des objets)</a></li>
+        </ul>
+  <li>Texte</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-text-html.html">Texte - HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-canvas2d.html">Texte - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-texture.html">Texte - Utiliser une texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-glyphs.html">Texte - Utiliser une texture de glyphes</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Astuces</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-smallest-programs.html">Plus petits programmes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-without-data.html">Dessiner sans données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/fr/webgl-pulling-vertices.html">Extraction de sommets</a></li>
+        </ul>
+  <li>Optimisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-indexed-vertices.html">Sommets indexés (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-instanced-drawing.html">Dessin instancié</a></li>
+        </ul>
+  <li>Divers</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-setup-and-installation.html">Installation et configuration</a></li>
+<li><a href="/webgl/lessons/fr/webgl-boilerplate.html">Code standard (Boilerplate)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-resizing-the-canvas.html">Redimensionner le Canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/fr/webgl-points-lines-triangles.html">Points, Lignes et Triangles</a></li>
+<li><a href="/webgl/lessons/fr/webgl-multiple-views.html">Vues multiples, Canvas multiples</a></li>
+<li><a href="/webgl/lessons/fr/webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+<li><a href="/webgl/lessons/fr/webgl-and-alpha.html">WebGL2 et Alpha</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-vs-3d-library.html">Bibliothèques 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-vs-math.html">WebGL2 Matrices vs Matrices Mathématiques</a></li>
+<li><a href="/webgl/lessons/fr/webgl-precision-issues.html">Problèmes de précision</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#screenshot">Prendre une capture d'écran</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#preservedrawingbuffer">Empêcher l'effacement du canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#tabindex">Obtenir des entrées clavier depuis un canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#html-background">Utiliser WebGL2 comme arrière-plan en HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cross-platform-issues.html">Problèmes multi-plateformes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Référence</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-attributes.html">Attributs</a></li>
+<li><a href="/webgl/lessons/fr/webgl-texture-units.html">Unités de Texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/fr/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/fr/webgl-references.html">Références</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentation de l'API</a></li>
+  <li>
+    <a href="https://twgljs.org">TWGL, une bibliothèque utilitaire WebGL</a>
+  </li>
+  <li>
+    <a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a>
+  </li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Problème ou bug ? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Créez un ticket sur github</a>.</div>
+<div class="lesson-comment-notes">
+   Utilisez <b>&lt;pre&gt;&lt;code&gt;</b>le code ici<b>&lt;/code&gt;&lt;/pre&gt;</b> pour les blocs de code
+</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Skinning';
+            var disqus_title = 'WebGL2 Skinning';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Merci à <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>pour <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

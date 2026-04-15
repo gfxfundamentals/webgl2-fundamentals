@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/fr/webgl-text-texture.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Afficher du texte dans WebGL en utilisant des textures">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-text-texture_fr.jpg">
+
+<meta property="og:title" content="WebGL2 Texte - Textures">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-text-texture_fr.jpg">
+<meta property="og:description" content="Afficher du texte dans WebGL en utilisant des textures">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-text-texture.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Texte - Textures">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-text-texture.html">
+<meta name="twitter:description" content="Afficher du texte dans WebGL en utilisant des textures">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-text-texture_fr.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-text-texture.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-text-texture_fr.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-text-texture.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-text-texture.html",
+      "inLanguage":"fr",
+      "name":"WebGL2 Texte - Textures",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-text-texture.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Texte - Textures</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/fr/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-text-texture.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-text-texture.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/webgl/lessons/fr/webgl-text-texture.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-text-texture.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-text-texture.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-text-texture.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-text-texture.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-text-texture.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-text-texture.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-text-texture.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-text-texture.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-text-texture.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-text-texture.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-text-texture.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-text-texture.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-text-texture.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Table des matières</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/fr/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Texte - Textures</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Cet article est la suite de nombreux articles sur WebGL. Le dernier
+traitait de <a href="webgl-text-canvas2d.html">l’utilisation de Canvas 2D pour rendre du texte par-dessus un canvas WebGL</a>.
+Si vous ne l’avez pas lu, vous voudrez peut-être le consulter avant de continuer.</p>
+<p>Dans le dernier article, nous avons vu <a href="webgl-text-canvas2d.html">comment utiliser un canvas 2D pour dessiner du texte par-dessus votre
+scène WebGL</a>. Cette technique fonctionne et est facile à mettre en œuvre, mais elle a
+une limitation : le texte ne peut pas être occulté par d’autres objets 3D. Pour ce faire, nous
+avons réellement besoin de dessiner le texte dans WebGL.</p>
+<p>La façon la plus simple de le faire est de créer des textures contenant du texte. Vous pourriez par exemple
+aller dans Photoshop ou un autre programme de dessin et créer une image avec du texte dedans.</p>
+<img class="webgl_center" src="../resources/my-awesme-text.png" />
+<p>Ensuite, créez de la géométrie de plan et affichez-la. C’est en fait comment certains jeux sur lesquels j’ai
+travaillé affichaient tout leur texte. Par exemple, Locoroco n’avait qu’environ 270 chaînes. Il était
+localisé en 17 langues. Nous avions une feuille Excel avec toutes les langues et un script
+qui lançait Photoshop et générait une texture, une pour chaque message dans chaque langue.</p>
+<p>Bien sûr, vous pouvez aussi générer les textures à l’exécution. Puisque WebGL est dans le navigateur,
+nous pouvons à nouveau nous appuyer sur l’API Canvas 2D pour aider à générer nos textures.</p>
+<p>En partant des exemples de <a href="webgl-text-canvas2d.html">l’article précédent</a>,
+ajoutons une fonction pour remplir un canvas 2D avec du texte</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var textCtx = document.createElement(&quot;canvas&quot;).getContext(&quot;2d&quot;);
+
+// Met le texte au centre du canvas.
+function makeTextCanvas(text, width, height) {
+  textCtx.canvas.width  = width;
+  textCtx.canvas.height = height;
+  textCtx.font = &quot;20px monospace&quot;;
+  textCtx.textAlign = &quot;center&quot;;
+  textCtx.textBaseline = &quot;middle&quot;;
+  textCtx.fillStyle = &quot;black&quot;;
+  textCtx.clearRect(0, 0, textCtx.canvas.width, textCtx.canvas.height);
+  textCtx.fillText(text, width / 2, height / 2);
+  return textCtx.canvas;
+}
+</code></pre>
+<p>Maintenant que nous devons dessiner 2 choses différentes dans WebGL, le ‘F’ et notre texte, je vais
+passer à <a href="webgl-drawing-multiple-things.html">l’utilisation de fonctions helpers comme décrit dans un article précédent</a>.
+Si ce que sont <code class="notranslate" translate="no">programInfo</code>, <code class="notranslate" translate="no">bufferInfo</code>, etc. n’est pas clair, consultez cet article.</p>
+<p>Donc, créons le ‘F’ et un quad unitaire.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Créer des données pour le 'F'
+var fBufferInfo = primitives.create3DFBufferInfo(gl);
+var fVAO = webglUtils.createVAOFromBufferInfo(
+    gl, fProgramInfo, fBufferInfo);
+
+// Créer un quad unitaire pour le 'texte'
+var textBufferInfo = primitives.createXYQuadBufferInfo(gl, 1);
+var textVAO = webglUtils.createVAOFromBufferInfo(
+    gl, textProgramInfo, textBufferInfo);
+</code></pre>
+<p>Le quad XY est un quad (carré) de 1 unité de taille. Celui-ci est centré à l’origine. Étant de 1 unité,
+ses extrémités sont -0.5, -0.5 et 0.5, 0.5.</p>
+<p>Ensuite, créez 2 shaders</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// configurer les programmes GLSL
+var fProgramInfo = webglUtils.createProgramInfo(
+    gl, [fVertexShaderSource, fFragmentShaderSource]);
+var textProgramInfo = webglUtils.createProgramInfo(
+    gl, [textVertexShaderSource, textFragmentShaderSource]);
+</code></pre>
+<p>Et créez notre texture de texte. Nous générons des mips car le texte deviendra petit</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// créer la texture de texte.
+var textCanvas = makeTextCanvas(&quot;Hello!&quot;, 100, 26);
+var textWidth  = textCanvas.width;
+var textHeight = textCanvas.height;
+var textTex = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, textTex);
+gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textCanvas);
+gl.generateMipmap(gl.TEXTURE_2D);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+</code></pre>
+<p>Configurez les uniforms pour le ‘F’ et le texte</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var fUniforms = {
+  u_matrix: m4.identity(),
+};
+
+var textUniforms = {
+  u_matrix: m4.identity(),
+  u_texture: textTex,
+};
+</code></pre>
+<p>Maintenant, quand nous calculons les matrices pour le F, nous commençons avec la viewMatrix au lieu
+de la viewProjectionMatrix comme dans d’autres exemples. Nous la multiplions par les parties
+qui constituent l’orientation de notre F.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var fViewMatrix = m4.translate(viewMatrix,
+    translation[0] + xx * spread, translation[1] + yy * spread, translation[2]);
+fViewMatrix = m4.xRotate(fViewMatrix, rotation[0]);
+fViewMatrix = m4.yRotate(fViewMatrix, rotation[1] + yy * xx * 0.2);
+fViewMatrix = m4.zRotate(fViewMatrix, rotation[2] + now + (yy * 3 + xx) * 0.1);
+fViewMatrix = m4.scale(fViewMatrix, scale[0], scale[1], scale[2]);
+fViewMatrix = m4.translate(fViewMatrix, -50, -75, 0);
+</code></pre>
+<p>Puis enfin nous multiplions par la projectionMatrix lors de la définition de notre valeur d’uniform.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">fUniforms.u_matrix = m4.multiply(projectionMatrix, fViewMatrix);
+</code></pre>
+<p>Il est important de noter ici que <code class="notranslate" translate="no">projectionMatrix</code> est à gauche. Cela nous permet de
+multiplier la projectionMatrix comme si c’était la première matrice. Normalement,
+nous multiplions à droite.</p>
+<p>Dessiner le F ressemble à ceci</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// configurer pour dessiner le 'F'
+gl.useProgram(fProgramInfo.program);
+
+// configurer les attributs et buffers pour le F
+gl.bindVertexArray(fVAO);
+
+fUniforms.u_matrix = m4.multiply(projectionMatrix, fViewMatrix);
+
+webglUtils.setUniforms(fProgramInfo, fUniforms);
+
+webglUtils.drawBufferInfo(gl, fBufferInfo);
+</code></pre>
+<p>Pour le texte, nous commençons avec la projectionMatrix puis prenons seulement la position
+depuis la fViewMatrix que nous avons sauvegardée avant. Cela nous donnera un espace devant la vue.
+Nous devons aussi mettre à l’échelle notre quad unitaire pour correspondre aux dimensions de la texture.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// utiliser juste la position de vue du 'F' pour le texte
+var textMatrix = m4.translate(projectionMatrix,
+    fViewMatrix[12], fViewMatrix[13], fViewMatrix[14]);
+// mettre le F à l'échelle dont on a besoin.
+textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
+</code></pre>
+<p>Et ensuite rendre le texte</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// configurer pour dessiner le texte.
+gl.useProgram(textProgramInfo.program);
+
+gl.bindVertexArray(textVAO);
+
+m4.copy(textMatrix, textUniforms.u_matrix);
+webglUtils.setUniforms(textProgramInfo, textUniforms);
+
+// Dessiner le texte.
+webglUtils.drawBufferInfo(gl, textBufferInfo);
+</code></pre>
+<p>Voilà donc</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Vous remarquerez que parfois des parties de notre texte couvrent des parties de nos F. C’est parce que
+nous dessinons un quad. La couleur par défaut du canvas est noir transparent (0,0,0,0) et
+nous dessinons cette couleur dans le quad. Nous pourrions plutôt mélanger nos pixels.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.enable(gl.BLEND);
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+</code></pre>
+<p>Cela fait qu’il prend le pixel source (la couleur de notre fragment shader) et le combine
+avec le pixel de destination (la couleur dans le canvas) selon la fonction de mélange. Nous avons défini la
+fonction de mélange à <code class="notranslate" translate="no">SRC_ALPHA</code> pour la source et <code class="notranslate" translate="no">ONE_MINUS_SRC_ALPHA</code> pour la destination.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">result = dest * (1 - src_alpha) + src * src_alpha
+</code></pre>
+<p>donc par exemple si la destination est verte <code class="notranslate" translate="no">0,1,0,1</code> et la source est rouge <code class="notranslate" translate="no">1,0,0,1</code> on aurait</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">src = [1, 0, 0, 1]
+dst = [0, 1, 0, 1]
+src_alpha = src[3]  // c'est 1
+result = dst * (1 - src_alpha) + src * src_alpha
+
+// ce qui est la même chose que
+result = dst * 0 + src * 1
+
+// ce qui est la même chose que
+result = src
+</code></pre>
+<p>Pour les parties de la texture avec du noir transparent <code class="notranslate" translate="no">0,0,0,0</code></p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">src = [0, 0, 0, 0]
+dst = [0, 1, 0, 1]
+src_alpha = src[3]  // c'est 0
+result = dst * (1 - src_alpha) + src * src_alpha
+
+// ce qui est la même chose que
+result = dst * 1 + src * 0
+
+// ce qui est la même chose que
+result = dst
+</code></pre>
+<p>Voici le résultat avec le mélange activé.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-enable-blend.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-enable-blend.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Vous pouvez voir que c’est mieux mais pas encore parfait. Si vous regardez
+de près, vous verrez parfois ce problème</p>
+<img class="webgl_center" src="../resources/text-zbuffer-issue.png" />
+<p>Que se passe-t-il ? Nous dessinons actuellement un F puis son texte, puis le F suivant
+puis son texte, répété. Nous avons encore un <a href="webgl-3d-orthographic.html">depth buffer</a> donc quand nous dessinons le
+texte d’un F, même si le mélange a fait que certains pixels restent la couleur de fond,
+le depth buffer a quand même été mis à jour. Quand nous dessinons le F suivant, si des parties de ce F sont
+derrière ces pixels d’un texte dessiné précédemment, ils ne seront pas dessinés.</p>
+<p>Nous venons de rencontrer l’un des problèmes les plus difficiles du rendu 3D sur un GPU.
+<strong>La transparence a des problèmes</strong>.</p>
+<p>La solution la plus courante pour presque tout le rendu transparent
+est de dessiner toutes les choses opaques d’abord, puis après, dessiner toutes les choses transparentes
+triées par distance z avec le test du depth buffer activé mais la mise à jour du depth buffer désactivée.</p>
+<p>Séparons d’abord le dessin des choses opaques (les F) des choses transparentes (le texte).
+D’abord nous déclarerons quelque chose pour mémoriser les positions du texte.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var textPositions = [];
+</code></pre>
+<p>Et dans la boucle de rendu des F, nous mémoriserons ces positions</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// mémoriser la position pour le texte
+textPositions.push([fViewMatrix[12], fViewMatrix[13], fViewMatrix[14]]);
+</code></pre>
+<p>Avant de dessiner les ‘F’, nous désactiverons le mélange et activerons l’écriture dans le depth buffer</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.disable(gl.BLEND);
+gl.depthMask(true);
+</code></pre>
+<p>Pour dessiner le texte, nous activerons le mélange et désactiverons l’écriture dans le depth buffer.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.enable(gl.BLEND);
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+gl.depthMask(false);
+</code></pre>
+<p>Et ensuite dessiner le texte à toutes les positions que nous avons sauvegardées</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">textPositions.forEach(function(pos) {
+  // utiliser juste la position de vue du 'F' pour le texte
+  var textMatrix = m4.translate(projectionMatrix,
+      pos[0], pos[1], pos[2]);
+  // mettre le F à l'échelle dont on a besoin.
+  textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
+
+  // configurer pour dessiner le texte.
+  gl.useProgram(textProgramInfo.program);
+
+  gl.bindVertexArray(textVAO);
+
+  m4.copy(textMatrix, textUniforms.u_matrix);
+  webglUtils.setUniforms(textProgramInfo, textUniforms);
+
+  // Dessiner le texte.
+  webglUtils.drawBufferInfo(gl, textBufferInfo);
+});
+</code></pre>
+<p>Et maintenant ça fonctionne en grande partie</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-separate-opaque-from-transparent.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-separate-opaque-from-transparent.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Remarquez que nous n’avons pas trié comme je l’ai mentionné ci-dessus. Dans ce cas, puisque nous dessinons un texte principalement opaque,
+il n’y aura probablement aucune différence notable si nous trions, donc je laisserai ça pour un autre article.</p>
+<p>Un autre problème est que le texte intersecte son propre ‘F’. Il n’y a pas vraiment de solution spécifique pour ça. Si vous faisiez un MMO et vouliez que le texte de chaque
+joueur apparaisse toujours, vous pourriez essayer de faire apparaître le texte au-dessus de la tête. Traduisez-le simplement
+de +Y un certain nombre d’unités, assez pour s’assurer qu’il était toujours au-dessus du joueur.</p>
+<p>Vous pouvez aussi le déplacer vers l’avant, vers la caméra. Faisons ça ici pour le plaisir.
+Parce que ‘pos’ est dans l’espace de vue, cela signifie qu’il est relatif à l’œil (qui est à 0,0,0 dans l’espace de vue).
+Donc si on le normalise, on obtient un vecteur unitaire pointant de l’œil vers ce point, qu’on peut ensuite
+multiplier par un certain montant pour déplacer le texte d’un nombre spécifique d’unités vers ou loin de l’œil.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">+// parce que pos est dans l'espace de vue, cela signifie que c'est un vecteur depuis l'œil vers
++// une certaine position. Donc on translate le long de ce vecteur en revenant vers l'œil d'une certaine distance
++var fromEye = m4.normalize(pos);
++var amountToMoveTowardEye = 150;  // parce que le F fait 150 unités de long
++var viewX = pos[0] - fromEye[0] * amountToMoveTowardEye;
++var viewY = pos[1] - fromEye[1] * amountToMoveTowardEye;
++var viewZ = pos[2] - fromEye[2] * amountToMoveTowardEye;
+
+var textMatrix = m4.translate(projectionMatrix,
+*    viewX, viewY, viewZ);
+// mettre le F à l'échelle dont on a besoin.
+textMatrix = m4.scale(textMatrix, textWidth, textHeight, 1);
+</code></pre>
+<p>Voici ça.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-moved-toward-view.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-moved-toward-view.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Vous pourriez encore remarquer un problème avec les bords des lettres.</p>
+<img class="webgl_center" src="../resources/text-gray-outline.png" />
+<p>Le problème ici est que l’API Canvas 2D produit uniquement des valeurs d’alpha prémultipliées.
+Quand nous téléversons le contenu du canvas vers une texture, WebGL essaie de dé-prémultiplier
+les valeurs mais il ne peut pas le faire parfaitement car l’alpha prémultiplié est avec perte.</p>
+<p>Pour corriger ça, disons à WebGL de ne pas dé-prémultiplier</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+</code></pre>
+<p>Cela dit à WebGL de fournir des valeurs d’alpha prémultipliées à <code class="notranslate" translate="no">gl.texImage2D</code> et <code class="notranslate" translate="no">gl.texSubImage2D</code>.
+Si les données passées à <code class="notranslate" translate="no">gl.texImage2D</code> sont déjà prémultipliées comme c’est le cas pour les données Canvas 2D,
+WebGL peut simplement les passer telles quelles.</p>
+<p>Nous devons aussi changer la fonction de mélange</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">-gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
++gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+</code></pre>
+<p>L’ancienne multipliait la couleur source par son alpha. C’est ce que <code class="notranslate" translate="no">SRC_ALPHA</code> signifie. Mais
+maintenant les données de notre texture ont déjà été multipliées par leur alpha. C’est ce que prémultiplié signifie.
+Donc nous n’avons pas besoin que le GPU fasse la multiplication. Le définir à <code class="notranslate" translate="no">ONE</code> signifie multiplier par 1.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-premultiplied-alpha.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-premultiplied-alpha.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Les bords ont disparu maintenant.</p>
+<p>Que faire si vous voulez garder le texte à une taille fixe mais quand même trier correctement ? Eh bien, si vous vous souvenez
+de <a href="webgl-3d-perspective.html">l’article sur la perspective</a>, notre matrice de perspective va
+mettre à l’échelle notre objet par <code class="notranslate" translate="no">-Z</code> pour le rendre plus petit à distance. Donc, on peut juste mettre à l’échelle
+par <code class="notranslate" translate="no">-Z</code> fois une échelle désirée pour compenser.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
+// parce que pos est dans l'espace de vue, cela signifie que c'est un vecteur depuis l'œil vers
+// une certaine position. Donc on translate le long de ce vecteur en revenant vers l'œil d'une certaine distance
+var fromEye = normalize(pos);
+var amountToMoveTowardEye = 150;  // parce que le F fait 150 unités de long
+var viewX = pos[0] - fromEye[0] * amountToMoveTowardEye;
+var viewY = pos[1] - fromEye[1] * amountToMoveTowardEye;
+var viewZ = pos[2] - fromEye[2] * amountToMoveTowardEye;
++var desiredTextScale = -1 / gl.canvas.height;  // pixels 1x1
++var scale = viewZ * desiredTextScale;
+
+var textMatrix = m4.translate(projectionMatrix,
+    viewX, viewY, viewZ);
+// mettre le F à l'échelle dont on a besoin.
+textMatrix = m4.scale(textMatrix, textWidth * scale, textHeight * scale, 1);
+...
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-consistent-scale.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-consistent-scale.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Si vous voulez dessiner du texte différent pour chaque F, vous devriez créer une nouvelle texture pour chaque
+F et simplement mettre à jour les uniforms de texture pour ce F.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// créer les textures de texte, une pour chaque F
+var textTextures = [
+  &quot;anna&quot;,   // 0
+  &quot;colin&quot;,  // 1
+  &quot;james&quot;,  // 2
+  &quot;danny&quot;,  // 3
+  &quot;kalin&quot;,  // 4
+  &quot;hiro&quot;,   // 5
+  &quot;eddie&quot;,  // 6
+  &quot;shu&quot;,    // 7
+  &quot;brian&quot;,  // 8
+  &quot;tami&quot;,   // 9
+  &quot;rick&quot;,   // 10
+  &quot;gene&quot;,   // 11
+  &quot;natalie&quot;,// 12,
+  &quot;evan&quot;,   // 13,
+  &quot;sakura&quot;, // 14,
+  &quot;kai&quot;,    // 15,
+].map(function(name) {
+  var textCanvas = makeTextCanvas(name, 100, 26);
+  var textWidth  = textCanvas.width;
+  var textHeight = textCanvas.height;
+  var textTex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, textTex);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textCanvas);
+  gl.generateMipmap(gl.TEXTURE_2D);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  return {
+    texture: textTex,
+    width: textWidth,
+    height: textHeight,
+  };
+});
+</code></pre>
+<p>Puis au moment du rendu, sélectionner une texture</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">*textPositions.forEach(function(pos, ndx) {
+
+  +// sélectionner une texture
+  +var tex = textTextures[ndx];
+</code></pre>
+<p>Utiliser la taille de cette texture dans nos calculs de matrice</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  var textMatrix = m4.translate(projectionMatrix,
+      viewX, viewY, viewZ);
+  // mettre le F à l'échelle dont on a besoin.
+  *textMatrix = m4.scale(textMatrix, tex.width * scale, tex.height * scale, 1);
+</code></pre>
+<p>et définir l’uniform pour la texture avant de dessiner</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  textUniforms.u_texture = tex.texture;
+</code></pre>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-different-text.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-different-text.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Nous avons utilisé du noir pour dessiner le texte dans le canvas.
+Ce serait plus utile si nous rendions le texte en blanc. Ensuite, nous pourrions multiplier
+le texte par une couleur et le rendre de n’importe quelle couleur souhaitée.</p>
+<p>D’abord, nous changerons le shader de texte pour multiplier par une couleur</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
+in vec2 v_texcoord;
+
+uniform sampler2D u_texture;
++uniform vec4 u_color;
+
+out vec4 outColor;
+
+void main() {
+*   outColor = texture2D(u_texture, v_texcoord) * u_color;
+}
+</code></pre>
+<p>Et quand nous dessinons le texte dans le canvas, utilisons le blanc</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">textCtx.fillStyle = &quot;white&quot;;
+</code></pre>
+<p>Ensuite, nous créerons des couleurs</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// couleurs, 1 pour chaque F
+var colors = [
+  [0.0, 0.0, 0.0, 1], // 0
+  [1.0, 0.0, 0.0, 1], // 1
+  [0.0, 1.0, 0.0, 1], // 2
+  [1.0, 1.0, 0.0, 1], // 3
+  [0.0, 0.0, 1.0, 1], // 4
+  [1.0, 0.0, 1.0, 1], // 5
+  [0.0, 1.0, 1.0, 1], // 6
+  [0.5, 0.5, 0.5, 1], // 7
+  [0.5, 0.0, 0.0, 1], // 8
+  [0.0, 0.0, 0.0, 1], // 9
+  [0.5, 5.0, 0.0, 1], // 10
+  [0.0, 5.0, 0.0, 1], // 11
+  [0.5, 0.0, 5.0, 1], // 12,
+  [0.0, 0.0, 5.0, 1], // 13,
+  [0.5, 5.0, 5.0, 1], // 14,
+  [0.0, 5.0, 5.0, 1], // 15,
+];
+</code></pre>
+<p>Au moment du dessin, nous sélectionnons une couleur</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// définir l'uniform de couleur
+textUniforms.u_color = colors[ndx];
+</code></pre>
+<p>Couleurs</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-texture-different-colors.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-texture-different-colors.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Cette technique est en fait la technique que la plupart des navigateurs utilisent quand ils sont accélérés par GPU.
+Ils génèrent des textures avec votre contenu HTML et tous les différents styles que vous avez appliqués
+et tant que ce contenu ne change pas, ils peuvent simplement rendre à nouveau la texture
+quand vous faites défiler, etc. Bien sûr, si vous mettez à jour les choses tout le temps, alors
+cette technique pourrait devenir un peu lente car régénérer les textures et les re-téléverser
+vers le GPU est une opération relativement lente.</p>
+<p>Dans <a href="webgl-text-glyphs.html">le prochain article, nous verrons une technique qui est probablement mieux pour les cas où
+les choses se mettent à jour souvent</a>.</p>
+<div class="webgl_bottombar">
+<h3>Mettre le texte à l'échelle sans pixelisation</h3>
+<p>
+Vous pourriez remarquer dans les exemples avant que nous commencions à utiliser une taille cohérente que
+le texte devient très pixelisé quand il se rapproche de la caméra. Comment corrigeons-nous ça ?
+</p>
+<p>
+Eh bien, honnêtement il n'est pas très courant de mettre à l'échelle du texte 2D en 3D. Regardez la plupart des jeux
+ou des éditeurs 3D et vous verrez que le texte est presque toujours d'une taille cohérente
+quelle que soit la distance ou la proximité avec la caméra. En fait, souvent ce texte
+pourrait être dessiné en 2D plutôt qu'en 3D de sorte que même si quelqu'un ou quelque chose est
+derrière autre chose comme un coéquipier derrière un mur, vous pouvez quand même lire le texte.
+</p>
+<p>Si vous voulez vraiment mettre à l'échelle du texte 2D en 3D, je ne connais pas d'options faciles.
+Voici quelques idées qui me viennent à l'esprit</p>
+<ul>
+<li>Créer des textures de différentes tailles avec des polices à différentes résolutions. Vous utilisez ensuite
+les textures de plus haute résolution à mesure que le texte s'agrandit. C'est ce qu'on appelle
+le LOD (utiliser différents niveaux de détail).</li>
+<li>Une autre option serait de rendre les textures avec la taille exacte correcte du
+texte à chaque frame. Ce serait probablement très lent.</li>
+<li>Une autre encore serait de faire du texte 2D à partir de géométrie. En d'autres termes, au lieu
+de dessiner du texte dans une texture, créez du texte à partir de beaucoup de triangles. Ça
+fonctionne, mais ça a d'autres problèmes : le petit texte ne sera pas rendu correctement et pour le grand
+texte, vous commencerez à voir les triangles.</li>
+<li>Une autre option est <a href="https://www.google.com/search?q=loop+blinn+curve+rendering">d'utiliser des shaders très spéciaux qui rendent des courbes</a>. C'est très cool
+mais bien au-delà de ce que je peux expliquer ici.</li>
+</ul>
+</div>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-text-texture.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-text-texture.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-text-texture.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-text-texture.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-text-texture.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-text-texture.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-text-texture.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-text-texture.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fondamentaux</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-getting-webgl2.html">Comment utiliser WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fundamentals.html">Les bases</a></li>
+<li><a href="/webgl/lessons/fr/webgl-how-it-works.html">Comment ça marche</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shaders-and-glsl.html">Shaders et GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Diagramme d'état</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl2-whats-new.html">Quoi de neuf dans WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2.html">Passer de WebGL1 à WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2-fundamentals.html">Différences de WebGLFundamentals.org à WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Traitement d'images</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-image-processing.html">Traitement d'images</a></li>
+<li><a href="/webgl/lessons/fr/webgl-image-processing-continued.html">Traitement d'images - Suite</a></li>
+        </ul>
+  <li>Translation, rotation, mise à l'échelle 2D et calcul matriciel</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-translation.html">Translation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-rotation.html">Rotation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-scale.html">Mise à l'échelle 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrices.html">Matrices 2D</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-orthographic.html">Projection Orthographique 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective.html">Perspective 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-camera.html">3D - Caméras</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-naming.html">3D - Nommage des matrices</a></li>
+        </ul>
+  <li>Éclairage</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-lighting-directional.html">Éclairage directionnel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-point.html">Éclairage ponctuel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-spot.html">Éclairage spot</a></li>
+        </ul>
+  <li>Structure et organisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-less-code-more-fun.html">Moins de code, plus de plaisir</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-multiple-things.html">Dessiner plusieurs choses</a></li>
+<li><a href="/webgl/lessons/fr/webgl-scene-graph.html">Graphes de scène</a></li>
+        </ul>
+  <li>Géométrie</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-geometry-lathe.html">3D Géométrie - Tour</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj.html">Charger des fichiers .obj</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj-w-mtl.html">Charger des fichiers .obj avec .mtl</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/fr/webgl-data-textures.html">Textures de données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2-textures.html">Utiliser 2 textures ou plus</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cors-permission.html">Images Cross Origin</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective-correct-texturemapping.html">Mappage de Texture avec Correction de Perspective</a></li>
+<li><a href="/webgl/lessons/fr/webgl-planar-projection-mapping.html">Projection planaire et en perspective</a></li>
+        </ul>
+  <li>Rendu vers une texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-render-to-texture.html">Rendu vers une texture</a></li>
+        </ul>
+  <li>Ombres</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-shadows.html">Ombres</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrix-stack.html">2D - Pile de matrices</a></li>
+<li><a href="/webgl/lessons/fr/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/fr/webgl-environment-maps.html">Cartes d'environnement</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fog.html">Brouillard</a></li>
+<li><a href="/webgl/lessons/fr/webgl-picking.html">Picking (cliquer sur des objets)</a></li>
+        </ul>
+  <li>Texte</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-text-html.html">Texte - HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-canvas2d.html">Texte - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-texture.html">Texte - Utiliser une texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-glyphs.html">Texte - Utiliser une texture de glyphes</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Astuces</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-smallest-programs.html">Plus petits programmes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-without-data.html">Dessiner sans données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/fr/webgl-pulling-vertices.html">Extraction de sommets</a></li>
+        </ul>
+  <li>Optimisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-indexed-vertices.html">Sommets indexés (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-instanced-drawing.html">Dessin instancié</a></li>
+        </ul>
+  <li>Divers</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-setup-and-installation.html">Installation et configuration</a></li>
+<li><a href="/webgl/lessons/fr/webgl-boilerplate.html">Code standard (Boilerplate)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-resizing-the-canvas.html">Redimensionner le Canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/fr/webgl-points-lines-triangles.html">Points, Lignes et Triangles</a></li>
+<li><a href="/webgl/lessons/fr/webgl-multiple-views.html">Vues multiples, Canvas multiples</a></li>
+<li><a href="/webgl/lessons/fr/webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+<li><a href="/webgl/lessons/fr/webgl-and-alpha.html">WebGL2 et Alpha</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-vs-3d-library.html">Bibliothèques 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-vs-math.html">WebGL2 Matrices vs Matrices Mathématiques</a></li>
+<li><a href="/webgl/lessons/fr/webgl-precision-issues.html">Problèmes de précision</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#screenshot">Prendre une capture d'écran</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#preservedrawingbuffer">Empêcher l'effacement du canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#tabindex">Obtenir des entrées clavier depuis un canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#html-background">Utiliser WebGL2 comme arrière-plan en HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cross-platform-issues.html">Problèmes multi-plateformes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Référence</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-attributes.html">Attributs</a></li>
+<li><a href="/webgl/lessons/fr/webgl-texture-units.html">Unités de Texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/fr/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/fr/webgl-references.html">Références</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentation de l'API</a></li>
+  <li>
+    <a href="https://twgljs.org">TWGL, une bibliothèque utilitaire WebGL</a>
+  </li>
+  <li>
+    <a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a>
+  </li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Problème ou bug ? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Créez un ticket sur github</a>.</div>
+<div class="lesson-comment-notes">
+   Utilisez <b>&lt;pre&gt;&lt;code&gt;</b>le code ici<b>&lt;/code&gt;&lt;/pre&gt;</b> pour les blocs de code
+</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Texte - Textures';
+            var disqus_title = 'WebGL2 Texte - Textures';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Merci à <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>pour <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

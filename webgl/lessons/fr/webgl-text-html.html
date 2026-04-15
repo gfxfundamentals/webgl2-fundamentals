@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/fr/webgl-text-html.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Comment utiliser HTML pour afficher du texte positionné par rapport à WebGL">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-text-html_fr.jpg">
+
+<meta property="og:title" content="WebGL2 Texte - HTML">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-text-html_fr.jpg">
+<meta property="og:description" content="Comment utiliser HTML pour afficher du texte positionné par rapport à WebGL">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-text-html.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Texte - HTML">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-text-html.html">
+<meta name="twitter:description" content="Comment utiliser HTML pour afficher du texte positionné par rapport à WebGL">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-text-html_fr.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-text-html.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-text-html_fr.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-text-html.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-text-html.html",
+      "inLanguage":"fr",
+      "name":"WebGL2 Texte - HTML",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-text-html.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Texte - HTML</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/fr/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-text-html.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-text-html.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/webgl/lessons/fr/webgl-text-html.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-text-html.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-text-html.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-text-html.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-text-html.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-text-html.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-text-html.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-text-html.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-text-html.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-text-html.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-text-html.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-text-html.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-text-html.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-text-html.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Table des matières</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/fr/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Texte - HTML</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Cet article est la suite des articles précédents sur WebGL.
+Si vous ne les avez pas lus, je vous suggère <a href="webgl-3d-perspective.html">de commencer par là</a>
+et de revenir ici ensuite.</p>
+<p>Une question courante est “comment dessiner du texte dans WebGL”. La première chose à se demander
+est quel est votre objectif en dessinant le texte. Vous êtes dans un navigateur, le navigateur
+affiche du texte. Donc votre première réponse devrait être d’utiliser HTML pour afficher le texte.</p>
+<p>Commençons par l’exemple le plus simple : vous voulez juste dessiner du texte par-dessus
+votre WebGL. On pourrait appeler ça une superposition de texte. C’est essentiellement du texte qui reste
+à la même position.</p>
+<p>La façon simple est de créer un ou des éléments HTML et d’utiliser CSS pour les faire se superposer.</p>
+<p>Par exemple : d’abord créez un conteneur et mettez à la fois un canvas et du HTML à
+superposer à l’intérieur du conteneur.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;div class=&quot;container&quot;&gt;
+  &lt;canvas id=&quot;canvas&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
+  &lt;div id=&quot;overlay&quot;&gt;
+    &lt;div&gt;Time: &lt;span id=&quot;time&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+    &lt;div&gt;Angle: &lt;span id=&quot;angle&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p>Ensuite configurez le CSS pour que le canvas et le HTML se superposent</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">.container {
+    position: relative;
+}
+#overlay {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+</code></pre>
+<p>Maintenant recherchez ces éléments à l’initialisation et créez ou recherchez les zones que vous voulez
+modifier.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// rechercher les éléments à affecter
+var timeElement = document.querySelector(&quot;#time&quot;);
+var angleElement = document.querySelector(&quot;#angle&quot;);
+
+// Créer des nœuds de texte pour économiser du temps au navigateur
+// et éviter les allocations.
+var timeNode = document.createTextNode(&quot;&quot;);
+var angleNode = document.createTextNode(&quot;&quot;);
+
+// Ajouter ces nœuds de texte là où ils doivent aller
+timeElement.appendChild(timeNode);
+angleElement.appendChild(angleNode);
+</code></pre>
+<p>Enfin mettez à jour les nœuds lors du rendu</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function drawScene(time) {
+    var now = time * 0.001;  // convertir en secondes
+
+    ...
+
+    // convertir la rotation des radians en degrés
+    var angle = radToDeg(rotation[1]);
+
+    // ne rapporter que 0 - 360
+    angle = angle % 360;
+
+    // définir les nœuds
+    angleNode.nodeValue = angle.toFixed(0);  // pas de décimale
+    timeNode.nodeValue = now.toFixed(2);   // 2 décimales
+</code></pre>
+<p>Et voici cet exemple</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-overlay.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-overlay.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Remarquez comment j’ai mis des spans à l’intérieur des divs spécifiquement pour les parties que je voulais modifier. Je fais
+l’hypothèse ici que c’est plus rapide que d’utiliser juste les divs sans spans et de dire quelque chose comme</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">timeNode.nodeValue = &quot;Time &quot; + now.toFixed(2);
+</code></pre>
+<p>J’utilise aussi des nœuds de texte en appelant <code class="notranslate" translate="no">node = document.createTextNode()</code> et ensuite <code class="notranslate" translate="no">node.nodeValue = someMsg</code>.
+Je pourrais aussi utiliser <code class="notranslate" translate="no">someElement.innerHTML = someHTML</code>. Ce serait plus flexible car vous pourriez
+insérer des chaînes HTML arbitraires, mais ce serait peut-être légèrement plus lent car le navigateur doit créer
+et détruire des nœuds chaque fois que vous le définissez. Lequel est meilleur dépend de vous.</p>
+<p>Le point important à retenir de la technique de superposition est que WebGL s’exécute dans un navigateur. Rappelons-nous
+d’utiliser les fonctionnalités du navigateur quand c’est approprié. De nombreux programmeurs OpenGL sont habitués à devoir rendre
+chaque partie de leur application 100% eux-mêmes depuis zéro, mais parce que WebGL s’exécute dans un navigateur, il possède déjà
+des tonnes de fonctionnalités. Utilisez-les. Cela a beaucoup d’avantages. Par exemple, vous pouvez utiliser le style CSS pour
+donner facilement à cette superposition un style intéressant.</p>
+<p>Par exemple, voici le même exemple mais avec du style ajouté. L’arrière-plan est arrondi, les lettres ont
+un halo autour d’elles. Il y a une bordure rouge. Vous obtenez tout ça essentiellement gratuitement en utilisant HTML.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-overlay-styled.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-overlay-styled.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>La prochaine chose la plus courante à vouloir faire est de positionner du texte par rapport à quelque chose que vous rendez.
+On peut faire ça en HTML également.</p>
+<p>Dans ce cas, nous créerons à nouveau un conteneur avec le canvas et un autre conteneur pour notre HTML mobile</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;div class=&quot;container&quot;&gt;
+  &lt;canvas id=&quot;canvas&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
+  &lt;div id=&quot;divcontainer&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p>Et nous configurerons le CSS</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">.container {
+    position: relative;
+    overflow: none;
+}
+
+#divcontainer {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 400px;
+    height: 300px;
+    z-index: 10;
+    overflow: hidden;
+
+}
+
+.floating-div {
+    position: absolute;
+}
+</code></pre>
+<p>La partie <code class="notranslate" translate="no">position: absolute;</code> fait que le <code class="notranslate" translate="no">#divcontainer</code> est positionné en termes absolus par rapport
+au premier parent ayant un style <code class="notranslate" translate="no">position: relative</code> ou <code class="notranslate" translate="no">position: absolute</code>. Dans ce cas
+c’est le conteneur dans lequel se trouvent le canvas et le <code class="notranslate" translate="no">#divcontainer</code>.</p>
+<p>Le <code class="notranslate" translate="no">left: 0px; top: 0px</code> fait que le <code class="notranslate" translate="no">#divcontainer</code> s’aligne avec tout. Le <code class="notranslate" translate="no">z-index: 10</code> le fait
+flotter par-dessus le canvas. Et <code class="notranslate" translate="no">overflow: hidden</code> fait que ses enfants sont découpés.</p>
+<p>Enfin <code class="notranslate" translate="no">.floating-div</code> sera utilisé pour le div positionnable que nous créons.</p>
+<p>Donc maintenant nous devons rechercher le divcontainer, créer un div et l’y ajouter.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// rechercher le divcontainer
+var divContainerElement = document.querySelector(&quot;#divcontainer&quot;);
+
+// créer le div
+var div = document.createElement(&quot;div&quot;);
+
+// lui assigner une classe CSS
+div.className = &quot;floating-div&quot;;
+
+// créer un nœud de texte pour son contenu
+var textNode = document.createTextNode(&quot;&quot;);
+div.appendChild(textNode);
+
+// l'ajouter au divcontainer
+divContainerElement.appendChild(div);
+</code></pre>
+<p>Maintenant nous pouvons positionner le div en définissant son style.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">div.style.left = Math.floor(x) + &quot;px&quot;;
+div.style.top  = Math.floor(y) + &quot;px&quot;;
+textNode.nodeValue = now.toFixed(2);
+</code></pre>
+<p>Voici un exemple où nous faisons juste rebondir le div.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-bouncing-div.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-bouncing-div.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Donc l’étape suivante est de vouloir le placer par rapport à quelque chose dans la scène 3D.
+Comment fait-on ça ? On le fait exactement comme on a demandé au GPU de le faire quand on a
+<a href="webgl-3d-perspective.html">couvert la projection en perspective</a>.</p>
+<p>À travers cet exemple, nous avons appris comment utiliser des matrices, comment les multiplier,
+et comment appliquer une matrice de projection pour les convertir en clip space. Nous passons tout
+ça à notre shader et il multiplie les sommets dans l’espace local et les convertit
+en clip space. On peut faire toutes les maths nous-mêmes en JavaScript également.
+Ensuite, on peut multiplier le clip space (-1 à +1) en pixels et utiliser
+ça pour positionner le div.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.drawArrays(...);
+
+// On vient de finir de calculer une matrice pour dessiner notre
+// F en 3D.
+
+// choisir un point dans l'espace local du 'F'.
+//             X  Y  Z  W
+var point = [100, 0, 0, 1];  // c'est le coin avant supérieur droit
+
+// calculer une position en clip space
+// en utilisant la matrice qu'on a calculée pour le F
+var clipspace = m4.transformVector(matrix, point);
+
+// diviser X et Y par W comme le fait le GPU.
+clipspace[0] /= clipspace[3];
+clipspace[1] /= clipspace[3];
+
+// convertir du clip space en pixels
+var pixelX = (clipspace[0] *  0.5 + 0.5) * gl.canvas.width;
+var pixelY = (clipspace[1] * -0.5 + 0.5) * gl.canvas.height;
+
+// positionner le div
+div.style.left = Math.floor(pixelX) + &quot;px&quot;;
+div.style.top  = Math.floor(pixelY) + &quot;px&quot;;
+textNode.nodeValue = now.toFixed(2);
+</code></pre>
+<p>Et voilà, le coin supérieur gauche de notre div est parfaitement aligné
+avec le coin avant supérieur droit du F.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-div.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-div.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Bien sûr si vous voulez plus de texte, créez plus de divs.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-text-html-divs.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-text-html-divs.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Vous pouvez regarder le source de ce dernier exemple pour voir les
+détails. Un point important est que je suppose simplement que
+créer, ajouter et supprimer des éléments HTML du DOM
+est lent, donc l’exemple ci-dessus les crée et les garde.
+Il cache ceux qui ne sont pas utilisés plutôt que de les supprimer
+du DOM. Vous devriez profiler pour savoir si c’est plus rapide.
+C’était juste la méthode que j’ai choisie.</p>
+<p>J’espère que c’est clair comment utiliser HTML pour le texte. <a href="webgl-text-canvas2d.html">Ensuite nous
+couvrirons l’utilisation de Canvas 2D pour le texte</a>.</p>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-text-html.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-text-html.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-text-html.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-text-html.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-text-html.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-text-html.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-text-html.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-text-html.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fondamentaux</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-getting-webgl2.html">Comment utiliser WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fundamentals.html">Les bases</a></li>
+<li><a href="/webgl/lessons/fr/webgl-how-it-works.html">Comment ça marche</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shaders-and-glsl.html">Shaders et GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Diagramme d'état</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl2-whats-new.html">Quoi de neuf dans WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2.html">Passer de WebGL1 à WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2-fundamentals.html">Différences de WebGLFundamentals.org à WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Traitement d'images</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-image-processing.html">Traitement d'images</a></li>
+<li><a href="/webgl/lessons/fr/webgl-image-processing-continued.html">Traitement d'images - Suite</a></li>
+        </ul>
+  <li>Translation, rotation, mise à l'échelle 2D et calcul matriciel</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-translation.html">Translation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-rotation.html">Rotation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-scale.html">Mise à l'échelle 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrices.html">Matrices 2D</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-orthographic.html">Projection Orthographique 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective.html">Perspective 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-camera.html">3D - Caméras</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-naming.html">3D - Nommage des matrices</a></li>
+        </ul>
+  <li>Éclairage</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-lighting-directional.html">Éclairage directionnel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-point.html">Éclairage ponctuel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-spot.html">Éclairage spot</a></li>
+        </ul>
+  <li>Structure et organisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-less-code-more-fun.html">Moins de code, plus de plaisir</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-multiple-things.html">Dessiner plusieurs choses</a></li>
+<li><a href="/webgl/lessons/fr/webgl-scene-graph.html">Graphes de scène</a></li>
+        </ul>
+  <li>Géométrie</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-geometry-lathe.html">3D Géométrie - Tour</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj.html">Charger des fichiers .obj</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj-w-mtl.html">Charger des fichiers .obj avec .mtl</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/fr/webgl-data-textures.html">Textures de données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2-textures.html">Utiliser 2 textures ou plus</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cors-permission.html">Images Cross Origin</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective-correct-texturemapping.html">Mappage de Texture avec Correction de Perspective</a></li>
+<li><a href="/webgl/lessons/fr/webgl-planar-projection-mapping.html">Projection planaire et en perspective</a></li>
+        </ul>
+  <li>Rendu vers une texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-render-to-texture.html">Rendu vers une texture</a></li>
+        </ul>
+  <li>Ombres</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-shadows.html">Ombres</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrix-stack.html">2D - Pile de matrices</a></li>
+<li><a href="/webgl/lessons/fr/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/fr/webgl-environment-maps.html">Cartes d'environnement</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fog.html">Brouillard</a></li>
+<li><a href="/webgl/lessons/fr/webgl-picking.html">Picking (cliquer sur des objets)</a></li>
+        </ul>
+  <li>Texte</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-text-html.html">Texte - HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-canvas2d.html">Texte - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-texture.html">Texte - Utiliser une texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-glyphs.html">Texte - Utiliser une texture de glyphes</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Astuces</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-smallest-programs.html">Plus petits programmes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-without-data.html">Dessiner sans données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/fr/webgl-pulling-vertices.html">Extraction de sommets</a></li>
+        </ul>
+  <li>Optimisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-indexed-vertices.html">Sommets indexés (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-instanced-drawing.html">Dessin instancié</a></li>
+        </ul>
+  <li>Divers</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-setup-and-installation.html">Installation et configuration</a></li>
+<li><a href="/webgl/lessons/fr/webgl-boilerplate.html">Code standard (Boilerplate)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-resizing-the-canvas.html">Redimensionner le Canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/fr/webgl-points-lines-triangles.html">Points, Lignes et Triangles</a></li>
+<li><a href="/webgl/lessons/fr/webgl-multiple-views.html">Vues multiples, Canvas multiples</a></li>
+<li><a href="/webgl/lessons/fr/webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+<li><a href="/webgl/lessons/fr/webgl-and-alpha.html">WebGL2 et Alpha</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-vs-3d-library.html">Bibliothèques 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-vs-math.html">WebGL2 Matrices vs Matrices Mathématiques</a></li>
+<li><a href="/webgl/lessons/fr/webgl-precision-issues.html">Problèmes de précision</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#screenshot">Prendre une capture d'écran</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#preservedrawingbuffer">Empêcher l'effacement du canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#tabindex">Obtenir des entrées clavier depuis un canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#html-background">Utiliser WebGL2 comme arrière-plan en HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cross-platform-issues.html">Problèmes multi-plateformes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Référence</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-attributes.html">Attributs</a></li>
+<li><a href="/webgl/lessons/fr/webgl-texture-units.html">Unités de Texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/fr/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/fr/webgl-references.html">Références</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentation de l'API</a></li>
+  <li>
+    <a href="https://twgljs.org">TWGL, une bibliothèque utilitaire WebGL</a>
+  </li>
+  <li>
+    <a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a>
+  </li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Problème ou bug ? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Créez un ticket sur github</a>.</div>
+<div class="lesson-comment-notes">
+   Utilisez <b>&lt;pre&gt;&lt;code&gt;</b>le code ici<b>&lt;/code&gt;&lt;/pre&gt;</b> pour les blocs de code
+</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Texte - HTML';
+            var disqus_title = 'WebGL2 Texte - HTML';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Merci à <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>pour <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/fr/webgl-image-processing-continued.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Comment appliquer plusieurs techniques de traitement d&#x27;images en WebGL">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-image-processing-continued_fr.jpg">
+
+<meta property="og:title" content="Traitement d&#x27;images en WebGL2 - Suite">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-image-processing-continued_fr.jpg">
+<meta property="og:description" content="Comment appliquer plusieurs techniques de traitement d&#x27;images en WebGL">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-image-processing-continued.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="Traitement d&#x27;images en WebGL2 - Suite">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-image-processing-continued.html">
+<meta name="twitter:description" content="Comment appliquer plusieurs techniques de traitement d&#x27;images en WebGL">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-image-processing-continued_fr.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-image-processing-continued.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-image-processing-continued_fr.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-image-processing-continued.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-image-processing-continued.html",
+      "inLanguage":"fr",
+      "name":"Traitement d&#x27;images en WebGL2 - Suite",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-image-processing-continued.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>Traitement d&#x27;images en WebGL2 - Suite</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/fr/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-image-processing-continued.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-image-processing-continued.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/webgl/lessons/fr/webgl-image-processing-continued.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-image-processing-continued.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-image-processing-continued.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-image-processing-continued.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-image-processing-continued.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-image-processing-continued.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-image-processing-continued.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-image-processing-continued.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-image-processing-continued.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-image-processing-continued.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-image-processing-continued.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-image-processing-continued.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-image-processing-continued.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-image-processing-continued.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Table des matières</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/fr/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>Traitement d&#x27;images en WebGL2 - Suite</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Cet article fait suite à <a href="webgl-image-processing.html">Traitement d’images en WebGL</a>.
+Si vous ne l’avez pas encore lu, je vous suggère de <a href="webgl-image-processing.html">commencer par là</a>.</p>
+<p>La question la plus évidente pour le traitement d’images est : comment appliquer plusieurs effets ?</p>
+<p>Eh bien, vous pourriez essayer de générer des shaders à la volée. Fournir une interface utilisateur qui permet à
+l’utilisateur de sélectionner les effets qu’il souhaite utiliser, puis générer un shader qui applique
+tous ces effets. Cela n’est pas toujours possible, bien que cette technique
+soit souvent utilisée pour <a href="https://www.youtube.com/watch?v=cQUn0Zeh-0Q">créer des effets pour les graphiques en temps réel</a>.</p>
+<p>Une manière plus flexible est d’utiliser 2 textures de <em>travail</em> supplémentaires et
+de faire le rendu sur chaque texture à tour de rôle, en alternant d’avant en arrière
+et en appliquant l’effet suivant à chaque fois.</p>
+<blockquote><pre>Image originale -&gt; [Flou]            -&gt; Texture 1
+Texture 1       -&gt; [Accentuation]    -&gt; Texture 2
+Texture 2       -&gt; [Détection bords] -&gt; Texture 1
+Texture 1       -&gt; [Flou]            -&gt; Texture 2
+Texture 2       -&gt; [Normal]          -&gt; Canvas</pre></blockquote>
+<p>Pour ce faire, nous devons créer des framebuffers. En WebGL et OpenGL, Framebuffer
+est en réalité un nom mal choisi. Un Framebuffer WebGL/OpenGL est en fait juste une
+liste d’attachements et non un buffer d’aucune sorte. Mais, en
+attachant une texture à un framebuffer, nous pouvons faire le rendu dans cette texture.</p>
+<p>Commençons par transformer <a href="webgl-image-processing.html">l’ancien code de création de texture</a> en une fonction</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  function createAndSetupTexture(gl) {
+    var texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    // Configure la texture pour qu'on puisse faire le rendu de n'importe quelle taille d'image
+    // et pour qu'on travaille avec des pixels.
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+    return texture;
+  }
+
+  // Crée une texture et y place l'image.
+  var originalImageTexture = createAndSetupTexture(gl);
+
+  // Télécharge l'image dans la texture.
+  var mipLevel = 0;               // le plus grand mip
+  var internalFormat = gl.RGBA;   // format qu'on veut dans la texture
+  var srcFormat = gl.RGBA;        // format des données qu'on fournit
+  var srcType = gl.UNSIGNED_BYTE  // type des données qu'on fournit
+  gl.texImage2D(gl.TEXTURE_2D,
+                mipLevel,
+                internalFormat,
+                srcFormat,
+                srcType,
+                image);
+</code></pre>
+<p>Et maintenant utilisons cette fonction pour créer 2 textures supplémentaires et les attacher à 2 framebuffers.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // crée 2 textures et les attache aux framebuffers.
+  var textures = [];
+  var framebuffers = [];
+  for (var ii = 0; ii &lt; 2; ++ii) {
+    var texture = createAndSetupTexture(gl);
+    textures.push(texture);
+
+    // fait en sorte que la texture ait la même taille que l'image
+    var mipLevel = 0;               // le plus grand mip
+    var internalFormat = gl.RGBA;   // format qu'on veut dans la texture
+    var border = 0;                 // doit être 0
+    var srcFormat = gl.RGBA;        // format des données qu'on fournit
+    var srcType = gl.UNSIGNED_BYTE  // type des données qu'on fournit
+    var data = null;                // pas de données = crée une texture vide
+    gl.texImage2D(
+        gl.TEXTURE_2D, mipLevel, internalFormat, image.width, image.height, border,
+        srcFormat, srcType, data);
+
+    // Crée un framebuffer
+    var fbo = gl.createFramebuffer();
+    framebuffers.push(fbo);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+
+    // Y attache une texture.
+    var attachmentPoint = gl.COLOR_ATTACHMENT0;
+    gl.framebufferTexture2D(
+        gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, texture, mipLevel);
+  }
+</code></pre>
+<p>Maintenant créons un ensemble de noyaux et une liste de ceux à appliquer.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  // Définit plusieurs noyaux de convolution
+  var kernels = {
+    normal: [
+      0, 0, 0,
+      0, 1, 0,
+      0, 0, 0
+    ],
+    gaussianBlur: [
+      0.045, 0.122, 0.045,
+      0.122, 0.332, 0.122,
+      0.045, 0.122, 0.045
+    ],
+    unsharpen: [
+      -1, -1, -1,
+      -1,  9, -1,
+      -1, -1, -1
+    ],
+    emboss: [
+       -2, -1,  0,
+       -1,  1,  1,
+        0,  1,  2
+    ]
+  };
+
+  // Liste des effets à appliquer.
+  var effectsToApply = [
+    &quot;gaussianBlur&quot;,
+    &quot;emboss&quot;,
+    &quot;gaussianBlur&quot;,
+    &quot;unsharpen&quot;
+  ];
+</code></pre>
+<p>Et enfin appliquons chacun d’eux, en alternant la texture sur laquelle nous effectuons le rendu</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  function drawEffects() {
+    // Lui dit d'utiliser notre programme (paire de shaders)
+    gl.useProgram(program);
+
+    // Lie l'ensemble attribut/buffer que nous voulons.
+    gl.bindVertexArray(vao);
+
+    // commence avec l'image originale sur l'unité 0
+    gl.activeTexture(gl.TEXTURE0 + 0);
+    gl.bindTexture(gl.TEXTURE_2D, originalImageTexture);
+
+    // Dit au shader d'obtenir la texture depuis l'unité de texture 0
+    gl.uniform1i(imageLocation, 0);
+
+    // ne fait pas de retournement Y des images lors du dessin vers les textures
+    gl.uniform1f(flipYLocation, 1);
+
+    // parcourt chaque effet qu'on veut appliquer.
+    var count = 0;
+    for (var ii = 0; ii &lt; tbody.rows.length; ++ii) {
+      var checkbox = tbody.rows[ii].firstChild.firstChild;
+      if (checkbox.checked) {
+        // Configure pour dessiner dans l'un des framebuffers.
+        setFramebuffer(framebuffers[count % 2], image.width, image.height);
+
+        drawWithKernel(checkbox.value);
+
+        // pour le prochain dessin, utilise la texture sur laquelle on vient de faire le rendu.
+        gl.bindTexture(gl.TEXTURE_2D, textures[count % 2]);
+
+        // incrémente count pour qu'on utilise l'autre texture la prochaine fois.
+        ++count;
+      }
+    }
+
+    // enfin dessine le résultat sur le canvas.
+    gl.uniform1f(flipYLocation, -1);  // besoin de retourner Y pour le canvas
+
+    setFramebuffer(null, gl.canvas.width, gl.canvas.height);
+
+    drawWithKernel(&quot;normal&quot;);
+  }
+
+  function setFramebuffer(fbo, width, height) {
+    // fait de celui-ci le framebuffer sur lequel on effectue le rendu.
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+
+    // Dit au shader la résolution du framebuffer.
+    gl.uniform2f(resolutionLocation, width, height);
+
+    // Dit à WebGL comment convertir de l'espace de clip en pixels
+    gl.viewport(0, 0, width, height);
+  }
+
+  function drawWithKernel(name) {
+    // définit le noyau et son poids
+    gl.uniform1fv(kernelLocation, kernels[name]);
+    gl.uniform1f(kernelWeightLocation, computeKernelWeight(kernels[name]));
+
+    // Dessine le rectangle.
+    var primitiveType = gl.TRIANGLES;
+    var offset = 0;
+    var count = 6;
+    gl.drawArrays(primitiveType, offset, count);
+  }
+</code></pre>
+<p>Voici une version fonctionnelle avec une interface utilisateur un peu plus flexible. Cochez les effets
+pour les activer. Faites glisser les effets pour réorganiser l’ordre dans lequel ils sont appliqués.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-2d-image-processing.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-2d-image-processing.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Quelques points que je devrais aborder.</p>
+<p>Appeler <code class="notranslate" translate="no">gl.bindFramebuffer</code> avec <code class="notranslate" translate="no">null</code> dit à WebGL que vous voulez effectuer le rendu
+sur le canvas au lieu de sur l’un de vos framebuffers.</p>
+<p>De plus, les framebuffers peuvent fonctionner ou non selon les attachements que vous
+leur ajoutez. Il existe une liste des types et combinaisons d’attachements
+qui sont censés toujours fonctionner. Celui utilisé ici, une texture <code class="notranslate" translate="no">RGBA</code>/<code class="notranslate" translate="no">UNSIGNED_BYTE</code>
+assignée au point d’attachement <code class="notranslate" translate="no">COLOR_ATTACHMENT0</code>, est censé toujours fonctionner.
+Des formats de texture plus exotiques et/ou des combinaisons d’attachements pourraient ne pas fonctionner.
+Dans ce cas, vous êtes censé lier le framebuffer puis appeler
+<code class="notranslate" translate="no">gl.checkFramebufferStatus</code> et voir s’il renvoie <code class="notranslate" translate="no">gl.FRAMEBUFFER_COMPLETE</code>.
+Si c’est le cas, vous êtes prêt. Sinon, vous devrez dire à l’utilisateur de se rabattre
+sur autre chose. Heureusement, WebGL2 prend en charge de nombreux formats et combinaisons.</p>
+<p>WebGL doit convertir de l’<a href="webgl-fundamentals.html">espace de clip</a> en pixels.
+Il le fait en se basant sur les paramètres de <code class="notranslate" translate="no">gl.viewport</code>. Comme les framebuffers
+sur lesquels nous effectuons le rendu ont une taille différente de celle du canvas, nous devons définir le
+viewport de manière appropriée selon que nous effectuons le rendu sur une texture ou sur le canvas.</p>
+<p>Enfin, dans l’<a href="webgl-fundamentals.html">exemple original</a>, nous avons retourné la coordonnée Y
+lors du rendu car WebGL affiche le canvas avec 0,0 étant le
+coin inférieur gauche au lieu du coin supérieur gauche plus traditionnel pour la 2D. Ce n’est pas
+nécessaire lors du rendu sur un framebuffer. Comme le framebuffer n’est jamais
+affiché, la partie qui est en haut et en bas est sans importance. Tout ce qui compte, c’est
+que le pixel 0,0 dans le framebuffer corresponde à 0,0 dans nos calculs.
+Pour gérer cela, j’ai rendu possible la définition du retournement ou non en
+ajoutant une entrée uniform supplémentaire dans le shader appelée <code class="notranslate" translate="no">u_flipY</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">...
++uniform float u_flipY;
+...
+
+void main() {
+  ...
++   gl_Position = vec4(clipSpace * vec2(1, u_flipY), 0, 1);
+  ...
+}
+</code></pre>
+<p>Et ensuite nous pouvons le définir lors du rendu avec</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">  ...
++  var flipYLocation = gl.getUniformLocation(program, &quot;u_flipY&quot;);
+
+  ...
+
++  // ne retourne pas
++  gl.uniform1f(flipYLocation, 1);
+
+  ...
+
++  // retourne
++  gl.uniform1f(flipYLocation, -1);
+</code></pre>
+<p>J’ai gardé cet exemple simple en utilisant un seul programme GLSL qui peut réaliser
+plusieurs effets. Si vous vouliez faire du traitement d’images complet, vous auriez probablement
+besoin de nombreux programmes GLSL. Un programme pour l’ajustement de la teinte, de la saturation et de la luminance.
+Un autre pour la luminosité et le contraste. Un pour inverser, un autre pour ajuster
+les niveaux, etc. Vous devriez modifier le code pour changer de programmes GLSL et mettre à jour
+les paramètres pour ce programme particulier. J’avais envisagé d’écrire cet exemple
+mais c’est un exercice qu’il vaut mieux laisser au lecteur car plusieurs programmes GLSL chacun
+avec ses propres besoins en paramètres signifie probablement une refonte majeure pour éviter que tout
+ne devienne un grand plat de spaghettis.</p>
+<p>J’espère que cet exemple et les précédents ont rendu WebGL un peu plus
+accessible et j’espère que commencer par la 2D aide à rendre WebGL un peu plus facile à
+comprendre. Si j’en trouve le temps, j’essaierai d’écrire <a href="webgl-2d-translation.html">quelques articles supplémentaires</a>
+sur comment faire de la 3D ainsi que plus de détails sur <a href="webgl-how-it-works.html">ce que WebGL fait réellement sous le capot</a>.
+Pour la prochaine étape, envisagez d’apprendre <a href="webgl-2-textures.html">comment utiliser 2 textures ou plus</a>.</p>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-image-processing-continued.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-image-processing-continued.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-image-processing-continued.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-image-processing-continued.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-image-processing-continued.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-image-processing-continued.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-image-processing-continued.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-image-processing-continued.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fondamentaux</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-getting-webgl2.html">Comment utiliser WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fundamentals.html">Les bases</a></li>
+<li><a href="/webgl/lessons/fr/webgl-how-it-works.html">Comment ça marche</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shaders-and-glsl.html">Shaders et GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Diagramme d'état</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl2-whats-new.html">Quoi de neuf dans WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2.html">Passer de WebGL1 à WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2-fundamentals.html">Différences de WebGLFundamentals.org à WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Traitement d'images</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-image-processing.html">Traitement d'images</a></li>
+<li><a href="/webgl/lessons/fr/webgl-image-processing-continued.html">Traitement d'images - Suite</a></li>
+        </ul>
+  <li>Translation, rotation, mise à l'échelle 2D et calcul matriciel</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-translation.html">Translation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-rotation.html">Rotation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-scale.html">Mise à l'échelle 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrices.html">Matrices 2D</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-orthographic.html">Projection Orthographique 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective.html">Perspective 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-camera.html">3D - Caméras</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-naming.html">3D - Nommage des matrices</a></li>
+        </ul>
+  <li>Éclairage</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-lighting-directional.html">Éclairage directionnel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-point.html">Éclairage ponctuel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-spot.html">Éclairage spot</a></li>
+        </ul>
+  <li>Structure et organisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-less-code-more-fun.html">Moins de code, plus de plaisir</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-multiple-things.html">Dessiner plusieurs choses</a></li>
+<li><a href="/webgl/lessons/fr/webgl-scene-graph.html">Graphes de scène</a></li>
+        </ul>
+  <li>Géométrie</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-geometry-lathe.html">3D Géométrie - Tour</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj.html">Charger des fichiers .obj</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj-w-mtl.html">Charger des fichiers .obj avec .mtl</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/fr/webgl-data-textures.html">Textures de données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2-textures.html">Utiliser 2 textures ou plus</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cors-permission.html">Images Cross Origin</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective-correct-texturemapping.html">Mappage de Texture avec Correction de Perspective</a></li>
+<li><a href="/webgl/lessons/fr/webgl-planar-projection-mapping.html">Projection planaire et en perspective</a></li>
+        </ul>
+  <li>Rendu vers une texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-render-to-texture.html">Rendu vers une texture</a></li>
+        </ul>
+  <li>Ombres</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-shadows.html">Ombres</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrix-stack.html">2D - Pile de matrices</a></li>
+<li><a href="/webgl/lessons/fr/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/fr/webgl-environment-maps.html">Cartes d'environnement</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fog.html">Brouillard</a></li>
+<li><a href="/webgl/lessons/fr/webgl-picking.html">Picking (cliquer sur des objets)</a></li>
+        </ul>
+  <li>Texte</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-text-html.html">Texte - HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-canvas2d.html">Texte - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-texture.html">Texte - Utiliser une texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-glyphs.html">Texte - Utiliser une texture de glyphes</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Astuces</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-smallest-programs.html">Plus petits programmes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-without-data.html">Dessiner sans données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/fr/webgl-pulling-vertices.html">Extraction de sommets</a></li>
+        </ul>
+  <li>Optimisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-indexed-vertices.html">Sommets indexés (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-instanced-drawing.html">Dessin instancié</a></li>
+        </ul>
+  <li>Divers</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-setup-and-installation.html">Installation et configuration</a></li>
+<li><a href="/webgl/lessons/fr/webgl-boilerplate.html">Code standard (Boilerplate)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-resizing-the-canvas.html">Redimensionner le Canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/fr/webgl-points-lines-triangles.html">Points, Lignes et Triangles</a></li>
+<li><a href="/webgl/lessons/fr/webgl-multiple-views.html">Vues multiples, Canvas multiples</a></li>
+<li><a href="/webgl/lessons/fr/webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+<li><a href="/webgl/lessons/fr/webgl-and-alpha.html">WebGL2 et Alpha</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-vs-3d-library.html">Bibliothèques 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-vs-math.html">WebGL2 Matrices vs Matrices Mathématiques</a></li>
+<li><a href="/webgl/lessons/fr/webgl-precision-issues.html">Problèmes de précision</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#screenshot">Prendre une capture d'écran</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#preservedrawingbuffer">Empêcher l'effacement du canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#tabindex">Obtenir des entrées clavier depuis un canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#html-background">Utiliser WebGL2 comme arrière-plan en HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cross-platform-issues.html">Problèmes multi-plateformes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Référence</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-attributes.html">Attributs</a></li>
+<li><a href="/webgl/lessons/fr/webgl-texture-units.html">Unités de Texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/fr/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/fr/webgl-references.html">Références</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentation de l'API</a></li>
+  <li>
+    <a href="https://twgljs.org">TWGL, une bibliothèque utilitaire WebGL</a>
+  </li>
+  <li>
+    <a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a>
+  </li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Problème ou bug ? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Créez un ticket sur github</a>.</div>
+<div class="lesson-comment-notes">
+   Utilisez <b>&lt;pre&gt;&lt;code&gt;</b>le code ici<b>&lt;/code&gt;&lt;/pre&gt;</b> pour les blocs de code
+</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'Traitement d&#x27;images en WebGL2 - Suite';
+            var disqus_title = 'Traitement d&#x27;images en WebGL2 - Suite';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Merci à <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>pour <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

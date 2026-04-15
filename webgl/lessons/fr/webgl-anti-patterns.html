@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/fr/webgl-anti-patterns.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Ce qu&#x27;il ne faut pas faire en WebGL, pourquoi ne pas le faire, et quoi faire à la place">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-anti-patterns_fr.jpg">
+
+<meta property="og:title" content="WebGL2 Anti-Patterns">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-anti-patterns_fr.jpg">
+<meta property="og:description" content="Ce qu&#x27;il ne faut pas faire en WebGL, pourquoi ne pas le faire, et quoi faire à la place">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-anti-patterns.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Anti-Patterns">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-anti-patterns.html">
+<meta name="twitter:description" content="Ce qu&#x27;il ne faut pas faire en WebGL, pourquoi ne pas le faire, et quoi faire à la place">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-anti-patterns_fr.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-anti-patterns.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-anti-patterns_fr.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-anti-patterns.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-anti-patterns.html",
+      "inLanguage":"fr",
+      "name":"WebGL2 Anti-Patterns",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-anti-patterns.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Anti-Patterns</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/fr/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-anti-patterns.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-anti-patterns.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/webgl/lessons/fr/webgl-anti-patterns.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-anti-patterns.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-anti-patterns.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-anti-patterns.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-anti-patterns.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-anti-patterns.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-anti-patterns.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-anti-patterns.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-anti-patterns.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-anti-patterns.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-anti-patterns.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-anti-patterns.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-anti-patterns.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-anti-patterns.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Table des matières</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/fr/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Anti-Patterns</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Voici une liste d’anti-patterns pour WebGL. Les anti-patterns sont des choses que vous devriez éviter de faire.</p>
+<ol>
+<li>
+<p><a id="viewportwidth"></a>Mettre <code class="notranslate" translate="no">viewportWidth</code> et <code class="notranslate" translate="no">viewportHeight</code> sur le <code class="notranslate" translate="no">WebGLRenderingContext</code></p>
+<p>Certains codes ajoutent des propriétés pour leur largeur et hauteur de viewport
+et les collent sur le <code class="notranslate" translate="no">WebGLRenderingContext</code> comme ceci</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl = canvas.getContext(&quot;webgl2&quot;);
+gl.viewportWidth = canvas.width;    // MAUVAIS!!!
+gl.viewportHeight = canvas.height;  // MAUVAIS!!!
+</code></pre>
+<p>Puis plus tard ils pourraient faire quelque chose comme ça</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+</code></pre>
+<p><strong>Pourquoi c’est mauvais :</strong></p>
+<p>C’est objectivement mauvais parce que vous avez maintenant 2 propriétés qui doivent être mises à jour
+à chaque fois que vous changez la taille du canvas. Par exemple, si vous changez la taille
+du canvas quand l’utilisateur redimensionne la fenêtre, <code class="notranslate" translate="no">gl.viewportWidth</code> et <code class="notranslate" translate="no">gl.viewportHeight</code>
+seront incorrects sauf si vous les redéfinissez.</p>
+<p>C’est subjectivement mauvais car tout nouveau programmeur WebGL jettera un œil à votre code
+et pensera probablement que <code class="notranslate" translate="no">gl.viewportWidth</code> et <code class="notranslate" translate="no">gl.viewportHeight</code> font partie de la
+spécification WebGL, les confondant pendant des mois.</p>
+<p><strong>Que faire à la place :</strong></p>
+<p>Pourquoi se créer plus de travail ? Le contexte WebGL a son canvas disponible
+et celui-ci a une taille.</p>
+<pre class="prettyprint">
+gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+</pre>
+<p>Le contexte a aussi sa largeur et sa hauteur directement dessus.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// Quand vous avez besoin de définir le viewport pour correspondre à la taille du
+// drawingBuffer du canvas, ceci sera toujours correct
+gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+</code></pre>
+<p>C’est encore mieux car ça gérera les cas extrêmes alors qu’utiliser <code class="notranslate" translate="no">gl.canvas.width</code>
+et <code class="notranslate" translate="no">gl.canvas.height</code> ne le fera pas. <a href="#drawingbuffer">Pour savoir pourquoi, voir ici</a>.</p>
+</li>
+<li>
+<p><a id="canvaswidth"></a>Utiliser <code class="notranslate" translate="no">canvas.width</code> et <code class="notranslate" translate="no">canvas.height</code> pour le ratio d’aspect</p>
+<p>Souvent, le code utilise <code class="notranslate" translate="no">canvas.width</code> et <code class="notranslate" translate="no">canvas.height</code> pour le ratio d’aspect comme ça</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var aspect = canvas.width / canvas.height;
+perspective(fieldOfView, aspect, zNear, zFar);
+</code></pre>
+<p><strong>Pourquoi c’est mauvais :</strong></p>
+<p>La largeur et la hauteur du canvas n’ont rien à voir avec la taille à laquelle le canvas est
+affiché. CSS contrôle la taille à laquelle le canvas est affiché.</p>
+<p><strong>Que faire à la place :</strong></p>
+<p>Utilisez <code class="notranslate" translate="no">canvas.clientWidth</code> et <code class="notranslate" translate="no">canvas.clientHeight</code>. Ces valeurs vous indiquent quelle
+taille votre canvas est réellement affiché à l’écran. En utilisant ces valeurs,
+vous obtiendrez toujours le bon ratio d’aspect quelle que soit vos paramètres CSS.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var aspect = canvas.clientWidth / canvas.clientHeight;
+perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
+</code></pre>
+<p>Voici des exemples d’un canvas dont les drawingbuffers ont la même taille (<code class="notranslate" translate="no">width=&quot;400&quot; height=&quot;300&quot;</code>)
+mais en utilisant CSS, nous avons dit au navigateur d’afficher le canvas à une taille différente.
+Remarquez que les deux exemples affichent le ‘F’ avec le bon ratio d’aspect.</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 150px; height: 200px;" src="/webgl/lessons/../webgl-canvas-clientwidth-clientheight.html"></iframe>
+</div>
+
+</p>
+<p></p>
+<div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 400px; height: 150px;" src="/webgl/lessons/../webgl-canvas-clientwidth-clientheight.html"></iframe>
+</div>
+
+
+<p>Si nous avions utilisé <code class="notranslate" translate="no">canvas.width</code> et <code class="notranslate" translate="no">canvas.height</code>, ce ne serait pas le cas.</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 150px; height: 200px;" src="/webgl/lessons/../webgl-canvas-width-height.html"></iframe>
+</div>
+
+</p>
+<p></p>
+<div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 400px; height: 150px;" src="/webgl/lessons/../webgl-canvas-width-height.html"></iframe>
+</div>
+
+
+</li>
+<li>
+<p><a id="innerwidth"></a>Utiliser <code class="notranslate" translate="no">window.innerWidth</code> et <code class="notranslate" translate="no">window.innerHeight</code> pour calculer quoi que ce soit</p>
+<p>De nombreux programmes WebGL utilisent <code class="notranslate" translate="no">window.innerWidth</code> et <code class="notranslate" translate="no">window.innerHeight</code> dans de nombreux endroits.
+Par exemple :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">canvas.width = window.innerWidth;                    // MAUVAIS!!
+canvas.height = window.innerHeight;                  // MAUVAIS!!
+</code></pre>
+<p><strong>Pourquoi c’est mauvais :</strong></p>
+<p>Ce n’est pas portable. Oui, ça peut fonctionner pour les pages WebGL où vous voulez que le canvas
+remplisse l’écran. Le problème vient quand ce n’est pas le cas. Peut-être décidez-vous de faire un article
+comme ces tutoriels où votre canvas est juste un petit diagramme dans une page plus grande.
+Ou peut-être avez-vous besoin d’un éditeur de propriétés sur le côté ou d’un score pour un jeu. Bien sûr, vous pouvez corriger votre code
+pour gérer ces cas, mais pourquoi ne pas simplement l’écrire pour qu’il fonctionne dans ces cas dès le départ ?
+Alors vous n’aurez pas à modifier le code quand vous le copiez dans un nouveau projet ou utilisez un ancien
+projet d’une nouvelle façon.</p>
+<p><strong>Que faire à la place :</strong></p>
+<p>Au lieu de combattre la plateforme Web, utilisez la plateforme Web comme elle a été conçue pour être utilisée.
+Utilisez CSS et <code class="notranslate" translate="no">clientWidth</code> et <code class="notranslate" translate="no">clientHeight</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var width = gl.canvas.clientWidth;
+var height = gl.canvas.clientHeight;
+
+gl.canvas.width = width;
+gl.canvas.height = height;
+</code></pre>
+<p>Voici 9 cas. Ils utilisent tous exactement le même code. Remarquez qu’aucun d’eux
+ne fait référence à <code class="notranslate" translate="no">window.innerWidth</code> ni à <code class="notranslate" translate="no">window.innerHeight</code>.</p>
+<p><a href="../../webgl-same-code-canvas-fullscreen.html" target="_blank">Une page avec rien qu’un canvas utilisant CSS pour le mettre en plein écran</a></p>
+<p><a href="../../webgl-same-code-canvas-partscreen.html" target="_blank">Une page avec un canvas défini à 70% de largeur pour qu’il y ait de la place pour les contrôles éditeur</a></p>
+<p><a href="../../webgl-same-code-canvas-embedded.html" target="_blank">Une page avec un canvas intégré dans un paragraphe</a></p>
+<p><a href="../../webgl-same-code-canvas-embedded-border-box.html" target="_blank">Une page avec un canvas intégré dans un paragraphe en utilisant <code class="notranslate" translate="no">box-sizing: border-box;</code></a></p>
+<p><code class="notranslate" translate="no">box-sizing: border-box;</code> fait que les bordures et le rembourrage prennent de l’espace à l’élément sur lequel ils sont définis plutôt qu’à l’extérieur. En d’autres termes, dans
+le mode normal box-sizing, un élément de 400x300 pixels avec une bordure de 15 pixels a un espace de contenu de 400x300 pixels entouré d’une bordure de 15 pixels, faisant que sa taille totale est
+430x330 pixels. En mode box-sizing: border-box, la bordure va à l’intérieur de sorte que le même élément resterait à 400x300 pixels, le contenu se retrouverait
+à 370x270. C’est encore une autre raison pour laquelle l’utilisation de <code class="notranslate" translate="no">clientWidth</code> et <code class="notranslate" translate="no">clientHeight</code> est si importante. Si vous définissez la bordure à <code class="notranslate" translate="no">1em</code>, vous n’auriez
+aucun moyen de savoir quelle taille aura votre canvas. Ce serait différent avec différentes polices sur différentes machines ou différents navigateurs.</p>
+<p><a href="../../webgl-same-code-container-fullscreen.html" target="_blank">Une page avec rien qu’un conteneur utilisant CSS pour le mettre en plein écran dans lequel le code insérera un canvas</a></p>
+<p><a href="../../webgl-same-code-container-partscreen.html" target="_blank">Une page avec un conteneur défini à 70% de largeur pour qu’il y ait de la place pour les contrôles éditeur dans lequel le code insérera un canvas</a></p>
+<p><a href="../../webgl-same-code-container-embedded.html" target="_blank">Une page avec un conteneur intégré dans un paragraphe dans lequel le code insérera un canvas</a></p>
+<p><a href="../../webgl-same-code-container-embedded-border-box.html" target="_blank">Une page avec un conteneur intégré dans un paragraphe en utilisant <code class="notranslate" translate="no">box-sizing: border-box;</code> dans lequel le code insérera un canvas</a></p>
+<p><a href="../../webgl-same-code-body-only-fullscreen.html" target="_blank">Une page sans éléments avec CSS configuré pour la mettre en plein écran dans lequel le code insérera un canvas</a></p>
+<p>Encore une fois, l’essentiel est que si vous adoptez le web et écrivez votre code en utilisant les techniques ci-dessus, vous n’aurez pas à changer de code quand vous rencontrerez différents cas d’utilisation.</p>
+</li>
+<li>
+<p><a id="resize"></a>Utiliser l’événement <code class="notranslate" translate="no">'resize'</code> pour changer la taille de votre canvas.</p>
+<p>Certaines applications vérifient l’événement <code class="notranslate" translate="no">'resize'</code> de la fenêtre comme ça pour redimensionner leur canvas.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">window.addEventListener('resize', resizeTheCanvas);
+</code></pre>
+<p>ou cela</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">window.onresize = resizeTheCanvas;
+</code></pre>
+<p><strong>Pourquoi c’est mauvais :</strong></p>
+<p>Ce n’est pas mauvais en soi, plutôt, pour <em>la plupart</em> des programmes WebGL, ça couvre moins de cas d’utilisation.
+Spécifiquement, <code class="notranslate" translate="no">'resize'</code> ne fonctionne que lorsque la fenêtre est redimensionnée. Il ne fonctionne pas
+si le canvas est redimensionné pour une autre raison. Par exemple, imaginons que vous faites
+un éditeur 3D. Vous avez votre canvas à gauche et vos paramètres à droite. Vous avez
+fait en sorte qu’il y a une barre déplaçable séparant les 2 parties et vous pouvez faire glisser cette barre
+pour agrandir ou réduire la zone des paramètres. Dans ce cas, vous ne recevrez aucun événement <code class="notranslate" translate="no">'resize'</code>.
+De même, si vous avez une page où d’autres contenus sont ajoutés ou supprimés et
+que le canvas change de taille pendant que le navigateur refait la mise en page, vous ne recevrez pas d’événement de redimensionnement.</p>
+<p><strong>Que faire à la place :</strong></p>
+<p>Comme pour beaucoup des solutions aux anti-patterns ci-dessus, il y a une façon d’écrire votre code
+pour qu’il fonctionne simplement dans la plupart des cas. Pour les applications WebGL qui dessinent continuellement chaque frame,
+la solution est de vérifier si vous devez redimensionner à chaque fois que vous dessinez comme ça</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function resizeCanvasToDisplaySize() {
+  var width = gl.canvas.clientWidth;
+  var height = gl.canvas.clientHeight;
+  if (gl.canvas.width != width ||
+      gl.canvas.height != height) {
+     gl.canvas.width = width;
+     gl.canvas.height = height;
+  }
+}
+
+function render() {
+   resizeCanvasToDisplaySize();
+   drawStuff();
+   requestAnimationFrame(render);
+}
+render();
+</code></pre>
+<p>Maintenant dans n’importe lequel de ces cas, votre canvas s’adaptera à la bonne taille. Pas besoin de
+changer de code pour différents cas. Par exemple, en utilisant le même code du #3 ci-dessus,
+voici un éditeur avec une zone d’édition de taille variable.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-same-code-resize.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-same-code-resize.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Il n’y aurait pas d’événements de redimensionnement pour ce cas ni pour tout autre où le canvas est redimensionné
+en fonction de la taille d’autres éléments dynamiques sur la page.</p>
+<p>Pour les applications WebGL qui ne redessinent pas chaque frame, le code ci-dessus est toujours correct, vous aurez juste besoin
+de déclencher un redessin dans chaque cas où le canvas peut potentiellement être redimensionné. Une façon facile est d’utiliser un <code class="notranslate" translate="no">ResizeObserver</code></p>
+<pre class="prettyprint">
+const resizeObserver = new ResizeObserver(render);
+resizeObserver.observe(gl.canvas, {box: 'content-box'});
+</pre>
+</li>
+<li>
+<p><a id="properties"></a>Ajouter des propriétés aux <code class="notranslate" translate="no">WebGLObject</code>s</p>
+<p>Les <code class="notranslate" translate="no">WebGLObject</code>s sont les différents types de ressources dans WebGL comme un <code class="notranslate" translate="no">WebGLBuffer</code>
+ou <code class="notranslate" translate="no">WebGLTexture</code>. Certaines applications ajoutent des propriétés à ces objets. Par exemple du code comme ça :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var buffer = gl.createBuffer();
+buffer.itemSize = 3;        // MAUVAIS!!
+buffer.numComponents = 75;  // MAUVAIS!!
+
+var program = gl.createProgram();
+...
+program.u_matrixLoc = gl.getUniformLocation(program, &quot;u_matrix&quot;);  // MAUVAIS!!
+</code></pre>
+<p><strong>Pourquoi c’est mauvais :</strong></p>
+<p>La raison pour laquelle c’est mauvais est que WebGL peut “perdre le contexte”. Cela peut arriver pour n’importe quelle
+raison, mais la raison la plus courante est que si le navigateur décide que trop de ressources GPU sont utilisées,
+il pourrait intentionnellement perdre le contexte sur certains <code class="notranslate" translate="no">WebGLRenderingContext</code> pour libérer de l’espace.
+Les programmes WebGL qui veulent toujours fonctionner doivent gérer ça. Google Maps le gère par exemple.</p>
+<p>Le problème avec le code ci-dessus est que quand le contexte est perdu, les fonctions de création WebGL comme
+<code class="notranslate" translate="no">gl.createBuffer()</code> ci-dessus retourneront <code class="notranslate" translate="no">null</code>. Cela fait effectivement du code ça</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var buffer = null;
+buffer.itemSize = 3;        // ERREUR!
+buffer.numComponents = 75;  // ERREUR!
+</code></pre>
+<p>Cela tuera probablement votre application avec une erreur comme</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">TypeError: Cannot set property 'itemSize' of null
+</code></pre>
+<p>Bien que de nombreuses applications ne se soucient pas de mourir quand le contexte est perdu, il semble que ce soit une mauvaise idée
+d’écrire du code qui devra être corrigé plus tard si les développeurs décident un jour de mettre à jour leur
+application pour gérer les événements de perte de contexte.</p>
+<p><strong>Que faire à la place :</strong></p>
+<p>Si vous voulez garder les <code class="notranslate" translate="no">WebGLObject</code>s et certaines infos à leur sujet ensemble, une façon serait
+d’utiliser des objets JavaScript. Par exemple :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var bufferInfo = {
+  id: gl.createBuffer(),
+  itemSize: 3,
+  numComponents: 75,
+};
+
+var programInfo = {
+  id: program,
+  u_matrixLoc: gl.getUniformLocation(program, &quot;u_matrix&quot;),
+};
+</code></pre>
+<p>Personnellement, je suggère <a href="webgl-less-code-more-fun.html">d’utiliser quelques helpers simples qui rendent l’écriture WebGL
+beaucoup plus simple</a>.</p>
+</li>
+</ol>
+<p>Ce sont quelques-uns de ce que je considère comme des Anti-Patterns WebGL dans du code que j’ai vu sur le net.
+J’espère avoir montré pourquoi les éviter et avoir donné des solutions faciles et utiles.</p>
+<div class="webgl_bottombar"><a id="drawingbuffer"></a><h3>Que sont drawingBufferWidth et drawingBufferHeight ?</h3>
+<p>
+Les GPU ont une limite sur la taille du rectangle de pixels (texture, renderbuffer) qu'ils peuvent prendre en charge. Souvent cette
+taille est la prochaine puissance de 2 supérieure à la résolution d'un moniteur courant au moment où le GPU a été
+fabriqué. Par exemple, si le GPU a été conçu pour prendre en charge des écrans 1280x1024, il pourrait avoir une limite de taille de 2048.
+S'il a été conçu pour des écrans 2560x1600, il pourrait avoir une limite de 4096.
+</p><p>
+Ça semble raisonnable mais que se passe-t-il si vous avez plusieurs moniteurs ? Disons que j'ai un GPU avec une limite
+de 2048 mais j'ai deux moniteurs 1920x1080. L'utilisateur ouvre une fenêtre de navigateur avec une page WebGL, puis il
+étire cette fenêtre sur les deux moniteurs. Votre code essaie de définir le <code class="notranslate" translate="no">canvas.width</code> à
+<code class="notranslate" translate="no">canvas.clientWidth</code> qui dans ce cas est 3840. Que devrait-il se passer ?
+</p>
+<p>D'emblée, il n'y a que 3 options</p>
+<ol>
+<li>
+ <p>Lever une exception.</p>
+ <p>Ça semble mauvais. La plupart des applications web ne le vérifieront pas et l'application plantera.
+ Si l'application contenait des données utilisateur, l'utilisateur vient de perdre ses données</p>
+</li>
+<li>
+ <p>Limiter la taille du canvas à la limite du GPU</p>
+ <p>Le problème avec cette solution est qu'elle
+ mènera probablement aussi à un plantage ou éventuellement à une page web dérangée car le code s'attend à ce que le canvas soit à la taille
+ qu'il a demandée et s'attend à ce que d'autres parties de l'interface et les éléments sur la page soient aux bons endroits.</p>
+</li>
+<li>
+ <p>Laisser le canvas être à la taille demandée par l'utilisateur mais rendre son drawingbuffer à la limite</p>
+ <p>C'est la
+ solution que WebGL utilise. Si votre code est écrit correctement, la seule chose que l'utilisateur pourrait remarquer est que l'image dans
+ le canvas est légèrement mise à l'échelle. Sinon, ça fonctionne simplement. Dans le pire des cas, la plupart des programmes WebGL
+ qui ne font pas la bonne chose auront juste un affichage légèrement décalé, mais si l'utilisateur réduit la fenêtre,
+ les choses reviendront à la normale.</p>
+</li>
+</ol>
+<p>La plupart des gens n'ont pas plusieurs moniteurs donc ce problème se pose rarement. Ou du moins c'était le cas.
+Chrome et Safari, au moins en janvier 2015, avaient une limite codée en dur sur la taille du canvas de 4096. L'iMac 5k d'Apple dépasse cette limite. Beaucoup d'applications WebGL avaient des affichages étranges à cause de ça.
+De même, de nombreuses personnes ont commencé à utiliser WebGL avec plusieurs moniteurs pour des travaux d'installation et ont
+atteint cette limite.</p>
+<p>
+Donc, si vous voulez gérer ces cas, utilisez <code class="notranslate" translate="no">gl.drawingBufferWidth</code> et <code class="notranslate" translate="no">gl.drawingBufferHeight</code> comme
+indiqué dans le #1 ci-dessus. Pour la plupart des applications, si vous suivez les meilleures pratiques ci-dessus, les choses fonctionneront simplement. Sachez
+cependant que si vous faites des calculs qui nécessitent de connaître la taille réelle du drawingbuffer, vous devez
+en tenir compte. Des exemples qui me viennent à l'esprit : [le picking](webgl-picking.html), c'est-à-dire la conversion des coordonnées
+de souris en coordonnées de pixels du canvas. Un autre serait tout type d'effets de post-traitement
+qui veulent connaître la taille réelle du drawingbuffer.
+</p>
+</div>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-anti-patterns.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-anti-patterns.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-anti-patterns.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-anti-patterns.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-anti-patterns.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-anti-patterns.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-anti-patterns.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-anti-patterns.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fondamentaux</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-getting-webgl2.html">Comment utiliser WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fundamentals.html">Les bases</a></li>
+<li><a href="/webgl/lessons/fr/webgl-how-it-works.html">Comment ça marche</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shaders-and-glsl.html">Shaders et GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Diagramme d'état</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl2-whats-new.html">Quoi de neuf dans WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2.html">Passer de WebGL1 à WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2-fundamentals.html">Différences de WebGLFundamentals.org à WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Traitement d'images</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-image-processing.html">Traitement d'images</a></li>
+<li><a href="/webgl/lessons/fr/webgl-image-processing-continued.html">Traitement d'images - Suite</a></li>
+        </ul>
+  <li>Translation, rotation, mise à l'échelle 2D et calcul matriciel</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-translation.html">Translation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-rotation.html">Rotation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-scale.html">Mise à l'échelle 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrices.html">Matrices 2D</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-orthographic.html">Projection Orthographique 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective.html">Perspective 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-camera.html">3D - Caméras</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-naming.html">3D - Nommage des matrices</a></li>
+        </ul>
+  <li>Éclairage</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-lighting-directional.html">Éclairage directionnel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-point.html">Éclairage ponctuel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-spot.html">Éclairage spot</a></li>
+        </ul>
+  <li>Structure et organisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-less-code-more-fun.html">Moins de code, plus de plaisir</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-multiple-things.html">Dessiner plusieurs choses</a></li>
+<li><a href="/webgl/lessons/fr/webgl-scene-graph.html">Graphes de scène</a></li>
+        </ul>
+  <li>Géométrie</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-geometry-lathe.html">3D Géométrie - Tour</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj.html">Charger des fichiers .obj</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj-w-mtl.html">Charger des fichiers .obj avec .mtl</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/fr/webgl-data-textures.html">Textures de données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2-textures.html">Utiliser 2 textures ou plus</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cors-permission.html">Images Cross Origin</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective-correct-texturemapping.html">Mappage de Texture avec Correction de Perspective</a></li>
+<li><a href="/webgl/lessons/fr/webgl-planar-projection-mapping.html">Projection planaire et en perspective</a></li>
+        </ul>
+  <li>Rendu vers une texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-render-to-texture.html">Rendu vers une texture</a></li>
+        </ul>
+  <li>Ombres</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-shadows.html">Ombres</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrix-stack.html">2D - Pile de matrices</a></li>
+<li><a href="/webgl/lessons/fr/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/fr/webgl-environment-maps.html">Cartes d'environnement</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fog.html">Brouillard</a></li>
+<li><a href="/webgl/lessons/fr/webgl-picking.html">Picking (cliquer sur des objets)</a></li>
+        </ul>
+  <li>Texte</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-text-html.html">Texte - HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-canvas2d.html">Texte - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-texture.html">Texte - Utiliser une texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-glyphs.html">Texte - Utiliser une texture de glyphes</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Astuces</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-smallest-programs.html">Plus petits programmes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-without-data.html">Dessiner sans données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/fr/webgl-pulling-vertices.html">Extraction de sommets</a></li>
+        </ul>
+  <li>Optimisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-indexed-vertices.html">Sommets indexés (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-instanced-drawing.html">Dessin instancié</a></li>
+        </ul>
+  <li>Divers</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-setup-and-installation.html">Installation et configuration</a></li>
+<li><a href="/webgl/lessons/fr/webgl-boilerplate.html">Code standard (Boilerplate)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-resizing-the-canvas.html">Redimensionner le Canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/fr/webgl-points-lines-triangles.html">Points, Lignes et Triangles</a></li>
+<li><a href="/webgl/lessons/fr/webgl-multiple-views.html">Vues multiples, Canvas multiples</a></li>
+<li><a href="/webgl/lessons/fr/webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+<li><a href="/webgl/lessons/fr/webgl-and-alpha.html">WebGL2 et Alpha</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-vs-3d-library.html">Bibliothèques 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-vs-math.html">WebGL2 Matrices vs Matrices Mathématiques</a></li>
+<li><a href="/webgl/lessons/fr/webgl-precision-issues.html">Problèmes de précision</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#screenshot">Prendre une capture d'écran</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#preservedrawingbuffer">Empêcher l'effacement du canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#tabindex">Obtenir des entrées clavier depuis un canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#html-background">Utiliser WebGL2 comme arrière-plan en HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cross-platform-issues.html">Problèmes multi-plateformes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Référence</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-attributes.html">Attributs</a></li>
+<li><a href="/webgl/lessons/fr/webgl-texture-units.html">Unités de Texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/fr/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/fr/webgl-references.html">Références</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentation de l'API</a></li>
+  <li>
+    <a href="https://twgljs.org">TWGL, une bibliothèque utilitaire WebGL</a>
+  </li>
+  <li>
+    <a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a>
+  </li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Problème ou bug ? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Créez un ticket sur github</a>.</div>
+<div class="lesson-comment-notes">
+   Utilisez <b>&lt;pre&gt;&lt;code&gt;</b>le code ici<b>&lt;/code&gt;&lt;/pre&gt;</b> pour les blocs de code
+</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Anti-Patterns';
+            var disqus_title = 'WebGL2 Anti-Patterns';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Merci à <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>pour <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/fr/webgl-3d-orthographic.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Comment faire de la 3D en WebGL en commençant par une projection orthographique.">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-3d-orthographic_fr.jpg">
+
+<meta property="og:title" content="WebGL2 - Projection Orthographique 3D">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-3d-orthographic_fr.jpg">
+<meta property="og:description" content="Comment faire de la 3D en WebGL en commençant par une projection orthographique.">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-orthographic.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 - Projection Orthographique 3D">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-orthographic.html">
+<meta name="twitter:description" content="Comment faire de la 3D en WebGL en commençant par une projection orthographique.">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-3d-orthographic_fr.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-orthographic.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-3d-orthographic_fr.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-orthographic.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-orthographic.html",
+      "inLanguage":"fr",
+      "name":"WebGL2 - Projection Orthographique 3D",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-orthographic.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 - Projection Orthographique 3D</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/fr/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-3d-orthographic.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-3d-orthographic.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/webgl/lessons/fr/webgl-3d-orthographic.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-3d-orthographic.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-3d-orthographic.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-3d-orthographic.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-3d-orthographic.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-3d-orthographic.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-3d-orthographic.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-3d-orthographic.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-3d-orthographic.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-3d-orthographic.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-3d-orthographic.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-3d-orthographic.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-3d-orthographic.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-3d-orthographic.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Table des matières</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/fr/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 - Projection Orthographique 3D</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Cet article fait partie d’une série d’articles sur WebGL.
+Le premier <a href="webgl-fundamentals.html">a commencé par les fondamentaux</a> et
+le précédent portait sur <a href="webgl-2d-matrices.html">les matrices 2D</a>.
+Si vous ne les avez pas lus, veuillez les consulter en premier.</p>
+<p>Dans le dernier article, nous avons vu comment fonctionnaient les matrices 2D. Nous avons parlé
+de la façon dont la translation, la rotation, la mise à l’échelle, et même la projection depuis
+les pixels vers l’espace de découpage peuvent toutes être réalisées par 1 matrice et un peu de magie
+mathématique matricielle. Faire de la 3D n’est qu’un petit pas supplémentaire.</p>
+<p>Dans nos exemples 2D précédents, nous avions des points 2D (x, y) que nous multipliions par
+une matrice 3x3. Pour faire de la 3D, nous avons besoin de points 3D (x, y, z) et d’une matrice 4x4.</p>
+<p>Prenons notre dernier exemple et changeons-le en 3D. Nous utiliserons à nouveau un F,
+mais cette fois un ‘F’ 3D.</p>
+<p>La première chose à faire est de modifier le shader de sommet pour gérer la 3D.
+Voici l’ancien shader de sommet.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">#version 300 es
+
+// un attribut est une entrée (in) pour un shader de sommet.
+// Il recevra des données depuis un tampon
+in vec2 a_position;
+
+// Une matrice pour transformer les positions
+uniform mat3 u_matrix;
+
+// tous les shaders ont une fonction main
+void main() {
+  // Multiplie la position par la matrice.
+  gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
+}
+</code></pre>
+<p>Et voici le nouveau</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">// un attribut est une entrée (in) pour un shader de sommet.
+// Il recevra des données depuis un tampon
+*in vec4 a_position;
+
+// Une matrice pour transformer les positions
+*uniform mat4 u_matrix;
+
+// tous les shaders ont une fonction main
+void main() {
+  // Multiplie la position par la matrice.
+*  gl_Position = u_matrix * a_position;
+}
+</code></pre>
+<p>C’est devenu encore plus simple ! Tout comme en 2D nous fournissions <code class="notranslate" translate="no">x</code> et <code class="notranslate" translate="no">y</code> puis
+définissions <code class="notranslate" translate="no">z</code> à 1, en 3D nous fournirons <code class="notranslate" translate="no">x</code>, <code class="notranslate" translate="no">y</code>, et <code class="notranslate" translate="no">z</code> et nous avons besoin que <code class="notranslate" translate="no">w</code>
+soit 1, mais nous pouvons profiter du fait que pour les attributs
+<code class="notranslate" translate="no">w</code> vaut 1 par défaut.</p>
+<p>Ensuite, nous devons fournir des données 3D.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  ...
+
+  // Indique à l'attribut comment extraire les données de positionBuffer (ARRAY_BUFFER)
+*  var size = 3;          // 3 composantes par itération
+  var type = gl.FLOAT;   // les données sont des floats 32 bits
+  var normalize = false; // ne pas normaliser les données
+  var stride = 0;        // 0 = avancer de size * sizeof(type) à chaque itération pour obtenir la position suivante
+  var offset = 0;        // commencer au début du tampon
+  gl.vertexAttribPointer(
+      positionAttributeLocation, size, type, normalize, stride, offset);
+
+  ...
+
+  // Remplit le tampon ARRAY_BUFFER actuel
+  // avec les valeurs qui définissent la lettre 'F'.
+  function setGeometry(gl) {
+    gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array([
+            // colonne gauche
+              0,   0,  0,
+             30,   0,  0,
+              0, 150,  0,
+              0, 150,  0,
+             30,   0,  0,
+             30, 150,  0,
+
+            // barre supérieure
+             30,   0,  0,
+            100,   0,  0,
+             30,  30,  0,
+             30,  30,  0,
+            100,   0,  0,
+            100,  30,  0,
+
+            // barre du milieu
+             30,  60,  0,
+             67,  60,  0,
+             30,  90,  0,
+             30,  90,  0,
+             67,  60,  0,
+             67,  90,  0]),
+        gl.STATIC_DRAW);
+  }
+</code></pre>
+<p>Ensuite, nous devons changer toutes les fonctions matricielles de 2D à 3D</p>
+<p>Voici les versions 2D (avant) de m3.translation, m3.rotation, et m3.scaling</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">var m3 = {
+  translation: function translation(tx, ty) {
+    return [
+      1, 0, 0,
+      0, 1, 0,
+      tx, ty, 1
+    ];
+  },
+
+  rotation: function rotation(angleInRadians) {
+    var c = Math.cos(angleInRadians);
+    var s = Math.sin(angleInRadians);
+    return [
+      c,-s, 0,
+      s, c, 0,
+      0, 0, 1
+    ];
+  },
+
+  scaling: function scaling(sx, sy) {
+    return [
+      sx, 0, 0,
+      0, sy, 0,
+      0, 0, 1
+    ];
+  },
+};
+</code></pre>
+<p>Et voici les versions 3D mises à jour.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">var m4 = {
+  translation: function(tx, ty, tz) {
+    return [
+       1,  0,  0,  0,
+       0,  1,  0,  0,
+       0,  0,  1,  0,
+       tx, ty, tz, 1,
+    ];
+  },
+
+  xRotation: function(angleInRadians) {
+    var c = Math.cos(angleInRadians);
+    var s = Math.sin(angleInRadians);
+
+    return [
+      1, 0, 0, 0,
+      0, c, s, 0,
+      0, -s, c, 0,
+      0, 0, 0, 1,
+    ];
+  },
+
+  yRotation: function(angleInRadians) {
+    var c = Math.cos(angleInRadians);
+    var s = Math.sin(angleInRadians);
+
+    return [
+      c, 0, -s, 0,
+      0, 1, 0, 0,
+      s, 0, c, 0,
+      0, 0, 0, 1,
+    ];
+  },
+
+  zRotation: function(angleInRadians) {
+    var c = Math.cos(angleInRadians);
+    var s = Math.sin(angleInRadians);
+
+    return [
+       c, s, 0, 0,
+      -s, c, 0, 0,
+       0, 0, 1, 0,
+       0, 0, 0, 1,
+    ];
+  },
+
+  scaling: function(sx, sy, sz) {
+    return [
+      sx, 0,  0,  0,
+      0, sy,  0,  0,
+      0,  0, sz,  0,
+      0,  0,  0,  1,
+    ];
+  },
+};
+</code></pre>
+<p>Notez que nous avons maintenant 3 fonctions de rotation. Nous n’en avions besoin que d’une en 2D car nous
+effectuions effectivement une rotation uniquement autour de l’axe Z. Maintenant, pour faire de la 3D, nous
+voulons également pouvoir effectuer des rotations autour des axes X et Y. Vous
+pouvez voir en les regardant qu’elles sont toutes très similaires. Si nous devions les
+développer, vous les verriez se simplifier comme auparavant</p>
+<p>Rotation Z</p>
+<div class="webgl_center">
+<div>newX = x *  c + y * s;</div>
+<div>newY = x * -s + y * c;</div>
+</div>
+<p>Rotation Y</p>
+<div class="webgl_center">
+<div>newX = x *  c + z * s;</div>
+<div>newZ = x * -s + z * c;</div>
+</div>
+<p>Rotation X</p>
+<div class="webgl_center">
+<div>newY = y *  c + z * s;</div>
+<div>newZ = y * -s + z * c;</div>
+</div>
+<p>ce qui vous donne ces rotations.</p>
+<iframe class="external_diagram" src="../resources/axis-diagram.html" style="width: 540px; height: 240px;"></iframe>
+<p>De même, nous allons créer nos fonctions simplifiées</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  translate: function(m, tx, ty, tz) {
+    return m4.multiply(m, m4.translation(tx, ty, tz));
+  },
+
+  xRotate: function(m, angleInRadians) {
+    return m4.multiply(m, m4.xRotation(angleInRadians));
+  },
+
+  yRotate: function(m, angleInRadians) {
+    return m4.multiply(m, m4.yRotation(angleInRadians));
+  },
+
+  zRotate: function(m, angleInRadians) {
+    return m4.multiply(m, m4.zRotation(angleInRadians));
+  },
+
+  scale: function(m, sx, sy, sz) {
+    return m4.multiply(m, m4.scaling(sx, sy, sz));
+  },
+</code></pre>
+<p>Et nous avons besoin d’une fonction de multiplication de matrices 4x4</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  multiply: function(a, b) {
+    var b00 = b[0 * 4 + 0];
+    var b01 = b[0 * 4 + 1];
+    var b02 = b[0 * 4 + 2];
+    var b03 = b[0 * 4 + 3];
+    var b10 = b[1 * 4 + 0];
+    var b11 = b[1 * 4 + 1];
+    var b12 = b[1 * 4 + 2];
+    var b13 = b[1 * 4 + 3];
+    var b20 = b[2 * 4 + 0];
+    var b21 = b[2 * 4 + 1];
+    var b22 = b[2 * 4 + 2];
+    var b23 = b[2 * 4 + 3];
+    var b30 = b[3 * 4 + 0];
+    var b31 = b[3 * 4 + 1];
+    var b32 = b[3 * 4 + 2];
+    var b33 = b[3 * 4 + 3];
+    var a00 = a[0 * 4 + 0];
+    var a01 = a[0 * 4 + 1];
+    var a02 = a[0 * 4 + 2];
+    var a03 = a[0 * 4 + 3];
+    var a10 = a[1 * 4 + 0];
+    var a11 = a[1 * 4 + 1];
+    var a12 = a[1 * 4 + 2];
+    var a13 = a[1 * 4 + 3];
+    var a20 = a[2 * 4 + 0];
+    var a21 = a[2 * 4 + 1];
+    var a22 = a[2 * 4 + 2];
+    var a23 = a[2 * 4 + 3];
+    var a30 = a[3 * 4 + 0];
+    var a31 = a[3 * 4 + 1];
+    var a32 = a[3 * 4 + 2];
+    var a33 = a[3 * 4 + 3];
+
+    return [
+      b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
+      b00 * a01 + b01 * a11 + b02 * a21 + b03 * a31,
+      b00 * a02 + b01 * a12 + b02 * a22 + b03 * a32,
+      b00 * a03 + b01 * a13 + b02 * a23 + b03 * a33,
+      b10 * a00 + b11 * a10 + b12 * a20 + b13 * a30,
+      b10 * a01 + b11 * a11 + b12 * a21 + b13 * a31,
+      b10 * a02 + b11 * a12 + b12 * a22 + b13 * a32,
+      b10 * a03 + b11 * a13 + b12 * a23 + b13 * a33,
+      b20 * a00 + b21 * a10 + b22 * a20 + b23 * a30,
+      b20 * a01 + b21 * a11 + b22 * a21 + b23 * a31,
+      b20 * a02 + b21 * a12 + b22 * a22 + b23 * a32,
+      b20 * a03 + b21 * a13 + b22 * a23 + b23 * a33,
+      b30 * a00 + b31 * a10 + b32 * a20 + b33 * a30,
+      b30 * a01 + b31 * a11 + b32 * a21 + b33 * a31,
+      b30 * a02 + b31 * a12 + b32 * a22 + b33 * a32,
+      b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33,
+    ];
+  },
+</code></pre>
+<p>Nous devons également mettre à jour la fonction de projection. Voici l’ancienne</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  projection: function (width, height) {
+    // Note : Cette matrice inverse l'axe Y pour que 0 soit en haut.
+    return [
+      2 / width, 0, 0,
+      0, -2 / height, 0,
+      -1, 1, 1
+    ];
+  },
+}
+</code></pre>
+<p>qui convertissait depuis les pixels vers l’espace de découpage. Pour notre première tentative pour
+l’étendre à la 3D, essayons</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  projection: function(width, height, depth) {
+    // Note : Cette matrice inverse l'axe Y pour que 0 soit en haut.
+    return [
+       2 / width, 0, 0, 0,
+       0, -2 / height, 0, 0,
+       0, 0, 2 / depth, 0,
+      -1, 1, 0, 1,
+    ];
+  },
+</code></pre>
+<p>Tout comme nous devions convertir depuis les pixels vers l’espace de découpage pour X et Y, pour
+Z nous devons faire la même chose. Dans ce cas, je fais également de l’axe Z des unités en pixels.
+Je vais passer une valeur similaire à <code class="notranslate" translate="no">width</code> pour <code class="notranslate" translate="no">depth</code>
+de sorte que notre espace sera large de 0 à <code class="notranslate" translate="no">width</code> pixels, haut de 0 à <code class="notranslate" translate="no">height</code> pixels, mais
+pour <code class="notranslate" translate="no">depth</code> ce sera <code class="notranslate" translate="no">-depth / 2</code> à <code class="notranslate" translate="no">+depth / 2</code>.</p>
+<p>Enfin, nous devons mettre à jour le code qui calcule la matrice.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  // Calcule la matrice
+*  var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 400);
+*  matrix = m4.translate(matrix, translation[0], translation[1], translation[2]);
+*  matrix = m4.xRotate(matrix, rotation[0]);
+*  matrix = m4.yRotate(matrix, rotation[1]);
+*  matrix = m4.zRotate(matrix, rotation[2]);
+*  matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
+
+  // Définit la matrice.
+*  gl.uniformMatrix4fv(matrixLocation, false, matrix);
+</code></pre>
+<p>Et voici cet exemple.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step1.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-step1.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Le premier problème que nous avons est que notre géométrie est un F plat, ce qui rend difficile
+de voir toute 3D. Pour résoudre cela, étendons la géométrie en 3D. Notre
+F actuel est composé de 3 rectangles, 2 triangles chacun. Pour le rendre 3D, il faudra
+un total de 16 rectangles : les 3 rectangles à l’avant, 3 à
+l’arrière, 1 sur la gauche, 4 sur la droite, 2 en haut, 3 en bas.</p>
+<img class="webgl_center noinvertdark" width="300" src="../resources/3df.svg" />
+<p>C’est un peu trop pour les lister tous ici.
+16 rectangles avec 2 triangles par rectangle et 3 sommets par triangle font 96
+sommets. Si vous voulez tous les voir, consultez le code source de l’exemple.</p>
+<p>Nous devons dessiner plus de sommets donc</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">    // Dessine la géométrie.
+    var primitiveType = gl.TRIANGLES;
+    var offset = 0;
+*    var count = 16 * 6;
+    gl.drawArrays(primitiveType, offset, count);
+</code></pre>
+<p>Et voici cette version</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step2.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-step2.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>En déplaçant les curseurs, il est assez difficile de voir que c’est en 3D. Essayons
+de colorer chaque rectangle d’une couleur différente. Pour ce faire, nous allons ajouter un autre
+attribut à notre shader de sommet et un varying pour le transmettre du shader de sommet
+au shader de fragment.</p>
+<p>Voici le nouveau shader de sommet</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+
+// un attribut est une entrée (in) pour un shader de sommet.
+// Il recevra des données depuis un tampon
+in vec4 a_position;
++in vec4 a_color;
+
+// Une matrice pour transformer les positions
+uniform mat4 u_matrix;
+
++// un varying pour transmettre la couleur au shader de fragment
++out vec4 v_color;
+
+// tous les shaders ont une fonction main
+void main() {
+  // Multiplie la position par la matrice.
+  gl_Position = u_matrix * a_position;
+
++  // Transmet la couleur au shader de fragment.
++  v_color = a_color;
+}
+</code></pre>
+<p>Et nous devons utiliser cette couleur dans le shader de fragment</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+
+precision highp float;
+
++// la couleur variée transmise depuis le shader de sommet
++in vec4 v_color;
+
+// nous devons déclarer une sortie pour le shader de fragment
+out vec4 outColor;
+
+void main() {
+*  outColor = v_color;
+}
+</code></pre>
+<p>Nous devons rechercher l’emplacement de l’attribut pour fournir les couleurs, puis configurer un autre
+tampon et attribut pour lui donner les couleurs.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  ...
+  var colorAttributeLocation = gl.getAttribLocation(program, &quot;a_color&quot;);
+
+  ...
+
+  // crée le tampon de couleur, en fait le ARRAY_BUFFER actuel
+  // et copie les valeurs de couleur
+  var colorBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+  setColors(gl);
+
+  // Active l'attribut
+  gl.enableVertexAttribArray(colorAttributeLocation);
+
+  // Indique à l'attribut comment extraire les données de colorBuffer (ARRAY_BUFFER)
+  var size = 3;          // 3 composantes par itération
+  var type = gl.UNSIGNED_BYTE;   // les données sont des octets non signés de 8 bits
+  var normalize = true;  // convertir de 0-255 à 0.0-1.0
+  var stride = 0;        // 0 = avancer de size * sizeof(type) à chaque
+                         // itération pour obtenir la couleur suivante
+  var offset = 0;        // commencer au début du tampon
+  gl.vertexAttribPointer(
+      colorAttributeLocation, size, type, normalize, stride, offset);
+
+  ...
+
+// Remplit le tampon avec les couleurs pour le 'F'.
+
+function setColors(gl) {
+  gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Uint8Array([
+          // colonne gauche avant
+        200,  70, 120,
+        200,  70, 120,
+        200,  70, 120,
+        200,  70, 120,
+        200,  70, 120,
+        200,  70, 120,
+
+          // barre supérieure avant
+        200,  70, 120,
+        200,  70, 120,
+        ...
+        ...
+      gl.STATIC_DRAW);
+}
+</code></pre>
+<p>Maintenant nous obtenons ceci.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step3.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-step3.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Ouh là, c’est quoi ce désordre ? Eh bien, il s’avère que toutes les différentes parties de
+ce ‘F’ 3D, l’avant, l’arrière, les côtés, etc. sont dessinées dans l’ordre dans lequel elles apparaissent dans
+nos données de géométrie. Cela ne nous donne pas tout à fait les résultats souhaités car parfois
+celles de l’arrière sont dessinées après celles de l’avant.</p>
+<img class="webgl_center" style="background-color: transparent;" width="163" height="190" src="../resources/polygon-drawing-order.gif" />
+<p>La <span style="background: rgb(200, 70, 120); color: white; padding: 0.25em">partie rougeâtre</span> est
+l’<strong>avant</strong> du ‘F’ mais comme c’est la première partie de nos données,
+elle est dessinée en premier, puis les autres triangles derrière elle sont dessinés
+après, la recouvrant. Par exemple, la <span style="background: rgb(80, 70, 200); color: white; padding: 0.25em">partie violette</span>
+est en fait l’arrière du ‘F’. Elle est dessinée en 2ème position car elle vient en 2ème dans nos données.</p>
+<p>Les triangles en WebGL ont le concept de face avant et de face arrière. Par défaut, un
+triangle de face avant a ses sommets qui vont dans le sens antihoraire. Un
+triangle de face arrière a ses sommets qui vont dans le sens horaire.</p>
+<img src="../resources/triangle-winding.svg" class="webgl_center" width="400" />
+<p>WebGL a la capacité de ne dessiner que les triangles de face avant ou de face arrière. Nous pouvons activer cette
+fonctionnalité avec</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  gl.enable(gl.CULL_FACE);
+</code></pre>
+<p>Nous allons mettre cela dans notre fonction <code class="notranslate" translate="no">drawScene</code>. Avec cette
+fonctionnalité activée, WebGL “élimine” par défaut les triangles de face arrière.
+“Éliminer” dans ce cas est un mot sophistiqué pour “ne pas dessiner”.</p>
+<p>Notez que pour WebGL, qu’un triangle soit
+considéré comme allant dans le sens horaire ou antihoraire dépend des
+sommets de ce triangle dans l’espace de découpage. En d’autres termes, WebGL détermine
+si un triangle est avant ou arrière APRÈS que vous ayez appliqué des calculs mathématiques aux
+sommets dans le shader de sommet. Cela signifie par exemple qu’un triangle horaire
+qui est mis à l’échelle en X par -1 devient un triangle antihoraire ou
+qu’un triangle horaire tourné de 180 degrés devient un triangle antihoraire. Comme nous avions CULL_FACE désactivé, nous pouvions voir à la fois les
+triangles horaires (avant) et antihoraires (arrière). Maintenant que nous l’avons
+activé, chaque fois qu’un triangle de face avant se retourne, que ce soit à cause
+de la mise à l’échelle ou de la rotation ou pour quelque raison que ce soit, WebGL ne le dessinera pas.
+C’est une bonne chose car lorsque vous faites tourner quelque chose en 3D, vous
+voulez généralement que les triangles qui vous font face soient considérés comme de face
+avant.</p>
+<p>Avec CULL_FACE activé, voici ce que nous obtenons</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step4.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-step4.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Hé ! Où sont passés tous les triangles ? Il s’avère que beaucoup d’entre eux
+font face dans le mauvais sens. Faites-le tourner et vous les verrez apparaître lorsque vous regarderez
+de l’autre côté. Heureusement, c’est facile à corriger. Nous regardons simplement lesquels
+vont dans le mauvais sens et échangeons 2 de leurs sommets. Par exemple, si un
+triangle orienté vers l’arrière est</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">           1,   2,   3,
+          40,  50,  60,
+         700, 800, 900,
+</code></pre>
+<p>nous échangeons simplement les 2 derniers sommets pour le faire aller vers l’avant.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">           1,   2,   3,
+*         700, 800, 900,
+*          40,  50,  60,
+</code></pre>
+<p>Après avoir parcouru et corrigé tous les triangles orientés vers l’arrière, nous obtenons ceci</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step5.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-step5.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>C’est mieux, mais il y a encore un autre problème. Même avec tous les
+triangles orientés dans la bonne direction et avec ceux de face arrière
+éliminés, nous avons encore des endroits où les triangles qui devraient être à l’arrière
+sont dessinés par-dessus les triangles qui devraient être à l’avant.</p>
+<p>Entrez le TAMPON DE PROFONDEUR.</p>
+<p>Un tampon de profondeur, parfois appelé Z-Buffer, est un rectangle de pixels de <em>profondeur</em>,
+un pixel de profondeur pour chaque pixel de couleur utilisé pour créer l’image. Lorsque
+WebGL dessine chaque pixel de couleur, il peut également dessiner un pixel de profondeur. Il fait cela
+en fonction des valeurs que nous renvoyons depuis le shader de sommet pour Z. Tout comme nous
+devions convertir vers l’espace de découpage pour X et Y, Z est également dans l’espace de découpage ou (-1
+à +1). Cette valeur est ensuite convertie en une valeur d’espace de profondeur (0 à +1).
+Avant que WebGL ne dessine un pixel de couleur, il vérifiera le pixel de profondeur correspondant.
+Si la valeur de profondeur pour le pixel qu’il est sur le point de dessiner est supérieure
+à la valeur du pixel de profondeur correspondant, alors WebGL ne dessine pas
+le nouveau pixel de couleur. Sinon, il dessine à la fois le nouveau pixel de couleur avec la
+couleur de votre shader de fragment ET il dessine le pixel de profondeur avec la nouvelle
+valeur de profondeur. Cela signifie que les pixels qui sont derrière d’autres pixels ne seront pas
+dessinés.</p>
+<p>Nous pouvons activer cette fonctionnalité presque aussi simplement que nous avons activé l’élimination avec</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  gl.enable(gl.DEPTH_TEST);
+</code></pre>
+<p>Nous devons également effacer le tampon de profondeur à 1.0 avant de commencer à dessiner.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  // Dessine la scène.
+  function drawScene() {
+
+    ...
+
+    // Efface le canvas ET le tampon de profondeur.
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    ...
+</code></pre>
+<p>Et maintenant nous obtenons</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step6.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-step6.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>ce qui est de la 3D !</p>
+<p>Un petit détail. Dans la plupart des bibliothèques mathématiques 3D, il n’y a pas de fonction <code class="notranslate" translate="no">projection</code> pour
+effectuer nos conversions depuis l’espace de découpage vers l’espace en pixels. Il y a plutôt généralement une fonction
+appelée <code class="notranslate" translate="no">ortho</code> ou <code class="notranslate" translate="no">orthographic</code> qui ressemble à ceci</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var m4 = {
+  orthographic: function(left, right, bottom, top, near, far) {
+    return [
+      2 / (right - left), 0, 0, 0,
+      0, 2 / (top - bottom), 0, 0,
+      0, 0, 2 / (near - far), 0,
+
+      (left + right) / (left - right),
+      (bottom + top) / (bottom - top),
+      (near + far) / (near - far),
+      1,
+    ];
+  }
+</code></pre>
+<p>Contrairement à notre fonction <code class="notranslate" translate="no">projection</code> simplifiée ci-dessus qui n’avait que les paramètres width, height, et depth,
+cette fonction de projection orthographique plus courante nous permet de passer left, right,
+bottom, top, near, et far, ce qui nous donne plus de flexibilité. Pour l’utiliser de la même manière que
+notre fonction de projection originale, nous l’appellerions avec</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var left = 0;
+var right = gl.canvas.clientWidth;
+var bottom = gl.canvas.clientHeight;
+var top = 0;
+var near = 200;
+var far = -200;
+m4.orthographic(left, right, bottom, top, near, far);
+</code></pre>
+<p>Dans le prochain article, je vais expliquer <a href="webgl-3d-perspective.html">comment lui donner de la perspective</a>.</p>
+<div class="webgl_bottombar">
+<h3>Pourquoi l'attribut est vec4 mais gl.vertexAttribPointer size est 3</h3>
+<p>
+Pour ceux d'entre vous qui sont attentifs aux détails, vous avez peut-être remarqué que nous avons défini nos 2 attributs comme
+</p>
+<pre class="prettyprint showlinemods">
+in vec4 a_position;
+in vec4 a_color;
+</pre>
+<p>tous deux sont des 'vec4' mais lorsque nous disons à WebGL comment extraire les données de nos tampons, nous avons utilisé</p>
+<pre class="prettyprint showlinemods">
+// Indique à l&#x27;attribut comment extraire les données de positionBuffer (ARRAY_BUFFER)
+var size &#x3D; 3;          // 3 composantes par itération
+var type &#x3D; gl.FLOAT;   // les données sont des floats 32 bits
+var normalize &#x3D; false; // ne pas normaliser les données
+var stride &#x3D; 0;        // 0 &#x3D; avancer de size * sizeof(type) à chaque
+                       // itération pour obtenir la position suivante
+var offset &#x3D; 0;        // commencer au début du tampon
+gl.vertexAttribPointer(
+    positionAttributeLocation, size, type, normalize, stride, offset);
+
+...
+// Indique à l&#x27;attribut comment extraire les données de colorBuffer (ARRAY_BUFFER)
+var size &#x3D; 3;          // 3 composantes par itération
+var type &#x3D; gl.UNSIGNED_BYTE;   // les données sont des octets non signés de 8 bits
+var normalize &#x3D; true;  // convertir de 0-255 à 0.0-1.0
+var stride &#x3D; 0;        // 0 &#x3D; avancer de size * sizeof(type) à chaque
+                       // itération pour obtenir la couleur suivante
+var offset &#x3D; 0;        // commencer au début du tampon
+gl.vertexAttribPointer(
+    colorAttributeLocation, size, type, normalize, stride, offset);
+</pre>
+<p>
+Ce '3' dans chacun de ceux-ci dit de n'extraire que 3 valeurs du tampon par attribut
+par itération du shader de sommet.
+Cela fonctionne car dans le shader de sommet, WebGL fournit des valeurs par défaut pour celles
+que vous ne fournissez pas. Les valeurs par défaut sont 0, 0, 0, 1 où x = 0, y = 0, z = 0
+et w = 1. C'est pourquoi dans notre ancien shader de sommet 2D, nous devions explicitement
+fournir le 1. Nous passions x et y et nous avions besoin d'un 1 pour z, mais
+comme la valeur par défaut pour z est 0, nous devions explicitement fournir un 1. Pour la 3D
+cependant, même si nous ne fournissons pas de 'w', sa valeur par défaut est 1, ce qui est ce dont
+nous avons besoin pour que les calculs matriciels fonctionnent.
+</p>
+</div>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-3d-orthographic.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-3d-orthographic.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-3d-orthographic.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-3d-orthographic.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-3d-orthographic.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-3d-orthographic.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-3d-orthographic.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-3d-orthographic.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fondamentaux</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-getting-webgl2.html">Comment utiliser WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fundamentals.html">Les bases</a></li>
+<li><a href="/webgl/lessons/fr/webgl-how-it-works.html">Comment ça marche</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shaders-and-glsl.html">Shaders et GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Diagramme d'état</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl2-whats-new.html">Quoi de neuf dans WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2.html">Passer de WebGL1 à WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2-fundamentals.html">Différences de WebGLFundamentals.org à WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Traitement d'images</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-image-processing.html">Traitement d'images</a></li>
+<li><a href="/webgl/lessons/fr/webgl-image-processing-continued.html">Traitement d'images - Suite</a></li>
+        </ul>
+  <li>Translation, rotation, mise à l'échelle 2D et calcul matriciel</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-translation.html">Translation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-rotation.html">Rotation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-scale.html">Mise à l'échelle 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrices.html">Matrices 2D</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-orthographic.html">Projection Orthographique 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective.html">Perspective 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-camera.html">3D - Caméras</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-naming.html">3D - Nommage des matrices</a></li>
+        </ul>
+  <li>Éclairage</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-lighting-directional.html">Éclairage directionnel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-point.html">Éclairage ponctuel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-spot.html">Éclairage spot</a></li>
+        </ul>
+  <li>Structure et organisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-less-code-more-fun.html">Moins de code, plus de plaisir</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-multiple-things.html">Dessiner plusieurs choses</a></li>
+<li><a href="/webgl/lessons/fr/webgl-scene-graph.html">Graphes de scène</a></li>
+        </ul>
+  <li>Géométrie</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-geometry-lathe.html">3D Géométrie - Tour</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj.html">Charger des fichiers .obj</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj-w-mtl.html">Charger des fichiers .obj avec .mtl</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/fr/webgl-data-textures.html">Textures de données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2-textures.html">Utiliser 2 textures ou plus</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cors-permission.html">Images Cross Origin</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective-correct-texturemapping.html">Mappage de Texture avec Correction de Perspective</a></li>
+<li><a href="/webgl/lessons/fr/webgl-planar-projection-mapping.html">Projection planaire et en perspective</a></li>
+        </ul>
+  <li>Rendu vers une texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-render-to-texture.html">Rendu vers une texture</a></li>
+        </ul>
+  <li>Ombres</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-shadows.html">Ombres</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrix-stack.html">2D - Pile de matrices</a></li>
+<li><a href="/webgl/lessons/fr/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/fr/webgl-environment-maps.html">Cartes d'environnement</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fog.html">Brouillard</a></li>
+<li><a href="/webgl/lessons/fr/webgl-picking.html">Picking (cliquer sur des objets)</a></li>
+        </ul>
+  <li>Texte</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-text-html.html">Texte - HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-canvas2d.html">Texte - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-texture.html">Texte - Utiliser une texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-glyphs.html">Texte - Utiliser une texture de glyphes</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Astuces</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-smallest-programs.html">Plus petits programmes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-without-data.html">Dessiner sans données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/fr/webgl-pulling-vertices.html">Extraction de sommets</a></li>
+        </ul>
+  <li>Optimisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-indexed-vertices.html">Sommets indexés (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-instanced-drawing.html">Dessin instancié</a></li>
+        </ul>
+  <li>Divers</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-setup-and-installation.html">Installation et configuration</a></li>
+<li><a href="/webgl/lessons/fr/webgl-boilerplate.html">Code standard (Boilerplate)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-resizing-the-canvas.html">Redimensionner le Canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/fr/webgl-points-lines-triangles.html">Points, Lignes et Triangles</a></li>
+<li><a href="/webgl/lessons/fr/webgl-multiple-views.html">Vues multiples, Canvas multiples</a></li>
+<li><a href="/webgl/lessons/fr/webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+<li><a href="/webgl/lessons/fr/webgl-and-alpha.html">WebGL2 et Alpha</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-vs-3d-library.html">Bibliothèques 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-vs-math.html">WebGL2 Matrices vs Matrices Mathématiques</a></li>
+<li><a href="/webgl/lessons/fr/webgl-precision-issues.html">Problèmes de précision</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#screenshot">Prendre une capture d'écran</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#preservedrawingbuffer">Empêcher l'effacement du canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#tabindex">Obtenir des entrées clavier depuis un canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#html-background">Utiliser WebGL2 comme arrière-plan en HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cross-platform-issues.html">Problèmes multi-plateformes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Référence</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-attributes.html">Attributs</a></li>
+<li><a href="/webgl/lessons/fr/webgl-texture-units.html">Unités de Texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/fr/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/fr/webgl-references.html">Références</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentation de l'API</a></li>
+  <li>
+    <a href="https://twgljs.org">TWGL, une bibliothèque utilitaire WebGL</a>
+  </li>
+  <li>
+    <a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a>
+  </li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Problème ou bug ? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Créez un ticket sur github</a>.</div>
+<div class="lesson-comment-notes">
+   Utilisez <b>&lt;pre&gt;&lt;code&gt;</b>le code ici<b>&lt;/code&gt;&lt;/pre&gt;</b> pour les blocs de code
+</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 - Projection Orthographique 3D';
+            var disqus_title = 'WebGL2 - Projection Orthographique 3D';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Merci à <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>pour <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

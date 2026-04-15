@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/fr/webgl1-to-webgl2.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Comment passer de WebGL1 à WebGL2">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl1-to-webgl2_fr.jpg">
+
+<meta property="og:title" content="WebGL2 depuis WebGL1">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl1-to-webgl2_fr.jpg">
+<meta property="og:description" content="Comment passer de WebGL1 à WebGL2">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl1-to-webgl2.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 depuis WebGL1">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl1-to-webgl2.html">
+<meta name="twitter:description" content="Comment passer de WebGL1 à WebGL2">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl1-to-webgl2_fr.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl1-to-webgl2.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl1-to-webgl2_fr.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl1-to-webgl2.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl1-to-webgl2.html",
+      "inLanguage":"fr",
+      "name":"WebGL2 depuis WebGL1",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl1-to-webgl2.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 depuis WebGL1</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/fr/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl1-to-webgl2.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl1-to-webgl2.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/webgl/lessons/fr/webgl1-to-webgl2.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl1-to-webgl2.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl1-to-webgl2.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl1-to-webgl2.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl1-to-webgl2.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl1-to-webgl2.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl1-to-webgl2.html" >English</a>
+    <option value="/webgl/lessons/de/webgl1-to-webgl2.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl1-to-webgl2.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl1-to-webgl2.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl1-to-webgl2.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl1-to-webgl2.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl1-to-webgl2.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl1-to-webgl2.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Table des matières</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/fr/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 depuis WebGL1</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>WebGL2 est <strong>quasiment</strong> 100% rétrocompatible avec WebGL1.
+Si vous n’utilisez que des fonctionnalités WebGL1, il n’y a alors
+que 2 différences <strong>majeures</strong>.</p>
+<ol>
+<li>
+<p>Vous utilisez <code class="notranslate" translate="no">&quot;webgl2&quot;</code> au lieu de <code class="notranslate" translate="no">&quot;webgl&quot;</code> lors de l’appel à <code class="notranslate" translate="no">getContext</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var gl = someCanvas.getContext(&quot;webgl2&quot;);
+</code></pre>
+<p>Remarque : il n’y a pas d’“experimental-webgl2”. Les vendeurs de navigateurs se sont
+réunis et ont décidé de ne pas continuer à préfixer les choses car les sites web
+deviennent dépendants du préfixe.</p>
+</li>
+<li>
+<p>De nombreuses extensions font désormais partie intégrante de WebGL2 et ne sont donc plus disponibles
+en tant qu’extensions.</p>
+<p>Par exemple, les Vertex Array Objects <code class="notranslate" translate="no">OES_vertex_array_object</code> sont une
+fonctionnalité standard de WebGL2. Donc par exemple dans WebGL1, vous feriez ceci</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var ext = gl.getExtension(&quot;OES_vertex_array_object&quot;);
+if (!ext) {
+  // dire à l'utilisateur qu'il n'a pas l'extension requise ou la contourner
+} else {
+  var someVAO = ext.createVertexArrayOES();
+}
+</code></pre>
+<p>Dans WebGL2, vous feriez ceci</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var someVAO = gl.createVertexArray();
+</code></pre>
+<p>Parce que ça existe simplement.</p>
+</li>
+</ol>
+<p>Cela dit, pour tirer parti de la plupart des fonctionnalités de WebGL2, vous devrez apporter
+quelques modifications.</p>
+<h2 id="passer-à-glsl-300-es">Passer à GLSL 300 es</h2>
+<p>Le plus grand changement est que vous devriez mettre à niveau vos shaders en GLSL 3.00 ES. Pour ce faire,
+la première ligne de vos shaders doit être</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+</code></pre>
+<p><strong>REMARQUE : CELA DOIT ÊTRE LA PREMIÈRE LIGNE ! Aucun commentaire et aucune ligne vide avant n’est autorisé.</strong></p>
+<p>En d’autres termes, ceci est mauvais</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// MAUVAIS!!!!              +---Il y a une nouvelle ligne ici !
+// MAUVAIS!!!!              V
+var vertexShaderSource = `
+#version 300 es
+..
+`;
+</code></pre>
+<p>Ceci est également mauvais</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;!-- MAUVAIS!!                 V&lt;- il y a une nouvelle ligne ici
+&lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;
+#version 300 es
+...
+&lt;/script&gt;
+</code></pre>
+<p>Ceci est bon</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var vertexShaderSource = `#version 300 es
+...
+`;
+</code></pre>
+<p>Ceci est bon aussi</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;script id=&quot;vs&quot; type=&quot;notjs&quot;&gt;#version 300 es
+...
+&lt;/script&gt;
+</code></pre>
+<p>Ou vous pourriez faire en sorte que vos fonctions de compilation de shader suppriment
+les premières lignes vides.</p>
+<h3 id="changements-dans-glsl-300-es-par-rapport-à-glsl-100">Changements dans GLSL 300 es par rapport à GLSL 100</h3>
+<p>Il y a plusieurs changements que vous devrez apporter à vos shaders
+en plus d’ajouter la chaîne de version ci-dessus.</p>
+<h4 id="attribute---in"><code class="notranslate" translate="no">attribute</code> -&gt; <code class="notranslate" translate="no">in</code></h4>
+<p>Dans GLSL 100, vous pourriez avoir</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">attribute vec4 a_position;
+attribute vec2 a_texcoord;
+attribute vec3 a_normal;
+</code></pre>
+<p>Dans GLSL 300 es, cela devient</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">in vec4 a_position;
+in vec2 a_texcoord;
+in vec3 a_normal;
+</code></pre>
+<h4 id="varying-vers-in--out"><code class="notranslate" translate="no">varying</code> vers <code class="notranslate" translate="no">in</code> / <code class="notranslate" translate="no">out</code></h4>
+<p>Dans GLSL 100, vous pourriez déclarer un varying à la fois dans le vertex
+et le fragment shader comme ceci</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">varying vec2 v_texcoord;
+varying vec3 v_normal;
+</code></pre>
+<p>Dans GLSL 300 es, dans le vertex shader, les varyings deviennent</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">out vec2 v_texcoord;
+out vec3 v_normal;
+</code></pre>
+<p>Et dans le fragment shader, ils deviennent</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">in vec2 v_texcoord;
+in vec3 v_normal;
+</code></pre>
+<h4 id="plus-de-gl_fragcolor">Plus de <code class="notranslate" translate="no">gl_FragColor</code></h4>
+<p>Dans GLSL 100, votre fragment shader définirait la variable spéciale
+<code class="notranslate" translate="no">gl_FragColor</code> pour définir la sortie du shader.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl_FragColor = vec4(1, 0, 0, 1);  // rouge
+</code></pre>
+<p>Dans GLSL 300 es, vous déclarez votre propre variable de sortie et
+vous la définissez.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">out vec4 myOutputColor;
+
+void main() {
+   myOutputColor = vec4(1, 0, 0, 1);  // rouge
+}
+</code></pre>
+<p>Remarque : Vous pouvez choisir n’importe quel nom, mais les noms <strong>ne peuvent pas</strong> commencer par
+<code class="notranslate" translate="no">gl_</code>, donc vous ne pouvez pas simplement faire <code class="notranslate" translate="no">out vec4 gl_FragColor</code>.</p>
+<h4 id="texture2d---texture-etc"><code class="notranslate" translate="no">texture2D</code> -&gt; <code class="notranslate" translate="no">texture</code> etc.</h4>
+<p>Dans GLSL 100, vous obteniez une couleur d’une texture comme ceci</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler2D u_some2DTexture;
+uniform samplerCube u_someCubeTexture;
+
+...
+
+vec4 color1 = texture2D(u_some2DTexture, ...);
+vec4 color2 = textureCube(u_someCubeTexture, ...);
+</code></pre>
+<p>Dans GLSL 300 es, les fonctions de texture savent automatiquement
+quoi faire en fonction du type de sampler. Donc maintenant, c’est juste
+<code class="notranslate" translate="no">texture</code></p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">uniform sampler2D u_some2DTexture;
+uniform samplerCube u_someCubeTexture;
+
+...
+
+vec4 color1 = texture(u_some2DTexture, ...);
+vec4 color2 = texture(u_someCubeTexture, ...);
+</code></pre>
+<h2 id="fonctionnalités-que-vous-pouvez-tenir-pour-acquises">Fonctionnalités que vous pouvez tenir pour acquises</h2>
+<p>Dans WebGL1, de nombreuses fonctionnalités étaient des extensions optionnelles. Dans WebGL2,
+toutes les fonctionnalités suivantes sont des fonctionnalités standard :</p>
+<ul>
+<li>Textures de profondeur (<a href="https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/">WEBGL_depth_texture</a>)</li>
+<li>Textures à virgule flottante (<a href="https://www.khronos.org/registry/webgl/extensions/OES_texture_float/">OES_texture_float</a>/<a href="https://www.khronos.org/registry/webgl/extensions/OES_texture_float_linear/">OES_texture_float_linear</a>)</li>
+<li>Textures à demi-virgule flottante (<a href="https://www.khronos.org/registry/webgl/extensions/OES_texture_half_float/">OES_texture_half_float</a>/<a href="https://www.khronos.org/registry/webgl/extensions/OES_texture_half_float_linear/">OES_texture_half_float_linear</a>)</li>
+<li>Vertex Array Objects (<a href="https://www.khronos.org/registry/webgl/extensions/OES_vertex_array_object/">OES_vertex_array_object</a>)</li>
+<li>Dérivées standard (<a href="https://www.khronos.org/registry/webgl/extensions/OES_standard_derivatives/">OES_standard_derivatives</a>)</li>
+<li>Dessin instancié (<a href="https://www.khronos.org/registry/webgl/extensions/ANGLE_instanced_arrays/">ANGLE_instanced_arrays</a>)</li>
+<li>Indices UNSIGNED_INT (<a href="https://www.khronos.org/registry/webgl/extensions/OES_element_index_uint/">OES_element_index_uint</a>)</li>
+<li>Définir <code class="notranslate" translate="no">gl_FragDepth</code> (<a href="https://www.khronos.org/registry/webgl/extensions/EXT_frag_depth/">EXT_frag_depth</a>)</li>
+<li>Équation de fusion MIN/MAX (<a href="https://www.khronos.org/registry/webgl/extensions/EXT_blend_minmax/">EXT_blend_minmax</a>)</li>
+<li>Accès direct au LOD de texture (<a href="https://www.khronos.org/registry/webgl/extensions/EXT_shader_texture_lod/">EXT_shader_texture_lod</a>)</li>
+<li>Multiple Draw Buffers (<a href="https://www.khronos.org/registry/webgl/extensions/WEBGL_draw_buffers/">WEBGL_draw_buffers</a>)</li>
+<li>Support sRGB pour les textures et framebuffer objects (<a href="https://www.khronos.org/registry/webgl/extensions/EXT_sRGB/">EXT_sRGB</a>)</li>
+<li>N’importe quel niveau d’une texture peut être attaché à un framebuffer object (<a href="https://www.khronos.org/registry/webgl/extensions/OES_fbo_render_mipmap/">OES_fbo_render_mipmap</a>)</li>
+<li>Accès aux textures dans les vertex shaders</li>
+</ul>
+<h2 id="support-des-textures-non-puissance-de-2">Support des textures Non-Puissance de 2</h2>
+<p>Dans WebGL1, les textures qui n’étaient pas une puissance de 2 ne pouvaient pas avoir de mips.
+Dans WebGL2, cette limite est supprimée. Les textures non-puissance de 2 fonctionnent exactement
+de la même façon que les textures puissance de 2.</p>
+<h2 id="attachements-de-framebuffer-à-virgule-flottante">Attachements de Framebuffer à virgule flottante</h2>
+<p>Dans WebGL1, pour vérifier le support du rendu vers une texture à virgule flottante,
+vous deviez d’abord vérifier et activer l’extension <code class="notranslate" translate="no">OES_texture_float</code>, puis
+créer une texture à virgule flottante, l’attacher à un framebuffer, et appeler
+<code class="notranslate" translate="no">gl.checkFramebufferStatus</code> pour voir si elle retournait <code class="notranslate" translate="no">gl.FRAMEBUFFER_COMPLETE</code>.</p>
+<p>Dans WebGL2, vous devez vérifier et activer <code class="notranslate" translate="no">EXT_color_buffer_float</code> sinon
+<code class="notranslate" translate="no">gl.checkFramebufferStatus</code> ne retournera jamais <code class="notranslate" translate="no">gl.FRAMEBUFFER_COMPLETE</code> pour
+une texture à virgule flottante.</p>
+<p>Notez que c’est également vrai pour les attachements de framebuffer <code class="notranslate" translate="no">HALF_FLOAT</code>.</p>
+<blockquote>
+<p>Si vous êtes curieux, c’était un <em>bug</em> dans la spécification WebGL1. Ce qui s’est passé, c’est que WebGL1
+a été livré et <code class="notranslate" translate="no">OES_texture_float</code> a été ajouté, et on a simplement supposé que la façon correcte
+de l’utiliser pour le rendu était de créer une texture, de l’attacher à un framebuffer,
+et de vérifier son statut. Plus tard, quelqu’un a signalé que selon la spécification, ce n’était
+pas suffisant car la spécification dit que les couleurs écrites dans un fragment shader sont
+toujours clampées entre 0 et 1. <code class="notranslate" translate="no">EXT_color_buffer_float</code> supprime cette restriction de clampage,
+mais comme WebGL avait déjà été livré depuis environ un an ou plus,
+cela aurait cassé de nombreux sites web d’imposer la restriction. Pour WebGL2,
+ils ont pu le corriger et donc maintenant vous devez activer <code class="notranslate" translate="no">EXT_color_buffer_float</code>
+pour utiliser des textures à virgule flottante comme attachements de framebuffer.</p>
+<p>REMARQUE : À ma connaissance, en mars 2017, très peu d’appareils mobiles supportaient le rendu vers
+des textures à virgule flottante.</p>
+</blockquote>
+<h2 id="vertex-array-objects">Vertex Array Objects</h2>
+<p>De toutes les fonctionnalités ci-dessus, la seule fonctionnalité que je pense personnellement que vous devriez
+toujours TOUJOURS utiliser est les Vertex Array Objects. Tout le reste dépend vraiment
+de ce que vous essayez de faire, mais les Vertex Array Objects en particulier
+semblent être une fonctionnalité de base qui devrait toujours être utilisée.</p>
+<p>Dans WebGL1 sans Vertex Array Objects, toutes les données sur les attributs
+étaient des états WebGL globaux. Vous pouvez l’imaginer comme ceci</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var glState = {
+  attributeState: {
+    ELEMENT_ARRAY_BUFFER: null,
+    attributes: [
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+      { enable: ?, size: ?, type: ?, normalize: ?, stride: ?, offset: ?, buffer: ?, },
+    ],
+  },
+}
+</code></pre>
+<p>L’appel de fonctions comme <code class="notranslate" translate="no">gl.vertexAttribPointer</code>, <code class="notranslate" translate="no">gl.enableVertexAttribArray</code>, et
+<code class="notranslate" translate="no">gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ??)</code> affecterait cet état global.
+Avant chaque chose que vous vouliez dessiner, vous deviez configurer tous les attributs, et si vous
+dessiniez des données indexées, vous deviez définir l’<code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code>.</p>
+<p>Avec les Vertex Array Objects, tout l’<code class="notranslate" translate="no">attributeState</code> ci-dessus devient un <em>Vertex Array</em>.</p>
+<p>En d’autres termes</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var someVAO = gl.createVertexArray();
+</code></pre>
+<p>Crée une nouvelle instance de la chose ci-dessus appelée <code class="notranslate" translate="no">attributeState</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(someVAO);
+</code></pre>
+<p>C’est équivalent à</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">glState.attributeState = someVAO;
+</code></pre>
+<p>Ce que cela signifie, c’est que vous devriez configurer tous vos attributs au moment de l’initialisation maintenant.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// à l'initialisation
+for each model / geometry / ...
+  var vao = gl.createVertexArray()
+  gl.bindVertexArray(vao);
+  for each attribute
+    gl.enableVertexAttribArray(...);
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufferForAttribute);
+    gl.vertexAttribPointer(...);
+  if indexed geometry
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+  gl.bindVertexArray(null);
+</code></pre>
+<p>Puis au moment du rendu, pour utiliser une géométrie particulière, tout ce que vous avez à faire
+est</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(vaoForGeometry);
+</code></pre>
+<p>Dans WebGL1, la boucle d’initialisation ci-dessus serait apparue au moment du rendu.
+C’est une ÉNORME accélération !</p>
+<p>Il y a cependant quelques mises en garde :</p>
+<ol>
+<li>
+<p>Les emplacements d’attributs dépendent du programme.</p>
+<p>Si vous allez utiliser la même géométrie avec plusieurs
+programmes, pensez à assigner manuellement les emplacements d’attributs.
+Dans GLSL 300 es, vous pouvez le faire dans le shader.</p>
+<p>Par exemple :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">layout(location = 0) in vec4 a_position;
+layout(location = 1) in vec2 a_texcoord;
+layout(location = 2) in vec3 a_normal;
+layout(location = 3) in vec4 a_color;
+</code></pre>
+<p>Définit les emplacements des 4 attributs.</p>
+<p>Vous pouvez également toujours le faire à la manière WebGL1 en appelant
+<code class="notranslate" translate="no">gl.bindAttribLocation</code> avant d’appeler <code class="notranslate" translate="no">gl.linkProgram</code>.</p>
+<p>Par exemple :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindAttribLocation(someProgram, 0, &quot;a_position&quot;);
+gl.bindAttribLocation(someProgram, 1, &quot;a_texcoord&quot;);
+gl.bindAttribLocation(someProgram, 2, &quot;a_normal&quot;);
+gl.bindAttribLocation(someProgram, 3, &quot;a_color&quot;);
+</code></pre>
+<p>Cela signifie que vous pouvez les forcer à être compatibles entre plusieurs programmes shader.
+Si un programme n’a pas besoin de tous les attributs,
+les attributs dont il a besoin seront toujours assignés aux
+mêmes emplacements.</p>
+<p>Si vous ne faites pas cela, vous aurez besoin de VAOs différents pour
+différents programmes shader lors de l’utilisation de la même géométrie OU
+vous devrez juste faire la chose WebGL1 et ne pas utiliser
+de VAOs et toujours configurer les attributs au moment du rendu, ce qui est lent.</p>
+<p>REMARQUE : des 2 méthodes ci-dessus, je penche vers l’utilisation de
+<code class="notranslate" translate="no">gl.bindAttribLocation</code> car il est facile de l’avoir en un seul
+endroit dans mon code alors que la méthode utilisant <code class="notranslate" translate="no">layout(location = ?)</code> doit
+être dans tous les shaders, donc dans l’intérêt de D.R.Y., <code class="notranslate" translate="no">gl.bindAttribLocation</code>
+semble meilleur. Peut-être si j’utilisais un générateur de shader il n’y aurait aucune différence.</p>
+</li>
+<li>
+<p>Toujours délier le VAO quand vous avez terminé</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">gl.bindVertexArray(null);
+</code></pre>
+<p>Cela vient simplement de ma propre expérience. Si vous regardez ci-dessus,
+l’état <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code> fait partie d’un Vertex Array.</p>
+<p>Donc, j’ai rencontré ce problème. J’ai créé de la géométrie, puis
+j’ai créé un VAO pour cette géométrie et configuré les attributs
+et l’<code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code>. J’ai ensuite créé de la
+géométrie supplémentaire. Quand cette géométrie configurait ses indices, parce que
+j’avais toujours le VAO précédent lié lors de la configuration, les indices
+affectaient le binding <code class="notranslate" translate="no">ELEMENT_ARRAY_BUFFER</code> pour le VAO précédent.
+Il m’a fallu plusieurs heures pour déboguer.</p>
+<p>Donc ma suggestion est de ne jamais laisser un VAO lié quand vous avez fini
+avec lui. Soit liez immédiatement le prochain VAO que vous allez
+utiliser, soit liez <code class="notranslate" translate="no">null</code> si vous avez terminé.</p>
+</li>
+</ol>
+<p>Comme mentionné au début, de nombreuses extensions de WebGL1 sont des fonctionnalités standard
+de WebGL2, donc si vous utilisiez des extensions dans WebGL1, vous devrez
+changer votre code pour ne pas les utiliser en tant qu’extensions dans WebGL2. Voir ci-dessous.</p>
+<p>Deux nécessitent une attention particulière :</p>
+<ol>
+<li>
+<p><code class="notranslate" translate="no">OES_texture_float</code> et les textures à virgule flottante.</p>
+<p>Les textures à virgule flottante sont une fonctionnalité standard de WebGL2 mais :</p>
+<ul>
+<li>
+<p>Être capable de filtrer les textures à virgule flottante est toujours une extension : <code class="notranslate" translate="no">OES_texture_float_linear</code>.</p>
+</li>
+<li>
+<p>Être capable de rendre vers une texture à virgule flottante est une extension : <code class="notranslate" translate="no">EXT_color_buffer_float</code>.</p>
+</li>
+<li>
+<p>Créer une texture à virgule flottante est différent. Vous devez utiliser l’un des nouveaux formats internes WebGL2
+comme <code class="notranslate" translate="no">RGBA32F</code>, <code class="notranslate" translate="no">R32F</code>, etc. C’est différent de l’extension WebGL1 <code class="notranslate" translate="no">OES_texture_float</code>
+où le format interne était déduit du <code class="notranslate" translate="no">type</code> passé à <code class="notranslate" translate="no">texImage2D</code>.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code class="notranslate" translate="no">WEBGL_depth_texture</code> et les textures de profondeur.</p>
+<p>Similaire à la différence précédente, pour créer une texture de profondeur dans WebGL2, vous devez utiliser l’un
+des formats internes de WebGL2 : <code class="notranslate" translate="no">DEPTH_COMPONENT16</code>, <code class="notranslate" translate="no">DEPTH_COMPONENT24</code>,
+<code class="notranslate" translate="no">DEPTH_COMPONENT32F</code>, <code class="notranslate" translate="no">DEPTH24_STENCIL8</code>, ou <code class="notranslate" translate="no">DEPTH32F_STENCIL8</code>, alors que l’extension WebGL1
+<code class="notranslate" translate="no">WEBGL_depth_texture</code> utilisait <code class="notranslate" translate="no">DEPTH_COMPONENT</code> et <code class="notranslate" translate="no">DEPTH_STENCIL_COMPONENT</code>.</p>
+</li>
+</ol>
+<p>C’est ma courte liste personnelle des choses à surveiller lors du passage
+de WebGL1 à WebGL2. <a href="webgl2-whats-new.html">Il y a encore plus de choses que vous pouvez faire dans WebGL2, cependant</a>.</p>
+<div class="webgl_bottombar">
+<h3>Rendre les extensions WebGL1 compatibles avec WebGL2</h3>
+<p>Les fonctions qui étaient sur des extensions dans WebGL1 sont maintenant sur le
+contexte principal dans WebGL2. Par exemple dans WebGL</p>
+<pre class="prettyprint">
+var ext = gl.getExtension("OES_vertex_array_object");
+if (!ext) {
+  // dire à l'utilisateur qu'il n'a pas l'extension requise ou la contourner
+} else {
+  var someVAO = ext.createVertexArrayOES();
+}
+</pre>
+<p>
+vs dans webgl2
+</p>
+<pre class="prettyprint">
+var someVAO = gl.createVertexArray();
+</pre>
+<p>Comme vous pouvez le voir, si vous voulez que votre code fonctionne à la fois dans WebGL1 et WebGL2, cela
+peut présenter quelques défis.</p>
+<p>Une solution de contournement serait de copier les extensions WebGL1 dans le contexte WebGL à l'initialisation.
+De cette façon, le reste de votre code peut rester le même. Exemple :</p>
+<pre class="prettyprint">
+const gl &#x3D; someCanvas.getContext(&quot;webgl&quot;);
+const haveVAOs &#x3D; getAndApplyExtension(gl, &quot;OES_vertex_array_object&quot;);
+
+function getAndApplyExtension(gl, name) {
+  const ext &#x3D; gl.getExtension(name);
+  if (!ext) {
+    return null;
+  }
+  const fnSuffix &#x3D; name.split(&quot;_&quot;)[0];
+  const enumSuffix &#x3D; &#x27;_&#x27; + fnSuffix;
+  for (const key in ext) {
+    const value &#x3D; ext[key];
+    const isFunc &#x3D; typeof (value) &#x3D;&#x3D;&#x3D; &#x27;function&#x27;;
+    const suffix &#x3D; isFunc ? fnSuffix : enumSuffix;
+    let name &#x3D; key;
+    // examples of where this is not true are WEBGL_compressed_texture_s3tc
+    // and WEBGL_compressed_texture_pvrtc
+    if (key.endsWith(suffix)) {
+      name &#x3D; key.substring(0, key.length - suffix.length);
+    }
+    if (gl[name] !&#x3D;&#x3D; undefined) {
+      if (!isFunc &amp;&amp; gl[name] !&#x3D;&#x3D; value) {
+        console.warn(&quot;conflict:&quot;, name, gl[name], value, key);
+      }
+    } else {
+      if (isFunc) {
+        gl[name] &#x3D; function(origFn) {
+          return function() {
+            return origFn.apply(ext, arguments);
+          };
+        }(value);
+      } else {
+        gl[name] &#x3D; value;
+      }
+    }
+  }
+  return ext;
+}
+</pre>
+<p>Maintenant votre code peut surtout fonctionner de la même façon sur les deux. Exemple :</p>
+<pre class="prettyprint">
+if (haveVAOs) {
+  var someVAO &#x3D; gl.createVertexArray();
+  ...
+} else {
+  ... faire ce qu&#x27;il faut sans VAOs.
+}
+</pre>
+<p>L'alternative serait de devoir faire quelque chose comme ceci</p>
+<pre class="prettyprint">
+if (haveVAOs) {
+  if (isWebGL2)
+     someVAO &#x3D; gl.createVertexArray();
+  } else {
+     someVAO &#x3D; vaoExt.createVertexArrayOES();
+  }
+  ...
+} else {
+  ... faire ce qu&#x27;il faut sans VAOs.
+}
+</pre>
+<p>Remarque : Dans le cas des Vertex Array Objects en particulier, je suggère d'<a href="https://github.com/greggman/oes-vertex-array-object-polyfill">utiliser un polyfill</a>
+pour les avoir partout. Les VAOs sont disponibles sur la plupart des systèmes. Sur ces quelques systèmes
+où ils ne sont pas disponibles, le polyfill s'en occupera pour vous, et votre code
+peut rester simple.</p>
+</div>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl1-to-webgl2.html" >English</a>
+    <option value="/webgl/lessons/de/webgl1-to-webgl2.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl1-to-webgl2.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl1-to-webgl2.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl1-to-webgl2.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl1-to-webgl2.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl1-to-webgl2.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl1-to-webgl2.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fondamentaux</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-getting-webgl2.html">Comment utiliser WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fundamentals.html">Les bases</a></li>
+<li><a href="/webgl/lessons/fr/webgl-how-it-works.html">Comment ça marche</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shaders-and-glsl.html">Shaders et GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Diagramme d'état</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl2-whats-new.html">Quoi de neuf dans WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2.html">Passer de WebGL1 à WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2-fundamentals.html">Différences de WebGLFundamentals.org à WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Traitement d'images</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-image-processing.html">Traitement d'images</a></li>
+<li><a href="/webgl/lessons/fr/webgl-image-processing-continued.html">Traitement d'images - Suite</a></li>
+        </ul>
+  <li>Translation, rotation, mise à l'échelle 2D et calcul matriciel</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-translation.html">Translation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-rotation.html">Rotation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-scale.html">Mise à l'échelle 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrices.html">Matrices 2D</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-orthographic.html">Projection Orthographique 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective.html">Perspective 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-camera.html">3D - Caméras</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-naming.html">3D - Nommage des matrices</a></li>
+        </ul>
+  <li>Éclairage</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-lighting-directional.html">Éclairage directionnel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-point.html">Éclairage ponctuel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-spot.html">Éclairage spot</a></li>
+        </ul>
+  <li>Structure et organisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-less-code-more-fun.html">Moins de code, plus de plaisir</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-multiple-things.html">Dessiner plusieurs choses</a></li>
+<li><a href="/webgl/lessons/fr/webgl-scene-graph.html">Graphes de scène</a></li>
+        </ul>
+  <li>Géométrie</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-geometry-lathe.html">3D Géométrie - Tour</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj.html">Charger des fichiers .obj</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj-w-mtl.html">Charger des fichiers .obj avec .mtl</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/fr/webgl-data-textures.html">Textures de données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2-textures.html">Utiliser 2 textures ou plus</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cors-permission.html">Images Cross Origin</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective-correct-texturemapping.html">Mappage de Texture avec Correction de Perspective</a></li>
+<li><a href="/webgl/lessons/fr/webgl-planar-projection-mapping.html">Projection planaire et en perspective</a></li>
+        </ul>
+  <li>Rendu vers une texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-render-to-texture.html">Rendu vers une texture</a></li>
+        </ul>
+  <li>Ombres</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-shadows.html">Ombres</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrix-stack.html">2D - Pile de matrices</a></li>
+<li><a href="/webgl/lessons/fr/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/fr/webgl-environment-maps.html">Cartes d'environnement</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fog.html">Brouillard</a></li>
+<li><a href="/webgl/lessons/fr/webgl-picking.html">Picking (cliquer sur des objets)</a></li>
+        </ul>
+  <li>Texte</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-text-html.html">Texte - HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-canvas2d.html">Texte - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-texture.html">Texte - Utiliser une texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-glyphs.html">Texte - Utiliser une texture de glyphes</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Astuces</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-smallest-programs.html">Plus petits programmes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-without-data.html">Dessiner sans données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/fr/webgl-pulling-vertices.html">Extraction de sommets</a></li>
+        </ul>
+  <li>Optimisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-indexed-vertices.html">Sommets indexés (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-instanced-drawing.html">Dessin instancié</a></li>
+        </ul>
+  <li>Divers</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-setup-and-installation.html">Installation et configuration</a></li>
+<li><a href="/webgl/lessons/fr/webgl-boilerplate.html">Code standard (Boilerplate)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-resizing-the-canvas.html">Redimensionner le Canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/fr/webgl-points-lines-triangles.html">Points, Lignes et Triangles</a></li>
+<li><a href="/webgl/lessons/fr/webgl-multiple-views.html">Vues multiples, Canvas multiples</a></li>
+<li><a href="/webgl/lessons/fr/webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+<li><a href="/webgl/lessons/fr/webgl-and-alpha.html">WebGL2 et Alpha</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-vs-3d-library.html">Bibliothèques 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-vs-math.html">WebGL2 Matrices vs Matrices Mathématiques</a></li>
+<li><a href="/webgl/lessons/fr/webgl-precision-issues.html">Problèmes de précision</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#screenshot">Prendre une capture d'écran</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#preservedrawingbuffer">Empêcher l'effacement du canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#tabindex">Obtenir des entrées clavier depuis un canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#html-background">Utiliser WebGL2 comme arrière-plan en HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cross-platform-issues.html">Problèmes multi-plateformes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Référence</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-attributes.html">Attributs</a></li>
+<li><a href="/webgl/lessons/fr/webgl-texture-units.html">Unités de Texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/fr/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/fr/webgl-references.html">Références</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentation de l'API</a></li>
+  <li>
+    <a href="https://twgljs.org">TWGL, une bibliothèque utilitaire WebGL</a>
+  </li>
+  <li>
+    <a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a>
+  </li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Problème ou bug ? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Créez un ticket sur github</a>.</div>
+<div class="lesson-comment-notes">
+   Utilisez <b>&lt;pre&gt;&lt;code&gt;</b>le code ici<b>&lt;/code&gt;&lt;/pre&gt;</b> pour les blocs de code
+</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 depuis WebGL1';
+            var disqus_title = 'WebGL2 depuis WebGL1';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Merci à <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>pour <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/fr/webgl-3d-geometry-lathe.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Comment tourner une courbe de Bézier.">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-3d-geometry-lathe_fr.jpg">
+
+<meta property="og:title" content="WebGL2 3D Géométrie - Tour">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-3d-geometry-lathe_fr.jpg">
+<meta property="og:description" content="Comment tourner une courbe de Bézier.">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-geometry-lathe.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 3D Géométrie - Tour">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-geometry-lathe.html">
+<meta name="twitter:description" content="Comment tourner une courbe de Bézier.">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-3d-geometry-lathe_fr.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-geometry-lathe.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-3d-geometry-lathe_fr.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-geometry-lathe.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-geometry-lathe.html",
+      "inLanguage":"fr",
+      "name":"WebGL2 3D Géométrie - Tour",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-3d-geometry-lathe.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 3D Géométrie - Tour</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/fr/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-3d-geometry-lathe.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-3d-geometry-lathe.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/webgl/lessons/fr/webgl-3d-geometry-lathe.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-3d-geometry-lathe.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-3d-geometry-lathe.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-3d-geometry-lathe.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-3d-geometry-lathe.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-3d-geometry-lathe.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-3d-geometry-lathe.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-3d-geometry-lathe.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-3d-geometry-lathe.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-3d-geometry-lathe.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-3d-geometry-lathe.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-3d-geometry-lathe.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-3d-geometry-lathe.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-3d-geometry-lathe.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Table des matières</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/fr/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 3D Géométrie - Tour</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>C’est probablement un sujet un peu obscur mais je l’ai trouvé intéressant, donc je l’écris.
+Ce n’est pas quelque chose que je vous recommande de faire réellement. Plutôt, je pense que travailler sur
+ce sujet aidera à illustrer certaines choses sur la création de modèles 3D pour WebGL.</p>
+<p>Quelqu’un a demandé comment faire une forme de quille de bowling en WebGL. La réponse <em>intelligente</em> est
+&quot;Utilisez un logiciel de modélisation 3D comme <a href="https://blender.org">Blender</a>,
+<a href="https://www.autodesk.com/products/maya/overview">Maya</a>,
+<a href="https://www.autodesk.com/products/3ds-max/overview">3D Studio Max</a>,
+<a href="https://www.maxon.net/en/products/cinema-4d/overview/">Cinema 4D</a>, etc.
+Utilisez-le pour modéliser une quille de bowling, exportez, lisez les données.
+(<a href="https://en.wikipedia.org/wiki/Wavefront_.obj_file">Le format OBJ est relativement simple</a>).</p>
+<p>Mais, cela m’a fait réfléchir, que faire s’ils voulaient créer un logiciel de modélisation ?</p>
+<p>Il y a quelques idées. L’une est de créer un cylindre et d’essayer de le pincer aux
+bons endroits en utilisant des ondes sinusoïdales appliquées à certains endroits. Le problème
+avec cette idée est que vous n’obtiendriez pas un sommet lisse. Un cylindre standard
+est généré comme une série d’anneaux régulièrement espacés mais vous auriez besoin de plus
+d’anneaux là où les choses sont plus courbées.</p>
+<p>Dans un logiciel de modélisation, vous feriez une quille de bowling en créant une silhouette 2D ou plutôt
+une ligne courbe qui correspond au bord d’une silhouette 2D. Vous feriez ensuite
+tourner cela en une forme 3D. Par <em>tourner</em> je veux dire que vous la feriez pivoter autour
+d’un axe et générer des points au fur et à mesure. Cela vous permet de créer facilement
+n’importe quel objet rond comme un bol, un verre, une batte de baseball, des bouteilles,
+des ampoules, etc.</p>
+<p>Alors, comment faire cela ? Eh bien, d’abord nous avons besoin d’un moyen de créer une courbe.
+Ensuite, nous aurions besoin de calculer des points sur cette courbe. Nous ferions ensuite pivoter
+ces points autour d’un axe en utilisant <a href="webgl-2d-matrices.html">les mathématiques de matrices</a>
+et construire des triangles à partir de ces points.</p>
+<p>Le type de courbe le plus courant en infographie semble être
+une courbe de Bézier. Si vous avez déjà édité une courbe dans
+<a href="https://www.adobe.com/products/illustrator.html">Adobe Illustrator</a> ou
+<a href="https://inkscape.org/en/">Inkscape</a> ou
+<a href="https://affinity.serif.com/en-us/designer/">Affinity Designer</a>
+ou des programmes similaires, c’est une courbe de Bézier.</p>
+<p>Une courbe de Bézier ou plutôt une courbe de Bézier cubique est formée par 4 points.
+2 points sont les extrémités. 2 points sont les “points de contrôle”.</p>
+<p>Voici 4 points</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=0"></iframe>
+</div>
+
+</p>
+<p>Nous choisissons un nombre entre 0 et 1 (appelé <code class="notranslate" translate="no">t</code>) où 0 = le début
+et 1 = la fin. Nous calculons ensuite le point <code class="notranslate" translate="no">t</code> correspondant
+entre chaque paire de points. <code class="notranslate" translate="no">P1 P2</code>, <code class="notranslate" translate="no">P2 P3</code>, <code class="notranslate" translate="no">P3 P4</code>.</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=1"></iframe>
+</div>
+
+</p>
+<p>En d’autres termes, si <code class="notranslate" translate="no">t = .25</code> alors nous calculons un point à 25% du chemin
+allant de <code class="notranslate" translate="no">P1</code> à <code class="notranslate" translate="no">P2</code>, un autre à 25% du chemin allant de <code class="notranslate" translate="no">P2</code> à <code class="notranslate" translate="no">P3</code>
+et un de plus à 25% du chemin allant de <code class="notranslate" translate="no">P3</code> à <code class="notranslate" translate="no">P4</code>.</p>
+<p>Vous pouvez faire glisser le curseur pour ajuster <code class="notranslate" translate="no">t</code> et vous pouvez également déplacer les points
+<code class="notranslate" translate="no">P1</code>, <code class="notranslate" translate="no">P2</code>, <code class="notranslate" translate="no">P3</code>, et <code class="notranslate" translate="no">P4</code>.</p>
+<p>Nous faisons de même pour les points résultants. Calculer les points <code class="notranslate" translate="no">t</code> entre <code class="notranslate" translate="no">Q1 Q2</code>
+et <code class="notranslate" translate="no">Q2 Q3</code>.</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=2"></iframe>
+</div>
+
+</p>
+<p>Finalement nous faisons de même pour ces 2 points et calculons le point <code class="notranslate" translate="no">t</code> entre
+<code class="notranslate" translate="no">R1 R2</code>.</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=3"></iframe>
+</div>
+
+</p>
+<p>Les positions de ce <span style="color: red;">point rouge</span> forment une courbe.</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=4"></iframe>
+</div>
+
+</p>
+<p>Donc ceci est une courbe de Bézier cubique.</p>
+<p>Notez que bien que l’interpolation entre les points ci-dessus et
+le processus de création de 3 points à partir de 4, puis 2 à partir de 3, et finalement 1
+point à partir de 2 fonctionne, ce n’est pas la façon normale. Au lieu de cela, quelqu’un a branché
+toutes les mathématiques et les a simplifiées en une formule comme celle-ci</p>
+<div class="webgl_center">
+<pre class="webgl_math">
+invT = (1 - t)
+P = P1 * invT^3 +
+    P2 * 3 * t * invT^2 +
+    P3 * 3 * invT * t^2 +
+    P4 * t^3
+</pre>
+</div>
+<p>Où <code class="notranslate" translate="no">P1</code>, <code class="notranslate" translate="no">P2</code>, <code class="notranslate" translate="no">P3</code>, <code class="notranslate" translate="no">P4</code> sont les points comme dans les exemples ci-dessus et <code class="notranslate" translate="no">P</code>
+est le <span style="color: red;">point rouge</span>.</p>
+<p>Dans un programme d’art vectoriel 2D comme Adobe Illustrator
+lorsque vous créez une courbe plus longue, elle est en fait composée de nombreuses petites courbes à 4 points
+comme celle-ci. Par défaut, la plupart des applications verrouillent les points de contrôle
+autour d’un point de début/fin partagé et s’assurent qu’ils sont toujours
+opposés par rapport au point partagé.</p>
+<p>Voyez cet exemple, déplacez <code class="notranslate" translate="no">P3</code> ou <code class="notranslate" translate="no">P5</code> et le code déplacera l’autre.</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-edit.html"></iframe>
+</div>
+
+</p>
+<p>Remarquez que la courbe créée par <code class="notranslate" translate="no">P1,P2,P3,P4</code> est une courbe séparée de
+celle créée par <code class="notranslate" translate="no">P4,P5,P6,P7</code>. C’est juste que lorsque <code class="notranslate" translate="no">P3</code> et <code class="notranslate" translate="no">P5</code> sont sur des côtés exactement
+opposés de <code class="notranslate" translate="no">P4</code>, ensemble ils ressemblent à une courbe continue.
+La plupart des applications vous donneront ensuite généralement l’option d’arrêter de les verrouiller
+ensemble pour que vous puissiez obtenir un coin vif. Décochez la case de verrouillage
+puis faites glisser <code class="notranslate" translate="no">P3</code> ou <code class="notranslate" translate="no">P5</code> et il deviendra encore plus clair qu’elles sont
+des courbes séparées.</p>
+<p>Ensuite, nous avons besoin d’un moyen de générer des points sur une courbe.
+En utilisant la formule ci-dessus, nous pouvons générer un point pour
+une valeur <code class="notranslate" translate="no">t</code> donnée comme ceci.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function getPointOnBezierCurve(points, offset, t) {
+  const invT = (1 - t);
+  return v2.add(v2.mult(points[offset + 0], invT * invT * invT),
+                v2.mult(points[offset + 1], 3 * t * invT * invT),
+                v2.mult(points[offset + 2], 3 * invT * t * t),
+                v2.mult(points[offset + 3], t * t  *t));
+}
+</code></pre>
+<p>Et nous pouvons générer un ensemble de points pour la courbe comme ceci</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function getPointsOnBezierCurve(points, offset, numPoints) {
+  const cpoints = [];
+  for (let i = 0; i &lt; numPoints; ++i) {
+    const t = i / (numPoints - 1);
+    cpoints.push(getPointOnBezierCurve(points, offset, t));
+  }
+  return cpoints;
+}
+</code></pre>
+<p>Note : <code class="notranslate" translate="no">v2.mult</code> et <code class="notranslate" translate="no">v2.add</code> sont de petites fonctions JavaScript que j’ai incluses
+pour aider à faire des mathématiques avec des points.</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=0&showCurve=true&showPoints=true"></iframe>
+</div>
+
+</p>
+<p>Dans le diagramme ci-dessus, vous pouvez choisir un nombre de points. Si la courbe est vive
+vous voudriez plus de points. Si la courbe est presque une ligne droite cependant vous voudriez
+probablement moins de points. Une solution
+est de vérifier à quel point une courbe est courbée. Si elle est trop courbée alors la diviser en
+2 courbes.</p>
+<p>La partie division s’avère facile. Si nous regardons les différents
+niveaux d’interpolation à nouveau, les points <code class="notranslate" translate="no">P1</code>, <code class="notranslate" translate="no">Q1</code>, <code class="notranslate" translate="no">R1</code>, ROUGE forment une
+courbe et les points ROUGE, <code class="notranslate" translate="no">R2</code>, <code class="notranslate" translate="no">Q3</code>, <code class="notranslate" translate="no">P4</code> forment l’autre pour n’importe quelle valeur de t.
+En d’autres termes, nous pouvons diviser la courbe n’importe où et obtenir 2 courbes
+qui correspondent à l’originale.</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=4&show2Curves=true"></iframe>
+</div>
+
+</p>
+<p>La deuxième partie consiste à décider si une courbe doit être divisée ou non. En regardant
+autour du net, j’ai trouvé <a href="https://seant23.wordpress.com/2010/11/12/offset-bezier-curves/">cette fonction</a>
+qui pour une courbe donnée décide à quel point elle est plate.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function flatness(points, offset) {
+  const p1 = points[offset + 0];
+  const p2 = points[offset + 1];
+  const p3 = points[offset + 2];
+  const p4 = points[offset + 3];
+
+  let ux = 3 * p2[0] - 2 * p1[0] - p4[0]; ux *= ux;
+  let uy = 3 * p2[1] - 2 * p1[1] - p4[1]; uy *= uy;
+  let vx = 3 * p3[0] - 2 * p4[0] - p1[0]; vx *= vx;
+  let vy = 3 * p3[1] - 2 * p4[1] - p1[1]; vy *= vy;
+
+  if(ux &lt; vx) {
+    ux = vx;
+  }
+
+  if(uy &lt; vy) {
+    uy = vy;
+  }
+
+  return ux + uy;
+}
+</code></pre>
+<p>Nous pouvons utiliser cela dans notre fonction qui obtient des points pour une courbe.
+D’abord nous vérifierons si la courbe est trop courbée. Si oui nous subdiviserons,
+sinon nous ajouterons les points.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function getPointsOnBezierCurveWithSplitting(points, offset, tolerance, newPoints) {
+  const outPoints = newPoints || [];
+  if (flatness(points, offset) &lt; tolerance) {
+
+    // ajoute simplement les extrémités de cette courbe
+    outPoints.push(points[offset + 0]);
+    outPoints.push(points[offset + 3]);
+
+  } else {
+
+    // subdivise
+    const t = .5;
+    const p1 = points[offset + 0];
+    const p2 = points[offset + 1];
+    const p3 = points[offset + 2];
+    const p4 = points[offset + 3];
+
+    const q1 = v2.lerp(p1, p2, t);
+    const q2 = v2.lerp(p2, p3, t);
+    const q3 = v2.lerp(p3, p4, t);
+
+    const r1 = v2.lerp(q1, q2, t);
+    const r2 = v2.lerp(q2, q3, t);
+
+    const red = v2.lerp(r1, r2, t);
+
+    // fait la 1ère moitié
+    getPointsOnBezierCurveWithSplitting([p1, q1, r1, red], 0, tolerance, outPoints);
+    // fait la 2ème moitié
+    getPointsOnBezierCurveWithSplitting([red, r2, q3, p4], 0, tolerance, outPoints);
+
+  }
+  return outPoints;
+}
+</code></pre>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=0&showCurve=true&showTolerance=true"></iframe>
+</div>
+
+</p>
+<p>Cet algorithme fait un bon travail pour s’assurer que nous avons suffisamment de points mais
+il ne fait pas un si bon travail pour se débarrasser des points inutiles.</p>
+<p>Pour cela nous nous tournons vers l’<a href="https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm">algorithme de Ramer Douglas Peucker</a>
+que j’ai trouvé sur le net.</p>
+<p>Dans cet algorithme nous prenons une liste de points.
+Nous trouvons le point le plus éloigné de la ligne formée par les 2 extrémités.
+Ensuite nous vérifions si ce point est plus éloigné de la ligne qu’une certaine distance.
+S’il est inférieur à cette distance nous gardons simplement les 2 extrémités et jetons le reste
+Sinon nous exécutons l’algorithme à nouveau, une fois avec les points du début jusqu’au point le plus éloigné
+et à nouveau du point le plus éloigné à l’extrémité.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function simplifyPoints(points, start, end, epsilon, newPoints) {
+  const outPoints = newPoints || [];
+
+  // trouve le point le plus distant des extrémités
+  const s = points[start];
+  const e = points[end - 1];
+  let maxDistSq = 0;
+  let maxNdx = 1;
+  for (let i = start + 1; i &lt; end - 1; ++i) {
+    const distSq = v2.distanceToSegmentSq(points[i], s, e);
+    if (distSq &gt; maxDistSq) {
+      maxDistSq = distSq;
+      maxNdx = i;
+    }
+  }
+
+  // si ce point est trop loin
+  if (Math.sqrt(maxDistSq) &gt; epsilon) {
+
+    // divise
+    simplifyPoints(points, start, maxNdx + 1, epsilon, outPoints);
+    simplifyPoints(points, maxNdx, end, epsilon, outPoints);
+
+  } else {
+
+    // ajoute les 2 extrémités
+    outPoints.push(s, e);
+  }
+
+  return outPoints;
+}
+</code></pre>
+<p><code class="notranslate" translate="no">v2.distanceToSegmentSq</code> est une fonction qui calcule le carré de la distance d’un point
+à un segment de ligne. Nous utilisons le carré de la distance parce que c’est plus rapide à calculer que
+la distance réelle. Puisque nous nous soucions seulement de quel point est le plus éloigné, le carré de la distance
+fonctionnera tout aussi bien que la distance réelle.</p>
+<p>Voici cela en action. Ajustez la distance pour voir plus de points ajoutés ou supprimés.</p>
+<p><div class="webgl_diagram_container">
+  <iframe class="webgl_example " style="width: 400px; height: 300px;" src="/webgl/lessons/resources/bezier-curve-diagram.html?maxDepth=0&showCurve=true&showDistance=true"></iframe>
+</div>
+
+</p>
+<p>Revenons à notre quille de bowling. Nous pourrions essayer d’étendre le code ci-dessus en un éditeur complet.
+Il devrait pouvoir ajouter et supprimer des points, verrouiller et déverrouiller les points de contrôle.
+Il aurait besoin d’annulation, etc… Mais il y a un moyen plus facile. Nous pouvons simplement utiliser n’importe lequel des
+principaux éditeurs mentionnés ci-dessus. <a href="https://svg-edit.github.io/svgedit/">J’ai utilisé cet éditeur en ligne</a>.</p>
+<p>Voici la silhouette svg d’une quille de bowling que j’ai créée.</p>
+<img class="webgl_center" src="../resources/bowling-pin-silhouette.svg" width="400" />
+<p>Elle est composée de 4 courbes de Bézier. Les données pour ce chemin ressemblent à ceci</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">&lt;path fill=&quot;none&quot; stroke-width=&quot;5&quot; d=&quot;
+   m44,434
+   c18,-33 19,-66 15,-111
+   c-4,-45 -37,-104 -39,-132
+   c-2,-28 11,-51 16,-81
+   c5,-30 3,-63 -36,-63
+&quot;/&gt;
+</code></pre>
+<p><a href="https://developer.mozilla.org/en/docs/Web/SVG/Tutorial/Paths">En interprétant ces données</a> nous obtenons ces points.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">        ___
+44, 371,   |
+62, 338,   | 1ère courbe
+63, 305,___|__
+59, 260,___|  |
+55, 215,      | 2ème courbe
+22, 156,______|__
+20, 128,______|  |
+18, 100,         | 3ème courbe
+31,  77,_________|__
+36,  47,_________|  |
+41,  17,            | 4ème courbe
+39, -16,            |
+ 0, -16,____________|
+</code></pre>
+<p>Maintenant que nous avons les données pour les courbes, nous devons calculer certains points
+sur elles.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// obtient des points à travers tous les segments
+function getPointsOnBezierCurves(points, tolerance) {
+  const newPoints = [];
+  const numSegments = (points.length - 1) / 3;
+  for (let i = 0; i &lt; numSegments; ++i) {
+    const offset = i * 3;
+    getPointsOnBezierCurveWithSplitting(points, offset, tolerance, newPoints);
+  }
+  return newPoints;
+}
+</code></pre>
+<p>Nous appellerions <code class="notranslate" translate="no">simplifyPoints</code> sur le résultat.</p>
+<p>Maintenant nous devons les faire pivoter autour. Nous décidons combien de divisions faire, pour chaque division
+vous utilisez les <a href="webgl-2d-matrices.html">mathématiques de matrices</a> pour faire pivoter les points autour de l’axe Y.
+Une fois que nous avons créé tous les points, nous les connectons avec des triangles en utilisant des indices.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// fait pivoter autour de l'axe Y.
+function lathePoints(points,
+                     startAngle,   // angle de départ (c'est-à-dire 0)
+                     endAngle,     // angle de fin (c'est-à-dire Math.PI * 2)
+                     numDivisions, // combien de quads faire autour
+                     capStart,     // true pour fermer le début
+                     capEnd) {     // true pour fermer la fin
+  const positions = [];
+  const texcoords = [];
+  const indices = [];
+
+  const vOffset = capStart ? 1 : 0;
+  const pointsPerColumn = points.length + vOffset + (capEnd ? 1 : 0);
+  const quadsDown = pointsPerColumn - 1;
+
+  // génère les points
+  for (let division = 0; division &lt;= numDivisions; ++division) {
+    const u = division / numDivisions;
+    const angle = lerp(startAngle, endAngle, u) % (Math.PI * 2);
+    const mat = m4.yRotation(angle);
+    if (capStart) {
+      // ajoute un point sur l'axe Y au début
+      positions.push(0, points[0][1], 0);
+      texcoords.push(u, 0);
+    }
+    points.forEach((p, ndx) =&gt; {
+      const tp = m4.transformPoint(mat, [...p, 0]);
+      positions.push(tp[0], tp[1], tp[2]);
+      const v = (ndx + vOffset) / quadsDown;
+      texcoords.push(u, v);
+    });
+    if (capEnd) {
+      // ajoute un point sur l'axe Y à la fin
+      positions.push(0, points[points.length - 1][1], 0);
+      texcoords.push(u, 1);
+    }
+  }
+
+  // génère les indices
+  for (let division = 0; division &lt; numDivisions; ++division) {
+    const column1Offset = division * pointsPerColumn;
+    const column2Offset = column1Offset + pointsPerColumn;
+    for (let quad = 0; quad &lt; quadsDown; ++quad) {
+      indices.push(column1Offset + quad, column2Offset + quad, column1Offset + quad + 1);
+      indices.push(column1Offset + quad + 1, column2Offset + quad, column2Offset + quad + 1);
+    }
+  }
+
+  return {
+    position: positions,
+    texcoord: texcoords,
+    indices: indices,
+  };
+}
+</code></pre>
+<p>Le code ci-dessus génère des positions et des coordonnées de texture, il génère ensuite des indices pour créer des triangles
+à partir de ceux-ci. <code class="notranslate" translate="no">capStart</code> et <code class="notranslate" translate="no">capEnd</code> spécifient s’il faut générer ou non des points de fermeture. Imaginez
+que nous créons une canette. Ces options spécifieraient s’il faut fermer ou non les extrémités.</p>
+<p>En utilisant notre <a href="webgl-less-code-more-fun.html">code simplifié</a> nous pouvons générer des tampons WebGL avec
+ces données comme ceci</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">const tolerance = 0.15;
+const distance = .4;
+const divisions = 16;
+const startAngle = 0;
+const endAngle = Math.PI * 2;
+const capStart = true;
+const capEnd = true;
+
+const tempPoints = getPointsOnBezierCurves(curvePoints, tolerance);
+const points = simplifyPoints(tempPoints, 0, tempPoints.length, distance);
+const arrays = lathePoints(points, startAngle, endAngle, divisions, capStart, capEnd);
+const extents = getExtents(arrays.position);
+if (!bufferInfo) {
+  bufferInfo = webglUtils.createBufferInfoFromArrays(gl, arrays);
+</code></pre>
+<p>Voici un exemple</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lathe-step-01.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lathe-step-01.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Jouez avec les curseurs pour voir comment ils affectent le résultat.</p>
+<p>Il y a un problème cependant. Activez les triangles et vous verrez que la texture n’est pas appliquée
+uniformément. C’est parce que nous avons basé la coordonnée de texture <code class="notranslate" translate="no">v</code> sur l’indice des
+points sur la ligne. S’ils étaient régulièrement espacés, cela pourrait fonctionner. Ils ne le sont pas cependant
+donc nous devons faire autre chose.</p>
+<p>Nous pouvons parcourir les points et calculer la longueur totale de la courbe et la distance de chaque point
+sur cette courbe. Nous pouvons ensuite diviser par la longueur et obtenir une meilleure valeur
+pour <code class="notranslate" translate="no">v</code>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// fait pivoter autour de l'axe Y.
+function lathePoints(points,
+                     startAngle,   // angle de départ (c'est-à-dire 0)
+                     endAngle,     // angle de fin (c'est-à-dire Math.PI * 2)
+                     numDivisions, // combien de quads faire autour
+                     capStart,     // true pour fermer le haut
+                     capEnd) {     // true pour fermer le bas
+  const positions = [];
+  const texcoords = [];
+  const indices = [];
+
+  const vOffset = capStart ? 1 : 0;
+  const pointsPerColumn = points.length + vOffset + (capEnd ? 1 : 0);
+  const quadsDown = pointsPerColumn - 1;
+
++  // génère les coordonnées v
++  let vcoords = [];
++
++  // calcule d'abord la longueur des points
++  let length = 0;
++  for (let i = 0; i &lt; points.length - 1; ++i) {
++    vcoords.push(length);
++    length += v2.distance(points[i], points[i + 1]);
++  }
++  vcoords.push(length);  // le dernier point
++
++  // divise maintenant chacun par la longueur totale;
++  vcoords = vcoords.map(v =&gt; v / length);
+
+  // génère les points
+  for (let division = 0; division &lt;= numDivisions; ++division) {
+    const u = division / numDivisions;
+    const angle = lerp(startAngle, endAngle, u) % (Math.PI * 2);
+    const mat = m4.yRotation(angle);
+    if (capStart) {
+      // ajoute un point sur l'axe Y au début
+      positions.push(0, points[0][1], 0);
+      texcoords.push(u, 0);
+    }
+    points.forEach((p, ndx) =&gt; {
+      const tp = m4.transformPoint(mat, [...p, 0]);
+      positions.push(tp[0], tp[1], tp[2]);
+*      texcoords.push(u, vcoords[ndx]);
+    });
+    if (capEnd) {
+      // ajoute un point sur l'axe Y à la fin
+      positions.push(0, points[points.length - 1][1], 0);
+      texcoords.push(u, 1);
+    }
+  }
+
+  // génère les indices
+  for (let division = 0; division &lt; numDivisions; ++division) {
+    const column1Offset = division * pointsPerColumn;
+    const column2Offset = column1Offset + pointsPerColumn;
+    for (let quad = 0; quad &lt; quadsDown; ++quad) {
+      indices.push(column1Offset + quad, column1Offset + quad + 1, column2Offset + quad);
+      indices.push(column1Offset + quad + 1, column2Offset + quad + 1, column2Offset + quad);
+    }
+  }
+
+  return {
+    position: positions,
+    texcoord: texcoords,
+    indices: indices,
+  };
+}
+</code></pre>
+<p>Et voici le résultat</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lathe-step-02.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lathe-step-02.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Ces coordonnées de texture ne sont toujours pas parfaites. Nous n’avons pas décidé quoi faire pour les extrémités.
+C’est encore une autre raison pour laquelle vous devriez simplement utiliser un programme de modélisation. Nous pourrions proposer
+différentes idées sur comment calculer les coordonnées uv pour les extrémités mais elles ne seraient probablement pas
+très utiles. Si vous <a href="https://www.google.com/search?q=uv+map+a+barrel">cherchez sur Google comment mapper UV un tonneau</a>
+vous verrez qu’obtenir des coordonnées UV parfaites n’est pas tant un problème de mathématiques qu’un problème de saisie de données
+et vous avez besoin de bons outils pour saisir ces données.</p>
+<p>Il y a encore une autre chose que nous devrions faire et c’est d’ajouter des normales.</p>
+<p>Nous pourrions calculer une normale pour chaque point sur la courbe. En fait, si vous revenez aux exemples
+sur cette page, vous pouvez voir que la ligne formée par <code class="notranslate" translate="no">R1</code> et <code class="notranslate" translate="no">R2</code> est une ligne tangente à la courbe.</p>
+<img class="webgl_center" src="../resources/tangent-to-curve.png" width="400" />
+<p>Une normale est perpendiculaire à la tangente donc il serait facile d’utiliser les tangentes
+pour générer des normales.</p>
+<p>Mais, imaginons que nous voulions faire un bougeoir avec une silhouette comme celle-ci</p>
+<img class="webgl_center" src="../resources/candle-holder.svg" width="400" />
+<p>Il y a beaucoup de zones lisses mais aussi beaucoup de coins vifs. Comment décider quelles normales
+utiliser ? Pire, lorsque nous voulons une arête vive nous avons besoin de sommets supplémentaires. Parce que les sommets
+ont à la fois une position et une normale, si nous avons besoin d’une normale différente pour quelque chose à la
+même position alors nous avons besoin d’un sommet différent. C’est pourquoi si nous créons un cube
+nous avons en fait besoin d’au moins 24 sommets. Même si un cube n’a que 8 coins, chaque
+face du cube a besoin de normales différentes à ces coins.</p>
+<p>Lors de la génération d’un cube, il est facile de simplement générer les bonnes normales mais pour une
+forme plus complexe il n’y a pas de moyen facile de décider.</p>
+<p>Tous les programmes de modélisation ont diverses options pour générer des normales. Une façon courante est pour chaque
+sommet unique, ils calculent la moyenne des normales de tous les polygones qui partagent ce sommet. Sauf, ils
+laissent l’utilisateur choisir un angle maximum. Si l’angle entre un polygone partagé par
+un sommet est supérieur à cet angle maximum alors ils génèrent un nouveau sommet.</p>
+<p>Faisons cela.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">function generateNormals(arrays, maxAngle) {
+  const positions = arrays.position;
+  const texcoords = arrays.texcoord;
+
+  // calcule d'abord la normale de chaque face
+  let getNextIndex = makeIndiceIterator(arrays);
+  const numFaceVerts = getNextIndex.numElements;
+  const numVerts = arrays.position.length;
+  const numFaces = numFaceVerts / 3;
+  const faceNormals = [];
+
+  // Calcule la normale pour chaque face.
+  // En faisant cela, crée un nouveau sommet pour chaque sommet de face
+  for (let i = 0; i &lt; numFaces; ++i) {
+    const n1 = getNextIndex() * 3;
+    const n2 = getNextIndex() * 3;
+    const n3 = getNextIndex() * 3;
+
+    const v1 = positions.slice(n1, n1 + 3);
+    const v2 = positions.slice(n2, n2 + 3);
+    const v3 = positions.slice(n3, n3 + 3);
+
+    faceNormals.push(m4.normalize(m4.cross(m4.subtractVectors(v1, v2), m4.subtractVectors(v3, v2))));
+  }
+
+  let tempVerts = {};
+  let tempVertNdx = 0;
+
+  // cela suppose que les positions de sommets correspondent exactement
+
+  function getVertIndex(x, y, z) {
+
+    const vertId = x + &quot;,&quot; + y + &quot;,&quot; + z;
+    const ndx = tempVerts[vertId];
+    if (ndx !== undefined) {
+      return ndx;
+    }
+    const newNdx = tempVertNdx++;
+    tempVerts[vertId] = newNdx;
+    return newNdx;
+  }
+
+  // Nous devons trouver les sommets partagés.
+  // Ce n'est pas aussi simple que de regarder les faces (triangles)
+  // parce que par exemple si nous avons un cylindre standard
+  //
+  //
+  //      3-4
+  //     /   \
+  //    2     5   En regardant vers le bas un cylindre commençant à S
+  //    |     |   et en allant autour jusqu'à E, E et S ne sont pas
+  //    1     6   le même sommet dans les données que nous avons
+  //     \   /    car ils ne partagent pas les coordonnées UV.
+  //      S/E
+  //
+  // les sommets au début et à la fin ne partagent pas de sommets
+  // car ils ont des UV différentes mais si vous ne les considérez pas
+  // comme partageant des sommets ils obtiendront de mauvaises normales
+
+  const vertIndices = [];
+  for (let i = 0; i &lt; numVerts; ++i) {
+    const offset = i * 3;
+    const vert = positions.slice(offset, offset + 3);
+    vertIndices.push(getVertIndex(vert));
+  }
+
+  // parcourt chaque sommet et enregistre quelles faces il utilise
+  const vertFaces = [];
+  getNextIndex.reset();
+  for (let i = 0; i &lt; numFaces; ++i) {
+    for (let j = 0; j &lt; 3; ++j) {
+      const ndx = getNextIndex();
+      const sharedNdx = vertIndices[ndx];
+      let faces = vertFaces[sharedNdx];
+      if (!faces) {
+        faces = [];
+        vertFaces[sharedNdx] = faces;
+      }
+      faces.push(i);
+    }
+  }
+
+  // maintenant parcourt chaque face et calcule les normales pour chaque
+  // sommet de la face. Inclut seulement les faces qui ne sont pas plus que
+  // maxAngle différentes. Ajoute le résultat aux tableaux de newPositions,
+  // newTexcoords et newNormals, en écartant tous les sommets qui
+  // sont les mêmes.
+  tempVerts = {};
+  tempVertNdx = 0;
+  const newPositions = [];
+  const newTexcoords = [];
+  const newNormals = [];
+
+  function getNewVertIndex(x, y, z, nx, ny, nz, u, v) {
+    const vertId =
+        x + &quot;,&quot; + y + &quot;,&quot; + z + &quot;,&quot; +
+        nx + &quot;,&quot; + ny + &quot;,&quot; + nz + &quot;,&quot; +
+        u + &quot;,&quot; + v;
+
+    const ndx = tempVerts[vertId];
+    if (ndx !== undefined) {
+      return ndx;
+    }
+    const newNdx = tempVertNdx++;
+    tempVerts[vertId] = newNdx;
+    newPositions.push(x, y, z);
+    newNormals.push(nx, ny, nz);
+    newTexcoords.push(u, v);
+    return newNdx;
+  }
+
+  const newVertIndices = [];
+  getNextIndex.reset();
+  const maxAngleCos = Math.cos(maxAngle);
+  // pour chaque face
+  for (let i = 0; i &lt; numFaces; ++i) {
+    // obtient la normale pour cette face
+    const thisFaceNormal = faceNormals[i];
+    // pour chaque sommet de la face
+    for (let j = 0; j &lt; 3; ++j) {
+      const ndx = getNextIndex();
+      const sharedNdx = vertIndices[ndx];
+      const faces = vertFaces[sharedNdx];
+      const norm = [0, 0, 0];
+      faces.forEach(faceNdx =&gt; {
+        // cette face est-elle orientée de la même manière
+        const otherFaceNormal = faceNormals[faceNdx];
+        const dot = m4.dot(thisFaceNormal, otherFaceNormal);
+        if (dot &gt; maxAngleCos) {
+          m4.addVectors(norm, otherFaceNormal, norm);
+        }
+      });
+      m4.normalize(norm, norm);
+      const poffset = ndx * 3;
+      const toffset = ndx * 2;
+      newVertIndices.push(getNewVertIndex(
+          positions[poffset + 0], positions[poffset + 1], positions[poffset + 2],
+          norm[0], norm[1], norm[2],
+          texcoords[toffset + 0], texcoords[toffset + 1]));
+    }
+  }
+
+  return {
+    position: newPositions,
+    texcoord: newTexcoords,
+    normal: newNormals,
+    indices: newVertIndices,
+  };
+
+}
+
+function makeIndexedIndicesFn(arrays) {
+  const indices = arrays.indices;
+  let ndx = 0;
+  const fn = function() {
+    return indices[ndx++];
+  };
+  fn.reset = function() {
+    ndx = 0;
+  };
+  fn.numElements = indices.length;
+  return fn;
+}
+
+function makeUnindexedIndicesFn(arrays) {
+  let ndx = 0;
+  const fn = function() {
+    return ndx++;
+  };
+  fn.reset = function() {
+    ndx = 0;
+  }
+  fn.numElements = arrays.positions.length / 3;
+  return fn;
+}
+
+function makeIndiceIterator(arrays) {
+  return arrays.indices
+      ? makeIndexedIndicesFn(arrays)
+      : makeUnindexedIndicesFn(arrays);
+}
+</code></pre>
+<p>Dans le code ci-dessus, nous générons d’abord des normales pour chaque face (chaque triangle) à partir des points originaux.
+Nous générons ensuite un ensemble d’indices de sommets pour trouver les points qui sont les mêmes. C’est parce que lorsque nous avons fait pivoter
+les points, le premier point et le dernier point devraient correspondre mais ils ont des coordonnées UV différentes
+donc ils ne sont pas le même point. Pour calculer les normales de sommets, nous avons besoin qu’ils soient considérés comme le même
+point.</p>
+<p>Une fois cela fait, pour chaque sommet, nous faisons une liste de toutes les faces qu’il utilise.</p>
+<p>Finalement nous faisons la moyenne des normales de toutes les faces que chaque sommet utilise en excluant celles qui sont
+plus que <code class="notranslate" translate="no">maxAngle</code> différentes et générons un nouvel ensemble de sommets.</p>
+<p>Voici le résultat</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-lathe-step-03.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-lathe-step-03.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Remarquez que nous obtenons des arêtes vives là où nous les voulons. Augmentez le <code class="notranslate" translate="no">maxAngle</code> et vous verrez ces arêtes
+devenir lissées lorsque les faces voisines commencent à être incluses dans les calculs de normales.
+Essayez également d’ajuster les <code class="notranslate" translate="no">divisions</code> à quelque chose comme 5 ou 6 puis ajustez le <code class="notranslate" translate="no">maxAngle</code> jusqu’à ce que les
+arêtes autour soient dures mais les parties que vous voulez lisses sont encore lisses. Vous pouvez également définir le <code class="notranslate" translate="no">mode</code>
+à <code class="notranslate" translate="no">lit</code> pour voir à quoi ressemblerait l’objet avec de l’éclairage, la raison pour laquelle nous avions besoin de normales.</p>
+<h2 id="alors-quavons-nous-appris-">Alors, qu’avons-nous appris ?</h2>
+<p>Nous avons appris que si vous voulez créer des données 3D <strong>UTILISEZ UN LOGICIEL DE MODÉLISATION 3D !!!</strong> 😝</p>
+<p>Pour faire quoi que ce soit de vraiment utile, vous auriez probablement besoin d’un vrai <a href="https://www.google.com/search?q=uv+editor">éditeur UV</a>.
+Gérer les extrémités également est quelque chose qu’un éditeur 3D aiderait. Au lieu d’utiliser
+un ensemble limité d’options lors du tournage, vous utiliseriez d’autres fonctionnalités de l’éditeur
+pour ajouter des extrémités et générer des UV plus faciles pour les extrémités. Les éditeurs 3D supportent également <a href="https://www.google.com/search?q=extruding+model">l’extrusion de faces</a>
+et <a href="https://www.google.com/search?q=extruding+along+a+path">l’extrusion le long d’un chemin</a> qui si vous regardez
+il devrait être assez évident comment ils fonctionnent en se basant sur l’exemple de tour ci-dessus.</p>
+<h2 id="références">Références</h2>
+<p>Je voulais mentionner que je n’aurais pas pu faire cela sans <a href="https://pomax.github.io/bezierinfo/">cette page géniale sur les courbes de bézier</a>.</p>
+<div class="webgl_bottombar">
+<h3>Que fait cet opérateur modulo ici ?</h3>
+<p>Si vous regardez attentivement la fonction <code class="notranslate" translate="no">lathePoints</code> vous verrez ce modulo
+lors du calcul de l'angle.</p>
+<pre class="prettyprint showlinemods">
+for (let division = 0; division <= numDivisions; ++division) {
+  const u = division / numDivisions;
+*  const angle = lerp(startAngle, endAngle, u) % (Math.PI * 2);
+</pre>
+<p>Pourquoi est-il là ?</p>
+<p>Lorsque nous faisons pivoter les points tout autour d'un cercle, nous voulons vraiment que le premier
+et le dernier points correspondent. <code class="notranslate" translate="no">Math.sin(0)</code> et <code class="notranslate" translate="no">Math.sin(Math.PI * 2)</code>
+devraient correspondre mais les mathématiques en virgule flottante sur un ordinateur ne sont pas parfaites et bien qu'ils soient assez proches
+en général ils ne sont pas réellement égaux à 100%.</p>
+<p>Cela importe lorsque nous essayons de calculer les normales. Nous voulons connaître toutes les faces qu'un sommet
+utilise. Nous calculons cela en comparant les sommets. Si 2 sommets sont égaux nous supposons qu'ils sont le
+même sommet. Malheureusement, parce que <code class="notranslate" translate="no">Math.sin(0)</code> et <code class="notranslate" translate="no">Math.sin(Math.PI * 2)</code>
+ne sont pas égaux ils ne seront pas considérés comme le même sommet. Cela signifie que lors du calcul des normales
+ils ne prendront pas en considération toutes les faces et leurs normales seront incorrectes.</p>
+<p>Voici le résultat quand cela arrive</p>
+<img class="webgl_center" src="../resources/lathe-normal-seam.png" width="400" />
+<p>Comme vous pouvez le voir il y a une couture où les sommets ne sont pas considérés comme partagés
+parce qu'ils ne correspondent pas à 100%</p>
+<p>Ma première pensée a été que je devrais changer ma solution pour que lorsque je vérifie les sommets correspondants
+je vérifie s'ils sont à une certaine distance. S'ils le sont alors ils sont le même sommet.
+Quelque chose comme ceci.
+<pre class="prettyprint">
+const epsilon = 0.0001;
+const tempVerts = [];
+function getVertIndex(position) {
+  if (tempVerts.length) {
+    // trouve le sommet existant le plus proche
+    let closestNdx = 0;
+    let closestDistSq = v2.distanceSq(position, tempVerts[0]);
+    for (let i = 1; i < tempVerts.length; ++i) {
+      let distSq = v2.distanceSq(position, tempVerts[i]);
+      if (distSq < closestDistSq) {
+        closestDistSq = distSq;
+        closestNdx = i;
+      }
+    }
+    // le sommet le plus proche était-il assez proche ?
+    if (closestDistSq < epsilon) {
+      // oui, donc retourne simplement l'indice de ce sommet.
+      return closestNdx;
+    }
+  }
+  // pas de correspondance, ajoute le sommet comme un nouveau sommet et retourne son indice.
+  tempVerts.push(position);
+  return tempVerts.length - 1;
+}
+</pre>
+<p>Ça a marché ! Ça s'est débarrassé de la couture. Malheureusement ça a pris plusieurs secondes à s'exécuter et
+a rendu l'interface inutilisable. C'est parce que c'est une solution en O^2. Si vous faites glisser les curseurs
+pour le plus de sommets (distance/divisions) dans l'exemple ci-dessus vous pouvez générer ~114000 sommets.
+Pour un O^2 c'est jusqu'à 12 milliards d'itérations qui doivent se produire.
+</p>
+<p>J'ai cherché sur le net une solution facile. Je n'en ai pas trouvé. J'ai pensé à mettre tous les points
+dans un <a href="https://en.wikipedia.org/wiki/Octree">octree</a> pour rendre la recherche de points correspondants
+plus rapide mais cela semble être beaucoup trop pour cet article.
+</p>
+<p>C'est alors que j'ai réalisé que si le seul problème est les points de fin peut-être que je pourrais ajouter un modulo
+aux mathématiques pour que les points soient réellement les mêmes. Le code original était comme ceci
+</p>
+<pre class="prettyprint">
+  const angle = lerp(startAngle, endAngle, u);
+</pre>
+Et le nouveau code comme ceci
+<pre class="prettyprint">
+  const angle = lerp(startAngle, endAngle, u) % (Math.PI * 2);
+</pre>
+<p>À cause du modulo l'<code class="notranslate" translate="no">angle</code> quand <code class="notranslate" translate="no">endAngle</code> est <code class="notranslate" translate="no">Math.PI * 2</code> devient 0
+et donc il est le même que le début. La couture a disparu. Problème résolu !</p>
+<p>Pourtant, même avec le changement si vous définissez <code class="notranslate" translate="no">distance</code> à 0.001
+et <code class="notranslate" translate="no">divisions</code> à 60 ça prend presque une seconde sur ma machine pour recalculer le maillage. Bien qu'il
+puisse y avoir des moyens d'optimiser cela je pense que le point est de réaliser que générer des
+maillages complexes est une opération généralement lente. C'est juste un exemple de pourquoi un jeu 3d peut tourner à 60fps
+mais un logiciel de modélisation 3D tourne souvent à des fréquences d'images très lentes.
+</p>
+</div>
+<div class="webgl_bottombar">
+<h3>Les mathématiques de matrices sont-elles exagérées ici ?</h3>
+<p>Lorsque nous tournons les points il y a ce code pour faire pivoter.</p>
+<pre class="prettyprint">
+const mat = m4.yRotation(angle);
+...
+points.forEach((p, ndx) => {
+  const tp = m4.transformPoint(mat, [...p, 0]);
+  ...
+</pre>
+<p>Transformer un point 3D arbitraire par une matrice 4x4 nécessite 16 multiplications, 12 additions et 3 divisions.
+Nous pourrions simplifier en utilisant simplement <a href="webgl-2d-rotation.html">les mathématiques de rotation du cercle unité</a>.
+</p>
+<pre class="prettyprint">
+const s = Math.sin(angle);
+const c = Math.cos(angle);
+...
+points.forEach((p, ndx) => {
+  const x = p[0];
+  const y = p[1];
+  const z = p[2];
+  const tp = [
+    x * c - z * s,
+    y,
+    x * s + z * c,
+  ];
+  ...
+</pre>
+<p>
+C'est seulement 4 multiplications et 2 additions et aucun appel de fonction ce qui est probablement au moins 6x plus rapide.
+</p>
+<p>
+Est-ce que cette optimisation en vaut la peine ? Eh bien, pour cet exemple particulier je ne pense pas que nous en fassions assez
+pour que cela importe. Ma pensée était que vous pourriez vouloir laisser l'utilisateur décider autour de quel axe
+pivoter. Utiliser une matrice rendrait facile de laisser l'utilisateur passer un axe
+et utiliser quelque chose comme
+</p>
+<pre class="prettyprint">
+   const mat = m4.axisRotation(userSuppliedAxis, angle);
+</pre>
+<p>Quelle méthode est la meilleure dépend vraiment de vous et de vos besoins. Je pense que je choisirais flexible d'abord
+et seulement optimiser plus tard si quelque chose était trop lent pour ce que je faisais.</p>
+</div>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-3d-geometry-lathe.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-3d-geometry-lathe.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-3d-geometry-lathe.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-3d-geometry-lathe.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-3d-geometry-lathe.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-3d-geometry-lathe.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-3d-geometry-lathe.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-3d-geometry-lathe.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fondamentaux</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-getting-webgl2.html">Comment utiliser WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fundamentals.html">Les bases</a></li>
+<li><a href="/webgl/lessons/fr/webgl-how-it-works.html">Comment ça marche</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shaders-and-glsl.html">Shaders et GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Diagramme d'état</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl2-whats-new.html">Quoi de neuf dans WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2.html">Passer de WebGL1 à WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2-fundamentals.html">Différences de WebGLFundamentals.org à WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Traitement d'images</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-image-processing.html">Traitement d'images</a></li>
+<li><a href="/webgl/lessons/fr/webgl-image-processing-continued.html">Traitement d'images - Suite</a></li>
+        </ul>
+  <li>Translation, rotation, mise à l'échelle 2D et calcul matriciel</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-translation.html">Translation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-rotation.html">Rotation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-scale.html">Mise à l'échelle 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrices.html">Matrices 2D</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-orthographic.html">Projection Orthographique 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective.html">Perspective 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-camera.html">3D - Caméras</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-naming.html">3D - Nommage des matrices</a></li>
+        </ul>
+  <li>Éclairage</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-lighting-directional.html">Éclairage directionnel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-point.html">Éclairage ponctuel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-spot.html">Éclairage spot</a></li>
+        </ul>
+  <li>Structure et organisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-less-code-more-fun.html">Moins de code, plus de plaisir</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-multiple-things.html">Dessiner plusieurs choses</a></li>
+<li><a href="/webgl/lessons/fr/webgl-scene-graph.html">Graphes de scène</a></li>
+        </ul>
+  <li>Géométrie</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-geometry-lathe.html">3D Géométrie - Tour</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj.html">Charger des fichiers .obj</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj-w-mtl.html">Charger des fichiers .obj avec .mtl</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/fr/webgl-data-textures.html">Textures de données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2-textures.html">Utiliser 2 textures ou plus</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cors-permission.html">Images Cross Origin</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective-correct-texturemapping.html">Mappage de Texture avec Correction de Perspective</a></li>
+<li><a href="/webgl/lessons/fr/webgl-planar-projection-mapping.html">Projection planaire et en perspective</a></li>
+        </ul>
+  <li>Rendu vers une texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-render-to-texture.html">Rendu vers une texture</a></li>
+        </ul>
+  <li>Ombres</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-shadows.html">Ombres</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrix-stack.html">2D - Pile de matrices</a></li>
+<li><a href="/webgl/lessons/fr/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/fr/webgl-environment-maps.html">Cartes d'environnement</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fog.html">Brouillard</a></li>
+<li><a href="/webgl/lessons/fr/webgl-picking.html">Picking (cliquer sur des objets)</a></li>
+        </ul>
+  <li>Texte</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-text-html.html">Texte - HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-canvas2d.html">Texte - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-texture.html">Texte - Utiliser une texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-glyphs.html">Texte - Utiliser une texture de glyphes</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Astuces</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-smallest-programs.html">Plus petits programmes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-without-data.html">Dessiner sans données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/fr/webgl-pulling-vertices.html">Extraction de sommets</a></li>
+        </ul>
+  <li>Optimisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-indexed-vertices.html">Sommets indexés (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-instanced-drawing.html">Dessin instancié</a></li>
+        </ul>
+  <li>Divers</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-setup-and-installation.html">Installation et configuration</a></li>
+<li><a href="/webgl/lessons/fr/webgl-boilerplate.html">Code standard (Boilerplate)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-resizing-the-canvas.html">Redimensionner le Canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/fr/webgl-points-lines-triangles.html">Points, Lignes et Triangles</a></li>
+<li><a href="/webgl/lessons/fr/webgl-multiple-views.html">Vues multiples, Canvas multiples</a></li>
+<li><a href="/webgl/lessons/fr/webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+<li><a href="/webgl/lessons/fr/webgl-and-alpha.html">WebGL2 et Alpha</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-vs-3d-library.html">Bibliothèques 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-vs-math.html">WebGL2 Matrices vs Matrices Mathématiques</a></li>
+<li><a href="/webgl/lessons/fr/webgl-precision-issues.html">Problèmes de précision</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#screenshot">Prendre une capture d'écran</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#preservedrawingbuffer">Empêcher l'effacement du canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#tabindex">Obtenir des entrées clavier depuis un canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#html-background">Utiliser WebGL2 comme arrière-plan en HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cross-platform-issues.html">Problèmes multi-plateformes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Référence</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-attributes.html">Attributs</a></li>
+<li><a href="/webgl/lessons/fr/webgl-texture-units.html">Unités de Texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/fr/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/fr/webgl-references.html">Références</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentation de l'API</a></li>
+  <li>
+    <a href="https://twgljs.org">TWGL, une bibliothèque utilitaire WebGL</a>
+  </li>
+  <li>
+    <a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a>
+  </li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Problème ou bug ? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Créez un ticket sur github</a>.</div>
+<div class="lesson-comment-notes">
+   Utilisez <b>&lt;pre&gt;&lt;code&gt;</b>le code ici<b>&lt;/code&gt;&lt;/pre&gt;</b> pour les blocs de code
+</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 3D Géométrie - Tour';
+            var disqus_title = 'WebGL2 3D Géométrie - Tour';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Merci à <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>pour <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

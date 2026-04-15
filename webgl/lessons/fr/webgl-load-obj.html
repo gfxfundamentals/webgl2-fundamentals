@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/fr/webgl-load-obj.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Comment analyser et afficher un fichier .OBJ">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-load-obj_fr.jpg">
+
+<meta property="og:title" content="WebGL2 Charger des fichiers Obj">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-load-obj_fr.jpg">
+<meta property="og:description" content="Comment analyser et afficher un fichier .OBJ">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-load-obj.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Charger des fichiers Obj">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-load-obj.html">
+<meta name="twitter:description" content="Comment analyser et afficher un fichier .OBJ">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-load-obj_fr.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-load-obj.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-load-obj_fr.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-load-obj.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-load-obj.html",
+      "inLanguage":"fr",
+      "name":"WebGL2 Charger des fichiers Obj",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-load-obj.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Charger des fichiers Obj</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/fr/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-load-obj.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-load-obj.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/webgl/lessons/fr/webgl-load-obj.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-load-obj.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-load-obj.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-load-obj.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-load-obj.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-load-obj.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-load-obj.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-load-obj.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-load-obj.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-load-obj.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-load-obj.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-load-obj.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-load-obj.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-load-obj.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Table des matières</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/fr/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Charger des fichiers Obj</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Les fichiers Wavefront .obj sont l’un des formats de fichiers 3D les plus courants
+qu’on trouve en ligne. Les formes les plus communes ne sont pas trop difficiles à
+analyser, alors analysons-en un. Cela fournira, espérons-le, un exemple utile pour
+l’analyse des formats 3D en général.</p>
+<p><strong>Avertissement :</strong> Ce parser .OBJ n’est pas conçu pour être exhaustif ou
+parfait, ni pour gérer tous les fichiers .OBJ. Il s’agit plutôt d’un exercice
+pour parcourir la gestion de ce qu’on rencontre en chemin. Cela dit, si vous
+rencontrez des problèmes importants et leurs solutions, un commentaire en bas de
+page pourrait être utile aux autres s’ils choisissent d’utiliser ce code.</p>
+<p>La meilleure documentation que j’ai trouvée pour le format .OBJ est
+<a href="http://paulbourke.net/dataformats/obj/">ici</a>. Bien que
+<a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000507.shtml">cette page</a>
+renvoie à de nombreux autres documents, notamment ce qui semble être
+<a href="https://web.archive.org/web/20200324065233/http://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf">les docs originaux</a>.</p>
+<p>Regardons un exemple simple. Voici un fichier cube.obj exporté depuis la scène par
+défaut de Blender.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-txt"># Blender v2.80 (sub 75) OBJ File: ''
+# www.blender.org
+mtllib cube.mtl
+o Cube
+v 1.000000 1.000000 -1.000000
+v 1.000000 -1.000000 -1.000000
+v 1.000000 1.000000 1.000000
+v 1.000000 -1.000000 1.000000
+v -1.000000 1.000000 -1.000000
+v -1.000000 -1.000000 -1.000000
+v -1.000000 1.000000 1.000000
+v -1.000000 -1.000000 1.000000
+vt 0.375000 0.000000
+vt 0.625000 0.000000
+vt 0.625000 0.250000
+vt 0.375000 0.250000
+vt 0.375000 0.250000
+vt 0.625000 0.250000
+vt 0.625000 0.500000
+vt 0.375000 0.500000
+vt 0.625000 0.750000
+vt 0.375000 0.750000
+vt 0.625000 0.750000
+vt 0.625000 1.000000
+vt 0.375000 1.000000
+vt 0.125000 0.500000
+vt 0.375000 0.500000
+vt 0.375000 0.750000
+vt 0.125000 0.750000
+vt 0.625000 0.500000
+vt 0.875000 0.500000
+vt 0.875000 0.750000
+vn 0.0000 1.0000 0.0000
+vn 0.0000 0.0000 1.0000
+vn -1.0000 0.0000 0.0000
+vn 0.0000 -1.0000 0.0000
+vn 1.0000 0.0000 0.0000
+vn 0.0000 0.0000 -1.0000
+usemtl Material
+s off
+f 1/1/1 5/2/1 7/3/1 3/4/1
+f 4/5/2 3/6/2 7/7/2 8/8/2
+f 8/8/3 7/7/3 5/9/3 6/10/3
+f 6/10/4 2/11/4 4/12/4 8/13/4
+f 2/14/5 1/15/5 3/16/5 4/17/5
+f 6/18/6 5/19/6 1/20/6 2/11/6
+</code></pre>
+<p>Sans même consulter la documentation, on peut probablement deviner que les lignes
+commençant par <code class="notranslate" translate="no">v</code> sont des positions, celles commençant par <code class="notranslate" translate="no">vt</code> sont des coordonnées
+de texture, et celles commençant par <code class="notranslate" translate="no">vn</code> sont des normales. Il reste à comprendre le reste.</p>
+<p>Il semble que les fichiers .OBJ soient des fichiers texte, donc la première chose à faire
+est de charger un fichier texte. Heureusement, en 2020, c’est très simple avec
+<a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await">async/await</a>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">async function main() {
+  ...
+
+  const response = await fetch('resources/models/cube/cube.obj');
+  const text = await response.text();
+</code></pre>
+<p>Ensuite, on peut analyser le fichier ligne par ligne et chaque ligne est de la forme :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">mot-clé donnée donnée donnée ...
+</code></pre>
+<p>où la première chose sur la ligne est un mot-clé et les données sont séparées par des espaces.
+Les lignes commençant par <code class="notranslate" translate="no">#</code> sont des commentaires.</p>
+<p>Configurons du code pour analyser chaque ligne, ignorer les lignes vides et les commentaires,
+puis appeler une fonction selon le mot-clé :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">+function parseOBJ(text) {
++
++  const keywords = {
++  };
++
++  const keywordRE = /(\w*)(?: )*(.*)/;
++  const lines = text.split('\n');
++  for (let lineNo = 0; lineNo &lt; lines.length; ++lineNo) {
++    const line = lines[lineNo].trim();
++    if (line === '' || line.startsWith('#')) {
++      continue;
++    }
++    const parts = line.split(/\s+/);
++    const m = keywordRE.exec(line);
++    if (!m) {
++      continue;
++    }
++    const [, keyword, unparsedArgs] = m;
++    const parts = line.split(/\s+/).slice(1);
++    const handler = keywords[keyword];
++    if (!handler) {
++      console.warn('unhandled keyword:', keyword, 'at line', lineNo + 1);
++      continue;
++    }
++    handler(parts, unparsedArgs);
++  }
+}
+</code></pre>
+<p>Quelques remarques : nous supprimons les espaces en début et fin de chaque ligne.
+Je ne sais pas si c’est nécessaire mais je pense que ça ne peut pas faire de mal.
+Nous découpons la ligne par des espaces blancs avec <code class="notranslate" translate="no">/\s+/</code>. Là encore, je ne sais
+pas si c’est nécessaire. Peut-il y avoir plus d’un espace entre les données ? Des
+tabulations ? Je ne sais pas, mais il semblait plus sûr de supposer qu’il peut y avoir
+des variations dans un format texte.</p>
+<p>Sinon, nous extrayons la première partie comme mot-clé, puis cherchons une fonction
+pour ce mot-clé et l’appelons en lui passant les données après le mot-clé. Il faut
+maintenant remplir ces fonctions.</p>
+<p>Nous avons deviné les données <code class="notranslate" translate="no">v</code>, <code class="notranslate" translate="no">vt</code> et <code class="notranslate" translate="no">vn</code> ci-dessus. La documentation dit que <code class="notranslate" translate="no">f</code>
+signifie “face” ou polygone où chaque donnée est un indice dans les positions, les
+coordonnées de texture et les normales.</p>
+<p>Les indices sont basés sur 1 si positifs, ou relatifs au nombre de sommets analysés
+jusqu’ici s’ils sont négatifs. L’ordre des indices est position/texcoord/normale et
+tout sauf la position est optionnel :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-txt">f 1 2 3              # indices pour les positions seulement
+f 1/1 2/2 3/3        # indices pour les positions et les texcoords
+f 1/1/1 2/2/2 3/3/3  # indices pour les positions, texcoords et normales
+f 1//1 2//2 3//3     # indices pour les positions et les normales
+</code></pre>
+<p><code class="notranslate" translate="no">f</code> peut avoir plus de 3 sommets, par exemple 4 pour un quadrilatère.
+WebGL ne peut dessiner que des triangles, donc nous devons convertir les données en triangles.
+Les docs ne précisent pas si une face peut avoir plus de 4 sommets, ni si la face doit être
+convexe ou si elle peut être concave. Pour l’instant, supposons qu’elles soient concaves.</p>
+<p>Aussi, en général dans WebGL, nous n’utilisons pas d’indices différents pour les positions,
+les texcoords et les normales. Au lieu de ça, un “vertex webgl” est la combinaison de toutes
+les données pour ce sommet. Ainsi, pour dessiner un cube, WebGL nécessite 36 sommets, chaque
+face est 2 triangles, chaque triangle est 3 sommets. 6 faces * 2 triangles * 3 sommets par
+triangle = 36. Même s’il n’y a que 8 positions uniques, 6 normales uniques, et on ne sait
+pas combien de coordonnées de texture. Nous devons donc lire les indices de sommets des faces
+et générer un “vertex webgl” qui est la combinaison des données des 3 choses. <a href="webgl-pulling-vertices.html">*</a></p>
+<p>Donc, étant donné tout ça, on peut analyser ces parties comme suit :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
++  // comme les indices sont en base 1, remplissons simplement la 0ème donnée
++  const objPositions = [[0, 0, 0]];
++  const objTexcoords = [[0, 0]];
++  const objNormals = [[0, 0, 0]];
++
++  // même ordre que les indices `f`
++  const objVertexData = [
++    objPositions,
++    objTexcoords,
++    objNormals,
++  ];
++
++  // même ordre que les indices `f`
++  let webglVertexData = [
++    [],   // positions
++    [],   // texcoords
++    [],   // normales
++  ];
++
++  function addVertex(vert) {
++    const ptn = vert.split('/');
++    ptn.forEach((objIndexStr, i) =&gt; {
++      if (!objIndexStr) {
++        return;
++      }
++      const objIndex = parseInt(objIndexStr);
++      const index = objIndex + (objIndex &gt;= 0 ? 0 : objVertexData[i].length);
++      webglVertexData[i].push(...objVertexData[i][index]);
++    });
++  }
++
+  const keywords = {
++    v(parts) {
++      objPositions.push(parts.map(parseFloat));
++    },
++    vn(parts) {
++      objNormals.push(parts.map(parseFloat));
++    },
++    vt(parts) {
++      objTexcoords.push(parts.map(parseFloat));
++    },
++    f(parts) {
++      const numTriangles = parts.length - 2;
++      for (let tri = 0; tri &lt; numTriangles; ++tri) {
++        addVertex(parts[0]);
++        addVertex(parts[tri + 1]);
++        addVertex(parts[tri + 2]);
++      }
++    },
+  };
+</code></pre>
+<p>Le code ci-dessus crée 3 tableaux pour stocker les positions, texcoords et normales
+analysées du fichier objet. Il crée aussi 3 tableaux pour stocker les mêmes données
+pour WebGL. Ils sont mis dans des tableaux dans le même ordre que les indices <code class="notranslate" translate="no">f</code> pour
+faciliter les références lors de l’analyse de <code class="notranslate" translate="no">f</code>.</p>
+<p>En d’autres termes, une ligne <code class="notranslate" translate="no">f</code> comme :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-txt">f 1/2/3 4/5/6 7/8/9
+</code></pre>
+<p>Une de ces parties <code class="notranslate" translate="no">4/5/6</code> dit “utiliser la position 4” pour ce sommet de face,
+“utiliser la texcoord 5” et “utiliser la normale 6”. En mettant les tableaux eux-mêmes
+dans un tableau, <code class="notranslate" translate="no">objVertexData</code>, on peut simplifier en “utiliser l’élément n de objData i
+pour webglData i”, ce qui simplifie le code.</p>
+<p>À la fin de notre fonction, nous retournons les données construites :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  ...
+
+  return {
+    position: webglVertexData[0],
+    texcoord: webglVertexData[1],
+    normal: webglVertexData[2],
+  };
+}
+</code></pre>
+<p>Il ne reste plus qu’à dessiner les données. D’abord, nous utiliserons une variante des shaders
+de <a href="webgl-3d-lighting-directional.html">l’article sur l’éclairage directionnel</a>.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
+  in vec4 a_position;
+  in vec3 a_normal;
+
+  uniform mat4 u_projection;
+  uniform mat4 u_view;
+  uniform mat4 u_world;
+
+  out vec3 v_normal;
+
+  void main() {
+    gl_Position = u_projection * u_view * u_world * a_position;
+    v_normal = mat3(u_world) * a_normal;
+  }
+`;
+
+const fs = `#version 300 es
+  precision highp float;
+
+  in vec3 v_normal;
+
+  uniform vec4 u_diffuse;
+  uniform vec3 u_lightDirection;
+
+  out vec4 outColor;
+
+  void main () {
+    vec3 normal = normalize(v_normal);
+    float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
+    outColor = vec4(u_diffuse.rgb * fakeLight, u_diffuse.a);
+  }
+`;
+</code></pre>
+<p>Puis, en utilisant le code de l’article sur
+<a href="webgl-less-code-more-fun.html">moins de code, plus de fun</a>,
+nous chargeons d’abord nos données :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">async function main() {
+  // Obtenir un contexte WebGL
+  /** @type {HTMLCanvasElement} */
+  const canvas = document.querySelector(&quot;#canvas&quot;);
+  const gl = canvas.getContext(&quot;webgl2&quot;);
+  if (!gl) {
+    return;
+  }
+
+  // Dit à twgl de faire correspondre position avec a_position etc...
+  twgl.setAttributePrefix(&quot;a_&quot;);
+
+  ... shaders ...
+
+  // compile et lie les shaders, cherche les emplacements d'attribut et d'uniform
+  const meshProgramInfo = twgl.createProgramInfo(gl, [vs, fs]);
+
+  const response = await fetch('resources/models/cube/cube.obj');
+  const text = await response.text();
+  const data = parseOBJ(text);
+
+  // Parce que data est juste des tableaux nommés comme ceci
+  //
+  // {
+  //   position: [...],
+  //   texcoord: [...],
+  //   normal: [...],
+  // }
+  //
+  // et parce que ces noms correspondent aux attributs dans notre vertex
+  // shader nous pouvons le passer directement à `createBufferInfoFromArrays`
+  // de l'article &quot;moins de code, plus de fun&quot;.
+
+  // crée un tampon pour chaque tableau en appelant
+  // gl.createBuffer, gl.bindBuffer, gl.bufferData
+  const bufferInfo = webglUtils.createBufferInfoFromArrays(gl, data);
+  // remplit un vertex array en appelant gl.createVertexArray, gl.bindVertexArray
+  // puis gl.bindBuffer, gl.enableVertexAttribArray, et gl.vertexAttribPointer pour chaque attribut
+  const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
+</code></pre>
+<p>puis nous le dessinons :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  const cameraTarget = [0, 0, 0];
+  const cameraPosition = [0, 0, 4];
+  const zNear = 0.1;
+  const zFar = 50;
+
+  function degToRad(deg) {
+    return deg * Math.PI / 180;
+  }
+
+  function render(time) {
+    time *= 0.001;  // convertit en secondes
+
+    twgl.resizeCanvasToDisplaySize(gl.canvas);
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.CULL_FACE);
+
+    const fieldOfViewRadians = degToRad(60);
+    const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+    const projection = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
+
+    const up = [0, 1, 0];
+    // Calcule la matrice de la caméra avec lookAt.
+    const camera = m4.lookAt(cameraPosition, cameraTarget, up);
+
+    // Crée une matrice de vue depuis la matrice de caméra.
+    const view = m4.inverse(camera);
+
+    const sharedUniforms = {
+      u_lightDirection: m4.normalize([-1, 3, 5]),
+      u_view: view,
+      u_projection: projection,
+    };
+
+    gl.useProgram(meshProgramInfo.program);
+
+    // appelle gl.uniform
+    twgl.setUniforms(meshProgramInfo, sharedUniforms);
+
+    // configure les attributs pour cette partie.
+    gl.bindVertexArray(vao);
+
+    // appelle gl.uniform
+    twgl.setUniforms(meshProgramInfo, {
+      u_world: m4.yRotation(time),
+      u_diffuse: [1, 0.7, 0.5, 1],
+    });
+
+    // appelle gl.drawArrays ou gl.drawElements
+    twgl.drawBufferInfo(gl, bufferInfo);
+
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+}
+</code></pre>
+<p>Et avec ça, on peut voir notre cube chargé et dessiné :</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-load-obj-cube.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-load-obj-cube.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>On voit aussi des messages sur des mots-clés non gérés. À quoi servent-ils ?</p>
+<p><code class="notranslate" translate="no">usemtl</code> est le plus important d’entre eux. Il spécifie que toute la géométrie qui
+suit utilise un matériau spécifique. Par exemple, si vous avez un modèle de voiture,
+vous voudrez probablement des vitres transparentes et des pare-chocs chromés. Les vitres
+sont <a href="webgl-text-texture.html">transparentes</a> et les pare-chocs sont
+<a href="webgl-environment-maps.html">réfléchissants</a>, ils doivent donc être dessinés différemment
+de la carrosserie. Le tag <code class="notranslate" translate="no">usemtl</code> marque cette séparation des parties.</p>
+<p>Puisque nous devrons dessiner chacune de ces parties séparément, corrigeons le code
+pour qu’à chaque fois que nous voyons un <code class="notranslate" translate="no">usemtl</code>, nous démarrions un nouvel ensemble
+de données webgl.</p>
+<p>D’abord, créons du code qui démarre de nouvelles données webgl si nous n’en avons pas déjà :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
+  // comme les indices sont en base 1, remplissons simplement la 0ème donnée
+  const objPositions = [[0, 0, 0]];
+  const objTexcoords = [[0, 0]];
+  const objNormals = [[0, 0, 0]];
+
+  // même ordre que les indices `f`
+  const objVertexData = [
+    objPositions,
+    objTexcoords,
+    objNormals,
+  ];
+
+  // même ordre que les indices `f`
+  let webglVertexData = [
+    [],   // positions
+    [],   // texcoords
+    [],   // normales
+  ];
+
++  const geometries = [];
++  let geometry;
++  let material = 'default';
++
++  function newGeometry() {
++    // S'il y a une géométrie existante et qu'elle n'est
++    // pas vide, en démarrer une nouvelle.
++    if (geometry &amp;&amp; geometry.data.position.length) {
++      geometry = undefined;
++    }
++  }
++
++  function setGeometry() {
++    if (!geometry) {
++      const position = [];
++      const texcoord = [];
++      const normal = [];
++      webglVertexData = [
++        position,
++        texcoord,
++        normal,
++      ];
++      geometry = {
++        material,
++        data: {
++          position,
++          texcoord,
++          normal,
++        },
++      };
++      geometries.push(geometry);
++    }
++  }
+
+...
+</code></pre>
+<p>puis appelons-les aux bons endroits lors du traitement de nos mots-clés, en incluant
+l’ajout de la fonction pour le mot-clé <code class="notranslate" translate="no">o</code> :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  ...
+
+  const keywords = {
+    v(parts) {
+      objPositions.push(parts.map(parseFloat));
+    },
+    vn(parts) {
+      objNormals.push(parts.map(parseFloat));
+    },
+    vt(parts) {
+      objTexcoords.push(parts.map(parseFloat));
+    },
+    f(parts) {
++      setGeometry();
+      const numTriangles = parts.length - 2;
+      for (let tri = 0; tri &lt; numTriangles; ++tri) {
+        addVertex(parts[0]);
+        addVertex(parts[tri + 1]);
+        addVertex(parts[tri + 2]);
+      }
+    },
++    usemtl(parts, unparsedArgs) {
++      material = unparsedArgs;
++      newGeometry();
++    },
+  };
+
+  ...
+
+</code></pre>
+<p>Le mot-clé <code class="notranslate" translate="no">usemtl</code> n’est pas obligatoire, donc s’il n’y en a pas dans le fichier,
+on veut quand même de la géométrie. Donc dans le gestionnaire <code class="notranslate" translate="no">f</code>, on appelle <code class="notranslate" translate="no">setGeometry</code>
+qui en démarrera si aucun mot-clé <code class="notranslate" translate="no">usemtl</code> n’est apparu avant ce point dans le fichier.</p>
+<p>Sinon, à la fin, nous retournerons <code class="notranslate" translate="no">geometries</code> qui est un tableau d’objets, contenant
+chacun <code class="notranslate" translate="no">name</code> et <code class="notranslate" translate="no">data</code> :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  ...
+
+-  return {
+-    position: webglVertexData[0],
+-    texcoord: webglVertexData[1],
+-    normal: webglVertexData[2],
+-  };
++  return geometries;
+}
+</code></pre>
+<p>Tant que nous y sommes, nous devrions aussi gérer le cas où les texcoords ou normales
+sont absentes et simplement ne pas les inclure.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">+  // supprime tout tableau qui n'a pas d'entrées.
++  for (const geometry of geometries) {
++    geometry.data = Object.fromEntries(
++        Object.entries(geometry.data).filter(([, array]) =&gt; array.length &gt; 0));
++  }
+
+  return {
+    materialLibs,
+    geometries,
+  };
+}
+</code></pre>
+<p>En continuant avec les mots-clés, selon la <a href="https://web.archive.org/web/20200324065233/http://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf"><em>spécification officielle</em></a>,
+<code class="notranslate" translate="no">matlib</code> spécifie des fichiers séparés qui contiennent des informations sur les matériaux.
+Malheureusement, ça ne semble pas correspondre à la réalité car les noms de fichiers
+peuvent contenir des espaces et le format .OBJ ne fournit aucun moyen d’échapper les espaces
+ou de citer les arguments. Idéalement, ils auraient dû utiliser un format bien défini comme
+JSON, XML ou YAML, ou quelque chose qui résout ce problème. Mais à leur décharge, .OBJ est
+plus ancien que tous ces formats.</p>
+<p>Nous gérons le chargement du fichier plus tard. Pour l’instant, ajoutons-le juste à notre
+chargeur pour pouvoir y faire référence plus tard.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
+  ...
++  const materialLibs = [];
+
+  ...
+
+  const keywords = {
+    ...
++    mtllib(parts, unparsedArgs) {
++      materialLibs.push(unparsedArgs);
++    },
+    ...
+  };
+
+-  return geometries;
++  return {
++    materialLibs,
++    geometries,
++  };
+}
+</code></pre>
+<p><code class="notranslate" translate="no">o</code> spécifie que les éléments suivants appartiennent à l’“objet” nommé. Ce n’est pas
+vraiment clair comment l’utiliser. Peut-on avoir un fichier avec juste <code class="notranslate" translate="no">o</code> mais sans
+<code class="notranslate" translate="no">usemtl</code> ? Supposons que oui.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
+  ...
+  let material = 'default';
++  let object = 'default';
+
+  ...
+
+  function setGeometry() {
+    if (!geometry) {
+      const position = [];
+      const texcoord = [];
+      const normal = [];
+      webglVertexData = [
+        position,
+        texcoord,
+        normal,
+      ];
+      geometry = {
++        object,
+        material,
+        data: {
+          position,
+          texcoord,
+          normal,
+        },
+      };
+      geometries.push(geometry);
+    }
+  }
+
+  const keywords = {
+    ...
++    o(parts, unparsedArgs) {
++      object = unparsedArgs;
++      newGeometry();
++    },
+    ...
+  };
+</code></pre>
+<p><code class="notranslate" translate="no">s</code> spécifie un groupe de lissage. Je pense que les groupes de lissage sont quelque chose
+qu’on peut ignorer. Ils sont généralement utilisés dans un logiciel de modélisation pour
+auto-générer des normales de sommets. Une normale de sommet est calculée en calculant d’abord
+la normale de chaque face, ce qui est facile en utilisant le <em>produit vectoriel</em> que nous avons
+couvert dans <a href="webgl-3d-camera.html">l’article sur les caméras</a>. Ensuite, pour n’importe quel
+sommet, on peut faire la moyenne de toutes les faces qu’il partage. Mais si on veut un bord
+dur, on doit parfois pouvoir dire au système d’ignorer une face. Les groupes de lissage
+permettent de désigner quelles faces seront incluses lors du calcul des normales de sommets.
+Pour le calcul des normales de sommets pour la géométrie en général, vous pouvez regarder
+<a href="webgl-3d-geometry-lathe.html">l’article sur le tour de potier</a> pour un exemple.</p>
+<p>Dans notre cas, ignorons-les simplement. Je soupçonne que la plupart des fichiers .obj ont
+des normales en interne et n’ont donc probablement pas besoin de groupes de lissage. Ils les
+gardent pour les logiciels de modélisation au cas où vous voudriez éditer et régénérer des normales.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">+  const noop = () =&gt; {};
+
+  const keywords = {
+    ...
++    s: noop,
+    ...
+  };
+</code></pre>
+<p>Un autre mot-clé que nous n’avons pas encore vu est <code class="notranslate" translate="no">g</code> pour groupe. C’est essentiellement
+juste des métadonnées. Les objets peuvent appartenir à plusieurs groupes.
+Puisque ça apparaîtra dans le prochain fichier qu’on essaie, ajoutons le support ici même
+si on n’utilisera pas vraiment les données.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
+  ...
++  let groups = ['default'];
+  ...
+  function setGeometry() {
+    if (!geometry) {
+      const position = [];
+      const texcoord = [];
+      const normal = [];
+      webglVertexData = [
+        position,
+        texcoord,
+        normal,
+      ];
+      geometry = {
+        object,
++        groups,
+        material,
+        data: {
+          position,
+          texcoord,
+          normal,
+        },
+      };
+      geometries.push(geometry);
+    }
+  }
+
+  ...
+
+  const keywords = {
+    ...
++    g(parts) {
++      groups = parts;
++      newGeometry()
++    },
+    ...
+  };
+</code></pre>
+<p>Maintenant que nous créons plusieurs ensembles de géométrie, nous devons changer notre
+code de configuration pour créer des <code class="notranslate" translate="no">WebGLBuffers</code> pour chacun. Nous créerons aussi une
+couleur aléatoire pour pouvoir facilement voir les différentes parties.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-  const response = await fetch('resources/models/cube/cube.obj');
++  const response = await fetch('resources/models/cube/chair.obj');
+  const text = await response.text();
+-  const data = parseOBJ(text);
++  const obj = parseOBJ(text);
+
++  const parts = obj.geometries.map(({data}) =&gt; {
+    // Parce que data est juste des tableaux nommés comme ceci
+    //
+    // {
+    //   position: [...],
+    //   texcoord: [...],
+    //   normal: [...],
+    // }
+    //
+    // et parce que ces noms correspondent aux attributs dans notre vertex
+    // shader nous pouvons le passer directement à `createBufferInfoFromArrays`
+    // de l'article &quot;moins de code, plus de fun&quot;.
+
+    // crée un tampon pour chaque tableau en appelant
+    // gl.createBuffer, gl.bindBuffer, gl.bufferData
+    const bufferInfo = webglUtils.createBufferInfoFromArrays(gl, data);
+    // remplit un vertex array en appelant gl.createVertexArray, gl.bindVertexArray
+    // puis gl.bindBuffer, gl.enableVertexAttribArray, et gl.vertexAttribPointer pour chaque attribut
+    const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
++    return {
++      material: {
++        u_diffuse: [Math.random(), Math.random(), Math.random(), 1],
++      },
++      bufferInfo,
++      vao,
++    };
++  });
+</code></pre>
+<p>J’ai changé du chargement d’un cube au chargement de cette <a href="https://sketchfab.com/3d-models/chair-aa2acddb218646a59ece132bf95aa558">chaise</a> sous licence <a href="http://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a> par <a href="https://sketchfab.com/haytonm">haytonm</a> trouvée sur <a href="https://sketchfab.com/">Sketchfab</a>.</p>
+<div class="webgl_center"><img src="../../resources/models/chair/chair.jpg" style="width: 452px;"></div>
+<p>Pour le rendu, il suffit de boucler sur les parties :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render(time) {
+  ...
+
+  gl.useProgram(meshProgramInfo.program);
+
+  // appelle gl.uniform
+  twgl.setUniforms(meshProgramInfo, sharedUniforms);
+
++  // calcule la matrice monde une seule fois puisque toutes les parties
++  // sont dans le même espace.
++  const u_world = m4.yRotation(time);
++
++  for (const {bufferInfo, vao material} of parts) {
+    // configure les attributs pour cette partie.
+    gl.bindVertexArray(vao);
+    // appelle gl.uniform
+    twgl.setUniforms(meshProgramInfo, {
+-      u_world: m4.yRotation(time),
+-      u_diffuse: [1, 0.7, 0.5, 1],
++      u_world,
++      u_diffuse: material.u_diffuse,
+    });
+    // appelle gl.drawArrays ou gl.drawElements
+    twgl.drawBufferInfo(gl, bufferInfo);
++  }
+
+  ...
+</code></pre>
+<p>et ça fonctionne à peu près :</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-load-obj.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-load-obj.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Ne serait-il pas agréable de pouvoir essayer de centrer l’objet ?</p>
+<p>Pour ce faire, nous devons calculer les étendues, soit les positions minimale et maximale
+des sommets. D’abord, nous pouvons créer une fonction qui, étant donné des positions,
+calculera les positions min et max :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function getExtents(positions) {
+  const min = positions.slice(0, 3);
+  const max = positions.slice(0, 3);
+  for (let i = 3; i &lt; positions.length; i += 3) {
+    for (let j = 0; j &lt; 3; ++j) {
+      const v = positions[i + j];
+      min[j] = Math.min(v, min[j]);
+      max[j] = Math.max(v, max[j]);
+    }
+  }
+  return {min, max};
+}
+</code></pre>
+<p>puis nous pouvons boucler sur toutes les parties de notre géométrie et obtenir
+les étendues pour toutes les parties :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function getGeometriesExtents(geometries) {
+  return geometries.reduce(({min, max}, {data}) =&gt; {
+    const minMax = getExtents(data.position);
+    return {
+      min: min.map((min, ndx) =&gt; Math.min(minMax.min[ndx], min)),
+      max: max.map((max, ndx) =&gt; Math.max(minMax.max[ndx], max)),
+    };
+  }, {
+    min: Array(3).fill(Number.POSITIVE_INFINITY),
+    max: Array(3).fill(Number.NEGATIVE_INFINITY),
+  });
+}
+</code></pre>
+<p>Ensuite, nous pouvons utiliser ça pour calculer de combien déplacer l’objet
+afin que son centre soit à l’origine, et une distance depuis l’origine pour
+placer la caméra de façon à voir idéalement tout l’objet.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-  const cameraTarget = [0, 0, 0];
+-  const cameraPosition = [0, 0, 4];
+-  const zNear = 0.1;
+-  const zFar = 50;
++  const extents = getGeometriesExtents(obj.geometries);
++  const range = m4.subtractVectors(extents.max, extents.min);
++  // quantité de déplacement de l'objet pour que son centre soit à l'origine
++  const objOffset = m4.scaleVector(
++      m4.addVectors(
++        extents.min,
++        m4.scaleVector(range, 0.5)),
++      -1);
++  const cameraTarget = [0, 0, 0];
++  // calcule à quelle distance déplacer la caméra pour voir probablement l'objet.
++  const radius = m4.length(range) * 1.2;
++  const cameraPosition = m4.addVectors(cameraTarget, [
++    0,
++    0,
++    radius,
++  ]);
++  // Définit zNear et zFar à quelque chose d'approprié
++  // pour la taille de cet objet.
++  const zNear = radius / 100;
++  const zFar = radius * 3;
+</code></pre>
+<p>Ci-dessus, nous avons aussi défini <code class="notranslate" translate="no">zNear</code> et <code class="notranslate" translate="no">zFar</code> à quelque chose qui espérons-le
+montre bien l’objet.</p>
+<p>Il suffit d’utiliser <code class="notranslate" translate="no">objOffset</code> pour déplacer l’objet vers l’origine :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// calcule la matrice monde une seule fois puisque toutes les parties
+// sont dans le même espace.
+-const u_world = m4.yRotation(time);
++let u_world = m4.yRotation(time);
++u_world = m4.translate(u_world, ...objOffset);
+</code></pre>
+<p>et avec ça, l’objet est centré.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-load-obj-w-extents.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-load-obj-w-extents.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>En cherchant sur le net, il s’avère qu’il existe des versions non standard de fichiers .OBJ
+qui incluent des couleurs de sommets. Pour ce faire, ils ajoutent des valeurs supplémentaires
+à chaque position de sommet, donc au lieu de :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v &lt;x&gt; &lt;y&gt; &lt;z&gt;
+</code></pre>
+<p>c’est :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">v &lt;x&gt; &lt;y&gt; &lt;z&gt; &lt;rouge&gt; &lt;vert&gt; &lt;bleu&gt;
+</code></pre>
+<p>Il n’est pas clair s’il y a aussi un alpha optionnel à la fin.</p>
+<p>J’ai cherché et trouvé ce <a href="https://sketchfab.com/3d-models/book-vertex-chameleon-study-51b0b3bdcd844a9e951a9ede6f192da8">livre - Étude Vertex Caméléon</a> par <a href="https://sketchfab.com/homkahom0">Oleaf</a> sous licence <a href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC</a> qui utilise des couleurs de sommets.</p>
+<div class="webgl_center"><img src="../../resources/models/book-vertex-chameleon-study/book.png" style="width: 446px;"></div>
+<p>Voyons si nous pouvons ajouter le support dans notre parseur pour gérer les couleurs de sommets.</p>
+<p>Nous devons ajouter des éléments pour les couleurs partout où nous avions des positions, normales et texcoords :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function parseOBJ(text) {
+  // comme les indices sont en base 1, remplissons simplement la 0ème donnée
+  const objPositions = [[0, 0, 0]];
+  const objTexcoords = [[0, 0]];
+  const objNormals = [[0, 0, 0]];
++  const objColors = [[0, 0, 0]];
+
+  // même ordre que les indices `f`
+  const objVertexData = [
+    objPositions,
+    objTexcoords,
+    objNormals,
++    objColors,
+  ];
+
+  // même ordre que les indices `f`
+  let webglVertexData = [
+    [],   // positions
+    [],   // texcoords
+    [],   // normales
++    [],   // couleurs
+  ];
+
+  ...
+
+  function setGeometry() {
+    if (!geometry) {
+      const position = [];
+      const texcoord = [];
+      const normal = [];
++      const color = [];
+      webglVertexData = [
+        position,
+        texcoord,
+        normal,
++        color,
+      ];
+      geometry = {
+        object,
+        groups,
+        material,
+        data: {
+          position,
+          texcoord,
+          normal,
++          color,
+        },
+      };
+      geometries.push(geometry);
+    }
+  }
+</code></pre>
+<p>Ensuite, malheureusement l’analyse réelle rend le code un peu moins générique :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  const keywords = {
+    v(parts) {
+-      objPositions.push(parts.map(parseFloat));
++      // si il y a plus de 3 valeurs ici, ce sont des couleurs de sommets
++      if (parts.length &gt; 3) {
++        objPositions.push(parts.slice(0, 3).map(parseFloat));
++        objColors.push(parts.slice(3).map(parseFloat));
++      } else {
++        objPositions.push(parts.map(parseFloat));
++      }
+    },
+    ...
+  };
+</code></pre>
+<p>Puis quand nous lisons une ligne de face <code class="notranslate" translate="no">f</code>, nous appelons <code class="notranslate" translate="no">addVertex</code>. Nous devrons récupérer
+les couleurs de sommets ici :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">  function addVertex(vert) {
+    const ptn = vert.split('/');
+    ptn.forEach((objIndexStr, i) =&gt; {
+      if (!objIndexStr) {
+        return;
+      }
+      const objIndex = parseInt(objIndexStr);
+      const index = objIndex + (objIndex &gt;= 0 ? 0 : objVertexData[i].length);
+      webglVertexData[i].push(...objVertexData[i][index]);
++      // si c'est l'indice de position (index 0) et qu'on a analysé
++      // des couleurs de sommets, on copie les couleurs dans les données de couleur webgl
++      if (i === 0 &amp;&amp; objColors.length &gt; 1) {
++        geometry.data.color.push(...objColors[index]);
++      }
+    });
+  }
+</code></pre>
+<p>Maintenant, nous devons changer nos shaders pour utiliser les couleurs de sommets :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const vs = `#version 300 es
+in vec4 a_position;
+in vec3 a_normal;
++in vec4 a_color;
+
+uniform mat4 u_projection;
+uniform mat4 u_view;
+uniform mat4 u_world;
+
+out vec3 v_normal;
++out vec4 v_color;
+
+void main() {
+  gl_Position = u_projection * u_view * u_world * a_position;
+  v_normal = mat3(u_world) * a_normal;
++  v_color = a_color;
+}
+`;
+
+const fs = `#version 300 es
+precision mediump float;
+
+in vec3 v_normal;
++in vec4 v_color;
+
+uniform vec4 u_diffuse;
+uniform vec3 u_lightDirection;
+
+out vec4 outColor;
+
+void main () {
+  vec3 normal = normalize(v_normal);
+  float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
+-  outColor = vec4(u_diffuse.rgb * fakeLight, u_diffuse.a);
++  vec4 diffuse = u_diffuse * v_color;
++  outColor = vec4(diffuse.rgb * fakeLight, diffuse.a);
+}
+`;
+</code></pre>
+<p>Comme mentionné ci-dessus, je ne sais pas si cette version non standard de .OBJ peut inclure
+des valeurs alpha pour chaque couleur de sommet. Notre <a href="webgl-less-code-more-fun.html">bibliothèque d’assistance</a> prend automatiquement les données qu’on lui passe et crée des tampons pour nous. Elle devine
+le nombre de composants par élément dans les données. Pour les données dont le nom contient
+la chaîne <code class="notranslate" translate="no">position</code> ou <code class="notranslate" translate="no">normal</code>, elle suppose 3 composants par élément. Pour un nom qui
+contient <code class="notranslate" translate="no">texcoord</code>, elle suppose 2 composants par élément. Pour tout le reste, elle suppose
+4 composants par élément. Cela signifie que si nos couleurs sont seulement r, g, b (3 composants
+par élément), nous devons le lui dire pour qu’elle ne devine pas 4.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const parts = obj.geometries.map(({data}) =&gt; {
+  // Parce que data est juste des tableaux nommés comme ceci
+  //
+  // {
+  //   position: [...],
+  //   texcoord: [...],
+  //   normal: [...],
+  // }
+  //
+  // et parce que ces noms correspondent aux attributs dans notre vertex
+  // shader nous pouvons le passer directement à `createBufferInfoFromArrays`
+  // de l'article &quot;moins de code, plus de fun&quot;.
+
++   if (data.position.length === data.color.length) {
++     // c'est 3. Notre bibliothèque d'assistance suppose 4 donc nous devons
++     // lui dire qu'il n'y en a que 3.
++     data.color = { numComponents: 3, data: data.color };
++   }
+
+  // crée un tampon pour chaque tableau en appelant
+  // gl.createBuffer, gl.bindBuffer, gl.bufferData
+  const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
+  const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
+  return {
+    material: {
+      u_diffuse: [Math.random(), Math.random(), Math.random(), 1],
+    },
+    bufferInfo,
+    vao,
+  };
+});
+</code></pre>
+<p>Nous voulons aussi probablement encore gérer le cas plus courant où il n’y a pas de couleurs
+de sommets. Dans <a href="webgl-fundamentals.html">le premier article</a> ainsi que dans
+<a href="webgl-attributes.html">d’autres articles</a>, nous avons couvert le fait qu’un attribut obtient
+généralement sa valeur depuis un tampon. Mais, nous pouvons aussi faire des attributs qui ont
+juste une valeur constante. Un attribut désactivé utilise une valeur constante. Par exemple :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">gl.disableVertexAttribArray(someAttributeLocation);  // utilise une valeur constante
+const value = [1, 2, 3, 4];
+gl.vertexAttrib4fv(someAttributeLocation, value);    // la valeur constante à utiliser
+</code></pre>
+<p>Notre <a href="webgl-less-code-more-fun.html">bibliothèque d’assistance</a> gère ceci pour nous si nous
+définissons les données de cet attribut à <code class="notranslate" translate="no">{value: [1, 2, 3, 4]}</code>. Donc, on peut vérifier
+s’il n’y a pas de couleurs de sommets et si c’est le cas, définir l’attribut de couleur de
+sommet à blanc constant.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const parts = obj.geometries.map(({data}) =&gt; {
+  // Parce que data est juste des tableaux nommés comme ceci
+  //
+  // {
+  //   position: [...],
+  //   texcoord: [...],
+  //   normal: [...],
+  // }
+  //
+  // et parce que ces noms correspondent aux attributs dans notre vertex
+  // shader nous pouvons le passer directement à `createBufferInfoFromArrays`
+  // de l'article &quot;moins de code, plus de fun&quot;.
+
++  if (data.color) {
+      if (data.position.length === data.color.length) {
+        // c'est 3. Notre bibliothèque d'assistance suppose 4 donc nous devons
+        // lui dire qu'il n'y en a que 3.
+        data.color = { numComponents: 3, data: data.color };
+      }
++  } else {
++    // il n'y a pas de couleurs de sommets, on utilise juste blanc constant
++    data.color = { value: [1, 1, 1, 1] };
++  }
+
+  ...
+});
+</code></pre>
+<p>Nous ne pouvons également plus utiliser une couleur aléatoire par partie :</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const parts = obj.geometries.map(({data}) =&gt; {
+  ...
+
+  // crée un tampon pour chaque tableau en appelant
+  // gl.createBuffer, gl.bindBuffer, gl.bufferData
+  const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
+  const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
+  return {
+    material: {
+-      u_diffuse: [Math.random(), Math.random(), Math.random(), 1],
++      u_diffuse: [1, 1, 1, 1],
+    },
+    bufferInfo,
+    vao,
+  };
+});
+</code></pre>
+<p>Et avec ça, nous pouvons charger un fichier .OBJ avec des couleurs de sommets.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-load-obj-w-vertex-colors.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-load-obj-w-vertex-colors.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Pour analyser et utiliser les matériaux, <a href="webgl-load-obj-w-mtl.html">voir l’article suivant</a>.</p>
+<h2 id="quelques-notes">Quelques notes</h2>
+<h3 id="le-chargeur-ci-dessus-est-incomplet">Le chargeur ci-dessus est incomplet</h3>
+<p>Vous pouvez <a href="http://paulbourke.net/dataformats/obj/">lire plus sur le format .obj</a>.
+Il y a des tonnes de fonctionnalités que le code ci-dessus ne supporte pas. De plus, le code
+n’a pas été testé sur de très nombreux fichiers .obj, donc il y a peut-être des bugs cachés.
+Cela dit, je soupçonne que la majorité des fichiers .obj en ligne n’utilise que les
+fonctionnalités montrées ci-dessus, donc je pense que c’est probablement un exemple utile.</p>
+<h3 id="le-chargeur-ne-vérifie-pas-les-erreurs">Le chargeur ne vérifie pas les erreurs</h3>
+<p>Par exemple, le mot-clé <code class="notranslate" translate="no">vt</code> peut avoir 3 valeurs par entrée au lieu de seulement 2. 3 valeurs
+seraient pour des textures 3D, ce qui n’est pas courant, donc je ne me suis pas embêté avec ça.
+Si vous lui passiez un fichier avec des coordonnées de texture 3D, vous devriez changer les
+shaders pour gérer les textures 3D et le code qui génère des <code class="notranslate" translate="no">WebGLBuffers</code> (appels de
+<code class="notranslate" translate="no">createBufferInfoFromArrays</code>) pour lui dire qu’il s’agit de 3 composants par coordonnée UV.</p>
+<h3 id="il-suppose-que-les-données-sont-homogènes">Il suppose que les données sont homogènes</h3>
+<p>Je ne sais pas si certains mots-clés <code class="notranslate" translate="no">f</code> peuvent avoir 3 entrées et d’autres seulement 2 dans
+le même fichier. Si c’est possible, le code ci-dessus ne le gère pas.</p>
+<p>Le code suppose aussi que si les positions de sommets ont x, y, z, elles ont toutes x, y, z.
+S’il existe des fichiers où certaines positions de sommets ont x, y, z, d’autres seulement x, y,
+et d’autres encore x, y, z, r, g, b, alors il faudrait refactoriser.</p>
+<h3 id="on-pourrait-mettre-toutes-les-données-dans-un-seul-tampon">On pourrait mettre toutes les données dans un seul tampon</h3>
+<p>Le code ci-dessus met les données de position, texcoord, normale dans des tampons séparés.
+On pourrait les mettre dans un seul tampon en les entrelacant
+pos,uv,nrm,pos,uv,nrm,… mais il faudrait alors changer comment les attributs sont configurés
+pour passer des strides et des offsets.</p>
+<p>En étendant ça, on pourrait même mettre les données de toutes les parties dans les mêmes tampons,
+alors qu’actuellement c’est un tampon par type de données par partie.</p>
+<p>J’ai laissé ça de côté parce que je ne pense pas que ce soit si important et parce que ça
+alourdirait l’exemple.</p>
+<h3 id="on-pourrait-ré-indexer-les-sommets">On pourrait ré-indexer les sommets</h3>
+<p>Le code ci-dessus développe les sommets en listes plates de triangles. Nous aurions pu
+ré-indexer les sommets. Surtout si on mettait toutes les données de sommets dans un seul
+tampon ou au moins un seul tampon par type partagé entre les parties. Pour chaque mot-clé <code class="notranslate" translate="no">f</code>,
+on convertit les indices en nombres positifs (on traduit les nombres négatifs en index positifs
+corrects), et l’ensemble de ces nombres est un <em>identifiant</em> pour ce sommet. On peut stocker
+une <em>map id-vers-index</em> pour aider à chercher les indices.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const idToIndexMap = {}
+const webglIndices = [];
+
+function addVertex(vert) {
+  const ptn = vert.split('/');
+  // d'abord convertit tous les indices en indices positifs
+  const indices = ptn.forEach((objIndexStr, i) =&gt; {
+    if (!objIndexStr) {
+      return;
+    }
+    const objIndex = parseInt(objIndexStr);
+    return objIndex + (objIndex &gt;= 0 ? 0 : objVertexData[i].length);
+  });
+  // vérifie si cette combinaison particulière de position,texcoord,normale
+  // existe déjà
+  const id = indices.join(',');
+  let vertIndex = idToIndexMap[id];
+  if (!vertIndex) {
+    // Non. On l'ajoute.
+    vertIndex = webglVertexData[0].length / 3;
+    idToIndexMap[id] = vertexIndex;
+    indices.forEach((index, i) =&gt; {
+      if (index !== undefined) {
+        webglVertexData[i].push(...objVertexData[i][index]);
+      }
+    }
+  }
+  webglIndices.push(vertexIndex);
+}
+</code></pre>
+<p>Ou on pourrait simplement ré-indexer manuellement si on pense que c’est important.</p>
+<h3 id="le-code-ne-gère-pas-position-seule-ou-position--texcoord-seulement">Le code ne gère pas position seule ou position + texcoord seulement.</h3>
+<p>Le code tel qu’il est suppose que les normales existent. Comme nous l’avons fait pour
+<a href="webgl-3d-geometry-lathe.html">l’exemple du tour de potier</a>, nous pourrions générer des
+normales si elles n’existent pas, en tenant compte des groupes de lissage si on le souhaite.
+Ou nous pourrions utiliser des shaders différents qui n’utilisent pas les normales ou qui
+calculent les normales.</p>
+<h3 id="vous-ne-devriez-pas-utiliser-les-fichiers-obj">Vous ne devriez pas utiliser les fichiers .OBJ</h3>
+<p>Honnêtement, vous ne devriez pas utiliser les fichiers .OBJ à mon avis. J’ai principalement
+écrit ça comme exemple. Si vous pouvez extraire les données de sommets d’un fichier, vous
+pouvez écrire des importeurs pour n’importe quel format.</p>
+<p>Les problèmes avec les fichiers .OBJ incluent :</p>
+<ul>
+<li>
+<p>pas de support pour les lumières ni les caméras</p>
+<p>Ça pourrait être acceptable parce que peut-être que vous chargez un tas de parties
+(comme des arbres, des buissons, des rochers pour un paysage) et vous n’avez pas besoin
+de caméras ni de lumières. Mais il est quand même agréable d’avoir l’option si vous voulez
+charger des scènes entières telles qu’un artiste les a créées.</p>
+</li>
+<li>
+<p>Pas de hiérarchie, pas de graphe de scène</p>
+<p>Si vous voulez charger une voiture, vous aimeriez idéalement pouvoir tourner les roues et
+les faire pivoter autour de leurs centres. C’est impossible avec .OBJ parce que .OBJ ne
+contient pas de <a href="webgl-scene-graph.html">graphe de scène</a>. Les formats plus récents incluent
+ces données, ce qui est bien plus utile si vous voulez orienter des parties, faire glisser une
+fenêtre, ouvrir une porte, déplacer les jambes d’un personnage, etc.</p>
+</li>
+<li>
+<p>pas de support pour l’animation ou le skinning</p>
+<p>Nous avons couvert le <a href="webgl-skinning.html">skinning</a> ailleurs, mais .OBJ ne fournit aucune
+donnée pour le skinning ni pour l’animation. Là encore, ça pourrait être acceptable pour vos
+besoins, mais je préférerais un format qui gère plus de choses.</p>
+</li>
+<li>
+<p>.OBJ ne supporte pas les matériaux plus modernes.</p>
+<p>Les matériaux sont généralement assez spécifiques au moteur, mais dernièrement il y a au
+moins un accord sur les matériaux à rendu physique. .OBJ ne le supporte pas à ma connaissance.</p>
+</li>
+<li>
+<p>.OBJ nécessite de l’analyse</p>
+<p>À moins que vous ne fassiez une visionneuse générique permettant aux utilisateurs de charger
+des fichiers .OBJ, la meilleure pratique est d’utiliser un format qui nécessite le moins
+d’analyse possible. .GLTF est un format conçu pour WebGL. Il utilise JSON, donc vous pouvez
+juste le charger. Pour les données binaires, il utilise des formats prêts à être chargés
+directement dans le GPU, pas besoin d’analyser des nombres en tableaux la plupart du temps.</p>
+<p>Vous pouvez voir un exemple de chargement d’un fichier .GLTF dans <a href="webgl-skinning.html">l’article sur le skinning</a>.</p>
+<p>Si vous avez des fichiers .OBJ à utiliser, la meilleure pratique serait de les convertir
+d’abord hors ligne dans un autre format, puis d’utiliser le meilleur format sur votre page.</p>
+</li>
+</ul>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-load-obj.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-load-obj.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-load-obj.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-load-obj.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-load-obj.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-load-obj.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-load-obj.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-load-obj.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fondamentaux</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-getting-webgl2.html">Comment utiliser WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fundamentals.html">Les bases</a></li>
+<li><a href="/webgl/lessons/fr/webgl-how-it-works.html">Comment ça marche</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shaders-and-glsl.html">Shaders et GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Diagramme d'état</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl2-whats-new.html">Quoi de neuf dans WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2.html">Passer de WebGL1 à WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2-fundamentals.html">Différences de WebGLFundamentals.org à WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Traitement d'images</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-image-processing.html">Traitement d'images</a></li>
+<li><a href="/webgl/lessons/fr/webgl-image-processing-continued.html">Traitement d'images - Suite</a></li>
+        </ul>
+  <li>Translation, rotation, mise à l'échelle 2D et calcul matriciel</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-translation.html">Translation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-rotation.html">Rotation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-scale.html">Mise à l'échelle 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrices.html">Matrices 2D</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-orthographic.html">Projection Orthographique 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective.html">Perspective 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-camera.html">3D - Caméras</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-naming.html">3D - Nommage des matrices</a></li>
+        </ul>
+  <li>Éclairage</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-lighting-directional.html">Éclairage directionnel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-point.html">Éclairage ponctuel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-spot.html">Éclairage spot</a></li>
+        </ul>
+  <li>Structure et organisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-less-code-more-fun.html">Moins de code, plus de plaisir</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-multiple-things.html">Dessiner plusieurs choses</a></li>
+<li><a href="/webgl/lessons/fr/webgl-scene-graph.html">Graphes de scène</a></li>
+        </ul>
+  <li>Géométrie</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-geometry-lathe.html">3D Géométrie - Tour</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj.html">Charger des fichiers .obj</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj-w-mtl.html">Charger des fichiers .obj avec .mtl</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/fr/webgl-data-textures.html">Textures de données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2-textures.html">Utiliser 2 textures ou plus</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cors-permission.html">Images Cross Origin</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective-correct-texturemapping.html">Mappage de Texture avec Correction de Perspective</a></li>
+<li><a href="/webgl/lessons/fr/webgl-planar-projection-mapping.html">Projection planaire et en perspective</a></li>
+        </ul>
+  <li>Rendu vers une texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-render-to-texture.html">Rendu vers une texture</a></li>
+        </ul>
+  <li>Ombres</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-shadows.html">Ombres</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrix-stack.html">2D - Pile de matrices</a></li>
+<li><a href="/webgl/lessons/fr/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/fr/webgl-environment-maps.html">Cartes d'environnement</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fog.html">Brouillard</a></li>
+<li><a href="/webgl/lessons/fr/webgl-picking.html">Picking (cliquer sur des objets)</a></li>
+        </ul>
+  <li>Texte</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-text-html.html">Texte - HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-canvas2d.html">Texte - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-texture.html">Texte - Utiliser une texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-glyphs.html">Texte - Utiliser une texture de glyphes</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Astuces</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-smallest-programs.html">Plus petits programmes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-without-data.html">Dessiner sans données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/fr/webgl-pulling-vertices.html">Extraction de sommets</a></li>
+        </ul>
+  <li>Optimisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-indexed-vertices.html">Sommets indexés (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-instanced-drawing.html">Dessin instancié</a></li>
+        </ul>
+  <li>Divers</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-setup-and-installation.html">Installation et configuration</a></li>
+<li><a href="/webgl/lessons/fr/webgl-boilerplate.html">Code standard (Boilerplate)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-resizing-the-canvas.html">Redimensionner le Canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/fr/webgl-points-lines-triangles.html">Points, Lignes et Triangles</a></li>
+<li><a href="/webgl/lessons/fr/webgl-multiple-views.html">Vues multiples, Canvas multiples</a></li>
+<li><a href="/webgl/lessons/fr/webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+<li><a href="/webgl/lessons/fr/webgl-and-alpha.html">WebGL2 et Alpha</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-vs-3d-library.html">Bibliothèques 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-vs-math.html">WebGL2 Matrices vs Matrices Mathématiques</a></li>
+<li><a href="/webgl/lessons/fr/webgl-precision-issues.html">Problèmes de précision</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#screenshot">Prendre une capture d'écran</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#preservedrawingbuffer">Empêcher l'effacement du canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#tabindex">Obtenir des entrées clavier depuis un canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#html-background">Utiliser WebGL2 comme arrière-plan en HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cross-platform-issues.html">Problèmes multi-plateformes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Référence</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-attributes.html">Attributs</a></li>
+<li><a href="/webgl/lessons/fr/webgl-texture-units.html">Unités de Texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/fr/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/fr/webgl-references.html">Références</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentation de l'API</a></li>
+  <li>
+    <a href="https://twgljs.org">TWGL, une bibliothèque utilitaire WebGL</a>
+  </li>
+  <li>
+    <a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a>
+  </li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Problème ou bug ? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Créez un ticket sur github</a>.</div>
+<div class="lesson-comment-notes">
+   Utilisez <b>&lt;pre&gt;&lt;code&gt;</b>le code ici<b>&lt;/code&gt;&lt;/pre&gt;</b> pour les blocs de code
+</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Charger des fichiers Obj';
+            var disqus_title = 'WebGL2 Charger des fichiers Obj';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Merci à <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>pour <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+

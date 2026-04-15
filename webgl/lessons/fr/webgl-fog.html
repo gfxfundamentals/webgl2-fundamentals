@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from webgl/lessons/fr/webgl-fog.md. Do not edited directly -->
+<!--
+Copyright 2021, GFXFundamentals.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of GFXFundamentals. nor the names of his
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Comment implémenter le brouillard">
+<meta name="keywords" content="webgl webgl2 graphics">
+<meta name="thumbnail" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-fog_fr.jpg">
+
+<meta property="og:title" content="WebGL2 Brouillard">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-fog_fr.jpg">
+<meta property="og:description" content="Comment implémenter le brouillard">
+<meta property="og:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-fog.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="webgl2fundamentals.org">
+<meta name="twitter:title" content="WebGL2 Brouillard">
+<meta name="twitter:url" content="https://webgl2fundamentals.org/webgl/lessons/fr/webgl-fog.html">
+<meta name="twitter:description" content="Comment implémenter le brouillard">
+<meta name="twitter:image:src" content="https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-fog_fr.jpg">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://webgl2fundamentals.org/#website",
+      "url":"https://webgl2fundamentals.org/",
+      "name":"Webgl2Fundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-fog.html#primaryimage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/screenshots/webgl-fog_fr.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-fog.html#webpage",
+      "url":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-fog.html",
+      "inLanguage":"fr",
+      "name":"WebGL2 Brouillard",
+      "keywords":"webgl webgl2 graphics programming",
+      "isPartOf":{
+        "@id":"https://webgl2fundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://webgl2fundamentals.org/webgl/lessons/fr/webgl-fog.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+
+<title>WebGL2 Brouillard</title>
+<link href="/webgl/lessons/resources/webgl2fundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/webgl/lessons/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/fr/lang.css">
+<link rel="stylesheet" href="/webgl/lessons/resources/lesson.css">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/webgl/lessons/webgl-fog.html">
+  <link rel="alternate" hreflang="de" href="https://webglfundamentals.org/webgl/lessons/de/webgl-fog.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/webgl/lessons/fr/webgl-fog.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/webgl/lessons/ja/webgl-fog.html">
+  <link rel="alternate" hreflang="ko" href="https://webglfundamentals.org/webgl/lessons/ko/webgl-fog.html">
+  <link rel="alternate" hreflang="pt-br" href="https://webglfundamentals.org/webgl/lessons/pt-br/webgl-fog.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/webgl/lessons/ru/webgl-fog.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-fog.html">
+
+
+
+
+</head>
+<body>
+<div class="webgl_navbar">
+  <div>
+    <select class="language">
+    <option value="/webgl/lessons/webgl-fog.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-fog.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-fog.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-fog.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-fog.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-fog.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-fog.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-fog.html" >简体中文</a>
+</select>
+
+
+    <a href="#toc">Table des matières</a>
+    <input type="search" placeholder="?" id="search">
+  </div>
+</div>
+<div class="webgl_header">
+  <h1><a href="/webgl/lessons/fr/">WebGL2Fundamentals.org</a></h1>
+<style>
+#forkongithub>div {
+    background: #000;
+    color: #fff;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(200px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a {
+  text-decoration: none;
+  color: #fff;
+}
+#forkongithub>div:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub .contributors {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.2);
+  line-height: 1.2;
+  padding: 0.1em;
+}
+#forkongithub>div::before,#forkongithub>div::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub>div::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+#forkongithub img {
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+    #forkongithub>div {
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub>div {
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><div><div><a href="https://github.com/gfxfundamentals/webgl2-fundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div></div></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>WebGL2 Brouillard</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p>Cet article fait partie d’une série d’articles sur WebGL.
+<a href="webgl-fundamentals.html">Le premier article commence par les bases</a>.</p>
+<p>Le brouillard dans WebGL m’intéresse en raison du côté <em>artificiel</em> que cela semble être quand je réfléchis à son fonctionnement. En gros, ce qu’on fait c’est utiliser une sorte de calcul de profondeur ou de distance depuis la caméra dans les shaders pour rendre la couleur plus ou moins identique à la couleur du brouillard.</p>
+<p>En d’autres termes, on commence avec une équation de base comme celle-ci</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">outColor = mix(originalColor, fogColor, fogAmount);
+</code></pre>
+<p>Où <code class="notranslate" translate="no">fogAmount</code> est une valeur de 0 à 1. La fonction <code class="notranslate" translate="no">mix</code> mélange les 2 premières valeurs. Quand <code class="notranslate" translate="no">fogAmount</code> est 0, <code class="notranslate" translate="no">mix</code> retourne <code class="notranslate" translate="no">originalColor</code>. Quand <code class="notranslate" translate="no">fogAmount</code> est 1, <code class="notranslate" translate="no">mix</code> retourne <code class="notranslate" translate="no">fogColor</code>. Entre 0 et 1, on obtient un pourcentage des deux couleurs. On pourrait implémenter <code class="notranslate" translate="no">mix</code> soi-même comme ça</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">outColor = originalColor + (fogColor - originalColor) * fogAmount;
+</code></pre>
+<p>Créons un shader qui fait ça. Nous utiliserons un cube texturé de <a href="webgl-3d-textures.html">l’article sur les textures</a>.</p>
+<p>Ajoutons le mélange au fragment shader</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+precision highp float;
+
+// Passé depuis le vertex shader.
+in vec2 v_texcoord;
+
+// La texture.
+uniform sampler2D u_texture;
+
++uniform vec4 u_fogColor;
++uniform float u_fogAmount;
+
+out vec4 outColor;
+
+void main() {
++  vec4 color = texture(u_texture, v_texcoord);
++  outColor = mix(color, u_fogColor, u_fogAmount);  
+}
+</code></pre>
+<p>Ensuite, à l’initialisation, nous devons rechercher les emplacements des nouveaux uniforms</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">var fogColorLocation = gl.getUniformLocation(program, &quot;u_fogColor&quot;);
+var fogAmountLocation = gl.getUniformLocation(program, &quot;u_fogAmount&quot;);
+</code></pre>
+<p>et au moment du rendu les définir</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">var fogColor = [0.8, 0.9, 1, 1];
+var settings = {
+  fogAmount: .5,
+};
+
+...
+
+function drawScene(time) {
+  ...
+
+  // Effacer le canvas ET le depth buffer.
+  // Effacer avec la couleur du brouillard
+  gl.clearColor(...fogColor);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  ...
+
+  // définir la couleur du brouillard et sa quantité
+  gl.uniform4fv(fogColorLocation, fogColor);
+  gl.uniform1f(fogAmountLocation, settings.fogAmount);
+
+  ...
+}
+</code></pre>
+<p>Et ici vous verrez que si vous déplacez le curseur, vous pouvez changer entre la texture et la couleur du brouillard</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-fog-just-mix.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-fog-just-mix.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Maintenant, tout ce qu’on a vraiment besoin de faire est, au lieu de passer la quantité de brouillard, de la calculer en fonction de quelque chose comme la profondeur depuis la caméra.</p>
+<p>Rappelons-nous de <a href="webgl-3d-camera.html">l’article sur les caméras</a> qu’après avoir appliqué la matrice de vue, toutes les positions sont relatives à la caméra. La caméra regarde dans la direction -z, donc si on regarde juste la position z après avoir multiplié par les matrices world et view, on aura une valeur qui représente à quelle distance quelque chose se trouve du plan z de la caméra.</p>
+<p>Modifions le vertex shader pour passer ces données au fragment shader afin de pouvoir l’utiliser pour calculer une quantité de brouillard. Pour ce faire, divisons <code class="notranslate" translate="no">u_matrix</code> en 2 parties : une matrice de projection et une matrice worldView.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+in vec4 a_position;
+in vec2 a_texcoord;
+
+-uniform mat4 u_matrix;
++uniform mat4 u_worldView;
++uniform mat4 u_projection;
+
+out vec2 v_texcoord;
++out float v_fogDepth;
+
+void main() {
+  // Multiplier la position par la matrice.
+-  gl_Position = u_matrix * a_position;
++  gl_Position = u_projection * u_worldView * a_position;
+
+  // Passer les texcoords au fragment shader.
+  v_texcoord = a_texcoord;
+
++  // Passer juste la position z négative relative à la caméra.
++  // la caméra regarde dans la direction -z donc normalement les choses
++  // devant la caméra ont une position Z négative
++  // mais en la négativant on obtient une profondeur positive.
++  v_fogDepth = -(u_worldView * a_position).z;
+}
+</code></pre>
+<p>Maintenant dans le fragment shader, nous voulons que si la profondeur est inférieure à une certaine valeur, ne pas mélanger de brouillard (fogAmount = 0). Si la profondeur est supérieure à une certaine valeur, alors 100% de brouillard (fogAmount = 1). Entre ces 2 valeurs, mélanger les couleurs.</p>
+<p>On pourrait écrire du code pour faire ça, mais GLSL a une fonction, <code class="notranslate" translate="no">smoothstep</code>, qui fait exactement ça. On lui donne la valeur min, la valeur max et la valeur à tester. Si la valeur de test est inférieure ou égale à la valeur min, elle retourne 0. Si la valeur de test est supérieure ou égale à la valeur max, elle retourne 1. Si le test est entre ces 2 valeurs, elle retourne quelque chose entre 0 et 1 proportionnellement à l’endroit où la valeur de test se trouve entre min et max.</p>
+<p>Donc, il devrait être assez simple d’utiliser ça dans notre fragment shader pour calculer une quantité de brouillard</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+precision highp float;
+
+// Passé depuis le vertex shader.
+in vec2 v_texcoord;
+in float v_fogDepth;
+
+// La texture.
+uniform sampler2D u_texture;
+uniform vec4 u_fogColor;
+-uniform float u_fogAmount;
++uniform float u_fogNear;
++uniform float u_fogFar;
+
+out vec4 outColor;
+
+void main() {
+  vec4 color = texture(u_texture, v_texcoord);
+
++  float fogAmount = smoothstep(u_fogNear, u_fogFar, v_fogDepth);
+
+-  outColor = mix(color, u_fogColor, u_fogAmount);  
++ outColor = mix(color, u_fogColor, fogAmount);  
+}
+</code></pre>
+<p>et bien sûr nous devons rechercher tous ces uniforms à l’initialisation</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">// rechercher les uniforms
++var projectionLocation = gl.getUniformLocation(program, &quot;u_projection&quot;);
++var worldViewLocation = gl.getUniformLocation(program, &quot;u_worldView&quot;);
+var textureLocation = gl.getUniformLocation(program, &quot;u_texture&quot;);
+var fogColorLocation = gl.getUniformLocation(program, &quot;u_fogColor&quot;);
++var fogNearLocation = gl.getUniformLocation(program, &quot;u_fogNear&quot;);
++var fogFarLocation = gl.getUniformLocation(program, &quot;u_fogFar&quot;);
+</code></pre>
+<p>et les définir au moment du rendu</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">var fogColor = [0.8, 0.9, 1, 1];
+var settings = {
+-  fogAmount: .5,
++  fogNear: 1.1,
++  fogFar: 2.0,
+};
+
+// Dessiner la scène.
+function drawScene(time) {
+  ...
+
+  // Calculer la matrice de projection
+  var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  var projectionMatrix =
+      m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
+
+  var cameraPosition = [0, 0, 2];
+  var up = [0, 1, 0];
+  var target = [0, 0, 0];
+
+  // Calculer la matrice de la caméra avec lookAt.
+  var cameraMatrix = m4.lookAt(cameraPosition, target, up);
+
+  // Créer une matrice de vue depuis la matrice de caméra.
+  var viewMatrix = m4.inverse(cameraMatrix);
+
+-  var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
+-
+-  var matrix = m4.xRotate(viewProjectionMatrix, modelXRotationRadians);
+-  matrix = m4.yRotate(matrix, modelYRotationRadians);
+
++  var worldViewMatrix = m4.xRotate(viewMatrix, modelXRotationRadians);
++  worldViewMatrix = m4.yRotate(worldViewMatrix, modelYRotationRadians);
+
+  // Définir les matrices.
+-  gl.uniformMatrix4fv(matrixLocation, false, matrix);
++  gl.uniformMatrix4fv(projectionLocation, false, projectionMatrix);
++  gl.uniformMatrix4fv(worldViewLocation, false, worldViewMatrix);
+
+  // Indiquer au shader d'utiliser l'unité de texture 0 pour u_texture
+  gl.uniform1i(textureLocation, 0);
+
+  // définir la couleur du brouillard et les paramètres near, far
+  gl.uniform4fv(fogColorLocation, fogColor);
++  gl.uniform1f(fogNearLocation, settings.fogNear);
++  gl.uniform1f(fogFarLocation, settings.fogFar);
+-  gl.uniform1f(fogAmountLocation, settings.fogAmount);
+</code></pre>
+<p>Pendant qu’on y est, dessinons 40 cubes dans la distance pour rendre le brouillard plus visible.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">var settings = {
+  fogNear: 1.1,
+  fogFar: 2.0,
++  xOff: 1.1,
++  zOff: 1.4,
+};
+
+...
+
+const numCubes = 40;
+for (let i = 0; i &lt;= numCubes; ++i) {
+  var worldViewMatrix = m4.translate(viewMatrix, -2 + i * settings.xOff, 0, -i * settings.zOff);
+  worldViewMatrix = m4.xRotate(worldViewMatrix, modelXRotationRadians + i * 0.1);
+  worldViewMatrix = m4.yRotate(worldViewMatrix, modelYRotationRadians + i * 0.1);
+
+  gl.uniformMatrix4fv(worldViewLocation, false, worldViewMatrix);
+
+  // Dessiner la géométrie.
+  gl.drawArrays(gl.TRIANGLES, 0, 6 * 6);
+}
+</code></pre>
+<p>Et maintenant nous obtenons un brouillard basé sur la profondeur</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-fog-depth-based.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-fog-depth-based.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Note : Nous n’avons pas ajouté de code pour s’assurer que <code class="notranslate" translate="no">fogNear</code> est inférieur ou égal à <code class="notranslate" translate="no">fogFar</code>, ce qui sont des paramètres en quelque sorte invalides, donc assurez-vous de les définir tous les deux de manière appropriée.</p>
+<p>Comme je l’ai mentionné ci-dessus, cela ressemble à un tour de passe-passe. Ça fonctionne parce que la couleur du brouillard vers laquelle on s’estompe correspond à la couleur de fond. Changez la couleur de fond et l’illusion disparaît.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-gl.clearColor(...fogColor);
++gl.clearColor(1, 0, 0, 1);  // rouge
+</code></pre>
+<p>nous donne</p>
+<div class="webgl_center"><img src="../resources/fog-background-color-mismatch.png"></div>
+<p>donc n’oubliez pas que vous devez définir la couleur de fond pour qu’elle corresponde à la couleur du brouillard.</p>
+<p>Utiliser la profondeur fonctionne et c’est peu coûteux, mais il y a un problème. Supposons que vous ayez un cercle d’objets autour de la caméra. Nous calculons une quantité de brouillard basée sur la distance depuis le plan z de la caméra. Cela signifie que lorsque vous tournez la caméra, les objets sembleront entrer et sortir légèrement du brouillard car leur valeur Z dans l’espace de vue se rapproche de 0</p>
+<div class="webgl_center"><img src="../resources/fog-depth.svg" style="width: 600px;"></div>
+<p>Vous pouvez voir le problème dans cet exemple</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-fog-depth-based-issue.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-fog-depth-based-issue.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Ci-dessus, il y a un anneau de 8 cubes directement autour de la caméra. La caméra tourne sur place. Cela signifie que les cubes sont toujours à la même distance de la caméra mais à une distance différente du plan Z, donc notre calcul de quantité de brouillard fait que les cubes près des bords sortent du brouillard.</p>
+<p>La solution est de calculer à la place la distance depuis la caméra, qui sera la même pour tous les cubes</p>
+<div class="webgl_center"><img src="../resources/fog-distance.svg" style="width: 600px;"></div>
+<p>Pour ce faire, nous avons juste besoin de passer la position du sommet dans l’espace de vue depuis le vertex shader au fragment shader</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+in vec4 a_position;
+in vec2 a_texcoord;
+
+uniform mat4 u_worldView;
+uniform mat4 u_projection;
+
+out vec2 v_texcoord;
+-out float v_fogDepth;
++out vec3 v_position;
+
+void main() {
+  // Multiplier la position par la matrice.
+  gl_Position = u_projection * u_worldView * a_position;
+
+  // Passer les texcoords au fragment shader.
+  v_texcoord = a_texcoord;
+
+-  // Passer juste la position z négative relative à la caméra.
+-  // la caméra regarde dans la direction -z donc normalement les choses
+-  // devant la caméra ont une position Z négative
+-  // mais en la négativant on obtient une profondeur positive.
+-  v_fogDepth = -(u_worldView * a_position).z;
++  // Passer la position de vue au fragment shader
++  v_position = (u_worldView * a_position).xyz;
+}
+</code></pre>
+<p>et ensuite dans le fragment shader nous pouvons utiliser la position pour calculer la distance</p>
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
+precision highp float;
+
+// Passé depuis le vertex shader.
+in vec2 v_texcoord;
+-in float v_fogDepth;
++in vec3 v_position;
+
+// La texture.
+uniform sampler2D u_texture;
+uniform vec4 u_fogColor;
+uniform float u_fogNear;
+uniform float u_fogFar;
+
+out vec4 outColor;
+
+void main() {
+  vec4 color = texture(u_texture, v_texcoord);
+
+-  float fogAmount = smoothstep(u_fogNear, u_fogFar, v_fogDepth);
++  float fogDistance = length(v_position);
++  float fogAmount = smoothstep(u_fogNear, u_fogFar, fogDistance);
+
+  outColor = mix(color, u_fogColor, fogAmount);  
+}
+</code></pre>
+<p>Et maintenant les cubes ne sortent plus du brouillard lorsque la caméra tourne</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-fog-distance-based.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-fog-distance-based.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Jusqu’ici, tout notre brouillard a utilisé un calcul linéaire. En d’autres termes, la couleur du brouillard est appliquée linéairement entre near et far. Comme beaucoup de choses dans la vraie vie, le brouillard fonctionne apparemment de manière exponentielle. Il s’épaissit avec le carré de la distance depuis l’observateur. Une équation courante pour le brouillard exponentiel est</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#define LOG2 1.442695
+
+fogAmount = 1. - exp2(-fogDensity * fogDensity * fogDistance * fogDistance * LOG2));
+fogAmount = clamp(fogAmount, 0., 1.);
+</code></pre>
+<p>Pour utiliser ça, nous modifierions le fragment shader en quelque chose comme</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-glsl">#version 300 es
+precision highp float;
+
+// Passé depuis le vertex shader.
+in vec2 v_texcoord;
+in vec3 v_position;
+
+// La texture.
+uniform sampler2D u_texture;
+uniform vec4 u_fogColor;
+-uniform float u_fogNear;
+-uniform float u_fogFar;
++uniform float u_fogDensity;
+
+out vec4 outColor;
+
+void main() {
+  vec4 color = texture(u_texture, v_texcoord);
+
+  #define LOG2 1.442695
+
+  float fogDistance = length(v_position);
+-  float fogAmount = smoothstep(u_fogNear, u_fogFar, fogDistance);
++  float fogAmount = 1. - exp2(-u_fogDensity * u_fogDensity * fogDistance * fogDistance * LOG2);
+  fogAmount = clamp(fogAmount, 0., 1.);
+
+  outColor = mix(color, u_fogColor, fogAmount);  
+}
+</code></pre>
+<p>Et nous obtenons un brouillard basé sur la distance <em>exp2</em> et la densité</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-fog-distance-exp2.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-fog-distance-exp2.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+<p>Une chose à noter avec le brouillard basé sur la densité est qu’il n’y a pas de paramètres near et far. Cela pourrait être plus réaliste, mais cela pourrait aussi ne pas correspondre à vos besoins esthétiques. Lequel vous préférez est une décision artistique.</p>
+<p>Il existe de nombreuses autres façons de calculer le brouillard. Sur un GPU peu puissant, vous pourriez simplement utiliser <code class="notranslate" translate="no">gl_FragCoord.z</code>. <code class="notranslate" translate="no">gl_FragCoord</code> est une variable globale que WebGL définit. Les composantes <code class="notranslate" translate="no">x</code> et <code class="notranslate" translate="no">y</code> sont les coordonnées du pixel dessiné. La coordonnée <code class="notranslate" translate="no">z</code> est la profondeur de ce pixel de 0 à 1. Bien que pas directement traduisible en distance, vous pouvez quand même obtenir quelque chose qui ressemble à du brouillard en choisissant des valeurs entre 0 et 1 pour near et far. Rien n’a besoin d’être passé du vertex shader au fragment shader et aucun calcul de distance n’est nécessaire, c’est donc une façon de créer un effet de brouillard peu coûteux sur un GPU peu puissant.</p>
+<p><div class="webgl_example_container">
+  <iframe class="webgl_example" style=" " src="/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-fog-depth-based-gl_FragCoord.html"></iframe>
+  <a class="webgl_center" href="/webgl/lessons/../webgl-3d-fog-depth-based-gl_FragCoord.html" target="_blank">clique ici pour ouvrir dans une fenêtre séparée</a>
+</div>
+
+</p>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/webgl/lessons/webgl-fog.html" >English</a>
+    <option value="/webgl/lessons/de/webgl-fog.html" >Deutsch</a>
+    <option value="/webgl/lessons/fr/webgl-fog.html" selected>Français</a>
+    <option value="/webgl/lessons/ja/webgl-fog.html" >日本語</a>
+    <option value="/webgl/lessons/ko/webgl-fog.html" >한국어</a>
+    <option value="/webgl/lessons/pt-br/webgl-fog.html" >Português Brasileiro</a>
+    <option value="/webgl/lessons/ru/webgl-fog.html" >Русский</a>
+    <option value="/webgl/lessons/zh_cn/webgl-fog.html" >简体中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Fondamentaux</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-getting-webgl2.html">Comment utiliser WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fundamentals.html">Les bases</a></li>
+<li><a href="/webgl/lessons/fr/webgl-how-it-works.html">Comment ça marche</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shaders-and-glsl.html">Shaders et GLSL</a></li>
+<li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 Diagramme d'état</a></li>
+        </ul>
+  <li>WebGL2 vs WebGL1</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl2-whats-new.html">Quoi de neuf dans WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2.html">Passer de WebGL1 à WebGL2</a></li>
+<li><a href="/webgl/lessons/fr/webgl1-to-webgl2-fundamentals.html">Différences de WebGLFundamentals.org à WebGL2Fundamentals.org</a></li>
+        </ul>
+  <li>Traitement d'images</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-image-processing.html">Traitement d'images</a></li>
+<li><a href="/webgl/lessons/fr/webgl-image-processing-continued.html">Traitement d'images - Suite</a></li>
+        </ul>
+  <li>Translation, rotation, mise à l'échelle 2D et calcul matriciel</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-translation.html">Translation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-rotation.html">Rotation 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-scale.html">Mise à l'échelle 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrices.html">Matrices 2D</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-orthographic.html">Projection Orthographique 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective.html">Perspective 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-camera.html">3D - Caméras</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-naming.html">3D - Nommage des matrices</a></li>
+        </ul>
+  <li>Éclairage</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-lighting-directional.html">Éclairage directionnel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-point.html">Éclairage ponctuel</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-lighting-spot.html">Éclairage spot</a></li>
+        </ul>
+  <li>Structure et organisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-less-code-more-fun.html">Moins de code, plus de plaisir</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-multiple-things.html">Dessiner plusieurs choses</a></li>
+<li><a href="/webgl/lessons/fr/webgl-scene-graph.html">Graphes de scène</a></li>
+        </ul>
+  <li>Géométrie</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-geometry-lathe.html">3D Géométrie - Tour</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj.html">Charger des fichiers .obj</a></li>
+<li><a href="/webgl/lessons/fr/webgl-load-obj-w-mtl.html">Charger des fichiers .obj avec .mtl</a></li>
+        </ul>
+  <li>Textures</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-3d-textures.html">Textures</a></li>
+<li><a href="/webgl/lessons/fr/webgl-data-textures.html">Textures de données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2-textures.html">Utiliser 2 textures ou plus</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cors-permission.html">Images Cross Origin</a></li>
+<li><a href="/webgl/lessons/fr/webgl-3d-perspective-correct-texturemapping.html">Mappage de Texture avec Correction de Perspective</a></li>
+<li><a href="/webgl/lessons/fr/webgl-planar-projection-mapping.html">Projection planaire et en perspective</a></li>
+        </ul>
+  <li>Rendu vers une texture</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-render-to-texture.html">Rendu vers une texture</a></li>
+        </ul>
+  <li>Ombres</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-shadows.html">Ombres</a></li>
+        </ul>
+  <li>Techniques</li>
+        <ul>
+            <li>2D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-2d-drawimage.html">2D - DrawImage</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-matrix-stack.html">2D - Pile de matrices</a></li>
+<li><a href="/webgl/lessons/fr/webgl-sprites.html">Sprites</a></li>
+        </ul>
+  <li>3D</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-cube-maps.html">Cubemaps</a></li>
+<li><a href="/webgl/lessons/fr/webgl-environment-maps.html">Cartes d'environnement</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skybox.html">Skyboxes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-skinning.html">Skinning</a></li>
+<li><a href="/webgl/lessons/fr/webgl-fog.html">Brouillard</a></li>
+<li><a href="/webgl/lessons/fr/webgl-picking.html">Picking (cliquer sur des objets)</a></li>
+        </ul>
+  <li>Texte</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-text-html.html">Texte - HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-canvas2d.html">Texte - Canvas 2D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-texture.html">Texte - Utiliser une texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-text-glyphs.html">Texte - Utiliser une texture de glyphes</a></li>
+        </ul>
+  <li>GPGPU</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-gpgpu.html">GPGPU</a></li>
+        </ul>
+        </ul>
+  <li>Astuces</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-smallest-programs.html">Plus petits programmes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-drawing-without-data.html">Dessiner sans données</a></li>
+<li><a href="/webgl/lessons/fr/webgl-shadertoy.html">Shadertoy</a></li>
+<li><a href="/webgl/lessons/fr/webgl-pulling-vertices.html">Extraction de sommets</a></li>
+        </ul>
+  <li>Optimisation</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-indexed-vertices.html">Sommets indexés (gl.drawElements)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-instanced-drawing.html">Dessin instancié</a></li>
+        </ul>
+  <li>Divers</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-setup-and-installation.html">Installation et configuration</a></li>
+<li><a href="/webgl/lessons/fr/webgl-boilerplate.html">Code standard (Boilerplate)</a></li>
+<li><a href="/webgl/lessons/fr/webgl-resizing-the-canvas.html">Redimensionner le Canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-animation.html">Animation</a></li>
+<li><a href="/webgl/lessons/fr/webgl-points-lines-triangles.html">Points, Lignes et Triangles</a></li>
+<li><a href="/webgl/lessons/fr/webgl-multiple-views.html">Vues multiples, Canvas multiples</a></li>
+<li><a href="/webgl/lessons/fr/webgl-visualizing-the-camera.html">Visualisation de la caméra</a></li>
+<li><a href="/webgl/lessons/fr/webgl-and-alpha.html">WebGL2 et Alpha</a></li>
+<li><a href="/webgl/lessons/fr/webgl-2d-vs-3d-library.html">Bibliothèques 2D vs 3D</a></li>
+<li><a href="/webgl/lessons/fr/webgl-anti-patterns.html">Anti-Patterns</a></li>
+<li><a href="/webgl/lessons/fr/webgl-matrix-vs-math.html">WebGL2 Matrices vs Matrices Mathématiques</a></li>
+<li><a href="/webgl/lessons/fr/webgl-precision-issues.html">Problèmes de précision</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#screenshot">Prendre une capture d'écran</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#preservedrawingbuffer">Empêcher l'effacement du canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#tabindex">Obtenir des entrées clavier depuis un canvas</a></li>
+<li><a href="/webgl/lessons/fr/webgl-tips.html#html-background">Utiliser WebGL2 comme arrière-plan en HTML</a></li>
+<li><a href="/webgl/lessons/fr/webgl-cross-platform-issues.html">Problèmes multi-plateformes</a></li>
+<li><a href="/webgl/lessons/fr/webgl-qna.html">Questions and Answers</a></li>
+        </ul>
+  <li>Référence</li>
+        <ul>
+          <li><a href="/webgl/lessons/fr/webgl-attributes.html">Attributs</a></li>
+<li><a href="/webgl/lessons/fr/webgl-texture-units.html">Unités de Texture</a></li>
+<li><a href="/webgl/lessons/fr/webgl-framebuffers.html">Framebuffers</a></li>
+<li><a href="/webgl/lessons/fr/webgl-readpixels.html">readPixels</a></li>
+<li><a href="/webgl/lessons/fr/webgl-references.html">Références</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="/docs/">Documentation de l'API</a></li>
+  <li>
+    <a href="https://twgljs.org">TWGL, une bibliothèque utilitaire WebGL</a>
+  </li>
+  <li>
+    <a href="https://github.com/gfxfundamentals/webgl2-fundamentals">github</a>
+  </li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+<div>Problème ou bug ? <a href="https://github.com/gfxfundamentals/webgl2-fundamentals/issues">Créez un ticket sur github</a>.</div>
+<div class="lesson-comment-notes">
+   Utilisez <b>&lt;pre&gt;&lt;code&gt;</b>le code ici<b>&lt;/code&gt;&lt;/pre&gt;</b> pour les blocs de code
+</div>
+  
+
+        <div id="disqus_thread"></div>
+        <script>
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'webgl2fundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'WebGL2 Brouillard';
+            var disqus_title = 'WebGL2 Brouillard';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("webgl2fundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+const settings = {
+  contribTemplate: "Merci à <a href=\"${html_url}\"><img src=\"${avatar_url}\"> ${login}</a><br>pour <a href=\"https://github.com/${owner}/${repo}/commits?author=${login}\">${contributions} contributions</a>",
+  owner: "gfxfundamentals",
+  repo: "webgl2-fundamentals",
+};
+</script>
+<script src="/contributors.js"></script>
+<script src="/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/webgl/lessons/resources/prettify.js"></script>
+<script src="/webgl/lessons/resources/lesson.js" type="module"></script>
+<script>
+</script>
+
+
+</html>
+
+
+
