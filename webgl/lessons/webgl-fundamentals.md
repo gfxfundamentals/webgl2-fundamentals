@@ -16,7 +16,7 @@ and triangles to accomplish your task.
 
 WebGL runs on the GPU on your computer. As such you need to provide the code that runs on that GPU.
 You provide that code in the form of pairs of functions. Those 2 functions are called a vertex shader
-and a fragment shader and they are each written in a very strictly typed C/C++ like language called
+and a fragment shader, and they are each written in a very strictly typed C/C++ like language called
 [GLSL](webgl-shaders-and-glsl.html). (GL Shader Language). Paired together they are called a *program*.
 
 A vertex shader's job is to compute vertex positions. Based on the positions the function outputs
