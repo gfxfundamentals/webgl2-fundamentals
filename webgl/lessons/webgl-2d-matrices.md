@@ -570,7 +570,7 @@ and in the second we had
 
 And we saw how they are different.
 
-They are 2 ways to look at matrices. Given the expression
+There are 2 ways to look at matrices. Given the expression
 
     projectionMat * translationMat * rotationMat * scaleMat * position
 
