@@ -2,9 +2,8 @@ Title: WebGL2 작동 원리
 Description: WebGL이 내부적으로 하는 일
 TOC: WebGL2 작동 원리
 
-
 이글은 [WebGL 기초](webgl-fundamentals.html)에서 이어지는 글입니다. 계속하기 전에 실제로 WebGL과 GPU가 기본적인 수준에서 무엇을 하는지 아셔야 합니다.
-기본적으로 GPU가 하는 일은 두가지 입니다. 첫 번째는 정점(vertex)(또는 데이터 스트림)을 처리하여 클립 공간의 정점으로 변환하는 것입니다. 두 번째는 첫 번째 결과를 가지고  픽셀을 그리는 것입니다.
+기본적으로 GPU가 하는 일은 두가지 입니다. 첫 번째는 정점(vertex)(또는 데이터 스트림)을 처리하여 클립 공간의 정점으로 변환하는 것입니다. 두 번째는 첫 번째 결과를 가지고 픽셀을 그리는 것입니다.
 
 아래와 같이 호출한다면,
 
@@ -58,7 +57,7 @@ TOC: WebGL2 작동 원리
     *  v_color = gl_Position * 0.5 + 0.5;
     }
 
-그런 다음 똑같은 *varying*을 프레그먼트 셰이더에서 `in`을 사용해 선언합니다.
+그런 다음 똑같은 *varying*을 프래그먼트 셰이더에서 `in`을 사용해 선언합니다.
 
     #version 300 es
 
@@ -72,7 +71,7 @@ TOC: WebGL2 작동 원리
     *  outColor = v_color;
     }
 
-WebGL이 정점 셰이더에서 정의된 varying과 동일한 이름과 타입을 갖는 프레그먼트 셰이더의 varying을 연결해 줍니다.
+WebGL이 정점 셰이더에서 정의된 varying과 동일한 이름과 타입을 갖는 프래그먼트 셰이더의 varying을 연결해 줍니다.
 
 아래는 동작하는 예제입니다.
 
@@ -82,7 +81,7 @@ WebGL이 정점 셰이더에서 정의된 varying과 동일한 이름과 타입�
 
 생각해 보세요. 우리는 오직 세개의 정점만 계산 했습니다. 정점 셰이더는 3번만 호출 되기 때문에 세개의 색상만을 계산했지만 방금 그려진 삼각형은 이보다 더 다양한 색상을 갖고 있습니다. *varying*이라 불리는 이유가 바로 그것입니다.
 
-WebGL은 각 정점에 대해 계산한 세개의 값을 받아서, 래스터화 과정에서 그 값들을  보간합니다. 각 픽셀마다 우리가 작성한 프래그먼트 셰이더를 각 픽셀에 해당하는 보간된 값과 함께 호출합니다.
+WebGL은 각 정점에 대해 계산한 세개의 값을 받아서, 래스터화 과정에서 그 값들을 보간합니다. 각 픽셀마다 우리가 작성한 프래그먼트 셰이더를 각 픽셀에 해당하는 보간된 값과 함께 호출합니다.
 
 위 예제에서 보면 우선 세개의 정점으로 시작을 했습니다.
 
@@ -142,7 +141,7 @@ table.vertex_table td {
 
 {{{diagram url="resources/fragment-shader-anim.html" width="600" height="400" caption="v_color는 v0, v1 그리고 v2 사이에서 보간됩니다." }}}
 
-또한 더 많은 데이터를 정점 셰이더로 전달하여 이를 프레그먼트 셰이더에 전달할 수 있습니다. 예를 들어 두개의 삼각형과 두개의 색상으로 구성된 직사각형을 그려 본다고 합시다. 이를 위해 또다른 attribute를 정점 셰이더에 추가하여 더 많은 데이터를 전달 하고 그 데이터를 프래그먼트 셰이더에 직접 전달할 수 있습니다.
+또한 더 많은 데이터를 정점 셰이더로 전달하여 이를 프래그먼트 셰이더에 전달할 수 있습니다. 예를 들어 두개의 삼각형과 두개의 색상으로 구성된 직사각형을 그려 본다고 합시다. 이를 위해 또다른 attribute를 정점 셰이더에 추가하여 더 많은 데이터를 전달 하고 그 데이터를 프래그먼트 셰이더에 직접 전달할 수 있습니다.
 
     in vec2 a_position;
     +in vec4 a_color;
@@ -298,21 +297,23 @@ function setColors(gl) {
   var b2 = Math.random() * 256; 
   var g2 = Math.random() * 256;
 
-  gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Uint8Array(   // Uint8Array
-        [ r1, b1, g1, 255,
-          r1, b1, g1, 255,
-          r1, b1, g1, 255,
-          r2, b2, g2, 255,
-          r2, b2, g2, 255,
-          r2, b2, g2, 255]),
-      gl.STATIC_DRAW);
+gl.bufferData(
+gl.ARRAY_BUFFER,
+new Uint8Array( // Uint8Array
+[ r1, b1, g1, 255,
+r1, b1, g1, 255,
+r1, b1, g1, 255,
+r2, b2, g2, 255,
+r2, b2, g2, 255,
+r2, b2, g2, 255]),
+gl.STATIC_DRAW);
 }
 {{/escapehtml}}</pre>
+
 <p>
 아래는 결과 예제입니다.
 </p>
 
 {{{example url="../webgl-2d-rectangle-with-2-byte-colors.html" }}}
+
 </div>
