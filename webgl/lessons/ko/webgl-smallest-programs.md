@@ -1,6 +1,6 @@
 Title: WebGL2 가장 작은 프로그램들
 Description: WebGL2 가장 작은 프로그램들
-TOC: Tips
+TOC: WebGL2 가장 작은 프로그램들
 
 이 글은 [기초](webgl-fundamentals.html)부터 시작하는 여러 글을 이미 읽었다고 가정합니다. 아직 읽지 않으셨다면 기초 문서부터 먼저 읽어보세요.
 
@@ -140,7 +140,7 @@ WebGL 명세상 요구되는 최댓값은 1.0에 불과하지만, 다행히도 [
     // 프래그먼트 셰이더
     precision highp float;
 
-    + uniform sampler tex;
+    +uniform sampler tex;
 
     out vec4 outColor;
 
@@ -187,32 +187,31 @@ WebGL은 기본적으로 텍스처 유닛 0을 사용하도록 되어 있고 유
     #version 300 es
     // 정점 셰이더
 
-    + in vec4 position;
+    +in vec4 position;
 
     void main() {
-
-        - gl_Position = vec4(0, 0, 0, 1);
-        + gl_Position = position;
+        -gl_Position = vec4(0, 0, 0, 1);
+        +gl_Position = position;
         gl_PointSize = 120.0;
     }
 
 어트리뷰트의 기본값은 `0, 0, 0, 1`이므로 이 변경 사항만으로는 이전 예제가 그대로 동작합니다. 하지만 이제 원하는 대로 위치를 직접 설정할 수 있는 유연성이 생깁니다.
 
-    + const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
+    +const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
     const positionLoc = gl.getAttribLocation(program, 'position');
 
     // ...
 
-    + const numPoints = 5;
-    + for (let i = 0; i < numPoints; ++i) {
-        + const u = i / (numPoints - 1); // 0 ~ 1
-        + const clipspace = u * 1.6 - 0.8; // -0.8 ~ +0.8
-        + gl.vertexAttrib2f(positionLoc, clipspace, clipspace);
+    +const numPoints = 5;
+    +for (let i = 0; i < numPoints; ++i) {
+    +   const u = i / (numPoints - 1); // 0 ~ 1
+    +   const clipspace = u * 1.6 - 0.8; // -0.8 ~ +0.8
+    +   gl.vertexAttrib2f(positionLoc, clipspace, clipspace);
 
-        * const offset = 0;
-        * const count = 1;
-        * gl.drawArrays(gl.POINTS, offset, count);
-    + }
+    *   const offset = 0;
+    *   const count = 1;
+    *   gl.drawArrays(gl.POINTS, offset, count);
+    +}
 
 실행하기 전에 점의 크기를 좀 더 줄여보겠습니다.
 
@@ -223,21 +222,21 @@ WebGL은 기본적으로 텍스처 유닛 0을 사용하도록 되어 있고 유
     void main() {
         gl_Position = position;
 
-        - gl_PointSize = 120.0;
-        + gl_PointSize = 20.0;
+    -   gl_PointSize = 120.0;
+    +   gl_PointSize = 20.0;
     }
 
 그리고 점의 색상을 직접 지정할 수 있도록 수정합니다. (참고: 텍스처가 없는 코드로 되돌렸습니다.)
 
     precision highp float;
 
-    + uniform vec4 color;
+    +uniform vec4 color;
 
     out vec4 outColor;
 
     void main() {
-        - outColor = vec4(1, 0, 0, 1);   // 빨간색
-        + outColor = color;
+    -   outColor = vec4(1, 0, 0, 1);   // 빨간색
+    +   outColor = color;
     }
 
 색상 위치를 조회하고,
@@ -245,7 +244,7 @@ WebGL은 기본적으로 텍스처 유닛 0을 사용하도록 되어 있고 유
     // GLSL 프로그램 설정
     const program = webglUtils.createProgramFromSources(gl, [vs, fs]);
     const positionLoc = gl.getAttribLocation(program, 'position');
-    + const colorLoc = gl.getUniformLocation(program, 'color');
+    +const colorLoc = gl.getUniformLocation(program, 'color');
 
 이를 사용합니다.
 
@@ -257,7 +256,7 @@ WebGL은 기본적으로 텍스처 유닛 0을 사용하도록 되어 있고 유
         const clipspace = u * 1.6 - 0.8; // -0.8 ~ +0.8
         gl.vertexAttrib2f(positionLoc, clipspace, clipspace);
 
-        + gl.uniform4f(colorLoc, u, 0, 1 - u, 1);
+    +   gl.uniform4f(colorLoc, u, 0, 1 - u, 1);
 
         const offset = 0;
         const count = 1;
