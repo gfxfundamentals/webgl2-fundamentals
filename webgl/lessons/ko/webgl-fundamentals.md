@@ -13,7 +13,7 @@ WebGL로 그 외에 다른 일들을 하고 싶다면 원하는 대로 동작하
 WebGL은 여러분 컴퓨터의 GPU에서 실행됩니다. 따라서 여러분은 GPU에서 실행되는 코드를 제공해만 합니다.
 그 코드는 두 개 함수 쌍 형태로 제공되어야 하고, 각각의 함수는 정점 셰이더(vertex shader)와 프래그먼트 셰이더(fragment shader)라고 불립니다.
 각각은 매우 엄격한 타입(strictly-types)을 가지는 C/C++과 유사한 [GLSL](webgl-shaders-and-glsl.html)(GL Shader Language)로 작성되어야 합니다.
-이 한 쌍을 합쳐서 _프로그램(program)_ 이라고 부릅니다.
+이 한 쌍을 합쳐서 *프로그램(program)* 이라고 부릅니다.
 
 정점 셰이더의 역할은 정점의 위치(position)를 계산 하는 것입니다.
 함수를 통해 출력 위치가 계산되고 WebGL은 그 위치를 기준으로 [점, 선 또는 삼각형](webgl-points-lines-triangles.html)을 비롯한 다양한 종류의 기본요소(primitives)들을 래스터화 할수 있습니다.
@@ -205,7 +205,7 @@ WebGL에서 색상은 0에서 1 사이의 값을 사용합니다.
     var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
     var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 
-그런 다음 이 두개의 셰이더를 *프로그램*으로 _링크_ 해야합니다.
+그런 다음 이 두개의 셰이더를 *프로그램*으로 *링크* 해야합니다.
 
     function createProgram(gl, vertexShader, fragmentShader) {
       var program = gl.createProgram();
@@ -370,7 +370,7 @@ WebGL은 이제 삼각형을 렌더링할 것입니다. 그려질 각 픽셀마�
 
 위의 경우 정점 셰이더가 아무것도 하지 않고 위치데이터를 바로 전달만 하는 것을 볼 수 있습니다.
 위치 데이터가 이미 클립 공간에 있으므로 다른 작업을 할 필요가 없습니다.
-_만약 3D로 그리기를 원하다면 3D 좌표를 클립 공간으로 변환하는 셰이더는 여러분이 직접 제공해 주어야만 합니다. WebGL은 단지 래스터화(rasterization) API이기 때문입니다._
+*만약 3D로 그리기를 원하다면 3D 좌표를 클립 공간으로 변환하는 셰이더는 여러분이 직접 제공해 주어야만 합니다. WebGL은 단지 래스터화(rasterization) API이기 때문입니다.*
 
 왜 삼각형이 화면 가운데에서 시작하여 오른쪽 상단으로 그려지는지 궁금할 것입니다.
 `x`의 클립 공간은 -1에서 +1 사이입니다. 이는 0이 가운고 양수 값은 오른쪽이라는 것을 의미합니다.
@@ -531,7 +531,7 @@ WebGL API 자체는 단순한 래스터라이저이며 개념적으로도 꽤 �
 
 우리는 어떻게 attribute와 두개의 uniform에 데이터를 제공하는지를 보여주는 작은 예제를 다루었습니다.
 여러 개의 attribute와 더 많은 uniform들을 갖는 것이 일반적입니다.
-이 글의 맨위에서 _varying_ 과 *텍스처*에 대해서도 언급을 했었습니다. 이것들은 이후의 강의에서 소개될 것입니다.
+이 글의 맨위에서 *varying* 과 *텍스처*에 대해서도 언급을 했었습니다. 이것들은 이후의 강의에서 소개될 것입니다.
 
 다음으로 넘어가기 전에, *대부분*의 어플리케이션에서는 우리가 `setRectangle`에서 했던것 처럼 버퍼 안의 데이터를 업데이트하는 것이 일반적이지 않다는 것을 언급하고자 합니다.
 예제를 이렇게 만든것은 입력을 픽셀 좌표로 표현하고 GLSL에서 간단한 계산을 하는 것이 설명하기 쉬운 예제라고 생각했기 때문입니다.
