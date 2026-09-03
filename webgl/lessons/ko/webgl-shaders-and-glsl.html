@@ -255,7 +255,7 @@ void main() {
 <p>정점 셰이더는 데이터가 필요합니다. 3가지 방법으로 데이터를 받을 수 있습니다.</p>
 <ol>
 <li><a href="#attributes">Attributes</a> (버퍼에서 가져온 데이터)</li>
-<li><a href="#uniforms">Uniforms</a> (드로우 콜(draw call) 마다 모든 정점에서 동일하게 유지되는 값)</li>
+<li><a href="#uniforms">Uniforms</a> (드로우 콜(draw call)마다 모든 정점에서 동일하게 유지되는 값)</li>
 <li><a href="#textures-in-vertex-shaders">Textures</a> (픽셀 / 텍셀 데이터)</li>
 </ol>
 <h3 id="attributes">Attributes</h3>
@@ -293,11 +293,11 @@ void main() {
    gl_Position = a_position;
 }
 </code></pre>
-<p>클립 공간 위치값을 가진 정점을 버퍼에 넣는다면 제대로 작동 할 것입니다.</p>
+<p>클립 공간 위치값을 가진 정점을 버퍼에 넣는다면 제대로 작동할 것입니다.</p>
 <p>Attribute는 <code class="notranslate" translate="no">float</code>, <code class="notranslate" translate="no">vec2</code>, <code class="notranslate" translate="no">vec3</code>, <code class="notranslate" translate="no">vec4</code>, <code class="notranslate" translate="no">mat2</code>, <code class="notranslate" translate="no">mat3</code>, <code class="notranslate" translate="no">mat4</code>,
 <code class="notranslate" translate="no">int</code>, <code class="notranslate" translate="no">ivec2</code>, <code class="notranslate" translate="no">ivec3</code>, <code class="notranslate" translate="no">ivec4</code>, <code class="notranslate" translate="no">uint</code>, <code class="notranslate" translate="no">uvec2</code>, <code class="notranslate" translate="no">uvec3</code>, <code class="notranslate" translate="no">uvec4</code>를 타입으로 사용할 수 있습니다.</p>
 <h3 id="uniforms">Uniforms</h3>
-<p>정점 셰이더의 uniforms은 드로우 콜마다 모든 정점에서 동일하게 유지되는 값입니다. 간단한 예로 오프셋을 위 정점 셰이더에 추가 할수 있습니다.</p>
+<p>정점 셰이더의 uniforms은 드로우 콜마다 모든 정점에서 동일하게 유지되는 값입니다. 간단한 예로 오프셋을 위 정점 셰이더에 추가할 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 
 in vec4 a_position;
@@ -350,8 +350,8 @@ gl.uniform4uv(ivec4UniformLoc, [v0, v1, v2, v4]);  // uvec4 또는 uvec4 array
 gl.uniform1i (samplerUniformLoc,   v);
 gl.uniform1iv(samplerUniformLoc, [v]);
 </code></pre>
-<p><code class="notranslate" translate="no">bool</code>, <code class="notranslate" translate="no">bvec2</code>, <code class="notranslate" translate="no">bvec3</code> <code class="notranslate" translate="no">bvec4</code>같은 타입도 있습니다. 이 타입들도  <code class="notranslate" translate="no">gl.uniform?f?</code>, <code class="notranslate" translate="no">gl.uniform?i?</code>, <code class="notranslate" translate="no">gl.uniform?u?</code>같은 함수를 사용합니다.</p>
-<p>배열의 경우 모든 배열의 유니폼들을 한꺼번에 설정 할수 있습니다. 예를들어</p>
+<p><code class="notranslate" translate="no">bool</code>, <code class="notranslate" translate="no">bvec2</code>, <code class="notranslate" translate="no">bvec3</code> <code class="notranslate" translate="no">bvec4</code>같은 타입도 있습니다. 이 타입들도 <code class="notranslate" translate="no">gl.uniform?f?</code>, <code class="notranslate" translate="no">gl.uniform?i?</code>, <code class="notranslate" translate="no">gl.uniform?u?</code>같은 함수를 사용합니다.</p>
+<p>배열의 경우 모든 배열의 유니폼들을 한꺼번에 설정할 수 있습니다. 예를들어</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">// 셰이더에서 아래와 같이 선언
 uniform vec2 u_someVec2[3];
 
@@ -384,20 +384,20 @@ uniform SomeStruct u_someThing;
 var someThingSomeVec2Loc = gl.getUniformLocation(someProgram, &quot;u_someThing.someVec2&quot;);
 </code></pre>
 <h3 id="정점-셰이더에서의-텍스처">정점 셰이더에서의 텍스처</h3>
-<p><a href="#textures-in-fragment-shaders">프래그먼트 셰이더에서의 텍스처</a>를 참조 하세요.</p>
+<p><a href="#textures-in-fragment-shaders">프래그먼트 셰이더에서의 텍스처</a>를 참조하세요.</p>
 <h2 id="프래그먼트-셰이더">프래그먼트 셰이더</h2>
 <p>프래그먼트 셰이더의 역할은 현재 래스터화 되는 픽셀에 색상을 할당하는 것입니다.
 항상 다음과 같은 형식을 가집니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
 precision highp float;
 
-out vec4 outColor;  // 아무 이름이나 사용 할수 있습니다.
+out vec4 outColor;  // 아무 이름이나 사용할 수 있습니다.
 
 void main() {
    outColor = doMathToMakeAColor;
 }
 </code></pre>
-<p>프래그먼트 셰이더는 픽셀당 한번씩 호출 됩니다. 호출 될 때마다 여러분이 지정한 out 변수를 어떤 색상으로 설정해야 합니다.</p>
+<p>프래그먼트 셰이더는 픽셀당 한 번씩 호출 됩니다. 호출될 때마다 여러분이 지정한 out 변수를 어떤 색상으로 설정해야 합니다.</p>
 <p>프래그먼트 셰이더는 데이터가 필요합니다. 3가지 방법으로 데이터를 가져올 수 있습니다.</p>
 <ol>
 <li><a href="#uniforms">Uniforms</a> (한번의 드로우 콜에서 모든 픽셀에 동일하게 유지되는 데이터)</li>
@@ -456,7 +456,7 @@ gl.bindTexture(gl.TEXTURE_2D, tex);
 </code></pre>
 <h3 id="varyings">Varyings</h3>
 <p>varying는 <a href="webgl-how-it-works.html">작동 방법</a>에서 보았던 정점 셰이더에서 프래그먼트 셰이더로 값을 전달하는 방법입니다.</p>
-<p>varying를 사용하기 위해서는 varying들을 정점와 프래그먼트 셰이더 두곳에서 일치하게 선언을 해야합니다.
+<p>varying를 사용하기 위해서는 varying들을 정점과 프래그먼트 셰이더 두곳에서 일치하게 선언을 해야합니다.
 정점 셰이더는 각 정점의 특정 값을 <em>out</em> varying에 설정합니다. WebGL은 픽셀을 그릴때 선택 사항으로 해당 값들을 보간하고 프래먼트 셰이더의 상응하는 <em>in</em> varying에 전달합니다.</p>
 <p>정점 셰이더</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">#version 300 es
@@ -489,12 +489,12 @@ void main() {
 <p>위의 예제는 거의 무의미한 예제입니다. 일반적으로 클립 공간 값을 프래그먼트 셰이더로 직접 복사하여 색상으로는 사용하지 않습니다. 그럼에도 불구하고 잘 작동하고 색상을 만들어 냅니다.</p>
 <h2 id="glsl">GLSL</h2>
 <p>GLSL은 <a href="https://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.3.pdf">Graphics Library Shader Language</a>의 약자입니다.
-이는 셰이더에 쓰이는 언어입니다. 자바스크립트에서 흔히 볼 수 없는 어느정도 특별한 고유 기능이 있습니다. 래스터화 그래픽스를 위한 계산 작업에 일반적으로 필요한 수학적 계산을 수행할 수 있도록 설계되어 있습니다. 그래서 예를 들어 <code class="notranslate" translate="no">vec2</code>, <code class="notranslate" translate="no">vec3</code>, <code class="notranslate" translate="no">vec4</code>와 같이 두개의 값, 세개의 값, 네개의 값을 각각 표현하는 타입이 있습니다. 비슷하게 <code class="notranslate" translate="no">mat2</code>, <code class="notranslate" translate="no">mat3</code>, <code class="notranslate" translate="no">mat4</code>는 2x2, 3x3, 4x4 행렬을 표현합니다. 스칼라를 <code class="notranslate" translate="no">vec</code>에 곱하는 것도 할 수 있습니다.</p>
+이는 셰이더에 쓰이는 언어입니다. 자바스크립트에서 흔히 볼 수 없는 어느 정도 특별한 고유 기능이 있습니다. 래스터화 그래픽스를 위한 계산 작업에 일반적으로 필요한 수학적 계산을 수행할 수 있도록 설계되어 있습니다. 그래서 예를 들어 <code class="notranslate" translate="no">vec2</code>, <code class="notranslate" translate="no">vec3</code>, <code class="notranslate" translate="no">vec4</code>와 같이 두 개의 값, 세 개의 값, 네 개의 값을 각각 표현하는 타입이 있습니다. 비슷하게 <code class="notranslate" translate="no">mat2</code>, <code class="notranslate" translate="no">mat3</code>, <code class="notranslate" translate="no">mat4</code>는 2x2, 3x3, 4x4 행렬을 표현합니다. 스칼라를 <code class="notranslate" translate="no">vec</code>에 곱하는 것도 할 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 a = vec4(1, 2, 3, 4);
 vec4 b = a * 2.0;
 // b는 이제 vec4(2, 4, 6, 8)입니다.;
 </code></pre>
-<p>마찬가지로 행렬 곱셉과 벡터와 행렬 곱셈을 수행 할 수 있습니다.</p>
+<p>마찬가지로 행렬 곱셉과 벡터와 행렬 곱셈을 수행할 수 있습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">mat4 a = ???
 mat4 b = ???
 mat4 c = a * b;
@@ -523,14 +523,14 @@ vec4 y = c * v;
 <p>는 다음과 같습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4(v.b, v.g, v.r, v.a)
 </code></pre>
-<p>vec이나 mat를 구성할 때, 한번에 여러 부분을 제공 할 수 있습니다. 예를 들어</p>
+<p>vec이나 mat를 구성할 때, 한번에 여러 부분을 제공할 수 있습니다. 예를 들어</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4(v.rgb, 1)
 </code></pre>
 <p>는 다음과 같습니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4(v.r, v.g, v.b, 1)
 </code></pre>
 <p>주의 해야 할 한가지는 GLSL은 타입에 대하여 매우 엄격합니다.</p>
-<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">float f = 1;  // ERROR 1은 int입니다. float에 int를 할당 할 수 없습니다.
+<pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">float f = 1;  // ERROR 1은 int입니다. float에 int를 할당할 수 없습니다.
 </code></pre>
 <p>올바른 방법은 다음 중 하나입니다.</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">float f = 1.0;      // float 사용
@@ -540,7 +540,7 @@ float f = float(1)  // float에 정수를 캐스팅
 <p>GLSL는 많은 내장 함수를 가지고 있습니다. 대부분이 다양한 구성 요소에 대해 똑같이 작동합니다. 예를 들어</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">T sin(T angle)
 </code></pre>
-<p>T의 의미는  <code class="notranslate" translate="no">float</code>, <code class="notranslate" translate="no">vec2</code>, <code class="notranslate" translate="no">vec3</code> 또는 <code class="notranslate" translate="no">vec4</code> 일 수 있습니다. 만약에 <code class="notranslate" translate="no">vec4</code>를 전달한다면 구성요소 각각이 sine된 <code class="notranslate" translate="no">vec4</code>를 반환합니다. 다시말해 <code class="notranslate" translate="no">v</code>가 <code class="notranslate" translate="no">vec4</code>이라면</p>
+<p>T의 의미는 <code class="notranslate" translate="no">float</code>, <code class="notranslate" translate="no">vec2</code>, <code class="notranslate" translate="no">vec3</code> 또는 <code class="notranslate" translate="no">vec4</code> 일 수 있습니다. 만약에 <code class="notranslate" translate="no">vec4</code>를 전달한다면 구성요소 각각이 sine된 <code class="notranslate" translate="no">vec4</code>를 반환합니다. 다시말해 <code class="notranslate" translate="no">v</code>가 <code class="notranslate" translate="no">vec4</code>이라면</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">vec4 s = sin(v);
 </code></pre>
 <p>는 다음과 같습니다.</p>
@@ -582,7 +582,7 @@ float f = float(1)  // float에 정수를 캐스팅
           <li><a href="/webgl/lessons/ko/webgl-getting-webgl2.html">WebGL2 사용법</a></li>
 <li><a href="/webgl/lessons/ko/webgl-fundamentals.html">기초</a></li>
 <li><a href="/webgl/lessons/ko/webgl-how-it-works.html">WebGL2 작동 원리</a></li>
-<li><a href="/webgl/lessons/ko/webgl-shaders-and-glsl.html">WebGL2 셰이더와 GLSL</a></li>
+<li><a href="/webgl/lessons/ko/webgl-shaders-and-glsl.html">기초</a></li>
 <li><a href="/webgl/lessons/resources/webgl-state-diagram.html">WebGL2 State Diagram</a></li>
         </ul>
   <li>WebGL2 vs WebGL1</li>
@@ -676,7 +676,7 @@ float f = float(1)  // float에 정수를 캐스팅
         </ul>
   <li>Tips</li>
         <ul>
-          <li><a href="/webgl/lessons/ko/webgl-smallest-programs.html">Smallest Programs</a></li>
+          <li><a href="/webgl/lessons/ko/webgl-smallest-programs.html">Tips</a></li>
 <li><a href="/webgl/lessons/ko/webgl-drawing-without-data.html">Drawing Without Data</a></li>
 <li><a href="/webgl/lessons/ko/webgl-shadertoy.html">Shadertoy</a></li>
 <li><a href="/webgl/lessons/ko/webgl-pulling-vertices.html">Pulling Vertices</a></li>
