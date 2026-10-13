@@ -31,7 +31,7 @@ For each thing you want to draw you setup a bunch of state then execute a pair o
 Any data you want those functions to have access to must be provided to the GPU. There are 4 ways
 a shader can receive data.
 
-1. Attributes, Buffers, and Vertex Arrays
+1. Attributes, Buffers, and Vertex Array Objects
 
    Buffers are arrays of binary data you upload to the GPU. Usually buffers contain
    things like positions, normals, texture coordinates, vertex colors, etc although
@@ -49,19 +49,20 @@ a shader can receive data.
    out and assigned to an attribute.
 
    The state of attributes, which buffers to use for each one, and how to pull out data
-   from those buffers is collected into a vertex array object (VAO).
+   from those buffers is collected into a vertex array object (VAO). Its name notwithstanding,
+   a VAO does not contain vertices. Those reside in buffers (Vertex Buffer Objects, to be precise).
 
-2. Uniforms
+3. Uniforms
 
    Uniforms are effectively global variables you set before you execute your shader program.
 
-3. Textures
+4. Textures
 
    Textures are arrays of data you can randomly access in your shader program. The most
    common thing to put in a texture is image data but textures are just data and can just
    as easily contain something other than colors.
 
-4. Varyings
+5. Varyings
 
    Varyings are a way for a vertex shader to pass data to a fragment shader. Depending
    on what is being rendered, points, lines, or triangles, the values set on a varying
