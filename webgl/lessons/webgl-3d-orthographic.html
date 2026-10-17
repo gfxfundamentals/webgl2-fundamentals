@@ -705,7 +705,7 @@ back facing triangle has its vertices go in a clockwise direction.</p>
 triangles.  We can turn that feature on with</p>
 <pre class="prettyprint notranslate" translate="no"><code class="lang-js">  gl.enable(gl.CULL_FACE);
 </code></pre>
-<p>Well put that in our <code class="notranslate" translate="no">drawScene</code> function. With that
+<p>We’ll put that in our <code class="notranslate" translate="no">drawScene</code> function. With that
 feature turned on, WebGL defaults to “culling” back facing triangles.
 “Culling” in this case is a fancy word for “not drawing”.</p>
 <p>Note that as far as WebGL is concerned, whether or not a triangle is
@@ -719,7 +719,7 @@ triangle.  Because we had CULL_FACE disabled we can see both
 clockwise(front) and counter clockwise(back) triangles.  Now that we’ve
 turned it on, any time a front facing triangle flips around either because
 of scaling or rotation or for whatever reason, WebGL won’t draw it.
-That’s a good thing since as your turn something around in 3D you
+That’s a good thing since as you turn something around in 3D you
 generally want whichever triangles are facing you to be considered front
 facing.</p>
 <p>With CULL_FACE turned on this is what we get</p>
@@ -809,7 +809,7 @@ called <code class="notranslate" translate="no">ortho</code> or <code class="not
 </code></pre>
 <p>Unlike our simplified <code class="notranslate" translate="no">projection</code> function above which only had width, height, and depth
 parameters this more common orthographic projection function we can pass in left, right,
-bottom, top, near, and far which gives as more flexibility. To use it the same as
+bottom, top, near, and far which gives us more flexibility. To use it the same as
 our original projection function we’d call it with</p>
 <pre class="prettyprint notranslate" translate="no"><code class="notranslate" translate="no">var left = 0;
 var right = gl.canvas.clientWidth;
