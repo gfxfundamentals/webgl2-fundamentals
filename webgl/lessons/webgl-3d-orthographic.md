@@ -2,6 +2,7 @@ Title: WebGL2 - Orthographic 3D
 Description: How to do 3D in WebGL starting with an orthographic projection.
 TOC: Orthographic 3D
 
+
 This post is a continuation of a series of posts about WebGL.
 The first [started with fundamentals](webgl-fundamentals.html) and
 the previous was [about 2D matrices](webgl-2d-matrices.html).
@@ -116,17 +117,29 @@ Here are the 2D (before) versions of m3.translation, m3.rotation, and m3.scaling
 ```js
 var m3 = {
   translation: function translation(tx, ty) {
-    return [1, 0, 0, 0, 1, 0, tx, ty, 1];
+    return [
+      1, 0, 0,
+      0, 1, 0,
+      tx, ty, 1
+    ];
   },
 
   rotation: function rotation(angleInRadians) {
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
-    return [c, -s, 0, s, c, 0, 0, 0, 1];
+    return [
+      c,-s, 0,
+      s, c, 0,
+      0, 0, 1
+    ];
   },
 
   scaling: function scaling(sx, sy) {
-    return [sx, 0, 0, 0, sy, 0, 0, 0, 1];
+    return [
+      sx, 0, 0,
+      0, sy, 0,
+      0, 0, 1
+    ];
   },
 };
 ```
@@ -135,41 +148,66 @@ And here are the updated 3D versions.
 
 ```js
 var m4 = {
-  translation: function (tx, ty, tz) {
-    return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, tx, ty, tz, 1];
+  translation: function(tx, ty, tz) {
+    return [
+       1,  0,  0,  0,
+       0,  1,  0,  0,
+       0,  0,  1,  0,
+       tx, ty, tz, 1,
+    ];
   },
 
-  xRotation: function (angleInRadians) {
+  xRotation: function(angleInRadians) {
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
 
-    return [1, 0, 0, 0, 0, c, s, 0, 0, -s, c, 0, 0, 0, 0, 1];
+    return [
+      1, 0, 0, 0,
+      0, c, s, 0,
+      0, -s, c, 0,
+      0, 0, 0, 1,
+    ];
   },
 
-  yRotation: function (angleInRadians) {
+  yRotation: function(angleInRadians) {
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
 
-    return [c, 0, -s, 0, 0, 1, 0, 0, s, 0, c, 0, 0, 0, 0, 1];
+    return [
+      c, 0, -s, 0,
+      0, 1, 0, 0,
+      s, 0, c, 0,
+      0, 0, 0, 1,
+    ];
   },
 
-  zRotation: function (angleInRadians) {
+  zRotation: function(angleInRadians) {
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
 
-    return [c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+    return [
+       c, s, 0, 0,
+      -s, c, 0, 0,
+       0, 0, 1, 0,
+       0, 0, 0, 1,
+    ];
   },
 
-  scaling: function (sx, sy, sz) {
-    return [sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1];
+  scaling: function(sx, sy, sz) {
+    return [
+      sx, 0,  0,  0,
+      0, sy,  0,  0,
+      0,  0, sz,  0,
+      0,  0,  0,  1,
+    ];
   },
 };
 ```
 
-Notice we now have 3 rotation functions. We only needed one in 2D as we
-were effectively only rotating around the Z axis. Now though to do 3D we
-also want to be able to rotate around the X axis and Y axis as well. You
-can see from looking at them they are all very similar. If we were to
+Notice we now have 3 rotation functions.  We only needed one in 2D as we
+were effectively only rotating around the Z axis.  Now though to do 3D we
+also want to be able to rotate around the X axis and Y axis as well.  You
+can see from looking at them they are all very similar.  If we were to
 work them out you'd see them simplify just like before
 
 Z rotation
@@ -309,8 +347,8 @@ expanding it to 3D let's try
 ```
 
 Just like we needed to convert from pixels to clip space for X and Y, for
-Z we need to do the same thing. In this case I'm making the Z axis pixel
-units as well. I'll pass in some value similar to `width` for the `depth`
+Z we need to do the same thing.  In this case I'm making the Z axis pixel
+units as well.  I'll pass in some value similar to `width` for the `depth`
 so our space will be 0 to `width` pixels wide, 0 to `height` pixels tall, but
 for `depth` it will be `-depth / 2` to `+depth / 2`.
 
@@ -334,16 +372,16 @@ And here's that sample.
 {{{example url="../webgl-3d-step1.html" }}}
 
 The first problem we have is that our geometry is a flat F which makes it
-hard to see any 3D. To fix that let's expand the geometry to 3D. Our
-current F is made of 3 rectangles, 2 triangles each. To make it 3D will
-require a total of 16 rectangles. the 3 rectangles on the front, 3 on the
+hard to see any 3D.  To fix that let's expand the geometry to 3D.  Our
+current F is made of 3 rectangles, 2 triangles each.  To make it 3D will
+require a total of 16 rectangles.  the 3 rectangles on the front, 3 on the
 back, 1 on the left, 4 on the right, 2 on the tops, 3 on the bottoms.
 
 <img class="webgl_center noinvertdark" width="300" src="resources/3df.svg" />
 
 That's quite a few to list out here.
 16 rectangles with 2 triangles per rectangle and 3 vertices per triangle is 96
-vertices. If you want to see all of them view the source of the sample.
+vertices.  If you want to see all of them view the source of the sample.
 
 We have to draw more vertices so
 
@@ -359,8 +397,8 @@ And here's that version
 
 {{{example url="../webgl-3d-step2.html" }}}
 
-Moving the sliders it's pretty hard to tell that it's 3D. Let's try
-coloring each rectangle a different color. To do this we will add another
+Moving the sliders it's pretty hard to tell that it's 3D.  Let's try
+coloring each rectangle a different color.  To do this we will add another
 attribute to our vertex shader and a varying to pass it from the vertex
 shader to the fragment shader.
 
@@ -465,30 +503,30 @@ Now we get this.
 
 {{{example url="../webgl-3d-step3.html" }}}
 
-Uh oh, what's that mess? Well, it turns out all the various parts of
+Uh oh, what's that mess?  Well, it turns out all the various parts of
 that 3D 'F', front, back, sides, etc get drawn in the order they appear in
-our geometry data. That doesn't give us quite the desired results as sometimes
+our geometry data.  That doesn't give us quite the desired results as sometimes
 the ones in the back get drawn after the ones in the front.
 
 <img class="webgl_center" style="background-color: transparent;" width="163" height="190" src="resources/polygon-drawing-order.gif" />
 
 The <span style="background: rgb(200, 70, 120); color: white; padding: 0.25em">reddish part</span> is
-the **front** of the 'F' but because it's the first part of our data
+the **front** of the 'F'  but because it's the first part of our data
 it is drawn first and then the other triangles behind it get drawn
-after covering it up. For example the <span style="background: rgb(80, 70, 200); color: white; padding: 0.25em">purple part</span>
+after covering it up. For example the  <span style="background: rgb(80, 70, 200); color: white; padding: 0.25em">purple part</span>
 is actually the back of the 'F'. It gets drawn 2nd because it comes 2nd in our data.
 
-Triangles in WebGL have the concept of front facing and back facing. By default a
-front facing triangle has its vertices go in a counter clockwise direction. A
+Triangles in WebGL have the concept of front facing and back facing.  By default a
+front facing triangle has its vertices go in a counter clockwise direction.  A
 back facing triangle has its vertices go in a clockwise direction.
 
 <img src="resources/triangle-winding.svg" class="webgl_center" width="400" />
 
 WebGL has the ability to draw only forward facing or back facing
-triangles. We can turn that feature on with
+triangles.  We can turn that feature on with
 
 ```js
-gl.enable(gl.CULL_FACE);
+  gl.enable(gl.CULL_FACE);
 ```
 
 We'll put that in our `drawScene` function. With that
@@ -497,13 +535,13 @@ feature turned on, WebGL defaults to "culling" back facing triangles.
 
 Note that as far as WebGL is concerned, whether or not a triangle is
 considered to be going clockwise or counter clockwise depends on the
-vertices of that triangle in clip space. In other words, WebGL figures out
+vertices of that triangle in clip space.  In other words, WebGL figures out
 whether a triangle is front or back AFTER you've applied math to the
-vertices in the vertex shader. That means for example a clockwise
+vertices in the vertex shader.  That means for example a clockwise
 triangle that is scaled in X by -1 becomes a counter clockwise triangle or
 a clockwise triangle rotated 180 degrees becomes a counter clockwise
-triangle. Because we had CULL_FACE disabled we can see both
-clockwise(front) and counter-clockwise(back) triangles. Now that we've
+triangle.  Because we had CULL_FACE disabled we can see both
+clockwise(front) and counter clockwise(back) triangles.  Now that we've
 turned it on, any time a front facing triangle flips around either because
 of scaling or rotation or for whatever reason, WebGL won't draw it.
 That's a good thing since as you turn something around in 3D you
@@ -514,10 +552,10 @@ With CULL_FACE turned on this is what we get
 
 {{{example url="../webgl-3d-step4.html" }}}
 
-Hey! Where did all the triangles go? It turns out, many of them are
-facing the wrong way. Rotate it and you'll see them appear when you look
-at the other side. Fortunately it's easy to fix. We just look at which
-ones are backward and exchange 2 of their vertices. For example if one
+Hey!  Where did all the triangles go?  It turns out, many of them are
+facing the wrong way.  Rotate it and you'll see them appear when you look
+at the other side.  Fortunately it's easy to fix.  We just look at which
+ones are backward and exchange 2 of their vertices.  For example if one
 backward triangle is
 
 ```
@@ -538,32 +576,33 @@ Going through and fixing all the backward triangles gets us to this
 
 {{{example url="../webgl-3d-step5.html" }}}
 
-That's closer but there's still one more problem. Even with all the
+That's closer but there's still one more problem.  Even with all the
 triangles facing in the correct direction and with the back facing ones
 being culled we still have places where triangles that should be in the back
 are being drawn over triangles that should be in front.
 
 Enter the DEPTH BUFFER.
 
-A depth buffer, sometimes called a Z-Buffer, is a rectangle of _depth_
-pixels, one depth pixel for each color pixel used to make the image. As
-WebGL draws each color pixel it can also draw a depth pixel. It does this
-based on the values we return from the vertex shader for Z. Just like we
+A depth buffer, sometimes called a Z-Buffer, is a rectangle of *depth*
+pixels, one depth pixel for each color pixel used to make the image.  As
+WebGL draws each color pixel it can also draw a depth pixel.  It does this
+based on the values we return from the vertex shader for Z.  Just like we
 had to convert to clip space for X and Y, Z is also in clip space or (-1
-to +1). That value is then converted into a depth space value (0 to +1).
+to +1).  That value is then converted into a depth space value (0 to +1).
 Before WebGL draws a color pixel it will check the corresponding depth
-pixel. If the depth value for the pixel it's about to draw is greater
+pixel.  If the depth value for the pixel it's about to draw is greater
 than the value of the corresponding depth pixel then WebGL does not draw
-the new color pixel. Otherwise it draws both the new color pixel with the
+the new color pixel.  Otherwise it draws both the new color pixel with the
 color from your fragment shader AND it draws the depth pixel with the new
-depth value. This means, pixels that are behind other pixels won't get
+depth value.  This means, pixels that are behind other pixels won't get
 drawn.
 
 We can turn on this feature nearly as simply as we turned on culling with
 
 ```js
-gl.enable(gl.DEPTH_TEST);
+  gl.enable(gl.DEPTH_TEST);
 ```
+
 
 We also need to clear the depth buffer back to 1.0 before we start drawing.
 
@@ -641,16 +680,15 @@ gl.vertexAttribPointer(
 
 ...
 // Tell the attribute how to get data out of colorBuffer (ARRAY_BUFFER)
-var size = 3; // 3 components per iteration
-var type = gl.UNSIGNED_BYTE; // the data is 8bit unsigned bytes
-var normalize = true; // convert from 0-255 to 0.0-1.0
-var stride = 0; // 0 = move forward size \* sizeof(type) each
-// iteration to get the next color
-var offset = 0; // start at the beginning of the buffer
+var size = 3;          // 3 components per iteration
+var type = gl.UNSIGNED_BYTE;   // the data is 8bit unsigned bytes
+var normalize = true;  // convert from 0-255 to 0.0-1.0
+var stride = 0;        // 0 = move forward size * sizeof(type) each
+                       // iteration to get the next color
+var offset = 0;        // start at the beginning of the buffer
 gl.vertexAttribPointer(
-colorAttributeLocation, size, type, normalize, stride, offset);
+    colorAttributeLocation, size, type, normalize, stride, offset);
 {{/escapehtml}}</pre>
-
 <p>
 That '3' in each of those says only to pull 3 values out of the buffer per attribute
 per iteration of the vertex shader.
