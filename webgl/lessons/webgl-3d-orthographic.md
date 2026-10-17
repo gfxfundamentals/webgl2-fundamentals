@@ -529,7 +529,7 @@ triangles.  We can turn that feature on with
   gl.enable(gl.CULL_FACE);
 ```
 
-Well put that in our `drawScene` function. With that
+We'll put that in our `drawScene` function. With that
 feature turned on, WebGL defaults to "culling" back facing triangles.
 "Culling" in this case is a fancy word for "not drawing".
 
@@ -544,7 +544,7 @@ triangle.  Because we had CULL_FACE disabled we can see both
 clockwise(front) and counter clockwise(back) triangles.  Now that we've
 turned it on, any time a front facing triangle flips around either because
 of scaling or rotation or for whatever reason, WebGL won't draw it.
-That's a good thing since as your turn something around in 3D you
+That's a good thing since as you turn something around in 3D you
 generally want whichever triangles are facing you to be considered front
 facing.
 
@@ -644,7 +644,7 @@ called `ortho` or `orthographic` that looks like this
 
 Unlike our simplified `projection` function above which only had width, height, and depth
 parameters this more common orthographic projection function we can pass in left, right,
-bottom, top, near, and far which gives as more flexibility. To use it the same as
+bottom, top, near, and far which gives us more flexibility. To use it the same as
 our original projection function we'd call it with
 
     var left = 0;
