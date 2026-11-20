@@ -30,7 +30,7 @@ passed to `setRectangle` right? Here's a sample based on our
 +  // re-draw everything. We can call this
 +  // function after we update the translation.
 
-+  // Draw a the scene.
++  // Draw the scene.
 +  function drawScene() {
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
